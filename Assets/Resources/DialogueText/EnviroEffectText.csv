@@ -1,0 +1,21 @@
+Index,Name,Description Easy,Description Hard
+ElectricWind,Electric Wind,"You lose <var,2> EP every <var,3> turn(s). Your Air/Electric attacks deal 1 more damage.","You lose <var,0> EP every <var,1> turn(s). Your Air/Electric attacks deal 1 more damage."
+SeasideAir,Seaside Air,"You receive <var,2> Sunder every <var,3> times you attack. Your Water attacks deal 2 more damage.","You receive <var,0> Sunder every <var,1> times you attack. Your Water attacks deal 2 more damage."
+ScaldingHeat,Scalding Heat,"You get Defense Down <var,2> for 2 turns every <var,3> turn(s). Your Fire attacks deal 2 more damage.","You get Defense Down <var,2> indefinitely every <var,3> turn(s). Your Fire attacks deal 2 more damage."
+DarkFog,Dark Fog,"You get Endurance Down <var,4> for 3 turns every <var,5> turn(s). Your Dark attacks deal 2 more damage.","You get Endurance Down <var,4> indefinitely every <var,5> turn(s). Your Dark attacks deal 2 more damage."
+FrigidBreeze,Frigid Breeze,"You get Attack Down <var,2> for 2 turns every <var,3> turn(s). Your Light attacks deal 2 more damage.","You get Attack Down <var,2> indefinitely every <var,3> turn(s). Your Light attacks deal 2 more damage."
+AetherHunger,Aether Hunger,"You lose <var,2> HP and <var,9> SE every <var,3> turn(s).","You lose <var,0> HP and <var,8> SE every <var,1> turn(s)."
+DigestiveAcid,Digestive Acid,"You lose <var,9> HP and <var,11> SE every <var,3> turn(s).","You lose <var,8> HP and <var,10> SE every <var,1> turn(s)."
+AcidFlow,Acid Flow,"You lose <var,8> HP and <var,10> SE every <var,1> turn(s). Items are 90% less powerful.","You lose <var,10> HP and <var,12> SE every <var,1> turn(s). Items are 90% less powerful."
+SacredGrove,Sacred Grove,You can only use moves that cost 8 stamina or less. Earth damage is doubled.,You can only use moves that cost 8 stamina or less. Earth damage is doubled.
+IonizedSand,Ionized Sand,"Every 3 turns, you will get hit by a strong lightning bolt. (starting turn 3). Air/Electric damage is doubled.","Every 3 turns, you will get hit by a strong lightning bolt. (starting turn 3). Air/Electric damage is doubled."
+WhiteoutBlizzard,Whiteout Blizzard,You take damage equal to damage dealt. Water damage is doubled.,
+VoidShadow,Void Shadow,Items are 50% less effective. Dark damage is doubled.,Items are 50% less effective. Dark damage is doubled.
+CounterWave,Counter Wave,"When you attack, you take 4 damage every hit. Water damage is doubled.","When you attack, you take 4 damage every hit. Water damage is doubled."
+ScaldingMagma,Scalding Magma,"When anyone gets hit, they receive 1 Focus. Fire damage is doubled.","When anyone gets hit, they receive 1 Focus. Fire damage is doubled."
+TrialOfSimplicity,Trial Of Simplicity,You can only use moves that cost 5 stamina or less. Earth damage is doubled.,You can only use moves that cost 5 stamina or less. Earth damage is doubled.
+TrialOfHaste,Trial Of Haste,"Every 3 turns, you will get hit by a very powerful lightning bolt. (starting turn 3). Air/Electric damage is doubled.","Every 3 turns, you will get hit by a very powerful lightning bolt. (starting turn 3). Air/Electric damage is doubled."
+TrialOfResolve,Trial Of Resolve,All damage is limited to 3 damage per hit. Light damage is doubled.,All damage is limited to 3 damage per hit. Light damage is doubled.
+TrialOfAmbition,Trial Of Ambition,Items are 90% less effective. Dark damage is doubled.,Items are 90% less effective. Dark damage is doubled.
+TrialOfPatience,Trial Of Patience,"When you attack, you take damage equal to damage dealt. Water damage is doubled.",You take damage equal to damage dealt. Water damage is doubled.
+TrialOfZeal,Trial Of Zeal,"When anyone gets hit, they receive 3 Focus. Enemies get Attack Boost 2 every turn. Fire damage is doubled.","When anyone gets hit, they receive 3 Focus. Enemies get Attack Boost 2 every turn. Fire damage is doubled."

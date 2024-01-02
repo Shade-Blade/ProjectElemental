@@ -1,0 +1,13 @@
+Index,Name,Description
+Up,Up,Go up
+Down,Down,Go down
+Right,Right,Go right
+Left,Left,Go left
+A,A,"Jump, select options"
+B,B,"Cancel, use weapon in overworld"
+Z,Z,"Switch positions in overworld, switch positions in battle"
+Y,Y,Tattle in overworld
+L,L,
+R,R,Toggles the HUD in the overworld
+Start,Start,Used to pause and unpause the game
+n/a,Reset To Defaults,Reset settings to the defaults.

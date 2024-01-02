@@ -1,0 +1,26 @@
+Index,Text
+Unknown,You can't use that right now!
+NoTargets,No available targets!
+NotEnoughEnergy,Not enough energy!
+NotEnoughSoul,Not enough soul energy!
+NotEnoughHealth,Not enough health!
+NotEnoughCoins,Not enough coins!
+NotEnoughStamina,Not enough stamina!
+BlockFlee,You can't run from this fight!
+BlockSkills,You can't use skills right now!
+BlockJump,You can't use stomp moves right now!
+BlockWeapon,You can't use weapon moves right now!
+BlockSoul,You can't use soul moves right now!
+BlockItems,You can't use items right now!
+BlockSkillEnvironment,The environment prevents you from using that!
+NoItems,You have no items you can use!
+FullItems,Your inventory is full!
+ItemOverworldOnly,This item is only usable in the overworld!
+ItemExpended,You can only use this item once per battle!
+ItemMultiBiteBlock,You must select unique items for Multi Bite!
+MoveExpended,You can't use this move anymore in this battle!
+TeamMoveNoTeammate,This move requires a teammate!
+TeamMoveUnavailableTeammate,Your teammate must be available!
+RibbonUnavailable,You can't equip a single ribbon on both characters!
+BadgeSwapDisabled,You cannot equip or unequip this badge with Badge Swap!
+BadgeTooExpensive,Not enough Soul Points!

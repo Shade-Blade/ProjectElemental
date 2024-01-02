@@ -1,0 +1,25 @@
+Index (unused),Name,Description,L2 Description,L3 Description
+0,High Stomp,Stomp on an enemy from above.,,
+1,Focus,Increases your attack power for your next attack by 2.,+3 attack,+6 attack
+2,Multistomp,Stomp on all enemies in a row.,,
+3,Electro Stomp,Jump on an enemy with electric element. Ignores all contact hazards. (Air/Electric damage pierces defense except for specifically air/electric defense.),Bonus damage based on target defense. Inflicts Defense Down 2 for 3 turns,
+4,Taunt,Makes all enemies berserk and makes them target the user.,,
+5,Paralyze Stomp,Jump on an enemy and paralyze it. Paralyzing an enemy will halve its attack power.,,
+6,Flame Stomp,Jump on an enemy with flame element. (Fire damage gets boosted up to 0.66x based on how much the enemy took damage this turn and last turn),Inflicts Sunder 3 at the end of your turn.,
+7,Double Stomp,Jump on an enemy twice. Base hit is stomp + 1. Second hit is 0.75x as strong.,"Hits 3 times, but 3rd hit is x0.75 of the 2nd hit.",
+8,Overstomp,Stomp an enemy a little too hard. (Deals recoil damage equal to base stomp power),,
+9,Smart Stomp,"Stomp on an enemy and inflict the status they are weakest to. (Highest turn count, but only tries to inflict statuses that the enemy is currently susceptible to.)",,
+10,Team Quake,(Requires Luna) Deals massive damage to all grounded enemies 3 times. Each subsequent hit is 0.75x as strong.,Hits 5 times.,
+11,Egg Toss,Lay an egg and use it immediately (either throwing it at an enemy or using it on yourself.),,
+12,Slash,Slash an enemy. Pierces 1 defense.,,
+13,Multislash,"Slash an enemy with multiple times. Hits twice, first hit is base sword damage + 1",4 hits.,6 hits.
+14,Slip Slash,Slip past grounded enemies to hit a target behind them. Deals damage to enemies that get passed.,"Does 1 more to passed enemies, 2 more to the target.",
+15,Poison Slash,Slash an enemy and inflict Poison.,,
+16,Precise Stab,Stab an enemy with water element. (Water element is 0.66x stronger against enemies that were not hit last turn),Element damage formula changes: Additional 0.5x bonus damage when you haven't dealt damage last turn,
+17,Sword Discharge,Shoot a lightning bolt that can hit any position. (Air/Electric damage pierces defense.),,
+18,Sword Dance,A special dance that can hit any grounded enemy and preserves Focus (Focus is not lost after this attack.) Also switches your position around.,,
+19,Boomerang Slash,Throw your sword out to hit any position. Hits twice. Returning hit is stronger.,,
+20,Dark Slash,Slash an enemy with dark element. (Dark element is stronger against enemies at low hp.),Element damage formula changes: Bonus damage based on delta hp percentages.,
+21,Aetherize,"Become ethereal for 1 turn, preventing most attacks from hitting you. (Also costs an extra action to all targets)",Targets both.,"Targets both, does not inflict Cooldown."
+22,Flame Bat,Launch a flaming ball that can hit any position. Refunds your turn if it hits and action command is successful. Action command difficulty increases the more actions you have taken. (Fire damage gets boosted up to 0.66x based on how much the enemy took damage this turn and last turn),,
+23,Astral Wall,Protects you from losing more than 25% of your max hp of damage in a single turn. Failed action command results it in getting capped at half max HP instead. Gets removed at the end of turn if damage is capped.,Targets both,"Targets both, applies Astral Recovery for 3 turns"

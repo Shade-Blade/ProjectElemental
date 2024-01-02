@@ -1,0 +1,74 @@
+Menu Text
+Yes
+No
+Cancel
+Done
+Reset
+Back
+"Do you want to save? (Current save file: <color,red><var,0></color>)"
+Save
+Don't Save
+Save with different name
+Rename current file
+Choose a save file name.
+Saving…
+Save completed.
+Save failed. Check file system for corruption.
+Global save file could not be saved. Check file system for corruption.
+Status
+Items
+Equip
+Quests
+Journal
+Map
+Settings
+Check your stats and abilities as well as various other information about the game.
+Displays items you are holding.
+Displays badges and other things you can wear.
+Displays information about your quests.
+"Displays information about recipes, enemies, lore, achievements and game mechanics."
+Health Points go down when you are attacked.
+Energy Points are used to pay for normal skills.
+Soul Points is used to pay for Badges.
+Soul Energy is used to pay for Soul Moves. Your maximum Soul Energy is usually equal to your maximum Soul Points.
+Agility determines how fast you generate Stamina every turn. It is proportional to your maximum Energy Points.
+"Coins are used to buy items, badges and other things."
+Prisma Shards are rare and valuable items used to buy Badges and other permanent items and upgrades.
+"Level determines how much experience you gain from enemies. You can increase either your max HP, max EP or max SP when you level up."
+"Experience points can be obtained by defeating enemies. When you get 100 of them, you will level up."
+Astral Tokens can be converted back into stat upgrades by certain NPCs. You can only obtain more of them by lowering your stats.
+Items
+Key Items
+Displays the consumable items you are holding. Some of them can be selected to use them.
+Displays the key items you are holding. Some of them can be selected to use them.
+All Badges
+Party Equipped
+Single Equipped
+Ribbons
+Displays all badges you are holding.
+Displays badges equipped to the whole party.
+Displays badges equipped to a single character.
+Displays the ribbons you are holding.
+In Progress
+Completed
+Displays quests you have taken but not completed.
+Displays quests you have previously completed.
+Difficulty:
+Issued By:
+Recipes
+Bestiary
+Lore
+Achievements
+Info
+Displays information about all the recipes you have discovered.
+Displays information about all the enemies you have seen.
+Displays information about the world.
+Displays information about game mechanics.
+"Made with <var,0> alone."
+"Made with <var,0> and <var,1>"
+Base Max HP:
+Level:
+Seen:
+Defeated:
+Displays information about locations you have visited before.
+Displays information about game settings and allows you to change them.

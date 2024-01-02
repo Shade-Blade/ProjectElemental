@@ -1,0 +1,1118 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BE_PuffJelly : BattleEntity
+{
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_PuffJelly_Slam>(), gameObject.AddComponent<BM_PuffJelly_Hard_BlinkSlam>() };
+
+        base.Initialize();
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        if (moveset.Count == 0)
+        {
+            currMove = null;
+        }
+        else
+        {
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+            } else
+            {
+                currMove = moveset[0];
+            }
+        }
+
+        BasicOffsetTargetChooser(2, 3);
+    }
+
+    public override IEnumerator DoEvent(BattleHelper.Event eventID)
+    {
+        yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
+    }
+}
+
+public class BM_PuffJelly_Slam : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.PuffJelly_Slam;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 abovePos = caller.curTarget.transform.position + Vector3.up * 2;
+            Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.stompOffset);
+
+            yield return StartCoroutine(caller.Move(abovePos));
+
+            Vector3 spos = transform.position;
+
+            yield return StartCoroutine(caller.JumpHeavy(tpos, 2, 0.5f, -0.25f));
+
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                caller.DealDamage(caller.curTarget, 1, 0, 0, BattleHelper.ContactLevel.Contact);
+                yield return StartCoroutine(caller.Move(caller.homePos));
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+
+                //extrapolate the move curve
+                yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
+                yield return StartCoroutine(caller.Move(caller.homePos));
+            }
+        }
+    }
+}
+
+public class BM_PuffJelly_Hard_BlinkSlam : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.PuffJelly_Hard_BlinkSlam;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 abovePos = caller.curTarget.transform.position + Vector3.up * 2;
+            Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.stompOffset);
+
+            yield return StartCoroutine(caller.Move(abovePos));
+
+            Vector3 spos = transform.position;
+
+            yield return StartCoroutine(caller.JumpHeavy(tpos, 3, 0.5f, -0.25f));
+
+            if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Light))
+            {
+                caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+                yield return StartCoroutine(caller.Move(caller.homePos));
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+
+                //extrapolate the move curve
+                yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
+                yield return StartCoroutine(caller.Move(caller.homePos));
+            }
+        }
+    }
+}
+
+public class BE_Fluffling : BattleEntity
+{
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_Fluffling_Bash>(), gameObject.AddComponent<BM_Fluffling_Hard_WaterTorpedo>() };
+
+        base.Initialize();
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        if (moveset.Count == 0)
+        {
+            currMove = null;
+        }
+        else
+        {
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+            }
+            else
+            {
+                currMove = moveset[0];
+            }
+        }
+
+        BasicOffsetTargetChooser(2, 3);
+    }
+
+    public override IEnumerator DoEvent(BattleHelper.Event eventID)
+    {
+        yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
+    }
+}
+
+public class BM_Fluffling_Bash : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Fluffling_Bash;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.kickOffset);
+            Vector3 spos = transform.position;
+
+            float delta = Random.Range(0f, 1f);
+            yield return StartCoroutine(caller.JumpHeavy(tpos, 1f + delta, 0.5f + delta/2, -0.25f));
+
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                caller.DealDamage(caller.curTarget, 1, 0, 0, BattleHelper.ContactLevel.Contact);
+                yield return StartCoroutine(caller.Move(caller.homePos));
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+
+                //extrapolate the move curve
+                yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
+                yield return StartCoroutine(caller.Move(caller.homePos));
+            }
+        }
+    }
+}
+
+public class BM_Fluffling_Hard_WaterTorpedo : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Fluffling_Hard_WaterTorpedo;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.kickOffset);
+            Vector3 spos = transform.position;
+
+            float delta = Random.Range(0f, 1f);
+            yield return StartCoroutine(caller.JumpHeavy(tpos, 1f + delta, 0.5f + delta / 2, -0.25f));
+
+            if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
+            {
+                caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+                yield return StartCoroutine(caller.Move(caller.homePos));
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+
+                //extrapolate the move curve
+                yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
+                yield return StartCoroutine(caller.Move(caller.homePos));
+            }
+        }
+    }
+}
+
+public class BE_CloudJelly : BattleEntity
+{
+    public enum CloudJellyForm
+    {
+        Ice,
+        Water,
+        Cloud
+    }
+    public CloudJellyForm form;
+
+    int counterCount;
+
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_CloudJelly_IceSwing>(), gameObject.AddComponent<BM_CloudJelly_FrostFortify>(), gameObject.AddComponent<BM_CloudJelly_BubbleToss>(), gameObject.AddComponent<BM_CloudJelly_BubbleBlast>(), gameObject.AddComponent<BM_CloudJelly_PowerBolt>(), gameObject.AddComponent<BM_CloudJelly_PowerCharge>(), gameObject.AddComponent<BM_CloudJelly_CounterFormChange>() };
+
+        base.Initialize();
+    }
+    public void SetForm(CloudJellyForm cjf)
+    {
+        SpriteRenderer s = subObject.GetComponentInChildren<SpriteRenderer>();
+        form = cjf;
+        switch (form)
+        {
+            case CloudJellyForm.Ice:
+                s.color = new Color(0.4f, 1, 1);
+                break;
+            case CloudJellyForm.Water:
+                s.color = new Color(0.2f, 0.5f, 0.7f);
+                break;
+            case CloudJellyForm.Cloud:
+                s.color = new Color(0.8f, 0.9f, 1);
+                break;
+        }
+    }
+
+    public override void SetEncounterVariables(string variable)
+    {
+        if (variable.Contains("cloud"))
+        {
+            form = CloudJellyForm.Cloud;
+        }
+        if (variable.Contains("water"))
+        {
+            form = CloudJellyForm.Water;
+        }
+        if (variable.Contains("ice"))
+        {
+            form = CloudJellyForm.Ice;
+        }
+        SetForm(form);
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        counterCount = 0;
+        if (moveset.Count == 0)
+        {
+            currMove = null;
+        }
+        else
+        {
+            switch (form)
+            {
+                case CloudJellyForm.Ice:
+                    currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+                    break;
+                case CloudJellyForm.Water:
+                    currMove = moveset[2 + ((posId + BattleControl.Instance.turnCount - 1) % 2)];
+                    break;
+                case CloudJellyForm.Cloud:
+                    currMove = moveset[4 + ((posId + BattleControl.Instance.turnCount - 1) % 2)];
+                    break;
+            }
+        }
+
+        BasicOffsetTargetChooser(2, 3);
+    }
+
+    public override IEnumerator DoEvent(BattleHelper.Event eventID)
+    {
+        yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
+    }
+
+
+    public override IEnumerator PostMove()
+    {
+        //also reset here in case something weird happens
+        counterCount = 0;
+        yield return StartCoroutine(base.PostMove());
+    }
+    public override IEnumerator PreReact(Move move, BattleEntity target)
+    {
+        counterCount = 0;
+
+        Effect_ReactionDefend();
+
+        yield return new WaitForSeconds(0.5f);
+    }
+    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
+    {
+        if (BattleControl.Instance.GetCurseLevel() <= 0)
+        {
+            return false;
+        }
+
+        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
+        {
+            bool formChange = true;
+            if ((((lastDamageType & BattleHelper.DamageType.Light) != 0) || ((lastDamageType & BattleHelper.DamageType.Water) != 0) || ((lastDamageType & BattleHelper.DamageType.Air) != 0)))
+            {
+                if (form == CloudJellyForm.Ice)
+                {
+                    formChange = false;
+                }
+            } else
+            {
+                if (form == CloudJellyForm.Cloud)
+                {
+                    formChange = false;
+                }
+            }
+
+            if (!formChange)
+            {
+                return false;
+            }
+
+            counterCount++;
+            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[6]);
+            return true;
+        }
+
+        return false;
+    }
+}
+
+public class BM_CloudJelly_IceSwing : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_IceSwing;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 itpos = Vector3.negativeInfinity;
+            bool backflag = false;
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                itpos = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.back * 0.5f;
+                backflag = true;
+            }
+
+            //Debug.Log(itpos);
+
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right;
+
+            if (backflag)
+            {
+                yield return StartCoroutine(caller.Move(itpos));
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+            else
+            {
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+
+            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Light))
+            {
+                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.Move(caller.homePos));
+    }
+}
+
+public class BM_CloudJelly_FrostFortify : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_FrostFortify;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, 255));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, 255));
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 1, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+        }
+    }
+}
+
+public class BM_CloudJelly_BubbleToss : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_BubbleToss;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
+        {
+            caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+        }
+        else
+        {
+            //Miss
+            caller.InvokeMissEvents(caller.curTarget);
+        }
+    }
+}
+
+public class BM_CloudJelly_BubbleBlast : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_BubbleBlast;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
+            {
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 1, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+        }
+    }
+}
+
+public class BM_CloudJelly_PowerBolt : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_PowerBolt;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
+        {
+            caller.DealDamage(caller.curTarget, 8, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Contact);
+        }
+        else
+        {
+            //Miss
+            caller.InvokeMissEvents(caller.curTarget);
+        }
+    }
+}
+
+public class BM_CloudJelly_PowerCharge : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_PowerCharge;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        caller.HealHealth(4);
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 4, 255));
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 3, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+        }
+        else
+        {
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 2, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+        }
+    }
+}
+
+public class BM_CloudJelly_CounterFormChange : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_CounterFormChange;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
+
+    public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
+    {
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        if (caller is BE_CloudJelly cj)
+        {
+            if (((caller.lastDamageType & BattleHelper.DamageType.Light) != 0) || ((caller.lastDamageType & BattleHelper.DamageType.Water) != 0))
+            {
+                switch (cj.form)
+                {
+                    case BE_CloudJelly.CloudJellyForm.Ice:
+                        cj.SetForm(BE_CloudJelly.CloudJellyForm.Ice);
+                        break;
+                    case BE_CloudJelly.CloudJellyForm.Water:
+                        cj.SetForm(BE_CloudJelly.CloudJellyForm.Ice);
+                        break;
+                    case BE_CloudJelly.CloudJellyForm.Cloud:
+                        cj.SetForm(BE_CloudJelly.CloudJellyForm.Water);
+                        break;
+                }
+            } else
+            {
+                switch (cj.form)
+                {
+                    case BE_CloudJelly.CloudJellyForm.Ice:
+                        cj.SetForm(BE_CloudJelly.CloudJellyForm.Water);
+                        break;
+                    case BE_CloudJelly.CloudJellyForm.Water:
+                        cj.SetForm(BE_CloudJelly.CloudJellyForm.Cloud);
+                        break;
+                    case BE_CloudJelly.CloudJellyForm.Cloud:
+                        cj.SetForm(BE_CloudJelly.CloudJellyForm.Cloud);
+                        break;
+                }
+            }
+        }
+    }
+}
+
+public class BE_CrystalCrab : BattleEntity
+{
+    int counterCount;
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_CrystalCrab_TripleClaw>(), gameObject.AddComponent<BM_CrystalCrab_DarkClaw>(), gameObject.AddComponent<BM_CrystalCrab_Hard_CounterClearClaw>() };
+
+        base.Initialize();
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        //also reset here in case something weird happens
+        counterCount = 0;
+
+        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+        BasicTargetChooser();
+    }
+
+
+    public override IEnumerator PostMove()
+    {
+        //also reset here in case something weird happens
+        counterCount = 0;
+        yield return StartCoroutine(base.PostMove());
+    }
+
+    public override IEnumerator PreReact(Move move, BattleEntity target)
+    {
+        counterCount = 0;
+
+        Effect_ReactionCounter();
+
+        yield return new WaitForSeconds(0.5f);
+    }
+    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
+    {
+        if (BattleControl.Instance.GetCurseLevel() <= 0)
+        {
+            return false;
+        }
+
+        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
+        {
+            counterCount++;
+            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
+            return true;
+        }
+
+        return false;
+    }
+}
+
+public class BM_CrystalCrab_TripleClaw : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CrystalCrab_TripleClaw;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 itpos = Vector3.negativeInfinity;
+            bool backflag = false;
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                itpos = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.back * 0.5f;
+                backflag = true;
+            }
+
+            //Debug.Log(itpos);
+
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right;
+
+            if (backflag)
+            {
+                yield return StartCoroutine(caller.Move(itpos));
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+            else
+            {
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+
+            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.Move(caller.homePos));
+    }
+}
+
+public class BM_CrystalCrab_DarkClaw : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CrystalCrab_DarkClaw;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Dark))
+            {
+                bool hasStatus = t.HasStatus();
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Contact);
+                if (!hasStatus)
+                {
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Sleep, 1, 3));
+                }
+                caller.InflictEffect(t, new Effect(Effect.EffectType.AttackDown, 1, 3));
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+    }
+}
+
+public class BM_CrystalCrab_Hard_CounterClearClaw : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CrystalCrab_Hard_CounterClearClaw;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity causer, int level = 1)
+    {
+        caller.curTarget = causer;
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 itpos = Vector3.negativeInfinity;
+            bool backflag = false;
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                itpos = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.back * 0.5f;
+                backflag = true;
+            }
+
+            //Debug.Log(itpos);
+
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right;
+
+            if (backflag)
+            {
+                yield return StartCoroutine(caller.Move(itpos));
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+            else
+            {
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+
+            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                caller.curTarget.CureCleanseableEffects(false);
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.Move(caller.homePos));
+    }
+}
+
+public class BE_CrystalSlug : BattleEntity
+{
+    int counterCount;
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_CrystalSlug_Slap>(), gameObject.AddComponent<BM_CrystalSlug_ChillingStare>(), gameObject.AddComponent<BM_Shared_Hard_CounterShield>() };
+
+        base.Initialize();
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        //also reset here in case something weird happens
+        counterCount = 0;
+
+        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+        BasicTargetChooser();
+    }
+
+
+    public override IEnumerator PostMove()
+    {
+        //also reset here in case something weird happens
+        counterCount = 0;
+        yield return StartCoroutine(base.PostMove());
+    }
+
+    public override IEnumerator PreReact(Move move, BattleEntity target)
+    {
+        counterCount = 0;
+
+        Effect_ReactionCounter();
+
+        yield return new WaitForSeconds(0.5f);
+    }
+    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
+    {
+        if (BattleControl.Instance.GetCurseLevel() <= 0)
+        {
+            return false;
+        }
+
+        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
+        {
+            counterCount++;
+            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
+            return true;
+        }
+
+        return false;
+    }
+}
+
+public class BM_CrystalSlug_Slap : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CrystalSlug_Slap;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 itpos = Vector3.negativeInfinity;
+            bool backflag = false;
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                itpos = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.back * 0.5f;
+                backflag = true;
+            }
+
+            //Debug.Log(itpos);
+
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right;
+
+            if (backflag)
+            {
+                yield return StartCoroutine(caller.Move(itpos));
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+            else
+            {
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+
+            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.Move(caller.homePos));
+    }
+}
+
+public class BM_CrystalSlug_ChillingStare : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CrystalSlug_ChillingStare;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
+            {
+                bool hasStatus = t.HasStatus();
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+                if (!hasStatus)
+                {
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Freeze, 1, 2));
+                }
+                caller.InflictEffect(t, new Effect(Effect.EffectType.DefenseDown, 1, 3));
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+    }
+}
+
+public class BE_AuroraWing : BattleEntity
+{
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_Aurorawing_RubyDust>(), gameObject.AddComponent<BM_Aurorawing_SapphireDust>(), gameObject.AddComponent<BM_Aurorawing_EmeraldDust>() };
+
+        base.Initialize();
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        if (moveset.Count == 0)
+        {
+            currMove = null;
+        }
+        else
+        {
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+        }
+
+        BasicTargetChooser();
+    }
+
+    public override IEnumerator DoEvent(BattleHelper.Event eventID)
+    {
+        yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
+    }
+}
+
+public class BM_Aurorawing_RubyDust : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.AuroraWing_RubyDust;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
+            {
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+
+        //ally boost effect
+        List<BattleEntity> allyTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
+        foreach (BattleEntity a in allyTargets)
+        {
+            caller.InflictEffect(a, new Effect(Effect.EffectType.AttackUp, 2, 3));
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                caller.InflictEffect(a, new Effect(Effect.EffectType.Focus, 2, 255));
+            }
+        }
+    }
+}
+
+public class BM_Aurorawing_SapphireDust : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.AuroraWing_SapphireDust;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
+            {
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+
+        //ally boost effect
+        List<BattleEntity> allyTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
+        foreach (BattleEntity a in allyTargets)
+        {
+            caller.InflictEffect(a, new Effect(Effect.EffectType.DefenseUp, 2, 3));
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                caller.InflictEffect(a, new Effect(Effect.EffectType.Absorb, 2, 255));
+            }
+        }
+    }
+}
+
+public class BM_Aurorawing_EmeraldDust : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.AuroraWing_EmeraldDust;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Earth))
+            {
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+
+        //ally boost effect
+        List<BattleEntity> allyTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
+        foreach (BattleEntity a in allyTargets)
+        {
+            a.HealHealth(5);
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                caller.InflictEffect(a, new Effect(Effect.EffectType.Immunity, 1, 3));
+            }
+        }
+    }
+}
