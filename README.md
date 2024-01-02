@@ -43,5 +43,7 @@ Note: You can look in the Input Manager for what keyboard inputs are used for ce
 	- 10 maps corresponding to different areas (with mostly placeholder level materials)
 	- Each of these maps has enemies with the logic for enemies of the area (though no graphics)
 	- Main map (the large green plane with stuff on it) has a lot of shader tests in it. (It is somewhat bad for GPUs?)
+- Text System
+  	- The textbox system is quite robust, with many different tags with different effects (See DialogueText.cs for the enum, use Analyze to find the code for the tags for more information on how they work than the comments provide)
 
 Use the ~ key to open the cheat menu in the overworld, you can type and press enter to execute a cheat or escape to close the menu. Look at CheatMenu.cs for more information on how the cheat menu works. Look at the cheat flags in MainManager.cs to see what all of them do.
