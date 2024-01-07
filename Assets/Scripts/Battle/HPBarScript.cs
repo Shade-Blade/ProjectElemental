@@ -48,6 +48,27 @@ public class HPBarScript : MonoBehaviour
 
         Setup(b.hp, b.maxHP, defense);
         entity = b;
+
+        if (b.GetEntityProperty(BattleHelper.EntityProperties.HideHP))
+        {
+            Setup(1, 1, defense);
+            Color a = BattleControl.Instance.GetHPBarColors()[0];
+            Color bc = BattleControl.Instance.GetHPBarColors()[3];
+            Color newColor = new Color((a.r + bc.r)/2, (a.g + bc.g) / 2, (a.b + bc.b) / 2, 1);
+            fullbarA.color = newColor;
+            fullbarB.color = newColor;
+            fullbarA.transform.localScale = Vector3.up * HP_LIGHTER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * 1;
+            fullbarB.transform.localScale = Vector3.up * HP_DARKER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * 1;
+            if (hpText.color == Color.black)
+            {
+                //Very hacky fix
+                hpText.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">?</font>";
+            }
+            else
+            {
+                hpText.text = "?";
+            }
+        }
     }
     public void Setup(int hp, int maxhp, int def = int.MinValue)
     {
@@ -129,131 +150,190 @@ public class HPBarScript : MonoBehaviour
             Destroy(this);
         } else
         {
-            //Move the proportion along
-            realproportion = (entity.hp / (float)entity.maxHP);
-            if (float.IsNaN(realproportion))
+            if (entity.GetEntityProperty(BattleHelper.EntityProperties.HideHP))
             {
-                realproportion = 0;
-            }
-            if (realproportion < 0)
-            {
-                realproportion = 0;
-            }
-            if (realproportion > 1)
-            {
-                realproportion = 1;
-            }
-            
-            float maxDiff = HP_SCROLL_SPEED * Time.deltaTime;
-            
-            //snap proportion if target is within (proportion - max diff) and (proportion + max diff)
-            if (realproportion > proportion - maxDiff && realproportion < proportion + maxDiff)
-            {
-                if (realproportion != proportion)
+                Color a = BattleControl.Instance.GetHPBarColors()[0];
+                Color bc = BattleControl.Instance.GetHPBarColors()[3];
+                Color newColor = new Color((a.r + bc.r) / 2, (a.g + bc.g) / 2, (a.b + bc.b) / 2, 1);
+                fullbarA.color = newColor;
+                fullbarB.color = newColor;
+                fullbarA.transform.localScale = Vector3.up * HP_LIGHTER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * 1;
+                fullbarB.transform.localScale = Vector3.up * HP_DARKER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * 1;
+                if (hpText.color == Color.black)
                 {
-                    bufferTimer = BUFFER_TIME;
+                    //Very hacky fix
+                    hpText.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">?</font>";
                 }
-                proportion = realproportion;
+                else
+                {
+                    hpText.text = "?";
+                }
+
+                int def = int.MinValue;
+
+                //presume that you can't equip DefenseSight without passing through Setup
+                //This is a safe assumption
+                if (lastDef != int.MinValue)
+                {
+                    def = entity.GetDefense();
+                }
+
+                if (lastDef != def)
+                {
+                    if (def != int.MinValue)
+                    {
+                        if (def > DefenseTableEntry.IMMUNITY_CONSTANT)
+                        {
+                            defText.text = "A";
+                        }
+                        else if (def == DefenseTableEntry.IMMUNITY_CONSTANT)
+                        {
+                            defText.text = "X";
+                        }
+                        else
+                        {
+                            defText.text = "" + def;
+                        }
+                    }
+                    else
+                    {
+                        defText.text = "";
+                    }
+                    lastDef = def;
+                }
+
+                bufferBar.transform.localScale = Vector3.up * HP_LIGHTER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * 0;
             } else
             {
-                //otherwise move it along
-                bufferTimer = BUFFER_TIME;
-                if (realproportion < proportion - maxDiff)
+                //Move the proportion along
+                realproportion = (entity.hp / (float)entity.maxHP);
+                if (float.IsNaN(realproportion))
                 {
-                    proportion -= maxDiff;
-                } else
-                {
-                    proportion += maxDiff;
+                    realproportion = 0;
                 }
-            }
-
-            float maxDiffB = BUFFER_SCROLL_SPEED * Time.deltaTime;
-
-            if (bufferTimer > 0)
-            {
-                if (!entity.inCombo)
+                if (realproportion < 0)
                 {
-                    bufferTimer -= Time.deltaTime;
+                    realproportion = 0;
                 }
-            } else
-            {
-                bufferTimer = 0;
-                //Buffer can move with same rules as normal hp bar
+                if (realproportion > 1)
+                {
+                    realproportion = 1;
+                }
+
+                float maxDiff = HP_SCROLL_SPEED * Time.deltaTime;
+
                 //snap proportion if target is within (proportion - max diff) and (proportion + max diff)
-                if (realproportion > bufferproportion - maxDiffB && realproportion < bufferproportion + maxDiffB)
+                if (realproportion > proportion - maxDiff && realproportion < proportion + maxDiff)
                 {
-                    bufferproportion = realproportion;
+                    if (realproportion != proportion)
+                    {
+                        bufferTimer = BUFFER_TIME;
+                    }
+                    proportion = realproportion;
                 }
                 else
                 {
                     //otherwise move it along
-                    if (realproportion < bufferproportion - maxDiffB)
+                    bufferTimer = BUFFER_TIME;
+                    if (realproportion < proportion - maxDiff)
                     {
-                        bufferproportion -= maxDiffB;
+                        proportion -= maxDiff;
                     }
                     else
                     {
-                        bufferproportion += maxDiffB;
+                        proportion += maxDiff;
                     }
                 }
-            }
 
-            fullbarA.transform.localScale = Vector3.up * HP_LIGHTER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * proportion;
-            fullbarA.transform.localPosition = Vector3.up * HP_UP_OFFSET + Vector3.right * HP_BAR_WIDTH * (1 - proportion) * (-1 / 2.0f);
-            fullbarB.transform.localScale = Vector3.up * HP_DARKER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * proportion;
-            fullbarB.transform.localPosition = Vector3.right * HP_BAR_WIDTH * (1 - proportion) * (-1 / 2.0f);
+                float maxDiffB = BUFFER_SCROLL_SPEED * Time.deltaTime;
 
-            float bufferCenter = (bufferproportion + proportion) / 2;
-            float bufferWidth = Mathf.Abs(bufferproportion - proportion);
-
-            bufferBar.transform.localScale = Vector3.up * HP_LIGHTER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * bufferWidth;
-            bufferBar.transform.localPosition = Vector3.up * HP_UP_OFFSET + Vector3.right * HP_BAR_WIDTH * (bufferCenter - 0.5f);
-
-            if (lastHP != entity.hp)
-            {
-                if (hpText.color == Color.black)
+                if (bufferTimer > 0)
                 {
-                    //Very hacky fix
-                    hpText.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">" + entity.hp + "</font>";
-                }
-                else
-                {
-                    hpText.text = "" + entity.hp;
-                }
-                lastHP = entity.hp;
-            }
-
-            int def = int.MinValue;
-
-            //presume that you can't equip DefenseSight without passing through Setup
-            //This is a safe assumption
-            if (lastDef != int.MinValue)
-            {
-                def = entity.GetDefense();
-            }
-
-            if (lastDef != def)
-            {
-                if (def != int.MinValue)
-                {
-                    if (def > DefenseTableEntry.IMMUNITY_CONSTANT)
+                    if (!entity.inCombo)
                     {
-                        defText.text = "A";
-                    }
-                    else if (def == DefenseTableEntry.IMMUNITY_CONSTANT)
-                    {
-                        defText.text = "X";
-                    }
-                    else
-                    {
-                        defText.text = "" + def;
+                        bufferTimer -= Time.deltaTime;
                     }
                 }
                 else
                 {
-                    defText.text = "";
+                    bufferTimer = 0;
+                    //Buffer can move with same rules as normal hp bar
+                    //snap proportion if target is within (proportion - max diff) and (proportion + max diff)
+                    if (realproportion > bufferproportion - maxDiffB && realproportion < bufferproportion + maxDiffB)
+                    {
+                        bufferproportion = realproportion;
+                    }
+                    else
+                    {
+                        //otherwise move it along
+                        if (realproportion < bufferproportion - maxDiffB)
+                        {
+                            bufferproportion -= maxDiffB;
+                        }
+                        else
+                        {
+                            bufferproportion += maxDiffB;
+                        }
+                    }
                 }
-                lastDef = def;
+
+                fullbarA.transform.localScale = Vector3.up * HP_LIGHTER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * proportion;
+                fullbarA.transform.localPosition = Vector3.up * HP_UP_OFFSET + Vector3.right * HP_BAR_WIDTH * (1 - proportion) * (-1 / 2.0f);
+                fullbarB.transform.localScale = Vector3.up * HP_DARKER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * proportion;
+                fullbarB.transform.localPosition = Vector3.right * HP_BAR_WIDTH * (1 - proportion) * (-1 / 2.0f);
+
+                float bufferCenter = (bufferproportion + proportion) / 2;
+                float bufferWidth = Mathf.Abs(bufferproportion - proportion);
+
+                bufferBar.transform.localScale = Vector3.up * HP_LIGHTER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * bufferWidth;
+                bufferBar.transform.localPosition = Vector3.up * HP_UP_OFFSET + Vector3.right * HP_BAR_WIDTH * (bufferCenter - 0.5f);
+
+                if (lastHP != entity.hp)
+                {
+                    if (hpText.color == Color.black)
+                    {
+                        //Very hacky fix
+                        hpText.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">" + entity.hp + "</font>";
+                    }
+                    else
+                    {
+                        hpText.text = "" + entity.hp;
+                    }
+                    lastHP = entity.hp;
+                }
+
+                int def = int.MinValue;
+
+                //presume that you can't equip DefenseSight without passing through Setup
+                //This is a safe assumption
+                if (lastDef != int.MinValue)
+                {
+                    def = entity.GetDefense();
+                }
+
+                if (lastDef != def)
+                {
+                    if (def != int.MinValue)
+                    {
+                        if (def > DefenseTableEntry.IMMUNITY_CONSTANT)
+                        {
+                            defText.text = "A";
+                        }
+                        else if (def == DefenseTableEntry.IMMUNITY_CONSTANT)
+                        {
+                            defText.text = "X";
+                        }
+                        else
+                        {
+                            defText.text = "" + def;
+                        }
+                    }
+                    else
+                    {
+                        defText.text = "";
+                    }
+                    lastDef = def;
+                }
             }
         }
     }

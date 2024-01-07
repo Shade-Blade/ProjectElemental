@@ -588,11 +588,15 @@ public class BattleControl : MonoBehaviour
     public GameObject hitWater;
     public GameObject hitAir;
     public GameObject hitEarth;
+    public GameObject hitPrismatic;
+    public GameObject hitVoid;
     public GameObject hitLightTriple;
     public GameObject hitDarkTriple;
     public GameObject hitWaterTriple;
     public GameObject hitAirTriple;
     public GameObject hitEarthTriple;
+    public GameObject hitPrismaticTriple;
+    public GameObject hitVoidTriple;
 
     public GameObject effectBuff;
     public GameObject effectDebuff;
@@ -609,6 +613,7 @@ public class BattleControl : MonoBehaviour
     //Menu assets (used by menu scripts)
     public GameObject nameBoxBase;
     public GameObject popupBoxBase;
+    public GameObject movePopupBoxBase;
     public GameObject menuBase;
     public GameObject menuEntryBase;
     public GameObject descriptionBoxBase;
@@ -641,6 +646,8 @@ public class BattleControl : MonoBehaviour
     //public BattleAction switchCharacter = null;
     public BattleAction badgeSwap = null;
     public BattleAction ribbonSwap = null;
+
+    public BattleMoveNamePopupScript movePopup;
 
     //some important constants (make into data files later?)
     //(Gets initialized in init)
@@ -1960,11 +1967,15 @@ public class BattleControl : MonoBehaviour
         hitWater = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Splash");
         hitAir = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Spark");
         hitEarth = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Leaf");
+        hitPrismatic = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Prismatic");
+        hitVoid = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Void");
         hitLightTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_ShineTriple");
         hitDarkTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_DarkTriple");
         hitWaterTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_SplashTriple");
         hitAirTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_SparkTriple");
         hitEarthTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_LeafTriple");
+        hitPrismaticTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_PrismaticTriple");
+        hitVoidTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_VoidTriple");
 
         effectBuff = Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Buff");
         effectDebuff = Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Debuff");
@@ -1980,6 +1991,7 @@ public class BattleControl : MonoBehaviour
 
         nameBoxBase = (GameObject)Resources.Load("Menu/NameBox");
         popupBoxBase = (GameObject)Resources.Load("Menu/BattlePopup");
+        movePopupBoxBase = (GameObject)Resources.Load("Menu/BattleMovePopup");
         menuBase = MainManager.Instance.menuBase; //(GameObject)Resources.Load("Menu/MoveMenuBase");
         menuEntryBase = MainManager.Instance.menuEntryBase; //(GameObject)Resources.Load("Menu/MoveMenuEntry");
         descriptionBoxBase = MainManager.Instance.descriptionBoxBase; //(GameObject)Resources.Load("Menu/DescriptionBox");
@@ -2202,7 +2214,7 @@ public class BattleControl : MonoBehaviour
     } //end battle under conditions
     public IEnumerator EndBattle(BattleHelper.BattleOutcome outcome)
     {
-        //To do later: create exp gain system and level up
+        DestroyMovePopup();
 
         //don't need them anymore
         GlobalItemScript.Instance.ClearItemMoves();
@@ -2807,6 +2819,9 @@ public class BattleControl : MonoBehaviour
         float air = 0;
         float earth = 0;
 
+        float prismatic = 0;
+        float voidd = 0;
+
         int typeCount = 0;
 
         if (((uint)type & (uint)BattleHelper.DamageType.Light) != 0)
@@ -2839,6 +2854,16 @@ public class BattleControl : MonoBehaviour
             typeCount++;
             earth = s;
         }
+        if (((uint)type & (uint)BattleHelper.DamageType.Prismatic) != 0)
+        {
+            typeCount++;
+            prismatic = s;
+        }
+        if (((uint)type & (uint)BattleHelper.DamageType.Void) != 0)
+        {
+            typeCount++;
+            voidd = s;
+        }
 
         if (typeCount > 0)
         {
@@ -2848,6 +2873,8 @@ public class BattleControl : MonoBehaviour
             water /= typeCount;
             air /= typeCount;
             earth /= typeCount;
+            prismatic /= typeCount;
+            voidd /= typeCount;
         } else
         {
             //return;
@@ -2919,6 +2946,9 @@ public class BattleControl : MonoBehaviour
             water = numberTransformClamp(water);
             air = numberTransformClamp(air);
             earth = numberTransformClamp(earth);
+
+            prismatic = numberTransformClamp(prismatic);
+            voidd = numberTransformClamp(voidd);
         }
         else
         {
@@ -2928,6 +2958,9 @@ public class BattleControl : MonoBehaviour
             water = numberTransform(water);
             air = numberTransform(air);
             earth = numberTransform(earth);
+
+            prismatic = numberTransform(prismatic);
+            voidd = numberTransform(voidd);
         }
 
         float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
@@ -2992,6 +3025,14 @@ public class BattleControl : MonoBehaviour
             {
                 EffectSpawn(0.5f, hitEarthTriple, hitEarth);
             }
+            if (((uint)type & (uint)BattleHelper.DamageType.Prismatic) != 0)
+            {
+                EffectSpawn(0.5f, hitPrismaticTriple, hitPrismatic);
+            }
+            if (((uint)type & (uint)BattleHelper.DamageType.Void) != 0)
+            {
+                EffectSpawn(0.5f, hitVoidTriple, hitVoid);
+            }
             return;
         }
         
@@ -3003,6 +3044,10 @@ public class BattleControl : MonoBehaviour
         EffectSpawn(water, hitWaterTriple, hitWater);
         EffectSpawn(air, hitAirTriple, hitAir);
         EffectSpawn(earth, hitEarthTriple, hitEarth);
+
+
+        EffectSpawn(prismatic, hitPrismaticTriple, hitPrismatic);
+        EffectSpawn(voidd, hitVoidTriple, hitVoid);
 
         //fire is a special case
         if (fire > 0)
@@ -3989,9 +4034,12 @@ public class BattleControl : MonoBehaviour
                     }
                 } else
                 {
+                    DisplayMovePopup(reactionMoveList[0].move.GetName());
+                    //this replaces the wait for 0.25 seconds
                     yield return StartCoroutine(reactionMoveList[0].user.PreReact(reactionMoveList[0].move, reactionMoveList[0].target));
                     yield return StartCoroutine(reactionMoveList[0].move.ExecuteOutOfTurn(reactionMoveList[0].user, reactionMoveList[0].target));
                     //yield return StartCoroutine(CheckEndBattle());
+                    DestroyMovePopup();
                     if (reactionMoveList.Count > 1)
                     {
                         yield return new WaitForSeconds(0.5f);
@@ -4059,6 +4107,24 @@ public class BattleControl : MonoBehaviour
         }
 
         return aa;
+    }
+
+    public void DisplayMovePopup(string name)
+    {
+        //Debug.Log("Display " + name);
+        DestroyMovePopup();
+        GameObject go = Instantiate(movePopupBoxBase, MainManager.Instance.Canvas.transform);
+        movePopup = go.GetComponent<BattleMoveNamePopupScript>();
+
+        movePopup.SetText(name, true, true);
+    }
+    public void DestroyMovePopup()
+    {
+        //Debug.Log("Destroy");
+        if (movePopup != null)
+        {
+            Destroy(movePopup.gameObject);
+        }
     }
 
     public void AddBattlePopup(BattleEntity target, Effect se)
@@ -4189,6 +4255,7 @@ public class BattleControl : MonoBehaviour
 
     public void AddReactionMoveEvent(BattleEntity caller, BattleEntity target, Move move, bool ignoreImmobile = false, bool isItem = false)
     {
+        Debug.Log(caller.name + " " + target.name + " " + move.GetName());
         reactionMoveList.Add(new ReactionMoveListEntry(caller, target, move, ignoreImmobile, isItem));
     }
     public void BroadcastEvent(BattleEntity battleEntity, BattleHelper.Event eventID)
@@ -4614,8 +4681,11 @@ public class BattleControl : MonoBehaviour
                 {
                     current.moveExecuting = true;
                     current.moveActive = true;
+                    DisplayMovePopup(current.currMove.GetName());
+                    yield return new WaitForSeconds(0.5f); //note: not in reactions because they have their own standard particle effect
                     StartCoroutine(current.ExecuteMoveCoroutine(current.currMove));
                     yield return new WaitUntil(() => current == null || !current.moveActive);
+                    DestroyMovePopup();
                 }
 
                 //try to use bonus moves

@@ -7,23 +7,19 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ProperSpriteEffect4
-  m_Shader: {fileID: 4800000, guid: af9458d20c3c87e43b5325ed53842310, type: 3}
+  m_Name: VoidObject
+  m_Shader: {fileID: 4800000, guid: f318491d07c381341867fe7816208ad1, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2900
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -45,7 +41,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 6ec8e5e4b051cac469cd295c91114736, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -56,67 +52,60 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _OverlayTex:
-        m_Texture: {fileID: 2800000, guid: 8767261b65e2a0045a7be777f72c785e, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _OverlayTexB:
-        m_Texture: {fileID: 2800000, guid: 265a97ffddd02c64b865ba54178c72fd, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ScreenTex:
+        m_Texture: {fileID: 2800000, guid: feaca8732c2a88c40b435e3d239c711a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - PixelSnap: 0
-    - _BacklightBorder: 3
-    - _BidirCutoff: 0.1
-    - _BidirectionalLight: 0
     - _BumpScale: 1
-    - _ColorMask: 15
-    - _CullMode: 0
-    - _Cutoff: 0.5
+    - _Cutoff: 0.1
     - _DetailNormalMapScale: 1
-    - _DotScale: 0.7
+    - _Distortion: 0.4
     - _DstBlend: 0
-    - _EnableExternalAlpha: 0
-    - _FalloffDot: 0.2
+    - _FresnelExponent: 1
+    - _FresnelPower: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Leak: 0.5
+    - _GlowFresnelPower: 1
+    - _HighEnd: 0.9
+    - _HoleValue: 0
+    - _LowEnd: -5
     - _Metallic: 0
-    - _Midpoint: 0.7
+    - _Midpoint: 0.5
     - _Mode: 0
+    - _NoiseFactor: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _PerPixelScale: 48
+    - _RefractionIndex: 2
     - _SmoothnessTextureChannel: 0
+    - _SpecPower: 10
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _TimeScale: 32
+    - _ThroughPower: 3
+    - _TimeScale: 20
+    - _TimeScaleA: 0.15
+    - _TimeScaleX: 25
+    - _TimeScaleXS: 2
+    - _TimeScaleY: -25
+    - _TimeScaleYS: 2
     - _UVSec: 0
-    - _UseUIAlphaClip: 0
-    - _XOffset: 0
-    - _XOffsetB: 0
+    - _YFactor: -1
     - _ZWrite: 1
     m_Colors:
-    - _BlackColor: {r: 0, g: 0, b: 1, a: 1}
-    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 0.15, b: 0.15, a: 1}
+    - _Emission: {r: 2.790326, g: 0.28663978, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _GrayColor: {r: 0, g: 0, b: 1, a: 1}
-    - _OcclusionColor: {r: 0, g: 0, b: 0, a: 0.2}
-    - _OverlayColor: {r: 1, g: 0, b: 0, a: 0}
-    - _OverlayColorB: {r: 0, g: 1, b: 1, a: 0}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _WhiteColor: {r: 0, g: 0, b: 1, a: 1}
+    - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ScreenColor: {r: 1, g: 0, b: 0, a: 1}
+    - _ScreenColorA: {r: 24.999996, g: 19.726765, b: 15.052353, a: 1}
+    - _ScreenColorB: {r: 5, g: 2.0464475, b: 1.0209423, a: 1}
+    - _ScreenColorC: {r: 2.6701574, g: 0.74116075, b: 0, a: 1}
+    - _SpecColor: {r: 1, g: 1, b: 1, a: 0}
+    - _ThroughColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []

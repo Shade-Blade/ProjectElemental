@@ -20,22 +20,26 @@ public class EffectScript_Damage : MonoBehaviour
 
     private Color[] damageTypeColors = new Color[]
     {
-        new Color(1.0f,1.0f,1.0f),      //Light
+        new Color(0.5f,1.0f,1.0f),      //Light
         new Color(0.0f,0.5f,1.0f),      //Water
         new Color(1.0f,1.0f,0.0f),      //Air
-        new Color(0.0f,0.0f,0.0f),      //Dark
+        new Color(0.2f,0.0f,0.4f),      //Dark
         new Color(1.0f,0.5f,0.0f),      //Fire
         new Color(0.0f,1.0f,0.0f),      //Earth
+        new Color(1.0f,0.0f,1.0f),      //Prismatic
+        new Color(0.5f,0.0f,0.0f),      //Void
     };
 
     private Color[] damageTypeAdvancedColors = new Color[]
     {
-        new Color(0.0f,1.0f,1.0f),      //Light
+        new Color(0.0f,0.9f,0.9f),      //Light
         new Color(0.0f,0.0f,1.0f),      //Water
         new Color(1.0f,1.0f,1.0f),      //Air
         new Color(0.5f,0.0f,1.0f),      //Dark
         new Color(1.0f,0.0f,0.0f),      //Fire
         new Color(0.75f,1.0f,0.0f),     //Earth
+        new Color(0.5f,0.0f,1.0f),      //Prismatic
+        new Color(0.5f,0.4f,0.0f),      //Void
     };
 
     public int minStars = 3;
@@ -146,7 +150,7 @@ public class EffectScript_Damage : MonoBehaviour
                         advancedColorList = new List<Color>();
                     }
 
-                    for (int j = 0; j < 6; j++)
+                    for (int j = 0; j < 8; j++)
                     {
                         if (((int)type & (1 << (j))) != 0)
                         {

@@ -699,6 +699,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int chargedAttackCount = 0;                                              //Number of attacks that used charge (used for charge removal)
     public BattleEntity lastAttacker;                                               //which entity attacked this entity last? (enviro damage is targetless and does not set this) (Note: many counters use this to determine what attacked them)
     public int lastDamageTaken;                                                     //damage from last damage source (not statuses)
+    public int lastDamageTakenInput;                                                //damage taken but before the defense calculation
     public DamageType lastDamageType;
     public bool bufferRemoveCharge = false;                                         //next time you try to remove charge, if this is true, set this to false instead of removing (but also gets reset in postmove phase)
 
@@ -769,7 +770,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return "???";
         }
 
-        string output = "<align,right>Base Max HP: " + bed.maxHP;
+        string output = "";
+        if ((bed.entityProperties & (ulong)BattleHelper.EntityProperties.HideHP) != 0)
+        {
+            output = "<align,right>Base Max HP: <color,red>?</color>";
+        }
+        else
+        {
+            output = "<align,right>Base Max HP: " + bed.maxHP;           
+        }
         output += "<line>Level: " + bed.level + " (+" + bed.bonusXP + ")";
         output += "<line>Coin Bonus: " + MainManager.PrecisionTruncate(bed.moneyMult);
 
@@ -1639,6 +1648,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //This is past the attack and defense calculation (so this is only for special properties)
     public virtual int TakeDamage(int damage, BattleHelper.DamageType type, ulong properties) //default type damage
     {
+        lastDamageTakenInput = damage;
+
         //note that this function is not actually the one that queues the hurt events
         //so there may be some possibilities of desync?
         damageEventsCount++;
@@ -2495,10 +2506,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //canCounterProperties = !canCounterProperties;
 
         //Debug.Log(target.CanCounter() + "" + !IsUncounterable() + "" + canCounterProperties);
+        /*
         if (target.CanReact() && canCounterProperties)
         {
             target.ExecuteCounterBuffered(this);    //add it to reaction queue
         }
+        */
 
         attackThisTurn = true;
         attackHitCount++;
@@ -2588,10 +2601,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         bool canCounterProperties = !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NoCounterProperties);
 
         //Debug.Log(target.CanCounter() + "" + !IsUncounterable() + "" + canCounterProperties);
+        /*
         if (target.CanReact() && canCounterProperties)
         {
             target.ExecuteCounterBuffered(this);    //add it to reaction queue
         }
+        */
 
         attackThisTurn = true;
         attackHitCount++;
@@ -2699,10 +2714,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         bool canCounterProperties = !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NoCounterProperties);
 
         //Debug.Log(target.CanCounter() + "" + !IsUncounterable() + "" + canCounterProperties);
+        /*
         if (target.CanReact() && canCounterProperties)
         {
             target.ExecuteCounterBuffered(this);    //add it to reaction queue
         }
+        */
 
         attackThisTurn = true;
         attackHitCount++;
@@ -2791,10 +2808,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         bool canCounterProperties = !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NoCounterProperties);
 
         //Debug.Log(target.CanCounter() + "" + !IsUncounterable() + "" + canCounterProperties);
+        /*
         if (target.CanReact() && canCounterProperties)
         {
             target.ExecuteCounterBuffered(this);    //add it to reaction queue
         }
+        */
 
         attackThisTurn = true;
         attackHitCount++;
@@ -3975,6 +3994,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public static void SpecialInvokeHurtEvents(BattleEntity target, BattleHelper.DamageType type, ulong properties)
     {
         target.lastDamageType = type;
+        target.lastDamageTaken = 0;
+        target.lastDamageTakenInput = 0;
         target.InvokeHurtEvents(type, properties);
     }
     public virtual void InvokeHurtEvents(BattleHelper.DamageType type, ulong properties)
@@ -4174,7 +4195,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return false;
         }
 
-        if (HasEffect(Effect.EffectType.Ethereal) && !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.PiercesEthereal) && ((type & DamageType.Light) == 0))
+        if (HasEffect(Effect.EffectType.Ethereal) && !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.PiercesEthereal) && ((type & DamageType.PierceEthereal) == 0))
         {
             return false;
         }
@@ -4187,7 +4208,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return false;
         }
 
-        if (HasEffect(Effect.EffectType.Ethereal) && !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.PiercesEthereal) && ((type & DamageType.Light) == 0))
+        if (HasEffect(Effect.EffectType.Ethereal) && !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.PiercesEthereal) && ((type & DamageType.PierceEthereal) == 0))
         {
             return false;
         }
@@ -4361,6 +4382,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (!found)
         {
+            //special cases
+            if (type == DamageType.Prismatic || type == DamageType.Void)
+            {
+                return GetDefense(DamageType.Everything);
+            }
             if (type == BattleHelper.DamageType.Air)
             {
                 return 0;
@@ -6221,10 +6247,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         moveExecuting = false;
         moveActive = false;
     } //note that you can make entities do arbitrary moves due to how its coded
+    /*
     public virtual void ExecuteCounterBuffered(BattleEntity causer) 
     {
-        BattleControl.Instance.AddReactionMoveEvent(this, causer, currMove);
+        //BattleControl.Instance.AddReactionMoveEvent(this, causer, currMove);
     } //adds currmove to reaction queue as a counter
+    */
     public void StartMove()
     {
         if (currMove == null)

@@ -658,6 +658,9 @@ public static class BattleHelper
         Fire =      1 << 4, //Applies a bonus based on damage taken this turn and last turn (target damage taken)
         Earth =     1 << 5, //Applies bonus on enemies that were hit this turn
 
+        Prismatic = 1 << 6, //takes lowest defense of all of them (Air pierces so this inherits that property)
+        Void =      1 << 7, //Same as prismatic but different effect
+
         //don't use these, use the advanced formulas instead (*or just use these for the outcome check)
         Spectral =  Light | Water | Air,    
         Soul =      Light | Earth | Fire,
@@ -668,6 +671,8 @@ public static class BattleHelper
         Quantum = Water | Air | Dark,
         Phlox = Dark | Fire | Earth,
         Plasma = Light | Fire | Air,
+
+        PierceEthereal = Light | Prismatic | Void,
 
         Everything = Light | Dark | Fire | Water | Earth | Air  //Don't
     }
@@ -913,6 +918,8 @@ public static class BattleHelper
         StateRage =     1L << 28,
         CharacterMark = 1L << 29,
         PositionMark =  1L << 30,
+
+        HideHP = 1L << 31,
 
         SuppressMovesetWarning = NoTattle | ScanHideMoves | ScanMovesetMismatch
     }
