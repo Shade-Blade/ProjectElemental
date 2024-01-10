@@ -647,7 +647,7 @@ public class BattleControl : MonoBehaviour
     public BattleAction badgeSwap = null;
     public BattleAction ribbonSwap = null;
 
-    public BattleMoveNamePopupScript movePopup;
+    public NamePopupScript movePopup;
 
     //some important constants (make into data files later?)
     //(Gets initialized in init)
@@ -4114,7 +4114,7 @@ public class BattleControl : MonoBehaviour
         //Debug.Log("Display " + name);
         DestroyMovePopup();
         GameObject go = Instantiate(movePopupBoxBase, MainManager.Instance.Canvas.transform);
-        movePopup = go.GetComponent<BattleMoveNamePopupScript>();
+        movePopup = go.GetComponent<NamePopupScript>();
 
         movePopup.SetText(name, true, true);
     }

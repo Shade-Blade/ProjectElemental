@@ -2101,6 +2101,7 @@ public class MainManager : MonoBehaviour
     //assets and prefabs
     //public Sprite[] damageSprites;
     public GameObject overworldHUD;
+    public NamePopupScript areaNamePopup;
 
     public Sprite defaultSprite;
     public GameObject defaultTextbox;
@@ -3979,6 +3980,26 @@ public class MainManager : MonoBehaviour
         }
     }
 
+
+    public void DisplayAreaPopup(string name)
+    {
+        //Debug.Log("Display " + name);
+        DestroyAreaPopup();
+        GameObject go = Instantiate((GameObject)Resources.Load("Menu/AreaNamePopup"), Canvas.transform);
+        areaNamePopup = go.GetComponent<NamePopupScript>();
+
+        areaNamePopup.SetText(name, true, true);
+    }
+    public void DestroyAreaPopup()
+    {
+        //Debug.Log("Destroy");
+        if (areaNamePopup != null)
+        {
+            Destroy(areaNamePopup.gameObject);
+        }
+    }
+
+
     public void SetHUDTime(float time = HUD_BUTTON_SHOW_TIME)
     {
         hudShowTime = time;
@@ -5098,6 +5119,7 @@ public class MainManager : MonoBehaviour
         BattleControl.SetCameraDefault();
         //Camera.SetManual(new Vector3(0, 2, -6.5f), new Vector3(0, 0, 0));
         BattleControl.StartBattleStatic(bsa); //note that currently, BattleControl takes references from this script directly
+        DestroyAreaPopup();
         yield return new WaitForSeconds(0.7f);
         yield return StartCoroutine(BattleUnfadeToBlack(firstStrikeColor, new Vector2(0.5f, 0.5f)));
     }
@@ -5274,6 +5296,12 @@ public class MainManager : MonoBehaviour
         {
             ResetAreaFlags();
             ResetAreaVars();
+        }
+
+        DestroyAreaPopup();
+        if (wl != nwl)
+        {
+            DisplayAreaPopup(GetAreaName(nwl));
         }
     }
     //note: stuff like loading in from a save file will call LoadMap instead of ChangeMap (because you are starting from a state of having no map active)

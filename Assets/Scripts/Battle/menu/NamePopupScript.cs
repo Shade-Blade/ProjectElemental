@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleMoveNamePopupScript : TextDisplayer
+public class NamePopupScript : TextDisplayer
 {
     public float width;
     public Image baseBox;
 
     Vector3 targetPos;
     public RectTransform rectTransform;
+
+    public float ypos;
+    public float lifetime;
+    private float curlifetime;
 
     public override void Start()
     {
@@ -31,8 +35,8 @@ public class BattleMoveNamePopupScript : TextDisplayer
         Canvas.ForceUpdateCanvases();
         RecalculateBoxSize();
 
-        targetPos = Vector3.up * 70 + Vector3.left * (width / 2);
-        rectTransform.anchoredPosition = Vector3.up * 70 + Vector3.right * width;
+        targetPos = Vector3.up * ypos + Vector3.left * (width / 2);
+        rectTransform.anchoredPosition = Vector3.up * ypos + Vector3.right * width;
 
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
         base.SetTextNoFormat(text);
@@ -46,8 +50,8 @@ public class BattleMoveNamePopupScript : TextDisplayer
         Canvas.ForceUpdateCanvases();
         RecalculateBoxSize();
 
-        targetPos = Vector3.up * 70 + Vector3.left * (width / 2);
-        rectTransform.anchoredPosition = Vector3.up * 70 + Vector3.right * width;
+        targetPos = Vector3.up * ypos + Vector3.left * (width / 2);
+        rectTransform.anchoredPosition = Vector3.up * ypos + Vector3.right * width;
 
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
         base.SetText(text, vars, complete, forceOpaque);
@@ -61,8 +65,8 @@ public class BattleMoveNamePopupScript : TextDisplayer
         Canvas.ForceUpdateCanvases();
         RecalculateBoxSize();
 
-        targetPos = Vector3.up * 70 + Vector3.left * (width / 2);
-        rectTransform.anchoredPosition = Vector3.up * 70 + Vector3.right * width;
+        targetPos = Vector3.up * ypos + Vector3.left * (width / 2);
+        rectTransform.anchoredPosition = Vector3.up * ypos + Vector3.right * width;
 
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
         base.SetText(text, complete, forceOpaque);
@@ -82,6 +86,16 @@ public class BattleMoveNamePopupScript : TextDisplayer
 
     public void Update()
     {
+        if (curlifetime > lifetime && lifetime != 0)
+        {
+            targetPos = Vector3.up * ypos + Vector3.right * width;
+            if ((Vector3)rectTransform.anchoredPosition == targetPos)
+            {
+                Destroy(gameObject);
+            }
+        }
+        curlifetime += Time.deltaTime;
+
         rectTransform.anchoredPosition = MainManager.EasingQuadraticTime(rectTransform.anchoredPosition, targetPos, 7000);
     }
 }

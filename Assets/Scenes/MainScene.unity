@@ -968,6 +968,7 @@ MonoBehaviour:
   worldPlayer: {fileID: 0}
   worldspaceYaw: 0
   overworldHUD: {fileID: 0}
+  areaNamePopup: {fileID: 0}
   defaultSprite: {fileID: 7482667652216324306, guid: 8f9a297526949ec4086ad801649dd6c2,
     type: 3}
   defaultTextbox: {fileID: 0}
