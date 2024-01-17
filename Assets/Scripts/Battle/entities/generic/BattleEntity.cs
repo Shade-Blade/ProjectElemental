@@ -5242,7 +5242,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //...but the tokens / static effects just use additive stacking
 
         //store them as pairs (a-b, c-d...)
-        Effect.EffectType[] conflictingStatuses =
+        Effect.EffectType[] cs =
         {
             Effect.EffectType.AttackBoost,
             Effect.EffectType.AttackReduction,
@@ -5321,19 +5321,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         */
 
         //better way? make a list of indices of the statuses above for future reference to avoid loop retreading
-        int[] conflictingStatusIndices = new int[conflictingStatuses.Length];
-        for (int i = 0; i < conflictingStatusIndices.Length; i++)
+        int[] csi = new int[cs.Length];
+        for (int i = 0; i < csi.Length; i++)
         {
-            conflictingStatusIndices[i] = -1;
+            csi[i] = -1;
         }
         for (int i = 0; i < effects.Count; i++)
         {
             //Debug.Log(effects[i]);
-            for (int j = 0; j < conflictingStatuses.Length; j++)
+            for (int j = 0; j < cs.Length; j++)
             {
-                if (effects[i].effect == conflictingStatuses[j])
+                if (effects[i].effect == cs[j])
                 {
-                    conflictingStatusIndices[j] = i;
+                    csi[j] = i;
                 }
             }
         }
@@ -5342,39 +5342,39 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         int temppowerB = 0;
         int tempduration = 0;
         //reset the weaker status to 0,0 so I can get rid of it later
-        for (int i = 0; i < conflictingStatuses.Length; i += 2)
+        for (int i = 0; i < cs.Length; i += 2)
         {
-            if (conflictingStatusIndices[i] != -1 && conflictingStatusIndices[i + 1] != -1)
+            if (csi[i] != -1 && csi[i + 1] != -1)
             {
-                if (effects[conflictingStatusIndices[i]].duration != 255 && effects[conflictingStatusIndices[i]].duration != 255)
+                if (effects[csi[i]].duration != 255 && effects[csi[i + 1]].duration != 255)
                 {
-                    temppowerA = effects[conflictingStatusIndices[i]].duration * effects[conflictingStatusIndices[i]].potency;
-                    temppowerB = effects[conflictingStatusIndices[i + 1]].duration * effects[conflictingStatusIndices[i + 1]].potency;
+                    temppowerA = effects[csi[i]].duration * effects[csi[i]].potency;
+                    temppowerB = effects[csi[i + 1]].duration * effects[csi[i + 1]].potency;
                     if (temppowerA > temppowerB)
                     {
                         //First status wins out
                         //Duration = higher of the 2
                         //Potency = ((TemppowerA - TemppowerB) / dur)
                         //Potency rounds down but gets floored at 1
-                        tempduration = effects[conflictingStatusIndices[i]].duration;
-                        if (effects[conflictingStatusIndices[i + 1]].duration > tempduration)
+                        tempduration = effects[csi[i]].duration;
+                        if (effects[csi[i + 1]].duration > tempduration)
                         {
-                            tempduration = effects[conflictingStatusIndices[i + 1]].duration;
+                            tempduration = effects[csi[i + 1]].duration;
                         }
                         if (tempduration > 254)
                         {
                             tempduration = 254;
                         }
 
-                        effects[conflictingStatusIndices[i]].duration = (byte)tempduration;
-                        effects[conflictingStatusIndices[i]].potency = (byte)((temppowerA - temppowerB) / tempduration);
-                        if (effects[conflictingStatusIndices[i]].potency < 1)
+                        effects[csi[i]].duration = (byte)tempduration;
+                        effects[csi[i]].potency = (byte)((temppowerA - temppowerB) / tempduration);
+                        if (effects[csi[i]].potency < 1)
                         {
-                            effects[conflictingStatusIndices[i]].potency = 1;
+                            effects[csi[i]].potency = 1;
                         }
 
-                        effects[conflictingStatusIndices[i + 1]].duration = 0;
-                        effects[conflictingStatusIndices[i + 1]].potency = 0;
+                        effects[csi[i + 1]].duration = 0;
+                        effects[csi[i + 1]].potency = 0;
                     }
                     else if (temppowerB > temppowerA)
                     {
@@ -5382,36 +5382,37 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                         //Duration = higher of the 2
                         //Potency = ((TemppowerB - TemppowerA) / dur)
                         //Potency rounds down but gets floored at 1
-                        tempduration = effects[conflictingStatusIndices[i]].duration;
-                        if (effects[conflictingStatusIndices[i + 1]].duration > tempduration)
+                        tempduration = effects[csi[i]].duration;
+                        if (effects[csi[i + 1]].duration > tempduration)
                         {
-                            tempduration = effects[conflictingStatusIndices[i + 1]].duration;
+                            tempduration = effects[csi[i + 1]].duration;
                         }
                         if (tempduration > 254)
                         {
                             tempduration = 254;
                         }
 
-                        effects[conflictingStatusIndices[i + 1]].duration = (byte)tempduration;
-                        effects[conflictingStatusIndices[i + 1]].potency = (byte)((temppowerB - temppowerA) / tempduration);
-                        if (effects[conflictingStatusIndices[i + 1]].potency < 1)
+                        effects[csi[i + 1]].duration = (byte)tempduration;
+                        effects[csi[i + 1]].potency = (byte)((temppowerB - temppowerA) / tempduration);
+                        if (effects[csi[i + 1]].potency < 1)
                         {
-                            effects[conflictingStatusIndices[i + 1]].potency = 1;
+                            effects[csi[i + 1]].potency = 1;
                         }
 
-                        effects[conflictingStatusIndices[i]].duration = 0;
-                        effects[conflictingStatusIndices[i]].potency = 0;
+                        effects[csi[i]].duration = 0;
+                        effects[csi[i]].potency = 0;
                     }
                     else
                     {
                         //Perfectly cancels out both of them
-                        effects[conflictingStatusIndices[i]].duration = 0;
-                        effects[conflictingStatusIndices[i]].potency = 0;
-                        effects[conflictingStatusIndices[i + 1]].duration = 0;
-                        effects[conflictingStatusIndices[i + 1]].potency = 0;
+                        effects[csi[i]].duration = 0;
+                        effects[csi[i]].potency = 0;
+                        effects[csi[i + 1]].duration = 0;
+                        effects[csi[i + 1]].potency = 0;
                     }
-                } else if (effects[conflictingStatusIndices[i]].duration != 255 || effects[conflictingStatusIndices[i]].duration != 255)
+                } else if (effects[csi[i]].duration != 255 || effects[csi[i + 1]].duration != 255)
                 {
+                    /*
                     //The infinite duration one wins
                     //By convention this really should never happen though
                     if (effects[conflictingStatusIndices[i]].duration == 255)
@@ -5424,27 +5425,46 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                         effects[conflictingStatusIndices[i]].duration = 0;
                         effects[conflictingStatusIndices[i]].potency = 0;
                     }
+                    */
+
+                    //New behavior: Subtract potency only (use the same logic as the thing below)
+                    if (effects[csi[i]].potency > effects[csi[i + 1]].potency)
+                    {
+                        effects[csi[i]].potency -= effects[csi[i + 1]].potency;
+                        effects[csi[i + 1]].potency = 0;
+                    }
+                    else if (effects[csi[i]].potency < effects[csi[i + 1]].potency)
+                    {
+                        effects[csi[i + 1]].potency -= effects[csi[i]].potency;
+                        effects[csi[i]].potency = 0;
+                    }
+                    else
+                    {
+                        //Perfectly cancels out both of them
+                        effects[csi[i]].potency = 0;
+                        effects[csi[i + 1]].potency = 0;
+                    }
                 }
                 else
                 {
                     //2 infinite duration ones
                     //Use additive stacking
                     //The KeepDurAddPot stacking would give the same result but eh
-                    if (effects[conflictingStatusIndices[i]].potency > effects[conflictingStatusIndices[i + 1]].potency)
+                    if (effects[csi[i]].potency > effects[csi[i + 1]].potency)
                     {
-                        effects[conflictingStatusIndices[i]].potency -= effects[conflictingStatusIndices[i + 1]].potency;
-                        effects[conflictingStatusIndices[i + 1]].potency = 0;
+                        effects[csi[i]].potency -= effects[csi[i + 1]].potency;
+                        effects[csi[i + 1]].potency = 0;
                     }
-                    else if (effects[conflictingStatusIndices[i]].potency < effects[conflictingStatusIndices[i + 1]].potency)
+                    else if (effects[csi[i]].potency < effects[csi[i + 1]].potency)
                     {
-                        effects[conflictingStatusIndices[i + 1]].potency -= effects[conflictingStatusIndices[i]].potency;
-                        effects[conflictingStatusIndices[i]].potency = 0;
+                        effects[csi[i + 1]].potency -= effects[csi[i]].potency;
+                        effects[csi[i]].potency = 0;
                     }
                     else
                     {
                         //Perfectly cancels out both of them
-                        effects[conflictingStatusIndices[i]].potency = 0;
-                        effects[conflictingStatusIndices[i + 1]].potency = 0;
+                        effects[csi[i]].potency = 0;
+                        effects[csi[i + 1]].potency = 0;
                     }
                 }
 

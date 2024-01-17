@@ -73,6 +73,12 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
         return uo;
     }
 
+    public void UpdateCharacterSection(BattleHelper.EntityID eid)
+    {
+        //inventory.selectedPlayer = eid;
+        characterStats.ApplyUpdate(eid);
+    }
+
     public override Pause_SectionShared GetSubsection(object state)
     {
         ApplyUpdate(state);

@@ -35,8 +35,12 @@ public class MapExitScript : MapExit
     bool active = false;
     bool coroutineActive = false;
 
-    public void OnDrawGizmos()
+    public virtual void OnDrawGizmos()
     {
+        if (exitPoint == null)
+        {
+            return;
+        }
         Gizmos.color = new Color(0f, 1f, 1f, 0.5f);
         Gizmos.DrawSphere(exitPoint.position, 0.3f);
         Vector3 facing = exitPoint.rotation * Vector3.right;
@@ -216,6 +220,8 @@ public class MapExitScript : MapExit
             wp.scriptedInput = scriptedInput;
             yield return null;
         }
+
+        MainManager.Instance.mapScript.SetDefaultCamera();
 
         yield return null;
     }

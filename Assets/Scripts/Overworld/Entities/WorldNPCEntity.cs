@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.WSA;
 
 //Used for npcs, enemies
-public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger
+public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteractable
 {
     public EncounterData encounter;
 

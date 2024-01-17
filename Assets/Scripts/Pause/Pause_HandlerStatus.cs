@@ -130,19 +130,19 @@ public class Pause_HandlerStatus : Pause_HandlerShared
     {
         if (mn == null)
         {
-            Debug.Log("Move in null dir " + inputDir);
+            //Debug.Log("Move in null dir " + inputDir);
             return;
         }
 
         selectedNode = mn;
-        Debug.Log("Move to " + mn.menuNodeType);
+        //Debug.Log("Move to " + mn.menuNodeType);
         section.ApplyUpdate(mn);
     }
 
     void Select()
     {
         //this is a dead end (no submenus)
-        Debug.Log(selectedNode.menuNodeType);
+        //Debug.Log(selectedNode.menuNodeType);
     }
 
     public override void Init()

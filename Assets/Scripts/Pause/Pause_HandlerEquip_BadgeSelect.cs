@@ -69,6 +69,7 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
 
     public void SendUpdate(int i)
     {
+        //bm_parent.SetEntityID(selectedPlayer);
         if (section != null)
         {
             section.ApplyUpdate(new UpdateObject(index, selectedPlayer, index));
@@ -77,6 +78,7 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
     }
     public override void SendUpdate()
     {
+        bm_parent.SetEntityID(selectedPlayer);
         if (section != null)
         {
             section.ApplyUpdate(new UpdateObject(index, selectedPlayer));
@@ -288,7 +290,11 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
 
                 selectedPlayer = sortedParty[indexB].entityID;
                 SendUpdate();
-                Debug.Log("Player " + selectedPlayer);
+                if (subpage == BadgeSubpage.SingleEquipped)
+                {
+                    badgeList = ((Pause_HandlerEquip)parent).RebuildListAndGet();
+                }
+                //Debug.Log("Player " + selectedPlayer);
             }
         }
     }

@@ -10,6 +10,11 @@ public class InteractTrigger : MonoBehaviour
 
     public bool active = false;
 
+    //Unfortunately due to technical limitations this doesn't show up in inspector
+    //So a workaround is to just make special interact triggers for different use cases I guess
+    //  (although they will usually just bypass the interactable field)
+    public IInteractable interactable;
+
     public virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
@@ -85,8 +90,14 @@ public class InteractTrigger : MonoBehaviour
 
     public virtual void Interact()
     {
-        Debug.Log("Interact");
-        StartCoroutine(TestCutscene());
+        if (interactable != null)
+        {
+            interactable.Interact();
+        } else
+        {
+            Debug.Log("Interact");
+            StartCoroutine(TestCutscene());
+        }
     }
 
     public IEnumerator TestCutscene()
@@ -111,4 +122,9 @@ public class InteractTrigger : MonoBehaviour
 
         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.Instance.testTextFile, 6, null, vars));
     }
+}
+
+public interface IInteractable
+{
+    public void Interact();
 }

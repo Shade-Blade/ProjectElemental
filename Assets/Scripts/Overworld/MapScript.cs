@@ -52,6 +52,8 @@ public class MapScript : MonoBehaviour
     [HideInInspector]
     public bool exitsActive = false;
 
+    public float worldspaceYaw;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -190,6 +192,19 @@ public class MapScript : MonoBehaviour
     {
         halted = false;
         gameObject.SetActive(true);
+    }
+
+    public virtual void SetDefaultCamera()
+    {
+        WorldCameraSettings wcs = new WorldCameraSettings();
+        wcs.worldspaceYaw = worldspaceYaw;
+        wcs.cameraEulerAngles = Vector3.zero;
+        wcs.directionVector = new Vector3(0, 1.2f, -3f);
+        wcs.movementHalflife = 0.05f;
+        wcs.mode = WorldCamera.CameraMode.FollowPlayer;
+        wcs.distance = 4.75f;
+
+        MainManager.Instance.Camera.SetCameraSettings(wcs);
     }
 
     public void AddObject(WorldObject wo)

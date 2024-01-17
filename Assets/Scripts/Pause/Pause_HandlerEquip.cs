@@ -318,6 +318,12 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
         //Debug.Log("Rebuild list, select index is now " + badgeIndex);
     }
 
+    public List<Badge> RebuildListAndGet()
+    {
+        RebuildList();
+        return badgeList;
+    }
+
     public override int GetMaxTabs()
     {
         return MAX_BADGE_ELEMENTS - 1 + (!RibbonsAvailable() ? -1 : 0);
@@ -346,7 +352,7 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
         {
             section.ApplyUpdate(new UpdateObject(tabindex, selectedPlayer, badgeIndex, (SortMode)sortIndex));
         }
-        Debug.Log("Player " + selectedPlayer);
+        //Debug.Log("Player " + selectedPlayer);
     }
 
     public override void Select()
@@ -407,6 +413,10 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
     public void SetEntityID(BattleHelper.EntityID eid)
     {
         selectedPlayer = eid;
+        if (section != null)
+        {
+            ((Pause_SectionEquip)section).UpdateCharacterSection(eid);
+        }
     }
 
     public override void Init()

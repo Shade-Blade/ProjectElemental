@@ -33,7 +33,7 @@ Lemon,Lemon,a,A super sour fruit that makes you hit harder!,"Restores 2 hp and 7
 Flour,Flour,a,"A versatile cooking ingredient. You can eat it raw, but you probably shouldn't.",Restores 3 hp and 3 ep to all allies.,,
 Dragonfruit,Dragonfruit,a,Fruit of a cactus.,"Restores 5 hp and 5 ep to one ally, and gives then 2 focus and 2 absorb.",,
 MistWater,Mist Water,some,Purified water that is always refreshing.,Cures negative effects on all allies.,,
-StaticThorn,Static Thorn,a,These thorns constantly build up static. Make sure you don't shock yourself!,"Deals 4 Air/Electric damage to any target, and inflicts Paralyze for 2 turns.",Air/Electric damage pierces defense.,
+StaticThorn,Static Thorn,a,These thorns can passively absorb the electrical energy of the Tempest Desert. Make sure you don't shock yourself!,"Deals 4 Air/Electric damage to any target, and inflicts Paralyze for 2 turns.",Air/Electric damage pierces defense.,
 WarpedLeaf,Warped Leaf,a,A strangely shaped leaf that warps your stats. Cooking it with other items often has strange results.,"Swaps an ally's current HP and EP. (If they would go to 0 hp, they instead go to 1 hp.)",,
 CarrotCake,Carrot Cake,a,A cake big enough to share.,Restores 4 hp and 4 ep to all allies.,,
 BronzeCake,Bronze Cake,a,A bronze cake big enough to share.,Restores 8 hp and 8 ep to all allies.,,

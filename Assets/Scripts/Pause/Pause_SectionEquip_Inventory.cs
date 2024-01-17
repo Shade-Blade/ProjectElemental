@@ -40,12 +40,14 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
         int selectedIndex = uo.selectIndex;
 
         bool updateRequired = (selectedPlayer != uo.player) && (bs == Pause_HandlerEquip.BadgeSubpage.SingleEquipped);
+        //Debug.Log("Inventory sp: " + selectedPlayer + " vs " + uo.player);
         selectedPlayer = uo.player;
         if (updateRequired)
         {
             Clear();
             Init();
         }
+        //Debug.Log("Inventory sp: " + selectedPlayer);
 
         selectorArrow.gameObject.SetActive(true);
         selectorArrow.color = new Color(1, 1, 1, 1);
@@ -493,6 +495,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 emptyString = "No Equipped Badges";
                 break;
             case Pause_HandlerEquip.BadgeSubpage.SingleEquipped:
+                Debug.Log("Generate all of " + selectedPlayer + "'s badges");
                 List<Badge> sinv = pd.GetPlayerDataEntry(selectedPlayer).equippedBadges;
                 sinv = SortBadges(sinv);
 
@@ -625,6 +628,11 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
             //noItemText.SetText(???, true, true);
         }
 
+        if (menuIndex > menuEntries.Length - 1)
+        {
+            menuIndex = 0;
+        }
+
         if (menuEntries.Length == 0)
         {
             selectorArrow.enabled = false;
@@ -645,12 +653,13 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
         //only do this when you get to the menu
         //textbox.SetText(menuEntries[menuIndex].description, true, true);
         selectedPlayer = (BattleHelper.EntityID)(characterStats.GetState());
+        //Debug.Log("Character stats says the current player is " + selectedPlayer);
         if (selectedPlayer == 0)
         {
             selectedPlayer = pd.GetSortedParty()[0].entityID;
             characterStats.ApplyUpdate(pd.GetSortedParty()[0].entityID);
         }
-        //characterStats.ApplyUpdate(selectedPlayer);
+        //characterStats.ApplyUpdate(selectedPlayer);        
     }
 
     public override void Clear()
