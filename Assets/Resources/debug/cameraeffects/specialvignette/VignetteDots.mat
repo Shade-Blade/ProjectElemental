@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WorldPositionBlur
-  m_Shader: {fileID: 4800000, guid: bc55c027e243ce346b2cd1442fff4577, type: 3}
+  m_Name: VignetteDots
+  m_Shader: {fileID: 4800000, guid: eeae36c090a1de2419202553767871c9, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -44,6 +44,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 2800000, guid: b004ae3d22e872648acb1b5ebf0e1e54, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -58,36 +62,35 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BlurStrength: 0.04
-    - _BlurStrengthB: 0.06
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _FogEnd: 3
-    - _FogIntensity: 1
-    - _FogMid1: 0
-    - _FogMid2: 2
-    - _FogStart: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Intensity: 0.5
-    - _MaxDistance: 15
+    - _MaskPower: -0.5
+    - _MaskScale: 3
+    - _MaskScaleX: 15
+    - _MaskScaleY: 1.25
+    - _MaskScrollX: 0
+    - _MaskScrollY: 0.5
     - _Metallic: 0
-    - _MinDistance: 5
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _Offset: -0.25
     - _Parallax: 0.02
+    - _Power: 0.5
+    - _Scale: 0.05
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _UVScale: 2
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 0.032075405, b: 1, a: 1}
+    - _ColorB: {r: 0.37503374, g: 0.24499805, b: 0.547886, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FogColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FogColor1: {r: 1, g: 0.92156863, b: 0.53333336, a: 1}
-    - _FogColor2: {r: 1, g: 0.4366577, b: 0.29622638, a: 1}
+    - _OuterColor: {r: 1, g: 0.5417922, b: 0, a: 1}
   m_BuildTextureStacks: []

@@ -16,8 +16,15 @@ public class AnimationController_BackSprite : AnimationController
         }
 
 
-        bool update = (!currentAnim.Equals(modifiedName));
+        //bool update = (!currentAnim.Equals(modifiedName));
+        //better way
+        bool update = !(animator.GetCurrentAnimatorStateInfo(0).IsName(modifiedName));
         currentAnim = modifiedName;
+
+        //fixes a problem I'm having somehow
+        //update = true;
+        //Debug.Log("Play " + currentAnim + " " + update);
+
 
         if (animator != null && update)
         {

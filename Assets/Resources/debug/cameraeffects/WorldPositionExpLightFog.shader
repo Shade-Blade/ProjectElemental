@@ -5,6 +5,7 @@ Shader "Hidden/WorldPositionExpLightFog"
         _MainTex ("-", 2D) = ""{}
         _FogIntensity("Fog intensity", float) = 1
         _FogIntensityB("Fog intensity (light)", float) = 1
+        [HDR]
         _FogColor("Fog Color", Color) = (1.0,1.0,1.0,1.0)
     }
 
@@ -19,12 +20,12 @@ Shader "Hidden/WorldPositionExpLightFog"
     float _FogIntensity;
     float _FogIntensityB;
 
-    fixed4 _FogColor;
+    half4 _FogColor;
 
 	uniform float4 _PlayerPos;
 	uniform float _PlayerLight;
 
-    fixed4 frag (v2f_img i) : SV_Target
+    half4 frag (v2f_img i) : SV_Target
     {
         const float2 p11_22 = float2(unity_CameraProjection._11, unity_CameraProjection._22);
         const float2 p13_31 = float2(unity_CameraProjection._13, unity_CameraProjection._23);
@@ -62,7 +63,7 @@ Shader "Hidden/WorldPositionExpLightFog"
 		lightValue = clamp(lightValue, 0, 1);
 
 
-        fixed4 fogCol = _FogColor; //tex2D(_ColorRamp, (float2(fogValue, 0)));
+        half4 fogCol = _FogColor; //tex2D(_ColorRamp, (float2(fogValue, 0)));
 
         float _FogIntensityC = lerp(_FogIntensity, _FogIntensityB, lightValue);
         fogCol.a = 1 - exp(-_FogIntensityC * distance);

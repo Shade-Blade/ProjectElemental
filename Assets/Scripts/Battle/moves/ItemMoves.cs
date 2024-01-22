@@ -182,7 +182,7 @@ public class Item_GenericConsumable : ItemMove
             boost *= 2;
         }
 
-        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowItems) != null && BattleControl.Instance.playerData.itemInventory.Count <= 5)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowItems) != null && BattleControl.Instance.GetItemInventory(caller).Count <= 5)
         {
             boost *= 2;
         }

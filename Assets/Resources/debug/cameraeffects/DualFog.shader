@@ -10,7 +10,9 @@ Shader "Custom/DualFog"
         _FogEnd("Fog end distance", float) = 1
         _FogMid1("Fog mid proportion 1", float) = 1
         _FogMid2("Fog mid proportion 2", float) = 1
+        [HDR]
         _FogColor1("Fog Color 1", Color) = (1.0,1.0,1.0,1.0)
+        [HDR]
         _FogColor2("Fog Color 2", Color) = (1.0,1.0,1.0,1.0)
     }
     SubShader
@@ -57,12 +59,12 @@ Shader "Custom/DualFog"
             float _FogMid1;
             float _FogMid2;
 
-            fixed4 _FogColor1;
-            fixed4 _FogColor2;
+            half4 _FogColor1;
+            half4 _FogColor2;
  
-            fixed4 frag (v2f i) : SV_Target
+            half4 frag (v2f i) : SV_Target
             {
-                fixed4 orCol = tex2D(_MainTex, i.uv);
+                half4 orCol = tex2D(_MainTex, i.uv);
                 float rawDepth = tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.scrPos));
                 float depthValue = LinearEyeDepth (rawDepth);
                 float fogValue = (depthValue-_FogStart)/_FogEnd;
@@ -70,7 +72,7 @@ Shader "Custom/DualFog"
                 float interp = (fogValue - _FogMid1) / (_FogMid2 - _FogMid1);
                 interp = clamp(interp, 0, 1);
 
-                fixed4 fogCol = lerp(_FogColor1, _FogColor2, interp); //tex2D(_ColorRamp, (float2(fogValue, 0)));
+                half4 fogCol = lerp(_FogColor1, _FogColor2, interp); //tex2D(_ColorRamp, (float2(fogValue, 0)));
 
                 fogValue = clamp(fogValue, 0, 1);
                 fogCol.a = lerp(0, 1, fogValue);

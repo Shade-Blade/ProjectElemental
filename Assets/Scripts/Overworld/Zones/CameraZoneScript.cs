@@ -127,7 +127,8 @@ public class CameraZoneScript : MonoBehaviour
         {
             if (wcs.priority <= 0)
             {
-                MainManager.Instance.Camera.SetCameraSettings(WorldCameraSettings.GetDefault());
+                MainManager.Instance.mapScript.SetDefaultCamera();
+                //MainManager.Instance.Camera.SetCameraSettings(WorldCameraSettings.GetDefault());
             }
         }
     }

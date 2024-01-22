@@ -48,7 +48,7 @@ public class AnimationController : MonoBehaviour
 
     public virtual void SetAnimation(string name)
     {
-        bool update = (!currentAnim.Equals(name));
+        bool update = !(animator.GetCurrentAnimatorStateInfo(0).IsName(name));
         currentAnim = name;
 
         if (animator != null && update)
@@ -279,7 +279,7 @@ public class AnimationController : MonoBehaviour
         if (buffColors != null && buffColors.Length > 0)
         {
             propertyBlock.SetVector("_OverlayColor", buffColors[0]);
-            Debug.Log("Make color " + buffColors[0].ToString());
+            //Debug.Log("Make color " + buffColors[0].ToString());
         }
         else
         {

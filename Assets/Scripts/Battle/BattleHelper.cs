@@ -927,12 +927,13 @@ public static class BattleHelper
     [Flags]
     public enum BattleProperties : ulong
     {
-        CanRetry = 1L,
-        NoFlee = 1L << 1,
-        FreeFlee = 1L << 2,
-        IgnoreFirstStrikeBadges = 1L << 3,
+        CanRetry = 1L,                          //Retrying is possible
+        NoFlee = 1L << 1,                       //Can't flee
+        FreeFlee = 1L << 2,                     //Flee for 0 stamina
+        FleeResetStats = 1L << 3,               //Fleeing does not update playerdata, so your stats are reset to before the battle
+        IgnoreFirstStrikeBadges = 1L << 3,      //First strike badges don't do anything
 
-        ScriptedEncounter = CanRetry | NoFlee | IgnoreFirstStrikeBadges
+        ScriptedEncounter = CanRetry | NoFlee | IgnoreFirstStrikeBadges     //Bosses, minibosses and other stuff has this
     }
 
     public enum Event

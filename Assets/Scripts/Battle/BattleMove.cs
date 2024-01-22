@@ -500,6 +500,14 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                 staminaCost = 0;
             }
 
+            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand)
+            {
+                staminaCost /= 2;
+            }
+            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfHaste)
+            {
+                staminaCost = 0;
+            }
         }
 
         if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.SacredGrove)
@@ -748,7 +756,15 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                 //the actual cost check was earlier in this case so this check doesn't really matter
                 staminaCost = 0;
             }
-            
+
+            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand)
+            {
+                staminaCost /= 2;
+            }
+            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfHaste)
+            {
+                staminaCost = 0;
+            }
         }
 
         if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.SacredGrove)
@@ -803,19 +819,27 @@ public abstract class PlayerMove : Move, IEntityHighlighter
         switch (GetCurrency(caller))
         {
             case BattleHelper.MoveCurrency.Energy:
-                BattleControl.Instance.SetEP(caller, BattleControl.Instance.GetEP(caller) - cost);
+                BattleControl.Instance.AddEP(caller, -cost);
                 break;
             case BattleHelper.MoveCurrency.Health:  //Note: you are not allowed to pay with all your hp (leaving you with 0)
                 caller.hp -= cost;
+                if (caller.hp < 0)
+                {
+                    caller.hp = 0;
+                }
                 break;
             case BattleHelper.MoveCurrency.Stamina:
                 caller.stamina -= cost;
+                if (caller.stamina < 0)
+                {
+                    caller.stamina = 0;
+                }
                 break;
             case BattleHelper.MoveCurrency.Soul:
-                BattleControl.Instance.SetSE(caller, BattleControl.Instance.GetSE(caller) - cost);
+                BattleControl.Instance.AddSE(caller, -cost);
                 break;
             case BattleHelper.MoveCurrency.Coins:
-                BattleControl.Instance.playerData.coins -= cost;
+                BattleControl.Instance.AddCoins(caller, -cost);
                 break;
         }
 
@@ -831,6 +855,15 @@ public abstract class PlayerMove : Move, IEntityHighlighter
             if (GetCurrency(caller) == BattleHelper.MoveCurrency.Stamina && pcaller.BadgeEquipped(Badge.BadgeType.StaminaEnergy))
             {
                 //stamina cost is ignored in this case so this entire block is pretty unnecesary
+                staminaCost = 0;
+            }
+
+            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand)
+            {
+                staminaCost /= 2;
+            }
+            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfHaste)
+            {
                 staminaCost = 0;
             }
 
@@ -1325,7 +1358,7 @@ public abstract class EnemyMove : Move
 
     public static string GetNameWithIndex(MoveIndex mi)
     {
-        Debug.Log(mi);
+        //Debug.Log(mi);
         string output = MainManager.Instance.enemyMoveText[(int)mi + 1][1];
         return output;
     }

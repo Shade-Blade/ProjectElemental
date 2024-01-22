@@ -2289,6 +2289,12 @@ public class BattleControl : MonoBehaviour
         switch (outcome)
         {
             case BattleHelper.BattleOutcome.Flee:
+                if (!GetProperty(battleProperties, BattleHelper.BattleProperties.FleeResetStats))
+                {
+                    EOBUpdatePlayerData();
+                    Item.ApplyVolatile();
+                }
+                break;
             case BattleHelper.BattleOutcome.Exit:
             case BattleHelper.BattleOutcome.Win:
                 EOBUpdatePlayerData();
@@ -2354,6 +2360,7 @@ public class BattleControl : MonoBehaviour
 
         //Drop item?
         //current logic: 1/4 base, but x2 if it dropped 0 xp, x2 if you have itemfinder
+        //New addition: If you have 0 items, item drops become guaranteed
 
         int itemFinder = playerData.BadgeEquippedCount(Badge.BadgeType.ItemFinder);
         bool checkDropItem = false;
@@ -2378,6 +2385,12 @@ public class BattleControl : MonoBehaviour
         {
             checkDropItem = true;
         }
+
+        if (playerData.itemInventory.Count < 3)
+        {
+            checkDropItem = true;
+        }
+
         shouldDropItem &= checkDropItem;
 
         if (forceDropItem)
@@ -2583,7 +2596,7 @@ public class BattleControl : MonoBehaviour
         {
             //Dropped item is based on the front enemy (this should be the one that appears in the overworld)
             //dropItem = be.dropItemType;
-            shouldDropItem = true;      //To do: Make this correct (Dropping stuff every battle is probably OP)
+            shouldDropItem = true;      //end of battle thing will fix this
 
             if (be.moneyMult >= 2)
             {
@@ -4255,7 +4268,7 @@ public class BattleControl : MonoBehaviour
 
     public void AddReactionMoveEvent(BattleEntity caller, BattleEntity target, Move move, bool ignoreImmobile = false, bool isItem = false)
     {
-        Debug.Log(caller.name + " " + target.name + " " + move.GetName());
+        //Debug.Log(caller.name + " " + target.name + " " + move.GetName());
         reactionMoveList.Add(new ReactionMoveListEntry(caller, target, move, ignoreImmobile, isItem));
     }
     public void BroadcastEvent(BattleEntity battleEntity, BattleHelper.Event eventID)
@@ -4727,6 +4740,7 @@ public class BattleControl : MonoBehaviour
             yield return StartCoroutine(current.PostMove());
         }
 
+        /*
         //enviro effect moves
         if (enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand && (turnCount % 3 == 0))
         {
@@ -4740,6 +4754,7 @@ public class BattleControl : MonoBehaviour
             yield return move.Execute(null);
             //Destroy(move);
         }
+        */
 
 
         //tick down charm effects

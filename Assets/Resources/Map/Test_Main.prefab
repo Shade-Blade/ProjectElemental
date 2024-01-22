@@ -4563,38 +4563,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!1 &2427056453682728019
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4435274016356317553}
-  m_Layer: 7
-  m_Name: Teleporter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4435274016356317553
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2427056453682728019}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.03, y: 0.5, z: -7.37}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7957932340129884792}
-  m_Father: {fileID: 3868111841212316064}
-  m_RootOrder: 73
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2440597150724668838
 GameObject:
   m_ObjectHideFlags: 0
@@ -33423,7 +33391,7 @@ Transform:
   - {fileID: 5434843290227670390}
   - {fileID: 9204382544895650393}
   - {fileID: 2750029529700967941}
-  - {fileID: 4435274016356317553}
+  - {fileID: 7957932340129884792}
   m_Father: {fileID: 3868111840974364226}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -45872,7 +45840,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bc0509d2232f4d1438e3a627701ff3c7, type: 2}
+  - {fileID: 2100000, guid: a6a13d831ebd57449b0af8e409a191b6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -87570,7 +87538,7 @@ GameObject:
   - component: {fileID: 5194219340847918228}
   - component: {fileID: 8158715547637821027}
   m_Layer: 7
-  m_Name: InteractTest (3)
+  m_Name: Teleporter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -87584,12 +87552,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8116864628578686974}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -10.03, y: 0.5, z: -7.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4435274016356317553}
-  m_RootOrder: 0
+  m_Father: {fileID: 3868111841212316064}
+  m_RootOrder: 73
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4598566902295688792
 MeshFilter:
@@ -87671,12 +87639,13 @@ MonoBehaviour:
   active: 0
   flyPath:
   - {x: -10, y: 2, z: -8}
-  - {x: -5, y: 8, z: -8}
-  - {x: -15, y: 8, z: -8}
+  - {x: -25, y: 8, z: -8}
+  - {x: -5, y: 9, z: -8}
   - {x: -20, y: 2, z: -8}
   backwardsFly: 0
-  destination: {fileID: 0}
   duration: 3
+  teleporterDot: {fileID: 109397696214874272, guid: ee67298dcff3ec84aa637e05b342b56e,
+    type: 3}
 --- !u!1 &8145055824407486537
 GameObject:
   m_ObjectHideFlags: 0

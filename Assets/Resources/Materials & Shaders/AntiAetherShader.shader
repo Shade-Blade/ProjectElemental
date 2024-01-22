@@ -124,8 +124,8 @@ Shader "Custom/AntiAether"
 				//(so 255 red, ? green, 0 blue)
 				half3 rimcol;
 				rimcol.r = 1;
-				rimcol.g = sin(_Time.w * 0.5 + 16 * dist) * 0.125 + 0.125;
-				rimcol.b = 0;
+				rimcol.g = -0.5;
+				rimcol.b = sin(_Time.w * 0.661 + 24 * dist) * 0.06 + 0.06;
 
 				o.Emission = _EmissionMult * lerp(half4(0,0,0,0), rimcol, rimedge);
 				if (rimedge > 0) {

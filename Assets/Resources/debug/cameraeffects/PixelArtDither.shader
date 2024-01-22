@@ -5,6 +5,7 @@ Shader "Hidden/Dither" {
         _GreenColorCount("Green", float) = 5
         _BlueColorCount("Blue", float) = 5
         _BayerLevel("Bayer Level", float) = 2
+        _Spread("Spread", float) = 1
     }
 
     SubShader {
@@ -65,23 +66,23 @@ Shader "Hidden/Dither" {
                 63, 31, 55, 23, 61, 29, 53, 21
             };
 
-            float GetBayer2(int x, int y) {
+            float GetBayer2(uint x, uint y) {
                 return float(bayer2[(x % 2) + (y % 2) * 2]) * (1.0f / 4.0f) - 0.5f;
             }
 
-            float GetBayer4(int x, int y) {
+            float GetBayer4(uint x, uint y) {
                 return float(bayer4[(x % 4) + (y % 4) * 4]) * (1.0f / 16.0f) - 0.5f;
             }
 
-            float GetBayer8(int x, int y) {
+            float GetBayer8(uint x, uint y) {
                 return float(bayer8[(x % 8) + (y % 8) * 8]) * (1.0f / 64.0f) - 0.5f;
             }
 
             fixed4 fp(v2f i) : SV_Target {
                 float4 col = _MainTex.Sample(point_clamp_sampler, i.uv);
 
-                int x = i.uv.x * _MainTex_TexelSize.z;
-                int y = i.uv.y * _MainTex_TexelSize.w;
+                uint x = i.uv.x * _MainTex_TexelSize.z;
+                uint y = i.uv.y * _MainTex_TexelSize.w;
 
                 float bayerValues[3] = { 0, 0, 0 };
                 bayerValues[0] = GetBayer2(x, y);

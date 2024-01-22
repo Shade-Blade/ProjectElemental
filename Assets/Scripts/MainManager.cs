@@ -4571,6 +4571,31 @@ public class MainManager : MonoBehaviour
             return GlobalFlag.GF_Burden_Greed;
         }
 
+        if (name.Equals("Envy"))
+        {
+            return GlobalFlag.GF_Burden_Envy;
+        }
+
+        if (name.Equals("Pride"))
+        {
+            return GlobalFlag.GF_Burden_Pride;
+        }
+
+        if (name.Equals("Wrath"))
+        {
+            return GlobalFlag.GF_Burden_Wrath;
+        }
+
+        if (name.Equals("Gluttony"))
+        {
+            return GlobalFlag.GF_Burden_Gluttony;
+        }
+
+        if (name.Equals("Sloth"))
+        {
+            return GlobalFlag.GF_Burden_Sloth;
+        }
+
         if (name.Equals("Randomizer"))
         {
             return GlobalFlag.GF_FileCode_Randomizer;
@@ -4791,6 +4816,13 @@ public class MainManager : MonoBehaviour
 
         //load in new map
         LoadMap(mid, -1, newPos, 0);
+
+        //in case I wasn't careful with save points and enemy locations, to make sure you can't softlock yourself with a bad save location (?)
+        WorldPlayer wp = WorldPlayer.Instance;
+        if (wp != null)
+        {
+            wp.SetEncounterCooldown();
+        }
     }
     public void ApplyFileCodeChanges()
     {

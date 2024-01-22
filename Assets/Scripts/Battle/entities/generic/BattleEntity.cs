@@ -5075,24 +5075,25 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     }
                     break;
                 case Effect.EffectStackMode.KeepPotAddDur:
-                    if (entry.potency < se.potency)
+                    if (entry.duration == 255 || se.duration == 255)
                     {
-                        int total = entry.potency * entry.duration;
-                        entry.potency = se.potency;
-                        entry.duration = se.duration;
-                        if (entry.duration != 255)
+                        //No
+                    } else
+                    {
+                        if (entry.potency < se.potency)
                         {
+                            int total = entry.potency * entry.duration;
+                            entry.potency = se.potency;
+                            entry.duration = se.duration;
                             entry.duration += (byte)(total / se.potency);
                             if ((byte)(total / se.potency) < 1)
                             {
                                 entry.duration++;
                             }
                         }
-                    } else
-                    {
-                        int total = se.potency * se.duration;
-                        if (entry.duration != 255)
+                        else
                         {
+                            int total = se.potency * se.duration;
                             entry.duration += (byte)(total / entry.potency);
                             if ((byte)(total / entry.potency) < 1)
                             {
@@ -5138,25 +5139,26 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                             break;
                         case Effect.EffectClass.BuffDebuff:
                             //KeepPotAddDur
-                            if (entry.potency < se.potency)
+                            if (entry.duration == 255 || se.duration == 255)
                             {
-                                int total = entry.potency * entry.duration;
-                                entry.potency = se.potency;
-                                entry.duration = se.duration;
-                                if (entry.duration != 255)
+                                //No
+                            }
+                            else
+                            {
+                                if (entry.potency < se.potency)
                                 {
+                                    int total = entry.potency * entry.duration;
+                                    entry.potency = se.potency;
+                                    entry.duration = se.duration;
                                     entry.duration += (byte)(total / se.potency);
                                     if ((byte)(total / se.potency) < 1)
                                     {
                                         entry.duration++;
                                     }
                                 }
-                            }
-                            else
-                            {
-                                int total = se.potency * se.duration;
-                                if (entry.duration != 255)
+                                else
                                 {
+                                    int total = se.potency * se.duration;
                                     entry.duration += (byte)(total / entry.potency);
                                     if ((byte)(total / entry.potency) < 1)
                                     {
@@ -5164,6 +5166,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                                     }
                                 }
                             }
+
                             break;
                         case Effect.EffectClass.Token:
                             //Special case!

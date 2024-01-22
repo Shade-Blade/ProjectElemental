@@ -6,8 +6,8 @@ public class TeleporterScript : InteractTrigger
 {
     public Vector3[] flyPath;
     public bool backwardsFly;
-    public TeleporterScript destination;
     public float duration;
+    public GameObject teleporterDot;
 
     public override void OnDrawGizmos()
     {
@@ -29,6 +29,21 @@ public class TeleporterScript : InteractTrigger
             {
                 Gizmos.DrawLine(flyPath[i - 1], flyPath[i]);
             }
+        }
+
+        for (int i = 0; i < 30; i++)
+        {
+            float c1 = i / 30f;
+            float c2 = (i + 1) / 30f;
+            if (i % 2 == 0)
+            {
+                Gizmos.color = Color.white;
+            }
+            else
+            {
+                Gizmos.color = Color.black;
+            }
+            Gizmos.DrawLine(MainManager.BezierCurve(c1, flyPath), MainManager.BezierCurve(c2, flyPath));
         }
     }
 
@@ -53,6 +68,8 @@ public class TeleporterScript : InteractTrigger
         float completion = (Time.time - initialTime) / duration;
         //make a bezier curve
 
+        GameObject dot = Instantiate(teleporterDot, transform);
+
         while (completion < 1)
         {
             if (backwardsFly)
@@ -63,9 +80,14 @@ public class TeleporterScript : InteractTrigger
             {
                 wp.transform.position = MainManager.BezierCurve(completion, flyPath);
             }
+
+            dot.transform.position = wp.transform.position;
             completion = (Time.time - initialTime) / duration;
             yield return null;
         }
+
+        Destroy(dot);
+
         //force position = endpoint (prevent lag glitches)
         wp.transform.position = flyPath[flyPath.Length - 1];
 

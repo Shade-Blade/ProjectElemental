@@ -58,8 +58,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BayerLevel: 3
-    - _BlueColorCount: 16
+    - _BayerLevel: 2
+    - _BlueColorCount: 2
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -70,14 +70,15 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GreenColorCount: 16
+    - _GreenColorCount: 2
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RedColorCount: 16
+    - _RedColorCount: 2
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _Spread: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1

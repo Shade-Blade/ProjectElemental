@@ -4,6 +4,7 @@ Shader "Hidden/WorldPositionExpFog"
     {
         _MainTex ("-", 2D) = ""{}
         _FogIntensity("Fog intensity", float) = 1
+        [HDR]
         _FogColor("Fog Color", Color) = (1.0,1.0,1.0,1.0)
     }
 
@@ -55,7 +56,7 @@ Shader "Hidden/WorldPositionExpFog"
 
         float distance = length(wpos - _PlayerPos);
 
-        fixed4 fogCol = _FogColor; //tex2D(_ColorRamp, (float2(fogValue, 0)));
+        half4 fogCol = _FogColor; //tex2D(_ColorRamp, (float2(fogValue, 0)));
 
         //fogCol.a = lerp(0, 1, fogValue);
 

@@ -2919,6 +2919,7 @@ public class WorldPlayer : WorldEntity
 
         if (ac != null)
         {
+            //Debug.Log(animName);
             ac.SetAnimation(animName);
         }
     }

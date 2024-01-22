@@ -28,9 +28,9 @@ public class WorldCameraSettings    //contains all the info something that messe
 
         wcs.mode = WorldCamera.CameraMode.FollowPlayer;
         wcs.effect = WorldCamera.CameraEffect.None;
-        wcs.distance = 6.25f;
-        wcs.directionVector = new Vector3(0f, 1.2f, -3f);
-        wcs.cameraEulerAngles = new Vector3(-10f, 0f, 0f);
+        wcs.cameraEulerAngles = Vector3.zero;
+        wcs.directionVector = new Vector3(0, 1.2f, -3f);
+        wcs.distance = 4.75f;
         wcs.worldspaceYaw = 0;
         wcs.movementHalflife = 0.05f;
 
@@ -78,6 +78,9 @@ public class WorldCamera : MonoBehaviour
         GradientFog,
         DoubleGradientFog,
     }
+
+    //to do: some way to allow for the settings of the material to be changed
+    //to do: way to toggle orthographic
 
     //future thing to do: assign materials to each enum value somehow
     //but also trying to check the material every frame seems like a bad idea
