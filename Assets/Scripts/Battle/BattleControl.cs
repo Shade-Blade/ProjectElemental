@@ -2381,12 +2381,20 @@ public class BattleControl : MonoBehaviour
             xpBoost = 1;
         }
 
-        if (battleBoost + xpBoost + itemFinder >= 2)
+        int lowItemBoost = 0;
+
+        if (playerData.itemInventory.Count < 5)
         {
-            checkDropItem = true;
+            lowItemBoost = 1;
         }
 
         if (playerData.itemInventory.Count < 3)
+        {
+            lowItemBoost = 2;
+        }
+
+
+        if (lowItemBoost + battleBoost + xpBoost + itemFinder >= 2)
         {
             checkDropItem = true;
         }

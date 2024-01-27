@@ -39,6 +39,10 @@ public class BoxMenu : MenuHandler
 
     public event EventHandler<int> indexEvent;
 
+    public float lifetime;
+    public const float MIN_SELECT_TIME = 0.1f;
+
+
     public static BoxMenu BuildMenu(PlayerEntity caller, BaseBattleMenu.BaseMenuName p_menuName)
     {
         GameObject newObj = new GameObject("Box Menu");
@@ -112,6 +116,7 @@ public class BoxMenu : MenuHandler
 
     protected virtual void MenuUpdate()
     {
+        lifetime += Time.deltaTime;
         bool indexChange = false;
         if (Mathf.Sign(InputManager.GetAxisVertical()) != inputDir || InputManager.GetAxisVertical() == 0)
         {
@@ -292,7 +297,7 @@ public class BoxMenu : MenuHandler
             }
         }
 
-        if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries.Length > 0 && (menuEntries[menuIndex].canUse || canUseDisabled) && menuEntries.Length > 0) //Press A to select stuff
+        if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries.Length > 0 && (menuEntries[menuIndex].canUse || canUseDisabled) && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME) //Press A to select stuff
         {
             SelectOption();
         } else if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries.Length > 0)

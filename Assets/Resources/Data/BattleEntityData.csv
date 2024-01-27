@@ -89,7 +89,7 @@ CrystalSlug,15,27,0,TRUE,1,FlashBud,2,Default:0.2/0.5|Paralyze:0/1|Poison:0.8/1,
 AuroraWing,16,28,5,FALSE,1.5,RoyalSyrup,2,Default:1/1.5,Default:1|Dark:-4|Light:A,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 FinalBoss,150,31,39,TRUE,1,MoonPop,1,Default:0/1,Default:4,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 FinalSuperboss,210,36,84,TRUE,1,CrystalCarrot,1,Default:0/1,Default:4,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Plaguebud,22,36,4,TRUE,1.5,StellarSyrup,2,Default:0.1/0.5,Default:1|Light:-3|Water:A,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Plaguebud,22,36,4,TRUE,1.5,StellarSyrup,2,Default:0.1/0.5,Default:1|Fire:-1|Light:-1|Water:A,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Starfish,2,28,4,FALSE,1,PlagueRoot,2,Default:0.1/0.5|Paralyze:0.5/1,Default:0|Air:-2|Earth:A,Limiter,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 CursedEye,16,32,4,FALSE,1,StellarSyrup,2,Default:0.1/0.5|Dizzy:0.5/1,Default:0|Earth:-2|Light:-4|Dark:A,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 StrangeTendril,11,34,4,TRUE,1,PlagueRoot,6,Default:1/1.5,Default:7|Air:7,,0.75,2,0|1|0,0.475|1|0,0|-0.15|0,0|2.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8

@@ -296,6 +296,7 @@ public class ItemBoxMenu : BoxMenu
 
     public override void Init()
     {
+        lifetime = 0;
         /*
         displayModes = new List<ItemMenuEntry.StatDisplay>
         {
@@ -569,6 +570,7 @@ public class MetaItemBoxMenu : BoxMenu
 
     public override void Init()
     {
+        lifetime = 0;
         /*
         displayModes = new List<ItemMenuEntry.StatDisplay>
         {
@@ -741,6 +743,7 @@ public class TacticsBoxMenu : BoxMenu
 {
     public override void Init()
     {
+        lifetime = 0;
         active = true;
         if (menuIndex == -1)
         {
@@ -854,6 +857,7 @@ public class BadgeSwapBoxMenu : BoxMenu
 
     public override void Init()
     {
+        lifetime = 0;
         active = true;
         if (menuIndex == -1)
         {
@@ -1058,6 +1062,7 @@ public class RibbonSwapBoxMenu : BoxMenu
 
     public override void Init()
     {
+        lifetime = 0;
         active = true;
         if (menuIndex == -1)
         {

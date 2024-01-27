@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class OWItemBoxMenu : BoxMenu
 {
@@ -86,6 +83,7 @@ public class OWItemBoxMenu : BoxMenu
 
     public override void Init()
     {
+        lifetime = 0;
         /*
         if (displayModes == null)
         {
@@ -286,6 +284,7 @@ public class OWKeyItemBoxMenu : BoxMenu
 
     public override void Init()
     {
+        lifetime = 0;
         /*
         if (displayModes == null)
         {
@@ -665,6 +664,7 @@ public class GenericBoxMenu : BoxMenu
 
     public override void Init()
     {
+        lifetime = 0;
         /*
         if (displayModes == null)
         {
@@ -928,6 +928,7 @@ public class OWCharacterBoxMenu : BoxMenu
 
     public override void Init()
     {
+        lifetime = 0;
         //displayMode = CharacterMenuEntry.StatDisplay.Health;
 
         active = true;
@@ -1041,9 +1042,6 @@ public class PromptBoxMenu : BoxMenu
 
     public string topText;
 
-    public float lifetime;
-    public const float MIN_SELECT_TIME = 0.1f;
-
     public float width;
     
 
@@ -1078,6 +1076,7 @@ public class PromptBoxMenu : BoxMenu
     
     public override void Init()
     {
+        lifetime = 0;
         active = true;
         menuIndex = 0;
         visualSelectIndex = menuIndex;
