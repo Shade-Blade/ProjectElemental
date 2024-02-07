@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [System.Serializable]
 public class WorldCameraSettings    //contains all the info something that messes with the world camera will need (Note: battle camera is special and needs special handling, but the script may end up shared)
@@ -75,8 +76,20 @@ public class WorldCamera : MonoBehaviour
     public enum CameraEffect
     {
         None,
-        GradientFog,
-        DoubleGradientFog,
+        VignetteWeakSpark,
+        VignetteWeakFire,
+        VignetteWeakWater,
+        VignetteWeakDark,
+        VignetteWeakIce,
+        VignetteAetherRays,
+        VignetteAcid,
+        VignetteSpark,
+        VignetteLeafy,
+        VignetteFire,
+        VignetteWater,
+        VignetteDark,
+        VignetteIce,
+        VignettePrismatic
     }
 
     //to do: some way to allow for the settings of the material to be changed
@@ -129,10 +142,13 @@ public class WorldCamera : MonoBehaviour
     public void SetCameraSettings(WorldCameraSettings settings)
     {
         //Debug.Log("set");
-        bool setup = false;
+
+        //Debug.Log("settings has effect " + settings.effect + " vs " + effect);
+
+        bool esetup = false;
         if (effect != settings.effect)
         {
-            setup = true;
+            esetup = true;
         }
 
         mode = settings.mode;
@@ -140,7 +156,12 @@ public class WorldCamera : MonoBehaviour
         distance = settings.distance;
         directionVector = settings.directionVector;
         targetEulerAngles = settings.cameraEulerAngles;
-        targetYaw = settings.worldspaceYaw;
+
+        if (!MainManager.Instance.Cheat_FirstPersonCamera || mode != CameraMode.FirstPerson_DoNotUse)
+        {
+            targetYaw = settings.worldspaceYaw;
+        }
+
         movementHalflife = settings.movementHalflife;
 
         distanceB = settings.distanceB;
@@ -151,7 +172,7 @@ public class WorldCamera : MonoBehaviour
         pointB = settings.pointB;
         //priority = settings.priority;
 
-        if (setup)
+        if (esetup)
         {
             ProcessEffectChange(effect);
         }
@@ -217,6 +238,22 @@ public class WorldCamera : MonoBehaviour
     public void ProcessEffectChange(CameraEffect ce)
     {
         //set up the camera material
+
+        effect = ce;
+
+        if (ce == CameraEffect.None)
+        {
+            material = null;
+            return;
+        }
+        
+        //Lazy way
+        material = Resources.Load<Material>("MaterialsShaders/CameraEffects/" + ce.ToString());
+
+        if (material == null)
+        {
+            Debug.LogWarning("Material did not load in properly");
+        }
     }
 
     public void DefaultFocusCalculation()
@@ -642,57 +679,53 @@ public class WorldCamera : MonoBehaviour
                 speedMult = 2;
             }
 
-            if (InputManager.GetButton(InputManager.Button.B))
+            float x = transform.eulerAngles.x;
+            float y = transform.eulerAngles.y;
+
+            x += Input.GetAxis("MouseY") * Time.fixedDeltaTime * -0.01f;
+            y += Input.GetAxis("MouseX") * Time.fixedDeltaTime * 0.01f;
+
+            if (x > 180 && x < 270)
             {
-                if (!pastFreeCamMode)
-                {
-                    freeCamHoldTime = 0;
-                }
-                pastFreeCamMode = true;
-                //Rotation mode: rotate around using the inputs
-                //X input -> rotate along Y
-                //Y input -> rotate along camera sideways axis (but how)
-
-                float rotSpeed = 60 * speedMult;
-
-                //transform.Rotate(Vector3.right, inputXY.y * Time.fixedDeltaTime * rotSpeed, Space.World);
-                //transform.Rotate(Vector3.up, inputXY.x * Time.fixedDeltaTime * rotSpeed, Space.World);
-
-                float yMove = 0;
-                if (InputManager.GetButton(InputManager.Button.A))
-                {
-                    yMove += 1;
-                }
-                if (InputManager.GetButton(InputManager.Button.Z))
-                {
-                    yMove -= 1;
-                }
-                //transform.Rotate(Vector3.forward, yMove * Time.fixedDeltaTime * rotSpeed, Space.World);
-                transform.eulerAngles += new Vector3(-inputXY.y * Time.fixedDeltaTime * rotSpeed, inputXY.x * Time.fixedDeltaTime * rotSpeed, yMove * Time.fixedDeltaTime * rotSpeed);
+                x = 270;
             }
-            else
+            if (x > 90 && x < 180)
             {
-                if (pastFreeCamMode)
-                {
-                    freeCamHoldTime = 0;
-                }
-                pastFreeCamMode = false;
-                float moveSpeed = 10 * speedMult;
-
-                transform.position += transform.forward * moveSpeed * Time.fixedDeltaTime * inputXY.y;
-                transform.position += transform.right * moveSpeed * Time.fixedDeltaTime * inputXY.x;
-
-                float yMove = 0;
-                if (InputManager.GetButton(InputManager.Button.A))
-                {
-                    yMove += 1;
-                }
-                if (InputManager.GetButton(InputManager.Button.Z))
-                {
-                    yMove -= 1;
-                }
-                transform.position += transform.up * moveSpeed * Time.fixedDeltaTime * yMove;
+                x = 90;
             }
+
+            if (y > 360)
+            {
+                y -= 360;
+            }
+            if (y < 0)
+            {
+                y += 360;
+            }
+
+            transform.eulerAngles = Vector3.right * x + Vector3.up * y;
+            targetEulerAngles = transform.eulerAngles;
+
+            if (pastFreeCamMode)
+            {
+                freeCamHoldTime = 0;
+            }
+            pastFreeCamMode = false;
+            float moveSpeed = 10 * speedMult;
+
+            transform.position += transform.forward * moveSpeed * Time.fixedDeltaTime * inputXY.y;
+            transform.position += transform.right * moveSpeed * Time.fixedDeltaTime * inputXY.x;
+
+            float yMove = 0;
+            if (InputManager.GetButton(InputManager.Button.A))
+            {
+                yMove += 1;
+            }
+            if (InputManager.GetButton(InputManager.Button.Z))
+            {
+                yMove -= 1;
+            }
+            transform.position += transform.up * moveSpeed * Time.fixedDeltaTime * yMove;
 
             return;
         }
@@ -749,7 +782,10 @@ public class WorldCamera : MonoBehaviour
         {
             tempEulerAngles.z += 360;
         }
-        transform.eulerAngles = MainManager.EasingExponentialFixedTime(transform.eulerAngles, tempEulerAngles, movementHalflife);
+        if (!(MainManager.Instance.worldMode == MainManager.WorldMode.Overworld && (mode == CameraMode.FirstPerson_DoNotUse || MainManager.Instance.Cheat_FirstPersonCamera)))
+        {
+            transform.eulerAngles = MainManager.EasingExponentialFixedTime(transform.eulerAngles, tempEulerAngles, movementHalflife);
+        }
         if (transform.eulerAngles.y < 0)
         {
             transform.eulerAngles += Vector3.up * 360;
@@ -761,12 +797,14 @@ public class WorldCamera : MonoBehaviour
         //Debug.Log((transform.position - pastPos).magnitude);
 
 
-        if (mode == CameraMode.FirstPerson_DoNotUse || MainManager.Instance.Cheat_FirstPersonCamera)
+        if (MainManager.Instance.worldMode == MainManager.WorldMode.Overworld && (mode == CameraMode.FirstPerson_DoNotUse || MainManager.Instance.Cheat_FirstPersonCamera))
         {
             WorldPlayer wp = WorldPlayer.Instance;
             if (wp != null)
             {
                 transform.position = wp.transform.position + WorldPlayer.EYE_HEIGHT * Vector3.up;
+
+                /*
                 float angle = (wp.GetTrueFacingRotation() + 90);
                 if (angle > 360)
                 {
@@ -777,12 +815,46 @@ public class WorldCamera : MonoBehaviour
                     angle += 360;
                 }
                 transform.eulerAngles = (angle) * Vector3.up;
+                */
+
+                float x = transform.eulerAngles.x;
+                float y = transform.eulerAngles.y;
+
+                x += Input.GetAxis("MouseY") * Time.fixedDeltaTime * -0.01f;
+                y += Input.GetAxis("MouseX") * Time.fixedDeltaTime * 0.01f;
+
+
+                if (x > 180 && x < 270)
+                {
+                    x = 270;
+                }
+                if (x > 90 && x < 180)
+                {
+                    x = 90;
+                }
+
+                if (y > 360)
+                {
+                    y -= 360;
+                }
+                if (y < 0)
+                {
+                    y += 360;
+                }
+
+                transform.eulerAngles = Vector3.right * x + Vector3.up * y;
+                targetEulerAngles = transform.eulerAngles;
+                targetYaw = y;
+
+                worldspaceYaw = targetYaw;  
             }
 
+            /*
             if (mode == CameraMode.FirstPerson_DoNotUse)
             {
                 worldspaceYaw = targetYaw;
             }
+            */
         }
 
 

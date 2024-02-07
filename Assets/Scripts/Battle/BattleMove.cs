@@ -441,6 +441,8 @@ public abstract class PlayerMove : Move, IEntityHighlighter
         RibbonUnavailable,
         BadgeSwapDisabled,
         BadgeTooExpensive,
+        BadgeUnavailable,
+        BadgeSwapExpended,
     }
 
     public virtual CantMoveReason GetCantMoveReason(BattleEntity caller, int level = 1)

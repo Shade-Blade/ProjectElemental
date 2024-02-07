@@ -516,6 +516,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
                 }
             }
 
+            /*
             //by convention, 0 and 180 (straight right and left) are front facing
             //may want to add some leeway?            
 
@@ -528,6 +529,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
             }
 
             pastShowBack = showBack;
+            */
         }
         //Debug.Log("b" + trueFacingRotation);
 
@@ -582,8 +584,22 @@ public class WorldEntity : WorldObject, ITextSpeaker
             }
         }
 
+
+
         //need to add a correction for some reason (Lighting fix)
         float correctedRotation = facingRotation;
+
+        //by convention, 0 and 180 (straight right and left) are front facing
+        //may want to add some leeway?            
+
+        if (correctedRotation != 180 && correctedRotation != 360 && correctedRotation != 0)
+        {
+            showBack = correctedRotation < 360 && correctedRotation > 180;
+        }
+        else
+        {
+            showBack = trueFacingRotation < 360 && trueFacingRotation > 180;
+        }
 
         while (correctedRotation > 90)
         {
@@ -970,7 +986,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
     public void Particle_Alert()
     {
-        GameObject eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Enemy_Alert"), gameObject.transform);
+        GameObject eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Enemy/Effect_Enemy_Alert"), gameObject.transform);
         eo.transform.position = transform.position;
         if (height != 0)
         {
@@ -981,7 +997,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
     }
     public void Particle_Miss()
     {
-        GameObject eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Enemy_Miss"), gameObject.transform);
+        GameObject eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Enemy/Effect_Enemy_Miss"), gameObject.transform);
         eo.transform.position = transform.position;
         if (height != 0)
         {
@@ -992,7 +1008,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
     }
     public void Particle_GiveUp()
     {
-        GameObject eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Enemy_GiveUp"), gameObject.transform);
+        GameObject eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Enemy/Effect_Enemy_GiveUp"), gameObject.transform);
         eo.transform.position = transform.position;
         if (height != 0)
         {

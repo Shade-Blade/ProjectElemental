@@ -205,6 +205,23 @@ public class MapScript : MonoBehaviour
         wcs.distance = 4.75f;
 
         MainManager.Instance.Camera.SetCameraSettings(wcs);
+
+        if (MainManager.Instance.Cheat_FirstPersonCamera || wcs.mode == WorldCamera.CameraMode.FirstPerson_DoNotUse)
+        {
+            //MainManager.Instance.Camera.targetYaw = (180 / Mathf.PI) * Mathf.Atan2(WorldPlayer.Instance.scriptedInput.y, WorldPlayer.Instance.scriptedInput.x);
+
+            float angle = (WorldPlayer.Instance.GetTrueFacingRotation() + 90);
+            if (angle > 360)
+            {
+                angle -= 360;
+            }
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+            MainManager.Instance.Camera.transform.eulerAngles = (angle) * Vector3.up;
+            MainManager.Instance.Camera.targetYaw = angle;
+        }
     }
 
     public void AddObject(WorldObject wo)

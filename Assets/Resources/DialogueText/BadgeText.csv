@@ -1,5 +1,5 @@
 File version: 1,Name,Description,Clarification Text
-BadgeSwap,Badge Swap,Allows you to unequip one badge and equip one badge per battle. Unequipping a badge does not cost a turn. Badge Swap cannot be unequipped in battle.,
+BadgeSwap,Badge Swap,"Lets you change badges in battle 4 times. (Equipping or unequipping a badge counts as 1 use). Changing a badge does not cost a turn, but a badge equipped on a single character can only be removed by that character. Certain badges cannot be equipped or unequipped by Badge Swap.",
 SuperCurse,Super Curse,"For players familiar with RPG combat. Increases enemy HP, attack power, exp gain and money gain by 1.33x in most cases. Enemies and bosses may have changes to their moves. Environmental effects become more severe.",
 UltraCurse,Ultra Curse,"For expert players not intimidated by strong enemies. Increases enemy HP, attack power, exp gain and money gain by 1.5x in most cases. Enemies and bosses may have changes to their moves. Environmental effects become more severe.",Same as Super Curse but with higher stats.
 MegaCurse,Mega Curse,"For dauntless players wishing to push the limits of what's possible. Increases enemy HP, attack power, exp gain and money gain by 2.0x in most cases. Enemies and bosses may have changes to their moves. Environmental effects become more severe.",Same as Super Curse but with higher stats.
@@ -187,7 +187,7 @@ StatusResist,Status Resist A,Most negative effects last half as long (Blocking w
 StatusResistB,Status Resist B,Most negative effects last half as long (Blocking will negate status infliction),
 CharmBoost,Charm Boost,Increases the strength of Power charm effects. (+3 <rarrow> +5),
 RibbonPower,Ribbon Power,Ribbon rest effects are tripled but you also gain statuses or other negative effects,
-RibbonSwap,Ribbon Swap,Allows you to change ribbons in battle.,
+RibbonSwap,Ribbon Swap,Allows you to change ribbons in battle. Changing ribbons does not take up your turn. Only the character wearing a ribbon can remove it from themselves.,
 LongRest,Long Rest,"Inn rest effects are stronger, Effects for using Rest are 50% stronger if you rest last turn",
 HealthSteal,Health Steal,"Attacks siphon a small amount of HP, but -1 atk (1/hit, max 5/turn)",
 EnergySteal,Energy Steal,"Attacks siphon a small amount of EP, but -1 atk (1/hit, max 5/turn)",

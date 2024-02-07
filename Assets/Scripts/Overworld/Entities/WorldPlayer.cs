@@ -2728,19 +2728,6 @@ public class WorldPlayer : WorldEntity
                     targetFacingRotation = 180;
                 }
             }
-
-            //by convention, 0 and 180 (straight right and left) are front facing
-            //may want to add some leeway?            
-
-            showBack = trueFacingRotation < 360 && trueFacingRotation > 180;
-
-            if ((pastShowBack ^ showBack))
-            {
-                //hardcode for now
-                facingRotation = targetFacingRotation;
-            }
-
-            pastShowBack = showBack;
         }
 
         bool lrdir = targetFacingRotation == 0; //true = left to right
@@ -2797,15 +2784,56 @@ public class WorldPlayer : WorldEntity
         //Debug.Log(hiddenFacingRotation + " " + targetFacingRotation + " " + facingRotation);
 
         //need to add a correction for some reason (Lighting fix)
-        float correctedRotation = facingRotation;
+        float correctedRotation = facingRotation + switchRotation;
+        /*
+        bool specialShowBack = false;
         if (switchRotation != 0)
         {
-            correctedRotation = switchRotation;
+            //hacky fix 
+
+            if (switchRotation > 180)
+            {
+                correctedRotation = facingRotation + switchRotation - 180;
+                specialShowBack = true;
+            }
+            else
+            {
+                correctedRotation = facingRotation + switchRotation;
+            }
         }
         else
         {
             correctedRotation = facingRotation;
         }
+        */
+
+
+        //by convention, 0 and 180 (straight right and left) are front facing
+        //may want to add some leeway?            
+
+        if (correctedRotation != 180 && correctedRotation != 360 && correctedRotation != 0)
+        {
+            showBack = correctedRotation < 360 && correctedRotation > 180;
+        } else
+        {
+            showBack = trueFacingRotation < 360 && trueFacingRotation > 180;
+        }
+
+        /*
+        if ((pastShowBack ^ showBack))
+        {
+            //hardcode for now
+            facingRotation = targetFacingRotation;
+        }
+
+        pastShowBack = showBack;
+        */
+
+        while (correctedRotation > 360)
+        {
+            correctedRotation -= 360;
+        }
+        float rotationB = correctedRotation;
 
         while (correctedRotation > 90)
         {
@@ -2852,7 +2880,7 @@ public class WorldPlayer : WorldEntity
                 ac.SendAnimationData("unshowback");
             }
 
-            if (facingRotation > 90 || facingRotation < -90)
+            if ((rotationB > 90 || rotationB < -90) && (rotationB < 270 && rotationB > -270))
             {
                 ac.SendAnimationData("xflip");
             }
@@ -2994,12 +3022,12 @@ public class WorldPlayer : WorldEntity
     public void Dig()
     {
         GameObject eoI = null;
-        eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Dig"), realOrientationObject.transform);
+        eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Dig"), realOrientationObject.transform);
         eoI.transform.localPosition = Vector3.down * 0.375f;
         eoI.transform.localRotation = Quaternion.identity;
 
         GameObject eo = null;
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Perpetual_Dig"), realOrientationObject.transform);
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Perpetual_Dig"), realOrientationObject.transform);
         eo.transform.localPosition = Vector3.down * 0.375f;
         eo.transform.localRotation = Quaternion.identity;
 
@@ -3047,7 +3075,7 @@ public class WorldPlayer : WorldEntity
         if (IsGrounded())
         {
             GameObject eoI = null;
-            eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Dig"), realOrientationObject.transform);
+            eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Dig"), realOrientationObject.transform);
             eoI.transform.position = lastFloorPos + Vector3.down * 0.375f;
             eoI.transform.localRotation = Quaternion.identity;
         }
@@ -3230,12 +3258,12 @@ public class WorldPlayer : WorldEntity
         }
 
         GameObject eoI = null;
-        eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Aetherize"), realOrientationObject.transform);
+        eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Aetherize"), realOrientationObject.transform);
         eoI.transform.localPosition = Vector3.zero;
         eoI.transform.localRotation = Quaternion.identity;
 
         GameObject eo = null;
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Perpetual_Aetherize"), realOrientationObject.transform);
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Perpetual_Aetherize"), realOrientationObject.transform);
         eo.transform.localPosition = Vector3.zero;
         eo.transform.localRotation = Quaternion.identity;
         perpetualParticleObject = eo;
@@ -3267,12 +3295,12 @@ public class WorldPlayer : WorldEntity
         }
 
         GameObject eoI = null;
-        eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Illuminate"), realOrientationObject.transform);
+        eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Illuminate"), realOrientationObject.transform);
         eoI.transform.localPosition = Vector3.zero;
         eoI.transform.localRotation = Quaternion.identity;
 
         GameObject eo = null;
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Effect_Perpetual_Illuminate"), realOrientationObject.transform);
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Perpetual_Illuminate"), realOrientationObject.transform);
         eo.transform.localPosition = Vector3.zero;
         eo.transform.localRotation = Quaternion.identity;
         perpetualParticleObject = eo;

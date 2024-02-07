@@ -2405,9 +2405,9 @@ public class WM_PoisonSlash : WM_Slash
     }
 }
 
-public class WM_PreciseSlash : WM_Slash
+public class WM_PreciseStab : WM_Slash
 {
-    public WM_PreciseSlash()
+    public WM_PreciseStab()
     {
     }
 
@@ -2447,7 +2447,7 @@ public class WM_PreciseSlash : WM_Slash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, sd + 5, BattleHelper.DamageType.Water, propertyBlockB, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 4, BattleHelper.DamageType.Water, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
                     caller.DealDamage(caller.curTarget, sd + 7, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
@@ -2459,7 +2459,7 @@ public class WM_PreciseSlash : WM_Slash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 5, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 4, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 7, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
@@ -2910,7 +2910,7 @@ public class WM_DarkSlash : WM_Slash
     public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
-    public override int GetBaseCost() => 12;
+    public override int GetBaseCost() => 13;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -2938,10 +2938,10 @@ public class WM_DarkSlash : WM_Slash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, sd + 5, BattleHelper.DamageType.Dark, propertyBlockB, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 6, BattleHelper.DamageType.Dark, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
-                    caller.DealDamage(caller.curTarget, sd + 8, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 9, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }
@@ -2950,10 +2950,10 @@ public class WM_DarkSlash : WM_Slash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 5, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 6, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 8, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 9, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }

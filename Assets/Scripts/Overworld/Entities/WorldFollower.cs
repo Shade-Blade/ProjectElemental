@@ -633,6 +633,7 @@ public class WorldFollower : WorldEntity
                 }
             }
 
+            /*
             //by convention, 0 and 180 (straight right and left) are front facing
             //may want to add some leeway?            
 
@@ -645,6 +646,7 @@ public class WorldFollower : WorldEntity
             }
 
             pastShowBack = showBack;
+            */
         }
 
         bool lrdir = targetFacingRotation == 0; //true = left to right
@@ -700,21 +702,35 @@ public class WorldFollower : WorldEntity
 
         //need to add a correction for some reason (Lighting fix)
         float correctedRotation = facingRotation;
+        bool specialShowBack = false;
         if (followerIndex == 0 && MainManager.Instance.playerData.party.Count > 1)
         {
-            if (WorldPlayer.Instance.switchRotation != 0)
-            {
-                correctedRotation = WorldPlayer.Instance.switchRotation;
-            }
-            else
-            {
-                correctedRotation = facingRotation;
-            }
+            correctedRotation = facingRotation + WorldPlayer.Instance.switchRotation;
         }
         else
         {
             correctedRotation = facingRotation;
         }
+
+
+        //by convention, 0 and 180 (straight right and left) are front facing
+        //may want to add some leeway?            
+
+        if (correctedRotation != 180 && correctedRotation != 360 && correctedRotation != 0)
+        {
+            showBack = correctedRotation < 360 && correctedRotation > 180;
+        }
+        else
+        {
+            showBack = trueFacingRotation < 360 && trueFacingRotation > 180;
+        }
+
+
+        while (correctedRotation > 360)
+        {
+            correctedRotation -= 360;
+        }
+        float rotationB = correctedRotation;
 
         while (correctedRotation > 90)
         {
@@ -741,7 +757,7 @@ public class WorldFollower : WorldEntity
                 ac.SendAnimationData("unshowback");
             }
 
-            if (facingRotation > 90 || facingRotation < -90)
+            if ((rotationB > 90 || rotationB < -90) && (rotationB < 270 && rotationB > -270))
             {
                 ac.SendAnimationData("xflip");
             }

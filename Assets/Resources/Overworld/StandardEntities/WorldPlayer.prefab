@@ -602,6 +602,11 @@ MonoBehaviour:
     durationVariance: 0
     height: 0
     width: 0
+    interactRadius: 0
+    stompBoostable: 0
+    stompLaunch: 0
+    tattleString: 
+    talkStrings: []
   subObject: {fileID: 0}
   ac: {fileID: 0}
   dropShadow: {fileID: 893807658837282251}
@@ -635,10 +640,14 @@ MonoBehaviour:
   semisolidFloorActive: 0
   lastSemiSolidFloorActive: 0
   semisolidSnapBelow: 0
+  testRotationObject: {fileID: 0}
+  testRotationObjectB: {fileID: 0}
   realOrientationObject: {fileID: 8785854051838675749}
   floorNormalObject: {fileID: 4890636820154289488}
   perpetualParticleObject: {fileID: 0}
   stalePerpetualParticles: []
+  interactIndicator: {fileID: 0}
+  indicatorActive: 0
   digCheck: {fileID: 8785854052065713138}
   lastFloorNoDig: 0
   lastFloorDigThrough: 0
@@ -649,6 +658,9 @@ MonoBehaviour:
   noDigZone: 0
   concealedZone: 0
   concealedTime: 0
+  noAetherZone: 0
+  disabledTime: 0
+  interactCooldown: 0
   lastFloorPos: {x: 0, y: 0, z: 0}
   followers:
   - {fileID: 0}
@@ -666,6 +678,7 @@ MonoBehaviour:
   applySuperKickLift: 0
   hasTouchedObject: 0
   currentCharacter: 0
+  undigTimer: 0
   switchRotation: 0
   landShockwavePossible: 0
   jumpStomp: 0

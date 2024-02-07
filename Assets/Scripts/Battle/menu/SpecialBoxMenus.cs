@@ -920,6 +920,8 @@ public class BadgeSwapBoxMenu : BoxMenu
                 canUse = true;
             }
 
+            //you can't take off rage's power but this also stops weird cheese strats?
+            //put on badge on other character, other character moves, take off badge
             //can only unequip the badges you wear
             if (caller.entityID == BattleHelper.EntityID.Wilex && et == BadgeMenuEntry.EquipType.Luna)
             {
@@ -972,7 +974,7 @@ public class BadgeSwapBoxMenu : BoxMenu
 
         //note: selecting a badge kicks you out of the menu so I don't need to put this there
         BattleControl.Instance.playerData.usedSP = BattleControl.Instance.playerData.CalculateUsedSP();
-        descriptorString = "Remaining SP: " + (BattleControl.Instance.playerData.sp - BattleControl.Instance.playerData.usedSP);
+        descriptorString = "Uses Left: " + (BattleControl.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.BadgeSwap) * 4 - BattleControl.Instance.badgeSwapUses) + ", SP Left: " + (BattleControl.Instance.playerData.sp - BattleControl.Instance.playerData.usedSP);
 
         if (descriptorString != null)
         {
@@ -1028,7 +1030,14 @@ public class BadgeSwapBoxMenu : BoxMenu
         }
         else
         {
-            popup = new BattlePopup(PlayerMove.CantMoveReason.BadgeTooExpensive);
+            if (BattleControl.Instance.playerData.equippedBadges.Contains(badges[menuIndex]))
+            {
+                popup = new BattlePopup(PlayerMove.CantMoveReason.BadgeUnavailable);
+            }
+            else
+            {
+                popup = new BattlePopup(PlayerMove.CantMoveReason.BadgeTooExpensive);
+            }
         }
 
         BattlePopupMenuScript s = BattlePopupMenuScript.BuildMenu(popup.text);

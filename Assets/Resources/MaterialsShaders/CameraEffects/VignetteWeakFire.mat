@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: VignetteMaskedPrismatic
-  m_Shader: {fileID: 4800000, guid: f7760d4a94d8cd146b04c004662ef187, type: 3}
+  m_Name: VignetteWeakFire
+  m_Shader: {fileID: 4800000, guid: eeae36c090a1de2419202553767871c9, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -45,7 +45,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
-        m_Texture: {fileID: 2800000, guid: 1070919ba45812840959615303e76f1c, type: 3}
+        m_Texture: {fileID: 2800000, guid: a765aa4aaa9e32646b3f11b2edf6ef7a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -69,18 +69,18 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _MaskPower: 1
+    - _MaskPower: 0.7
     - _MaskScale: 3
-    - _MaskScaleX: 12
-    - _MaskScaleY: 1
-    - _MaskScrollX: 0.25
-    - _MaskScrollY: 0.25
+    - _MaskScaleX: 10
+    - _MaskScaleY: 0.2
+    - _MaskScrollX: 0
+    - _MaskScrollY: 0.1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Offset: -0.5
+    - _Offset: -0.1
     - _Parallax: 0.02
-    - _Power: 2
+    - _Power: 3
     - _Scale: 0.05
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -89,8 +89,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1.25, g: 1.25, b: 1.25, a: 1}
-    - _ColorB: {r: 3, g: 3, b: 3, a: 1}
+    - _Color: {r: 1.5, g: 0.2, b: 0, a: 1}
+    - _ColorB: {r: 2, g: 1, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _OuterColor: {r: 1, g: 0.5417922, b: 0, a: 1}
   m_BuildTextureStacks: []

@@ -145,7 +145,7 @@ AuroraWing_EmeraldDust,Emerald Dust,"(Targets All Enemies, Targets All Allies) S
 Plaguebud_HeadSprout,Head Sprout,(Targets Any Enemy) Throw a seed from your head flower to deal weak normal damage and inflict Drain Sprout.,(Higher Difficulties: Heal 4 HP when using this move.)
 Plaguebud_TailSprout,Tail Sprout,(Targets Any Enemy) Toss a seed from your tail flower to deal strong Electric damage and inflict Poison and Bolt Sprout.,(Higher Difficulties: Heal 4 HP when using this move.)
 Starfish_FeebleWave,Feeble Wave,(Targets All Enemies) Summon a massive wave to deal Water damage to all targets and inflict Attack Down.,
-Starfish_FatigueFog,Fatigue Fog,(Targets All Enemies) Summon a cloud of fog to deal Dark damage to all targets and inflict Endurance Down.,
+Starfish_FatigueFog,Fatigue Fog,(Targets All Enemies) Blow a cloud of fog to deal Dark damage to all targets and inflict Endurance Down.,
 Starfish_LeafStorm,Leaf Storm,(Targets All Enemies) Summon a storm of fast moving leaves to deal Earth damage to all targets and inflict Defense Down.,
 CursedEye_UnnervingStare,Unnerving Stare,(Targets All Enemies) Stare down all enemies to deal weak Light damage.,
 CursedEye_MaliciousStare,Malicious Stare,(Targets Lowest Health Enemy) Stare down the weakest target to deal strong Dark damage.,"(Higher Difficulties: Inflicts Seal, preventing you from gaining buffs.)"

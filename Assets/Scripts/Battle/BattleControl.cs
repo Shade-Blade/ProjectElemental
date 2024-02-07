@@ -693,6 +693,8 @@ public class BattleControl : MonoBehaviour
     public int quickBiteUses;
     public int voidBiteUses;
 
+    public int badgeSwapUses;
+
     public BattleHelper.EnvironmentalEffect enviroEffect;
 
     //Bonus energy types

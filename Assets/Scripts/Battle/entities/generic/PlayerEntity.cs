@@ -202,7 +202,7 @@ public class PlayerEntity : BattleEntity
         }
         if (GetWilexMoveMaxLevel((int)WilexMove.MoveType.PreciseStab) > 0)
         {
-            WM_PreciseSlash prs = gameObject.AddComponent<WM_PreciseSlash>();
+            WM_PreciseStab prs = gameObject.AddComponent<WM_PreciseStab>();
             moveset.Add(prs);
             weaponMoves.Add(prs);
         }

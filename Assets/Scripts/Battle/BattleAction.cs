@@ -1437,6 +1437,8 @@ public class BA_BadgeSwap : BattleAction
     {
         PlayerData pd = BattleControl.Instance.playerData;
 
+        //Debug.Log("Badge Swap: " + et + " " + badge);
+
         //what to do?
         switch (et)
         {
@@ -1446,11 +1448,11 @@ public class BA_BadgeSwap : BattleAction
                 break;
             case BadgeMenuEntry.EquipType.Wilex:
                 pd.GetPlayerDataEntry(BattleHelper.EntityID.Wilex).equippedBadges.Remove(badge);
-                pd.equippedBadges.Add(badge);
+                pd.equippedBadges.Remove(badge);
                 break;
             case BadgeMenuEntry.EquipType.Luna:
                 pd.GetPlayerDataEntry(BattleHelper.EntityID.Luna).equippedBadges.Remove(badge);
-                pd.equippedBadges.Add(badge);
+                pd.equippedBadges.Remove(badge);
                 break;
             case BadgeMenuEntry.EquipType.None:
                 BadgeDataEntry bde = Badge.GetBadgeDataEntry(badge);
@@ -1466,7 +1468,10 @@ public class BA_BadgeSwap : BattleAction
                 break;
         }
         pd.usedSP = pd.CalculateUsedSP();
+        //Debug.Log("Used SP is now " + pd.usedSP);
         pd.UpdateMaxStats();
+
+        BattleControl.Instance.badgeSwapUses++;
 
         //update max stats in BattleControl
         //but I need to check for the permanent effects that mess with max stats

@@ -21,6 +21,8 @@ ItemMultiBiteBlock,You must select unique items for Multi Bite!
 MoveExpended,You can't use this move anymore in this battle!
 TeamMoveNoTeammate,This move requires a teammate!
 TeamMoveUnavailableTeammate,Your teammate must be available!
-RibbonUnavailable,You can't equip a single ribbon on both characters!
+RibbonUnavailable,Only the one wearing the ribbon can remove it!
 BadgeSwapDisabled,You cannot equip or unequip this badge with Badge Swap!
 BadgeTooExpensive,Not enough Soul Points!
+BadgeUnavailable,Only the one wearing the badge can remove it!
+BadgeSwapExpended,You can't use Badge Swap anymore this battle!

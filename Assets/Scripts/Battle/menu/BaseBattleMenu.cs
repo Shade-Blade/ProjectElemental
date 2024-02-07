@@ -85,9 +85,10 @@ public class BaseBattleMenu : MenuHandler
             case BaseMenuName.Tactics:
                 return "Tactics";
             case BaseMenuName.BadgeSwap:
-                return "Badge Swap";
+                //A bad idea? Probably not
+                return "Change Badges (" + (BattleControl.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.BadgeSwap) * 4 - BattleControl.Instance.badgeSwapUses) + ")";
             case BaseMenuName.RibbonSwap:
-                return "Ribbon Swap";
+                return "Change Ribbons";
         }
         return "???";
     }
@@ -466,6 +467,14 @@ public class BaseBattleMenu : MenuHandler
                     //Badge swap is a badge (but cheats can let you use badgeswap without actually having the badge)
                     temp = new BaseMenuOption(BaseMenuName.BadgeSwap);
                     temp.canSelect = BattleControl.Instance.playerData.badgeInventory.Count > 0;
+
+                    if (!MainManager.Instance.Cheat_BadgeSwap && (BattleControl.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.BadgeSwap) * 4 - BattleControl.Instance.badgeSwapUses <= 0))
+                    {
+                        temp.canSelect = false;
+                    }
+
+                    temp.cantMoveReason = PlayerMove.CantMoveReason.BadgeSwapExpended;
+
                     break;
                 case BaseMenuName.RibbonSwap:
                     //basically impossible to have ribbon swap but no ribbons?
