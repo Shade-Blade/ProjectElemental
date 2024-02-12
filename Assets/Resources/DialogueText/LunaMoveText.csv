@@ -22,4 +22,4 @@ Index (unused),Name,Description,L2 Description,L3 Description
 20,Light Smash,Smash an enemy with light element. (Light element is stronger against enemies at high hp.),Element formula changes: Bonus based on similar hp proportions.,
 21,Illuminate,Gives the targets Attack Up 2 for 3 turns.,Targets both,"Targets both, gives Parry Aura 1 for 3 turns"
 22,Hammer Beat,Heals 5 hp to all targets and gives 1 focus. Refunds your turn if it hits and action command is successful. Action command difficulty increases the more actions you have taken.,,
-23,Mist Wall,Protects you from negative effects and reduces incoming damage by 33% for 3 turns.,Targets both,"Targets both, applies Bolster Aura 1 for 3 turns"
+23,Mist Wall,Cures and protects you from negative effects and reduces incoming damage by 33% for 3 turns.,Targets both,"Targets both, applies Bolster Aura 1 for 3 turns"

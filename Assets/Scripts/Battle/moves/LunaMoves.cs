@@ -3471,6 +3471,7 @@ public class LM_MistWall : LunaMove
             switch (level)
             {
                 case 1:
+                    caller.CureCurableEffects(false);
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.MistWall, 1, 3));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Immunity, 1, 3));
                     break;
@@ -3478,6 +3479,7 @@ public class LM_MistWall : LunaMove
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
+                        b.CureCurableEffects(false);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.MistWall, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Immunity, 1, 3));
                     }
@@ -3486,6 +3488,7 @@ public class LM_MistWall : LunaMove
                     List<BattleEntity> targetsB = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsB)
                     {
+                        b.CureCurableEffects(false);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.MistWall, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Immunity, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.BolsterAura, 1, 3));
@@ -3499,21 +3502,21 @@ public class LM_MistWall : LunaMove
             switch (level)
             {
                 case 1:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.MistWall, 1, 3));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.MistWall, 1, 2));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.MistWall, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.MistWall, 1, 2));
                     }
                     break;
                 case 3:
                     List<BattleEntity> targetsB = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsB)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.MistWall, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.BolsterAura, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.MistWall, 1, 2));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.BolsterAura, 1, 2));
                     }
                     break;
             }
