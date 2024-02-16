@@ -59,6 +59,21 @@ public class SettingsManager : MonoBehaviour
     public void UpdateSetting(Setting s, int index)
     {
         settingsValues[(int)s] = index;
+
+        switch (s)
+        {
+            case Setting.FPS:
+                Debug.Log("update " + index);
+                if (index == 0)
+                {
+                    Application.targetFrameRate = 30;
+                }
+                if (index == 1)
+                {
+                    Application.targetFrameRate = 60;
+                }
+                break;
+        }
     }
 
     public string GetSettingString()
@@ -148,6 +163,11 @@ public class SettingsManager : MonoBehaviour
             }
         }
 
-        InputManager.SetControlsWithKeyCodeStrings(split[1], split[2]);
+        InputManager.SetControlsWithKeyCodeStrings(split[1], split[2]);        
+    }
+
+    public void UpdateSettings()
+    {
+
     }
 }
