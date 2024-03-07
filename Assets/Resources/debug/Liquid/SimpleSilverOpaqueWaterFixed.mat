@@ -7,14 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SimpleSilverWater
-  m_Shader: {fileID: 4800000, guid: a29e45e22a1e6514abb49380b614502a, type: 3}
+  m_Name: SimpleSilverOpaqueWaterFixed
+  m_Shader: {fileID: 4800000, guid: c17eadbabada7364482011812ed2fcd0, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2899
+  m_CustomRenderQueue: 2999
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -64,11 +64,13 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _FadeLength: 3
-    - _FoamAlpha: 0.7
+    - _FixedDepth: 0
+    - _FoamAlpha: 1
     - _FoamLength: 0.15
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _GlowPower: 1
     - _HorizonPower: 2
     - _Metallic: 0
     - _Mode: 0
@@ -78,14 +80,14 @@ Material:
     - _SpecPower: 5
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _TopAlpha: 0.3
+    - _TopAlpha: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.56078434, g: 0.57450986, b: 0.69803923, a: 1}
+    - _Color: {r: 0.56078434, g: 0.5764706, b: 0.69803923, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 0.9019608, g: 0.9019608, b: 1, a: 1}
-    - _GlowColor: {r: 0.44, g: 0.45222223, b: 0.55, a: 1}
+    - _GlowColor: {r: 0.4392157, g: 0.4509804, b: 0.54901963, a: 1}
     - _HorizonColor: {r: 0.9019608, g: 0.9019608, b: 1, a: 1}
     - _SpecColor: {r: 1, g: 0.016662598, b: 0, a: 1}
   m_BuildTextureStacks: []

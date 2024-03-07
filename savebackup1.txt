@@ -1,8 +1,8 @@
 sus
 
 
-AetherTrench,Test_LandscapeC7,9.087305|0.8749998|-9.776907
-546.0314
+AetherTrench,Test_LandscapeC7,9.086961|0.8749998|-9.776577
+543.165
 25,0,56,60,60,60,60,60,0,0,0,0,10,32,6,6,6,0,0,2,0,0,0,0,2,0,2,2
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP
 HP
@@ -16,7 +16,7 @@ SafetyRibbon|1,SharpRibbon|2,BeginnerRibbon|3,ExpertRibbon|4,ChampionRibbon|5,St
 Defense|4|5|5,Fortune|3|3|0
 
 2,0
-Wilex,36,36,2,2,SoftRibbon|9,0,0,0,0,0,0,1.533178
-PerfectPower|78,FirstPower|81,FirstShield|82,AttackBoost|102,AttackBoostB|103,EnduranceBoost|106,EnduranceBoostB|107,AgilityBoost|108
-Luna,54,54,2,2,MimicRibbon|10,0,0,0,0,31,1,5.009583
+Luna,54,54,2,2,MimicRibbon|10,0,0,0,0,301,3.676202
 PerfectShield|79,FirstEndurance|83,DefenseBoost|104,DefenseBoostB|105,BadgeSwap|1
+Wilex,36,36,2,2,SoftRibbon|9,0,0,0,0,00,0
+PerfectPower|78,FirstPower|81,FirstShield|82,AttackBoost|102,AttackBoostB|103,EnduranceBoost|106,EnduranceBoostB|107,AgilityBoost|108

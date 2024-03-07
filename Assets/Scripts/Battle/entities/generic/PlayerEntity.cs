@@ -2833,15 +2833,15 @@ public class PlayerEntity : BattleEntity
             }
         }
 
-        if (BadgeEquipped(Badge.BadgeType.PowerClock))
+        if (BadgeEquipped(Badge.BadgeType.MagicClock))
         {
             if (BattleControl.Instance.turnCount % 4 == 1)
             {
-                bonus += 2 * BadgeEquippedCount(Badge.BadgeType.PowerClock);
+                bonus += 2 * BadgeEquippedCount(Badge.BadgeType.MagicClock);
             }
             if (BattleControl.Instance.turnCount % 4 == 3)
             {
-                bonus -= 2 * BadgeEquippedCount(Badge.BadgeType.PowerClock);
+                bonus -= 2 * BadgeEquippedCount(Badge.BadgeType.MagicClock);
             }
         }
 
@@ -2957,26 +2957,26 @@ public class PlayerEntity : BattleEntity
             }
         }
 
-        if (BadgeEquipped(Badge.BadgeType.PowerClock))
+        if (BadgeEquipped(Badge.BadgeType.MagicClock))
         {
             if (BattleControl.Instance.turnCount % 4 == 2)
             {
-                bonus += 2 * BadgeEquippedCount(Badge.BadgeType.PowerClock);
+                bonus += 2 * BadgeEquippedCount(Badge.BadgeType.MagicClock);
             }
             if (BattleControl.Instance.turnCount % 4 == 0)
             {
-                bonus -= 2 * BadgeEquippedCount(Badge.BadgeType.PowerClock);
+                bonus -= 2 * BadgeEquippedCount(Badge.BadgeType.MagicClock);
             }
         }
 
-        if (BadgeEquipped(Badge.BadgeType.GearShield))
+        if (BadgeEquipped(Badge.BadgeType.ShieldGear))
         {
             if (hitsTaken % 4 == 3)
             {
-                bonus += 3 * BadgeEquippedCount(Badge.BadgeType.GearShield);
+                bonus += 3 * BadgeEquippedCount(Badge.BadgeType.ShieldGear);
             } else
             {
-                bonus -= BadgeEquippedCount(Badge.BadgeType.GearShield);
+                bonus -= BadgeEquippedCount(Badge.BadgeType.ShieldGear);
             }
         }
 

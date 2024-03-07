@@ -42,6 +42,9 @@ public class PlayerData
         public int maxDamagePerTurn;
         public int maxDamageSingleHit;
 
+        public int turnsInFront;
+        public float timeInFront;
+
 
         public SpriteID GetSpriteID()
         {
@@ -130,9 +133,12 @@ public class PlayerData
             output += maxDamagePerTurn;
             output += ",";
             output += maxDamageSingleHit;
+            output += ",";
+            output += turnsInFront;
+            output += ",";
+            output += timeInFront;
             output += "\n";
             output += Badge.ListToString(equippedBadges);       //equipped list appears at the bottom because it's a list
-
 
             return output;
         }
@@ -222,6 +228,20 @@ public class PlayerData
             {
                 int.TryParse(split[10], out temp);
                 output.maxDamageSingleHit = temp;
+            }
+
+            temp = 0;
+            if (split.Length > 11)
+            {
+                int.TryParse(split[11], out temp);
+                output.turnsInFront = temp;
+            }
+
+            float tempF = 0f;
+            if (split.Length > 12)
+            {
+                float.TryParse(split[12], out tempF);
+                output.timeInFront = tempF;
             }
 
             List<Badge> badgeList = Badge.ParseList(input[1]);
@@ -1277,6 +1297,12 @@ public class PlayerData
                 count++;
             } else
             {
+                if ((int)(partyEquippedBadges[i].type) - 1 < 0)
+                {
+                    Debug.LogError("Player has illegal badge");
+                    continue;
+                }
+
                 if (GlobalBadgeScript.Instance.badgeDataTable[(int)(partyEquippedBadges[i].type) - 1].copy == b)
                 {
                     count++;
@@ -1365,6 +1391,12 @@ public class PlayerData
             }
             else
             {
+                if ((int)(pde.equippedBadges[i].type) - 1 < 0)
+                {
+                    Debug.LogError("Player has illegal badge");
+                    continue;
+                }
+
                 if (GlobalBadgeScript.Instance.badgeDataTable[(int)(pde.equippedBadges[i].type) - 1].copy == b)
                 {
                     count++;
@@ -3840,6 +3872,11 @@ public class MainManager : MonoBehaviour
             }
         }
 
+        if (worldMode == WorldMode.Overworld)
+        {
+            playerData.party[0].timeInFront += Time.deltaTime;
+        }
+
         if (GetGlobalFlag(GlobalFlag.GF_Burden_Greed))
         {
             if (worldMode == WorldMode.Battle)
@@ -4968,6 +5005,7 @@ public class MainManager : MonoBehaviour
     }
     public FileMenuEntry ConstructFileMenuEntry(int index)
     {
+        Debug.Log("Parse file " + index);
         try
         {
             FileMenuEntry output = new FileMenuEntry();
@@ -6252,6 +6290,11 @@ public class MainManager : MonoBehaviour
     {
         Dictionary<GlobalFlag, bool> output = new Dictionary<GlobalFlag, bool>();
 
+        if (input.Replace("\r", "").Length == 0)
+        {
+            return output;
+        }
+
         string[] split = input.Split(",");
 
         if ((split.Length == 0) || (split.Length == 1 && split[0].Length < 1))
@@ -6274,12 +6317,12 @@ public class MainManager : MonoBehaviour
                 Debug.LogWarning("[ParseGlobalFlagString] Could not parse GlobalFlag " + tempSplit[0]);
             }
 
-            if (bool.TryParse(tempSplit[1], out tempBool))
+            if (tempSplit.Length > 1 && bool.TryParse(tempSplit[1], out tempBool))
             {
 
             } else
             {
-                Debug.LogWarning("[ParseGlobalFlagString] Could not parse bool " + tempSplit[1]);
+                Debug.LogWarning("[ParseGlobalFlagString] Could not parse bool " + (tempSplit.Length < 2 ? "??" : tempSplit[1]));
             }
 
             if ((int)temp != -1)
@@ -6321,6 +6364,11 @@ public class MainManager : MonoBehaviour
     {
         Dictionary<GlobalVar, string> output = new Dictionary<GlobalVar, string>();
 
+        if (input.Replace("\r", "").Length == 0)
+        {
+            return output;
+        }
+
         string[] split = input.Split(",");
 
         if ((split.Length == 0) || (split.Length == 1 && split[0].Length < 1))
@@ -6333,7 +6381,7 @@ public class MainManager : MonoBehaviour
             string[] tempSplit = split[i].Split(":");
 
             GlobalVar temp = (GlobalVar)(-1);
-            string tempStr = tempSplit[1];
+            string tempStr = tempSplit.Length > 1 ? tempSplit[1] : null;
 
             if (Enum.TryParse(tempSplit[0], true, out temp))
             {
@@ -6341,7 +6389,7 @@ public class MainManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("[ParseGlobalFlagString] Could not parse GlobalFlag " + tempSplit[0]);
+                Debug.LogWarning("[ParseGlobalVarString] Could not parse GlobalVar " + tempSplit[0]);
             }
 
 

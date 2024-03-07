@@ -313,9 +313,9 @@ public struct Badge
         MetalPower,
         AttackFormation,
         DefenseFormation,
-        PowerClock,
+        MagicClock,
         PowerGear,
-        GearShield,
+        ShieldGear,
         EnergyGear,
         PowerMomentum,
         TenaciousStrikes,
@@ -540,7 +540,7 @@ public struct Badge
     public static List<Badge> ParseList(string input)
     {
         //Debug.Log(input);
-        string[] split = input.Split(",");
+        string[] split = input.Replace("\r","").Split(",");
         List<Badge> output = new List<Badge>();
 
         //Empty

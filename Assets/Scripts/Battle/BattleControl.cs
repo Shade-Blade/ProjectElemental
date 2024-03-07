@@ -3649,6 +3649,9 @@ public class BattleControl : MonoBehaviour
         //Visual things
         visualXP = MainManager.EasingQuadraticTime(visualXP, battleXP, 50);
 
+        //stat thing
+        playerData.GetPlayerDataEntry(GetFrontmostAlly(-1).entityID).timeInFront += Time.deltaTime;
+
         playerData.ep = ep;
         playerData.maxEP = maxEP;
         playerData.se = se;
@@ -4515,6 +4518,7 @@ public class BattleControl : MonoBehaviour
 
         turnCount++;
         playerData.cumulativeBattleTurns++;
+        playerData.GetPlayerDataEntry(GetFrontmostAlly(-1).entityID).turnsInFront++;
         if (battleMapScript != null)
         {
             battleMapScript.OnPreTurn();

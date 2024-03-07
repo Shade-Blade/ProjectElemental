@@ -495,7 +495,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 emptyString = "No Equipped Badges";
                 break;
             case Pause_HandlerEquip.BadgeSubpage.SingleEquipped:
-                Debug.Log("Generate all of " + selectedPlayer + "'s badges");
+                //Debug.Log("Generate all of " + selectedPlayer + "'s badges");
                 List<Badge> sinv = pd.GetPlayerDataEntry(selectedPlayer).equippedBadges;
                 sinv = SortBadges(sinv);
 
