@@ -6831,6 +6831,21 @@ public class MainManager : MonoBehaviour
     {
         return input * (1 + heaviness) - input * input * heaviness;
     }
+
+    //Watch out for impossible values
+    //(Also watch out for ambiguous values with high heaviness)
+    public static float InverseEasingQuadratic(float input, float heaviness)
+    {
+        float h = heaviness;
+        float x = input;
+
+        float termA = (h + 1) / (2 * h);
+        float termB = Mathf.Sqrt(h * h - 4 * h * x + 2 * h + 1) / (2 * h);
+
+        return termA - termB;
+    }
+
+
     //exponential easing (positive = fast at start, negative = fast at end. Heaviness can be anything
     //(graph out the formula for more specifics)
     public static float EasingExponential(float input, float heaviness)

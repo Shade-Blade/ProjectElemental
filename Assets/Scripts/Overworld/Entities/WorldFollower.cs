@@ -702,7 +702,7 @@ public class WorldFollower : WorldEntity
 
         //need to add a correction for some reason (Lighting fix)
         float correctedRotation = facingRotation;
-        bool specialShowBack = false;
+        //bool specialShowBack = false;
         if (followerIndex == 0 && MainManager.Instance.playerData.party.Count > 1)
         {
             correctedRotation = facingRotation + WorldPlayer.Instance.switchRotation;

@@ -59,8 +59,8 @@ public class PlayerTurnController : MonoBehaviour
         MoveExecute,
         ActionExecute,
         Switch,
-        //SwitchCharacter,
         SuperSwap,
+        Null,       //error condition (can't do anything)
         Suspend
     }
     public MenuExitType mexitType = MenuExitType.None;
@@ -467,6 +467,7 @@ public class PlayerTurnController : MonoBehaviour
             switch (mexitType)
             {
                 case MenuExitType.MoveExecute:
+                case MenuExitType.Null:
                     exit = true;
                     break;
                 case MenuExitType.ActionExecute:
@@ -959,6 +960,7 @@ public class PlayerTurnController : MonoBehaviour
         {
             case MenuExitType.MoveExecute:
             case MenuExitType.ActionExecute:
+            case MenuExitType.Null:
                 mresult = menu.GetFullResult();
                 menu.ActiveClear();
                 break;
@@ -971,5 +973,17 @@ public class PlayerTurnController : MonoBehaviour
         mexitType = t;
         inMenu = false;
         return;
+    }
+
+    //These are "filters"
+    //(so you can disable stuff remotely)
+    //  (This is mainly for tutorials where you are scripted to use certain moves)
+    public bool CanChoose(Move pm, BattleEntity b)
+    {
+        return true;
+    }
+    public bool CanChoose(BattleAction pm, BattleEntity b)
+    {
+        return true;
     }
 }

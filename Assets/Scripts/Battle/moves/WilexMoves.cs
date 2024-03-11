@@ -160,7 +160,7 @@ public class WM_HighStomp : WilexMove
                     targetPos += Vector3.down * height + Vector3.left * 0.5f * height;
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                     //StartCoroutine(caller.RevertScale(0.1f));
-                    yield return StartCoroutine(caller.Jump(targetPos, 0.5f, height / 2));
+                    yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
                     yield return StartCoroutine(caller.Move(caller.homePos));
                 }
             }
@@ -393,7 +393,7 @@ public class WM_MultiStomp : WilexMove
                         targetPos += Vector3.down * height + Vector3.left * 0.5f * height;
                         //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                         //StartCoroutine(caller.RevertScale(0.1f));
-                        yield return StartCoroutine(caller.Jump(targetPos, 0.5f, height / 2));
+                        yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
                         fail = true;
                     }
                 }
@@ -617,7 +617,7 @@ public class WM_Taunt : WilexMove
 
             foreach (BattleEntity b in targets)
             {
-                BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Fire, 0);
+                BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
                 caller.InflictEffect(b, new Effect(Effect.EffectType.Berserk, 1, 2), caller.posId);
             }
         }
@@ -627,7 +627,7 @@ public class WM_Taunt : WilexMove
 
             foreach (BattleEntity b in targets)
             {
-                BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Fire, 0);
+                BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
                 caller.InflictEffect(b, new Effect(Effect.EffectType.Berserk, 1, 2), caller.posId);
             }
         }
@@ -968,7 +968,7 @@ public class WM_DoubleStomp : WilexMove
                         targetPos += Vector3.down * height + Vector3.left * 0.5f * height;
                         //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                         //StartCoroutine(caller.RevertScale(0.1f));
-                        yield return StartCoroutine(caller.Jump(targetPos, 0.5f, height / 2));
+                        yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
                         yield return StartCoroutine(caller.Move(caller.homePos));
                         break;
                     }
@@ -1130,7 +1130,7 @@ public class WM_Overstomp : WilexMove
                     targetPos += Vector3.down * height + Vector3.left * 0.5f * height;
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                     //StartCoroutine(caller.RevertScale(0.1f));
-                    yield return StartCoroutine(caller.Jump(targetPos, 0.5f, height / 2));
+                    yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
                     yield return StartCoroutine(caller.Move(caller.homePos));
                 }
             }
@@ -1534,6 +1534,9 @@ public class WM_TeamQuake : WilexMove
             }
 
             MainManager.Instance.StartCoroutine(MainManager.Instance.CameraShake1D(Vector3.up, 0.3f, 0.5f));
+            Shockwave(caller, 1);
+            yield return new WaitForSeconds(0.1f);
+
             int c = 0;
             foreach (BattleEntity target in targets)
             {
@@ -1564,6 +1567,14 @@ public class WM_TeamQuake : WilexMove
         caller.InflictEffectForce(other, new Effect(Effect.EffectType.Cooldown, 1, 255));
         other.actionCounter++;
 
+    }
+
+    public virtual void Shockwave(BattleEntity caller, int level = 1)
+    {
+        //Impact effect
+        GameObject eoShockwave;
+        eoShockwave = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_TeamQuakeShockwave"), BattleControl.Instance.transform);
+        eoShockwave.transform.position = transform.position + Vector3.down * 0.2f;  //(so that it fades away smoother at the end)
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -1801,17 +1812,19 @@ public class WM_Slash : WilexMove
         }
 
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
-        target += Vector3.left * 0.5f * caller.width;
+        target += Vector3.left * 0.5f * caller.width + 0.5f * Vector3.left;
         yield return StartCoroutine(caller.Move(target));
 
         if (caller.curTarget != null)
         {
             int sd = 2;
+            int sl = 0;
 
             AC_HoldLeft actionCommand = null;
             if (caller is PlayerEntity pcaller)
             {
                 sd = pcaller.GetWeaponDamage();
+                sl = pcaller.GetWeaponLevel();
                 actionCommand = gameObject.AddComponent<AC_HoldLeft>();
                 actionCommand.Init(pcaller);
                 actionCommand.Setup(ActionCommandTime());
@@ -1820,13 +1833,14 @@ public class WM_Slash : WilexMove
             yield return new WaitUntil(() => actionCommand.IsStarted());
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
                 actionCommand.End();
                 Destroy(actionCommand);
             }
+
+            yield return StartCoroutine(SwingAnimations(caller, sl, level));
             if (GetOutcome(caller))
             {
                 DealDamage(caller, sd, result);
@@ -1835,8 +1849,8 @@ public class WM_Slash : WilexMove
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             }
+            yield return new WaitForSeconds(0.1f);
         }
         yield return StartCoroutine(caller.Move(caller.homePos));
     }
@@ -1844,6 +1858,27 @@ public class WM_Slash : WilexMove
     public virtual float ActionCommandTime()
     {
         return 0.5f;
+    }
+    public virtual IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
+    {
+        GameObject eoS = null;
+        switch (sl)
+        {
+            default:
+            case 0:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash0"), BattleControl.Instance.transform);
+                break;
+            case 1:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash1"), BattleControl.Instance.transform);
+                break;
+            case 2:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash2"), BattleControl.Instance.transform);
+                break;
+        }
+        eoS.transform.position = transform.position + Vector3.up * 0.325f;
+
+        //slightly before the end (So that damage is dealt before the effect completes)
+        yield return new WaitForSeconds(0.1f);
     }
     public virtual bool GetOutcome(BattleEntity caller)
     {
@@ -1940,20 +1975,22 @@ public class WM_MultiSlash : WM_Slash
         }
 
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
-        target += Vector3.left * 0.5f * caller.width;
+        target += Vector3.left * 0.5f * caller.width + 0.5f * Vector3.left;
         yield return StartCoroutine(caller.Move(target));
 
         if (caller.curTarget != null)
         {
             int sd = 2;
+            int sl = 0;
 
-            AC_HoldLeft actionCommand = null;
+            AC_MashLeft actionCommand = null;
             if (caller is PlayerEntity pcaller)
             {
                 sd = pcaller.GetWeaponDamage();
-                actionCommand = gameObject.AddComponent<AC_HoldLeft>();
+                sl = pcaller.GetWeaponLevel();
+                actionCommand = gameObject.AddComponent<AC_MashLeft>();
                 actionCommand.Init(pcaller);
-                actionCommand.Setup(ActionCommandTime());
+                actionCommand.Setup(1f, 5);
             }
 
             yield return new WaitUntil(() => actionCommand.IsStarted());
@@ -1971,6 +2008,8 @@ public class WM_MultiSlash : WM_Slash
             {
                 hits = 1;
             }
+            StartCoroutine(SwingAnimations(caller, sl, hits));
+            yield return new WaitForSeconds(0.1f);
             if (GetOutcome(caller))
             {
                 for (int i = 0; i < hits; i++)
@@ -1985,12 +2024,13 @@ public class WM_MultiSlash : WM_Slash
                         DealDamage(caller, sd, i, result, true);
                     }
                 }
+                yield return new WaitForSeconds(0.1f);
             }
             else
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                //yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             }
         }
         yield return StartCoroutine(caller.Move(caller.homePos));
@@ -1999,6 +2039,67 @@ public class WM_MultiSlash : WM_Slash
     public override float ActionCommandTime()
     {
         return 0.5f;
+    }
+    public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int hits = 1)
+    {
+        if (!GetOutcome(caller))
+        {
+            hits = 1;
+        }
+
+        float delay = 0.5f / hits;
+        if (delay < 0.15f)
+        {
+            delay = 0.15f;
+        }
+
+        bool flip = false;
+
+        GameObject eoS;
+        
+        for (int i = 0; i < hits; i++)
+        {
+            eoS = null;
+            switch (sl)
+            {
+                default:
+                case 0:
+                    eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash0"), BattleControl.Instance.transform);
+                    break;
+                case 1:
+                    eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash1"), BattleControl.Instance.transform);
+                    break;
+                case 2:
+                    eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash2"), BattleControl.Instance.transform);
+                    break;
+            }
+            eoS.transform.position = transform.position + Vector3.up * 0.325f;
+
+            //2 hits: 30, 30
+            //4 hits: 30, 30, 15, 15
+            //6 hits: 30, 30, 15, 15, -30, -30
+
+            int k = i / 2;
+            float angle = 30 * (1 - k);
+
+            if (k == 1)
+            {
+                angle = 15;
+            }
+
+            eoS.transform.localEulerAngles = Vector3.right * angle * (flip ? -1 : 1);
+
+            if (flip)
+            {
+                eoS.transform.localScale = new Vector3(0.65f, 0.8f, -0.65f);
+            }
+            flip = !flip;
+
+            yield return new WaitForSeconds(delay);
+        }
+
+        //slightly before the end (So that damage is dealt before the effect completes)
+        //yield return new WaitForSeconds(0.1f);
     }
     public override bool GetOutcome(BattleEntity caller)
     {
@@ -2155,14 +2256,16 @@ public class WM_SlipSlash : WilexMove
 
             Vector3 midpoint = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.left * 1.5f + Vector3.forward * 1.5f;
 
-            Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset) + (caller.width / 2) * Vector3.left;
+            Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset) + (caller.width / 2) * Vector3.left + Vector3.left * 0.3f;
 
             int sd = 2;
+            int sl = 0;
 
             AC_HoldLeft actionCommand = null;
             if (caller is PlayerEntity pcaller)
             {
                 sd = pcaller.GetWeaponDamage();
+                sl = pcaller.GetWeaponLevel();
                 actionCommand = gameObject.AddComponent<AC_HoldLeft>();
                 actionCommand.Init(pcaller);
                 actionCommand.Setup(caller.GetMoveTime(target, caller.entitySpeed * 1.5f) + 0.25f + ActionCommand.TIMING_WINDOW);
@@ -2215,7 +2318,7 @@ public class WM_SlipSlash : WilexMove
 
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+            yield return StartCoroutine(SwingAnimations(caller, sl, level));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
@@ -2258,6 +2361,28 @@ public class WM_SlipSlash : WilexMove
             }
         }
         yield return StartCoroutine(caller.Move(caller.homePos));
+    }
+
+    public virtual IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
+    {
+        GameObject eoS = null;
+        switch (sl)
+        {
+            default:
+            case 0:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash0"), BattleControl.Instance.transform);
+                break;
+            case 1:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash1"), BattleControl.Instance.transform);
+                break;
+            case 2:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash2"), BattleControl.Instance.transform);
+                break;
+        }
+        eoS.transform.position = transform.position + Vector3.up * 0.325f;
+
+        //slightly before the end (So that damage is dealt before the effect completes)
+        yield return new WaitForSeconds(0.1f);
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -2433,6 +2558,15 @@ public class WM_PreciseStab : WM_Slash
     }
     */
 
+    public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
+    {
+        //Particles
+        GameObject particle = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_PreciseStab"), BattleControl.Instance.transform);
+        particle.transform.position = caller.ApplyScaledOffset(Vector3.up * 0.5f) + Vector3.right * 0.3f;
+
+        //slightly before the end (So that damage is dealt before the effect completes)
+        yield return new WaitForSeconds(0.1f);
+    }
     public override bool GetOutcome(BattleEntity caller)
     {
         return caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water);
@@ -2647,11 +2781,13 @@ public class WM_SwordDance : WilexMove
             Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset) + (caller.width / 2) * Vector3.left;
 
             int sd = 2;
+            int sl = 0;
 
             AC_HoldLeft actionCommand = null;
             if (caller is PlayerEntity pcaller)
             {
                 sd = pcaller.GetWeaponDamage();
+                sl = pcaller.GetWeaponLevel();
                 actionCommand = gameObject.AddComponent<AC_HoldLeft>();
                 actionCommand.Init(pcaller);
                 actionCommand.Setup(caller.GetMoveTime(target, caller.entitySpeed * 1.5f) + 0.25f + ActionCommand.TIMING_WINDOW);
@@ -2666,7 +2802,7 @@ public class WM_SwordDance : WilexMove
 
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+            yield return StartCoroutine(SwingAnimations(caller, sl, level));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
@@ -2726,6 +2862,28 @@ public class WM_SwordDance : WilexMove
             }
         }
         yield return StartCoroutine(caller.Move(caller.homePos));
+    }
+
+    public virtual IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
+    {
+        GameObject eoS = null;
+        switch (sl)
+        {
+            default:
+            case 0:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash0"), BattleControl.Instance.transform);
+                break;
+            case 1:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash1"), BattleControl.Instance.transform);
+                break;
+            case 2:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash2"), BattleControl.Instance.transform);
+                break;
+        }
+        eoS.transform.position = transform.position + Vector3.up * 0.325f;
+
+        //slightly before the end (So that damage is dealt before the effect completes)
+        yield return new WaitForSeconds(0.1f);
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -2957,6 +3115,16 @@ public class WM_DarkSlash : WM_Slash
                     break;
             }
         }
+    }
+
+    public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
+    {
+        GameObject eoS = null;
+        eoS = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_DarkSlash"), BattleControl.Instance.transform);
+        eoS.transform.position = transform.position + Vector3.up * 0.325f;
+
+        //slightly before the end (So that damage is dealt before the effect completes)
+        yield return new WaitForSeconds(0.1f);
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)

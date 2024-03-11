@@ -446,13 +446,13 @@ public class SM_ElectroDischarge : SoulMove
                 {
                     if (level > 1)
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Air, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Air, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 2, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, 3));
                     }
                     else
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Air, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Air, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 2, 3));
                     }
                 }
@@ -471,13 +471,13 @@ public class SM_ElectroDischarge : SoulMove
                 {
                     if (level > 1)
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Air, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Air, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, 3));
                     }
                     else
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Air, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Air, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 1, 3));
                     }
                 }
@@ -696,13 +696,13 @@ public class SM_Overheat : SoulMove
                 {
                     if (level > 1)
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Fire, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 4, 255));
                     }
                     else
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Fire, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, 3));
                     }
                 }
@@ -721,13 +721,13 @@ public class SM_Overheat : SoulMove
                 {
                     if (level > 1)
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Fire, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, 255));
                     }
                     else
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Fire, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, 3));
                     }
                 }
@@ -953,14 +953,14 @@ public class SM_FlashFreeze : SoulMove
                 {
                     if (level > 1)
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Light, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Light, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, 255));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, 255));
                     }
                     else
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Light, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Light, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, 3));
                     }
                 }
@@ -979,14 +979,14 @@ public class SM_FlashFreeze : SoulMove
                 {
                     if (level > 1)
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Light, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Light, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, 2));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 1, 255));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 1, 255));
                     }
                     else
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Light, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Light, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, 2));
                     }
                 }
@@ -1060,8 +1060,6 @@ public class SM_Cleanse : SoulMove
     {
         switch (level)
         {
-            case 1:
-                return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
             default:
                 return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
         }
@@ -1114,7 +1112,7 @@ public class SM_Cleanse : SoulMove
             {
                 if (caller.GetAttackHit(b, BattleHelper.DamageType.Spectral))
                 {
-                    BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Spectral, 0);
+                    BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Spectral, 0);
                     b.CureCleanseableEffects(false);
                     if (level > 1)
                     {
@@ -1134,7 +1132,7 @@ public class SM_Cleanse : SoulMove
             {
                 if (caller.GetAttackHit(b, BattleHelper.DamageType.Spectral))
                 {
-                    BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Spectral, 0);
+                    BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Spectral, 0);
                     b.CureCleanseableEffects(false);
                     if (level > 1)
                     {
@@ -1237,7 +1235,7 @@ public class SM_Blight : SoulMove
                 {
                     if (caller.GetAttackHit(b, BattleHelper.DamageType.Astral))
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Astral, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Astral, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DrainSprout, 1, 4));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.BoltSprout, 1, 4));
                     }
@@ -1252,7 +1250,7 @@ public class SM_Blight : SoulMove
                 BattleEntity b = caller.curTarget;
                 if (caller.GetAttackHit(b, BattleHelper.DamageType.Astral))
                 {
-                    BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Astral, 0);
+                    BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Astral, 0);
                     caller.InflictEffect(b, new Effect(Effect.EffectType.DrainSprout, 1, 3));
                     caller.InflictEffect(b, new Effect(Effect.EffectType.BoltSprout, 1, 3));
                 }
@@ -1272,7 +1270,7 @@ public class SM_Blight : SoulMove
                 {
                     if (caller.GetAttackHit(b, BattleHelper.DamageType.Astral))
                     {
-                        BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Astral, 0);
+                        BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Astral, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DrainSprout, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.BoltSprout, 1, 3));
                     }
@@ -1287,7 +1285,7 @@ public class SM_Blight : SoulMove
                 BattleEntity b = caller.curTarget;
                 if (caller.GetAttackHit(b, BattleHelper.DamageType.Astral))
                 {
-                    BattleEntity.SpecialInvokeHurtEvents(b, BattleHelper.DamageType.Astral, 0);
+                    BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Astral, 0);
                     caller.InflictEffect(b, new Effect(Effect.EffectType.DrainSprout, 1, 2));
                     caller.InflictEffect(b, new Effect(Effect.EffectType.BoltSprout, 1, 2));
                 }

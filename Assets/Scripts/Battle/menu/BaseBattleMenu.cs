@@ -535,6 +535,23 @@ public class BaseBattleMenu : MenuHandler
 
         Sort();
         Canvas.ForceUpdateCanvases();
+
+
+        //failsafe check
+        bool anyUsable = false;
+        for (int i = 0; i < baseMenuOptions.Count; i++)
+        {
+            if (baseMenuOptions[i].canSelect)
+            {
+                anyUsable = true;
+            }
+        }
+
+        if (!anyUsable)
+        {
+            menuExit?.Invoke(this, new MenuExitEventArgs(GetFullResult()));
+            PlayerTurnController.Instance.ExitMenu(PlayerTurnController.MenuExitType.Null);
+        }
     }
     public override void Clear()
     {

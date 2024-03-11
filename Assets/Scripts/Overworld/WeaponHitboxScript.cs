@@ -11,6 +11,8 @@ public class WeaponHitboxScript : MonoBehaviour
 
     public bool hitboxActive = false;
 
+    public Vector3 lastPos;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +26,7 @@ public class WeaponHitboxScript : MonoBehaviour
         {
             player = WorldPlayer.Instance;
         }
+        lastPos = transform.position;
         switch (player.GetActionState())
         {
             case WorldPlayer.ActionState.Slash:
@@ -33,8 +36,11 @@ public class WeaponHitboxScript : MonoBehaviour
                     visualCollider.SetActive(true);
                 }
                 collider.enabled = true;
-                collider.radius = WorldPlayer.SWORD_HITBOX_RADIUS; 
-                visualCollider.transform.localScale = Vector3.one * WorldPlayer.SWORD_HITBOX_RADIUS * 2;
+                collider.radius = WorldPlayer.SWORD_HITBOX_RADIUS;
+                if (visualCollider != null)
+                {
+                    visualCollider.transform.localScale = Vector3.one * WorldPlayer.SWORD_HITBOX_RADIUS * 2;
+                }
 
                 float slashProgress = player.GetVisualAttackTime() / WorldPlayer.SWORD_SWING_TIME;
                 if (slashProgress >= 1)
@@ -42,7 +48,7 @@ public class WeaponHitboxScript : MonoBehaviour
                     slashProgress = 1;
                 }
 
-                float slashAngle = (-MainManager.EasingQuadratic(slashProgress, 1.5f) + 0.5f) * WorldPlayer.SWORD_ANGLE_SPREAD;
+                float slashAngle = (-MainManager.EasingQuadratic(slashProgress, 1) + 0.5f) * WorldPlayer.SWORD_ANGLE_SPREAD;
 
                 float offset = WorldPlayer.SWORD_HITBOX_OFFSET;
                 transform.localPosition = Vector3.forward * offset * Mathf.Sin(slashAngle * (Mathf.PI / 180f)) + Vector3.right * offset * Mathf.Cos(slashAngle * (Mathf.PI / 180f));
@@ -65,14 +71,20 @@ public class WeaponHitboxScript : MonoBehaviour
                 if (smashProgress >= 1 || player.GetAttackTime() != player.GetVisualAttackTime())
                 {
                     collider.radius = WorldPlayer.HAMMER_BIG_RADIUS;
-                    visualCollider.transform.localScale = Vector3.one * WorldPlayer.HAMMER_BIG_RADIUS * 2;
+                    if (visualCollider != null)
+                    {
+                        visualCollider.transform.localScale = Vector3.one * WorldPlayer.HAMMER_BIG_RADIUS * 2;
+                    }
                 } else
                 {
                     collider.radius = WorldPlayer.HAMMER_HITBOX_RADIUS;
-                    visualCollider.transform.localScale = Vector3.one * WorldPlayer.HAMMER_HITBOX_RADIUS * 2;
+                    if (visualCollider != null)
+                    {
+                        visualCollider.transform.localScale = Vector3.one * WorldPlayer.HAMMER_HITBOX_RADIUS * 2;
+                    }
                 }
 
-                float smashAngle = (1 - MainManager.EasingQuadratic(smashProgress, 2)) * WorldPlayer.HAMMER_ANGLE_SPREAD + WorldPlayer.HAMMER_DOWN_ANGLE;
+                float smashAngle = (1 - MainManager.EasingQuadratic(smashProgress, 1)) * WorldPlayer.HAMMER_ANGLE_SPREAD + WorldPlayer.HAMMER_DOWN_ANGLE;
 
                 float offsetB = WorldPlayer.HAMMER_HITBOX_OFFSET;
 
@@ -170,7 +182,8 @@ public class WeaponHitboxScript : MonoBehaviour
         if (interrupt && secondaryCheck)
         {
             //Final check to make oblique hits not fail
-            Vector3 checkPos = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+            //Note: this seems buggy (Mesh colliders act a bit sus)
+            Vector3 checkPos = other.ClosestPointOnBounds(transform.position);
             checkPos -= transform.position;
 
             //float checker = Vector3.Dot(player.FacingVector(), checkPos);
@@ -182,7 +195,7 @@ public class WeaponHitboxScript : MonoBehaviour
             //My dot product setup didn't work right :(
             if (checkPos.magnitude < 0.3f)
             {
-                player.InterruptWeapon();
+                player.InterruptWeapon(lastPos, transform.position);
             }
         }
     }

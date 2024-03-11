@@ -416,7 +416,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
 
     public enum CantMoveReason
     {
-        Unknown = 0,
+        Unknown = 0,    //this is the "you just can't use it" text
         NoTargets,
         NotEnoughEnergy,
         NotEnoughSoul,
@@ -447,6 +447,11 @@ public abstract class PlayerMove : Move, IEntityHighlighter
 
     public virtual CantMoveReason GetCantMoveReason(BattleEntity caller, int level = 1)
     {
+        if (BattleControl.IsPlayerControlled(caller, true) && !PlayerTurnController.Instance.CanChoose(this, caller))
+        {
+            return CantMoveReason.Unknown;
+        }
+
         if (GetTargetArea(caller, level).range != TargetArea.TargetAreaType.None && BattleControl.Instance.GetEntities(caller, GetBaseTarget()).Count == 0)
         {
             return CantMoveReason.NoTargets;
@@ -1481,6 +1486,11 @@ public abstract class Move : MonoBehaviour
     //Note that this base form calls the GetEntity function
     public virtual bool CanChoose(BattleEntity caller, int level = 1)
     {
+        if (BattleControl.IsPlayerControlled(caller, true) && !PlayerTurnController.Instance.CanChoose(this, caller))
+        {
+            return false;
+        }
+
         //make sure at least one target is available
         if (GetTargetArea(caller, level).range == TargetArea.TargetAreaType.None || BattleControl.Instance.GetEntities(caller, GetBaseTarget()).Count > 0)
         {

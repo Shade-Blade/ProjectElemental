@@ -55,11 +55,15 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
     {
         return true;
     }
-
-    //Note: I had to code in some normal move stuff
-    //Possible future thing to code: code a "reason why you can't use this" function
+    
+    //copies stuff from the move code
     public virtual bool CanChoose(BattleEntity caller)
     {
+        if (!PlayerTurnController.Instance.CanChoose(this, caller))
+        {
+            return false;
+        }
+
         if (GetBaseCost() == 0)
         {
             return true;
@@ -152,6 +156,11 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
 
     public virtual CantMoveReason GetCantMoveReason(BattleEntity caller)
     {
+        if (BattleControl.IsPlayerControlled(caller, true) && !PlayerTurnController.Instance.CanChoose(this, caller))
+        {
+            return CantMoveReason.Unknown;
+        }
+
         if (GetBaseTarget().range != TargetArea.TargetAreaType.None && BattleControl.Instance.GetEntities(caller, GetBaseTarget()).Count == 0)
         {
             return CantMoveReason.NoTargets;

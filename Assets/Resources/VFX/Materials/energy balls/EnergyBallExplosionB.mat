@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: EnergyBallExplosionB
-  m_Shader: {fileID: 4800000, guid: 4048641cfc8e7cc4893ef12f95edeba7, type: 3}
+  m_Shader: {fileID: 4800000, guid: 5e36473d06367c246b9181e3aac9bd70, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -86,10 +86,10 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.78431374, g: 0.22852783, b: 0, a: 0.6}
-    - _ColorB: {r: 1, g: 0.69950783, b: 0, a: 1}
-    - _Emission: {r: 4, g: 0.25, b: 0, a: 1}
-    - _EmissionB: {r: 5, g: 2, b: 1, a: 1}
+    - _Color: {r: 0.78431374, g: 0.41218722, b: 0, a: 1}
+    - _ColorB: {r: 1, g: 0.8137485, b: 0, a: 1}
+    - _Emission: {r: 2.0939956, g: 0.4347785, b: 0.047411162, a: 1}
+    - _EmissionB: {r: 3.14877, g: 1.7401097, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 0}

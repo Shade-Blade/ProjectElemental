@@ -3991,8 +3991,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         target.InvokeHurtEvents(type, properties);
     }
     //version that should be used if outside of DealDamage
-    public static void SpecialInvokeHurtEvents(BattleEntity target, BattleHelper.DamageType type, ulong properties)
+    public static void SpecialInvokeHurtEvents(BattleEntity attacker, BattleEntity target, BattleHelper.DamageType type, ulong properties)
     {
+        target.lastAttacker = attacker;
         target.lastDamageType = type;
         target.lastDamageTaken = 0;
         target.lastDamageTakenInput = 0;
@@ -6663,6 +6664,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public IEnumerator Move(Vector3 position, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
+        if (transform.position == position)
+        {
+            yield break;
+        }
+
+        bool frameOne = false;
+
         if (animate)
         {
             yield return null;
@@ -6696,6 +6704,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             {
                 diff = diff.normalized * entitySpeed * Time.deltaTime;
                 transform.position += diff;
+                frameOne = true;
                 yield return null; //Keep going
             }
             else
@@ -6703,6 +6712,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 transform.position = position;
                 break;
             }
+        }
+
+        if (!frameOne)
+        {
+            yield return null;
         }
 
         if (animate && animateEnd)
@@ -6721,6 +6735,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public IEnumerator Move(Vector3 position, float speed, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
+        if (transform.position == position)
+        {
+            yield break;
+        }
+
+        bool frameOne = false;
+
         if (animate)
         {
             yield return null;
@@ -6756,6 +6777,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             {
                 diff = diff.normalized * speed * Time.deltaTime;
                 transform.position += diff;
+                frameOne = true;
                 yield return null; //Keep going
             }
             else
@@ -6763,6 +6785,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 transform.position = position;
                 break;
             }
+        }
+
+        if (!frameOne)
+        {
+            yield return null;
         }
 
         if (animate && animateEnd)

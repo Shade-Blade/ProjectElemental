@@ -72,6 +72,7 @@ public class WorldPlayer : WorldEntity
     public GameObject floorNormalObject;
     public GameObject perpetualParticleObject;  //the illuminate, aetherize and dig actions produce perpetual particles
     public List<GameObject> stalePerpetualParticles;
+    public GameObject swooshParticle;   //swoosh from slashing or smashing (Reference is kept so that stopping the swing looks correct)
 
     public GameObject interactIndicator;    //Cyan colored
     public bool indicatorActive;
@@ -346,7 +347,7 @@ public class WorldPlayer : WorldEntity
     //sword / hammer info
     public const float SWORD_ANIM_TIME = 0.3f;
     public const float SWORD_SWING_TIME = 0.2f;
-    public const float SWORD_ANGLE_SPREAD = 120f;    //How far the sword swings around (note: hitbox sticks out making this slightly higher than expected)
+    public const float SWORD_ANGLE_SPREAD = 150f;    //How far the sword swings around (note: hitbox sticks out making this slightly higher than expected)
     public const float SWORD_HITBOX_OFFSET = 0.6f;
     public const float SWORD_HITBOX_RADIUS = 0.325f;
     public const float SWORD_INTERRUPT_LENIENCY = 0.075f;   //Sword can pass through walls more easily (also makes it possible to swing sword next to a wall without it instantly bonking)
@@ -358,7 +359,7 @@ public class WorldPlayer : WorldEntity
     public const float HAMMER_HITBOX_OFFSET = 0.7f;
     public const float HAMMER_HITBOX_RADIUS = 0.4f;
     public const float HAMMER_BIG_RADIUS = 0.75f;   //After the interrupt, the hitbox becomes a lot bigger (like it's making a shockwave or something)
-    public const float HAMMER_INTERRUPT_LENIENCY = 0.0167f;   //time where weapon moves can't be interrupted
+    public const float HAMMER_INTERRUPT_LENIENCY = 0.075f;   //time where weapon moves can't be interrupted (Required to make the particles look right?)
 
     //Step up / down
     public const float STEP_UP_MINIMUM = 0.1f;
@@ -3114,11 +3115,11 @@ public class WorldPlayer : WorldEntity
             collision.rigidbody.AddForce(-8 * (kicknormal + Vector3.up * 0.2f), ForceMode.Impulse);
         }
 
-        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Player/Effect_SmallShockwave"), MainManager.Instance.mapScript.transform);
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SmallShockwave"), MainManager.Instance.mapScript.transform);
         effect.transform.position = kickpos;
         effect.transform.rotation = Quaternion.LookRotation(kicknormal) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
 
-        Debug.Log("Bonk: " + kickpos + " with normal " + kicknormal);
+        //Debug.Log("Bonk: " + kickpos + " with normal " + kicknormal);
     }
 
     public void StartSlash()
@@ -3128,6 +3129,24 @@ public class WorldPlayer : WorldEntity
         visualAttackTime = 0;
         attackInterrupted = false;
         reswingBuffer = 0;
+
+        GameObject eoI = null;
+        switch (SwordLevel())
+        {
+            default:
+            case 0:
+                eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash0"), realOrientationObject.transform);
+                break;
+            case 1:
+                eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash1"), realOrientationObject.transform);
+                break;
+            case 2:
+                eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash2"), realOrientationObject.transform);
+                break;
+        }
+        eoI.transform.localPosition = Vector3.zero;
+        eoI.transform.localRotation = Quaternion.identity;
+        swooshParticle = eoI;
     }
 
     public void StartSmash()
@@ -3137,6 +3156,24 @@ public class WorldPlayer : WorldEntity
         visualAttackTime = 0;
         attackInterrupted = false;
         reswingBuffer = 0;
+
+        GameObject eoI = null;
+        switch (HammerLevel())
+        {
+            default:
+            case 0:
+                eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_HammerSwoosh0"), realOrientationObject.transform);
+                break;
+            case 1:
+                eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_HammerSwoosh1"), realOrientationObject.transform);
+                break;
+            case 2:
+                eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_HammerSwoosh2"), realOrientationObject.transform);
+                break;
+        }
+        eoI.transform.localPosition = Vector3.zero;
+        eoI.transform.localRotation = Quaternion.identity;
+        swooshParticle = eoI;
     }
 
     public void ResetWeapon()
@@ -3145,6 +3182,11 @@ public class WorldPlayer : WorldEntity
         visualAttackTime = 0;
         attackInterrupted = false;
         reswingBuffer = 0;
+
+        if (swooshParticle != null)
+        {
+            Destroy(swooshParticle);
+        }
     }
 
     public float GetAttackTime()
@@ -3157,8 +3199,51 @@ public class WorldPlayer : WorldEntity
         return visualAttackTime;
     }
 
-    public void InterruptWeapon()
+    public void InterruptWeapon(Vector3 weaponLastPos, Vector3 weaponGlobalPos)
     {
+        if (swooshParticle != null && !attackInterrupted)
+        {
+            if (actionState == ActionState.Smash)
+            {
+                swooshParticle.GetComponent<Effect_Swoosh>().StopRotation();
+
+                //Also spawn impact
+                GameObject effect;
+                switch (HammerLevel())
+                {
+                    default:
+                    case 0:
+                        effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_HammerShockwave0"), MainManager.Instance.mapScript.transform);
+                        break;
+                    case 1:
+                        effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_HammerShockwave1"), MainManager.Instance.mapScript.transform);
+                        break;
+                    case 2:
+                        effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_HammerShockwave2"), MainManager.Instance.mapScript.transform);
+                        break;
+                }
+
+                //"slightly wrong" interpolation
+                //"correct" interpolation is to use the arc the hammer travels through but that is annoying
+                Vector3 midpoint = (weaponLastPos + weaponGlobalPos) / 2;
+
+                //fix
+                Vector3 delta = Vector3.Cross(Vector3.up, FacingVector());   //points perpendicular to weapon and up plane
+                //Debug.Log((midpoint - transform.position) + " -> " + delta);
+                delta = Vector3.Cross((midpoint - transform.position), delta);       //points down relative to weapon
+
+                delta = -delta.normalized * HAMMER_HITBOX_RADIUS;
+                //Debug.Log(delta);
+
+                effect.transform.position = midpoint + delta;
+
+                effect.transform.rotation = Quaternion.LookRotation(delta) * Quaternion.FromToRotation(Vector3.up, Vector3.back);
+            }
+            else
+            {
+                swooshParticle.GetComponent<Effect_Swoosh>().StopRotationSword();
+            }
+        }
         //Interrupt slash or smash in the middle of its animation
         attackInterrupted = true;
     }
@@ -3526,6 +3611,17 @@ public class WorldPlayer : WorldEntity
     {
         PlayerData.PlayerDataEntry pde = MainManager.Instance.playerData.GetPlayerDataEntry(EntityID.Luna);
         return pde == null ? false : pde.jumpLevel >= 2;
+    }
+
+    public int SwordLevel()
+    {
+        PlayerData.PlayerDataEntry pde = MainManager.Instance.playerData.GetPlayerDataEntry(EntityID.Wilex);
+        return pde == null ? 0 : pde.weaponLevel;
+    }
+    public int HammerLevel()
+    {
+        PlayerData.PlayerDataEntry pde = MainManager.Instance.playerData.GetPlayerDataEntry(EntityID.Luna);
+        return pde == null ? 0 : pde.weaponLevel;
     }
 
     public void HazardZoneTouch()
@@ -3950,7 +4046,7 @@ public class WorldPlayer : WorldEntity
 
         //no sticky penalty since there is no floor
 
-        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Player/Effect_Jump_Spark"), MainManager.Instance.mapScript.transform);
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Spark"), MainManager.Instance.mapScript.transform);
         effect.transform.position = transform.position;
 
         applyJumpLift = true;
@@ -4016,7 +4112,7 @@ public class WorldPlayer : WorldEntity
         }
         */
 
-        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Player/Effect_SmallShockwave"), MainManager.Instance.mapScript.transform);
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SmallShockwave"), MainManager.Instance.mapScript.transform);
         effect.transform.position = transform.position + Vector3.down * ((height / 2) + 0.05f);
 
         applyDashJumpLift = true;
@@ -4058,7 +4154,7 @@ public class WorldPlayer : WorldEntity
         }
         */
 
-        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Player/Effect_Jump_Flame"), MainManager.Instance.mapScript.transform);
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Flame"), MainManager.Instance.mapScript.transform);
         effect.transform.position = transform.position + Vector3.down * ((height / 2) + 0.05f);
 
         applySuperJumpLift = true;
