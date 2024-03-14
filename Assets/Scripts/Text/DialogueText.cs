@@ -365,31 +365,31 @@ public class TMPString
             case TagEntry.TextTag.HighlightYesColor:
                 if (!tag.open)
                 {
-                    output = "</color>";
+                    output = "</color></font>";
                 }
                 else
                 {
-                    output = "<color=#00ff00>";
+                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkGreen Outline + Overlay\"><color=#00ff00>";
                 }
                 break;
             case TagEntry.TextTag.HighlightNoColor:
                 if (!tag.open)
                 {
-                    output = "</color>";
+                    output = "</color></font>";
                 }
                 else
                 {
-                    output = "<color=#ff0000>";
+                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkRed Outline + Overlay\"><color=#ff0000>";
                 }
                 break;
             case TagEntry.TextTag.HighlightDangerColor:
                 if (!tag.open)
                 {
-                    output = "</color>";
+                    output = "</color></font>";
                 }
                 else
                 {
-                    output = "<color=#ff8000>";
+                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkOrange Outline + Overlay\"><color=#ff8000>";
                 }
                 break;
             case TagEntry.TextTag.DescriptionWarnColor:
@@ -435,41 +435,41 @@ public class TMPString
             case TagEntry.TextTag.HighlightHPColor:
                 if (!tag.open)
                 {
-                    output = "</color>";
+                    output = "</color></font>";
                 }
                 else
                 {
-                    output = "<color=#00ff00>";
+                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkRed Outline + Overlay\"><color=#00ff00>";
                 }
                 break;
             case TagEntry.TextTag.HighlightEPColor:
                 if (!tag.open)
                 {
-                    output = "</color>";
+                    output = "</color></font>";
                 }
                 else
                 {
-                    output = "<color=#ffff00>";
+                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkYellow Outline + Overlay\"><color=#ffff00>";
                 }
                 break;
             case TagEntry.TextTag.HighlightSEColor:
                 if (!tag.open)
                 {
-                    output = "</color>";
+                    output = "</color></font>";
                 }
                 else
                 {
-                    output = "<color=#ff00ff>";
+                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkMagenta Outline + Overlay\"><color=#ff00ff>";
                 }
                 break;
             case TagEntry.TextTag.HighlightSTColor:
                 if (!tag.open)
                 {
-                    output = "</color>";
+                    output = "</color></font>";
                 }
                 else
                 {
-                    output = "<color=#a0ffa0>";
+                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkMint Outline + Overlay\"><color=#a0ffa0>";
                 }
                 break;
             case TagEntry.TextTag.Sprite:

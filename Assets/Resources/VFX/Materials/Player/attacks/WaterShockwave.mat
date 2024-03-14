@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SuperJump
+  m_Name: WaterShockwave
   m_Shader: {fileID: 4800000, guid: c51911399fdecd54ca78ea41be7b4b8f, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -89,10 +89,10 @@ Material:
     - _YFactor: -2
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.6784314, g: 0, b: 0.031679835, a: 0.41960785}
-    - _ColorB: {r: 0.8784314, g: 0.20599827, b: 0.09411766, a: 1}
-    - _Emission: {r: 2, g: 0, b: 0, a: 1}
-    - _EmissionB: {r: 7, g: 0.1, b: 0, a: 1}
+    - _Color: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
+    - _ColorB: {r: 1, g: 1, b: 1, a: 1}
+    - _Emission: {r: 0.26666668, g: 0.53333336, b: 0.7529412, a: 1}
+    - _EmissionB: {r: 0, g: 1.0288147, b: 1.8, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 0}

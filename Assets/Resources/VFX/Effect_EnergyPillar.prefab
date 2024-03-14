@@ -47,8 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pillar: {fileID: 5143238194697033353}
   maxLifetime: 0.75
-  lifetimeRatio: 0.2
-  lifetimeRatioB: 0.2
+  lifetimeRatio: 0.4
+  lifetimeRatioB: 0.4
   maxRotation: 360
   easingPower: 2
 --- !u!1001 &5866057063591976420

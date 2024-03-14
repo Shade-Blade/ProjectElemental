@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EffectScript_SingleShockwave : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class EffectScript_SingleShockwave : MonoBehaviour
     {
         //propertyBlock = new MaterialPropertyBlock();
         frustum.transform.localScale = Vector3.up * startYScale + (Vector3.right + Vector3.forward) * startXZScale;
+        frustum.transform.localPosition = Vector3.up * (startYScale);
     }
 
     // Update is called once per frame
@@ -41,8 +43,8 @@ public class EffectScript_SingleShockwave : MonoBehaviour
         }
 
         //transform.localScale = Vector3.one * (startScale + (maxScale - startScale) * Easing(newLifetime));
-        float YScale = (startYScale + (maxYScale - startYScale) * newLifetime);
-        float XZScale = (startXZScale + (maxXZScale - startXZScale) * Easing(newLifetime));
+        float YScale = Mathf.Lerp(startYScale, maxYScale, newLifetime); // (startYScale + (maxYScale - startYScale) * newLifetime);
+        float XZScale = Mathf.Lerp(startXZScale, maxXZScale, Easing(newLifetime)); // (startXZScale + (maxXZScale - startXZScale) * Easing(newLifetime));
         frustum.transform.localScale = Vector3.up * YScale + (Vector3.right + Vector3.forward) * XZScale;
         frustum.transform.localPosition = Vector3.up * (YScale);
 

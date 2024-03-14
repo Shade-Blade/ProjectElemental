@@ -77,7 +77,7 @@ public class CheatMenu : MenuHandler
 
             if (e.keyCode == KeyCode.Backspace)
             {
-                if (currString.Length > 0)
+                if (currString != null && currString.Length > 0)
                 {
                     currString = currString.Substring(0, currString.Length - 1);
                 } else

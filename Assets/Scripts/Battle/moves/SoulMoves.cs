@@ -57,6 +57,7 @@ public class SM_Revitalize : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -66,6 +67,7 @@ public class SM_Revitalize : SoulMove
             Destroy(actionCommand);
         }
 
+        EndAnimation(caller, level, result);
         if (result)
         {
             yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
@@ -78,6 +80,7 @@ public class SM_Revitalize : SoulMove
                 }
                 yield return new WaitForSeconds(0.5f);
                 caller.HealEnergy(12);
+                yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
                     b.CureCurableEffects();
@@ -92,6 +95,7 @@ public class SM_Revitalize : SoulMove
                 }
                 yield return new WaitForSeconds(0.5f);
                 caller.HealEnergy(6);
+                yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
                     b.CureCurableEffects();
@@ -109,11 +113,12 @@ public class SM_Revitalize : SoulMove
                     b.HealHealth(6);
                 }
                 yield return new WaitForSeconds(0.5f);
+                caller.HealEnergy(6);
+                yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
-                    b.HealEnergy(6);
+                    b.CureCurableEffects();
                 }
-
             }
             else
             {
@@ -124,11 +129,31 @@ public class SM_Revitalize : SoulMove
                 }
                 yield return new WaitForSeconds(0.5f);
                 caller.HealEnergy(3);
+                yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
                     b.CureCurableEffects();
                 }
             }
+        }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_RevitalizeSoulCast"), BattleControl.Instance.transform);
+        eo.transform.position = caller.ApplyScaledOffset(Vector3.zero);
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+        foreach (BattleEntity b in targets)
+        {
+            GameObject eo = null;
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_RevitalizeShockwave"), BattleControl.Instance.transform);
+            eo.transform.position = b.ApplyScaledOffset(Vector3.zero);
+            eo.transform.localRotation = Quaternion.identity;
         }
     }
 
@@ -195,6 +220,7 @@ public class SM_Hasten : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -202,8 +228,9 @@ public class SM_Hasten : SoulMove
         {
             actionCommand.End();
             Destroy(actionCommand);
-        }        
+        }
 
+        EndAnimation(caller, level, result);
         if (result)
         {
             yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
@@ -237,6 +264,36 @@ public class SM_Hasten : SoulMove
             }
         }
     }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_HastenSoulCast"), BattleControl.Instance.transform);
+        eo.transform.position = caller.ApplyScaledOffset(Vector3.zero);
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        if (level == 1)
+        {
+            GameObject eo = null;
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_HastenShockwave"), BattleControl.Instance.transform);
+            eo.transform.position = caller.curTarget.ApplyScaledOffset(Vector3.zero);
+            eo.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+            foreach (BattleEntity b in targets)
+            {
+                GameObject eo = null;
+                eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_HastenShockwave"), BattleControl.Instance.transform);
+                eo.transform.position = b.ApplyScaledOffset(Vector3.zero);
+                eo.transform.localRotation = Quaternion.identity;
+            }
+        }
+    }
+
 
     public override void PreMove(BattleEntity caller, int level = 1)
     {
@@ -290,6 +347,7 @@ public class SM_LeafStorm : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -301,6 +359,7 @@ public class SM_LeafStorm : SoulMove
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
 
+        EndAnimation(caller, level, result);
         ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.Static);
         if (result)
         {
@@ -346,6 +405,25 @@ public class SM_LeafStorm : SoulMove
                 }
             }
         }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_EarthFlowIn"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_EarthFlowOut"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -426,6 +504,7 @@ public class SM_ElectroDischarge : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -437,6 +516,7 @@ public class SM_ElectroDischarge : SoulMove
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
 
+        EndAnimation(caller, level, result);
         if (result)
         {
             yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
@@ -487,6 +567,25 @@ public class SM_ElectroDischarge : SoulMove
                 }
             }
         }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_SparkFlowIn"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_SparkFlowOut"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -541,6 +640,7 @@ public class SM_MistWave : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -552,6 +652,7 @@ public class SM_MistWave : SoulMove
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
 
+        EndAnimation(caller, level, result);
         ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.Static);
         if (result)
         {
@@ -597,6 +698,25 @@ public class SM_MistWave : SoulMove
                 }
             }
         }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_WaterFlowIn"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_WaterFlowOut"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -676,6 +796,7 @@ public class SM_Overheat : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -687,6 +808,7 @@ public class SM_Overheat : SoulMove
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
 
+        EndAnimation(caller, level, result);
         if (result)
         {
             yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
@@ -737,6 +859,25 @@ public class SM_Overheat : SoulMove
                 }
             }
         }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_FireFlowIn"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_FireFlowOut"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -791,6 +932,7 @@ public class SM_VoidCrush : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -802,6 +944,7 @@ public class SM_VoidCrush : SoulMove
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
 
+        EndAnimation(caller, level, result);
         if (result)
         {
             yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
@@ -848,6 +991,25 @@ public class SM_VoidCrush : SoulMove
                 }
             }
         }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_DarkFlowIn"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_DarkFlowOut"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -933,6 +1095,7 @@ public class SM_FlashFreeze : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -944,6 +1107,7 @@ public class SM_FlashFreeze : SoulMove
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
 
+        EndAnimation(caller, level, result);
         if (result)
         {
             yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
@@ -996,6 +1160,25 @@ public class SM_FlashFreeze : SoulMove
                 }
             }
         }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_LightFlowIn"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_LightFlowOut"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -1094,6 +1277,7 @@ public class SM_Cleanse : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -1105,6 +1289,7 @@ public class SM_Cleanse : SoulMove
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
 
+        EndAnimation(caller, level, result);
         if (result)
         {
             yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
@@ -1145,6 +1330,21 @@ public class SM_Cleanse : SoulMove
                 }
             }
         }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_CleanseSoulCast"), BattleControl.Instance.transform);
+        eo.transform.position = caller.ApplyScaledOffset(Vector3.zero);
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_CleanseFlowOut"), BattleControl.Instance.transform);
+        eo.transform.position = caller.ApplyScaledOffset(Vector3.up * 0.5f);
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -1211,6 +1411,7 @@ public class SM_Blight : SoulMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -1225,6 +1426,7 @@ public class SM_Blight : SoulMove
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.Static;
         propertyBlock += (ulong)BattleHelper.DamageProperties.CountDebuffs2;
 
+        EndAnimation(caller, level, result);
         if (result)
         {
             yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
@@ -1295,6 +1497,21 @@ public class SM_Blight : SoulMove
                 }
             }
         }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_BlightSoulCast"), BattleControl.Instance.transform);
+        eo.transform.position = caller.ApplyScaledOffset(Vector3.zero);
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_BlightFlowOut"), BattleControl.Instance.transform);
+        eo.transform.position = caller.ApplyScaledOffset(Vector3.up * 0.5f);
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)

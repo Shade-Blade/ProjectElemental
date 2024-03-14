@@ -262,6 +262,7 @@ public class LM_Brace : LunaMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        BraceEffect(caller);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -305,6 +306,14 @@ public class LM_Brace : LunaMove
             }
 
         }
+    }
+
+    public void BraceEffect(BattleEntity caller)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_BraceRadialFlowIn"), BattleControl.Instance.transform);
+        eo.transform.position = caller.ApplyScaledOffset(Vector3.up * 0.5f);
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -857,6 +866,7 @@ public class LM_MeteorStomp : LunaMove
 
             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
             //StartCoroutine(caller.RevertScale(0.1f));
+            StartJumpEffects(caller);
             yield return StartCoroutine(caller.JumpHeavy(tpos, 4, 0.65f, -0.25f));
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -868,6 +878,7 @@ public class LM_MeteorStomp : LunaMove
 
             if (GetOutcome(caller, sd))
             {
+                StompEffects(caller, result);
                 if (result)
                 {
                     DealDamageSuccess(caller, sd);
@@ -903,6 +914,15 @@ public class LM_MeteorStomp : LunaMove
         }
     }
 
+    public virtual void StartJumpEffects(BattleEntity caller)
+    {
+
+    }
+    public virtual void StompEffects(BattleEntity caller, bool result)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_MeteorShockwave"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.down * (0.05f);
+    }
     public bool GetOutcome(BattleEntity caller, int sd)
     {
         return caller.GetAttackHit(caller.curTarget, 0);
@@ -1013,6 +1033,7 @@ public class LM_UnderStrike : LunaMove
             int sd = 2;
 
             Vector3 bpos = caller.homePos + caller.curTarget.height * 2 * Vector3.down;
+            DigParticles(caller);
             yield return StartCoroutine(caller.Move(bpos, 16));
 
             AC_PressButtonTimed actionCommand = null;
@@ -1050,6 +1071,7 @@ public class LM_UnderStrike : LunaMove
                 {
                     if (level > 1)
                     {
+                        DigParticles(caller);
                         DealDamageSuccessA(caller, sd);
                         AC_Jump actionCommand2 = null;
                         if (caller is PlayerEntity pcaller2) //we have technology
@@ -1088,6 +1110,7 @@ public class LM_UnderStrike : LunaMove
                     }
                     else
                     {
+                        DigParticles(caller);
                         DealDamageSuccess(caller, sd);
                         yield return StartCoroutine(caller.JumpHeavy(spos, 2, 0.5f, 0.15f));
                     }
@@ -1095,6 +1118,7 @@ public class LM_UnderStrike : LunaMove
                 }
                 else
                 {
+                    DigParticles(caller);
                     DealDamageFailure(caller, sd);
                     yield return StartCoroutine(caller.JumpHeavy(spos, 0.5f, 0.5f, 0.15f));
                     yield return StartCoroutine(caller.Move(caller.homePos));
@@ -1117,6 +1141,13 @@ public class LM_UnderStrike : LunaMove
         }
     }
 
+    public void DigParticles(BattleEntity caller)
+    {
+        GameObject eoI = null;
+        eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Dig"), BattleControl.Instance.transform);
+        eoI.transform.position = caller.transform.position - (caller.transform.position.y * Vector3.up) + (caller.homePos.y * Vector3.up);
+        eoI.transform.localRotation = Quaternion.identity;
+    }
     public bool GetOutcome(BattleEntity caller, int sd)
     {
         return caller.GetAttackHit(caller.curTarget, 0);
@@ -1262,6 +1293,7 @@ public class LM_IronStomp : LunaMove
 
             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
             //StartCoroutine(caller.RevertScale(0.1f));
+            StartJumpEffects(caller);
             yield return StartCoroutine(caller.JumpHeavy(tpos, 4, 0.65f, -0.25f));
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -1273,6 +1305,7 @@ public class LM_IronStomp : LunaMove
 
             if (GetOutcome(caller, sd))
             {
+                StompEffects(caller, result);
                 if (result)
                 {
                     DealDamageSuccess(caller, sd);
@@ -1308,6 +1341,15 @@ public class LM_IronStomp : LunaMove
         }
     }
 
+    public virtual void StartJumpEffects(BattleEntity caller)
+    {
+
+    }
+    public virtual void StompEffects(BattleEntity caller, bool result)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_IronShockwave"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.down * (0.05f);
+    }
     public bool GetOutcome(BattleEntity caller, int sd)
     {
         return caller.GetAttackHit(caller.curTarget, 0);
@@ -1393,6 +1435,7 @@ public class LM_ElementalStomp : LunaMove
 
             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
             //StartCoroutine(caller.RevertScale(0.1f));
+            StartJumpEffects(caller);
             yield return StartCoroutine(caller.JumpHeavy(tpos, 4, 0.65f, -0.25f));
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -1404,6 +1447,7 @@ public class LM_ElementalStomp : LunaMove
 
             if (GetOutcome(caller, sd))
             {
+                StompEffects(caller, result);
                 if (result)
                 {
                     DealDamageSuccess(caller, sd);
@@ -1439,6 +1483,15 @@ public class LM_ElementalStomp : LunaMove
         }
     }
 
+    public virtual void StartJumpEffects(BattleEntity caller)
+    {
+
+    }
+    public virtual void StompEffects(BattleEntity caller, bool result)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_RainbowShockwave"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.down * (0.05f);
+    }
     public bool GetOutcome(BattleEntity caller, int sd)
     {
         return caller.GetAttackHit(caller.curTarget, 0);
@@ -2311,6 +2364,42 @@ public class LM_PowerSmash : LM_Smash
     public override float ActionCommandTime()
     {
         return 0.5f;
+    }
+    public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
+    {
+        GameObject eoS = null;
+        switch (sl)
+        {
+            default:
+            case 0:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_HammerSwoosh0"), BattleControl.Instance.transform);
+                break;
+            case 1:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_HammerSwoosh1"), BattleControl.Instance.transform);
+                break;
+            case 2:
+                eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_HammerSwoosh2"), BattleControl.Instance.transform);
+                break;
+        }
+        eoS.transform.position = transform.position + Vector3.up * 0.325f;
+
+        yield return new WaitForSeconds(0.2f);
+        //Impact effect
+        GameObject eoShockwave;
+        switch (sl)
+        {
+            default:
+            case 0:
+                eoShockwave = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_PowerShockwave0"), BattleControl.Instance.transform);
+                break;
+            case 1:
+                eoShockwave = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_PowerShockwave1"), BattleControl.Instance.transform);
+                break;
+            case 2:
+                eoShockwave = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_PowerShockwave2"), BattleControl.Instance.transform);
+                break;
+        }
+        eoShockwave.transform.position = transform.position + Vector3.right * 0.7f;
     }
     public override bool GetOutcome(BattleEntity caller)
     {

@@ -748,7 +748,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.5
+      value: 0.6
       mode: 0
       spread: 0
       speed:
@@ -9730,5 +9730,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2534f79a948fd4b8649c5ae73ff062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ps: {fileID: 6454174494320837046}
-  basePower: 16

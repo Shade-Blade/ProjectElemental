@@ -78,16 +78,16 @@ public class Effect_Swoosh : MonoBehaviour
         }
         stopped = true;
 
-        float timeB = MainManager.EasingQuadratic(time / lifetime, 1);
+        float timeB = MainManager.EasingQuadratic(time / lifetime, 1) * lifetime;
 
         //Special thing for sword swoosh
-        if (time > scaleMidpoint || timeB > (2/3f))
+        if (time > scaleMidpoint || timeB/lifetime > (2/3f))
         {
 
         } else
         {
-            scaleMax = Mathf.Lerp(startXScale, endXScale, (timeB / (scaleMidpoint / lifetime)));
-            lifetime = MainManager.InverseEasingQuadratic(timeB * 1.5f, 1) * lifetime;
+            scaleMax = Mathf.Lerp(startXScale, endXScale, (timeB / (scaleMidpoint)));
+            lifetime = MainManager.InverseEasingQuadratic((timeB/lifetime) * 1.5f, 1) * lifetime;
             scaleMidpoint = timeB;
         }
     }

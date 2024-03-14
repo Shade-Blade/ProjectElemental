@@ -92,7 +92,7 @@ Material:
     - _Color: {r: 0.4245283, g: 0.37261626, b: 0.31799573, a: 1}
     - _ColorB: {r: 0.5283019, g: 0.4427493, b: 0.32096833, a: 1}
     - _Emission: {r: 0.6509804, g: 0.55053467, b: 0.5137255, a: 1}
-    - _EmissionB: {r: 0.7058824, g: 0.63003093, b: 0.5764706, a: 1}
+    - _EmissionB: {r: 1.2, g: 1, b: 0.6, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 0}

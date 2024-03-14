@@ -4,7 +4,7 @@ Index (unused),Name,Description,L2 Description,L3 Description
 2,Multistomp,Stomp on all enemies in a row.,,
 3,Electro Stomp,Jump on an enemy with electric element. Ignores all contact hazards. (Air/Electric damage pierces defense except for specifically air/electric defense.),Bonus damage based on target defense. Inflicts Defense Down 2 for 3 turns,
 4,Taunt,Makes all enemies berserk and makes them target the user.,,
-5,Paralyze Stomp,Jump on an enemy and paralyze it. Paralyzing an enemy will halve its attack power.,,
+5,Paralyze Stomp,Jump on an enemy with electric element and paralyze it. Ignores all contact hazards. Paralyzing an enemy will halve its attack power.,,
 6,Flame Stomp,Jump on an enemy with flame element. (Fire damage gets boosted up to 0.66x based on how much the enemy took damage this turn and last turn),Inflicts Sunder 3 at the end of your turn.,
 7,Double Stomp,Jump on an enemy twice. Base hit is stomp + 1. Second hit is 0.75x as strong.,"Hits 3 times, but 3rd hit is x0.75 of the 2nd hit.",
 8,Overstomp,Stomp an enemy a little too hard. (Deals recoil damage equal to base stomp power),,

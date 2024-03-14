@@ -54,10 +54,10 @@ MonoBehaviour:
   offsetXZ: -0.075
   offsetY: -0.025
   maxLifetime: 0.3
-  maxXZScale: 0.75
+  maxXZScale: 0.6
   maxYScale: 0.1
-  startXZScale: 0.125
-  startYScale: 0.5
+  startXZScale: 0.1
+  startYScale: 0.4
   easingPower: 2
 --- !u!1001 &1478412133704282986
 PrefabInstance:
@@ -140,7 +140,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ba6d1ba06369ed6499aa8c31656e965a, type: 2}
+      objectReference: {fileID: 2100000, guid: a584bcfd2ac2e4a4ebc47866ba13bbf0, type: 2}
     - target: {fileID: 919132149155446097, guid: 09ef31b7b2617e04ca3655ec3637f184,
         type: 3}
       propertyPath: m_Name
@@ -241,7 +241,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ba6d1ba06369ed6499aa8c31656e965a, type: 2}
+      objectReference: {fileID: 2100000, guid: a584bcfd2ac2e4a4ebc47866ba13bbf0, type: 2}
     - target: {fileID: 919132149155446097, guid: 09ef31b7b2617e04ca3655ec3637f184,
         type: 3}
       propertyPath: m_Name
@@ -342,7 +342,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ba6d1ba06369ed6499aa8c31656e965a, type: 2}
+      objectReference: {fileID: 2100000, guid: a584bcfd2ac2e4a4ebc47866ba13bbf0, type: 2}
     - target: {fileID: 919132149155446097, guid: 09ef31b7b2617e04ca3655ec3637f184,
         type: 3}
       propertyPath: m_Name

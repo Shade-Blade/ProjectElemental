@@ -134,6 +134,7 @@ public class WM_HighStomp : WilexMove
 
             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
             //StartCoroutine(caller.RevertScale(0.1f));
+            StartJumpEffects(caller);
             yield return StartCoroutine(caller.JumpHeavy(tpos, 2, 0.5f, -0.25f));
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -145,6 +146,7 @@ public class WM_HighStomp : WilexMove
 
             if (GetOutcome(caller))
             {
+                StompEffects(caller, result);
                 if (result)
                 {
                     DealDamageSuccess(caller, sd);
@@ -180,6 +182,14 @@ public class WM_HighStomp : WilexMove
         }
     }
 
+    public virtual void StartJumpEffects(BattleEntity caller)
+    {
+
+    }
+    public virtual void StompEffects(BattleEntity caller, bool result)
+    {
+
+    }
     public virtual bool GetOutcome(BattleEntity caller)
     {
         return caller.GetAttackHit(caller.curTarget, 0);
@@ -263,6 +273,7 @@ public class WM_Focus : WilexMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        FocusEffect(caller);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -306,6 +317,14 @@ public class WM_Focus : WilexMove
                     break;
             }
         }
+    }
+
+    public void FocusEffect(BattleEntity caller)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_FocusRadialFlowIn"), BattleControl.Instance.transform);
+        eo.transform.position = caller.ApplyScaledOffset(Vector3.up * 0.5f);
+        eo.transform.localRotation = Quaternion.identity;
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -494,7 +513,7 @@ public class WM_ElectroStomp : WM_HighStomp
         }
         return CostCalculation(caller, level, 5);
     }
-    
+
     /*
     public override int GetMaxLevel(BattleEntity caller)
     {
@@ -502,6 +521,16 @@ public class WM_ElectroStomp : WM_HighStomp
     }
     */
 
+    public override void StartJumpEffects(BattleEntity caller)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Spark"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.up * 0.425f;
+    }
+    public override void StompEffects(BattleEntity caller, bool result)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Spark"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.up * 0.425f;
+    }
     public override bool GetOutcome(BattleEntity caller)
     {
         return caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air);
@@ -689,8 +718,18 @@ public class WM_ParalyzeStomp : WM_HighStomp
     public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost() => 6;
+    public override int GetBaseCost() => 7;
 
+    public override void StartJumpEffects(BattleEntity caller)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Spark"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.up * 0.425f;
+    }
+    public override void StompEffects(BattleEntity caller, bool result)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Spark"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.up * 0.425f;
+    }
     public override bool GetOutcome(BattleEntity caller)
     {
         return caller.GetAttackHit(caller.curTarget, 0);
@@ -698,12 +737,12 @@ public class WM_ParalyzeStomp : WM_HighStomp
     public override void DealDamageSuccess(BattleEntity caller, int sd)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
-        caller.DealDamage(caller.curTarget, sd, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
+        caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
         caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, 2), caller.posId);
     }
     public override void DealDamageFailure(BattleEntity caller, int sd)
     {
-        caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), 0, 0, BattleHelper.ContactLevel.Contact);
+        caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
         caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, 2), caller.posId);
     }
 
@@ -803,8 +842,50 @@ public class WM_FlameStomp : WM_HighStomp
     {
         return 2;
     }
-    */  
+    */
 
+    public override void StartJumpEffects(BattleEntity caller)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Flame"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.down * (0.05f);
+
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_FireTrail"), caller.transform);
+        eo.transform.localPosition = Vector3.down * 0.375f;
+        eo.transform.localRotation = Quaternion.identity;
+
+        IEnumerator DestroyDelayed(GameObject particle)
+        {
+            float height = caller.transform.position.y;
+            float pastHeight = height;
+
+            float delayTime = 5;
+            while (true)
+            {
+                height = caller.transform.position.y;
+
+                if (delayTime <= 0 && (height < pastHeight || height == pastHeight))
+                {
+                    particle.GetComponent<ParticleSystem>().Stop();
+                    //Destroy(particle);
+                    yield break;
+                }
+                if (delayTime > 0)
+                {
+                    delayTime--;
+                }
+
+                yield return null;
+                pastHeight = height;
+            }
+        }
+        StartCoroutine(DestroyDelayed(eo));
+    }
+    public override void StompEffects(BattleEntity caller, bool result)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Flame"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.down * (0.05f);
+    }
     public override bool GetOutcome(BattleEntity caller)
     {
         return caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Fire);
@@ -1104,6 +1185,7 @@ public class WM_Overstomp : WilexMove
 
             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
             //StartCoroutine(caller.RevertScale(0.1f));
+            StartJumpEffects(caller);
             yield return StartCoroutine(caller.JumpHeavy(tpos, 5, 0.75f, -0.25f));
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -1115,6 +1197,7 @@ public class WM_Overstomp : WilexMove
 
             if (GetOutcome(caller))
             {
+                StompEffects(caller, result);
                 if (result)
                 {
                     DealDamageSuccess(caller, sd);
@@ -1150,6 +1233,15 @@ public class WM_Overstomp : WilexMove
         }
     }
 
+    public virtual void StartJumpEffects(BattleEntity caller)
+    {
+
+    }
+    public virtual void StompEffects(BattleEntity caller, bool result)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_OverstompShockwave"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.down * (0.05f);
+    }
     public bool GetOutcome(BattleEntity caller)
     {
         return caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Fire);

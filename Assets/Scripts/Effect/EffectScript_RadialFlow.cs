@@ -49,7 +49,7 @@ public class EffectScript_RadialFlow : MonoBehaviour
 
         //look rotation moves the z forward vector towards the target
         //but the frustum points upward
-        transform.rotation = Quaternion.LookRotation(cameraTransform.position) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
+        transform.rotation = Quaternion.LookRotation(cameraTransform.position - targetPos) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
 
         //orient it with respect to the camera
         float scale = (transform.position - cameraTransform.position).magnitude / 2;

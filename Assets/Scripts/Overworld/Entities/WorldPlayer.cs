@@ -2977,6 +2977,7 @@ public class WorldPlayer : WorldEntity
                 case ActionState.LightHold:
                 case ActionState.LightHoldFall:
                 case ActionState.Dig:
+                case ActionState.SuperJump:
                     keep = true;
                     break;
             }
@@ -4156,6 +4157,19 @@ public class WorldPlayer : WorldEntity
 
         GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Flame"), MainManager.Instance.mapScript.transform);
         effect.transform.position = transform.position + Vector3.down * ((height / 2) + 0.05f);
+
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_FireTrail"), realOrientationObject.transform);
+        eo.transform.localPosition = Vector3.down * 0.375f;
+        eo.transform.localRotation = Quaternion.identity;
+
+        //decided to instead just mess with settings to mimic what it should look like instead of using this
+        //since the collision plane thing would mess up if you moved upwards after digging
+        //ParticleSystem ps = eo.GetComponent<ParticleSystem>();
+        //ps.collision.SetPlane(0, floorNormalObject.transform);
+
+        perpetualParticleObject = eo;
+        stalePerpetualParticles.Add(eo);
 
         applySuperJumpLift = true;
         SetActionState(ActionState.SuperJump);

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EffectScript_TripleShockwave : MonoBehaviour
 {
@@ -31,6 +32,9 @@ public class EffectScript_TripleShockwave : MonoBehaviour
         frustum.transform.localScale = Vector3.up * startYScale + (Vector3.right + Vector3.forward) * startXZScale;
         frustumB.transform.localScale = Vector3.up * startYScale + (Vector3.right + Vector3.forward) * startXZScale;
         frustumC.transform.localScale = Vector3.up * startYScale + (Vector3.right + Vector3.forward) * startXZScale;
+        frustum.transform.localPosition = Vector3.up * (startYScale);
+        frustum.transform.localPosition = Vector3.up * (startYScale);
+        frustum.transform.localPosition = Vector3.up * (startYScale);
         frustumB.SetActive(false);
         frustumC.SetActive(false);
     }
@@ -51,16 +55,16 @@ public class EffectScript_TripleShockwave : MonoBehaviour
         }
 
         //transform.localScale = Vector3.one * (startScale + (maxScale - startScale) * Easing(newLifetime));
-        float YScaleA = (startYScale + (maxYScale - startYScale) * newLifetimeA);
-        float XZScaleA = (startXZScale + (maxXZScale - startXZScale) * Easing(newLifetimeA));
+        float YScaleA = Mathf.Lerp(startYScale, maxYScale, newLifetimeA); // (startYScale + (maxYScale - startYScale) * newLifetimeA);
+        float XZScaleA = Mathf.Lerp(startXZScale, maxXZScale, Easing(newLifetimeA)); // (startXZScale + (maxXZScale - startXZScale) * Easing(newLifetimeA));
         frustum.transform.localScale = Vector3.up * YScaleA + (Vector3.right + Vector3.forward) * XZScaleA;
         frustum.transform.localPosition = Vector3.up * (YScaleA);
 
         if (newLifetimeB > 0)
         {
             frustumB.SetActive(true);
-            float YScaleB = (startYScale + (offsetY + maxYScale - startYScale) * newLifetimeB);
-            float XZScaleB = (startXZScale + (offsetXZ + maxXZScale - startXZScale) * Easing(newLifetimeB));
+            float YScaleB = Mathf.Lerp(startYScale, offsetY + maxYScale, newLifetimeB);  //(startYScale + (offsetY + maxYScale - startYScale) * newLifetimeB);
+            float XZScaleB = Mathf.Lerp(startXZScale, offsetXZ + maxXZScale, Easing(newLifetimeA)); //(startXZScale + (offsetXZ + maxXZScale - startXZScale) * Easing(newLifetimeB));
             frustumB.transform.localScale = Vector3.up * YScaleB + (Vector3.right + Vector3.forward) * XZScaleB;
             frustumB.transform.localPosition = Vector3.up * (YScaleB);
         }
@@ -68,8 +72,8 @@ public class EffectScript_TripleShockwave : MonoBehaviour
         if (newLifetimeC > 0)
         {
             frustumC.SetActive(true);
-            float YScaleC = (startYScale + (2 * offsetY + maxYScale - startYScale) * newLifetimeC);
-            float XZScaleC = (startXZScale + (2 * offsetXZ + maxXZScale - startXZScale) * Easing(newLifetimeC));
+            float YScaleC = Mathf.Lerp(startYScale, 2 * offsetY + maxYScale, newLifetimeC); // (startYScale + (2 * offsetY + maxYScale - startYScale) * newLifetimeC);
+            float XZScaleC = Mathf.Lerp(startXZScale, 2 * offsetXZ + maxXZScale, Easing(newLifetimeC));  //(startXZScale + (2 * offsetXZ + maxXZScale - startXZScale) * Easing(newLifetimeC));
             frustumC.transform.localScale = Vector3.up * YScaleC + (Vector3.right + Vector3.forward) * XZScaleC;
             frustumC.transform.localPosition = Vector3.up * (YScaleC);
         }

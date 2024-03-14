@@ -61,31 +61,37 @@ public class BattleSightScript : MonoBehaviour
         }
 
         string damageDealtText = "Damage Dealt: ";
+        damageDealtText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkRed Outline + Overlay\"><color=#ff5050>";
         damageDealtText += wilex == null ? "?" : wilex.damageDealt;
         damageDealtText += " (";
         damageDealtText += wilexPDE == null ? "?" : wilexPDE.cumulativeDamageDealt;
-        damageDealtText += ") | ";
+        damageDealtText += ")</font></color> | ";
+        damageDealtText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkGreen Outline + Overlay\"><color=#00ff00>";
         damageDealtText += luna == null ? "?" : luna.damageDealt;
         damageDealtText += " (";
         damageDealtText += lunaPDE == null ? "?" : lunaPDE.cumulativeDamageDealt;
-        damageDealtText += ") | ";
+        damageDealtText += ")</font></color> | ";
+        damageDealtText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkYellow Outline + Overlay\"><color=#ffff00>";
         damageDealtText += currentDamageDealt;
         damageDealtText += " (";
         damageDealtText += pd.cumulativeDamageDealt;
-        damageDealtText += ")";
+        damageDealtText += ")</font></color>";
 
         damageDealt.text = damageDealtText;
 
 
         string damageTakenText = "Damage Taken: ";
+        damageTakenText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkRed Outline + Overlay\"><color=#ff5050>";
         damageTakenText += wilex == null ? "?" : wilex.damageTaken;
         damageTakenText += " (";
         damageTakenText += wilexPDE == null ? "?" : wilexPDE.cumulativeDamageTaken;
-        damageTakenText += ") | ";
+        damageTakenText += ")</font></color> | ";
+        damageTakenText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkGreen Outline + Overlay\"><color=#00ff00>";
         damageTakenText += luna == null ? "?" : luna.damageTaken;
         damageTakenText += " (";
         damageTakenText += lunaPDE == null ? "?" : lunaPDE.cumulativeDamageTaken;
-        damageTakenText += ") | ";
+        damageTakenText += ")</font></color> | ";
+        damageTakenText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkYellow Outline + Overlay\"><color=#ffff00>";
         damageTakenText += currentDamageTaken;
         damageTakenText += " (";
         damageTakenText += pd.cumulativeDamageTaken;
@@ -95,20 +101,26 @@ public class BattleSightScript : MonoBehaviour
 
 
         string maxDamagePerTurnText = "Max Damage Per Turn: ";
+        maxDamagePerTurnText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkRed Outline + Overlay\"><color=#ff5050>";
         maxDamagePerTurnText += wilexPDE == null ? "?" : wilexPDE.maxDamagePerTurn;
-        maxDamagePerTurnText += " | ";
+        maxDamagePerTurnText += "</font></color> | ";
+        maxDamagePerTurnText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkGreen Outline + Overlay\"><color=#00ff00>";
         maxDamagePerTurnText += lunaPDE == null ? "?" : lunaPDE.maxDamagePerTurn;
-        maxDamagePerTurnText += " | ";
+        maxDamagePerTurnText += "</font></color> | ";
+        maxDamagePerTurnText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkYellow Outline + Overlay\"><color=#ffff00>";
         maxDamagePerTurnText += pd.maxDamagePerTurn;
 
         maxDamagePerTurn.text = maxDamagePerTurnText;
 
 
         string maxDamageSingleHitText = "Max Damage Single Hit: ";
+        maxDamageSingleHitText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkRed Outline + Overlay\"><color=#ff5050>";
         maxDamageSingleHitText += wilexPDE == null ? "?" : wilexPDE.maxDamageSingleHit;
-        maxDamageSingleHitText += " | ";
+        maxDamageSingleHitText += "</font></color> | ";
+        maxDamageSingleHitText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkGreen Outline + Overlay\"><color=#00ff00>";
         maxDamageSingleHitText += lunaPDE == null ? "?" : lunaPDE.maxDamageSingleHit;
-        maxDamageSingleHitText += " | ";
+        maxDamageSingleHitText += "</font></color> | ";
+        maxDamageSingleHitText += "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkYellow Outline + Overlay\"><color=#ffff00>";
         maxDamageSingleHitText += pd.maxDamageSingleHit;
 
         maxDamageSingleHit.text = maxDamageSingleHitText;

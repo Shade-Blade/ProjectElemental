@@ -96,7 +96,7 @@ Material:
     - _YUVFactor: 0.2
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0, b: 0.23025036, a: 1}
+    - _Color: {r: 1, g: 0, b: 0.2, a: 1}
     - _ColorB: {r: 0.7264151, g: 0, b: 0.19193392, a: 1}
     - _Emission: {r: 4, g: 0, b: 0, a: 1}
     - _EmissionB: {r: 0, g: 0, b: 0, a: 1}
@@ -105,5 +105,5 @@ Material:
     - _SpecColor: {r: 1, g: 1, b: 1, a: 0}
     - _ThroughColor: {r: 1, g: 1, b: 1, a: 0}
     - _UnEmission: {r: 0, g: 0, b: 0, a: 1}
-    - _UnEmissionB: {r: 0, g: 1.5, b: 1.5, a: 1}
+    - _UnEmissionB: {r: 0, g: 1.5, b: 0, a: 1}
   m_BuildTextureStacks: []

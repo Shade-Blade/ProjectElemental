@@ -4845,8 +4845,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2534f79a948fd4b8649c5ae73ff062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ps: {fileID: 5853774443997794492}
-  basePower: 16
 --- !u!1 &8383578772330689462
 GameObject:
   m_ObjectHideFlags: 0
@@ -5595,7 +5593,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.5
+      value: 0.7
       mode: 0
       spread: 0
       speed:
