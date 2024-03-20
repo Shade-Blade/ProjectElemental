@@ -23,6 +23,31 @@ public class BE_Blazecrest : BattleEntity
         BasicTargetChooser();
     }
 
+    public override void TryContactHazard(BattleEntity target, BattleHelper.ContactLevel contact, BattleHelper.DamageType type, int damage)
+    {
+        EnvironmentalContactHazards(target, contact, type, damage);
+
+        if (target.CanTriggerContactHazard(contact, type, damage))
+        {
+            //do
+
+            //Check for contact hazard immunity list
+            //(prevents multihits on the same target from hurting multiple times)
+            //(does not prevent multitarget moves from doing the same!)
+
+            if (target.contactImmunityList.Contains(posId))
+            {
+                return;
+            }
+
+            if (contact <= BattleHelper.ContactLevel.Contact)
+            {
+                DealDamage(target, 2, BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Contact);
+                target.contactImmunityList.Add(posId);
+            }
+        }
+    }
+
 
     public override IEnumerator PostMove()
     {

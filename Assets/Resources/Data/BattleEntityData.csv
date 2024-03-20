@@ -50,8 +50,8 @@ FalseDragon,50,16,29,TRUE,1,SleepyTea,2,Default:0.5/1|Dizzy:0/1|Sleep:0/1|Berser
 AmalgamLeftArm,24,0,0,TRUE,1,RubyFruit,2,Default:0/1,Default:1|Light:-1|Fire:-1|Earth:-3,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 AmalgamRightArm,24,0,0,TRUE,1,RubyFruit,2,Default:0/1,Default:0|Light:-3|Fire:-3|Earth:-3|Air:-3,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 AmalgamsWill,110,21,54,TRUE,1,RubyFruit,2,Default:0.3/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:3|Water:A|Fire:0|Air:-1,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Blazecrest,10,17,0,TRUE,1.5,LavaPepper,4,Default:0.6/1|Freeze:0/1|Berserk:1/1.5,Default:2|Water:-2|Light:-2|Fire:5,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Embercrest,8,16,0,FALSE,1,SpicyCherry,4,Default:0.6/1|Freeze:0/1|Poison:1/1,Default:1|Water:-2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Blazecrest,10,17,0,TRUE,1.5,LavaPepper,4,Default:0.6/1|Freeze:0/1|Berserk:1/1.5,Default:1|Water:-2|Light:-2|Fire:5,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Embercrest,8,16,0,FALSE,1,SpicyCherry,4,Default:0.6/1|Freeze:0/1|Poison:1/1,Default:2|Water:-1,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Ashcrest,7,15,0,FALSE,1,BasaltNut,4,Default:0.6/1|Berserk:0/1|Paralyze:1/1.5,Default:0|Air:-1|Fire:-1,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Flametongue,6,16,0,FALSE,1,BombFruit,4,Default:0.6/1|Paralyze:0.8/1,Default:3|Fire:6,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Heatwing,7,15,0,FALSE,1,LavaPepper,4,Default:0.6/1|Dizzy:0.9/1.5,Default:1|Water:-2|Light:-2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
