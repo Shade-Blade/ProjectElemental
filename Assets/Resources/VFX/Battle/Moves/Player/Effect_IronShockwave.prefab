@@ -81,8 +81,10 @@ MonoBehaviour:
   maxLifetime: 0.4
   maxXZScale: 0.4
   maxYScale: 0
+  maxYOffset: 0
   startXZScale: 0.2
   startYScale: 0.75
+  startYOffset: 0
   easingPower: 3
 --- !u!1 &3484843999932888215
 GameObject:
@@ -515,11 +517,14 @@ MonoBehaviour:
   offset: 0.075
   offsetXZ: -0.2
   offsetY: -0.025
+  offsetYo: 0.075
   maxLifetime: 0.35
   maxXZScale: 1.1
   maxYScale: 0
+  maxYOffset: -0.075
   startXZScale: 0.5
   startYScale: 0.4
+  startYOffset: 0
   easingPower: 2
 --- !u!1 &8130011384181993325
 GameObject:

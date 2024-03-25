@@ -4912,5 +4912,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ps: {fileID: 8445376783695290223}
-  baseEmission: 1.5
+  baseEmission: 1
   baseWidth: 0.25

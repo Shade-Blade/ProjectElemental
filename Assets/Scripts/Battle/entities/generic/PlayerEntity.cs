@@ -4081,6 +4081,16 @@ public class PlayerEntity : BattleEntity
                 InflictEffectForce(this, new Effect(Effect.EffectType.Cooldown, 1, 255));
             }
 
+            if (HasEffect(Effect.EffectType.Illuminate) && attackHitCount > 0)
+            {
+                Effect ee = GetEffectEntry(Effect.EffectType.Illuminate);
+                ee.potency++;
+                if (ee.potency >= Effect.ILLUMINATE_CAP)
+                {
+                    ee.potency = Effect.ILLUMINATE_CAP;
+                }
+            }
+
             if (HasEffect(Effect.EffectType.AstralWall) && damageTakenThisTurn >= GetEffectEntry(Effect.EffectType.AstralWall).potency)
             {
                 CureEffect(Effect.EffectType.AstralWall);
@@ -4623,6 +4633,10 @@ public class PlayerEntity : BattleEntity
             case BattleHelper.Event.Death:
                 alive = false;
                 //BattleControl.Instance.RemoveEntity(BattleControl.Instance.GetIndexFromID(id)); //create consistent death timing
+                if (!GetEntityProperty(EntityProperties.KeepEffectsAtNoHP))
+                {
+                    CureDeathCurableEffects();
+                }
                 if (!dead)
                 {
                     yield return StartCoroutine(Spin(Vector3.up * 360, 0.5f));

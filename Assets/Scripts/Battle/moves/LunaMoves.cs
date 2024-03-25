@@ -3447,20 +3447,20 @@ public class LM_Illuminate : LunaMove
             switch (level)
             {
                 case 1:
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 2, 3));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Illuminate, 1, 3));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, 2, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, 3));
                     }
                     break;
                 case 3:
                     List<BattleEntity> targetsB = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsB)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, 2, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.ParryAura, 1, 3));
                     }
                     break;
@@ -3472,20 +3472,20 @@ public class LM_Illuminate : LunaMove
             switch (level)
             {
                 case 1:
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 1, 3));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Illuminate, 1, 3));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, 3));
                     }
                     break;
                 case 3:
                     List<BattleEntity> targetsB = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsB)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.ParryAura, 1, 3));
                     }
                     break;

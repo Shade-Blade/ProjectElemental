@@ -11,7 +11,7 @@ Index (unused),Name,Description,L2 Description,L3 Description
 9,Smart Stomp,"Stomp on an enemy and inflict the status they are weakest to. (Highest turn count, but only tries to inflict statuses that the enemy is currently susceptible to.)",,
 10,Team Quake,(Requires Luna) Deals massive damage to all grounded enemies 3 times. Each subsequent hit is 0.75x as strong.,Hits 5 times.,
 11,Egg Toss,Lay an egg and use it immediately (either throwing it at an enemy or using it on yourself.),,
-12,Slash,Slash an enemy. Pierces 1 defense.,,
+12,Slash,"Slash an enemy. Pierces 1 defense. (Defense is treated as if it was lowered by 1, if defense is at least 1)",,
 13,Multislash,"Slash an enemy with multiple times. Hits twice, first hit is base sword damage + 1",4 hits.,6 hits.
 14,Slip Slash,Slip past grounded enemies to hit a target behind them. Deals damage to enemies that get passed.,"Does 1 more to passed enemies, 2 more to the target.",
 15,Poison Slash,Slash an enemy and inflict Poison.,,

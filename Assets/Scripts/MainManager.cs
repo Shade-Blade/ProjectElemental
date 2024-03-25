@@ -4225,7 +4225,7 @@ public class MainManager : MonoBehaviour
         ribbonSprites = Resources.LoadAll<Sprite>("Sprites/Ribbons/RibbonSpritesV2");
         commonSprites = Resources.LoadAll<Sprite>("Sprites/CommonSpritesV2");
 
-        effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV7");
+        effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV8");
         stateSprites = Resources.LoadAll<Sprite>("Sprites/Battle/StateIconsV2");
 
         noFrictionMaterial = Resources.Load<PhysicMaterial>("Physics Materials/NoFriction");

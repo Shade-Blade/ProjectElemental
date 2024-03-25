@@ -14,9 +14,11 @@ public class EffectScript_SingleShockwave : MonoBehaviour
 
     public float maxXZScale;
     public float maxYScale;
+    public float maxYOffset;
 
     public float startXZScale;
     public float startYScale;
+    public float startYOffset;
 
     public float easingPower;
 
@@ -25,7 +27,7 @@ public class EffectScript_SingleShockwave : MonoBehaviour
     {
         //propertyBlock = new MaterialPropertyBlock();
         frustum.transform.localScale = Vector3.up * startYScale + (Vector3.right + Vector3.forward) * startXZScale;
-        frustum.transform.localPosition = Vector3.up * (startYScale);
+        frustum.transform.localPosition = Vector3.up * (startYScale + startYOffset);
     }
 
     // Update is called once per frame
@@ -46,7 +48,7 @@ public class EffectScript_SingleShockwave : MonoBehaviour
         float YScale = Mathf.Lerp(startYScale, maxYScale, newLifetime); // (startYScale + (maxYScale - startYScale) * newLifetime);
         float XZScale = Mathf.Lerp(startXZScale, maxXZScale, Easing(newLifetime)); // (startXZScale + (maxXZScale - startXZScale) * Easing(newLifetime));
         frustum.transform.localScale = Vector3.up * YScale + (Vector3.right + Vector3.forward) * XZScale;
-        frustum.transform.localPosition = Vector3.up * (YScale);
+        frustum.transform.localPosition = Vector3.up * ((YScale) + Mathf.Lerp(startYOffset, maxYOffset, newLifetime));
 
         lifetime += Time.deltaTime;
 

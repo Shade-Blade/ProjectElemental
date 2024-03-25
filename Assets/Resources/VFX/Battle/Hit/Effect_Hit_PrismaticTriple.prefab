@@ -117,7 +117,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.25
+      scalar: 0.4
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -170,7 +170,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 14
+      scalar: 9
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1841,8 +1841,8 @@ ParticleSystem:
     orbitalZ:
       serializedVersion: 2
       minMaxState: 3
-      scalar: -10
-      minScalar: 10
+      scalar: -6
+      minScalar: 6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4911,5 +4911,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ps: {fileID: 7333403729127467858}
-  baseEmission: 30
-  baseWidth: 0.1

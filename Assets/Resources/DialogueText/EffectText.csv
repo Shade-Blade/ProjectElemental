@@ -32,6 +32,7 @@ Hustle,Hustle,"Get <var,1> extra action(s) every turn."
 EffectStasis,Effect Stasis,Effects other than this one cannot tick down from 1 to 0.
 Immunity,Immunity,Cannot receive most negative effects.
 Ethereal,Ethereal,Non-light attacks against this entity will miss.
+Illuminate,Illuminate,"Attack is increased by <var,1> (Potency increases by 1 if you attack on your turn, up to <var,6>)"
 MistWall,Mist Wall,"Take <var,5>% less damage."
 AstralWall,Astral Wall,"Damage per turn taken is capped at <var,1> per turn. (Effect is removed on your turn if damage is capped)"
 ParryAura,Parry Aura,"Gain <var,1> Focus when hit."

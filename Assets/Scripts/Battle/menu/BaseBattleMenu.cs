@@ -409,7 +409,7 @@ public class BaseBattleMenu : MenuHandler
                     break;
                 case BaseMenuName.Items:
                     temp = new BaseMenuOption(BaseMenuName.Items);
-                    temp.canSelect = BattleControl.Instance.playerData.itemInventory.Count > 0 && !caller.HasEffect(Effect.EffectType.Sticky);
+                    temp.canSelect = BattleControl.Instance.playerData.itemInventory.Count > 0;
                     if (temp.canSelect)
                     {
                         for (int i = 0; i < BattleControl.Instance.playerData.itemInventory.Count; i++)
@@ -423,6 +423,10 @@ public class BaseBattleMenu : MenuHandler
                         }
                     }
 
+                    bool normalCanSelect = temp.canSelect;
+
+                    temp.canSelect &= !caller.HasEffect(Effect.EffectType.Sticky);
+
 
                     //sidenote: no need to check double bite, quick bite etc because normal item use overshadows them (if you can't use items normally you can't use them either)
                     temp.canSelect &= !(caller.BadgeEquipped(Badge.BadgeType.VoraciousEater));
@@ -430,7 +434,7 @@ public class BaseBattleMenu : MenuHandler
 
                     if (!temp.canSelect)
                     {
-                        if (BattleControl.Instance.playerData.itemInventory.Count > 0 && !caller.HasEffect(Effect.EffectType.Sticky))
+                        if (normalCanSelect)
                         {
                             temp.cantMoveReason = PlayerMove.CantMoveReason.BlockItems;
                         }

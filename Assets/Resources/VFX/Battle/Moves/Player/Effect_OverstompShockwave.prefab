@@ -398,9 +398,12 @@ MonoBehaviour:
   offset: 0.075
   offsetXZ: -0.2
   offsetY: -0.025
+  offsetYo: 0.075
   maxLifetime: 0.35
   maxXZScale: 1.1
   maxYScale: 0
+  maxYOffset: -0.075
   startXZScale: 0.5
   startYScale: 0.6
+  startYOffset: 0
   easingPower: 2

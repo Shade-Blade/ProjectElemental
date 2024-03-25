@@ -11,7 +11,7 @@ Index (unused),Name,Description,L2 Description,L3 Description
 9,Elemental Stomp,Jump on an enemy from higher above. Uses the element that will deal the most damage.,,
 10,Team Throw,Throw the other character into an enemy in any position to deal massive damage. Damage is based on the stomp damage for both characters.,+6 damage,
 11,Double Egg,Lay two eggs. These will go into your inventory if there's space (otherwise they will disappear),,
-12,Smash,Smash an enemy. Does 1 more damage if you have any attack buffs.,,
+12,Smash,Smash an enemy. Does 1 more damage if you have any attack increasing effects.,,
 13,Power Smash,Smash an enemy with extra force.,+4 damage,+8 damage
 14,Dazzle Smash,Smash an enemy and make it dizzy for 2 turns. (Dizzy enemies will miss their attacks.),,
 15,Hammer Throw,Throw your hammer out to hit any position.,+5 damage,
@@ -20,6 +20,6 @@ Index (unused),Name,Description,L2 Description,L3 Description
 18,Momentum Smash,"Smash an enemy with a lot of momentum, hitting it into the enemies behind it in succession. Gives you 2 Absorb. Also switches your position around.",,
 19,Quake Smash,Deal quake damage to all enemies (Earth damage). (Earth element is stronger against enemies that took damage this turn),,
 20,Light Smash,Smash an enemy with light element. (Light element is stronger against enemies at high hp.),Element formula changes: Bonus based on similar hp proportions.,
-21,Illuminate,Gives the targets Attack Up 2 for 3 turns.,Targets both,"Targets both, gives Parry Aura 1 for 3 turns"
+21,Illuminate,"Gives the targets Illuminate for 3 turns. (Illuminate gives you an attack boost, and the boost will increase after every turn you attack.)",Targets both,"Targets both, gives Parry Aura 1 for 3 turns"
 22,Hammer Beat,Heals 5 hp to all targets and gives 1 focus. Refunds your turn if it hits and action command is successful. Action command difficulty increases the more actions you have taken.,,
 23,Mist Wall,Cures and protects you from negative effects and reduces incoming damage by 33% for 3 turns.,Targets both,"Targets both, applies Bolster Aura 1 for 3 turns"

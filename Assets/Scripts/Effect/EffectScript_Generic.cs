@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class EffectScript_Generic : MonoBehaviour
 {
     public ParticleSystem ps;
-    public float baseEmission;
-    public float baseWidth;
+    //public float baseEmission;
+    //public float baseWidth;
 
     protected bool playing = false;
 
@@ -22,20 +23,29 @@ public class EffectScript_Generic : MonoBehaviour
         ParticleSystem.EmissionModule emm = ps.emission;
         //mm.startColor = color;
 
-        ParticleSystem.Burst b = ps.emission.GetBurst(0);
-        int k = (int)(baseEmission * power);
-        if (k < 1)
+        //hacky setup for children
+        ParticleSystem[] psB = GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < psB.Length; i++)
         {
-            k = 1;
+            mm = psB[i].main;
+            emm = psB[i].emission;
+
+            ParticleSystem.Burst b = psB[i].emission.GetBurst(0);
+            int k = (int)(b.count.constant * power);
+            if (k < 1)
+            {
+                k = 1;
+            }
+            b.count = k;
+            emm.SetBurst(0, b);
+
+            float width = psB[i].main.startSize.constant;
+            transform.localScale = Vector3.one * scale;
+            mm.startSize = width / scale;
+
+            psB[i].Play();
         }
-        b.count = k;
-        emm.SetBurst(0, b);
 
-        float width = baseWidth;
-        transform.localScale = Vector3.one * scale;
-        mm.startSize = width / scale;
-
-        ps.Play();
         playing = true;
     }
 

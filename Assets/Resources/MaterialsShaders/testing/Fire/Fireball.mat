@@ -7,19 +7,23 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MeteorStompA
-  m_Shader: {fileID: 4800000, guid: c51911399fdecd54ca78ea41be7b4b8f, type: 3}
+  m_Name: Fireball
+  m_Shader: {fileID: 4800000, guid: df20462cdd0cce64b94000eec0a660e8, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 6ec8e5e4b051cac469cd295c91114736, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -41,8 +45,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 6ec8e5e4b051cac469cd295c91114736, type: 3}
-        m_Scale: {x: 2, y: 0.4}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -59,42 +63,32 @@ Material:
     m_Ints: []
     m_Floats:
     - _BumpScale: 1
-    - _Cutoff: -0.5
-    - _CutoffB: -0.2
+    - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Distortion: 0.4
     - _DstBlend: 0
-    - _FresnelExponent: 1
-    - _FresnelPower: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GlowFresnelPower: 1
-    - _HoleValue: 0
+    - _InterpScale: 2
     - _Metallic: 0
     - _Mode: 0
-    - _NoiseFactor: 0.2
+    - _NoiseFactor: 0.3
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RefractionIndex: 2
     - _SmoothnessTextureChannel: 0
-    - _SpecPower: 10
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _ThroughPower: 3
-    - _TimeScale: 20
-    - _TimeScaleX: 0
-    - _TimeScaleY: -25
     - _UVSec: 0
-    - _YFactor: -3
+    - _WidthA: 0.3
+    - _WidthA2: 0.6
+    - _WidthB: 0.15
+    - _WidthB2: 0.3
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.1812165, b: 0.16470587, a: 1}
-    - _ColorB: {r: 0.5283019, g: 0.4427493, b: 0.32096833, a: 0}
-    - _Emission: {r: 2.5, g: 0.61679864, b: 0, a: 1}
-    - _EmissionB: {r: 0, g: 0, b: 0, a: 1}
+    - _BaseColor: {r: 2, g: 0.5, b: 0, a: 1}
+    - _BaseColorB: {r: 2, g: 0.55, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SpecColor: {r: 1, g: 1, b: 1, a: 0}
-    - _ThroughColor: {r: 1, g: 1, b: 1, a: 0}
+    - _InnerColor: {r: 2, g: 0.4, b: 0, a: 1}
+    - _InnerColorB: {r: 2, g: 0.25, b: 0, a: 1}
   m_BuildTextureStacks: []

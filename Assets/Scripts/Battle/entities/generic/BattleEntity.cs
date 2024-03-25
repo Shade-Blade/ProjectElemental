@@ -3997,6 +3997,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         target.lastDamageType = type;
         target.lastDamageTaken = 0;
         target.lastDamageTakenInput = 0;
+
+        if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.SuppressHitParticles))
+        {
+            BattleControl.Instance.CreateHitEffect(0, target.GetDamageEffectPosition(), target, type, properties);
+        }
+
         target.InvokeHurtEvents(type, properties);
     }
     public virtual void InvokeHurtEvents(BattleHelper.DamageType type, ulong properties)
@@ -4453,6 +4459,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (temp != null)
         {
             output -= temp.potency * 1;
+        }
+
+        temp = GetEffectEntry(Effect.EffectType.Illuminate);
+        if (temp != null)
+        {
+            output += temp.potency * 1;
         }
 
         temp = GetEffectEntry(Effect.EffectType.Focus);
@@ -6345,6 +6357,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             case BattleHelper.Event.StatusDeath:
             case BattleHelper.Event.Death:
                 SetAnimation("dead");
+                if (GetEntityProperty(EntityProperties.KeepEffectsAtNoHP))
+                {
+                    CureDeathCurableEffects();
+                }
                 yield return StartCoroutine(DefaultDeathEvent());
                 break;
             case BattleHelper.Event.HiddenHurt:
@@ -6412,6 +6428,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             case BattleHelper.Event.StatusDeath:
             case BattleHelper.Event.Death:
                 SetAnimation("dead");
+                if (GetEntityProperty(EntityProperties.KeepEffectsAtNoHP))
+                {
+                    CureDeathCurableEffects();
+                }
                 yield return StartCoroutine(DefaultDeathEvent());
                 break;
             case BattleHelper.Event.HiddenHurt:

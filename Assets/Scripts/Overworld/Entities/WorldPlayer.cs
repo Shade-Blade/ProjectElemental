@@ -2990,6 +2990,17 @@ public class WorldPlayer : WorldEntity
             }
         }
 
+        //super jump trail
+        if (perpetualParticleObject != null && actionState == ActionState.SuperJump)
+        {
+            if (rb.velocity.y < 1)
+            {
+                perpetualParticleObject.GetComponent<ParticleSystem>().Stop();
+                //Destroy(perpetualParticleObject);
+                perpetualParticleObject = null;
+            }
+        }
+
         if (IsGrounded())
         {
             Vector3 ortho = Vector3.Cross(floorNormal, Vector3.right);

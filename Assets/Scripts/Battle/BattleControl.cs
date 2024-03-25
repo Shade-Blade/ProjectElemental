@@ -374,6 +374,7 @@ public class BattlePopup
         vars[3] = 2 * status.potency + "";      //sleep/poison low end
         vars[4] = (10 * status.potency) + "";   //sleep/poison high end
         vars[5] = ((status.potency) / (2 + (status.potency))) + "";   //mist wall damage reduction
+        vars[6] = Effect.ILLUMINATE_CAP + "";
 
         string[] entry = BattleControl.Instance.effectText[(int)(status.effect + 1)];
 
@@ -583,19 +584,21 @@ public class BattleControl : MonoBehaviour
     public GameObject hitNormal;
     public GameObject hitNormalTriple;
     public GameObject hitLight;
-    public GameObject hitDark;
-    public GameObject hitFire;
-    public GameObject hitWater;
-    public GameObject hitAir;
-    public GameObject hitEarth;
-    public GameObject hitPrismatic;
-    public GameObject hitVoid;
     public GameObject hitLightTriple;
+    public GameObject hitDark;
     public GameObject hitDarkTriple;
+    public GameObject hitFire;
+    public GameObject hitFireEmber;
+    public GameObject hitFireEmberTriple;
+    public GameObject hitWater;
     public GameObject hitWaterTriple;
+    public GameObject hitAir;
     public GameObject hitAirTriple;
+    public GameObject hitEarth;
     public GameObject hitEarthTriple;
+    public GameObject hitPrismatic;
     public GameObject hitPrismaticTriple;
+    public GameObject hitVoid;
     public GameObject hitVoidTriple;
 
     public GameObject effectBuff;
@@ -1964,19 +1967,21 @@ public class BattleControl : MonoBehaviour
         hitNormalTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_NormalTriple");
 
         hitLight = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Shine");
-        hitDark = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Dark");
-        hitFire = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Fire");
-        hitWater = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Splash");
-        hitAir = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Spark");
-        hitEarth = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Leaf");
-        hitPrismatic = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Prismatic");
-        hitVoid = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Void");
         hitLightTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_ShineTriple");
+        hitDark = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Dark");
         hitDarkTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_DarkTriple");
+        hitFire = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Fire");
+        hitFireEmber = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_FireEmbers");
+        hitFireEmberTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_FireEmbersTriple");
+        hitWater = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Splash");
         hitWaterTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_SplashTriple");
+        hitAir = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Spark");
         hitAirTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_SparkTriple");
+        hitEarth = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Leaf");
         hitEarthTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_LeafTriple");
+        hitPrismatic = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Prismatic");
         hitPrismaticTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_PrismaticTriple");
+        hitVoid = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Void");
         hitVoidTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_VoidTriple");
 
         effectBuff = Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Buff");
@@ -3035,6 +3040,12 @@ public class BattleControl : MonoBehaviour
                 e.transform.position = position;
                 es_h = e.GetComponent<EffectScript_Generic>();
                 es_h.Setup(newScale * 0.25f, fire);
+
+                //new: ember effects
+                e = Instantiate(hitFireEmber, gameObject.transform);
+                e.transform.position = position;
+                es_h = e.GetComponent<EffectScript_Generic>();
+                es_h.Setup(newScale * 0.25f, fire);
             }
             if (((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
             {
@@ -3099,10 +3110,20 @@ public class BattleControl : MonoBehaviour
             es_h = e.GetComponent<EffectScript_Generic>();
             es_h.Setup(newScale * 0.5f, fire);
 
+            e = Instantiate(hitFireEmber, gameObject.transform);
+            e.transform.position = position;
+            es_h = e.GetComponent<EffectScript_Generic>();
+            es_h.Setup(newScale * 0.5f, fire);
+
             for (int i = 0; i < count; i++)
             {
                 posA = Vector3.up * Mathf.Sin(angle + i * delta) + Vector3.right * Mathf.Cos(angle + i * delta);
                 e = Instantiate(hitFire, gameObject.transform);
+                e.transform.position = position + posA * outOffset;
+                es_h = e.GetComponent<EffectScript_Generic>();
+                es_h.Setup(newScale * 0.5f, fire);
+
+                e = Instantiate(hitFireEmber, gameObject.transform);
                 e.transform.position = position + posA * outOffset;
                 es_h = e.GetComponent<EffectScript_Generic>();
                 es_h.Setup(newScale * 0.5f, fire);

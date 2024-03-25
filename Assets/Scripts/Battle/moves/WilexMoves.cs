@@ -864,7 +864,7 @@ public class WM_FlameStomp : WM_HighStomp
             {
                 height = caller.transform.position.y;
 
-                if (delayTime <= 0 && (height < pastHeight || height == pastHeight))
+                if (delayTime <= 0 && (height < pastHeight + Time.deltaTime * 1))
                 {
                     particle.GetComponent<ParticleSystem>().Stop();
                     //Destroy(particle);
@@ -2725,7 +2725,7 @@ public class WM_PreciseStab : WM_Slash
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 5, BattleHelper.DamageType.Water, 0);
+                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Water, 0);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 7, BattleHelper.DamageType.Water, propertyBlock);

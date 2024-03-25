@@ -87,6 +87,7 @@ public class Effect
         EffectStasis,
         Immunity,
         Ethereal,
+        Illuminate,
         MistWall,
         AstralWall,
         ParryAura,
@@ -153,9 +154,12 @@ public class Effect
     public const int FIRST_TOKEN_ID = (int)EffectType.Focus;
 
     //these are bidirectional, so you can't get more of the debuff than the cap
+    //To do: way to increase this
     public const int FOCUS_CAP = 6;
     public const int ABSORB_CAP = 6;
     public const int BURST_CAP = 99;    //ehh there's no realistic way to make this too broken (?)
+
+    public const int ILLUMINATE_CAP = 3;
 
     public Effect(EffectType effect, byte potency, byte duration, int casterID)
     {
@@ -279,7 +283,8 @@ public class Effect
     {
         if ((int)se < FIRST_STATUS_ID)
         {
-            return (int)se <= (int)EffectType.MaxSEReduction && (int)se >= (int)EffectType.AttackReduction;
+            return false;   //Permanents are permanent (I am going to be extremely stringent with anti-permanent things, even on enemies)
+            //return (int)se <= (int)EffectType.MaxSEReduction && (int)se >= (int)EffectType.AttackReduction;
         }
         else if ((int)se < FIRST_BUFF_ID)
         {
@@ -287,11 +292,11 @@ public class Effect
         }
         else if ((int)se < FIRST_TOKEN_ID)
         {
-            return (int)se <= (int)EffectType.Slow || (int)se >= (int)EffectType.Curse;
+            return (int)se <= (int)EffectType.BoltSprout || (int)se >= (int)EffectType.Curse;
         }
         else
         {
-            return true;
+            return true;    //note: includes cooldown (But it probably isn't very exploitable)
         }
     }
 
@@ -904,22 +909,23 @@ public static class BattleHelper
         ExactDamageKill =   1L << 16, //will heal if not exact damage killed
         NoMiracle =     1L << 17, //can't get miracle effect (flag set when Miracle activates)
         GetEffectsAtNoHP = 1L << 18, //can you receive effects at 0 hp? (only set for special enemies that don't die at 0 hp)
-        NoTattle =      1L << 19,   //Can't tattle
-        ScanHideMoves = 1L << 20,   //Scan does not reveal moveset
-        ScanMovesetMismatch = 1L << 21, //For enemies whose movesets dont match the data table (The three of these quiet the warning message for the data table not having the right moveset)
+        KeepEffectsAtNoHP = 1L << 19, //Death will cure curable stuff normally
+        NoTattle =      1L << 20,   //Can't tattle
+        ScanHideMoves = 1L << 21,   //Scan does not reveal moveset
+        ScanMovesetMismatch = 1L << 22, //For enemies whose movesets dont match the data table (The three of these quiet the warning message for the data table not having the right moveset)
 
-        SoftTouch =     1L << 22,
-        DeepSleep =     1L << 23,
-        Glacier =       1L << 24,
+        SoftTouch =     1L << 23,
+        DeepSleep =     1L << 24,
+        Glacier =       1L << 25,
 
-        StateStunned =  1L << 25,
-        StateCharge =   1L << 26,
-        StateDefensive = 1L << 27,
-        StateRage =     1L << 28,
-        CharacterMark = 1L << 29,
-        PositionMark =  1L << 30,
+        StateStunned =  1L << 26,
+        StateCharge =   1L << 27,
+        StateDefensive = 1L << 28,
+        StateRage =     1L << 29,
+        CharacterMark = 1L << 30,
+        PositionMark =  1L << 31,
 
-        HideHP = 1L << 31,
+        HideHP = 1L << 32,  //Replaces the hp number with a ?, also replaces the hp bar with an ambiguous thing
 
         SuppressMovesetWarning = NoTattle | ScanHideMoves | ScanMovesetMismatch
     }
