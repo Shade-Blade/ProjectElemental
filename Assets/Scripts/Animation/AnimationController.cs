@@ -122,13 +122,28 @@ public class AnimationController : MonoBehaviour
     }
     public void Illuminate()
     {
+        //Hopefully the color struct can handle invalid values
+        blackColor = new Color(1.3f, 1f, 0.3f, 1f);
+        grayColor = new Color(1.4f, 1.3f, 1f, 1f);
+        whiteColor = new Color(2.3f, 2.3f, 1.3f, 1f);
+        leak = 0.5f;
+        bigradientMap = true;
+
         occlusionColor = new Color(1f, 0.85f, 0.5f, 0.1f);
         if (propertyBlock == null)
         {
             propertyBlock = new MaterialPropertyBlock();
         }
         propertyBlock.SetTexture("_MainTex", sprite.sprite.texture);
+
+        propertyBlock.SetFloat("_Leak", leak);
+        propertyBlock.SetVector("_BlackColor", blackColor);
+        propertyBlock.SetVector("_GrayColor", grayColor);
+        propertyBlock.SetVector("_WhiteColor", whiteColor);
+
         propertyBlock.SetVector("_OcclusionColor", occlusionColor);
+
+        sprite.material = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect2");
         sprite.SetPropertyBlock(propertyBlock);
     }
     public void EffectUpdate(string data)

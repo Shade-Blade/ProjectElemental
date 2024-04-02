@@ -94,6 +94,10 @@ public class Effect
         BolsterAura,
         AstralRecovery,
         Elusive,
+        CounterFlare,
+        Supercharge,
+        QuantumShield,
+        Soften,
 
         AttackDown,
         DefenseDown,
@@ -111,6 +115,8 @@ public class Effect
         Fizzle,
         Cloud,
         Curse,
+        DamageOverTime,
+        Splotch,
 
         Focus,
         Absorb,
@@ -292,7 +298,7 @@ public class Effect
         }
         else if ((int)se < FIRST_TOKEN_ID)
         {
-            return (int)se <= (int)EffectType.BoltSprout || (int)se >= (int)EffectType.Curse;
+            return (int)se <= (int)EffectType.BoltSprout || (int)se >= (int)EffectType.DamageOverTime;
         }
         else
         {
@@ -695,7 +701,7 @@ public static class BattleHelper
         NoCharge =              1L << 7,  //does not use charge (sets the buffered charge remover thing though)
         Static =                1L << 8,  //Ignores all attack modification, does not trigger buffered charge remover
         LightDarkAbsolute =     1L << 9, //uses 60 instead of maxhp in the damage formula
-        IgnoreDamageCalc =      1L << 10, //ignores the special damage calculation from fire, earth, water, light, dark
+        IgnoreElementCalculation =      1L << 10, //ignores the special damage calculation from fire, earth, water, light, dark
         Unblockable =           1L << 11, //Can't be blocked
         NonLethal =             1L << 12, //can't reduce you to 0 hp
         RemoveMaxHP =           1L << 13, //reduces your max hp
@@ -774,8 +780,15 @@ public static class BattleHelper
         StateCharge,
         StateDefensive,
         StateRage,
+        StateCounter,
+        StateCounterHeavy,
+        StateContactHazard,
+        StateContactHazardHeavy,
         CharacterMark,
         PositionMark,
+
+        Charge,
+        Countdown,
 
         /* Charms (handled globally) */
         CharmAttack,
@@ -795,23 +808,6 @@ public static class BattleHelper
         ItemBoostRest,
         SoulRest,
         FreebieRest,
-
-        /* Calculated */
-        LightWeak,
-        WaterWeak,
-        AirWeak,
-        DarkWeak,
-        FireWeak,
-        EarthWeak,
-
-        BerserkWeak,
-        SleepWeak,
-        PoisonWeak,
-        FreezeWeak,
-        DizzyWeak,
-        ParalyzeWeak,
-
-        VoidCrushWeak,
 
         /* Enviro effects (handled globally) */
         ElectricWind,
@@ -922,10 +918,14 @@ public static class BattleHelper
         StateCharge =   1L << 27,
         StateDefensive = 1L << 28,
         StateRage =     1L << 29,
-        CharacterMark = 1L << 30,
-        PositionMark =  1L << 31,
+        StateCounter = 1L << 30,
+        StateCounterHeavy = 1L << 31,
+        StateContactHazard = 1L << 32,
+        StateContactHazardHeavy = 1L << 33,
+        CharacterMark = 1L << 34,
+        PositionMark =  1L << 35,
 
-        HideHP = 1L << 32,  //Replaces the hp number with a ?, also replaces the hp bar with an ambiguous thing
+        HideHP = 1L << 36,  //Replaces the hp number with a ?, also replaces the hp bar with an ambiguous thing
 
         SuppressMovesetWarning = NoTattle | ScanHideMoves | ScanMovesetMismatch
     }
@@ -1097,6 +1097,7 @@ public static class BattleHelper
         SuperBlockedDamage,
         UnblockableDamage,
         MaxHPDamage,
+        SoftDamage,
         SoulEnergize,
         DrainSoulEnergy,
         Stamina,

@@ -16,8 +16,11 @@ Shader "Custom/ProperSpriteBiGradientMap" {
 		_BidirCutoff("Bidirectional Cutoff", float) = 0.1
 		[MaterialToggle] _BidirectionalLight("Bidirectional Light", Float) = 0	//light from behind is counted
 
+		[HDR]
 		_BlackColor("Black Color", Color) = (0,0,1,1)
+		[HDR]
 		_GrayColor("Gray Color", Color) = (0,0,1,1)
+		[HDR]
 		_WhiteColor("White Color", Color) = (0,0,1,1)
 		_Midpoint("Midpoint", Range(0,1)) = 0.5
 		_Leak("Leak", Range(0,1)) = 0.5
@@ -179,9 +182,9 @@ Shader "Custom/ProperSpriteBiGradientMap" {
 		float _BacklightBorder;
 		
 
-		fixed4 _BlackColor;
-		fixed4 _GrayColor;
-		fixed4 _WhiteColor;
+		half4 _BlackColor;
+		half4 _GrayColor;
+		half4 _WhiteColor;
 
 		float _Leak;
 		float _Midpoint;

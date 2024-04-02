@@ -408,6 +408,16 @@ public class CheatMenu : MenuHandler
                 if (toggle)
                 {
                     MainManager.Instance.Cheat_BattleRandomActions = !MainManager.Instance.Cheat_BattleRandomActions;
+
+                    if (BattleControl.Instance != null)
+                    {
+                        List<PlayerEntity> pel = BattleControl.Instance.GetPlayerEntities();
+                        foreach (PlayerEntity pe in pel)
+                        {
+                            pe.tactics = new List<BattleAction>();
+                            pe.AddTactics();
+                        }
+                    }
                 }
                 else
                 {
@@ -420,6 +430,16 @@ public class CheatMenu : MenuHandler
                 if (toggle)
                 {
                     MainManager.Instance.Cheat_BattleCheatActions = !MainManager.Instance.Cheat_BattleCheatActions;
+
+                    if (BattleControl.Instance != null)
+                    {
+                        List<PlayerEntity> pel = BattleControl.Instance.GetPlayerEntities();
+                        foreach (PlayerEntity pe in pel)
+                        {
+                            pe.tactics = new List<BattleAction>();
+                            pe.AddTactics();
+                        }
+                    }
                 }
                 else
                 {
@@ -432,6 +452,16 @@ public class CheatMenu : MenuHandler
                 if (toggle)
                 {
                     MainManager.Instance.Cheat_BattleInfoActions = !MainManager.Instance.Cheat_BattleInfoActions;
+
+                    if (BattleControl.Instance != null)
+                    {
+                        List<PlayerEntity> pel = BattleControl.Instance.GetPlayerEntities();
+                        foreach (PlayerEntity pe in pel)
+                        {
+                            pe.tactics = new List<BattleAction>();
+                            pe.AddTactics();
+                        }
+                    }
                 }
                 else
                 {

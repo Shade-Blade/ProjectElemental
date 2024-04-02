@@ -103,7 +103,7 @@ Honeywing_SpitHeal,Spit Heal,"(Targets Any Enemy) Spit at the target to deal Wat
 Shimmerwing_DazzlingScreech,Dazzling Screech,"(Targets All Enemies) Screech loudly to deal strong Light damage to all targets and inflict Dizzy. (Usable while grounded, will fly up before the move.)",
 Shimmerwing_RallySong,Rally Song,(Targets All Allies) Applies 1 Focus to all allies.,(Higher Difficulties: Also applies Parry Aura for 3 turns.)
 LumistarVanguard_HornBlast,Horn Blast,(Targets All Enemies) Blast with your horn to deal Light damage to all targets.,
-LumistarVanguard_HornRally,Horn Rally,"(Targets All Enemies, Target All Allies) Blast with your horn to deal weaker Light damage to all targets and apply Defense Up 2 for 3 turns to all allies.",
+LumistarVanguard_LanternRally,Lantern Rally,"(Targets All Enemies, Target All Allies) Shine your lantern brightly to deal weak Light damage to all targets and apply Defense Up 2 for 3 turns to all allies.",
 LumistarSoldier_Charge,Charge,(Targets Self) Charge up for a Charge Slice.,(Higher Difficulties: Also applies 1 Focus to all allies.)
 LumistarSoldier_ChargeSlash,Charge Slash,(Targets Front) Slice the target hard to deal normal damage.,
 LumistarStriker_Charge,Charge,(Targets Self) Charge up for a Quad Slash.,(Higher Difficulties: Also applies 1 Focus to all allies.)

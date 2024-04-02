@@ -1956,6 +1956,12 @@ public class PlayerEntity : BattleEntity
             //Apply special properties
             damage = ApplyDefensiveProperties(damage, properties);
 
+            //Quantum Shield
+            if (TokenRemoveOne(Effect.EffectType.QuantumShield))
+            {
+                damage = 0;
+            }
+
             if (!noSpecial && GetAbsorbBlock())
             {
                 HealEnergy(damage / 2);
@@ -2042,7 +2048,18 @@ public class PlayerEntity : BattleEntity
         int preHP = hp;
 
         //Post damage calculation
-        hp -= damage;
+        if (HasEffect(Effect.EffectType.Soften))
+        {
+            int softDamage = (byte)(damage / 3);
+            if (softDamage > 0)
+            {
+                ReceiveEffectForce(new Effect(Effect.EffectType.Soften, (byte)(damage / 3), 3), posId, Effect.EffectStackMode.KeepDurAddPot);
+            }
+        }
+        else
+        {
+            hp -= damage;
+        }
 
 
         //Risky rush
@@ -2096,23 +2113,29 @@ public class PlayerEntity : BattleEntity
             BattleControl.Instance.CreateDamageEffect(DamageEffect.MaxHPDamage, damage, GetDamageEffectPosition(), this, type, properties);
         } else
         {
-            if (GetDamageProperty(properties, DamageProperties.Unblockable))
+            if (HasEffect(Effect.EffectType.Soften))
             {
-                BattleControl.Instance.CreateDamageEffect(DamageEffect.UnblockableDamage, damage, GetDamageEffectPosition(), this, type, properties);
-            }
-            else
+                BattleControl.Instance.CreateDamageEffect(DamageEffect.SoftDamage, damage, GetDamageEffectPosition(), this, type, properties);
+            } else
             {
-                if (sb)
+                if (GetDamageProperty(properties, DamageProperties.Unblockable))
                 {
-                    BattleControl.Instance.CreateDamageEffect(DamageEffect.SuperBlockedDamage, damage, GetDamageEffectPosition(), this, type, properties);
-                }
-                else if (b || safetyBlock)
-                {
-                    BattleControl.Instance.CreateDamageEffect(DamageEffect.BlockedDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                    BattleControl.Instance.CreateDamageEffect(DamageEffect.UnblockableDamage, damage, GetDamageEffectPosition(), this, type, properties);
                 }
                 else
                 {
-                    BattleControl.Instance.CreateDamageEffect(DamageEffect.Damage, damage, GetDamageEffectPosition(), this, type, properties);
+                    if (sb)
+                    {
+                        BattleControl.Instance.CreateDamageEffect(DamageEffect.SuperBlockedDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                    }
+                    else if (b || safetyBlock)
+                    {
+                        BattleControl.Instance.CreateDamageEffect(DamageEffect.BlockedDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                    }
+                    else
+                    {
+                        BattleControl.Instance.CreateDamageEffect(DamageEffect.Damage, damage, GetDamageEffectPosition(), this, type, properties);
+                    }
                 }
             }
         }
@@ -2581,7 +2604,7 @@ public class PlayerEntity : BattleEntity
         if (chargedAttackCount > 0)
         {
             chargedAttackCount = 0;
-            if (bufferRemoveCharge)
+            if (bufferRemoveCharge || HasEffect(Effect.EffectType.Supercharge))
             {
                 bufferRemoveCharge = false;
             }
@@ -2623,7 +2646,7 @@ public class PlayerEntity : BattleEntity
         if (chargedAttackCount > 0)
         {
             chargedAttackCount = 0;
-            if (bufferRemoveCharge)
+            if (bufferRemoveCharge || HasEffect(Effect.EffectType.Supercharge))
             {
                 bufferRemoveCharge = false;
             }
@@ -3351,7 +3374,7 @@ public class PlayerEntity : BattleEntity
         {
             //target gets defocus
             //note: inflict status
-            byte drain = target.GetEffectEntry(Effect.EffectType.BoltSprout).potency;
+            byte drain = target.GetEffectEntry(Effect.EffectType.DrainSprout).potency;
             InflictEffect(target, new Effect(Effect.EffectType.Defocus, drain, 255));
             HealHealth(2 * drain);
         }
@@ -3386,14 +3409,6 @@ public class PlayerEntity : BattleEntity
                     InflictEffect(this, new Effect(Effect.EffectType.Sunder, (byte)procSeasideAir, 255));
                 }
             }
-        }
-        if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.ScaldingMagma)
-        {
-            InflictEffect(target, new Effect(Effect.EffectType.Focus, 1, 255));
-        }
-        if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.TrialOfZeal)
-        {
-            InflictEffect(target, new Effect(Effect.EffectType.Focus, 3, 255));
         }
 
         if (target.HasEffect(Effect.EffectType.ParryAura))
@@ -3990,6 +4005,11 @@ public class PlayerEntity : BattleEntity
                 }
                 yield return new WaitForSeconds(0.5f);
             }
+            if (HasEffect(Effect.EffectType.DamageOverTime))
+            {
+                TakeDamageStatus(GetEffectEntry(Effect.EffectType.DamageOverTime).potency);
+                yield return new WaitForSeconds(0.5f);
+            }
             if (HasEffect(Effect.EffectType.HealthLoss))
             {
                 //statusDamage = true;
@@ -4496,7 +4516,7 @@ public class PlayerEntity : BattleEntity
         if (chargedAttackCount > 0)
         {
             chargedAttackCount = 0;
-            if (bufferRemoveCharge)
+            if (bufferRemoveCharge || HasEffect(Effect.EffectType.Supercharge))
             {
                 bufferRemoveCharge = false;
             }

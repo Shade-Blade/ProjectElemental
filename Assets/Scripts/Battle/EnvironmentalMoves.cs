@@ -2,6 +2,100 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//move executed by Counter Flare entities (Targets all enemies to deal damage and heal)
+public class CounterFlare : Move
+{
+    public override TargetArea GetBaseTarget()
+    {
+        return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+    }
+
+    public override string GetDescription()
+    {
+        return "Counter damage and healing from the Counter Flare buff.";
+    }
+
+    public override string GetName()
+    {
+        return "(Counter Flare) Vengeful Flames";
+    }
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        List<BattleEntity> targets = BattleControl.Instance.GetEntities(caller, GetBaseTarget());
+
+        caller.HealHealth(caller.counterFlareDamage);
+
+        //Impact effect
+        GameObject eoShockwave;
+        eoShockwave = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Special/Effect_CounterFlareShockwave"), BattleControl.Instance.transform);
+        eoShockwave.transform.position = caller.transform.position;
+
+        for (int i = 0; i < targets.Count; i++)
+        {
+            caller.DealDamage(targets[i], caller.counterFlareDamage, BattleHelper.DamageType.Fire, (ulong)(BattleHelper.DamageProperties.Static | BattleHelper.DamageProperties.IgnoreElementCalculation), BattleHelper.ContactLevel.Infinite);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+    }
+}
+
+public class Splotch : Move
+{
+    public override TargetArea GetBaseTarget()
+    {
+        return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+    }
+
+    public override string GetDescription()
+    {
+        return "Damage taken due to Splotch";
+    }
+
+    public override string GetName()
+    {
+        return "(Splotch) Burn";
+    }
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        List<BattleEntity> targets = BattleControl.Instance.GetEntities(caller, GetBaseTarget());
+
+        caller.lastAttacker = null;
+        caller.TakeDamage(caller.splotchDamage, BattleHelper.DamageType.Fire, (ulong)(BattleHelper.DamageProperties.Static | BattleHelper.DamageProperties.IgnoreElementCalculation));
+
+        yield return new WaitForSeconds(0.5f);
+    }
+}
+
+public class ScaldingMagma : Move
+{
+    public override TargetArea GetBaseTarget()
+    {
+        return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+    }
+
+    public override string GetDescription()
+    {
+        return "Damage taken due to Scalding Magma or Trial of Zeal";
+    }
+
+    public override string GetName()
+    {
+        return "(Environment) Magma Burn";
+    }
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        List<BattleEntity> targets = BattleControl.Instance.GetEntities(caller, GetBaseTarget());
+
+        caller.lastAttacker = null;
+        caller.TakeDamage(caller.magmaDamage, BattleHelper.DamageType.Fire, (ulong)(BattleHelper.DamageProperties.Static | BattleHelper.DamageProperties.IgnoreElementCalculation));
+
+        yield return new WaitForSeconds(0.5f);
+    }
+}
+
 public class IonizedSandBolt : Move
 {
     //note: executed from the perspective of one of the enemies
@@ -17,7 +111,7 @@ public class IonizedSandBolt : Move
 
     public override string GetName()
     {
-        return "Ionized Sand bolt";
+        return "(Environment) Lightning Bolt";
     }
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
@@ -50,7 +144,7 @@ public class TrialOfHasteBolt : Move
 
     public override string GetName()
     {
-        return "Trial of Haste bolt";
+        return "(Environment) Mega Bolt";
     }
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)

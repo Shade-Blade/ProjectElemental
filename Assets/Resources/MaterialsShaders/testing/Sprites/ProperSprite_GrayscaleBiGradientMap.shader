@@ -2,8 +2,11 @@ Shader "Custom/ProperSprite_GrayscaleBiGradientMap" {
 	Properties{
 		[PerRendererData]_MainTex("Sprite Texture", 2D) = "white" {}
 		_Cutoff("Shadow alpha cutoff", Range(0,1)) = 0.5
+		[HDR]
 		_BlackColor("Black Color", Color) = (0,0,1,1)
+		[HDR]
 		_GrayColor("Gray Color", Color) = (0,0,1,1)
+		[HDR]
 		_WhiteColor("White Color", Color) = (0,0,1,1)
 		_Midpoint("Midpoint", Range(0,1)) = 0.5
 		_Leak("Leak", Range(0,1)) = 0.5
@@ -119,9 +122,9 @@ Shader "Custom/ProperSprite_GrayscaleBiGradientMap" {
 		sampler2D _MainTex;
 		fixed _Cutoff;
 
-		fixed4 _BlackColor;
-		fixed4 _GrayColor;
-		fixed4 _WhiteColor;
+		half4 _BlackColor;
+		half4 _GrayColor;
+		half4 _WhiteColor;
 
 		float _Leak;
 		float _Midpoint;

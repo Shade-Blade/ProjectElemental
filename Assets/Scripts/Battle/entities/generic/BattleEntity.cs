@@ -706,6 +706,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public bool statusCatalyst;
     public bool wakeUp;
 
+    public int counterFlareDamage;                                                //Damage to deal by Counter Flare (Set before Postmove is run)
+    public int splotchDamage;                                                //Damage to deal by Splotch
+    public int magmaDamage;
     public int damageTakenThisTurn;                                        //Non-status damage taken since last PostMove call (Used to calculate Astral Wall stuff)
     public int damageTakenLastTurn;
     public bool alive;
@@ -1416,6 +1419,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             TakeDamageStatus(poisonDamage * GetEffectEntry(Effect.EffectType.Poison).potency);
             yield return new WaitForSeconds(0.5f);
         }
+        if (HasEffect(Effect.EffectType.DamageOverTime))
+        {
+            TakeDamageStatus(GetEffectEntry(Effect.EffectType.DamageOverTime).potency);
+            yield return new WaitForSeconds(0.5f);
+        }
         if (HasEffect(Effect.EffectType.HealthLoss))
         {
             //statusDamage = true;
@@ -1484,15 +1492,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         damageTakenLastTurn = damageTakenThisTurn;
         damageTakenThisTurn = 0;
-
-
-        //Enviro effects
-        switch (BattleControl.Instance.enviroEffect)
-        {
-            case EnvironmentalEffect.TrialOfZeal:
-                InflictEffect(this, new Effect(Effect.EffectType.AttackBoost, 2, 255));
-                break;
-        }
 
 
         //decrement turncount
@@ -1690,6 +1689,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //Apply special properties
             damage = ApplyDefensiveProperties(damage, properties);
 
+            //Quantum Shield
+            if (TokenRemoveOne(Effect.EffectType.QuantumShield))
+            {
+                damage = 0;
+            }
+
             //Apply Astral Wall
             damageTakenThisTurn += damage;
 
@@ -1733,7 +1738,18 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
 
         bool preAlive = hp > 0;
-        hp -= damage;
+
+        if (HasEffect(Effect.EffectType.Soften))
+        {
+            int softDamage = (byte)(damage / 3);
+            if (softDamage > 0)
+            {
+                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, (byte)(damage / 3), 3), posId, Effect.EffectStackMode.KeepDurAddPot);
+            }
+        } else
+        {
+            hp -= damage;
+        }
 
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
         {
@@ -1768,13 +1784,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         else
         {
-            if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Unblockable))
+            if (HasEffect(Effect.EffectType.Soften))
             {
-                BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.UnblockableDamage, damage, GetDamageEffectPosition(), this, type, properties);
-            }
-            else
+                BattleControl.Instance.CreateDamageEffect(DamageEffect.SoftDamage, damage, GetDamageEffectPosition(), this, type, properties);
+            } else
             {
-                BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, damage, GetDamageEffectPosition(), this, type, properties);
+                if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Unblockable))
+                {
+                    BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.UnblockableDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                }
+                else
+                {
+                    BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, damage, GetDamageEffectPosition(), this, type, properties);
+                }
             }
         }
 
@@ -1897,9 +1919,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.WhiteoutBlizzard)
         {
-            if (damage > 3)
+            if (damage > 6)
             {
-                damage = 3;
+                damage = 6;
             }
         }
         if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.TrialOfResolve)
@@ -2023,10 +2045,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (health < 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.NegativeHeal, health, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateNegativeHealParticles(this, (int)(1 + 9 * Mathf.Log(health, 60)));
         }
         else
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Heal, health, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateHealParticles(this, (int)(1 + 9 * Mathf.Log(health, 60)));
         }
 
         if (e)
@@ -2080,10 +2104,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (health < 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.NegativeHeal, health, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateNegativeHealParticles(this, (int)(1 + 9 * Mathf.Log(health, 60)));
         }
         else
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Heal, health, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateHealParticles(this, (int)(1 + 9 * Mathf.Log(health, 60)));
         }
 
         if (e)
@@ -2115,10 +2141,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (energy > 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Energize, energy, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
         }
         else
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainEnergy, energy, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateNegativeEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
         }
     }
     public int HealEnergyTrackOverhealPay(int energy)
@@ -2137,10 +2165,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (energy > 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Energize, energy, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
         }
         else
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainEnergy, energy, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateNegativeEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
         }
 
         return overheal;
@@ -2158,10 +2188,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (se > 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.SoulEnergize, se, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
         }
         else
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainSoulEnergy, se, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateNegativeSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
         }
     }
     public int HealSoulEnergyTrackOverhealPay(int se)
@@ -2171,10 +2203,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (se > 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.SoulEnergize, se, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
         }
         else
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainSoulEnergy, se, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateNegativeSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
         }
 
         return overheal;
@@ -2199,10 +2233,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (st > 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Stamina, st, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
         }
         else
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainStamina, st, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateNegativeStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
         }
 
         if (stamina > BattleControl.Instance.GetMaxStamina(this))
@@ -2221,10 +2257,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (st > 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Stamina, st, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
         }
         else
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainStamina, st, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateNegativeStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
         }
 
         int payStamina = 0;
@@ -2266,10 +2304,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (coins > 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Coins, coins, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateCoinParticles(this, (int)(1 + 9 * Mathf.Log(coins, 60)));
         }
         else
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.NegativeCoins, coins, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateNegativeCoinParticles(this, (int)(1 + 9 * Mathf.Log(coins, 60)));
         }
     }
 
@@ -2386,6 +2426,27 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (GetEntityProperty(BattleHelper.EntityProperties.StateRage))
         {
             MakeStateIcon(output, BattleHelper.EntityState.StateRage);
+            output++;
+        }
+
+        if (GetEntityProperty(BattleHelper.EntityProperties.StateCounter))
+        {
+            MakeStateIcon(output, BattleHelper.EntityState.StateCounter);
+            output++;
+        }
+        if (GetEntityProperty(BattleHelper.EntityProperties.StateCounterHeavy))
+        {
+            MakeStateIcon(output, BattleHelper.EntityState.StateCounterHeavy);
+            output++;
+        }
+        if (GetEntityProperty(BattleHelper.EntityProperties.StateContactHazard))
+        {
+            MakeStateIcon(output, BattleHelper.EntityState.StateContactHazard);
+            output++;
+        }
+        if (GetEntityProperty(BattleHelper.EntityProperties.StateContactHazardHeavy))
+        {
+            MakeStateIcon(output, BattleHelper.EntityState.StateContactHazardHeavy);
             output++;
         }
 
@@ -3211,7 +3272,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             inputDamage++;
         }
 
-        if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.IgnoreDamageCalc))
+        if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.IgnoreElementCalculation))
         {
             inputDamage += lightbonus;
             inputDamage += darkbonus;
@@ -3245,7 +3306,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
 
         //Enviro effect boosts
-        if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.IgnoreDamageCalc))
+        if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.IgnoreElementCalculation))
         {
             bool player = BattleControl.IsPlayerControlled(caller, false);
             
@@ -3594,7 +3655,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             inputDamage++;
         }
 
-        if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.IgnoreDamageCalc))
+        if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.IgnoreElementCalculation))
         {
             inputDamage += lightbonus;
             inputDamage += darkbonus;
@@ -3925,16 +3986,18 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             //target gets defocus
             //note: inflict status
-            InflictEffect(target, new Effect(Effect.EffectType.Defocus, 1, 255));
-            HealHealth(2);
+            byte drain = target.GetEffectEntry(Effect.EffectType.DrainSprout).potency;
+            InflictEffect(target, new Effect(Effect.EffectType.Defocus, drain, 255));
+            HealHealth(2 * drain);
         }
 
         if (target.HasEffect(Effect.EffectType.BoltSprout))
         {
             //target gets sunder (buffered)
             //note: inflict status
-            InflictEffectBuffered(target, new Effect(Effect.EffectType.Sunder, 1, 255));
-            HealEnergy(2);
+            byte drain = target.GetEffectEntry(Effect.EffectType.BoltSprout).potency;
+            InflictEffectBuffered(target, new Effect(Effect.EffectType.Sunder, drain, 255));
+            HealEnergy(2 * drain);
         }
 
         if (BattleControl.IsPlayerControlled(this, false) && BattleControl.Instance.enviroEffect == EnvironmentalEffect.SeasideAir)
@@ -3958,14 +4021,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     InflictEffect(this, new Effect(Effect.EffectType.Sunder, (byte)procSeasideAir, 255));
                 }
             }
-        }
-        if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.ScaldingMagma)
-        {
-            InflictEffect(target, new Effect(Effect.EffectType.Focus, 1, 255));
-        }
-        if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.TrialOfZeal)
-        {
-            InflictEffect(target, new Effect(Effect.EffectType.Focus, 3, 255));
         }
 
         if (target.HasEffect(Effect.EffectType.ParryAura))
@@ -4149,7 +4204,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             if (damage > 0)
             {
-                DealDamage(target, damage, BattleHelper.DamageType.Water, (ulong)(BattleHelper.DamageProperties.StandardContactHazard | DamageProperties.IgnoreDamageCalc), BattleHelper.ContactLevel.Contact);
+                DealDamage(target, Mathf.CeilToInt(0.5f * damage), BattleHelper.DamageType.Water, (ulong)(BattleHelper.DamageProperties.StandardContactHazard | DamageProperties.IgnoreElementCalculation), BattleHelper.ContactLevel.Contact);
             }
         }
     }
@@ -5839,22 +5894,117 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 statusColorString += "|" + 0.1f;
             }
             statusColorString += "_" + MainManager.ColorToString(new Color(0.5f, 0f, 0f, 0.1f)) + "_";
-        } else
+        } else if (HasEffect(Effect.EffectType.Illuminate))
         {
-            if (statusColorString.Equals("X") && HasEffect(Effect.EffectType.AstralWall))
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(1.3f, 1f, 0.3f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1.4f, 1.3f, 1f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(2.3f, 2.3f, 1.3f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_" + MainManager.ColorToString(new Color(1f, 0.85f, 0.5f, 0.1f)) + "_";
+        } else if (HasEffect(Effect.EffectType.MistWall))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.5f, 0.8f, 0.8f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.5f, 1f, 1f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 1.2f, 1.2f, 1f));
+                statusColorString += "|" + 0.6f;
+            }
+            statusColorString += "_" + MainManager.ColorToString(new Color(0f, 0.6f, 0.6f, 0.1f)) + "_";
+        }
+        else if (HasEffect(Effect.EffectType.AstralWall))
+        {
+            if (statusColorString.Equals("X"))
             {
                 statusColorString = MainManager.ColorToString(new Color(0.6f, 0f, 1f, 1f));
                 statusColorString += "|" + MainManager.ColorToString(new Color(0.4f, 0f, 0.6f, 1f));
                 statusColorString += "|" + MainManager.ColorToString(new Color(0f, 0f, 0f, 1f));
                 statusColorString += "|" + 0.6f;
             }
-            if (statusColorString.Equals("X") && HasEffect(Effect.EffectType.MistWall))
+            statusColorString += "_" + MainManager.ColorToString(new Color(0.25f, 0.1f, 0.4f, 0.1f)) + "_";
+        }
+        else if (HasEffect(Effect.EffectType.CounterFlare))
+        {
+            if (statusColorString.Equals("X"))
             {
-                statusColorString = MainManager.ColorToString(new Color(0.5f, 0.8f, 0.8f, 1f));
-                statusColorString += "|" + MainManager.ColorToString(new Color(0.5f, 1f, 1f, 1f));
-                statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 1f, 1f, 1f));
+                statusColorString = MainManager.ColorToString(new Color(1f, 0.6f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1.4f, 0.7f, 0.3f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(2.3f, 1.6f, 0.6f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_" + MainManager.ColorToString(new Color(0.75f, 0.5f, 0.25f, 0.1f)) + "_";
+        }
+        else if (HasEffect(Effect.EffectType.Supercharge))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(1.25f, 0.3f, 1.25f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1.4f, 0.5f, 1.4f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(2.3f, 1f, 1.3f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_" + MainManager.ColorToString(new Color(1f, 0.3f, 1f, 0.1f)) + "_";
+        }
+        else if (HasEffect(Effect.EffectType.QuantumShield))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0f, 0.3f, 1.2f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0f, 0f, 0.36f, 0.7f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.2f, 0.2f, 0.2f, 0.6f));
+                statusColorString += "|" + 0.1f;
+            }
+            statusColorString += "_" + MainManager.ColorToString(new Color(0f, 0f, 0.5f, 0.1f)) + "_";
+        }
+        else if (HasEffect(Effect.EffectType.Soften))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.4f, 1.3f, 0.4f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 1.4f, 1f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1.3f, 2.3f, 1.3f, 1f));
                 statusColorString += "|" + 0.6f;
             }
+            statusColorString += "_" + MainManager.ColorToString(new Color(0f, 0.5f, 0f, 0.1f)) + "_";
+        }
+        else if (HasEffect(Effect.EffectType.Splotch))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0f, 0f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.15f, 0.15f, 0.15f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.3f, 0.25f, 0.2f, 1f));
+                statusColorString += "|" + 0.1f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.DrainSprout))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0f, 0.7f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0f, 0.35f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.6f, 0.7f, 0.6f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.BoltSprout))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.6f, 0.7f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.25f, 0.35f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 0.7f, 0.6f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_X_";
+        }
+        else
+        {
             statusColorString += "_X_";
         }
 
@@ -6175,7 +6325,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (chargedAttackCount > 0)
         {
             chargedAttackCount = 0;
-            if (bufferRemoveCharge)
+            if (bufferRemoveCharge || HasEffect(Effect.EffectType.Supercharge))
             {
                 bufferRemoveCharge = false;
             }

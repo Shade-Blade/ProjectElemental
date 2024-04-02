@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class EffectScript_Generic : MonoBehaviour
 {
-    public ParticleSystem ps;
+    //public ParticleSystem ps;
     //public float baseEmission;
     //public float baseWidth;
 
@@ -19,8 +19,8 @@ public class EffectScript_Generic : MonoBehaviour
     public virtual void Setup(float scale = 1, float power = 1)
     {
         //particle system code is sus
-        ParticleSystem.MainModule mm = ps.main;
-        ParticleSystem.EmissionModule emm = ps.emission;
+        ParticleSystem.MainModule mm;// = ps.main;
+        ParticleSystem.EmissionModule emm;// = ps.emission;
         //mm.startColor = color;
 
         //hacky setup for children

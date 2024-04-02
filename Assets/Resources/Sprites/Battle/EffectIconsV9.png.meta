@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2774c46d54cd56943bb58514623e6ebf
+guid: 163b0d94258987845a0b49eb7c933141
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,7 +117,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: EffectIconsV8_0
+      name: EffectIconsV9_0
       rect:
         serializedVersion: 2
         x: 0
@@ -131,14 +131,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0dbbbcd437a59ec458b9eef4e0aadfd4
-      internalID: 913225620
+      spriteID: 5b7e3892aa11d6d4c8acca3383f3e3d2
+      internalID: -1551857009
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_1
+      name: EffectIconsV9_1
       rect:
         serializedVersion: 2
         x: 32
@@ -152,14 +152,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d19854479052e224391111cca2937dd9
-      internalID: 789731565
+      spriteID: 2c3ef8709c4cbfa40885f2d4d975871d
+      internalID: 32536726
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_2
+      name: EffectIconsV9_2
       rect:
         serializedVersion: 2
         x: 64
@@ -173,14 +173,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 54c4e044cfe75f34e94294126346adac
-      internalID: 1975094701
+      spriteID: da0a982af031d3049ad49d917125c387
+      internalID: 1526936684
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_3
+      name: EffectIconsV9_3
       rect:
         serializedVersion: 2
         x: 96
@@ -194,14 +194,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6d01afd5ad4ac9c4995e5054514fd68a
-      internalID: -1887253412
+      spriteID: 5c7ab88eff5fc5846a80e32b1f6037d1
+      internalID: -508203215
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_4
+      name: EffectIconsV9_4
       rect:
         serializedVersion: 2
         x: 128
@@ -215,14 +215,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7321896dccc0a564981b2b8e697023a8
-      internalID: 1793346876
+      spriteID: b006eab2ff77b334588baba7d99753e7
+      internalID: -1367493844
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_5
+      name: EffectIconsV9_5
       rect:
         serializedVersion: 2
         x: 160
@@ -236,14 +236,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1b53e2a51c93f27499661b578012d88d
-      internalID: -43706727
+      spriteID: 0da7538e91ff38a48a82ad3ff0a1386a
+      internalID: -1926709322
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_6
+      name: EffectIconsV9_6
       rect:
         serializedVersion: 2
         x: 192
@@ -257,14 +257,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f749e1df6961799488b180a9de8c7f79
-      internalID: 1857498232
+      spriteID: 798f949eb17b2f74f9872ddbcb643070
+      internalID: 1678335775
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_7
+      name: EffectIconsV9_7
       rect:
         serializedVersion: 2
         x: 0
@@ -278,14 +278,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: da85a17051b72624d9359f5f694f0db7
-      internalID: 1891074411
+      spriteID: ae26e7e26320b2a45bc640272f4a7d3c
+      internalID: -1439455793
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_8
+      name: EffectIconsV9_8
       rect:
         serializedVersion: 2
         x: 32
@@ -299,14 +299,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cd85b08bef919d8408033a5e82ccfa88
-      internalID: -1647089142
+      spriteID: 9429f88e1e7925c4199dcd4550b76ba5
+      internalID: -1627871276
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_9
+      name: EffectIconsV9_9
       rect:
         serializedVersion: 2
         x: 64
@@ -320,14 +320,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e41a5e5ab5118c0438ea614d45f260bc
-      internalID: -365719530
+      spriteID: 579501991c706984e89284db40e94108
+      internalID: 1733713250
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_10
+      name: EffectIconsV9_10
       rect:
         serializedVersion: 2
         x: 96
@@ -341,14 +341,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 33efb64cb64d9db47a756036912a83d6
-      internalID: -813908874
+      spriteID: 88a0dfd382c32c743a50deaf04661d99
+      internalID: -552526905
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_11
+      name: EffectIconsV9_11
       rect:
         serializedVersion: 2
         x: 128
@@ -362,14 +362,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4f154cd5f9d57d847afe3bd336e5ea28
-      internalID: 1600794075
+      spriteID: 639e05708e84ce149be4d222a0fe665e
+      internalID: -844006863
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_12
+      name: EffectIconsV9_12
       rect:
         serializedVersion: 2
         x: 160
@@ -383,14 +383,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dea1404280c3a5a4ca1acb797e2f22e5
-      internalID: 1084066634
+      spriteID: e7373eef3b9bcd548b4efb3e145df97e
+      internalID: 569085716
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_13
+      name: EffectIconsV9_13
       rect:
         serializedVersion: 2
         x: 192
@@ -404,14 +404,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7f8f3082c3ffc3743b7dbf18ee53d60a
-      internalID: -818284682
+      spriteID: 126c033cc702a3e4da837c7a23317147
+      internalID: -962140350
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_14
+      name: EffectIconsV9_14
       rect:
         serializedVersion: 2
         x: 0
@@ -425,14 +425,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 76a855d3bd8b9524aba76fc8deeb62c9
-      internalID: -1101828993
+      spriteID: 3dd9418bf4c808740ba9f04dcb093a25
+      internalID: -58511308
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_15
+      name: EffectIconsV9_15
       rect:
         serializedVersion: 2
         x: 32
@@ -446,14 +446,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5e081004f83d41a42b6bc2ee06f2a3b5
-      internalID: 1040991604
+      spriteID: c58c711dc10cffb4c8e6d22d41e6c660
+      internalID: -1553936808
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_16
+      name: EffectIconsV9_16
       rect:
         serializedVersion: 2
         x: 64
@@ -467,14 +467,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2e215eafa597529428cb060688bfe204
-      internalID: -216046286
+      spriteID: 313cfef81a82e304ba0c45d853f55064
+      internalID: 342953796
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_17
+      name: EffectIconsV9_17
       rect:
         serializedVersion: 2
         x: 96
@@ -488,14 +488,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 198176772573e7c4785972df66ffb5b8
-      internalID: -2120694510
+      spriteID: 0c0d2282c81aa814fad9799e4e7ef03a
+      internalID: 1724499379
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_18
+      name: EffectIconsV9_18
       rect:
         serializedVersion: 2
         x: 128
@@ -509,14 +509,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 26a8a5b458287c04baf7325ed66bb793
-      internalID: -1487928811
+      spriteID: 20902e18b60ef5144b7467fec7821aa9
+      internalID: 910613513
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_19
+      name: EffectIconsV9_19
       rect:
         serializedVersion: 2
         x: 160
@@ -530,14 +530,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 08da47e692822f340baf1a8229eaff6a
-      internalID: 775884915
+      spriteID: 09ffc5a5403e8394080cd9cda82d3a31
+      internalID: 159789182
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_20
+      name: EffectIconsV9_20
       rect:
         serializedVersion: 2
         x: 192
@@ -551,14 +551,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f5c75861dbfd069478424f4b39e4937e
-      internalID: 1383071566
+      spriteID: ee3d981fe2432ca4f897fbca0e581930
+      internalID: -343965685
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_21
+      name: EffectIconsV9_21
       rect:
         serializedVersion: 2
         x: 0
@@ -572,14 +572,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e45e1e14b90d0f241b9372fd949af3b5
-      internalID: 1587212561
+      spriteID: 4108e4e3e4fc3114a84eca13fd945d1b
+      internalID: 1998640247
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_22
+      name: EffectIconsV9_22
       rect:
         serializedVersion: 2
         x: 32
@@ -593,14 +593,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1f3a99a29576537408da4c4a9d428c11
-      internalID: -1406808867
+      spriteID: 93647538ef4b3574bbd5965a78f8b2d5
+      internalID: 1610871571
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_23
+      name: EffectIconsV9_23
       rect:
         serializedVersion: 2
         x: 64
@@ -614,14 +614,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 408423ad361247d428e2292c1bb51fdb
-      internalID: 1103103588
+      spriteID: 197239d631a5b574bbee687031103695
+      internalID: 1755313914
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_24
+      name: EffectIconsV9_24
       rect:
         serializedVersion: 2
         x: 96
@@ -635,14 +635,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 001a22e728172614a8e41193305fc581
-      internalID: 687203027
+      spriteID: 6b3bcb4db7582d64cbb3a3387956ed28
+      internalID: -1274106738
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_25
+      name: EffectIconsV9_25
       rect:
         serializedVersion: 2
         x: 128
@@ -656,14 +656,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dbfc70b3c56b2314c846bc9bc22226b1
-      internalID: -1124447867
+      spriteID: 1667fa44fc4019942826e3a6c924eeb8
+      internalID: 657715396
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_26
+      name: EffectIconsV9_26
       rect:
         serializedVersion: 2
         x: 160
@@ -677,14 +677,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 00e70a5bc6efbb4488213553f05c4c32
-      internalID: -217635221
+      spriteID: bc121292d0e03bf4098501024da851a1
+      internalID: -2059010794
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_27
+      name: EffectIconsV9_27
       rect:
         serializedVersion: 2
         x: 192
@@ -698,14 +698,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 56fb908919fd41147aea368e4f59a081
-      internalID: 1445717151
+      spriteID: af2f5721c770c92439e4e4da93c201df
+      internalID: 544426520
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_28
+      name: EffectIconsV9_28
       rect:
         serializedVersion: 2
         x: 224
@@ -719,14 +719,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7c9e5dc01049c3541bcd1109f80abfe6
-      internalID: 576370696
+      spriteID: 922892e681a2c7c44afa1a13c532c46c
+      internalID: -2116765323
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_29
+      name: EffectIconsV9_29
       rect:
         serializedVersion: 2
         x: 256
@@ -740,14 +740,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d6c42f8a394d50f4fb0651aa9968f9c3
-      internalID: -942629232
+      spriteID: 72abe4f2b851e444e950ae4eba8eca57
+      internalID: 609870717
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_30
+      name: EffectIconsV9_30
       rect:
         serializedVersion: 2
         x: 288
@@ -761,14 +761,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e988ef272a7cfef4088a7944e51ef5bd
-      internalID: 1628307866
+      spriteID: 9ccb658dba45e6545bf85163563d0c52
+      internalID: 1021574770
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_31
+      name: EffectIconsV9_31
       rect:
         serializedVersion: 2
         x: 320
@@ -782,14 +782,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4ddd73a340d9a2348acfd1b1b52ddf9f
-      internalID: -802741229
+      spriteID: dc205cbf6e2b2b947a821d43dac37754
+      internalID: -847639239
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_32
+      name: EffectIconsV9_32
       rect:
         serializedVersion: 2
         x: 352
@@ -803,14 +803,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a7e34222053be6f498bb774aa439a331
-      internalID: 1542163741
+      spriteID: 4c7e7c34dbbbace4882416bdc0051e85
+      internalID: 512217365
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_33
+      name: EffectIconsV9_33
       rect:
         serializedVersion: 2
         x: 384
@@ -824,14 +824,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bffa0c8364edb244ea82c615e9667a54
-      internalID: -1604859759
+      spriteID: bc9bafe4c2fa11b419cd8f3e7292748e
+      internalID: 597700025
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_34
+      name: EffectIconsV9_34
       rect:
         serializedVersion: 2
         x: 416
@@ -845,14 +845,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8a291ba980f5adc478ae7ab91a1d2ffe
-      internalID: 318131834
+      spriteID: 7c430d9ae7ed5c240891ba98e1180013
+      internalID: -1300889421
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_35
+      name: EffectIconsV9_35
       rect:
         serializedVersion: 2
         x: 448
@@ -866,14 +866,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 84b22167a28b71f4da35fe30262474b9
-      internalID: -1455609047
+      spriteID: dfcfdc0de666f9c4094d304a5860d21f
+      internalID: 1373594650
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_36
+      name: EffectIconsV9_36
       rect:
         serializedVersion: 2
         x: 480
@@ -887,14 +887,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8536078b13f09dc4aa9613f3199a75f3
-      internalID: 979601154
+      spriteID: 5e7c9521754417f4bae1823b5b3a99fe
+      internalID: -1554652572
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_37
+      name: EffectIconsV9_37
       rect:
         serializedVersion: 2
         x: 0
@@ -908,14 +908,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d943462c9503c3f47afc50fef301ab86
-      internalID: 389218788
+      spriteID: 5612985ef1414f34bb3e76017417f350
+      internalID: -464631362
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_38
+      name: EffectIconsV9_38
       rect:
         serializedVersion: 2
         x: 32
@@ -929,14 +929,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 93b6a097d14c60848bf49d939ef4360d
-      internalID: -372932151
+      spriteID: 2a9e977d6a9348140913c8b8461f1da7
+      internalID: 1827945000
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_39
+      name: EffectIconsV9_39
       rect:
         serializedVersion: 2
         x: 64
@@ -950,14 +950,98 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d46a1c1aa943b0246aa70e0900b53453
-      internalID: 346163517
+      spriteID: ffa4030e763a0e44182bc20dcdc3fe91
+      internalID: -1482156643
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_40
+      name: EffectIconsV9_40
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 352
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9574cf31523d94409c717743475163a
+      internalID: 1877114285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EffectIconsV9_41
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 352
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae32313484016ab40a6ec24cf5816a16
+      internalID: -590138043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EffectIconsV9_42
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 352
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b77cb264384c06449baac56cdc512b3b
+      internalID: 229798268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EffectIconsV9_43
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 352
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca72666a9ff1ada42acf2bf260bbcf81
+      internalID: -1752239423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EffectIconsV9_44
       rect:
         serializedVersion: 2
         x: 0
@@ -971,14 +1055,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d04433adb5c0cf04380f5d2ad80a5f05
-      internalID: 1236555192
+      spriteID: 6e11a84120961094f82ab059c8a98947
+      internalID: -1880873573
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_41
+      name: EffectIconsV9_45
       rect:
         serializedVersion: 2
         x: 32
@@ -992,14 +1076,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cae8f8aa0601b374ca393f2d6b53fe0c
-      internalID: -1886490314
+      spriteID: ff623a6a1b619ad459e4747f31da1206
+      internalID: -112481648
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_42
+      name: EffectIconsV9_46
       rect:
         serializedVersion: 2
         x: 64
@@ -1013,14 +1097,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 71f5e6adba01f7c4fa4e3c9b38055b87
-      internalID: -648543776
+      spriteID: 05e504b8b59750745850f15082037635
+      internalID: -1033599126
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_43
+      name: EffectIconsV9_47
       rect:
         serializedVersion: 2
         x: 96
@@ -1034,14 +1118,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb2faf06a3922c34da1b514d341b69b0
-      internalID: 52416142
+      spriteID: 488cf7901b336ed409d6070c3f4b814a
+      internalID: -884722578
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_44
+      name: EffectIconsV9_48
       rect:
         serializedVersion: 2
         x: 128
@@ -1055,14 +1139,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 10ddf6f29e114614895039ef7ee9a139
-      internalID: 279291
+      spriteID: 97da7e143b42a4943baf19288be0a2f2
+      internalID: 927197937
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_45
+      name: EffectIconsV9_49
       rect:
         serializedVersion: 2
         x: 160
@@ -1076,14 +1160,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 23ab9157a32f75448bac4c24523c15d3
-      internalID: -1158298227
+      spriteID: 5b3d36dc21fda954fb3278455a91fffc
+      internalID: -1382693699
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_46
+      name: EffectIconsV9_50
       rect:
         serializedVersion: 2
         x: 192
@@ -1097,14 +1181,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e2e487a709fdb84fb19a8e5696ae792
-      internalID: 81725953
+      spriteID: 79a72fa4dc0a55344b6af629c308080a
+      internalID: 42927726
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_47
+      name: EffectIconsV9_51
       rect:
         serializedVersion: 2
         x: 224
@@ -1118,14 +1202,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aed409d243f1de641a26bf169d52cdc9
-      internalID: 101670954
+      spriteID: 20e30de9a0dd79c44b1d9eb955c82553
+      internalID: 2037016641
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_48
+      name: EffectIconsV9_52
       rect:
         serializedVersion: 2
         x: 256
@@ -1139,14 +1223,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 663e4a57f1ecb7b4a833abe6e581b235
-      internalID: -1599162923
+      spriteID: 46c452783304ac0419ba6c54cee5f058
+      internalID: 1914894350
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_49
+      name: EffectIconsV9_53
       rect:
         serializedVersion: 2
         x: 288
@@ -1160,14 +1244,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ff0c0bc2761b7f54c8c308fd22c35f52
-      internalID: 471230410
+      spriteID: c397a0443cd0dae4194f33ee205378f5
+      internalID: -633493656
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_50
+      name: EffectIconsV9_54
       rect:
         serializedVersion: 2
         x: 320
@@ -1181,14 +1265,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 38ee7e94e32bceb4eae0420f451670fa
-      internalID: 668777915
+      spriteID: 53a14187d3cd4864a960f0377ac818ae
+      internalID: -1641231895
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_51
+      name: EffectIconsV9_55
       rect:
         serializedVersion: 2
         x: 352
@@ -1202,14 +1286,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8aec41dba354b724c8ea1015c8aec0e3
-      internalID: -240431550
+      spriteID: 095c85d3e77c1214698d0c1839160f27
+      internalID: -1259759021
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_52
+      name: EffectIconsV9_56
       rect:
         serializedVersion: 2
         x: 384
@@ -1223,14 +1307,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 78c3edea70bd22d498528098ab0150e0
-      internalID: 806178523
+      spriteID: fe769f7523667714cabd3051867e2c6b
+      internalID: 553317461
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_53
+      name: EffectIconsV9_57
       rect:
         serializedVersion: 2
         x: 416
@@ -1244,14 +1328,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 46b609f73c5cf384ca38cf1b0271f159
-      internalID: -1362953029
+      spriteID: 7021fdbccc35b2743b7c068cad5126cf
+      internalID: 663142370
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_54
+      name: EffectIconsV9_58
       rect:
         serializedVersion: 2
         x: 448
@@ -1265,14 +1349,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a34c4f714e79594da1c9476c239f6df
-      internalID: 1537958106
+      spriteID: f2cf1b5624d87364bbcbbde4200d2411
+      internalID: 1062038556
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_55
+      name: EffectIconsV9_59
       rect:
         serializedVersion: 2
         x: 480
@@ -1286,14 +1370,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6f65b848fedbe3349969c2a5844db4b8
-      internalID: -1884424900
+      spriteID: 84218f8bebdcb8a48b63be8d87d827e6
+      internalID: -649733098
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_56
+      name: EffectIconsV9_60
       rect:
         serializedVersion: 2
         x: 0
@@ -1307,14 +1391,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b495e259ed69c5643a97de57e12a01f3
-      internalID: -813770888
+      spriteID: 2414664a969b5ca428315d84d6f3ccbb
+      internalID: 1083735676
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_57
+      name: EffectIconsV9_61
       rect:
         serializedVersion: 2
         x: 32
@@ -1328,18 +1412,60 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4bb421f638c06b543b1f2af986fea61a
-      internalID: 473264064
+      spriteID: 0ced801d43795034ebc00f50dfcf8b4c
+      internalID: -1304091409
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_58
+      name: EffectIconsV9_62
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe6006c78a5830547980d267d5d1865e
+      internalID: -1629871899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EffectIconsV9_63
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 256
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a5d40bf19a6a2d418f6168191d83ea6
+      internalID: 1133103536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EffectIconsV9_64
       rect:
         serializedVersion: 2
         x: 64
-        y: 288
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -1349,18 +1475,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b695fe3f43dc2ca489275e49d2efd56b
-      internalID: -2093963018
+      spriteID: 80a0c9f5e4ffb0a4abc5c9f859d27d90
+      internalID: 1090329809
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_59
+      name: EffectIconsV9_65
       rect:
         serializedVersion: 2
         x: 96
-        y: 288
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -1370,18 +1496,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e7276ac7026a8d84d945987a69f4ab10
-      internalID: -371200031
+      spriteID: 8ff9ba2f50bbb2441994541e9611dd6a
+      internalID: -583016287
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_60
+      name: EffectIconsV9_66
       rect:
         serializedVersion: 2
         x: 128
-        y: 288
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -1391,18 +1517,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 544e74eee0b493641a03f620047adaa3
-      internalID: -282015174
+      spriteID: 372de0c4c51c443408a32650b98e3eab
+      internalID: -62577320
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_61
+      name: EffectIconsV9_67
       rect:
         serializedVersion: 2
         x: 160
-        y: 288
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -1412,18 +1538,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 77990fcd44c388b4da882153fe3cce6d
-      internalID: 1828821049
+      spriteID: 8cc43d3b930e19e45adcfc1cf7690bd2
+      internalID: 60294119
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_62
+      name: EffectIconsV9_68
       rect:
         serializedVersion: 2
         x: 192
-        y: 288
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -1433,18 +1559,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 53f98e43f6faf7b4aa88b138b4725142
-      internalID: -236560073
+      spriteID: 3c93da730fafb2b438d387986fc0144d
+      internalID: 1777046142
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_63
+      name: EffectIconsV9_69
       rect:
         serializedVersion: 2
         x: 224
-        y: 288
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -1454,18 +1580,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ed8d9b92f72c24e47b72bbfe8b4bc224
-      internalID: -1167142382
+      spriteID: 6cf07e10a95e2e14e9f80adf74aaf3d1
+      internalID: -1762495211
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_64
+      name: EffectIconsV9_70
       rect:
         serializedVersion: 2
         x: 256
-        y: 288
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -1475,18 +1601,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cc8bd852bf9f8a7438e757ced573c85d
-      internalID: -1400759227
+      spriteID: 978681e84d1c6a448a3366b5f4558bad
+      internalID: 780930142
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_65
+      name: EffectIconsV9_71
       rect:
         serializedVersion: 2
         x: 0
-        y: 256
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -1496,18 +1622,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 97a30cd46e0b022429287674a4e53383
-      internalID: 323252539
+      spriteID: 0536599ce56b58c41a015ec9a58b97b2
+      internalID: 1629705137
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_66
+      name: EffectIconsV9_72
       rect:
         serializedVersion: 2
         x: 32
-        y: 256
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -1517,18 +1643,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 81927e5a263fb424b98ab101d5f9c152
-      internalID: -1978742104
+      spriteID: 08897ca9ea26baf4ba7d8b677cf3d782
+      internalID: 68330398
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_67
+      name: EffectIconsV9_73
       rect:
         serializedVersion: 2
         x: 64
-        y: 256
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -1538,18 +1664,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e288c158c87ef9944925c42a2e8a8a60
-      internalID: 1270185772
+      spriteID: decad6279902df84095fa4f555da772a
+      internalID: -2092261355
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_68
+      name: EffectIconsV9_74
       rect:
         serializedVersion: 2
         x: 96
-        y: 256
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -1559,18 +1685,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9002f1662daa5234fad086a82b479b74
-      internalID: -1639911818
+      spriteID: 01590eb2f89369f48ae1e8dc3885e79b
+      internalID: 912590524
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_69
+      name: EffectIconsV9_75
       rect:
         serializedVersion: 2
         x: 128
-        y: 256
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -1580,18 +1706,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3d93d2a10074b5d46a6525797a0fe9b6
-      internalID: -967562962
+      spriteID: a8a208e5e10a40940924fec42b517a3e
+      internalID: 984311422
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EffectIconsV8_70
+      name: EffectIconsV9_76
       rect:
         serializedVersion: 2
         x: 160
-        y: 256
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -1601,8 +1727,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5e6cd34f04a18ac468ed134d98157609
-      internalID: 1273748198
+      spriteID: 0c8c38586c1edda4ab778294d1993b37
+      internalID: 1967335801
       vertices: []
       indices: 
       edges: []
@@ -1610,7 +1736,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 222ad31c575b99d49ae3da5039e83fe8
+    spriteID: 8432f9d9d09048f4ca1b99f0da685675
     internalID: 0
     vertices: []
     indices: 
@@ -1618,77 +1744,83 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      EffectIconsV8_39: 346163517
-      EffectIconsV8_49: 471230410
-      EffectIconsV8_46: 81725953
-      EffectIconsV8_18: -1487928811
-      EffectIconsV8_23: 1103103588
-      EffectIconsV8_30: 1628307866
-      EffectIconsV8_60: -282015174
-      EffectIconsV8_0: 913225620
-      EffectIconsV8_69: -967562962
-      EffectIconsV8_66: -1978742104
-      EffectIconsV8_2: 1975094701
-      EffectIconsV8_11: 1600794075
-      EffectIconsV8_14: -1101828993
-      EffectIconsV8_4: 1793346876
-      EffectIconsV8_55: -1884424900
-      EffectIconsV8_9: -365719530
-      EffectIconsV8_27: 1445717151
-      EffectIconsV8_25: -1124447867
-      EffectIconsV8_24: 687203027
-      EffectIconsV8_67: 1270185772
-      EffectIconsV8_32: 1542163741
-      EffectIconsV8_22: -1406808867
-      EffectIconsV8_36: 979601154
-      EffectIconsV8_59: -371200031
-      EffectIconsV8_40: 1236555192
-      EffectIconsV8_8: -1647089142
-      EffectIconsV8_51: -240431550
-      EffectIconsV8_6: 1857498232
-      EffectIconsV8_37: 389218788
-      EffectIconsV8_57: 473264064
-      EffectIconsV8_61: 1828821049
-      EffectIconsV8_68: -1639911818
-      EffectIconsV8_48: -1599162923
-      EffectIconsV8_10: -813908874
-      EffectIconsV8_3: -1887253412
-      EffectIconsV8_34: 318131834
-      EffectIconsV8_20: 1383071566
-      EffectIconsV8_52: 806178523
-      EffectIconsV8_7: 1891074411
-      EffectIconsV8_58: -2093963018
-      EffectIconsV8_38: -372932151
-      EffectIconsV8_5: -43706727
-      EffectIconsV8_17: -2120694510
-      EffectIconsV8_12: 1084066634
-      EffectIconsV8_47: 101670954
-      EffectIconsV8_62: -236560073
-      EffectIconsV8_29: -942629232
-      EffectIconsV8_53: -1362953029
-      EffectIconsV8_44: 279291
-      EffectIconsV8_21: 1587212561
-      EffectIconsV8_16: -216046286
-      EffectIconsV8_19: 775884915
-      EffectIconsV8_1: 789731565
-      EffectIconsV8_35: -1455609047
-      EffectIconsV8_33: -1604859759
-      EffectIconsV8_26: -217635221
-      EffectIconsV8_54: 1537958106
-      EffectIconsV8_70: 1273748198
-      EffectIconsV8_63: -1167142382
-      EffectIconsV8_15: 1040991604
-      EffectIconsV8_43: 52416142
-      EffectIconsV8_41: -1886490314
-      EffectIconsV8_28: 576370696
-      EffectIconsV8_56: -813770888
-      EffectIconsV8_31: -802741229
-      EffectIconsV8_64: -1400759227
-      EffectIconsV8_45: -1158298227
-      EffectIconsV8_50: 668777915
-      EffectIconsV8_42: -648543776
-      EffectIconsV8_65: 323252539
-      EffectIconsV8_13: -818284682
+      EffectIconsV9_35: 1373594650
+      EffectIconsV9_58: 1062038556
+      EffectIconsV9_43: -1752239423
+      EffectIconsV9_29: 609870717
+      EffectIconsV9_14: -58511308
+      EffectIconsV9_39: -1482156643
+      EffectIconsV9_56: 553317461
+      EffectIconsV9_1: 32536726
+      EffectIconsV9_73: -2092261355
+      EffectIconsV9_63: 1133103536
+      EffectIconsV9_52: 1914894350
+      EffectIconsV9_21: 1998640247
+      EffectIconsV9_45: -112481648
+      EffectIconsV9_59: -649733098
+      EffectIconsV9_5: -1926709322
+      EffectIconsV9_18: 910613513
+      EffectIconsV9_7: -1439455793
+      EffectIconsV9_64: 1090329809
+      EffectIconsV9_12: 569085716
+      EffectIconsV9_38: 1827945000
+      EffectIconsV9_44: -1880873573
+      EffectIconsV9_49: -1382693699
+      EffectIconsV9_9: 1733713250
+      EffectIconsV9_62: -1629871899
+      EffectIconsV9_6: 1678335775
+      EffectIconsV9_17: 1724499379
+      EffectIconsV9_10: -552526905
+      EffectIconsV9_47: -884722578
+      EffectIconsV9_72: 68330398
+      EffectIconsV9_70: 780930142
+      EffectIconsV9_40: 1877114285
+      EffectIconsV9_74: 912590524
+      EffectIconsV9_75: 984311422
+      EffectIconsV9_16: 342953796
+      EffectIconsV9_2: 1526936684
+      EffectIconsV9_65: -583016287
+      EffectIconsV9_69: -1762495211
+      EffectIconsV9_27: 544426520
+      EffectIconsV9_33: 597700025
+      EffectIconsV9_71: 1629705137
+      EffectIconsV9_55: -1259759021
+      EffectIconsV9_22: 1610871571
+      EffectIconsV9_48: 927197937
+      EffectIconsV9_4: -1367493844
+      EffectIconsV9_31: -847639239
+      EffectIconsV9_51: 2037016641
+      EffectIconsV9_23: 1755313914
+      EffectIconsV9_30: 1021574770
+      EffectIconsV9_11: -844006863
+      EffectIconsV9_50: 42927726
+      EffectIconsV9_53: -633493656
+      EffectIconsV9_68: 1777046142
+      EffectIconsV9_25: 657715396
+      EffectIconsV9_3: -508203215
+      EffectIconsV9_24: -1274106738
+      EffectIconsV9_32: 512217365
+      EffectIconsV9_67: 60294119
+      EffectIconsV9_46: -1033599126
+      EffectIconsV9_28: -2116765323
+      EffectIconsV9_61: -1304091409
+      EffectIconsV9_26: -2059010794
+      EffectIconsV9_34: -1300889421
+      EffectIconsV9_41: -590138043
+      EffectIconsV9_57: 663142370
+      EffectIconsV9_76: 1967335801
+      EffectIconsV9_37: -464631362
+      EffectIconsV9_42: 229798268
+      EffectIconsV9_13: -962140350
+      EffectIconsV9_0: -1551857009
+      EffectIconsV9_19: 159789182
+      EffectIconsV9_66: -62577320
+      EffectIconsV9_54: -1641231895
+      EffectIconsV9_60: 1083735676
+      EffectIconsV9_20: -343965685
+      EffectIconsV9_36: -1554652572
+      EffectIconsV9_8: -1627871276
+      EffectIconsV9_15: -1553936808
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

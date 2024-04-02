@@ -9,13 +9,13 @@ DigestiveAcid,Digestive Acid,"You lose <var,9> HP and <var,11> SE every <var,3> 
 AcidFlow,Acid Flow,"You lose <var,8> HP and <var,10> SE every <var,1> turn(s). Items are 90% less powerful.","You lose <var,10> HP and <var,12> SE every <var,1> turn(s). Items are 90% less powerful."
 SacredGrove,Sacred Grove,You can only use moves that cost 8 stamina or less. Earth damage is doubled.,You can only use moves that cost 8 stamina or less. Earth damage is doubled.
 IonizedSand,Ionized Sand,Stamina costs are halved. Air/Electric damage is doubled.,Stamina costs are halved. Air/Electric damage is doubled.
-WhiteoutBlizzard,Whiteout Blizzard,You take damage equal to damage dealt. Water damage is doubled.,
+WhiteoutBlizzard,Whiteout Blizzard,All damage dealt to enemies is limited to 6 damage per hit. Light damage is doubled.,All damage dealt to enemies is limited to 6 damage per hit. Light damage is doubled.
 VoidShadow,Void Shadow,Items are 50% less effective. Dark damage is doubled.,Items are 50% less effective. Dark damage is doubled.
 CounterWave,Counter Wave,"When you attack, you take 4 damage every hit. Water damage is doubled.","When you attack, you take 4 damage every hit. Water damage is doubled."
-ScaldingMagma,Scalding Magma,"When anyone gets hit, they receive 1 Focus. Fire damage is doubled.","When anyone gets hit, they receive 1 Focus. Fire damage is doubled."
+ScaldingMagma,Scalding Magma,"When anyone gets hit, they take half that damage again at the end of turn. Fire damage is doubled.","When anyone gets hit, they take half that damage again at the end of turn. Fire damage is doubled."
 TrialOfSimplicity,Trial Of Simplicity,You can only use moves that cost 5 stamina or less. Earth damage is doubled.,You can only use moves that cost 5 stamina or less. Earth damage is doubled.
 TrialOfHaste,Trial Of Haste,Stamina costs are ignored. Air/Electric damage is doubled.,Stamina costs are ignored. Air/Electric damage is doubled.
-TrialOfResolve,Trial Of Resolve,All damage is limited to 3 damage per hit. Light damage is doubled.,All damage is limited to 3 damage per hit. Light damage is doubled.
+TrialOfResolve,Trial Of Resolve,All damage dealt to enemies is limited to 3 damage per hit. Light damage is doubled.,All damage dealt to enemies is limited to 3 damage per hit. Light damage is doubled.
 TrialOfAmbition,Trial Of Ambition,Items are 90% less effective. Dark damage is doubled.,Items are 90% less effective. Dark damage is doubled.
-TrialOfPatience,Trial Of Patience,"When you attack, you take damage equal to damage dealt. Water damage is doubled.",You take damage equal to damage dealt. Water damage is doubled.
-TrialOfZeal,Trial Of Zeal,"When anyone gets hit, they receive 3 Focus. Enemies get Attack Boost 2 every turn. Fire damage is doubled.","When anyone gets hit, they receive 3 Focus. Enemies get Attack Boost 2 every turn. Fire damage is doubled."
+TrialOfPatience,Trial Of Patience,"When you attack, you take damage equal to half the damage dealt. Water damage is doubled.",You take damage equal to half the damage dealt. Water damage is doubled.
+TrialOfZeal,Trial Of Zeal,"When anyone gets hit, they take all that damage again at the end of turn. Fire damage is doubled.","When anyone gets hit, they take all that damage again at the end of turn. Fire damage is doubled."

@@ -492,7 +492,7 @@ public class BE_LumistarVanguard : BattleEntity
     int counterCount;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_LumistarVanguard_HornBlast>(), gameObject.AddComponent<BM_LumistarVanguard_HornRally>(), gameObject.AddComponent<BM_Shared_Hard_CounterShield>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_LumistarVanguard_HornBlast>(), gameObject.AddComponent<BM_LumistarVanguard_LanternRally>(), gameObject.AddComponent<BM_Shared_Hard_CounterShield>() };
 
         base.Initialize();
     }
@@ -572,9 +572,9 @@ public class BM_LumistarVanguard_HornBlast : EnemyMove
     }
 }
 
-public class BM_LumistarVanguard_HornRally : EnemyMove
+public class BM_LumistarVanguard_LanternRally : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.LumistarVanguard_HornRally;
+    public override MoveIndex GetMoveIndex() => MoveIndex.LumistarVanguard_LanternRally;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 

@@ -75,6 +75,7 @@ public class EffectScript_Damage : MonoBehaviour
         new Color(0.95f,0.82f,0.56f),   //super block (second color)
         new Color(1.0f,0.6f,0.6f),      //unused (unblockable) (damage uses the hp bar colors)
         new Color(1.0f,0.6f,0.6f),      //unused (max hp) (damage uses the hp bar colors)
+        new Color(0.6f,1f,0.6f),      //unused (soft) (damage uses the hp bar colors)
         new Color(1.0f,0.0f,1.0f),      //soul energy heal
         new Color(0.5f,0.0f,0.5f),      //negative soul energy
         new Color(0.2f,0.5f,0.2f),      //stamina
@@ -120,6 +121,15 @@ public class EffectScript_Damage : MonoBehaviour
                 text.colorGradient = gradient2;
                 text.color = Color.white;
                 break;
+            case BattleHelper.DamageEffect.SoftDamage:
+                text.color = BattleControl.Instance.GetHPBarColors()[3];
+                Color softColor = numberColors[9];
+
+                Color smidpoint = new Color(Mathf.Lerp(text.color.r, softColor.r, 0.5f), Mathf.Lerp(text.color.g, softColor.g, 0.5f), Mathf.Lerp(text.color.b, softColor.b, 0.5f));
+                TMPro.VertexGradient sgradient = new TMPro.VertexGradient(text.color, smidpoint, smidpoint, softColor);
+                text.colorGradient = sgradient;
+                text.color = Color.white;
+                break;
             case BattleHelper.DamageEffect.Damage:
             case BattleHelper.DamageEffect.UnblockableDamage:
             case BattleHelper.DamageEffect.MaxHPDamage:
@@ -139,6 +149,7 @@ public class EffectScript_Damage : MonoBehaviour
             case BattleHelper.DamageEffect.SuperBlockedDamage:
             case BattleHelper.DamageEffect.UnblockableDamage:
             case BattleHelper.DamageEffect.MaxHPDamage:
+            case BattleHelper.DamageEffect.SoftDamage:
             case BattleHelper.DamageEffect.Damage:
                 if (type != BattleHelper.DamageType.Normal && type != BattleHelper.DamageType.Default)
                 {
@@ -201,6 +212,7 @@ public class EffectScript_Damage : MonoBehaviour
             case BattleHelper.DamageEffect.SuperBlockedDamage:
             case BattleHelper.DamageEffect.UnblockableDamage:
             case BattleHelper.DamageEffect.MaxHPDamage:
+            case BattleHelper.DamageEffect.SoftDamage:
             case BattleHelper.DamageEffect.Damage:
                 backSpriteA.sprite = BattleControl.Instance.damageEffectStar;
                 backSpriteB.sprite = BattleControl.Instance.damageEffectStar;
@@ -340,6 +352,11 @@ public class EffectScript_Damage : MonoBehaviour
         if (number == 0)
         {
             numScale = 0.4f;
+        }
+
+        if (be == BattleHelper.DamageEffect.SoftDamage)
+        {
+            numScale = 0.45f;
         }
 
         if (ministars != null)

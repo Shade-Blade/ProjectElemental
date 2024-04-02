@@ -1781,7 +1781,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       scalar: 0
-      minScalar: 0
+      minScalar: -5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4912,6 +4912,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5016e86e86ac1a40a7e0227951aa2c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ps: {fileID: 6309588960752248223}
-  baseEmission: 2
-  baseWidth: 0.3

@@ -387,12 +387,6 @@ public class Item_GenericConsumable : ItemMove
                         BattleControl.Instance.CreateReviveParticles(targets[i], 1 + 3 * Mathf.Clamp(targetHeal / 60f, 0, 1));    //note: the heal health call produces revive particles if it revives
                     }
 
-                    if (targetHeal > 0)
-                    {
-                        int particles = (int)(1 + 9 * Mathf.Log(targetHeal, 60));
-                        HealParticles(targets[i], particles);
-                    }
-
                     overheal += targets[i].HealHealthTrackOverhealPay(targetHeal);
                 }
             }
@@ -406,11 +400,6 @@ public class Item_GenericConsumable : ItemMove
             }
 
             int targetEnergy = (int)(epheal * targets[0].GetItemReceiveBonus());
-            if (targetEnergy > 0)
-            {
-                int particles = (int)(1 + 9 * Mathf.Log(targetEnergy, 60));
-                EnergyParticles(targets[0], particles);
-            }
 
             overheal += targets[0].HealEnergyTrackOverhealPay(targetEnergy);
             delay = true;
@@ -423,11 +412,6 @@ public class Item_GenericConsumable : ItemMove
             }
 
             int targetSoul = (int)(seheal * targets[0].GetItemReceiveBonus());
-            if (targetSoul > 0)
-            {
-                int particles = (int)(1 + 9 * Mathf.Log(targetSoul, 60));
-                SoulParticles(targets[0], particles);
-            }
 
             overheal += targets[0].HealSoulEnergyTrackOverhealPay(targetSoul);
             delay = true;
@@ -441,11 +425,6 @@ public class Item_GenericConsumable : ItemMove
             for (int i = 0; i < targets.Count; i++)
             {
                 int targetStamina = (int)(staminaheal * targets[i].GetItemReceiveBonus());
-                if (targetStamina > 0)
-                {
-                    int particles = (int)(1 + 9 * Mathf.Log(targetStamina, 60));
-                    StaminaParticles(targets[i], particles);
-                }
 
                 overheal += targets[i].HealStaminaTrackOverhealPay(targetStamina);
             }
@@ -879,67 +858,6 @@ public class Item_GenericConsumable : ItemMove
         }
     }
 
-
-    public void HealParticles(BattleEntity be, int power)
-    {
-        //int power = 2;
-
-        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
-        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
-
-        GameObject eo = null;
-        EffectScript_Sparkle es_s = null;
-
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Effect_Sparkle"), gameObject.transform);
-        eo.transform.position = position;
-        es_s = eo.GetComponent<EffectScript_Sparkle>();
-        es_s.Setup(new Color(1.0f, 0.2f, 0.2f, 1.0f), 0.5f, power, 0.25f, newScale);
-    }
-    public void EnergyParticles(BattleEntity be, int power)
-    {
-        //int power = 2;
-
-        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
-        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
-
-        GameObject eo = null;
-        EffectScript_Sparkle es_s = null;
-
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Effect_Sparkle"), gameObject.transform);
-        eo.transform.position = position;
-        es_s = eo.GetComponent<EffectScript_Sparkle>();
-        es_s.Setup(new Color(1.0f, 1.0f, 0.2f, 1.0f), 0.5f, power, 0.25f, newScale);
-    }
-    public void SoulParticles(BattleEntity be, int power)
-    {
-        //int power = 2;
-
-        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
-        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
-
-        GameObject eo = null;
-        EffectScript_Sparkle es_s = null;
-
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Effect_Sparkle"), gameObject.transform);
-        eo.transform.position = position;
-        es_s = eo.GetComponent<EffectScript_Sparkle>();
-        es_s.Setup(new Color(1.0f, 0.2f, 1.0f, 1.0f), 0.5f, power, 0.25f, newScale);
-    }
-    public void StaminaParticles(BattleEntity be, int power)
-    {
-        //int power = 2;
-
-        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
-        Vector3 position = be.transform.position + Vector3.up * (be.height/2);
-
-        GameObject eo = null;
-        EffectScript_Sparkle es_s = null;
-
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Effect_Sparkle"), gameObject.transform);
-        eo.transform.position = position;
-        es_s = eo.GetComponent<EffectScript_Sparkle>();
-        es_s.Setup(new Color(0.2f, 1.0f, 0.2f, 1.0f), 0.5f, power, 0.25f, newScale);
-    }
     public void BoostParticles(BattleEntity be)
     {
         int power = 2;

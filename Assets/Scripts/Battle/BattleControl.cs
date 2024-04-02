@@ -2792,6 +2792,159 @@ public class BattleControl : MonoBehaviour
         return o;
     }
     */
+
+    public void CreateHealParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_HealthSparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+    public void CreateEnergyParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_EnergySparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+    public void CreateSoulParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_SoulSparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+    public void CreateStaminaParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_StaminaSparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+    public void CreateCoinParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_CoinSparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+
+    public void CreateNegativeHealParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_NegativeHealthSparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+    public void CreateNegativeEnergyParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_NegativeEnergySparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+    public void CreateNegativeSoulParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_NegativeSoulSparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+    public void CreateNegativeStaminaParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_NegativeStaminaSparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+    public void CreateNegativeCoinParticles(BattleEntity be, int power)
+    {
+        //int power = 2;
+
+        float newScale = Mathf.Max(be.height, be.width);  //looks fine as long as I don't make a super elongated or tall enemy
+        Vector3 position = be.transform.position + Vector3.up * (be.height / 2);
+
+        GameObject eo = null;
+        EffectScript_Generic es_s = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_NegativeCoinSparkle"), gameObject.transform);
+        eo.transform.position = position;
+        es_s = eo.GetComponent<EffectScript_Generic>();
+        es_s.Setup(newScale, power);
+    }
+
     public GameObject CreateDamageEffect(BattleHelper.DamageEffect b, int s, Vector3 position, BattleEntity be, BattleHelper.DamageType type = BattleHelper.DamageType.Default, ulong properties = 0)
     {
         GameObject o = Instantiate(damageEffect);
@@ -3222,6 +3375,25 @@ public class BattleControl : MonoBehaviour
                 effectColor = new Color(0.75f, 0.3f, 1f, 0.8f);
                 break;
 
+            case Effect.EffectType.HealthRegen:
+                eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_HealthRegen"), gameObject.transform);
+                eo.transform.position = be.GetDamageEffectPosition();
+                es_g = eo.GetComponent<EffectScript_Generic>();
+                es_g.Setup(newScale, 3);
+                break;
+            case Effect.EffectType.EnergyRegen:
+                eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_EnergyRegen"), gameObject.transform);
+                eo.transform.position = be.GetDamageEffectPosition();
+                es_g = eo.GetComponent<EffectScript_Generic>();
+                es_g.Setup(newScale, 3);
+                break;
+            case Effect.EffectType.SoulRegen:
+                eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_SoulRegen"), gameObject.transform);
+                eo.transform.position = be.GetDamageEffectPosition();
+                es_g = eo.GetComponent<EffectScript_Generic>();
+                es_g.Setup(newScale, 3);
+                break;
+
             case Effect.EffectType.AttackUp:
                 buff = true;
                 effectColor = new Color(1, 0.3f, 0.3f, 0.8f);
@@ -3270,6 +3442,26 @@ public class BattleControl : MonoBehaviour
                 buff = true;
                 effectColor = new Color(1f, 0.8f, 0.6f, 0.8f);
                 break;
+
+            case Effect.EffectType.HealthLoss:
+                eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_HealthLoss"), gameObject.transform);
+                eo.transform.position = be.GetDamageEffectPosition();
+                es_g = eo.GetComponent<EffectScript_Generic>();
+                es_g.Setup(newScale, 3);
+                break;
+            case Effect.EffectType.EnergyLoss:
+                eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_EnergyLoss"), gameObject.transform);
+                eo.transform.position = be.GetDamageEffectPosition();
+                es_g = eo.GetComponent<EffectScript_Generic>();
+                es_g.Setup(newScale, 3);
+                break;
+            case Effect.EffectType.SoulLoss:
+                eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_SoulLoss"), gameObject.transform);
+                eo.transform.position = be.GetDamageEffectPosition();
+                es_g = eo.GetComponent<EffectScript_Generic>();
+                es_g.Setup(newScale, 3);
+                break;
+
 
             case Effect.EffectType.AttackDown:
                 debuff = true;
@@ -4755,6 +4947,81 @@ public class BattleControl : MonoBehaviour
             yield return StartCoroutine(RunOutOfTurnEvents());
         }
 
+        //Counter Flare activates before the PostMove stuff since the damage taken this turn variable gets changed by postmove
+        //Counter Flare calculation + Splotch calculation
+        entities.Sort(Comparer<BattleEntity>.Create((a, b) => PosCompare(a, b)));
+        entities.SetBools();
+        while (entities.hasNext())
+        {
+            BattleEntity current = entities.next();
+            if (current.damageTakenThisTurn > 0)
+            {
+                if (current.TokenRemoveOne(Effect.EffectType.CounterFlare))
+                {
+                    current.counterFlareDamage = current.damageTakenThisTurn;
+                }
+                else
+                {
+                    current.counterFlareDamage = 0;
+                }
+            }
+            if (current.HasEffect(Effect.EffectType.Splotch))
+            {
+                current.splotchDamage = Mathf.CeilToInt(0.5f * current.damageTakenThisTurn);
+            } else
+            {
+                current.splotchDamage = 0;
+            }
+
+            if (enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfZeal)
+            {
+                current.magmaDamage = current.damageTakenThisTurn;
+            }
+            else if (enviroEffect == BattleHelper.EnvironmentalEffect.ScaldingMagma)
+            {
+                current.magmaDamage = Mathf.CeilToInt(0.5f * current.damageTakenThisTurn);
+            } else
+            {
+                current.magmaDamage = 0;
+            }
+        }
+
+        //Counter Flare + Splotch activation
+        entities.Sort(Comparer<BattleEntity>.Create((a, b) => PosCompare(a, b)));
+        entities.SetBools();
+        while (entities.hasNext())
+        {
+            BattleEntity current = entities.next();
+            //not the "right" property to use but I don't feel like making another property for a thing I probably won't use
+            if (current.splotchDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
+            {
+                Move sp = GetOrAddComponent<Splotch>();
+                DisplayMovePopup(sp.GetName());
+                yield return new WaitForSeconds(0.5f);
+                yield return sp.Execute(current);
+                DestroyMovePopup();
+            }
+            if (current.counterFlareDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
+            {
+                Move cf = GetOrAddComponent<CounterFlare>();
+                DisplayMovePopup(cf.GetName());
+                yield return new WaitForSeconds(0.5f);
+                yield return cf.Execute(current);
+                DestroyMovePopup();
+            }
+            if (current.magmaDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
+            {
+                Move sp = GetOrAddComponent<ScaldingMagma>();
+                DisplayMovePopup(sp.GetName());
+                yield return new WaitForSeconds(0.5f);
+                yield return sp.Execute(current);
+                DestroyMovePopup();
+            }
+        }
+
+
+        //post move stuff
+
         //tally max damage per turn
         int perTurnDamage = 0;
         List<PlayerEntity> pel = GetPlayerEntities();
@@ -4763,7 +5030,6 @@ public class BattleControl : MonoBehaviour
             perTurnDamage += pel[i].perTurnDamageDealt;
         }
         playerData.UpdateMaxDamageDealt(perTurnDamage);
-
 
         //post move
         entities.Sort(Comparer<BattleEntity>.Create((a, b) => PosCompare(a, b)));
@@ -4790,6 +5056,7 @@ public class BattleControl : MonoBehaviour
             //Destroy(move);
         }
         */
+        
 
 
         //tick down charm effects

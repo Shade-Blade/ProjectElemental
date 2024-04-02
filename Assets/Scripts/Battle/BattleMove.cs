@@ -1291,7 +1291,7 @@ public abstract class EnemyMove : Move
         Shimmerwing_DazzlingScreech,
         Shimmerwing_RallySong,
         LumistarVanguard_HornBlast,
-        LumistarVanguard_HornRally,
+        LumistarVanguard_LanternRally,
         LumistarSoldier_Charge,
         LumistarSoldier_ChargeSlash,
         LumistarStriker_Charge,

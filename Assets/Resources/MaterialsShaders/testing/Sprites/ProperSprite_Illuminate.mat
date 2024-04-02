@@ -76,7 +76,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Leak: 0.6
+    - _Leak: 0.5
     - _Metallic: 0
     - _Midpoint: 0.7
     - _Mode: 0
@@ -94,13 +94,13 @@ Material:
     - _UseUIAlphaClip: 0
     - _ZWrite: 1
     m_Colors:
-    - _BlackColor: {r: 1, g: 0.8509804, b: 0.5019608, a: 1}
+    - _BlackColor: {r: 1.3, g: 1.1, b: 0.3, a: 1}
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _GrayColor: {r: 1, g: 0.94185114, b: 0.80566037, a: 1}
+    - _GrayColor: {r: 1.4, g: 1.3, b: 1, a: 1}
     - _OcclusionColor: {r: 0, g: 0, b: 0, a: 0.2}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _WhiteColor: {r: 1, g: 1, b: 0.9, a: 1}
+    - _WhiteColor: {r: 2.3, g: 2.3, b: 1.3, a: 1}
   m_BuildTextureStacks: []

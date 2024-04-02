@@ -39,6 +39,10 @@ ParryAura,Parry Aura,"Gain <var,1> Focus when hit."
 BolsterAura,Bolster Aura,"Gain <var,1> Absorb at the end of turn when hit."
 AstralRecovery,Astral Recovery,"Gain <var,1> HP when hit except when the hit reduces the entity to 0 hp."
 Elusive,Elusive,"Get <var,1> turn(s) of Ethereal when hit."
+CounterFlare,Counter Flare,Damage taken will be healed back and returned to all enemies at the end of turn. (Effect potency is reduced by 1 if the counter activates)
+Supercharge,Supercharge,Preserve Focus after it is used
+QuantumShield,Quantum Shield,"Block the next <var,1> hits completely"
+Soften,Soften,Damage you take gets softened so that the damage happens over the course of 3 turns.
 AttackDown,Attack Down,"Attack is decreased by <var,1>"
 DefenseDown,Defense Down,"Defense is decreased by <var,1>"
 EnduranceDown,Endurance Down,"Endurance is decreased by <var,1>. (Move costs go up by <var,1>)"
@@ -55,6 +59,8 @@ Sticky,Sticky,Cannot use Items.
 Fizzle,Fizzle,Cannot use Skills.
 Cloud,Cloud,Cannot use Soul Moves.
 Curse,Curse,Cannot receive healing.
+DamageOverTime,Damage Over Time,"Take <var,1> damage per turn."
+Splotch,Splotch,"When hit, the damage will be dealt again at 50% strength at the end of turn."
 Focus,Focus,"Attack is increased by <var,1>. (Removed after their turn if they attack.)"
 Absorb,Absorb,"Defense is increased by <var,1> (When hit, this is removed after the attacker's turn.)"
 Burst,Burst,"Endurance is increased by <var,1> for their next energy using move. (Move costs go down by <var,1>)"

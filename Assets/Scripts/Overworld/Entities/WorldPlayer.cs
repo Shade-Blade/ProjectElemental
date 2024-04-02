@@ -3407,6 +3407,10 @@ public class WorldPlayer : WorldEntity
         {
             ac.SendAnimationData("illuminate");
         }
+        for (int i = 0; i < followers.Count; i++)
+        {
+            followers[i].SendAnimationData("illuminate");
+        }
     }
 
     public void AetherUpdate()
@@ -3482,6 +3486,10 @@ public class WorldPlayer : WorldEntity
         if (ac != null)
         {
             ac.SendAnimationData("matreset");
+        }
+        for (int i = 0; i < followers.Count; i++)
+        {
+            followers[i].SendAnimationData("matreset");
         }
     }
 
