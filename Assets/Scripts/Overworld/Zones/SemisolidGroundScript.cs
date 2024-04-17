@@ -8,6 +8,7 @@ public class SemisolidGroundScript : WorldZone
     public Vector3 digConveyer;
     public float damping;
     public bool snapBelow;
+    public bool noEffectAway;
 
     public void OnDrawGizmos()
     {
@@ -35,15 +36,18 @@ public class SemisolidGroundScript : WorldZone
         //Debug.Log(other.transform.GetComponent<WorldPlayer>());
         if (we != null)
         {
-            we.DoSemisolidLanding(transform.position + Vector3.up * 0.25f, transform.up, null, snapBelow);
-            we.conveyerVector = conveyer;
-            we.movementDamping = damping;
-
-            if (we is WorldPlayer wp)
+            if (!noEffectAway || Vector3.Dot(we.rb.velocity + Physics.gravity * Time.fixedDeltaTime, transform.up) <= 0)
             {
-                if (wp.GetActionState() == WorldPlayer.ActionState.Dig)
+                we.DoSemisolidLanding(transform.position + Vector3.up * 0.25f, transform.up, null, snapBelow);
+                we.conveyerVector = conveyer;
+                we.movementDamping = damping;
+
+                if (we is WorldPlayer wp)
                 {
-                    wp.conveyerVector = digConveyer;
+                    if (wp.GetActionState() == WorldPlayer.ActionState.Dig)
+                    {
+                        wp.conveyerVector = digConveyer;
+                    }
                 }
             }
         }

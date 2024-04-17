@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Campfire
+  m_Name: vitrum
   m_Shader: {fileID: 4800000, guid: df20462cdd0cce64b94000eec0a660e8, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -85,10 +85,10 @@ Material:
     - _WidthB2: 0.3
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 2, g: 0.4, b: 0, a: 1}
-    - _BaseColorB: {r: 2, g: 0.7, b: 0, a: 1}
+    - _BaseColor: {r: 0.8099241, g: 6.9235477, b: 0.9210809, a: 1}
+    - _BaseColorB: {r: 0, g: 4.6853695, b: 0.13238728, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _InnerColor: {r: 2, g: 0.2, b: 0, a: 1}
-    - _InnerColorB: {r: 2, g: 0.35, b: 0, a: 1}
+    - _InnerColor: {r: 0, g: 0.8854797, b: 0.04838688, a: 1}
+    - _InnerColorB: {r: 0, g: 1.6561923, b: 0.3960461, a: 1}
   m_BuildTextureStacks: []

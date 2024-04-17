@@ -1,15 +1,23 @@
-Shader "VFX/FireParticleSide"
+Shader "VFX/FireParticleMinus"
 {
     Properties
     {
 		[HDR]
         _BaseColor ("Color", Color) = (1,1,1,1)
 		[HDR]
+        _MinusBaseColor ("Color", Color) = (1,1,1,1)
+		[HDR]
 		_BaseColorB ("ColorB", Color) = (1,1,1,1)
+		[HDR]
+		_MinusBaseColorB ("ColorB", Color) = (1,1,1,1)
 		[HDR]
         _InnerColor ("InnerColor", Color) = (1,1,1,1)
 		[HDR]
+        _MinusInnerColor ("InnerColor", Color) = (1,1,1,1)
+		[HDR]
 		_InnerColorB ("InnerColorB", Color) = (1,1,1,1)
+		[HDR]
+		_MinusInnerColorB ("InnerColorB", Color) = (1,1,1,1)
 
 		_NoiseFactor("Noise Factor", float) = 0.3
 
@@ -39,9 +47,13 @@ Shader "VFX/FireParticleSide"
 
 			
 			half4 _BaseColor;
+			half4 _MinusBaseColor;
 			half4 _BaseColorB;
+			half4 _MinusBaseColorB;
 			half4 _InnerColor;
+			half4 _MinusInnerColor;
 			half4 _InnerColorB;
+			half4 _MinusInnerColorB;
 
 			half _NoiseFactor;
 
@@ -112,13 +124,9 @@ Shader "VFX/FireParticleSide"
 
 				float4 test = float4(0,0,0,0);
 
-				//Rotate
-				i.uv = float2(i.uv.y, i.uv.x);
-
 				float2 newUV = i.uv + _Time.y * float2(0,-1);
 
-				//offset looks wrong sideways
-				float offset = 0.0005 * (i.pos.y - i.pos.z - i.pos.x);
+				float offset = 0.005 * (i.pos.x - i.pos.z);
 				offset = 2 * abs(frac(offset * 0.5) - 0.5);
 
 				newUV.x += offset;
@@ -131,14 +139,14 @@ Shader "VFX/FireParticleSide"
 
 				Ovoid(i.uv, _WidthB, _WidthB, _WidthB2, test);
 
-				test.rgb = _BaseColor;
+				test.rgb = _BaseColor - _MinusBaseColor;
 				if (test.a > 0.5) {
 					float a = i.uv.y;
 
 					a = (a - 0.5) * _InterpScale + 0.5;
 
 					a = saturate(a);
-					fixed4 interColor = _BaseColor * a + _BaseColorB * (1 - a);
+					fixed4 interColor = (_BaseColor - _MinusBaseColor) * a + (_BaseColorB - _MinusBaseColorB) * (1 - a);
 
 					test.r = interColor.r;
 					test.g = interColor.g;
@@ -152,7 +160,7 @@ Shader "VFX/FireParticleSide"
 						b *= (b - 0.5) * _InterpScale + 0.5;
 						
 						b = saturate(b);
-						fixed4 interColorB = _InnerColor * b + _InnerColorB * (1 - b);
+						fixed4 interColorB = (_InnerColor - _MinusInnerColor) * b + (_InnerColorB - _MinusInnerColorB) * (1 - b);
 
 						test.r = interColorB.r;
 						test.g = interColorB.g;

@@ -1294,6 +1294,7 @@ public abstract class EnemyMove : Move
         LumistarVanguard_LanternRally,
         LumistarSoldier_Charge,
         LumistarSoldier_ChargeSlash,
+        LumistarStriker_DualSlash,
         LumistarStriker_Charge,
         LumistarStriker_QuadSlash,
         Plateshell_Slam,

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Campfire
+  m_Name: spectral
   m_Shader: {fileID: 4800000, guid: df20462cdd0cce64b94000eec0a660e8, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -85,10 +85,10 @@ Material:
     - _WidthB2: 0.3
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 2, g: 0.4, b: 0, a: 1}
-    - _BaseColorB: {r: 2, g: 0.7, b: 0, a: 1}
+    - _BaseColor: {r: 0.18095875, g: 2.5921133, b: 2.3775077, a: 1}
+    - _BaseColorB: {r: 1.2443938, g: 2.670157, b: 2.617904, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _InnerColor: {r: 2, g: 0.2, b: 0, a: 1}
-    - _InnerColorB: {r: 2, g: 0.35, b: 0, a: 1}
+    - _InnerColor: {r: 0.54828984, g: 2.4981642, b: 2.5945864, a: 1}
+    - _InnerColorB: {r: 0, g: 1.9030355, b: 2, a: 1}
   m_BuildTextureStacks: []

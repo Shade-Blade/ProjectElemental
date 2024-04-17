@@ -1733,7 +1733,7 @@ public class PlayerEntity : BattleEntity
             return 0;
         }
 
-        damageEventsCount++;
+        damageEventsThisTurn++;
         absorbDamageEvents++;
         hitThisTurn = true;
 
@@ -3833,7 +3833,7 @@ public class PlayerEntity : BattleEntity
 
         attackHitCount = 0;
         chargedAttackCount = 0;
-        damageEventsCount = 0;
+        damageEventsThisTurn = 0;
         absorbDamageEvents = 0;
         //Debug.Log(name + " reset");
 

@@ -106,7 +106,8 @@ LumistarVanguard_HornBlast,Horn Blast,(Targets All Enemies) Blast with your horn
 LumistarVanguard_LanternRally,Lantern Rally,"(Targets All Enemies, Target All Allies) Shine your lantern brightly to deal weak Light damage to all targets and apply Defense Up 2 for 3 turns to all allies.",
 LumistarSoldier_Charge,Charge,(Targets Self) Charge up for a Charge Slice.,(Higher Difficulties: Also applies 1 Focus to all allies.)
 LumistarSoldier_ChargeSlash,Charge Slash,(Targets Front) Slice the target hard to deal normal damage.,
-LumistarStriker_Charge,Charge,(Targets Self) Charge up for a Quad Slash.,(Higher Difficulties: Also applies 1 Focus to all allies.)
+LumistarStriker_DualSlash,Dual Slash,(Targets Any Enemy) Slash a single target twice to deal normal damage. Fly up after attacking.,
+LumistarStriker_Charge,Charge,(Targets Self) Charge up for a Quad Slash. Become grounded if you are airborne.,(Higher Difficulties: Also applies 1 Focus to all allies.)
 LumistarStriker_QuadSlash,Quad Slash,(Targets Front) Hit the target with four slashes to deal normal damage.,(Higher Difficulties: Each hit applies Defocus 1.)
 Plateshell_Slam,Slam,(Targets Any Enemy) Slam down on the target to deal normal damage and inflict Sunder.,
 Plateshell_RageFireball,Rage Fireball,(Targets Any Enemy) Shoot a fireball at the target to deal Fire damage and inflict Berserk.,(Higher difficulties: Gives 2 Focus and 1 Sunder.)

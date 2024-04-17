@@ -1389,6 +1389,7 @@ public class BattleControl : MonoBehaviour
     //status icons only appear on your turn
     public void ShowEffectIcons()
     {
+        HideEffectIcons();  //fix problem?
         for (int i = 0; i < entities.Count; i++)
         {
             entities[i].ShowEffectIcons();
@@ -1404,6 +1405,7 @@ public class BattleControl : MonoBehaviour
 
     public void ShowHPBars()
     {
+        HideHPBars();   //fix problem?
         showHPBars = true;
         for (int i = 0; i < entities.Count; i++)
         {

@@ -634,7 +634,7 @@ public class BE_LumistarSoldier : BattleEntity
         }
         else
         {
-            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3 > 1 ? 1 : 0];
         }
 
         if (currMove == moveset[2])
@@ -774,7 +774,9 @@ public class BE_LumistarStriker : BattleEntity
         }
         else
         {
-            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+            //Note: Just putting %2 here could make the Striker just cycle charge -> quad slash infinitely which is not what I want
+            //So you get this wacky series of symbols
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3 > 1 ? 1 : 0];
         }
 
         if (currMove == moveset[2])
@@ -787,6 +789,68 @@ public class BE_LumistarStriker : BattleEntity
             BasicTargetChooser();
         }
     }
+
+    public override IEnumerator DoEvent(BattleHelper.Event eventID)
+    {
+        yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
+    }
+}
+
+public class BM_LumistarStriker_DualSlash : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.LumistarStriker_DualSlash;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.FlyingFallDown());
+
+        if (caller.curTarget != null)
+        {
+            Vector3 itpos = Vector3.negativeInfinity;
+            bool backflag = false;
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                itpos = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.back * 0.5f;
+                backflag = true;
+            }
+
+            //Debug.Log(itpos);
+
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right;
+
+            if (backflag)
+            {
+                yield return StartCoroutine(caller.Move(itpos));
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+            else
+            {
+                yield return StartCoroutine(caller.Move(tpos));
+            }
+
+            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+    }
 }
 
 public class BM_LumistarStriker_Charge : EnemyMove
@@ -797,6 +861,8 @@ public class BM_LumistarStriker_Charge : EnemyMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
+        yield return StartCoroutine(caller.FlyingFallDown());
+
         yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
         if (BattleControl.Instance.GetCurseLevel() > 0)
@@ -823,6 +889,8 @@ public class BM_LumistarStriker_QuadSlash : EnemyMove
         {
             caller.curTarget = null;
         }
+
+        yield return StartCoroutine(caller.FlyingFallDown());
 
         if (caller.curTarget != null)
         {

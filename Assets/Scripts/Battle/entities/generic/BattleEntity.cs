@@ -591,7 +591,7 @@ public class BestiaryOrderEntry
 
 public class BattleEntity : MonoBehaviour, ITextSpeaker
 {
-    public static GameObject baseObject;
+    //public static GameObject baseObject;
 
     //Enemy stats (mostly)
     //specific entity values (Almost all of these are in the enemy data file)
@@ -639,6 +639,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //public Vector3 damageOffset;
     private List<GameObject> statusIcons = new List<GameObject>();
     private GameObject hpbar;
+
+    private GameObject effectParticle;
 
     //a few other offset things (but these are scaled based on height / width, such that -0.5, 1, 0 is the top left corner always for example)
     public Vector3 stompOffset = new Vector3(0,1,0);
@@ -688,7 +690,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     //public Item? heldItem;                                                        //mostly unused on players
     public bool hasIdle = false;                                                    //if true, idle method runs whenever it isn't doing anything else
-    public int damageEventsCount = 0;                                               //counts damage events in a turn
+    public int damageEventsThisTurn = 0;                                               //counts damage events in a turn
     public int absorbDamageEvents = 0;
     public bool hitThisTurn = false;                                                //did you get hurt this turn? (Flag checked and reset at the start of the "round", before player can move)
     public bool hitLastTurn = false;                                                //did you get hurt last turn? (Starts false at the start of battle because that makes more sense)
@@ -994,7 +996,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         stamina = 0;
         agility = 0;
 
-        //Debug stuff
+        damageEventsThisTurn = 0;
 
         damageTakenThisTurn = 0;
         damageTakenLastTurn = 0;
@@ -1085,7 +1087,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         attackHitCount = 0;
         chargedAttackCount = 0;
-        damageEventsCount = 0;
+        //damageEventsCount = 0;
         absorbDamageEvents = 0;
         //Debug.Log(name + " reset");
 
@@ -1649,13 +1651,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         lastDamageTakenInput = damage;
 
-        //note that this function is not actually the one that queues the hurt events
-        //so there may be some possibilities of desync?
-        damageEventsCount++;
-        absorbDamageEvents++;
-        //Debug.Log(name + " " + damageEventsCount);
-        hitThisTurn = true;
-
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.ContactHazard) && ShouldShowHPBar())
         {
             ShowHPBar();
@@ -1673,6 +1668,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             if (Invulnerable())
             {
+                //note that this function is not actually the one that queues the hurt events
+                //so there may be some possibilities of desync?
+                damageEventsThisTurn++;
+                absorbDamageEvents++;
+                //Debug.Log(name + " " + damageEventsCount);
+                hitThisTurn = true;
                 return 0;
             }
 
@@ -1819,6 +1820,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         lastDamageTaken = damage;
         lastDamageType = type;
+
+        //note that this function is not actually the one that queues the hurt events
+        //so there may be some possibilities of desync?
+        damageEventsThisTurn++;
+        absorbDamageEvents++;
+        //Debug.Log(name + " " + damageEventsCount);
+        hitThisTurn = true;
+
         return damage;
     }
 
@@ -1919,23 +1928,24 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.WhiteoutBlizzard)
         {
-            if (damage > 6)
+            if (damageEventsThisTurn == 0)
             {
-                damage = 6;
+                damage = Mathf.CeilToInt(damage * 0.5f);
             }
         }
         if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.TrialOfResolve)
         {
-            if (damage > 3)
+            //note: 0 damage hits will increment this, otherwise immunity would be permanent
+            if (damageEventsThisTurn == 0)
             {
-                damage = 3;
+                damage = 0;
             }
         }
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NonLethal) && damage >= hp)
         {
             damage = hp - 1;
-            if (damage < 0)
+            if (damage < 1)
             {
                 damage = 0;
             }
@@ -3178,8 +3188,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //hitThisTurn is set later so this is not always active (intended)
             if (target.hitThisTurn && ((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
             {
-                earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (target.damageEventsCount + 1)));
-                if (target.damageEventsCount + 1 > 4)
+                earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (target.damageEventsThisTurn + 1)));
+                if (target.damageEventsThisTurn + 1 > 4)
                 {
                     earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (4)));
                 }
@@ -3557,8 +3567,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //hitThisTurn is set later so this is not always active (intended)
             if (target.hitThisTurn && ((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
             {
-                earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (target.damageEventsCount + 1)));
-                if (target.damageEventsCount + 1 > 4)
+                earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (target.damageEventsThisTurn + 1)));
+                if (target.damageEventsThisTurn + 1 > 4)
                 {
                     earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (4)));
                 }
@@ -5839,8 +5849,68 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         EffectSpriteUpdate();
     }
+    public string GetEffectParticleName()
+    {
+        if (HasEffect(Effect.EffectType.Paralyze))
+        {
+            return "Paralyze";
+        }
+        if (HasEffect(Effect.EffectType.Dizzy))
+        {
+            return "Dizzy";
+        }
+        if (HasEffect(Effect.EffectType.Poison))
+        {
+            return "Poison";
+        }
+        if (HasEffect(Effect.EffectType.Freeze))
+        {
+            return "Freeze";
+        }
+        return "?";
+    }
+    public GameObject CreateEffectParticle()
+    {
+        float newScale = Mathf.Max(this.height, this.width);
+        GameObject eo = null;
+
+        if (eo == null && HasEffect(Effect.EffectType.Paralyze))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Paralyze"), subObject.transform);
+        }
+        if (eo == null && HasEffect(Effect.EffectType.Dizzy))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Dizzy"), subObject.transform);
+        }
+        if (eo == null && HasEffect(Effect.EffectType.Poison))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Poison"), subObject.transform);
+        }
+        if (eo == null && HasEffect(Effect.EffectType.Freeze))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Freeze"), subObject.transform);
+        }
+
+        if (eo != null)
+        {
+            eo.transform.localScale = newScale * Vector3.one;
+            eo.transform.position = ApplyScaledOffset(Vector3.up * 0.5f);
+        }
+        return eo;
+    }
     public void EffectSpriteUpdate()
     {
+        //Don't refresh the particle if it's just going to spawn the same effect
+        //(prevents stuttering?)
+        if (effectParticle != null && !effectParticle.name.Contains(GetEffectParticleName()))
+        {           
+            Destroy(effectParticle);
+        }
+        if (effectParticle == null)
+        {
+            effectParticle = CreateEffectParticle();
+        }
+
         //send data in accordance with the effects you have
 
         //going to try to reduce the number of materials/shaders I need
