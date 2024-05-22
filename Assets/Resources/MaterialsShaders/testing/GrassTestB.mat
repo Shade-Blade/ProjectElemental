@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GrassTest
+  m_Name: GrassTestB
   m_Shader: {fileID: 4800000, guid: 0c163dd6b40eedc4cbf0d76dd4f64ec0, type: 3}
   m_ValidKeywords:
   - IS_LIT
@@ -78,13 +78,13 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GrassBlades: 13
-    - _GrassHeight: 1.125
-    - _GrassWidth: 0.1
+    - _GrassBlades: 6
+    - _GrassHeight: 0.7
+    - _GrassWidth: 0.075
     - _IsLit: 1
     - _MaxCameraDistance: 15
     - _Metallic: 0
-    - _MinimunGrassBlades: 2
+    - _MinimunGrassBlades: 1
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -95,7 +95,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _TessellationGrassDistance: 0.6
+    - _TessellationGrassDistance: 0.5
     - _TranslucentGain: 0.25
     - _UVSec: 0
     - _WindSpeed: 0.025

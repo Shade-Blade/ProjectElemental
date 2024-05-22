@@ -3736,10 +3736,10 @@ public class PlayerEntity : BattleEntity
                     InflictEffect(this, new Effect(Effect.EffectType.Focus, (byte)(longRestBoost * 3), 255));
                     break;
                 case InnEffect.InnType.Ethereal:
-                    InflictEffect(this, new Effect(Effect.EffectType.Ethereal, 1, (byte)(longRestBoost * 2)));
+                    InflictEffect(this, new Effect(Effect.EffectType.Ethereal, 1, (byte)(longRestBoost * 1)));
                     break;
                 case InnEffect.InnType.Immunity:
-                    InflictEffect(this, new Effect(Effect.EffectType.Immunity, 1, (byte)(longRestBoost * 2)));
+                    InflictEffect(this, new Effect(Effect.EffectType.Immunity, 1, (byte)(longRestBoost * 3)));
                     break;
                 case InnEffect.InnType.BonusTurn:
                     InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (byte)(longRestBoost * 1), 255));

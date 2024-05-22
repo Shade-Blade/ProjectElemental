@@ -1,11 +1,7 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using UnityEngine.Windows;
 using static BattleHelper;
 
 //???
@@ -1645,9 +1641,87 @@ public class WorldPlayer : WorldEntity
         }
     }
 
+    public override void DoSemisolidLanding(Vector3 position, Vector3 normal, Rigidbody attached, bool snapBelow)
+    {
+        usedFirstBounce = false;
+        semisolidFloorActive = true;
+        semisolidFloorNormal = normal;
+        semisolidFloorPosition = position;
+        floorNormal = semisolidFloorNormal;
+        lastGroundedHeight = semisolidFloorPosition.y;
+        lastHighestHeight = lastGroundedHeight;
+        this.semisolidSnapBelow = snapBelow;
+        this.attached = attached;
+
+
+        canDoubleJump = false;
+        canHover = false;
+
+        //Convert aerial states into their corresponding grounded state
+        //first, double check for lack of y velocity (may lead to problems later though, if you land on an uphill slope without triggering this with negative velocity)
+        if (timeSinceLastJump > 0.06f || rb.velocity.y <= 0)
+        {
+            switch (actionState)
+            {
+                case ActionState.Fall:
+                case ActionState.LaunchFall:
+                case ActionState.Jump:
+                case ActionState.DoubleJump:
+                case ActionState.SuperJump:
+                case ActionState.WallJump:
+                case ActionState.Dash:
+                case ActionState.DashFall:
+                case ActionState.WallGrab:
+                case ActionState.Climb:
+                    SetActionState(ActionState.Land);
+                    if (landShockwavePossible)
+                    {
+                        landShockwavePossible = false;
+                    }
+                    groundedTime = 0;
+                    break;
+                case ActionState.AetherFall:
+                    SetActionState(ActionState.Aether);
+                    groundedTime = 0;
+                    break;
+                case ActionState.LightHoldFall:
+                    SetActionState(ActionState.LightHold);
+                    groundedTime = 0;
+                    break;
+                case ActionState.HazardFall:
+                    SetActionState(ActionState.HazardTouch);
+                    groundedTime = 0;
+                    break;
+            }
+        }
+        else
+        {
+            //Double jump is really not supposed to be touching anything so add a check also
+            //Dash is very prone to landing uphill since it is a nearly horizontal jump
+
+            switch (actionState)
+            {
+                case ActionState.DoubleJump:
+                    //case ActionState.Dash:
+                    //case ActionState.DashFall:
+                    SetActionState(ActionState.Land);
+                    groundedTime = 0;
+                    break;
+            }
+        }
+    }
+
     public void SetFloorTags(Collision collision)
     {
-        if (collision.collider.CompareTag("NoDig"))
+        SetFloorTags(collision.collider);
+    }
+    public void SetFloorTags(Rigidbody rigidbody)
+    {
+        SetFloorTags(rigidbody.GetComponent<Collider>());
+    }
+    public void SetFloorTags(Collider collider)
+    {
+        if (collider.CompareTag("NoDig"))
         {
             lastFloorNoDig = true;
         }
@@ -1656,7 +1730,7 @@ public class WorldPlayer : WorldEntity
             lastFloorNoDig = false;
         }
 
-        if (collision.collider.CompareTag("DigThrough"))
+        if (collider.CompareTag("DigThrough"))
         {
             lastFloorDigThrough = true;
         }
@@ -1665,7 +1739,7 @@ public class WorldPlayer : WorldEntity
             lastFloorDigThrough = false;
         }
 
-        if (collision.collider.CompareTag("Slippery"))
+        if (collider.CompareTag("Slippery"))
         {
             lastFloorSlippery = true;
             lastFloorNoDig = true;
@@ -1675,7 +1749,7 @@ public class WorldPlayer : WorldEntity
             lastFloorSlippery = false;
         }
 
-        if (collision.collider.CompareTag("Sticky"))
+        if (collider.CompareTag("Sticky"))
         {
             lastFloorSticky = true;
         }
@@ -1684,7 +1758,7 @@ public class WorldPlayer : WorldEntity
             lastFloorSticky = false;
         }
 
-        if (collision.collider.CompareTag("Unstable") || collision.collider.CompareTag("Launcher") || collision.collider.CompareTag("Hazard") || collision.collider.CompareTag("InvisibleWall"))
+        if (collider.CompareTag("Unstable") || collider.CompareTag("Launcher") || collider.CompareTag("Hazard") || collider.CompareTag("InvisibleWall"))
         {
             lastFloorUnstable = true;
         }
@@ -2438,10 +2512,10 @@ public class WorldPlayer : WorldEntity
 
             if (semisolidSnapBelow)
             {
-                float snapDot = Vector3.Dot(transform.position - semisolidFloorPosition - Vector3.up * (height / 2), semisolidFloorNormal);
+                float snapDot = Vector3.Dot(transform.position - semisolidFloorPosition - Vector3.up * (height), semisolidFloorNormal);
                 if (snapDot < 0)
                 {
-                    transform.position = Vector3.up * (height / 2) + Vector3.ProjectOnPlane(transform.position - semisolidFloorPosition - Vector3.up * (height / 2), semisolidFloorNormal) + semisolidFloorPosition + Vector3.up * (height / 2);
+                    transform.position = Vector3.ProjectOnPlane(transform.position - semisolidFloorPosition - Vector3.up * (height), semisolidFloorNormal) + semisolidFloorPosition + Vector3.up * (height);
                 }
             }
 
@@ -2451,7 +2525,7 @@ public class WorldPlayer : WorldEntity
             if  (dotProduct < 0)
             {
                 //replace with something that results in a dot product of 0
-                Vector3 newVelocity = Vector3.ProjectOnPlane((rb.velocity + Physics.gravity * Time.fixedDeltaTime), semisolidFloorNormal);
+                Vector3 newVelocity = Vector3.ProjectOnPlane((rb.velocity), semisolidFloorNormal);
                 rb.velocity = newVelocity - Physics.gravity * Time.fixedDeltaTime;
             }
         }

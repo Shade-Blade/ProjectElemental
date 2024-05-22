@@ -392,7 +392,7 @@ public class MoveMenuEntry : BoxMenuEntry
     {
         name = move.GetName();
         description = move.GetDescription();
-        cost = move.cost;
+        cost = move.GetBaseCost();
         target = move.GetBaseTarget();
         currency = move.GetCurrency();
 

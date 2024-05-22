@@ -106,6 +106,7 @@ public class LM_HeavyStomp : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowStompable, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 0;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -231,6 +232,7 @@ public class LM_Brace : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 1;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -339,6 +341,7 @@ public class LM_DashThrough : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, true);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 3;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -494,6 +497,7 @@ public class LM_FlipKick : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 4;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -619,6 +623,7 @@ public class LM_FluffHeal : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 4;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {
@@ -827,6 +832,7 @@ public class LM_MeteorStomp : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 6;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -1007,6 +1013,7 @@ public class LM_UnderStrike : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 7;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -1266,6 +1273,7 @@ public class LM_IronStomp : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 8;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -1408,6 +1416,7 @@ public class LM_ElementalStomp : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 8;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -1600,6 +1609,7 @@ public class LM_TeamThrow : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 12;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -2023,6 +2033,7 @@ public class LM_DoubleEgg : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 1;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -2185,6 +2196,7 @@ public class LM_Smash : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 0;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -2610,6 +2622,7 @@ public class LM_HammerThrow : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 5;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -3126,6 +3139,7 @@ public class LM_QuakeSmash : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyGrounded, true);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 8;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -3388,6 +3402,7 @@ public class LM_Illuminate : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 3;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {
@@ -3516,6 +3531,7 @@ public class LM_HammerBeat : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 5;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -3604,6 +3620,7 @@ public class LM_MistWall : LunaMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 8;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {

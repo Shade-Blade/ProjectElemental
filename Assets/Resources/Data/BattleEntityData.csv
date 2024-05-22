@@ -21,7 +21,7 @@ Bandit,3,9,0,FALSE,1,Lemon,5,Default:0.8/1,Default:0,,1,1,0|0.5|0,0.6|1|0,0|-0.1
 Renegade,4,10,0,TRUE,1.25,Dragonfruit,5,Default:0.8/1,Default:2,StateContactHazard,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Sentry,3,9,0,FALSE,1,StaticThorn,5,Default:0.8/1|Paralyze:0/1|Dizzy:1/1.5,Default:0|Air:N|Earth:-2,StateCounter,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Cactupole,2,9,0,FALSE,1,StaticThorn,5,Default:0.8/1|Paralyze:0/1|Dizzy:1/1.5,Default:2|Light:-3,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Sandswimmer,5,10,0,TRUE,1.25,Flour,5,Default:0.8/0.75|Poison:1/1,Default:1|Light:0,StateContactHazard,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Sandswimmer,5,10,0,TRUE,1.25,Flour,5,Default:0.8/0.75|Poison:1/1,Default:1|Light:0|Air:N,StateContactHazard,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 DesertMinibossA,10,12,0,FALSE,1.25,StaticThorn,3,Default:0.6/1|Paralyze:0/1,Default:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 DesertMinibossB,16,12,0,FALSE,1.25,Thorn Bundle,3,Default:0.6/1|Paralyze:0/1,Default:2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 DesertMinibossC,21,12,0,TRUE,1.25,WarpedLeaf,3,Default:0.6/1|Paralyze:0/1,Default:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8

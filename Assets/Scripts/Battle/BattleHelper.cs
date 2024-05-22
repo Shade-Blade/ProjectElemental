@@ -539,7 +539,7 @@ public class InnEffect
         Absorb, //rocky
         Stamina,    //windy
         Burst,  //seaside
-        Focus,  //warming
+        Focus,  //steamy
         Ethereal,   //hidden
         Immunity,   //clear
         BonusTurn,  //swift
@@ -960,6 +960,8 @@ public static class BattleHelper
 
         //"false" events (used for signalling things, generally only exist as broadcasted events)
         Skill,
+        Jump,
+        Weapon,
         SoulMove,
         UseItem,
         Tactic,

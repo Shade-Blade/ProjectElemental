@@ -24,8 +24,8 @@ public class TextboxScript : MonoBehaviour
     private Vector2 tailPointTruePos;
     private float maxTailMovement = 300;
 
-    public Color colorA;
-    public Color colorB;
+    public Color nextButtonColorA;
+    public Color nextButtonColorB;
 
     //All the important stuff for running the dialogue
     //public string[] lines;
@@ -170,7 +170,7 @@ public class TextboxScript : MonoBehaviour
         switch (t.tag)
         {
             case TagEntry.TextTag.Null:
-                Debug.LogWarning("Null tag detected: " + t.startIndex + " / " + t.trueStartIndex + " to " + t.trueEndIndex);
+                Debug.LogWarning("Null (invalid) tag detected: " + t.startIndex + " / " + t.trueStartIndex + " to " + t.trueEndIndex);
                 break;
             case TagEntry.TextTag.ShowCoins:
                 MainManager.Instance.ShowCoinCounter();
@@ -1966,7 +1966,7 @@ public class TextboxScript : MonoBehaviour
 
             if (currLine < latestLine)
             {
-                nextButton.color = colorB;
+                nextButton.color = nextButtonColorB;
             }
             else if (text.scrollDone)
             {
@@ -1987,7 +1987,7 @@ public class TextboxScript : MonoBehaviour
                     minibubbleWait = !check;    //so if it is false no change, if it is true then all bubbles are done, so stop waiting
                 } else
                 {
-                    nextButton.color = colorA;
+                    nextButton.color = nextButtonColorA;
                     if (speaker != null && speaker.SpeakingAnimActive())
                     {
                         speaker.DisableSpeakingAnim();

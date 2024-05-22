@@ -5,6 +5,7 @@ using UnityEngine;
 public class BouncerScript : WorldObject
 {
     public float minLaunch;
+    public float firstBounceBonus;
     public override void ProcessCollision(Collision collision)
     {
         if (collision.rigidbody != null)
@@ -17,6 +18,11 @@ public class BouncerScript : WorldObject
                 //need a failsafe
                 if ((w.lastHighestHeight - w.FeetPosition().y) > 0)
                 {
+                    if (!w.usedFirstBounce)
+                    {
+                        w.lastHighestHeight += firstBounceBonus;
+                    }
+
                     launchVel = Vector3.up * Mathf.Sqrt(2 * -Physics.gravity.y * (w.lastHighestHeight - w.FeetPosition().y));
 
                     //Need to calculate a velocity integral then find the inverse to get velocity from height
@@ -33,6 +39,7 @@ public class BouncerScript : WorldObject
                 {
                     launchVel.y = minLaunch;
                 }
+                w.usedFirstBounce = true;
                 w.Launch(launchVel, 0);
             }
         }

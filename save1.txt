@@ -1,8 +1,8 @@
 sus
 
 
-AetherTrench,Test_LandscapeC7,9.087305|0.8749998|-9.776907
-546.0314
+None,Test_Main,-8.741545|0.375|-20.23426
+563.4766
 25,0,56,60,60,60,60,60,0,0,0,0,10,32,6,6,6,0,0,2,0,0,0,0,2,0,2,2
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP
 HP
@@ -14,9 +14,9 @@ SuperCurse|2,SleepStomp|33,ElementalStomp|37,PerfectPower|78,PerfectShield|79,Fi
 SuperCurse|2,SleepStomp|33,ElementalStomp|37
 SafetyRibbon|1,SharpRibbon|2,BeginnerRibbon|3,ExpertRibbon|4,ChampionRibbon|5,StaticRibbon|6,SlimyRibbon|7,FlashyRibbon|8,SoftRibbon|9,MimicRibbon|10,ThornyRibbon|11,DiamondRibbon|12,RainbowRibbon|13
 Defense|4|5|5,Fortune|3|3|0
-
+None|0
 2,0
-Wilex,36,36,2,2,SoftRibbon|9,0,0,0,0,0,0,1.533178
-PerfectPower|78,FirstPower|81,FirstShield|82,AttackBoost|102,AttackBoostB|103,EnduranceBoost|106,EnduranceBoostB|107,AgilityBoost|108
-Luna,54,54,2,2,MimicRibbon|10,0,0,0,0,31,1,5.009583
+Luna,54,54,2,2,MimicRibbon|10,0,0,0,0,31,1,15.3429
 PerfectShield|79,FirstEndurance|83,DefenseBoost|104,DefenseBoostB|105,BadgeSwap|1
+Wilex,36,36,2,2,SoftRibbon|9,0,0,0,0,0,0,8.645029
+PerfectPower|78,FirstPower|81,FirstShield|82,AttackBoost|102,AttackBoostB|103,EnduranceBoost|106,EnduranceBoostB|107,AgilityBoost|108

@@ -109,6 +109,8 @@ public class WorldEntity : WorldObject, ITextSpeaker
     protected Vector3 attachedPos;
     protected Vector3 attachedLocalPos;
 
+    public bool usedFirstBounce;
+
     [HideInInspector]
     public bool applyDefaultJumpLift;
     [HideInInspector]
@@ -302,10 +304,10 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
             if (semisolidSnapBelow)
             {
-                float snapDot = Vector3.Dot(transform.position - semisolidFloorPosition - Vector3.up * (height / 2), semisolidFloorNormal);
+                float snapDot = Vector3.Dot(transform.position - semisolidFloorPosition - Vector3.up * (height), semisolidFloorNormal);
                 if (snapDot < 0)
                 {
-                    transform.position = Vector3.up * (height / 2) + Vector3.ProjectOnPlane(transform.position - semisolidFloorPosition - Vector3.up * (height / 2), semisolidFloorNormal) + semisolidFloorPosition + Vector3.up * (height / 2);
+                    transform.position = Vector3.ProjectOnPlane(transform.position - semisolidFloorPosition - Vector3.up * (height), semisolidFloorNormal) + semisolidFloorPosition + Vector3.up * (height);
                 }
             }
 
@@ -315,7 +317,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
             if (dotProduct < 0)
             {
                 //replace with something that results in a dot product of 0
-                Vector3 newVelocity = Vector3.ProjectOnPlane((rb.velocity + Physics.gravity * Time.fixedDeltaTime), semisolidFloorNormal);
+                Vector3 newVelocity = Vector3.ProjectOnPlane((rb.velocity), semisolidFloorNormal);
                 rb.velocity = newVelocity - Physics.gravity * Time.fixedDeltaTime;
             }
         }
@@ -758,6 +760,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
             lastGroundedHeight = accumulatedGroundHeight / accumulatedGround;
             lastHighestHeight = lastGroundedHeight;
             isGrounded = true;
+            usedFirstBounce = false;
             floorNormal = accumulatedFloorNormal.normalized;
             attached = collision.rigidbody;
         }
@@ -769,6 +772,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
                 lastGroundedHeight = accumulatedNonGroundHeight / accumulatedNonGround;
                 lastHighestHeight = lastGroundedHeight;
                 isGrounded = true;
+                usedFirstBounce = false;
                 floorNormal = accumulatedNonGroundNormal;
                 attached = collision.rigidbody;
             }
@@ -777,6 +781,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
     public virtual void DoSemisolidLanding(Vector3 position, Vector3 normal, Rigidbody attached, bool snapBelow)
     {
+        usedFirstBounce = false;
         semisolidFloorActive = true;
         semisolidFloorNormal = normal;
         semisolidFloorPosition = position;

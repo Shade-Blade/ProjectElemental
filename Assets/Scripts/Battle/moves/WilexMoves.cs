@@ -105,6 +105,8 @@ public class WM_HighStomp : WilexMove
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 0;
 
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
+
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
         //Debug.Log(caller.id + " jump");
@@ -243,6 +245,8 @@ public class WM_Focus : WilexMove
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 1;
 
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
+
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         switch (level)
@@ -350,6 +354,8 @@ public class WM_MultiStomp : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, true);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 3;
+
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -503,6 +509,7 @@ public class WM_ElectroStomp : WM_HighStomp
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 5;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -615,6 +622,7 @@ public class WM_Taunt : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 2;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -719,6 +727,7 @@ public class WM_ParalyzeStomp : WM_HighStomp
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 7;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override void StartJumpEffects(BattleEntity caller)
     {
@@ -826,6 +835,7 @@ public class WM_FlameStomp : WM_HighStomp
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 5;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -968,6 +978,7 @@ public class WM_DoubleStomp : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 9;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -1158,6 +1169,7 @@ public class WM_Overstomp : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 10;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -1300,6 +1312,7 @@ public class WM_SmartStomp : WM_HighStomp
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 8;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override bool GetOutcome(BattleEntity caller)
     {
@@ -1494,6 +1507,7 @@ public class WM_TeamQuake : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyGrounded, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 15;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -1752,6 +1766,7 @@ public class WM_EggToss : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 1;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -1894,6 +1909,7 @@ public class WM_Slash : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 0;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -2038,6 +2054,7 @@ public class WM_MultiSlash : WM_Slash
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 4;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -2306,6 +2323,7 @@ public class WM_SlipSlash : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 5;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -2537,6 +2555,7 @@ public class WM_PoisonSlash : WM_Slash
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override void DealDamage(BattleEntity caller, int sd, bool result)
     {
@@ -2637,6 +2656,7 @@ public class WM_PreciseStab : WM_Slash
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 8;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -2751,6 +2771,7 @@ public class WM_SwordDischarge : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 9;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -2856,6 +2877,7 @@ public class WM_SwordDance : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -3027,6 +3049,7 @@ public class WM_BoomerangSlash : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 11;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -3161,6 +3184,7 @@ public class WM_DarkSlash : WM_Slash
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 13;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -3276,6 +3300,7 @@ public class WM_Aetherize : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 3;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {
@@ -3406,6 +3431,7 @@ public class WM_FlameBat : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -3515,6 +3541,7 @@ public class WM_AstralWall : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 6;
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {

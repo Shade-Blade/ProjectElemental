@@ -412,7 +412,8 @@ public abstract class PlayerMove : Move, IEntityHighlighter
     //public abstract float GetBasePower();
 
     public abstract int GetBaseCost();
-    public int cost;
+
+    public abstract BaseBattleMenu.BaseMenuName GetMoveType();
 
     public enum CantMoveReason
     {
@@ -700,7 +701,6 @@ public abstract class PlayerMove : Move, IEntityHighlighter
 
     public PlayerMove()
     {
-        cost = GetBaseCost();
     }
 
     //Future thing to code: a "reason why you can't use this" function
@@ -958,6 +958,16 @@ public abstract class PlayerMove : Move, IEntityHighlighter
             BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.Skill);
         }
 
+        if (GetMoveType() == BaseBattleMenu.BaseMenuName.Jump)
+        {
+            BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.Jump);
+        }
+
+        if (GetMoveType() == BaseBattleMenu.BaseMenuName.Weapon)
+        {
+            BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.Weapon);
+        }
+
         if (UseFlow())
         {
             BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.SoulMove);
@@ -1137,7 +1147,6 @@ public abstract class SoulMove : PlayerMove
 
     public SoulMove()
     {
-        cost = GetBaseCost();
     }
 
     public static string GetNameWithIndex(int index)
@@ -1162,6 +1171,8 @@ public abstract class SoulMove : PlayerMove
 
         return output;
     }
+
+    public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Soul;
 
     public override int GetMaxLevel(BattleEntity caller)
     {
