@@ -14,6 +14,7 @@ Shader "VFX/VoidSprite"
         _ScreenTex ("Screen Texture", 2D) = "white" {}
         _LowEnd ("Low end", float) = -5
         _HighEnd ("High end", float) = 0.4
+        _Threshold ("Threshold", float) = 0.5
 	}
 
 	SubShader
@@ -64,6 +65,7 @@ Shader "VFX/VoidSprite"
 
 			half _LowEnd;
 			half _HighEnd;
+			half _Threshold;
 
 			v2f vert(appdata_t IN)
 			{
@@ -148,19 +150,23 @@ Shader "VFX/VoidSprite"
 					float ab = abs(vec.b);
 					float am = max(ar, max(ag, ab));
 
-					if (ar == am) {
-						vec.r = ar;
+					//new version I guess
+					float count = 0;
+					if (ar > _Threshold) {
+						count += 1;
 					}
-					if (ag == am) {
-						vec.g = ag;
+					if (ag > _Threshold) {
+						count += 1;
 					}
-					if (ab == am) {
-						vec.b = ab;
+					if (ab > _Threshold) {
+						count += 1;
 					}
 
-					vec.r = _LowEnd + (_HighEnd - _LowEnd) * vec.r;
-					vec.g = _LowEnd + (_HighEnd - _LowEnd) * vec.g;
-					vec.b = _LowEnd + (_HighEnd - _LowEnd) * vec.b;
+					count = count / 3;
+
+					vec.r = _LowEnd + (_HighEnd - _LowEnd) * count;
+					vec.g = _LowEnd + (_HighEnd - _LowEnd) * count;
+					vec.b = _LowEnd + (_HighEnd - _LowEnd) * count;
 
 					vec *= c.a;
 

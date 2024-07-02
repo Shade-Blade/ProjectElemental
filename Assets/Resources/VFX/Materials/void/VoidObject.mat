@@ -41,7 +41,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 6ec8e5e4b051cac469cd295c91114736, type: 3}
+        m_Texture: {fileID: 2800000, guid: 024914e2d569ad449bc4bc49b78bb244, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -57,7 +57,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ScreenTex:
-        m_Texture: {fileID: 2800000, guid: feaca8732c2a88c40b435e3d239c711a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 024914e2d569ad449bc4bc49b78bb244, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -73,7 +73,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _GlowFresnelPower: 1
-    - _HighEnd: 0.9
+    - _HighEnd: 0.5
     - _HoleValue: 0
     - _LowEnd: -5
     - _Metallic: 0
@@ -87,6 +87,7 @@ Material:
     - _SpecPower: 10
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Threshold: 0.35
     - _ThroughPower: 3
     - _TimeScale: 20
     - _TimeScaleA: 0.15

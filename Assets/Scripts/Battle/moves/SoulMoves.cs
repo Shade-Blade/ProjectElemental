@@ -2,6 +2,144 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class SM_Hasten : SoulMove
+{
+    public SM_Hasten()
+    {
+    }
+
+    public override int GetTextIndex()
+    {
+        return 0;
+    }
+    public override string GetName() => GetNameWithIndex(GetTextIndex());
+    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
+    //public override float GetBasePower() => 0.5f;
+    public override int GetBaseCost() => 8;
+
+    public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
+    {
+        switch (level)
+        {
+            case 1:
+                return new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
+            default:
+                return new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
+        }
+    }
+
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return StandardCostCalculation(caller, level, 12);
+    }
+
+    /*
+    public override int GetMaxLevel(BattleEntity caller)
+    {
+        if (caller is PlayerEntity pcaller)
+        {
+            return pcaller.GetSoulMoveMaxLevel(GetTextIndex());
+        }
+        return 2;
+    }
+    */
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        AC_PressButtonTimed actionCommand = null;
+        if (caller is PlayerEntity pcaller) //we have technology
+        {
+            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand.Init(pcaller);
+            actionCommand.Setup(0.5f);
+        }
+
+        yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
+        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        CastAnimation(caller, level);
+        yield return new WaitUntil(() => actionCommand.IsComplete());
+
+        bool result = actionCommand == null ? true : actionCommand.GetSuccess();
+        if (actionCommand != null)
+        {
+            actionCommand.End();
+            Destroy(actionCommand);
+        }
+
+        EndAnimation(caller, level, result);
+        if (result)
+        {
+            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
+            if (level == 1)
+            {
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 2));
+            }
+            else
+            {
+                List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 2));
+                }
+            }
+        }
+        else
+        {
+            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
+            if (level == 1)
+            {
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 2));
+            }
+            else
+            {
+                List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 2));
+                }
+            }
+        }
+    }
+
+    public void CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_HastenSoulCast"), BattleControl.Instance.transform);
+        eo.transform.position = caller.ApplyScaledOffset(Vector3.zero);
+        eo.transform.localRotation = Quaternion.identity;
+    }
+    public void EndAnimation(BattleEntity caller, int level, bool result)
+    {
+        if (level == 1)
+        {
+            GameObject eo = null;
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_HastenShockwave"), BattleControl.Instance.transform);
+            eo.transform.position = caller.curTarget.ApplyScaledOffset(Vector3.zero);
+            eo.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+            foreach (BattleEntity b in targets)
+            {
+                GameObject eo = null;
+                eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_HastenShockwave"), BattleControl.Instance.transform);
+                eo.transform.position = b.ApplyScaledOffset(Vector3.zero);
+                eo.transform.localRotation = Quaternion.identity;
+            }
+        }
+    }
+
+
+    public override void PreMove(BattleEntity caller, int level = 1)
+    {
+    }
+    public override void PostMove(BattleEntity caller, int level = 1)
+    {
+    }
+}
+
 public class SM_Revitalize : SoulMove
 {
     public SM_Revitalize()
@@ -10,7 +148,7 @@ public class SM_Revitalize : SoulMove
 
     public override int GetTextIndex()
     {
-        return 0;
+        return 1;
     }
     public override string GetName() => GetNameWithIndex(GetTextIndex());
     public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
@@ -156,144 +294,6 @@ public class SM_Revitalize : SoulMove
             eo.transform.localRotation = Quaternion.identity;
         }
     }
-
-    public override void PreMove(BattleEntity caller, int level = 1)
-    {
-    }
-    public override void PostMove(BattleEntity caller, int level = 1)
-    {
-    }
-}
-
-public class SM_Hasten : SoulMove
-{
-    public SM_Hasten()
-    {
-    }
-
-    public override int GetTextIndex()
-    {
-        return 1;
-    }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
-    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
-    //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 8;
-
-    public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
-    {
-        switch (level)
-        {
-            case 1:
-                return new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
-            default:
-                return new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
-        }
-    }
-
-    public override int GetCost(BattleEntity caller, int level = 1)
-    {
-        return StandardCostCalculation(caller, level, 12);
-    }
-
-    /*
-    public override int GetMaxLevel(BattleEntity caller)
-    {
-        if (caller is PlayerEntity pcaller)
-        {
-            return pcaller.GetSoulMoveMaxLevel(GetTextIndex());
-        }
-        return 2;
-    }
-    */
-
-    public override IEnumerator Execute(BattleEntity caller, int level = 1)
-    {
-        AC_PressButtonTimed actionCommand = null;
-        if (caller is PlayerEntity pcaller) //we have technology
-        {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
-            actionCommand.Init(pcaller);
-            actionCommand.Setup(0.5f);
-        }
-
-        yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
-        CastAnimation(caller, level);
-        yield return new WaitUntil(() => actionCommand.IsComplete());
-
-        bool result = actionCommand == null ? true : actionCommand.GetSuccess();
-        if (actionCommand != null)
-        {
-            actionCommand.End();
-            Destroy(actionCommand);
-        }
-
-        EndAnimation(caller, level, result);
-        if (result)
-        {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
-            if (level == 1)
-            {
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 2));
-            }
-            else
-            {
-                List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
-                foreach (BattleEntity b in targets)
-                {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 2));
-                }
-            }
-        }
-        else
-        {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
-            if (level == 1)
-            {
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 2));
-            }
-            else
-            {
-                List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
-                foreach (BattleEntity b in targets)
-                {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 2));
-                }
-            }
-        }
-    }
-
-    public void CastAnimation(BattleEntity caller, int level)
-    {
-        GameObject eo = null;
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_HastenSoulCast"), BattleControl.Instance.transform);
-        eo.transform.position = caller.ApplyScaledOffset(Vector3.zero);
-        eo.transform.localRotation = Quaternion.identity;
-    }
-    public void EndAnimation(BattleEntity caller, int level, bool result)
-    {
-        if (level == 1)
-        {
-            GameObject eo = null;
-            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_HastenShockwave"), BattleControl.Instance.transform);
-            eo.transform.position = caller.curTarget.ApplyScaledOffset(Vector3.zero);
-            eo.transform.localRotation = Quaternion.identity;
-        }
-        else
-        {
-            List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
-            foreach (BattleEntity b in targets)
-            {
-                GameObject eo = null;
-                eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_HastenShockwave"), BattleControl.Instance.transform);
-                eo.transform.position = b.ApplyScaledOffset(Vector3.zero);
-                eo.transform.localRotation = Quaternion.identity;
-            }
-        }
-    }
-
 
     public override void PreMove(BattleEntity caller, int level = 1)
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BE_Harvestborn : BattleEntity
+public class BE_MasterOfAutumn : BattleEntity
 {
     public int ai_state;
     public bool second_phase;
@@ -20,15 +20,15 @@ public class BE_Harvestborn : BattleEntity
 
         moveset = new List<Move>()
         {
-            gameObject.AddComponent<BM_Harvestborn_ThornToss>(),
-            gameObject.AddComponent<BM_Harvestborn_PollenStorm>(),
-            gameObject.AddComponent<BM_Harvestborn_FlowerShuriken>(),
-            gameObject.AddComponent<BM_Harvestborn_Overgrowth>(),
-            gameObject.AddComponent<BM_Harvestborn_VineStab>(),
-            gameObject.AddComponent<BM_Harvestborn_FullBloom>(),
-            gameObject.AddComponent<BM_Harvestborn_VineField>(),
-            gameObject.AddComponent<BM_Harvestborn_Resummon>(),
-            gameObject.AddComponent<BM_Harvestborn_Fall>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_ThornToss>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_PollenStorm>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_FlowerShuriken>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_Overgrowth>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_VineStab>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_FullBloom>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_VineField>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_Resummon>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_Fall>(),
         };
 
         base.Initialize();
@@ -656,9 +656,9 @@ public class BM_GiantVine_Hard_LashOut : EnemyMove
 
 
 
-public class BM_Harvestborn_ThornToss : EnemyMove
+public class BM_MasterOfAutumn_ThornToss : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Harvestborn_ThornToss;
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_ThornToss;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 
@@ -692,9 +692,9 @@ public class BM_Harvestborn_ThornToss : EnemyMove
     }
 }
 
-public class BM_Harvestborn_PollenStorm : EnemyMove
+public class BM_MasterOfAutumn_PollenStorm : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Harvestborn_PollenStorm;
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_PollenStorm;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
 
@@ -724,9 +724,9 @@ public class BM_Harvestborn_PollenStorm : EnemyMove
     }
 }
 
-public class BM_Harvestborn_FlowerShuriken : EnemyMove
+public class BM_MasterOfAutumn_FlowerShuriken : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Harvestborn_FlowerShuriken;
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_FlowerShuriken;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
 
@@ -755,16 +755,16 @@ public class BM_Harvestborn_FlowerShuriken : EnemyMove
     }
 }
 
-public class BM_Harvestborn_Overgrowth : EnemyMove
+public class BM_MasterOfAutumn_Overgrowth : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Harvestborn_Overgrowth;
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_Overgrowth;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
         //Heal for 10, summon burrow trap and sundew and vine platform
-        BE_Harvestborn vb = (BE_Harvestborn)caller;
+        BE_MasterOfAutumn vb = (BE_MasterOfAutumn)caller;
 
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
@@ -789,9 +789,9 @@ public class BM_Harvestborn_Overgrowth : EnemyMove
     }
 }
 
-public class BM_Harvestborn_VineStab : EnemyMove
+public class BM_MasterOfAutumn_VineStab : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Harvestborn_VineStab;
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_VineStab;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 
@@ -825,9 +825,9 @@ public class BM_Harvestborn_VineStab : EnemyMove
     }
 }
 
-public class BM_Harvestborn_FullBloom : EnemyMove
+public class BM_MasterOfAutumn_FullBloom : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Harvestborn_FullBloom;
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_FullBloom;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
 
@@ -857,9 +857,9 @@ public class BM_Harvestborn_FullBloom : EnemyMove
     }
 }
 
-public class BM_Harvestborn_VineField : EnemyMove
+public class BM_MasterOfAutumn_VineField : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Harvestborn_VineField;
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_VineField;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
 
@@ -888,15 +888,15 @@ public class BM_Harvestborn_VineField : EnemyMove
     }
 }
 
-public class BM_Harvestborn_Resummon : EnemyMove
+public class BM_MasterOfAutumn_Resummon : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Harvestborn_Resummon;
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_Resummon;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        BE_Harvestborn vb = (BE_Harvestborn)caller;
+        BE_MasterOfAutumn vb = (BE_MasterOfAutumn)caller;
 
         if (BattleControl.Instance.GetEntityByID(1) == null && BattleControl.Instance.GetEntityByID(3) == null)
         {
@@ -915,7 +915,7 @@ public class BM_Harvestborn_Resummon : EnemyMove
     }
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        BE_Harvestborn vb = (BE_Harvestborn)caller;
+        BE_MasterOfAutumn vb = (BE_MasterOfAutumn)caller;
 
         if (BattleControl.Instance.GetEntityByID(1) == null && BattleControl.Instance.GetEntityByID(3) == null)
         {
@@ -935,15 +935,15 @@ public class BM_Harvestborn_Resummon : EnemyMove
     }
 }
 
-public class BM_Harvestborn_Fall : EnemyMove
+public class BM_MasterOfAutumn_Fall : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Harvestborn_Fall;
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_Fall;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        BE_Harvestborn vb = (BE_Harvestborn)caller;
+        BE_MasterOfAutumn vb = (BE_MasterOfAutumn)caller;
 
         vb.posId = 2;
         vb.homePos = vb.homePos + vb.homePos.y * Vector3.down;
@@ -971,7 +971,7 @@ public class BM_Harvestborn_Fall : EnemyMove
     }
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        BE_Harvestborn vb = (BE_Harvestborn)caller;
+        BE_MasterOfAutumn vb = (BE_MasterOfAutumn)caller;
 
         vb.posId = 2;
         vb.homePos = vb.homePos + vb.homePos.y * Vector3.down;

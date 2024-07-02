@@ -6,6 +6,7 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
 {
     public Pause_SectionShared_SideText sidetext;
     public Pause_SectionShared_InfoBox infobox;
+    public TextDisplayer noItemText;
 
     public Pause_SectionShared_TextBox baseText;
 
@@ -27,9 +28,12 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
         }
         loadedTopIndex = desiredLoadedTopIndex;
 
+        string emptyString = "";
+
         switch (subpage)
         {
             case Pause_HandlerQuest.QuestSubpage.Available:
+                emptyString = "No Available Quests";
                 menuEntries = new BoxMenuEntry[GlobalQuestScript.Instance.availableQuests.Count];
                 for (int i = 0; i < menuEntries.Length; i++)
                 {
@@ -50,6 +54,7 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
                 }
                 break;
             case Pause_HandlerQuest.QuestSubpage.Taken:
+                emptyString = "No Taken Quests";
                 menuEntries = new BoxMenuEntry[GlobalQuestScript.Instance.startedQuests.Count];
                 for (int i = 0; i < menuEntries.Length; i++)
                 {
@@ -70,6 +75,7 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
                 }
                 break;
             case Pause_HandlerQuest.QuestSubpage.Complete:
+                emptyString = "No Complete Quests";
                 menuEntries = new BoxMenuEntry[GlobalQuestScript.Instance.completeQuests.Count];
                 for (int i = 0; i < menuEntries.Length; i++)
                 {
@@ -90,6 +96,7 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
                 }
                 break;
             case Pause_HandlerQuest.QuestSubpage.Achievements:
+                emptyString = "Error: achievement menu should not be empty";
                 if (GlobalQuestScript.Instance.achievementText == null)
                 {
                     GlobalQuestScript.Instance.LoadAchievementText();
@@ -160,6 +167,18 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
             Vector3 targetLocal = Vector3.left * 160f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
             Vector3 current = selectorArrow.transform.localPosition;
             selectorArrow.transform.localPosition = targetLocal;
+        }
+
+        if (menuEntries.Length > 0)
+        {
+            noItemText.gameObject.SetActive(false);
+        }
+        else
+        {
+            //create some text
+            noItemText.gameObject.SetActive(true);
+            noItemText.SetText(emptyString, true, true);
+            //noItemText.SetText(???, true, true);
         }
     }
 

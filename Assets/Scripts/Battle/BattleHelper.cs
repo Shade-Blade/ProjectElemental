@@ -741,7 +741,7 @@ public static class BattleHelper
         StatusExploit =         1L << 44,   //status exploit (certain damage types are stronger on certain statuses)
         SoftTouch =             1L << 45,   //does not wake up sleep or break ice
         NightmareStrike =       1L << 46,   //+2 damage to sleeping targets that will wake up
-        Aggrevate =             1L << 47,   //+2 damage to berserk
+        Aggravate =             1L << 47,   //+2 damage to berserk
         Icebreaker =            1L << 48,   //+2 to ice
 
         StandardContactHazard = ContactHazard | Static | Unblockable,
@@ -827,9 +827,9 @@ public static class BattleHelper
         TrialOfSimplicity,
         TrialOfHaste,
         TrialOfResolve,
-        TrialOfAmbition,
+        TrialOfCunning,
         TrialOfPatience,
-        TrialOfZeal,
+        TrialOfStrength,
     }
 
     //order unimportant, just that there is a one to one correspondence between the names in the state enum
@@ -1005,10 +1005,10 @@ public static class BattleHelper
         BurrowTrap,
         Sundew,
         VinePlatform,
-        Vineborn,
+        Sycamore,
         GiantVine,
         VineThrone,
-        Harvestborn,
+        MasterOfAutumn,
         Bandit,
         Renegade,
         Sentry,
@@ -1041,7 +1041,7 @@ public static class BattleHelper
         FalseDragon,
         AmalgamLeftArm,
         AmalgamRightArm,
-        AmalgamsWill,
+        DiscordantAmalgam,
         Blazecrest,
         Embercrest,
         Ashcrest,

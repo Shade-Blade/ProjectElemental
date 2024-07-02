@@ -52,7 +52,7 @@ public abstract class WilexMove : PlayerMove
             return StandardCostModification(caller, level, cost);
         } else
         {
-            return 2 * StandardCostModification(caller, level, cost);
+            return (int)(1.5f * StandardCostModification(caller, level, cost));
         }
     }
 
@@ -137,7 +137,7 @@ public class WM_HighStomp : WilexMove
             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
             //StartCoroutine(caller.RevertScale(0.1f));
             StartJumpEffects(caller);
-            yield return StartCoroutine(caller.JumpHeavy(tpos, 2, 0.5f, -0.25f));
+            yield return StartCoroutine(caller.JumpHeavy(tpos, 2.5f, 0.5f, -0.25f));
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
@@ -1314,6 +1314,11 @@ public class WM_SmartStomp : WM_HighStomp
     public override int GetBaseCost() => 8;
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
+    public override void StompEffects(BattleEntity caller, bool result)
+    {
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_SmartStompShockwave"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position + Vector3.down * (0.05f);
+    }
     public override bool GetOutcome(BattleEntity caller)
     {
         return caller.GetAttackHit(caller.curTarget, 0);

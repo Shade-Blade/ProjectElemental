@@ -498,7 +498,7 @@ public class WorldPlayer : WorldEntity
                 {
                     //make it
                     interactIndicator = Instantiate(Resources.Load<GameObject>("Overworld/Other/InteractIndicator"), gameObject.transform);
-                    interactIndicator.transform.localPosition = Vector3.up * 0.7f;
+                    interactIndicator.transform.localPosition = Vector3.up * 0.7f + Vector3.back * 0.01f;
                 }
             } else
             {

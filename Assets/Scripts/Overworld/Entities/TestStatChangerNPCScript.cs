@@ -40,11 +40,11 @@ public class TestStatChangerNPCScript : WorldNPCEntity
         testTextFile[5][0] = "Can't decrease stats";
         testTextFile[6][0] = "Impossible state (can't increase or decrease stats)";
 
-        testTextFile[7][0] = "Increase stat menu. Current stats: <var,0><var,1><var,2><dataget,arg,raise><genericmenu,arg,5,false,false,false,true>";
+        testTextFile[7][0] = "Increase stat menu. Current stats: <var,0><var,1><var,2><var,3><dataget,arg,raise><genericmenu,arg,5,false,false,false,true>";
         testTextFile[8][0] = "Increase stat? <var,0> to <var,1><prompt,Yes,1,No,2,1>";
         testTextFile[9][0] = "Increased a stat.";
 
-        testTextFile[10][0] = "Decrease stat menu. Current stats: <var,0><var,1><var,2><dataget,arg,lower><genericmenu,arg,5,false,false,false,true>";
+        testTextFile[10][0] = "Decrease stat menu. Current stats: <var,0><var,1><var,2><var,3><dataget,arg,lower><genericmenu,arg,5,false,false,false,true>";
         testTextFile[11][0] = "Decrease stat? <var,0> to <var,1><prompt,Yes,1,No,2,1>";
         testTextFile[12][0] = "Decreased a stat.";
         testTextFile[13][0] = "Decreased a stat. (lost badges)";
@@ -128,7 +128,7 @@ public class TestStatChangerNPCScript : WorldNPCEntity
 
         while (state == 1)
         {
-            string[] tempVars = new string[] { GetCurrentHPString(), GetCurrentEPString(), GetCurrentSPString() };
+            string[] tempVars = new string[] { GetCurrentHPString(), GetCurrentEPString(), GetCurrentSPString(), GetCurrentAstralString() };
 
             //menu
             yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 7, this, tempVars));
@@ -200,6 +200,48 @@ public class TestStatChangerNPCScript : WorldNPCEntity
 
                     int upgradesToAdd = level - downgradesRemoved;
 
+                    if (upgradesToAdd < 0)
+                    {
+                        //??? impossible state
+
+                        //delete upgrades if possible
+                        for (int i = 0; i < pd.upgrades.Count; i++)
+                        {
+                            bool remove = false;
+
+                            if (index == 0 && pd.upgrades[i] == PlayerData.LevelUpgrade.HP)
+                            {
+                                remove = true;
+                            }
+                            if (index == 1 && pd.upgrades[i] == PlayerData.LevelUpgrade.EP)
+                            {
+                                remove = true;
+                            }
+                            if (index == 2 && pd.upgrades[i] == PlayerData.LevelUpgrade.SP)
+                            {
+                                remove = true;
+                            }
+
+                            if (upgradesToAdd == 0)
+                            {
+                                break;
+                            }
+
+                            if (remove && upgradesToAdd > 0)
+                            {
+                                upgradesToAdd++;
+                                pd.downgrades.RemoveAt(i);
+                                i--;
+                                continue;
+                            }
+                        }
+
+                        for (int i = 0; i < -upgradesToAdd; i++)
+                        {
+                            pd.downgrades.Add(PlayerData.LevelUpgrade.HP);
+                        }
+                    }
+
                     for (int i = 0; i < upgradesToAdd; i++)
                     {
                         if (index == 0)
@@ -231,7 +273,7 @@ public class TestStatChangerNPCScript : WorldNPCEntity
 
         while (state == 2)
         {
-            string[] tempVars = new string[] { GetCurrentHPString(), GetCurrentEPString(), GetCurrentSPString() };
+            string[] tempVars = new string[] { GetCurrentHPString(), GetCurrentEPString(), GetCurrentSPString(), GetCurrentAstralString() };
 
             //menu
             yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 10, this, tempVars));
@@ -302,6 +344,46 @@ public class TestStatChangerNPCScript : WorldNPCEntity
                     }
 
                     int downgradesToAdd = level - upgradesRemoved;
+
+                    if (downgradesToAdd < 0)
+                    {
+                        //??? impossible state
+                        for (int i = 0; i < pd.downgrades.Count; i++)
+                        {
+                            bool remove = false;
+
+                            if (index == 0 && pd.downgrades[i] == PlayerData.LevelUpgrade.HP)
+                            {
+                                remove = true;
+                            }
+                            if (index == 1 && pd.downgrades[i] == PlayerData.LevelUpgrade.EP)
+                            {
+                                remove = true;
+                            }
+                            if (index == 2 && pd.downgrades[i] == PlayerData.LevelUpgrade.SP)
+                            {
+                                remove = true;
+                            }
+
+                            if (downgradesToAdd == 0)
+                            {
+                                break;
+                            }
+
+                            if (remove && downgradesToAdd < 0)
+                            {
+                                downgradesToAdd++;
+                                pd.downgrades.RemoveAt(i);
+                                i--;
+                                continue;
+                            }
+                        }
+
+                        for (int i = 0; i < -downgradesToAdd; i++)
+                        {
+                            pd.upgrades.Add(PlayerData.LevelUpgrade.HP);
+                        }
+                    }
 
                     for (int i = 0; i < downgradesToAdd; i++)
                     {
@@ -793,6 +875,14 @@ public class TestStatChangerNPCScript : WorldNPCEntity
         string current = "";
         current += PlayerData.GetMaxSP(currentLevels[2] + delta);
         current += "<sp>";
+        return current;
+    }
+    public string GetCurrentAstralString()
+    {
+        PlayerData pd = MainManager.Instance.playerData;
+        string current = "";
+        current += pd.astralTokens;
+        current += "<astraltoken>";
         return current;
     }
     public void SetupMaximums()

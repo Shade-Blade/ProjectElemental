@@ -1260,9 +1260,9 @@ public class PlayerEntity : BattleEntity
                 outProperties |= (ulong)BattleHelper.DamageProperties.NightmareStrike;
             }
 
-            if (BadgeEquipped(Badge.BadgeType.Aggrevate))
+            if (BadgeEquipped(Badge.BadgeType.Aggravate))
             {
-                outProperties |= (ulong)BattleHelper.DamageProperties.Aggrevate;
+                outProperties |= (ulong)BattleHelper.DamageProperties.Aggravate;
             }
 
             if (BadgeEquipped(Badge.BadgeType.Icebreaker))
@@ -2690,35 +2690,55 @@ public class PlayerEntity : BattleEntity
     }
 
 
-    public override int GetEffectAttackBonus()
+    public override int GetEffectAttackBonus(bool absolute = false)
     {
         int original = base.GetEffectAttackBonus();
         int passiveAtk = Item.CountItemsWithProperty(Item.ItemProperty.Passive_AttackUp, BattleControl.Instance.GetItemInventory(this));
         int passiveMAtk = Item.CountItemsWithProperty(Item.ItemProperty.Passive_AttackDown, BattleControl.Instance.GetItemInventory(this));
 
+        if (absolute)
+        {
+            passiveMAtk *= -1;
+        }
+
         return original + passiveAtk - passiveMAtk;
     }
-    public override int GetEffectDefenseBonus()
+    public override int GetEffectDefenseBonus(bool absolute = false)
     {
         int original = base.GetEffectDefenseBonus();
         int passiveDef = Item.CountItemsWithProperty(Item.ItemProperty.Passive_DefenseUp, BattleControl.Instance.GetItemInventory(this));
         int passiveMDef = Item.CountItemsWithProperty(Item.ItemProperty.Passive_DefenseDown, BattleControl.Instance.GetItemInventory(this));
 
+        if (absolute)
+        {
+            passiveMDef *= -1;
+        }
+
         return original + passiveDef - passiveMDef;
     }
-    public override int GetEffectEnduranceBonus()
+    public override int GetEffectEnduranceBonus(bool absolute = false)
     {
         int original = base.GetEffectEnduranceBonus();
         int passiveEnd = Item.CountItemsWithProperty(Item.ItemProperty.Passive_EnduranceUp, BattleControl.Instance.GetItemInventory(this));
         int passiveMEnd = Item.CountItemsWithProperty(Item.ItemProperty.Passive_EnduranceDown, BattleControl.Instance.GetItemInventory(this));
 
+        if (absolute)
+        {
+            passiveMEnd *= -1;
+        }
+
         return original + passiveEnd - passiveMEnd;
     }
-    public override int GetEffectHasteBonus()
+    public override int GetEffectHasteBonus(bool absolute = false)
     {
         int original = base.GetEffectHasteBonus();
         int passiveAgi = Item.CountItemsWithProperty(Item.ItemProperty.Passive_AgilityUp, BattleControl.Instance.GetItemInventory(this));
         int passiveMAgi = Item.CountItemsWithProperty(Item.ItemProperty.Passive_AgilityDown, BattleControl.Instance.GetItemInventory(this));
+
+        if (absolute)
+        {
+            passiveMAgi *= -1;
+        }
 
         return original + passiveAgi - passiveMAgi;
     }
@@ -3348,9 +3368,9 @@ public class PlayerEntity : BattleEntity
                 InflictEffect(target, new Effect(Effect.EffectType.Defocus, (byte)(3 * BadgeEquippedCount(Badge.BadgeType.NightmareStrike)), 255));
             }
 
-            if (target.HasEffect(Effect.EffectType.Berserk) && BadgeEquipped(Badge.BadgeType.Aggrevate))
+            if (target.HasEffect(Effect.EffectType.Berserk) && BadgeEquipped(Badge.BadgeType.Aggravate))
             {
-                InflictEffect(target, new Effect(Effect.EffectType.Focus, (byte)(BadgeEquippedCount(Badge.BadgeType.Aggrevate)), 255));
+                InflictEffect(target, new Effect(Effect.EffectType.Focus, (byte)(BadgeEquippedCount(Badge.BadgeType.Aggravate)), 255));
             }
 
             if (target.HasEffect(Effect.EffectType.Poison) && BadgeEquipped(Badge.BadgeType.NerveStrike))
@@ -3782,7 +3802,7 @@ public class PlayerEntity : BattleEntity
         float charmBoost = 1;
         if (charmPower)
         {
-            charmBoost = 1.0001f + (2 * BadgeEquippedCount(Badge.BadgeType.CharmBoost)) / 3;
+            charmBoost = 1.0001f + (2 * BadgeEquippedCount(Badge.BadgeType.CharmBoost)) / 3f;
         }
         //apply charms if possible
         //(note: the duration countdown is in BattleControl after this executes (after all PreBattle scripts))

@@ -709,7 +709,7 @@ public class PlayerData
 
         if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Envy))
         {
-            return 6 + spUpgrades;
+            return 6 + (int)(spUpgrades * 0.5f);
         }
 
         return GetMaxSP(spUpgrades);
@@ -815,7 +815,7 @@ public class PlayerData
     {
         if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Envy))
         {
-            return 6 + upgradeCount;
+            return 6 + (int)(upgradeCount * 0.5f);
         }
         return 12 + upgradeCount * 6;
     }
@@ -2463,10 +2463,10 @@ public class MainManager : MonoBehaviour
         GF_Bestiary_BurrowTrap,
         GF_Bestiary_Sundew,
         GF_Bestiary_VinePlatform,
-        GF_Bestiary_Vineborn,
+        GF_Bestiary_Sycamore,
         GF_Bestiary_GiantVine,
         GF_Bestiary_VineThrone,
-        GF_Bestiary_Harvestborn,
+        GF_Bestiary_MasterOfAutumn,
         GF_Bestiary_Bandit,
         GF_Bestiary_Renegade,
         GF_Bestiary_Sentry,
@@ -3814,7 +3814,7 @@ public class MainManager : MonoBehaviour
 
         //testTextFile[8][0] = "<boxstyle,outline><boxcolor,#ff0000,#00ff00>facing test<face,w,-100,0,0><face,w,l><face,l,w><emote,w,angryfizzle><minibubble,true,Keru says stuff,k,-1>Box style testing<next><boxstyle>Test 0<next><boxstyle,darkoutline><boxcolor,#ffff00>Test 2<next><boxstyle,fancyoutline>Test 3<next><boxstyle,shaded>Test 4<next><boxstyle,paper>Test 5<next><boxstyle,beads>Test 6<next><boxstyle,system>Test 7<next><sign><minibubble,false,l1,-1>Sign test<next><system>System test";
 
-        testTextFile[8][0] = "<condcut,hparty,wilex>Cut <condcut,nhkeru>true</condcut><boxstyle,outline></condcut><condcut,nhkeru>Cut false<boxstyle,outline></condcut>Condend false<condend,nhkeru>Condend true<condend,hkeru>After condend true";
+        testTextFile[8][0] = "<scramble>A lot of scrambled text for testing scramble tag</scramble> <condcut,hparty,wilex>Cut <condcut,nhkeru>true</condcut><boxstyle,outline></condcut><condcut,nhkeru>Cut false<boxstyle,outline></condcut>Condend false<condend,nhkeru>Condend true<condend,hkeru>After condend true";
 
         //testFile[0][0] = "<globalflag,0> <const,ItemProportion> item proportion!<itemMenu><next><removeitem,arg><branch,eqi,arg,cancel,2><goto,0>"; 
         //testFile[1][0] = "Flooop";

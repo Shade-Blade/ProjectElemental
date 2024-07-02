@@ -10,6 +10,7 @@ Shader "VFX/VoidModel"
         _ScreenTex ("Screen Texture", 2D) = "white" {}
         _LowEnd ("Low end", float) = -5
         _HighEnd ("High end", float) = 0.4
+        _Threshold ("Threshold", float) = 0.5
     }
     SubShader
     {
@@ -51,6 +52,7 @@ Shader "VFX/VoidModel"
 
         half _LowEnd;
         half _HighEnd;
+        half _Threshold;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -114,19 +116,23 @@ Shader "VFX/VoidModel"
             float ab = abs(vec.b);
             float am = max(ar, max(ag, ab));
 
-            if (ar == am) {
-                vec.r = ar;
-            }
-            if (ag == am) {
-                vec.g = ag;
-            }
-            if (ab == am) {
-                vec.b = ab;
-            }
+			//new version I guess
+			float count = 0;
+			if (ar > _Threshold) {
+				count += 1;
+			}
+			if (ag > _Threshold) {
+				count += 1;
+			}
+			if (ab > _Threshold) {
+				count += 1;
+			}
 
-            vec.r = _LowEnd + (_HighEnd - _LowEnd) * vec.r;
-            vec.g = _LowEnd + (_HighEnd - _LowEnd) * vec.g;
-            vec.b = _LowEnd + (_HighEnd - _LowEnd) * vec.b;
+			count = count / 3;
+
+			vec.r = _LowEnd + (_HighEnd - _LowEnd) * count;
+			vec.g = _LowEnd + (_HighEnd - _LowEnd) * count;
+			vec.b = _LowEnd + (_HighEnd - _LowEnd) * count;
 
             o.Albedo = vec;
             o.Alpha = 1;

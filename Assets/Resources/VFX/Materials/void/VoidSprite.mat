@@ -57,7 +57,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ScreenTex:
-        m_Texture: {fileID: 2800000, guid: feaca8732c2a88c40b435e3d239c711a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 024914e2d569ad449bc4bc49b78bb244, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -79,6 +79,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Threshold: 0.5
     - _TimeScaleA: 0.15
     - _UVSec: 0
     - _ZWrite: 1

@@ -2427,6 +2427,8 @@ public class MetaItem_Void : MetaItemMove
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
         //item.ChooseMove(caller, level);
+        BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.UseItem);
+        itemMove.itemCount = BattleControl.Instance.CountAllItemsOfType(caller, itemMove.GetItemType());
 
         yield return StartCoroutine(itemMove.Execute(caller, level));
 
@@ -2453,12 +2455,12 @@ public class MetaItem_Multi : MetaItemMove
 
     public override string GetDescription()
     {
-        return GetDescription(Move.Normal);
+        return GetDescription(Move.Multi);
     }
 
     public override string GetName()
     {
-        return GetName(Move.Normal);
+        return GetName(Move.Multi);
     }
 
     public override void ChooseMove(BattleEntity caller, int level = 1)
@@ -2477,6 +2479,7 @@ public class MetaItem_Multi : MetaItemMove
             caller.curTarget = targets[i];
 
             //itemMoves[i].ChooseMove(caller, level);
+            //note: can't use the normal choosemove because the indices need to be kept correct
             BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.UseItem);
             itemMoves[i].itemCount = BattleControl.Instance.CountAllItemsOfType(caller, itemMoves[i].GetItemType());
             itemMoves[i].BattleRemoveItemUsed(caller, indices[i]);

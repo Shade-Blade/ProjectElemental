@@ -16,6 +16,6 @@ ScaldingMagma,Scalding Magma,"When anyone gets hit, they take half that damage a
 TrialOfSimplicity,Trial Of Simplicity,You can only use moves that cost 5 stamina or less. Earth damage is doubled.,You can only use moves that cost 5 stamina or less. Earth damage is doubled.
 TrialOfHaste,Trial Of Haste,Stamina costs are ignored. Air/Electric damage is doubled.,Stamina costs are ignored. Air/Electric damage is doubled.
 TrialOfResolve,Trial Of Resolve,Enemies take no damage from the first hit they take each turn. Light damage is doubled.,Enemies take no damage from the first hit they take each turn. Light damage is doubled.
-TrialOfAmbition,Trial Of Ambition,Items are 90% less effective. Dark damage is doubled.,Items are 90% less effective. Dark damage is doubled.
+TrialOfCunning,Trial Of Cunning,Items are 90% less effective. Dark damage is doubled.,Items are 90% less effective. Dark damage is doubled.
 TrialOfPatience,Trial Of Patience,"When you attack, you take damage equal to half the damage dealt. Water damage is doubled.",You take damage equal to half the damage dealt. Water damage is doubled.
-TrialOfZeal,Trial Of Zeal,"When anyone gets hit, they take all that damage again at the end of turn. Fire damage is doubled.","When anyone gets hit, they take all that damage again at the end of turn. Fire damage is doubled."
+TrialOfStrength,Trial Of Strength,"When anyone gets hit, they take all that damage again at the end of turn. Fire damage is doubled.","When anyone gets hit, they take all that damage again at the end of turn. Fire damage is doubled."

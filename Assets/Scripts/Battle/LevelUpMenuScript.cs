@@ -19,6 +19,11 @@ public class LevelUpMenuScript : MonoBehaviour
 
     protected float inputDir;
 
+
+    public TextDisplayer hpCount;
+    public TextDisplayer epCount;
+    public TextDisplayer spCount;
+
     public GameObject wilexHPIndicator;
     public GameObject wilexHPIndicatorArrow;
     public TextDisplayer wilexHPIndicatorLeft;
@@ -85,6 +90,10 @@ public class LevelUpMenuScript : MonoBehaviour
         hpUpgrades -= hpDowngrades;
         epUpgrades -= epDowngrades;
         spUpgrades -= spDowngrades;
+
+        hpCount.SetText("(" + hpUpgrades + ")", true, true);
+        epCount.SetText("(" + epUpgrades + ")", true, true);
+        spCount.SetText("(" + spUpgrades + ")", true, true);
 
         usages = new bool[3];
         usages[0] = false;

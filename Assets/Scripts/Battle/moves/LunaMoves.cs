@@ -53,7 +53,7 @@ public abstract class LunaMove : PlayerMove
         }
         else
         {
-            return 2 * StandardCostModification(caller, level, cost);
+            return (int)(1.5f * StandardCostModification(caller, level, cost));
         }
     }
 
@@ -829,7 +829,7 @@ public class LM_MeteorStomp : LunaMove
     }
     public override string GetName() => GetNameWithIndex(GetTextIndex());
     public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
-    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowStompable, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 6;
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
@@ -873,7 +873,7 @@ public class LM_MeteorStomp : LunaMove
             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
             //StartCoroutine(caller.RevertScale(0.1f));
             StartJumpEffects(caller);
-            yield return StartCoroutine(caller.JumpHeavy(tpos, 4, 0.65f, -0.25f));
+            yield return StartCoroutine(caller.JumpHeavy(tpos, 3f, 0.65f, -0.25f));
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
@@ -1079,6 +1079,7 @@ public class LM_UnderStrike : LunaMove
                     if (level > 1)
                     {
                         DigParticles(caller);
+                        ShockwaveEffect(caller);
                         DealDamageSuccessA(caller, sd);
                         AC_Jump actionCommand2 = null;
                         if (caller is PlayerEntity pcaller2) //we have technology
@@ -1118,6 +1119,7 @@ public class LM_UnderStrike : LunaMove
                     else
                     {
                         DigParticles(caller);
+                        ShockwaveEffect(caller);
                         DealDamageSuccess(caller, sd);
                         yield return StartCoroutine(caller.JumpHeavy(spos, 2, 0.5f, 0.15f));
                     }
@@ -1154,6 +1156,12 @@ public class LM_UnderStrike : LunaMove
         eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Dig"), BattleControl.Instance.transform);
         eoI.transform.position = caller.transform.position - (caller.transform.position.y * Vector3.up) + (caller.homePos.y * Vector3.up);
         eoI.transform.localRotation = Quaternion.identity;
+    }
+    public virtual void ShockwaveEffect(BattleEntity caller)
+    {
+        //note: since the enemy is at the center of this effect, it should be less complex
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_UnderStrikeShockwave"), BattleControl.Instance.transform);
+        effect.transform.position = caller.transform.position - (caller.transform.position.y * Vector3.up) + (caller.homePos.y * Vector3.up);
     }
     public bool GetOutcome(BattleEntity caller, int sd)
     {
@@ -1415,7 +1423,7 @@ public class LM_ElementalStomp : LunaMove
     public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost() => 8;
+    public override int GetBaseCost() => 9;
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)

@@ -42,7 +42,7 @@ Elusive,Elusive,"Get <var,1> turn(s) of Ethereal when hit."
 CounterFlare,Counter Flare,Damage taken will be healed back and returned to all enemies at the end of turn. (Effect potency is reduced by 1 if the counter activates)
 Supercharge,Supercharge,Preserve Focus after it is used
 QuantumShield,Quantum Shield,"Block the next <var,1> hits completely"
-Soften,Soften,Damage you take gets softened so that the damage happens over the course of 3 turns.
+Soften,Soften,Damage you take is softened so that the damage happens over the course of 3 turns.
 AttackDown,Attack Down,"Attack is decreased by <var,1>"
 DefenseDown,Defense Down,"Defense is decreased by <var,1>"
 EnduranceDown,Endurance Down,"Endurance is decreased by <var,1>. (Move costs go up by <var,1>)"

@@ -2965,6 +2965,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int AttackBoostCalculation(BattleEntity target, int damage, BattleHelper.DamageType type, ulong properties)
     {
         int output = AttackBoostCalculationStatic(this, target, damage, GetBadgeAttackBonus(), GetEffectAttackBonus(), type, properties);
+        if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
+        {
+            if ((type & DamageType.Fire) != 0 && BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AdvancedElementCalc))
+            {
+                output = AttackBoostCalculationStatic(this, target, damage, GetBadgeAttackBonus(), GetEffectAttackBonus(true), type, properties);
+            }
+        }
 
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
@@ -3029,7 +3036,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 output = (int)(output * 1.5f);
             }
 
-            if (target.HasEffect(Effect.EffectType.Berserk) && BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Aggrevate))
+            if (target.HasEffect(Effect.EffectType.Berserk) && BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Aggravate))
             {
                 output = (int)(output * 1.5f);
             }
@@ -4493,10 +4500,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         return false;
     }
 
-    public virtual int GetEffectAttackBonus() //attack bonus from effects
+    public virtual int GetEffectAttackBonus(bool absolute = false) //attack bonus from effects (Absolute = treat debuffs as buffs, you can get "buffs are debuffs" by multiplying by -1)
     {
         Effect temp;
         int output = 0;
+
+        int negative = absolute ? 1 : -1;
 
         temp = GetEffectEntry(Effect.EffectType.AttackBoost);
         if (temp != null)
@@ -4506,7 +4515,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.AttackReduction);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         temp = GetEffectEntry(Effect.EffectType.Berserk);
@@ -4523,7 +4532,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.AttackDown);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         temp = GetEffectEntry(Effect.EffectType.Illuminate);
@@ -4540,15 +4549,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.Defocus);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         return output;
     }
-    public virtual int GetEffectDefenseBonus() //defense bonus from effects
+    public virtual int GetEffectDefenseBonus(bool absolute = false) //defense bonus from effects
     {
         Effect temp;
         int output = 0;
+
+        int negative = absolute ? 1 : -1;
 
         temp = GetEffectEntry(Effect.EffectType.DefenseBoost);
         if (temp != null)
@@ -4558,13 +4569,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.DefenseReduction);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         temp = GetEffectEntry(Effect.EffectType.Berserk);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
         //temp = GetStatusEntry(Status.StatusEffect.Petrify);
         //if (temp != null)
@@ -4574,7 +4585,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.Freeze);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
         //temp = GetStatusEntry(Status.StatusEffect.Paralyze);
         //if (temp != null)
@@ -4590,7 +4601,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.DefenseDown);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         temp = GetEffectEntry(Effect.EffectType.Absorb);
@@ -4601,22 +4612,24 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.Sunder);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         //Debug.Log(output);
 
         return output;
     }
-    public virtual int GetEffectEnduranceBonus() //endurance bonus (effectively cost down)
+    public virtual int GetEffectEnduranceBonus(bool absolute = false) //endurance bonus (effectively cost down)
     {
         Effect temp;
         int output = 0;
 
+        int negative = absolute ? 1 : -1;
+
         temp = GetEffectEntry(Effect.EffectType.EnduranceReduction);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
         temp = GetEffectEntry(Effect.EffectType.EnduranceBoost);
         if (temp != null)
@@ -4632,7 +4645,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.EnduranceDown);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         temp = GetEffectEntry(Effect.EffectType.Burst);
@@ -4643,7 +4656,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.Enervate);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         //Calculated later (in standard cost calculation)
@@ -4651,15 +4664,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         return output;
     }
-    public virtual int GetEffectHasteBonus() //agility bonus (haste) (lets you pay moves at lower stamina)
+    public virtual int GetEffectHasteBonus(bool absolute = false) //agility bonus (haste) (lets you pay moves at lower stamina)
     {
         Effect temp;
         int output = 0;
 
+        int negative = absolute ? 1 : -1;
+
         temp = GetEffectEntry(Effect.EffectType.AgilityReduction);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
         temp = GetEffectEntry(Effect.EffectType.AgilityBoost);
         if (temp != null)
@@ -4675,7 +4690,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.AgilityDown);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         temp = GetEffectEntry(Effect.EffectType.Haste);
@@ -4686,21 +4701,23 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.Hamper);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         return output;
     }
 
-    public virtual int GetEffectFlowBonus()
+    public virtual int GetEffectFlowBonus(bool absolute = false)
     {
         Effect temp;
         int output = 0;
 
+        int negative = absolute ? 1 : -1;
+
         temp = GetEffectEntry(Effect.EffectType.FlowDown);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
         temp = GetEffectEntry(Effect.EffectType.FlowUp);
         if (temp != null)
@@ -4716,7 +4733,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.Disorient);
         if (temp != null)
         {
-            output -= temp.potency * 1;
+            output += temp.potency * negative;
         }
 
         return output;
@@ -6069,6 +6086,28 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 statusColorString = MainManager.ColorToString(new Color(0.6f, 0.7f, 0f, 1f));
                 statusColorString += "|" + MainManager.ColorToString(new Color(0.25f, 0.35f, 0f, 1f));
                 statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 0.7f, 0.6f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Sticky))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.2f, 0.1f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.35f, 0.25f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 0.6f, 0.5f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Curse))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.7f, 0.0f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.35f, 0f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 0.5f, 0.5f, 1f));
                 statusColorString += "|" + 0.5f;
             }
             statusColorString += "_X_";

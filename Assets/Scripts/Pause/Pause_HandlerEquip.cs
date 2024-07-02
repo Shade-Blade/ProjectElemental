@@ -343,6 +343,7 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
     public override void LRChange(int index)
     {
         selectedPlayer = sortedParty[index].entityID;
+        RebuildList();
         SendSectionUpdate();
     }
 

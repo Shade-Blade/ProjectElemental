@@ -354,7 +354,7 @@ public struct Badge
         RageShield,
         RageRally,
         UndyingRage,
-        Aggrevate,
+        Aggravate,
         VengefulRage,
         ToxicStrength,
         ToxicShield,

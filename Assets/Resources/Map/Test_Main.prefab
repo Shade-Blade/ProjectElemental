@@ -178,7 +178,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -548,7 +548,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: <tail,w>Tattle stuff<next><tail,l>Other tattle stuff
     talkStrings:
     - l1
@@ -609,8 +609,8 @@ MonoBehaviour:
   idleTime: 0
   wanderTime: 0
   idlePos: {x: 0, y: 0, z: 0}
-  stompLaunch: 0
-  stompBoostable: 0
+  stompLaunch: 3
+  stompBoostable: 1
   textIndex: 0
   loop: 0
 --- !u!1 &211086560977027292
@@ -2394,7 +2394,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -4182,7 +4182,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -47655,7 +47655,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -47713,7 +47713,7 @@ MonoBehaviour:
   idleTime: 0
   wanderTime: 0
   idlePos: {x: 0, y: 0, z: 0}
-  stompLaunch: 2
+  stompLaunch: 3
   stompBoostable: 1
 --- !u!1 &3868111841725495809
 GameObject:
@@ -79256,7 +79256,7 @@ MonoBehaviour:
     width: 0.25
     interactRadius: 0.6
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -79314,8 +79314,8 @@ MonoBehaviour:
   idleTime: 0
   wanderTime: 0
   idlePos: {x: 0, y: 0, z: 0}
-  stompLaunch: 0
-  stompBoostable: 0
+  stompLaunch: 3
+  stompBoostable: 1
 --- !u!1 &4941228528617542661
 GameObject:
   m_ObjectHideFlags: 0
@@ -79494,7 +79494,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -79552,8 +79552,8 @@ MonoBehaviour:
   idleTime: 0
   wanderTime: 0
   idlePos: {x: 0, y: 0, z: 0}
-  stompLaunch: 0
-  stompBoostable: 0
+  stompLaunch: 3
+  stompBoostable: 1
 --- !u!1 &5036176833857532311
 GameObject:
   m_ObjectHideFlags: 0
@@ -85331,7 +85331,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -90927,7 +90927,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -91464,7 +91464,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -93524,7 +93524,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -93582,8 +93582,8 @@ MonoBehaviour:
   idleTime: 0
   wanderTime: 0
   idlePos: {x: 0, y: 0, z: 0}
-  stompLaunch: 0
-  stompBoostable: 0
+  stompLaunch: 3
+  stompBoostable: 1
 --- !u!1 &7899180861360550180
 GameObject:
   m_ObjectHideFlags: 0
@@ -98125,7 +98125,7 @@ MonoBehaviour:
     width: 0
     interactRadius: 0
     stompBoostable: 1
-    stompLaunch: 2
+    stompLaunch: 3
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -98183,8 +98183,8 @@ MonoBehaviour:
   idleTime: 0
   wanderTime: 0
   idlePos: {x: 0, y: 0, z: 0}
-  stompLaunch: 0
-  stompBoostable: 0
+  stompLaunch: 3
+  stompBoostable: 1
 --- !u!1 &8868560515791582977
 GameObject:
   m_ObjectHideFlags: 0

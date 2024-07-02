@@ -362,7 +362,7 @@ public class BA_Rest : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.None, false);
     public override string GetName() => "Rest";
-    public override string GetDescription() => "Do nothing until the next turn. Gives you one turn's worth of Stamina and 3 Soul Energy.";
+    public override string GetDescription() => "Do nothing until the next turn. Gives you one turn worth of Stamina and 3 Soul Energy.";
     public override bool ForfeitTurn() => true;
 
     public override int GetBaseCost() => 0;
@@ -932,7 +932,7 @@ public class BA_Flee : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.None, false);
     public override string GetName() => "Flee";
-    public override string GetDescription() => "Run from the current battle. Stamina cost is based on enemy level. Some battles may forbid you from fleeing, while others may allow you to flee for free.";
+    public override string GetDescription() => "Run from the current battle. Stamina cost is based on the level of the strongest enemy that can move. Some battles may forbid you from fleeing, while others may allow you to flee for free.";
     public override bool ForfeitTurn() => false;
 
 
@@ -944,7 +944,8 @@ public class BA_Flee : BattleAction
         }
 
         int cost = 0;
-        List<BattleEntity> enemyList = BattleControl.Instance.GetEntities((e) => (e.posId >= 0));
+        //note: only mobile enemies 
+        List<BattleEntity> enemyList = BattleControl.Instance.GetEntities((e) => (e.posId >= 0 && e.CanMove()));
 
         for (int i = 0; i < enemyList.Count; i++)
         {

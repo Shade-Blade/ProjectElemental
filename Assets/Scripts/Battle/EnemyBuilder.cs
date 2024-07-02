@@ -127,8 +127,8 @@ public class EnemyBuilder : MonoBehaviour
                 b = g.AddComponent<BE_VinePlatform>();
                 s.color = new Color(0.25f, 0.6f, 0.25f);
                 break;
-            case BattleHelper.EntityID.Vineborn:
-                b = g.AddComponent<BE_Vineborn>();
+            case BattleHelper.EntityID.Sycamore:
+                b = g.AddComponent<BE_Sycamore>();
                 s.color = new Color(0.65f, 1, 0.65f);
                 break;
             case BattleHelper.EntityID.GiantVine:
@@ -139,8 +139,8 @@ public class EnemyBuilder : MonoBehaviour
                 b = g.AddComponent<BE_VineThrone>();
                 s.color = new Color(0.8f, 0.7f, 0.6f);
                 break;
-            case BattleHelper.EntityID.Harvestborn:
-                b = g.AddComponent<BE_Harvestborn>();
+            case BattleHelper.EntityID.MasterOfAutumn:
+                b = g.AddComponent<BE_MasterOfAutumn>();
                 s.color = new Color(1, 0.9f, 0.8f);
                 break;
             case BattleHelper.EntityID.Bandit:
@@ -211,7 +211,7 @@ public class EnemyBuilder : MonoBehaviour
             case BattleHelper.EntityID.FalseDragonArm:
             case BattleHelper.EntityID.AmalgamLeftArm:
             case BattleHelper.EntityID.AmalgamRightArm:
-            case BattleHelper.EntityID.AmalgamsWill:
+            case BattleHelper.EntityID.DiscordantAmalgam:
                 s.color = new Color(0.6f, 0.6f, 1f);
                 break;
             case BattleHelper.EntityID.Blazecrest:

@@ -188,8 +188,12 @@ Shader "Custom/ProperSpriteGeneralWRibbon" {
 
 
 			//Ribbon mask
-			if (c.r > 0.75 && c.b > 0.75 && c.g < 0.25) {
-				c = _WRibbonColor;
+			fixed rgm = max(c.r, c.b);
+			fixed rdelta = abs(c.r - c.b);
+
+			if (rgm > 0.2 && rdelta < 0.01 && c.g < rgm - 0.15) {
+				c = _WRibbonColor * rgm;
+
 				if (_WRibbonMimic == 1) {
 					fixed timeDelta = 0.15 * (1 + sin(_Time.y));
 					c = lerp(_WRibbonColor, fixed4(0.71, 0.369, 0.965, 1), timeDelta);

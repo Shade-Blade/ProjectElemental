@@ -164,11 +164,11 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
                 interactIndicator = Instantiate(Resources.Load<GameObject>("Overworld/Other/InteractIndicator"), gameObject.transform);
                 if (height != 0)
                 {
-                    interactIndicator.transform.localPosition = Vector3.up * (0.325f + height/2);
+                    interactIndicator.transform.localPosition = Vector3.up * (0.325f + height/2) + Vector3.back * 0.01f;
                 }
                 else
                 {
-                    interactIndicator.transform.localPosition = Vector3.up * 0.7f;
+                    interactIndicator.transform.localPosition = Vector3.up * 0.7f + Vector3.back * 0.01f;
                 }                
                 indicatorActive = true;
             }
@@ -205,11 +205,11 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
                 interactIndicator = Instantiate(Resources.Load<GameObject>("Overworld/Other/QuestIndicator"), gameObject.transform);
                 if (height != 0)
                 {
-                    interactIndicator.transform.localPosition = Vector3.up * (0.325f + height/2);
+                    interactIndicator.transform.localPosition = Vector3.up * (0.325f + height/2) + Vector3.back * 0.01f;
                 }
                 else
                 {
-                    interactIndicator.transform.localPosition = Vector3.up * 0.7f;
+                    interactIndicator.transform.localPosition = Vector3.up * 0.7f + Vector3.back * 0.01f;
                 }
             }
         }
@@ -408,7 +408,7 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
         {
             if (stompBoost)
             {
-                WorldPlayer.Instance.Launch(2 * stompLaunch * Vector3.up, 0);
+                WorldPlayer.Instance.Launch((1 + stompLaunch) * Vector3.up, 0);
             }
             else
             {

@@ -2369,7 +2369,8 @@ public class BattleControl : MonoBehaviour
 
         //Drop item?
         //current logic: 1/4 base, but x2 if it dropped 0 xp, x2 if you have itemfinder
-        //New addition: If you have 0 items, item drops become guaranteed
+        //  <= 4 makes 1/2, <= 2 makes guaranteed
+        //  Super/ultra curse makes 1/2, mega curse makes guaranteed
 
         int itemFinder = playerData.BadgeEquippedCount(Badge.BadgeType.ItemFinder);
         bool checkDropItem = false;
@@ -2391,19 +2392,26 @@ public class BattleControl : MonoBehaviour
         }
 
         int lowItemBoost = 0;
-
-        if (playerData.itemInventory.Count < 5)
+        if (playerData.itemInventory.Count <= 4)
         {
             lowItemBoost = 1;
         }
-
-        if (playerData.itemInventory.Count < 3)
+        if (playerData.itemInventory.Count <= 2)
         {
             lowItemBoost = 2;
         }
 
+        int curseBoost = 0;
+        if (curseLevel >= 1)
+        {
+            curseBoost = 1;
+        }
+        if (curseLevel >= 2)
+        {
+            curseBoost = 2;
+        }
 
-        if (lowItemBoost + battleBoost + xpBoost + itemFinder >= 2)
+        if (lowItemBoost + battleBoost + xpBoost + itemFinder + curseBoost >= 2)
         {
             checkDropItem = true;
         }

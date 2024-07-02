@@ -1,6 +1,6 @@
 Index (unused),Name,Description,L2 Description,L3 Description
-0,Revitalize,Recover 6 HP and 6 EP. Cures most negative effects.,"Targets both, heals 9 HP and 9 EP, can revive dead allies.",
-1,Hasten,Get 2 actions next turn.,Targets both.,
+0,Hasten,Get 2 actions next turn.,Targets both.,
+1,Revitalize,Recover 6 HP and 6 EP. Cures most negative effects.,"Targets both, heals 9 HP and 9 EP, can revive dead allies.",
 2,Leaf Storm,Deal (4 base) Earth damage to all enemies. (Earth damage is 0.66x stronger against enemies that were hit this turn),8 damage base.,
 3,Electro Discharge,Inflict Attack Down 2 for 3 turns to all enemies,Also inflicts Defense Down 2 for 3 turns.,
 4,Mist Wave,Deal (6 base) Water damage to all enemies. (Water damage is 0.66x stronger against enemies that were not hit last turn),12 damage base.,

@@ -2228,9 +2228,10 @@ public class TextDisplayer : MonoBehaviour
                     float a = Random.Range(0, 1f);
                     float b = Random.Range(0, 1f);
                     float c = Random.Range(0, 1f);
-                    ar = a > a_probability ? 180 : 0;
-                    br = b > a_probability ? 180 : 0;
-                    cr = c > a_probability ? 180 : 0;
+                    ar = RandomGenerator.Hash(45 * ((uint)(Time.time * 4) + (uint)set.index)) % 360 > 180 ? 180 : 0;
+                    br = RandomGenerator.Hash(165 * ((uint)(Time.time * 3) + (uint)set.index)) % 360 > 180 ? 180 : 0;
+                    cr = RandomGenerator.Hash((uint)(Time.time * 2) + (uint)set.index) % 360;
+                    //cr = c * 360; //c > a_probability ? 180 : 0;
 
                     //matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(ar, br, cr), Vector3.one);
                 }

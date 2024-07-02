@@ -1129,7 +1129,8 @@ public abstract class SoulMove : PlayerMove
             {
                 if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
                 {
-                    return (int)Mathf.Clamp(modifiedCost / 4, 1, float.PositiveInfinity);                }
+                    return (int)Mathf.Clamp(modifiedCost / 4, 1, float.PositiveInfinity);                
+                }
                 else
                 {
                     return (int)Mathf.Clamp(modifiedCost / 2, 1, float.PositiveInfinity);
@@ -1234,14 +1235,14 @@ public abstract class EnemyMove : Move
         BurrowTrap_CounterPollenBite,
         Sundew_PoisonToss,
         Sundew_CounterPoisonToss,
-        Vineborn_ThornToss,
-        Vineborn_Pollenate,
-        Vineborn_FlowerShuriken,
-        Vineborn_Overgrowth,
-        Vineborn_VineStab,
-        Vineborn_FullBloom,
-        Vineborn_VineField,
-        Vineborn_Fall,
+        Sycamore_ThornToss,
+        Sycamore_Pollenate,
+        Sycamore_FlowerShuriken,
+        Sycamore_Overgrowth,
+        Sycamore_VineStab,
+        Sycamore_FullBloom,
+        Sycamore_VineField,
+        Sycamore_Fall,
         GiantVine_Slam,
         GiantVine_BigSlam,
         GiantVine_Telegraph,
@@ -1249,15 +1250,15 @@ public abstract class EnemyMove : Move
         GiantVine_Constrict,
         GiantVine_Throw,
         GiantVine_Hard_LashOut,
-        Harvestborn_ThornToss,
-        Harvestborn_PollenStorm,
-        Harvestborn_FlowerShuriken,
-        Harvestborn_Overgrowth,
-        Harvestborn_VineStab,
-        Harvestborn_FullBloom,
-        Harvestborn_VineField,
-        Harvestborn_Resummon,
-        Harvestborn_Fall,
+        MasterOfAutumn_ThornToss,
+        MasterOfAutumn_PollenStorm,
+        MasterOfAutumn_FlowerShuriken,
+        MasterOfAutumn_Overgrowth,
+        MasterOfAutumn_VineStab,
+        MasterOfAutumn_FullBloom,
+        MasterOfAutumn_VineField,
+        MasterOfAutumn_Resummon,
+        MasterOfAutumn_Fall,
         Bandit_Slash,
         Bandit_Hard_TeamCounter,
         Renegade_Hard_SandSplash,

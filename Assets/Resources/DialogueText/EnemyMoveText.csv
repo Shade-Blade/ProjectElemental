@@ -35,14 +35,14 @@ BurrowTrap_PollenBite,Pollen Bite,(Targets Any Enemy) Bite a target and cover th
 BurrowTrap_CounterPollenBite,Counter - Pollen Bite,(Targets Attacker) Bite a target and cover them with pollen to inflict Dizzy. Counter still happens even if they are reduced to 0 hp.,(Higher difficulties: Inflicts 2 turns of Dizzy instead of 1.)
 Sundew_PoisonToss,Poison Toss,(Targets Any Enemy) Fling a poison droplet at a single target to deal Earth damage and inflict Poison.,
 Sundew_CounterPoisonToss,Counter - Poison Toss,(Targets Attacker) Fling a poison droplet at a single target to deal Earth damage and inflict Poison. Counter still happens even if they are reduced to 0 hp.,(Higher difficulties: Inflicts 2 turns of Poison instead of 1.)
-Vineborn_ThornToss,Thorn Toss,(Targets Any Enemy) Throw a thorn to deal normal damage to a single target,
-Vineborn_Pollenate,Pollenate,(Targets All Enemies) Shoot a cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 1 Defocus.)
-Vineborn_FlowerShuriken,Flower Shuriken,(Targets All Enemies) Throw a sharp flower to deal Earth damage to all targets.,(Higher difficulties: Inflicts 1 Defocus.)
-Vineborn_Overgrowth,Overgrowth,"(Targets Self) (Activates at or below 2/3 health) Summon a Burrow Trap in front and a Sundew behind the user, heal for 10 HP and raise a Vine Platform to stand on.",
-Vineborn_VineStab,Vine Stab,(Targets Any Enemy) Send a vine to deal normal damage to a single target.,
-Vineborn_FullBloom,Full Bloom,(Targets All Enemies) Create a large cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 1 Defocus.)
-Vineborn_VineField,Vine Field,(Targets All Enemies) Grow many vines in order to deal Earth damage to all targets.,(Higher difficulties: Inflicts 1 Defocus.)
-Vineborn_Fall,Reaction - Fall,(Activates when the Vine Platform is destroyed) Fall down and permanently increase the user's defense by 1.,(Higher Difficulties: A Burrow Trap is summoned in front.)
+Sycamore_ThornToss,Thorn Toss,(Targets Any Enemy) Throw a thorn to deal normal damage to a single target,
+Sycamore_Pollenate,Pollenate,(Targets All Enemies) Shoot a cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 1 Defocus.)
+Sycamore_FlowerShuriken,Flower Shuriken,(Targets All Enemies) Throw a sharp flower to deal Earth damage to all targets.,(Higher difficulties: Inflicts 1 Defocus.)
+Sycamore_Overgrowth,Overgrowth,"(Targets Self) (Activates at or below 2/3 health) Summon a Burrow Trap in front and a Sundew behind the user, heal for 10 HP and raise a Vine Platform to stand on.",
+Sycamore_VineStab,Vine Stab,(Targets Any Enemy) Send a vine to deal normal damage to a single target.,
+Sycamore_FullBloom,Full Bloom,(Targets All Enemies) Create a large cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 1 Defocus.)
+Sycamore_VineField,Vine Field,(Targets All Enemies) Grow many vines in order to deal Earth damage to all targets.,(Higher difficulties: Inflicts 1 Defocus.)
+Sycamore_Fall,Reaction - Fall,(Activates when the Vine Platform is destroyed) Fall down and permanently increase the user's defense by 1.,(Higher Difficulties: A Burrow Trap is summoned in front.)
 GiantVine_Slam,Slam,(Targets Any Enemy) Slam down onto a single target to deal Normal damage.,
 GiantVine_BigSlam,Big Slam,(Targets All Enemies) Slam onto all targets to deal Normal damage.,
 GiantVine_Telegraph,Telegraph,(Targets Front Enemy) Prepare to grab an enemy. (Cannot grab if there is only 1 player left alive or not grabbed),
@@ -50,15 +50,15 @@ GiantVine_Grab,Grab,(Targets Grab Target) Grab the enemy chosen by Telegraph and
 GiantVine_Constrict,Constrict,(Targets Grabbed Character) Hurt the grabbed character for a moderate amount of Normal damage.,
 GiantVine_Throw,Reaction - Throw,(Activates when the Giant Vine or the grabbed character is at 0 hp) Throw the grabbed character to release them.,
 GiantVine_Hard_LashOut,(Hard) Lash Out,"<color,red>(Only on higher difficulties)</color> (Targets Any Enemy) Slash a single target to deal Earth Damage. (Occurs instead of Slam.)",
-Harvestborn_ThornToss,Thorn Toss,(Targets Any Enemy) Throw two thorns to deal normal damage to a single target,
-Harvestborn_PollenStorm,Pollen Storm,(Targets All Enemies) Shoot a cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 2 Defocus.)
-Harvestborn_FlowerShuriken,Flower Shuriken,(Targets All Enemies) Throw a sharp flower to deal Earth damage to all targets.,(Higher difficulties: Inflicts 2 Defocus.)
-Harvestborn_Overgrowth,Overgrowth,"(Targets Self) (Activates at or below 2/3 health) Summon two Giant Vines, heal for 10 HP and raise a Vine Throne to stand on to become untargettable until the Throne is destroyed.",
-Harvestborn_VineStab,Vine Stab,(Targets Any Enemy) Send two vines to deal normal damage to a single target.,
-Harvestborn_FullBloom,Full Bloom,(Targets All Enemies) Create a large cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 2 Defocus.)
-Harvestborn_VineField,Vine Field,(Targets All Enemies) Grow many vines in order to deal Earth damage to all targets.,(Higher difficulties: Inflicts 2 Defocus.)
-Harvestborn_Resummon,Reaction - Resummon,(Activates when both Giant Vines are destroyed in Phase 2) Summon a new Giant Vine. The summon position of the Giant Vine will alternate if this is repeatedly triggered.,
-Harvestborn_Fall,Reaction - Fall,"(Activates when the Vine Platform is destroyed) Fall down and permanently increase the user's defense by 1, and summon a Giant Vine.",(Higher Difficulties: Two Giant Vines are spawned instead of one.)
+MasterOfAutumn_ThornToss,Thorn Toss,(Targets Any Enemy) Throw two thorns to deal normal damage to a single target,
+MasterOfAutumn_PollenStorm,Pollen Storm,(Targets All Enemies) Shoot a cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 2 Defocus.)
+MasterOfAutumn_FlowerShuriken,Flower Shuriken,(Targets All Enemies) Throw a sharp flower to deal Earth damage to all targets.,(Higher difficulties: Inflicts 2 Defocus.)
+MasterOfAutumn_Overgrowth,Overgrowth,"(Targets Self) (Activates at or below 2/3 health) Summon two Giant Vines, heal for 10 HP and raise a Vine Throne to stand on to become untargettable until the Throne is destroyed.",
+MasterOfAutumn_VineStab,Vine Stab,(Targets Any Enemy) Send two vines to deal normal damage to a single target.,
+MasterOfAutumn_FullBloom,Full Bloom,(Targets All Enemies) Create a large cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 2 Defocus.)
+MasterOfAutumn_VineField,Vine Field,(Targets All Enemies) Grow many vines in order to deal Earth damage to all targets.,(Higher difficulties: Inflicts 2 Defocus.)
+MasterOfAutumn_Resummon,Reaction - Resummon,(Activates when both Giant Vines are destroyed in Phase 2) Summon a new Giant Vine. The summon position of the Giant Vine will alternate if this is repeatedly triggered.,
+MasterOfAutumn_Fall,Reaction - Fall,"(Activates when the Vine Platform is destroyed) Fall down and permanently increase the user's defense by 1, and summon a Giant Vine.",(Higher Difficulties: Two Giant Vines are spawned instead of one.)
 Bandit_Slash,Slash,(Targets Any Enemy) Slash a single target. May feint before actually striking.,
 Bandit_Hard_TeamCounter,(Hard) Team Counter,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Counter an attack made on any ally.",
 Renegade_Hard_SandSplash,(Hard) Sand Splash,"<color,red>(Only on higher difficulties)</color> (Targets All Enemies) Deal Electric damage to all targets and inflict Enervate on all targets.",
@@ -76,14 +76,14 @@ Slimebloom_Zap,Zap,(Targets Any Enemy) Zap a single target to deal Electric dama
 Slimebloom_Lob,Lob,(Targets Any Enemy) Lob a ball of water at a single target to deal Water damage and inflict Sleep,(Higher difficulties: Inflicts 1 Defocus)
 Sirenfish_BubbleSong,Bubble Song,"(Targets Any Enemy) Send a bubble towards the target to deal Water damage and inflict Sleep for 2 turns. (Usable while grounded, will fly up before the move.)",(Higher difficulties: Inflicts 3 turns of Sleep.)
 Sirenfish_PowerSong,Power Song,(Targets All Allies) Gives 1 Focus to all allies.,
-Sirenfish_Hard_NightmareBite,(Hard) Nightmare Bite,"<color,red>(Only on higher difficulties)</color> (Targets Any Sleeping Enemy) Bite a sleeping target to deal strong Dark damage. If you are not flying, start flying before sending the bubble.",
+Sirenfish_Hard_NightmareBite,(Hard) Nightmare Bite,"<color,red>(Only on higher difficulties)</color> (Targets Any Sleeping Enemy) Bite a sleeping target to deal strong Dark damage.",
 Blazecrest_FlameBreath,Flame Breath,(Targets All Enemies) Breathe fire to deal Fire damage to all targets.,
-Blazecrest_Roar,Roar,(Targets Any Enemy) Roar powerfully to hit all targets to deal normal damage and inflict Berserk.,
+Blazecrest_Roar,Roar,(Targets All Enemies) Roar powerfully to hit all targets to deal normal damage and inflict Berserk.,
 Blazecrest_Hard_CounterFlameFocus,(Hard) Counter - Flame Focus,"<color,red>(Only on higher difficulties)</color> (Targets Self) Get 1 Focus after being attacked. (If the incoming damage is Water or Light type, get 2 Focus instead.)",
 Embercrest_Fireball,Fireball,(Targets Any Enemy) Breathe a fireball that hits a single target and deals Fire damage.,(Higher Difficulties: Gives 1 Focus and 1 Sunder.)
 Ashcrest_ThornBomb,Thorn Bomb,(Targets Any Enemy) Hits a single target with Electric damage.,(Higher difficulties: Inflicts Defense Down)
 Ashcrest_SplashBomb,Splash Bomb,(Targets Any Enemy) Hits a single target with Water damage and inflicts Defocus.,(Higher difficulties: Inflicts Attack Down)
-Flametongue_FlameLick,Flame Lick,(Targets Any Enemy) Lick with a long fiery tongue to deal Fire damage to all targets.,
+Flametongue_FlameLick,Flame Lick,(Targets All Enemies) Lick with a long fiery tongue to deal Fire damage to all targets.,
 Heatwing_FlameSpread,Flame Spread,"(Targets Any Enemy) Spread fire by flapping your wings to deal Fire damage to all targets. (Usable while grounded, will fly up before the move.)",
 EyeSpore_SporeBeam,Spore Beam,(Targets Lowest Health Enemy) Shoot spores at the weakest target to deal Dark damage.,
 EyeSpore_Hard_CounterSpiteBeam,(Hard) Counter - Spite Beam,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Shoot a cloud of spores at the attacker to deal Dark damage.",(Higher difficulties: Inflicts Defocus)
@@ -117,7 +117,7 @@ Speartongue_Stare,Stare,(Targets Any Enemy) Stare strongly at an enemy to deal w
 Chaintail_ShockClaw,Shock Claw,(Targets Any Enemy) Slash a target with a claw strike to deal Electric damage and inflict Paralyze and Sunder.,(Higher Difficulties: Drains 4 energy as well.)
 Chaintail_TailWhip,Tail Whip,(Targets Any Enemy) Whip your tail around to hit a target for strong normal damage.,
 Sawcrest_SawRush,Saw Rush,(Targets All Enemies) Rush through all targets to hit each target twice.,
-Sawcrest_CounterSawToggle,Reaction - Saw Toggle,(Targets Self) Saws become active or inactive (the opposite of their previous state).,
+Sawcrest_CounterSawToggle,Counter - Saw Toggle,(Targets Self) Saws become active or inactive (the opposite of their previous state).,
 Sawcrest_Hard_CounterRevUp,(Hard) Counter - Rev Up,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) When going from the inactive to the active state, hit the attacker with a dark cloud for weak Dark damage.",
 Coiler_Slap,Slap,(Targets Any Enemy) Slap your body into a target to deal moderate normal damage.,
 Coiler_Charge,Charge,(Targets Any Enemy) Hide in your shell to draw in electric charge and become more defensive.,
@@ -134,7 +134,7 @@ CloudJelly_BubbleToss,Bubble Toss,(Targets Any Enemy) Toss a bubble from a tenta
 CloudJelly_BubbleBlast,Bubble Blast,(Targets All Enemies) Toss a barrage of bubbles to deal moderate Water damage to all targets.,(Higher Difficulties: Gives Attack Up 1 indefinitely.)
 CloudJelly_PowerBolt,Power Bolt,(Targets Any Enemy) Summon a large lightning bolt to deal massive Electric damage to one target.,
 CloudJelly_PowerCharge,Power Charge,"(Targets Self) Give yourself Attack Up 2 indefinitely, 4 Focus and heal for 4 hp.",(Higher Difficulties: Gives Attack Up 3 instead of 2)
-CloudJelly_CounterFormChange,Reaction - Form Change,"(Targets Self) Assume a more defensive form if hit by Light, Water or Air attacks, or a more offensive form if hit by other damage types. (The Ice form is the most defensive and the Cloud form is the most offensive.)",
+CloudJelly_CounterFormChange,Counter - Form Change,"(Targets Self) Assume a more defensive form if hit by Light, Water or Air attacks, or a more offensive form if hit by other damage types. (The Ice form is the most defensive and the Cloud form is the most offensive.)",
 CrystalCrab_TripleClaw,Triple Claw,(Targets Any Enemy) Slash with your claw to deal normal damage to a single target 3 times. First hit is weaker but the second and third hits are stronger.,
 CrystalCrab_DarkClaw,Dark Claw,(Targets All Enemies) Create a blast from your claw to deal Dark damage and inflict Sleep and Attack Down to all targets.,
 CrystalCrab_Hard_CounterClearClaw,(Hard) Counter - Clear Claw,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Hit an attacker with your claw to deal weak normal damage and remove their buffs .",

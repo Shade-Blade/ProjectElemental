@@ -2042,6 +2042,11 @@ public struct Item
 
     public static ItemDataEntry GetItemDataEntry(ItemType item)
     {
+        if ((int)item <= 0 || item >= ItemType.EndOfTable)
+        {
+            Debug.LogError("Attempting to get data entry of invalid item type: " + item);
+            return default;
+        }
         return GlobalItemScript.Instance.itemDataTable[(int)item - 1];
     }
     public static ItemDataEntry GetItemDataEntry(Item item)

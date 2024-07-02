@@ -588,7 +588,7 @@ public class MinibubbleScript : MonoBehaviour
         //Debug.Log("box " + vars);
 
         //Initial tags may change the start anim
-        List<TagEntry> startTags = (new List<TagEntry>(new FormattedString(dialogue).tags)).FindAll((t) => (t.trueStartIndex == 0));
+        List<TagEntry> startTags = (new List<TagEntry>(new FormattedString(FormattedString.ReplaceTextFileShorthand(dialogue)).tags)).FindAll((t) => (t.trueStartIndex == 0));
         for (int i = 0; i < startTags.Count; i++)
         {
             TagEntry t = startTags[i];
@@ -795,6 +795,171 @@ public class MinibubbleScript : MonoBehaviour
         this.vars = vars;
 
         hasTail = true && detached;
+
+        //Initial tags may change the start anim
+        //(This fixes the scenario where you format a minibubble a certain way but it shows up as the default white for a few frames)
+        List<TagEntry> startTags = (new List<TagEntry>(new FormattedString(FormattedString.ReplaceTextFileShorthand(dialogue)).tags)).FindAll((t) => (t.trueStartIndex == 0));
+        for (int i = 0; i < startTags.Count; i++)
+        {
+            TagEntry t = startTags[i];
+            switch (t.tag)
+            {
+                case TagEntry.TextTag.Tail:
+                    if (speaker != null && speaker.SpeakingAnimActive())
+                    {
+                        speaker.DisableSpeakingAnim();
+                    }
+                    if (t.args.Length == 1)
+                    {
+                        bool a;
+                        if (bool.TryParse(t.args[0], out a))
+                        {
+                            if (a)
+                            {
+                                Debug.LogWarning("<tail,true> is not supported. Use <tail,[vector]> or <tail,[speakerID]> instead.");
+                                //ConvertTailPos();
+                                //PointTail();
+                            }
+                            else
+                            {
+                                hasTail = a;
+                                tail.enabled = a;
+                                speaker = null;
+                            }
+                        }
+                        int b;
+                        if (int.TryParse(t.args[0], out b))
+                        {
+                            hasTail = true;
+                            tail.enabled = true;
+                            speaker = MainManager.Instance.GetSpeaker(b);
+                            MoveTail(speaker.GetTextTailPosition());
+                        }
+                        if (t.args[0].Equals("o"))
+                        {
+                            hasTail = true;
+                            tail.enabled = true;
+                            speaker = originalSpeaker;
+                            MoveTail(speaker.GetTextTailPosition());
+                        }
+                        if (t.args[0].Equals("w"))
+                        {
+                            hasTail = true;
+                            tail.enabled = true;
+                            speaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
+                            MoveTail(speaker.GetTextTailPosition());
+                        }
+                        if (t.args[0].Equals("l"))
+                        {
+                            hasTail = true;
+                            tail.enabled = true;
+                            speaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
+                            MoveTail(speaker.GetTextTailPosition());
+                        }
+                        if (t.args[0].Equals("k"))
+                        {
+                            hasTail = true;
+                            tail.enabled = true;
+                            speaker = MainManager.Instance.LocateKeru();
+                            if (speaker == null)
+                            {
+                                Color keruColorBorderA = new Color(1, 1, 1, 0.7f);
+                                Color keruColorInnerA = new Color(0.6f, 1, 1, 0.7f);
+                                borderBox.color = keruColorBorderA;
+                                innerBox.color = keruColorInnerA;
+                                ChangeBoxStyle(TagEntry.BoxStyle.System);
+                                //tail false
+                                hasTail = false;
+                                tail.enabled = false;
+                            }
+                            else
+                            {
+                                MoveTail(speaker.GetTextTailPosition());
+                            }
+                        }
+                    }
+                    //check for a vector3
+                    if (t.args.Length == 3)
+                    {
+                        hasTail = true;
+                        tail.enabled = true;
+                        float a = float.Parse(t.args[0]);
+                        float b = float.Parse(t.args[1]);
+                        float c = float.Parse(t.args[2]);
+                        MoveTail(new Vector3(a, b, c));
+                    }
+                    break;
+                case TagEntry.TextTag.BoxStyle:
+                    TagEntry.BoxStyle bs = TagEntry.BoxStyle.Default;
+                    if (t.args.Length > 0)
+                    {
+                        Enum.TryParse(t.args[0], true, out bs);
+                    }
+                    ChangeBoxStyle(bs);
+                    break;
+                case TagEntry.TextTag.BoxColor:
+                    Color targetColor = Color.white;
+                    ColorNames color;
+                    if (t.args.Length > 0)
+                    {
+                        if (Enum.TryParse(t.args[0], out color))
+                        {
+                            t.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
+                        }
+                        targetColor = MainManager.ParseColor(t.args[0]).GetValueOrDefault();
+                    }
+
+                    Color targetColorB = targetColor;
+
+                    if (t.args.Length > 1)
+                    {
+                        if (Enum.TryParse(t.args[1], out color))
+                        {
+                            t.args[1] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
+                        }
+                        targetColorB = MainManager.ParseColor(t.args[1]).GetValueOrDefault();
+                    }
+
+                    //tail and inner box are forced to have the same color
+                    innerBox.color = targetColor;
+                    borderBox.color = targetColorB;
+                    tail.color = targetColor;
+                    break;
+                case TagEntry.TextTag.Sign:
+                    Color signColorBorder = new Color(0.8f, 0.5f, 0.15f, 1);
+                    Color signColorInner = new Color(1, 0.95f, 0.7f, 1);
+                    borderBox.color = signColorBorder;
+                    innerBox.color = signColorInner;
+                    ChangeBoxStyle(TagEntry.BoxStyle.DarkOutline);
+                    //tail false
+                    hasTail = false;
+                    tail.enabled = false;
+                    speaker = null;
+                    break;
+                case TagEntry.TextTag.System:
+                    Color systemColorBorder = new Color(1, 1, 1, 0.5f);
+                    Color systemColorInner = new Color(0, 0, 0, 0.5f);
+                    borderBox.color = systemColorBorder;
+                    innerBox.color = systemColorInner;
+                    ChangeBoxStyle(TagEntry.BoxStyle.System);
+                    //tail false
+                    hasTail = false;
+                    tail.enabled = false;
+                    speaker = null;
+                    break;
+                case TagEntry.TextTag.KeruDistant:
+                    Color keruColorBorder = new Color(1, 1, 1, 0.7f);
+                    Color keruColorInner = new Color(0.6f, 1, 1, 0.7f);
+                    borderBox.color = keruColorBorder;
+                    innerBox.color = keruColorInner;
+                    ChangeBoxStyle(TagEntry.BoxStyle.System);
+                    //tail false
+                    hasTail = false;
+                    tail.enabled = false;
+                    speaker = null;
+                    break;
+            }
+        }
 
         if (!noStartAnim)
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Versioning;
 using UnityEngine;
 
-public class BE_Vineborn : BattleEntity
+public class BE_Sycamore : BattleEntity
 {
     public int ai_state;
     public bool second_phase;
@@ -19,14 +19,14 @@ public class BE_Vineborn : BattleEntity
 
         moveset = new List<Move>()
         {
-            gameObject.AddComponent<BM_Vineborn_ThornToss>(),
-            gameObject.AddComponent<BM_Vineborn_Pollenate>(),
-            gameObject.AddComponent<BM_Vineborn_FlowerShuriken>(),
-            gameObject.AddComponent<BM_Vineborn_Overgrowth>(),
-            gameObject.AddComponent<BM_Vineborn_VineStab>(),
-            gameObject.AddComponent<BM_Vineborn_FullBloom>(),
-            gameObject.AddComponent<BM_Vineborn_VineField>(),
-            gameObject.AddComponent<BM_Vineborn_Fall>(),
+            gameObject.AddComponent<BM_Sycamore_ThornToss>(),
+            gameObject.AddComponent<BM_Sycamore_Pollenate>(),
+            gameObject.AddComponent<BM_Sycamore_FlowerShuriken>(),
+            gameObject.AddComponent<BM_Sycamore_Overgrowth>(),
+            gameObject.AddComponent<BM_Sycamore_VineStab>(),
+            gameObject.AddComponent<BM_Sycamore_FullBloom>(),
+            gameObject.AddComponent<BM_Sycamore_VineField>(),
+            gameObject.AddComponent<BM_Sycamore_Fall>(),
         };
 
         base.Initialize();
@@ -172,9 +172,9 @@ public class BE_VinePlatform : BattleEntity
     }
 }
 
-public class BM_Vineborn_ThornToss : EnemyMove
+public class BM_Sycamore_ThornToss : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Vineborn_ThornToss;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_ThornToss;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 
@@ -201,9 +201,9 @@ public class BM_Vineborn_ThornToss : EnemyMove
     }
 }
 
-public class BM_Vineborn_Pollenate : EnemyMove
+public class BM_Sycamore_Pollenate : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Vineborn_Pollenate;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_Pollenate;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
 
@@ -233,9 +233,9 @@ public class BM_Vineborn_Pollenate : EnemyMove
     }
 }
 
-public class BM_Vineborn_FlowerShuriken : EnemyMove
+public class BM_Sycamore_FlowerShuriken : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Vineborn_FlowerShuriken;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_FlowerShuriken;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
 
@@ -264,16 +264,16 @@ public class BM_Vineborn_FlowerShuriken : EnemyMove
     }
 }
 
-public class BM_Vineborn_Overgrowth : EnemyMove
+public class BM_Sycamore_Overgrowth : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Vineborn_Overgrowth;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_Overgrowth;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
         //Heal for 10, summon burrow trap and sundew and vine platform
-        BE_Vineborn vb = (BE_Vineborn)caller;
+        BE_Sycamore vb = (BE_Sycamore)caller;
 
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
@@ -297,9 +297,9 @@ public class BM_Vineborn_Overgrowth : EnemyMove
     }
 }
 
-public class BM_Vineborn_VineStab : EnemyMove
+public class BM_Sycamore_VineStab : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Vineborn_VineStab;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_VineStab;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 
@@ -326,9 +326,9 @@ public class BM_Vineborn_VineStab : EnemyMove
     }
 }
 
-public class BM_Vineborn_FullBloom : EnemyMove
+public class BM_Sycamore_FullBloom : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Vineborn_FullBloom;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_FullBloom;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
 
@@ -358,9 +358,9 @@ public class BM_Vineborn_FullBloom : EnemyMove
     }
 }
 
-public class BM_Vineborn_VineField : EnemyMove
+public class BM_Sycamore_VineField : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Vineborn_VineField;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_VineField;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
 
@@ -389,16 +389,16 @@ public class BM_Vineborn_VineField : EnemyMove
     }
 }
 
-public class BM_Vineborn_Fall : EnemyMove
+public class BM_Sycamore_Fall : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Vineborn_Fall;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_Fall;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
         //Heal for 10, summon burrow trap and sundew and vine platform
-        BE_Vineborn vb = (BE_Vineborn)caller;
+        BE_Sycamore vb = (BE_Sycamore)caller;
 
         vb.posId = 2;
         vb.homePos = vb.homePos + vb.homePos.y * Vector3.down;
@@ -420,7 +420,7 @@ public class BM_Vineborn_Fall : EnemyMove
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
         //Heal for 10, summon burrow trap and sundew and vine platform
-        BE_Vineborn vb = (BE_Vineborn)caller;
+        BE_Sycamore vb = (BE_Sycamore)caller;
 
         vb.posId = 2;
         vb.homePos = vb.homePos + vb.homePos.y * Vector3.down;

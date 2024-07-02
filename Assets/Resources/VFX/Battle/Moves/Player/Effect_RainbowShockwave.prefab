@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6012931602222576375}
+  - component: {fileID: -7777300040981189829}
   m_Layer: 0
   m_Name: Effect_RainbowShockwave
   m_TagString: Untagged
@@ -33,6 +34,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7777300040981189829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224072879989190971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f8d6f67d25fe7a42b825129dde2c191, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1339582564987183625
 GameObject:
   m_ObjectHideFlags: 0
@@ -82,8 +95,10 @@ MonoBehaviour:
   maxLifetime: 0.4
   maxXZScale: 0.4
   maxYScale: 0
+  maxYOffset: 0
   startXZScale: 0.2
   startYScale: 0.75
+  startYOffset: 0
   easingPower: 3
 --- !u!1 &2170655403873547600
 GameObject:
@@ -202,11 +217,14 @@ MonoBehaviour:
   offset: 0.075
   offsetXZ: -0.2
   offsetY: -0.025
+  offsetYo: 0
   maxLifetime: 0.35
   maxXZScale: 1.1
   maxYScale: 0
+  maxYOffset: 0
   startXZScale: 0.5
   startYScale: 0.4
+  startYOffset: 0
   easingPower: 2
 --- !u!1 &6161563352032316937
 GameObject:
