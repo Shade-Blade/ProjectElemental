@@ -9,5 +9,5 @@ Index (unused),Name,Description,L2 Description,L3 Description
 7,Flash Freeze,"Inflict Freeze for 3 turns to all enemies (Frozen enemies can't move, but the next hit against them deals 1 more damage and unfreezes them.)",Also inflicts Defocus 2 and Sunder 2.,
 8,Cleanse,Remove all temporary buffs from all targets.,"Inflicts Seal for 2 turns, which prevents most temporary buffs from being applied.",
 9,Blight,Inflicts 3 turns of Drain Sprout and Bolt Sprout on the target.,"Targets all, inflicts the debuffs for 4 turns.",
-10,Chroma Blast,Deals 3 damage of each element against every target. (6 separate hits per enemy),Does 15 damage of all elements in a single hit against all targets.,
-11,Abyssal Dawn,"Fully restores HP and EP, cures most negative effects and can revive dead allies. (Can only be used once per battle)","Can be used again (one use of Level 1, one use of Level 2, or two uses of Level 2)",
+10,Elemental Conflux,"Cures negative effects, applies Attack Up, Defense Up, Endurance Up, Agility Up 2 for 3 turns, Focus 2, Absorb 2 and Burst 2.","Targets both, applies potency 3 effects.",
+11,Prismatic Blast,Does 15 Prismatic damage in a single hit against all targets.,"30 damage base. Inflicts Attack Down 2, Defense Down 2 for 3 turns, Defocus 2, Sunder 2.",

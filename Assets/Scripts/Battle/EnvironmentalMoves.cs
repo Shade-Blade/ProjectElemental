@@ -40,6 +40,43 @@ public class CounterFlare : Move
     }
 }
 
+public class ArcDischarge : Move
+{
+    public override TargetArea GetBaseTarget()
+    {
+        return new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
+    }
+
+    public override string GetDescription()
+    {
+        return "Damage from the Arc Discharge ailment.";
+    }
+
+    public override string GetName()
+    {
+        return "(Arc Discharge) Shockwave";
+    }
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        List<BattleEntity> targets = BattleControl.Instance.GetEntities(caller, GetBaseTarget());
+
+        //Impact effect
+        GameObject eoShockwave;
+        eoShockwave = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Special/Effect_ArcDischargeShockwave"), BattleControl.Instance.transform);
+        eoShockwave.transform.position = caller.transform.position;
+
+        yield return new WaitForSeconds(0.3f);
+
+        for (int i = 0; i < targets.Count; i++)
+        {
+            caller.DealDamage(targets[i], caller.arcDischargeDamage, BattleHelper.DamageType.Air, (ulong)(BattleHelper.DamageProperties.Static | BattleHelper.DamageProperties.IgnoreElementCalculation), BattleHelper.ContactLevel.Infinite);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+    }
+}
+
 public class Splotch : Move
 {
     public override TargetArea GetBaseTarget()

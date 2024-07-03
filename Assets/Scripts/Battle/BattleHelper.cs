@@ -73,7 +73,15 @@ public class Effect
         Freeze,
         Dizzy,
         Paralyze,
-        Stop,
+        Soulbleed,
+        Sunflame,
+        Brittle,
+        Inverted,
+        Dread,
+        ArcDischarge,
+        TimeStop,        
+        Exhausted,
+        Splotch,
 
         AttackUp,
         DefenseUp,
@@ -112,11 +120,7 @@ public class Effect
         BoltSprout,
         Seal,
         Sticky,
-        Fizzle,
-        Cloud,
-        Curse,
         DamageOverTime,
-        Splotch,
 
         Focus,
         Absorb,
@@ -218,7 +222,9 @@ public class Effect
 
     public static bool IsBlockableDebuff(EffectType se)
     {
-        return ((int)se <= (int)EffectType.Slow && (int)se >= (int)EffectType.AttackDown) || ((int)se <= (int)EffectType.Disorient && (int)se >= (int)EffectType.Defocus);
+        //balance decisions: should I make every debuff blockable?
+        //I upgraded a lot of the worse debuffs to become ailments, but you can block those still
+        return ((int)se <= (int)EffectType.Sticky && (int)se >= (int)EffectType.AttackDown) || ((int)se <= (int)EffectType.Disorient && (int)se >= (int)EffectType.Defocus);
     }
 
 

@@ -330,6 +330,18 @@ public class CheatMenu : MenuHandler
                 }
             }
 
+            if (input[1].Equals("Halt") || input[1].Equals("h"))
+            {
+                if (toggle)
+                {
+                    MainManager.Instance.Cheat_Halt = !MainManager.Instance.Cheat_Halt;
+                }
+                else
+                {
+                    MainManager.Instance.Cheat_Halt = setValue;
+                }
+            }
+
             //note that setting this makes the cheat menu invisible too :P
             if (input[1].Equals("InvisibleText") || input[1].Equals("it"))
             {
@@ -726,6 +738,11 @@ public class CheatMenu : MenuHandler
                 getText = "" + MainManager.Instance.Cheat_SuperFastTimeScale;
             }
 
+            if (input[1].Equals("Halt") || input[1].Equals("h"))
+            {
+                getText = "" + MainManager.Instance.Cheat_Halt;
+            }
+
             //note that setting this makes the cheat menu invisible too :P
             if (input[1].Equals("InvisibleText") || input[1].Equals("it"))
             {
@@ -876,6 +893,80 @@ public class CheatMenu : MenuHandler
             Enum.TryParse(input[1], out MainManager.GlobalVar globalVar);
 
             MainManager.Instance.SetGlobalVar(globalVar, input[2]);
+        }
+
+        //Apply effect
+        if (input[0].Equals("ae"))
+        {
+            if (MainManager.Instance.worldMode != MainManager.WorldMode.Battle)
+            {
+                doexit = false;
+                cs.log.SetText("Battle only cheat!", true, true);
+            }
+            else
+            {
+                BattleEntity be = null;
+                int index = 0;
+                if (input.Length > 1 && int.TryParse(input[1], out index))
+                {
+                    be = BattleControl.Instance.GetEntityByID(index);
+                    if (be == null)
+                    {
+                        doexit = false;
+                        cs.log.SetText(index + " does not correspond to a PosID any entity has.", true, true);
+                    } else
+                    {
+                        Effect.EffectType et = Effect.EffectType.Default;
+                        if (input.Length > 2 && Enum.TryParse(input[2], out et))
+                        {
+                            byte n1 = 1;
+                            byte n2 = 1;
+
+                            if (input.Length > 3 && byte.TryParse(input[3], out n1))
+                            {
+                                if (input.Length > 4)
+                                {
+                                    if (byte.TryParse(input[4], out n1))
+                                    {
+                                        be.ReceiveEffectForce(new Effect(et, n1, n2));
+                                    }
+                                    else
+                                    {
+                                        cs.log.SetText(input[4] + " is not a number.", true, true);
+                                        doexit = false;
+                                    }
+                                }
+                                else
+                                {
+                                    //infer one of them
+                                    if (Effect.GetEffectClass(et) == Effect.EffectClass.Token || Effect.GetEffectClass(et) == Effect.EffectClass.Static)
+                                    {
+                                        be.ReceiveEffectForce(new Effect(et, n1, 255));
+                                    }
+                                    else
+                                    {
+                                        be.ReceiveEffectForce(new Effect(et, 1, n1));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                cs.log.SetText(input.Length > 2 ? input[3] + " is not a number." : "Must specify a duration (or potency for tokens)", true, true);
+                                doexit = false;
+                            }
+                        }
+                        else
+                        {
+                            cs.log.SetText(input.Length > 1 ? input[2] + " is not a valid effect" : "Must specify an effect name. (Usage: [posid] [effect] [potency] [duration])", true, true);
+                        }
+                    }
+                }
+                else
+                {
+                    doexit = false;
+                    cs.log.SetText("ID must be a number (PosID)", true, true);
+                }
+            }
         }
 
         //slightly buggy, since you are supposed to fade to black?

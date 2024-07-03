@@ -7,7 +7,7 @@ NotEnoughHealth,Not enough health!
 NotEnoughCoins,Not enough coins!
 NotEnoughStamina,Not enough stamina!
 BlockFlee,You can't run from this fight!
-BlockSkills,You can't use skills right now!
+BlockSkills,You can't use Stamina right now!
 BlockJump,You can't use stomp moves right now!
 BlockWeapon,You can't use weapon moves right now!
 BlockSoul,You can't use soul moves right now!

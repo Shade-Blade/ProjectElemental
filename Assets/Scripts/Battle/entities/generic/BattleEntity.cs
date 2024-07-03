@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static BattleHelper;
+using static UnityEngine.GraphicsBuffer;
 
 //Data structure for enemy specific data (read from the data table)
 //Note that enemies will have enemy specific code so not everything needs to be data driven
@@ -709,6 +710,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public bool wakeUp;
 
     public int counterFlareDamage;                                                //Damage to deal by Counter Flare (Set before Postmove is run)
+    public int arcDischargeDamage;                                              //Damage to deal by Arc Discharge
     public int splotchDamage;                                                //Damage to deal by Splotch
     public int magmaDamage;
     public int damageTakenThisTurn;                                        //Non-status damage taken since last PostMove call (Used to calculate Astral Wall stuff)
@@ -1421,6 +1423,26 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             TakeDamageStatus(poisonDamage * GetEffectEntry(Effect.EffectType.Poison).potency);
             yield return new WaitForSeconds(0.5f);
         }
+        if (HasEffect(Effect.EffectType.Sunflame))
+        {
+            statusDamage = true;
+            int sfDamage = maxHP / 10;
+
+            int powermult = 1 + GetEffectEntry(Effect.EffectType.Sunflame).potency;
+
+            if (sfDamage < 2)
+            {
+                sfDamage = 2;
+            }
+
+            if (sfDamage > 10)
+            {
+                sfDamage = 10;
+            }
+
+            TakeDamageStatus((int)(sfDamage * powermult * 0.5f));
+            yield return new WaitForSeconds(0.5f);
+        }
         if (HasEffect(Effect.EffectType.DamageOverTime))
         {
             TakeDamageStatus(GetEffectEntry(Effect.EffectType.DamageOverTime).potency);
@@ -1674,6 +1696,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 absorbDamageEvents++;
                 //Debug.Log(name + " " + damageEventsCount);
                 hitThisTurn = true;
+                //How about I just make it dink
+                BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, 0, GetDamageEffectPosition(), this, type, properties);
                 return 0;
             }
 
@@ -1740,12 +1764,25 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         bool preAlive = hp > 0;
 
+        if (HasEffect(Effect.EffectType.Soulbleed))
+        {
+            byte bleedDamage = (byte)(damage / 8);
+            if (damage > 0 && bleedDamage <= 0)
+            {
+                bleedDamage = 1;
+            }
+            if (bleedDamage > 0)
+            {
+                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, bleedDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
+            }
+        }
+
         if (HasEffect(Effect.EffectType.Soften))
         {
-            int softDamage = (byte)(damage / 3);
+            byte softDamage = (byte)(damage / 3);
             if (softDamage > 0)
             {
-                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, (byte)(damage / 3), 3), posId, Effect.EffectStackMode.KeepDurAddPot);
+                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
             }
         } else
         {
@@ -1995,6 +2032,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public virtual void HealHealth(int health)
     {
+        if (HasEffect(Effect.EffectType.Soulbleed) && health > 0)
+        {
+            health = 0;
+        }
+
         if (!BattleControl.IsPlayerControlled(this, false) && ShouldShowHPBar())
         {
             ShowHPBar();
@@ -2080,6 +2122,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public virtual int HealHealthTrackOverhealPay(int health)
     {
+        if (HasEffect(Effect.EffectType.Soulbleed) && health > 0)
+        {
+            health = 0;
+        }
+
         //Subtle difference: Negative healing will not reduce you to 0 and bypasses all the damage stuff
         /*
         if (health < 0)
@@ -2990,6 +3037,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (HasEffect(Effect.EffectType.Sleep))
             {
                 output /= 2;
+            }
+
+            if (HasEffect(Effect.EffectType.Dread))
+            {
+                output = 0;
             }
 
             //status exploit
@@ -4356,6 +4408,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             return true;
         }
+
+        if (HasEffect(Effect.EffectType.TimeStop))
+        {
+            return true;
+        }
+
         /*
         if (HasStatus(Status.StatusEffect.Shield))
         {
@@ -4524,6 +4582,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             output += temp.potency * 1;
         }
 
+        temp = GetEffectEntry(Effect.EffectType.Sunflame);
+        if (temp != null)
+        {
+            output += temp.potency * 1;
+        }
+
         temp = GetEffectEntry(Effect.EffectType.AttackUp);
         if (temp != null)
         {
@@ -4592,6 +4656,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //{
         //    output += temp.potency * 1;
         //}
+
+        temp = GetEffectEntry(Effect.EffectType.Brittle);
+        if (temp != null)
+        {
+            output += temp.potency * 2 * negative;
+        }
 
         temp = GetEffectEntry(Effect.EffectType.DefenseUp);
         if (temp != null)
@@ -4664,7 +4734,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         return output;
     }
-    public virtual int GetEffectHasteBonus(bool absolute = false) //agility bonus (haste) (lets you pay moves at lower stamina)
+    public virtual int GetEffectAgilityBonus(bool absolute = false)
     {
         Effect temp;
         int output = 0;
@@ -4692,6 +4762,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             output += temp.potency * negative;
         }
+
+        return output;
+    }
+    public virtual int GetEffectHasteBonus(bool absolute = false) //agility bonus (haste) (lets you pay moves at lower stamina)
+    {
+        Effect temp;
+        int output = 0;
+
+        int negative = absolute ? 1 : -1;
 
         temp = GetEffectEntry(Effect.EffectType.Haste);
         if (temp != null)
@@ -4789,10 +4868,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public virtual int GetBoostedAgility()
     {
-        return agility + GetBadgeAgilityBonus() + GetEffectHasteBonus();
+        return agility + GetBadgeAgilityBonus() + GetEffectAgilityBonus();
     }
     public virtual int GetRealAgility()
     {
+        if (HasEffect(Effect.EffectType.Exhausted))
+        {
+            return 0;
+        }
         //the number representing stamina increase per turn
         int agility = GetBoostedAgility();
         int realAgility = agility;
@@ -4991,9 +5074,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         if (target != null)
         {
+            if (target.HasEffect(Effect.EffectType.Inverted))
+            {
+                Effect e = se.Copy();
+                InvertEffect(e);
+                se = e;
+            }
+
             bool statusWorks = true;
 
-            if (target.HasEffect(Effect.EffectType.Immunity))
+            if (target.HasEffect(Effect.EffectType.Immunity) || target.HasEffect(Effect.EffectType.TimeStop))
             {
                 if (Effect.IsCurable(se.effect))
                 {
@@ -5002,7 +5092,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
             }
 
-            if (target.HasEffect(Effect.EffectType.Seal))
+            if (target.HasEffect(Effect.EffectType.Seal) || target.HasEffect(Effect.EffectType.TimeStop))
             {
                 if (Effect.IsCleanseable(se.effect))
                 {
@@ -5866,6 +5956,134 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         EffectSpriteUpdate();
     }
+    public void InvertEffect(Effect e)
+    {
+        //store them as pairs (a-b, c-d...)
+        //some effects are off limits due to being problematic
+        //(infinite attack reduction -> boost is a bit too good)
+        //there are also a few "sproadic" effects
+        Effect.EffectType[] conflictingStatuses =
+        {
+            //Effect.EffectType.AttackBoost,
+            //Effect.EffectType.AttackReduction,
+
+            //Effect.EffectType.DefenseBoost,
+            //Effect.EffectType.DefenseReduction,
+
+            //Effect.EffectType.EnduranceBoost,
+            //Effect.EffectType.EnduranceReduction,
+
+            //Effect.EffectType.AgilityBoost,
+            //Effect.EffectType.AgilityReduction,
+
+            //Effect.EffectType.MaxHPBoost,
+            //Effect.EffectType.MaxHPReduction,
+
+            //Effect.EffectType.MaxEPBoost,
+            //Effect.EffectType.MaxEPReduction,
+
+            //Effect.EffectType.MaxSEBoost,
+            //Effect.EffectType.MaxSEReduction,
+
+            //advanced ailments
+            Effect.EffectType.Soulbleed,
+            Effect.EffectType.Ethereal,
+
+            Effect.EffectType.Sunflame,
+            Effect.EffectType.Illuminate,
+
+            Effect.EffectType.Brittle,
+            Effect.EffectType.MistWall,
+
+            Effect.EffectType.Inverted,
+            Effect.EffectType.AstralWall,
+
+            Effect.EffectType.Dread,
+            Effect.EffectType.CounterFlare,
+
+            Effect.EffectType.ArcDischarge,
+            Effect.EffectType.Supercharge,
+
+            Effect.EffectType.TimeStop,
+            Effect.EffectType.QuantumShield,
+
+            Effect.EffectType.Exhausted,
+            Effect.EffectType.Soften,
+
+            Effect.EffectType.AttackUp,
+            Effect.EffectType.AttackDown,
+
+            Effect.EffectType.DefenseUp,
+            Effect.EffectType.DefenseDown,
+
+            Effect.EffectType.EnduranceUp,
+            Effect.EffectType.EnduranceDown,
+
+            Effect.EffectType.AgilityUp,
+            Effect.EffectType.AgilityDown,
+
+            Effect.EffectType.FlowUp,
+            Effect.EffectType.FlowDown,
+
+            Effect.EffectType.HealthRegen,
+            Effect.EffectType.HealthLoss,
+
+            Effect.EffectType.EnergyRegen,
+            Effect.EffectType.EnergyLoss,
+
+            Effect.EffectType.SoulRegen,
+            Effect.EffectType.SoulLoss,
+
+            Effect.EffectType.Focus,
+            Effect.EffectType.Defocus,
+
+            Effect.EffectType.Absorb,
+            Effect.EffectType.Sunder,
+
+            Effect.EffectType.Burst,
+            Effect.EffectType.Enervate,
+
+            Effect.EffectType.Haste,
+            Effect.EffectType.Hamper,
+
+            Effect.EffectType.Awaken,
+            Effect.EffectType.Disorient,
+
+            //Effect.EffectType.BonusTurns,
+            //Effect.EffectType.Cooldown,
+
+            Effect.EffectType.Freeze,
+            Effect.EffectType.Poison,
+
+            Effect.EffectType.Dizzy,
+            Effect.EffectType.Paralyze,
+
+            Effect.EffectType.Sleep,
+            Effect.EffectType.Berserk,
+
+            Effect.EffectType.ParryAura,
+            Effect.EffectType.DrainSprout,
+
+            Effect.EffectType.BolsterAura,
+            Effect.EffectType.BoltSprout,
+        };
+
+        int indexFound = -1;
+        for (int j = 0; j < conflictingStatuses.Length; j++)
+        {
+            if (e.effect == conflictingStatuses[j])
+            {
+                indexFound = j;
+            }
+        }
+        
+        if (indexFound != -1)
+        {
+            int otherIndex = (indexFound - (indexFound % 2)) + ((indexFound + 1) % 2);
+            e.effect = conflictingStatuses[otherIndex];
+        }
+    }
+
     public string GetEffectParticleName()
     {
         if (HasEffect(Effect.EffectType.Paralyze))
@@ -6095,19 +6313,96 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (statusColorString.Equals("X"))
             {
                 statusColorString = MainManager.ColorToString(new Color(0.2f, 0.1f, 0f, 1f));
-                statusColorString += "|" + MainManager.ColorToString(new Color(0.35f, 0.25f, 0f, 1f));
-                statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 0.6f, 0.5f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.6f, 0.5f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 0.9f, 0.4f, 1f));
                 statusColorString += "|" + 0.5f;
             }
             statusColorString += "_X_";
         }
-        else if (HasEffect(Effect.EffectType.Curse))
+        else if (HasEffect(Effect.EffectType.Soulbleed))
         {
             if (statusColorString.Equals("X"))
             {
                 statusColorString = MainManager.ColorToString(new Color(0.7f, 0.0f, 0f, 1f));
                 statusColorString += "|" + MainManager.ColorToString(new Color(0.35f, 0f, 0f, 1f));
                 statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 0.5f, 0.5f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Sunflame))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(1f, 0.85f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.8f, 0.8f, 0.4f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 1f, 1f, 1f));
+                statusColorString += "|" + 0.35f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Brittle))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0f, 0.6f, 0.6f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.25f, 0.5f, 0.5f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 1f, 1f, 1f));
+                statusColorString += "|" + 0.35f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Inverted))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.75f, 0.6f, 1f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.4f, 0.2f, 0.5f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.1f, 0f, 0.1f, 1f));
+                statusColorString += "|" + 0.2f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Dread))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.5f, 0.2f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.25f, 0.15f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 0.6f, 0.3f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.ArcDischarge))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(1f, 0.5f, 1.1f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 0.4f, 1f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 1f, 1f, 1f));
+                statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.TimeStop))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0f, 0.0f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0f, 0f, 1f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.6f, 0.6f, 1f, 1f));
+                statusColorString += "|" + 0.2f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Exhausted))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.1f, 0.7f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.3f, 0.6f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.6f, 0.55f, 0.6f, 1f));
                 statusColorString += "|" + 0.5f;
             }
             statusColorString += "_X_";
@@ -6426,6 +6721,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             CureEffect(Effect.EffectType.Absorb);
             CureEffect(Effect.EffectType.Sunder);
+            if (HasEffect(Effect.EffectType.Brittle))
+            {
+                Effect e = GetEffectEntry(Effect.EffectType.Brittle);
+                e.potency++;
+            }
         }
         absorbDamageEvents = 0;
     }
@@ -6458,7 +6758,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             new Effect.EffectType[] {
                 Effect.EffectType.Freeze,
                 Effect.EffectType.Sleep,
-                Effect.EffectType.Stop,
+                Effect.EffectType.TimeStop,
             };
 
         foreach (Effect.EffectType e in effectList)

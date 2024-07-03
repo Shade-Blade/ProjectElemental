@@ -361,7 +361,7 @@ public class BattlePopup
         //the status popups
 
 
-        vars = new string[7];
+        vars = new string[11];
 
         //vars[0] = (int)status.effect + "";
 
@@ -371,10 +371,14 @@ public class BattlePopup
         vars[1] = status.potency + "";
 
         vars[2] = (10 * status.potency) + "";   //sleep/poison proportion
-        vars[3] = 2 * status.potency + "";      //sleep/poison low end
-        vars[4] = (10 * status.potency) + "";   //sleep/poison high end
-        vars[5] = ((status.potency) / (2 + (status.potency))) + "";   //mist wall damage reduction
+        vars[3] = (2 * status.potency) + "";      //sleep/poison low end
+        vars[4] = (10 * status.potency) + "";   //sleep/poison high end (Note: currently the same as var[2] but I am too lazy to change this)
+        vars[5] = MainManager.Percent(((status.potency) / (2f + (status.potency))), 1) + "";   //mist wall damage reduction
         vars[6] = Effect.ILLUMINATE_CAP + "";
+        vars[7] = MainManager.Percent(((status.potency) / (8f)), 1) + "";  //Soulbleed's damage over time proportion thing (take ?% of your damage as Damage Over Time)
+        vars[8] = (5 + (5 * status.potency)) + "";    //Sunflame damage received percentage
+        vars[9] = (1 + (1 * status.potency)) + "";    //Sunflame low end
+        vars[10] = (5 + (5 * status.potency)) + "";   //Sunflame high end
 
         string[] entry = BattleControl.Instance.effectText[(int)(status.effect + 1)];
 
@@ -4975,6 +4979,13 @@ public class BattleControl : MonoBehaviour
                     current.counterFlareDamage = 0;
                 }
             }
+            if (current.HasEffect(Effect.EffectType.ArcDischarge))
+            {
+                current.arcDischargeDamage = Mathf.CeilToInt(0.125f * current.damageTakenThisTurn);
+            } else
+            {
+                current.arcDischargeDamage = 0;
+            }
             if (current.HasEffect(Effect.EffectType.Splotch))
             {
                 current.splotchDamage = Mathf.CeilToInt(0.5f * current.damageTakenThisTurn);
@@ -5003,6 +5014,22 @@ public class BattleControl : MonoBehaviour
         {
             BattleEntity current = entities.next();
             //not the "right" property to use but I don't feel like making another property for a thing I probably won't use
+            if (current.magmaDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
+            {
+                Move sp = GetOrAddComponent<ScaldingMagma>();
+                DisplayMovePopup(sp.GetName());
+                yield return new WaitForSeconds(0.5f);
+                yield return sp.Execute(current);
+                DestroyMovePopup();
+            }
+            if (current.arcDischargeDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
+            {
+                Move sp = GetOrAddComponent<ArcDischarge>();
+                DisplayMovePopup(sp.GetName());
+                yield return new WaitForSeconds(0.5f);
+                yield return sp.Execute(current);
+                DestroyMovePopup();
+            }
             if (current.splotchDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
             {
                 Move sp = GetOrAddComponent<Splotch>();
@@ -5017,14 +5044,6 @@ public class BattleControl : MonoBehaviour
                 DisplayMovePopup(cf.GetName());
                 yield return new WaitForSeconds(0.5f);
                 yield return cf.Execute(current);
-                DestroyMovePopup();
-            }
-            if (current.magmaDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
-            {
-                Move sp = GetOrAddComponent<ScaldingMagma>();
-                DisplayMovePopup(sp.GetName());
-                yield return new WaitForSeconds(0.5f);
-                yield return sp.Execute(current);
                 DestroyMovePopup();
             }
         }

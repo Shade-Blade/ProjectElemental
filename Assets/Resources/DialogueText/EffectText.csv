@@ -19,7 +19,15 @@ Poison,Poison,"Take damage equal to <var,2>% of Max HP every turn (clamped betwe
 Freeze,Freeze,"Can't move, next attack against this entity deals 1 more damage and unfreezes them."
 Dizzy,Dizzy,Attacks made by this entity will miss.
 Paralyze,Paralyze,Attacks made by this entity will deal half damage.
-Stop,Stop,"Can't move, no side effects."
+Soulbleed,Soulbleed,"In addition to normal damage taken, <var,7>% of damage taken (min 1) is also inflicted as Damage Over Time for 3 turns. Can't receive HP healing."
+Sunflame,Sunflame,"Attack is increased by <var,1>, but take damage equal to <var,8>% of Max HP every turn (clamped between <var,9> and <var,10> hp). Each turn, the potency of this effect increases by 1, increasing attack by 1 and damage taken by 5%."
+Brittle,Brittle,"Defense is reduced by <var,3>. (When hit, the potency of this effect will increase after the attacker's action.)"
+Inverted,Inverted,Effects inflicted by this entity are inverted.
+Dread,Dread,"Attacks made by this entity will deal no damage, can't use Soul Moves."
+ArcDischarge,Arc Discharge,"When hit, the damage will be dealt to all allies at 12.5% strength at the end of turn."
+TimeStop,Time Stop,"Can't move, take damage or receive any other effects."
+Exhausted,Exhausted,"Can't use Stamina, Agility is reduced to 0."
+Splotch,Splotch,"When hit, the damage will be dealt again at 50% strength at the end of turn."
 AttackUp,Attack Up,"Attack is increased by <var,1>"
 DefenseUp,Defense Up,"Defense is increased by <var,1>"
 EnduranceUp,Endurance Up,"Endurance is increased by <var,1>. (Move costs go down by <var,1>)"
@@ -56,13 +64,9 @@ DrainSprout,Drain Sprout,"When hit, get <var,1> Defocus and the attacker gets <v
 BoltSprout,Bolt Sprout,"When hit, get <var,1> Sunder at the end of turn and the attacker gets <var,2> EP."
 Seal,Seal,Cannot receive most positive effects.
 Sticky,Sticky,Cannot use Items.
-Fizzle,Fizzle,Cannot use Skills.
-Cloud,Cloud,Cannot use Soul Moves.
-Curse,Curse,Cannot receive healing.
 DamageOverTime,Damage Over Time,"Take <var,1> damage per turn."
-Splotch,Splotch,"When hit, the damage will be dealt again at 50% strength at the end of turn."
-Focus,Focus,"Attack is increased by <var,1>. (Removed after their turn if they attack.)"
-Absorb,Absorb,"Defense is increased by <var,1> (When hit, this is removed after the attacker's turn.)"
+Focus,Focus,"Attack is increased by <var,1>. (Removed after their action if they attack.)"
+Absorb,Absorb,"Defense is increased by <var,1> (When hit, this is removed after the attacker's action.)"
 Burst,Burst,"Endurance is increased by <var,1> for their next energy using move. (Move costs go down by <var,1>)"
 Haste,Haste,"Agility is increased by <var,1> for their next stamina using move."
 BonusTurns,Bonus Turns,"Can do <var,1> additional action(s) on their turn."

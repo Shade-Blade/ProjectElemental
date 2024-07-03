@@ -965,6 +965,31 @@ public class Item_GenericConsumable : ItemMove
             //Effect.EffectType.MaxSEBoost,
             //Effect.EffectType.MaxSEReduction,
 
+            //advanced ailments
+            Effect.EffectType.Soulbleed,
+            Effect.EffectType.Ethereal,
+
+            Effect.EffectType.Sunflame,
+            Effect.EffectType.Illuminate,
+
+            Effect.EffectType.Brittle,
+            Effect.EffectType.MistWall,
+
+            Effect.EffectType.Inverted,
+            Effect.EffectType.AstralWall,
+
+            Effect.EffectType.Dread,
+            Effect.EffectType.CounterFlare,
+
+            Effect.EffectType.ArcDischarge,
+            Effect.EffectType.Supercharge,
+
+            Effect.EffectType.TimeStop,
+            Effect.EffectType.QuantumShield,
+
+            Effect.EffectType.Exhausted,
+            Effect.EffectType.Soften,
+
             Effect.EffectType.AttackUp,
             Effect.EffectType.AttackDown,
 
@@ -1050,6 +1075,25 @@ public class Item_GenericConsumable : ItemMove
                 //mult of 2 + (i + 1) % 2
                 int otherIndex = (i - (i % 2)) + ((i + 1) % 2);
                 target.effects[conflictingStatusIndices[i]].effect = conflictingStatuses[otherIndex];
+
+                //audit some specific cases
+                if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.MistWall)
+                {
+                    target.effects[conflictingStatusIndices[i]].potency = 1;
+                }
+                if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.AstralWall)
+                {
+                    byte min = (byte)Mathf.CeilToInt(target.maxHP / 4f);
+                    target.effects[conflictingStatusIndices[i]].potency = min;
+                }
+                if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.Inverted)
+                {
+                    target.effects[conflictingStatusIndices[i]].potency = 1;
+                }
+                if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.TimeStop)
+                {
+                    target.effects[conflictingStatusIndices[i]].potency = 1;
+                }
             }
         }
     }
@@ -1079,6 +1123,19 @@ public class Item_GenericConsumable : ItemMove
 
             Effect.EffectType.Defocus,
             Effect.EffectType.Sunder,
+
+            //shh, don't tell anyone
+            Effect.EffectType.Ethereal,
+            Effect.EffectType.CounterFlare,
+
+            Effect.EffectType.Illuminate,
+            Effect.EffectType.Supercharge,  //doesn't use potency right now
+
+            Effect.EffectType.MistWall,
+            Effect.EffectType.QuantumShield,
+
+            Effect.EffectType.AstralWall,
+            Effect.EffectType.Soften,   //note: don't make soften potency work or else this gets really broken
         };
 
         //4d loop seems bad for performance
@@ -1120,6 +1177,25 @@ public class Item_GenericConsumable : ItemMove
                 //mult of 2 + (i + 1) % 2
                 int otherIndex = (i - (i % 2)) + ((i + 1) % 2);
                 target.effects[conflictingStatusIndices[i]].effect = conflictingStatuses[otherIndex];
+            }
+
+            //audit some specific cases
+            if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.MistWall)
+            {
+                target.effects[conflictingStatusIndices[i]].potency = 1;
+            }
+            if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.AstralWall)
+            {
+                byte min = (byte)Mathf.CeilToInt(target.maxHP / 4f);
+                target.effects[conflictingStatusIndices[i]].potency = min;
+            }
+            if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.TimeStop)
+            {
+                target.effects[conflictingStatusIndices[i]].potency = 1;
+            }
+            if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.Soften)
+            {
+                target.effects[conflictingStatusIndices[i]].potency = 1;
             }
         }
     }

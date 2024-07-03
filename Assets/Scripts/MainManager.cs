@@ -2558,6 +2558,7 @@ public class MainManager : MonoBehaviour
     public bool Cheat_SlowTimeScale;
     public bool Cheat_FastTimeScale;
     public bool Cheat_SuperFastTimeScale;
+    public bool Cheat_Halt;                 //Timescale = 0
     public bool Cheat_InvisibleText;
     public bool Cheat_AlmostAllBadgesActive;    //does not include certain "worse than useless" badges
     public bool Cheat_BadgeDoubleStrength;  //badges act as if you have double of them equipped (for most stackable badges) (note that a lot of 1 off badges still have stacking logic)
@@ -3858,6 +3859,10 @@ public class MainManager : MonoBehaviour
         {
             targetTimeScale *= 0.125f;
         }
+        if (Cheat_Halt)
+        {
+            targetTimeScale *= 0;
+        }
 
         if (Time.timeScale != targetTimeScale)
         {
@@ -4225,7 +4230,7 @@ public class MainManager : MonoBehaviour
         ribbonSprites = Resources.LoadAll<Sprite>("Sprites/Ribbons/RibbonSpritesV2");
         commonSprites = Resources.LoadAll<Sprite>("Sprites/CommonSpritesV2");
 
-        effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV9");
+        effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV10");
         stateSprites = Resources.LoadAll<Sprite>("Sprites/Battle/StateIconsV4");
 
         noFrictionMaterial = Resources.Load<PhysicMaterial>("Physics Materials/NoFriction");

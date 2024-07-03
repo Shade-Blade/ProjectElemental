@@ -317,7 +317,7 @@ public class BE_GiantVine : BattleEntity
             new Effect.EffectType[] {
                 Effect.EffectType.Freeze,
                 Effect.EffectType.Sleep,
-                Effect.EffectType.Stop,
+                Effect.EffectType.TimeStop,
             };
 
         foreach (Effect.EffectType e in effectList)

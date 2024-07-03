@@ -1542,15 +1542,258 @@ public class SM_Blight : SoulMove
     */
 }
 
-public class SM_ChromaBlast : SoulMove
+public class SM_ElementalConflux : SoulMove
 {
-    public SM_ChromaBlast()
+    public SM_ElementalConflux()
     {
     }
 
     public override int GetTextIndex()
     {
         return 10;
+    }
+    public override string GetName() => GetNameWithIndex(GetTextIndex());
+    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
+    //public override float GetBasePower() => 0.5f;
+    public override int GetBaseCost() => 20;
+
+    public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
+    {
+        switch (level)
+        {
+            case 1:
+                return new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
+            default:
+                return new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
+        }
+    }
+
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return StandardCostCalculation(caller, level, 20);
+    }
+    /*
+    public override int GetMaxLevel(BattleEntity caller)
+    {
+        if (caller is PlayerEntity pcaller)
+        {
+            return pcaller.GetSoulMoveMaxLevel(GetTextIndex());
+        }
+        return 2;
+    }
+    */
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        AC_PressButtonTimed actionCommand = null;
+        if (caller is PlayerEntity pcaller) //we have technology
+        {
+            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand.Init(pcaller);
+            actionCommand.Setup(1.0f);
+        }
+
+        yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
+        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(CastAnimation(caller, level));
+        yield return new WaitUntil(() => actionCommand.IsComplete());
+
+        bool result = actionCommand == null ? true : actionCommand.GetSuccess();
+        if (actionCommand != null)
+        {
+            actionCommand.End();
+            Destroy(actionCommand);
+        }
+
+        //EndAnimation(caller, level, result);
+        if (result)
+        {
+            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
+            if (level == 1)
+            {
+                caller.CureCurableEffects();
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 2, 3));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Burst, 2, 255));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.EnduranceUp, 2, 3));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AgilityUp, 2, 3));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Absorb, 2, 255));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseUp, 2, 3));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Focus, 2, 255));
+            }
+            else
+            {
+                List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+                foreach (BattleEntity b in targets)
+                {
+                    b.CureCurableEffects();
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, 3, 3));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, 3, 255));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.EnduranceUp, 3, 3));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.AgilityUp, 3, 3));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, 3, 255));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseUp, 3, 3));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, 3, 255));
+                }
+            }
+        }
+        else
+        {
+            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
+            if (level == 1)
+            {
+                caller.CureCurableEffects();
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 1, 3));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Burst, 1, 255));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.EnduranceUp, 1, 3));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AgilityUp, 1, 3));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Absorb, 1, 255));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseUp, 1, 3));
+                yield return new WaitForSeconds(0.1f);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Focus, 1, 255));
+            }
+            else
+            {
+                List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+                foreach (BattleEntity b in targets)
+                {
+                    b.CureCurableEffects();
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, 2, 3));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, 2, 255));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.EnduranceUp, 2, 3));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.AgilityUp, 2, 3));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, 2, 255));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseUp, 2, 3));
+                }
+                yield return new WaitForSeconds(0.1f);
+                foreach (BattleEntity b in targets)
+                {
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, 2, 255));
+                }
+            }
+        }
+    }
+
+    public IEnumerator CastAnimation(BattleEntity caller, int level)
+    {
+        GameObject eo = null;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_FireFlowIn"), BattleControl.Instance.transform);
+        //position is the same as the one used by items
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+        yield return new WaitForSeconds(0.1f);
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_SparkFlowIn"), BattleControl.Instance.transform);
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+        yield return new WaitForSeconds(0.1f);
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_EarthFlowIn"), BattleControl.Instance.transform);
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+        yield return new WaitForSeconds(0.1f);
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_WaterFlowIn"), BattleControl.Instance.transform);
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+        yield return new WaitForSeconds(0.1f);
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_LightFlowIn"), BattleControl.Instance.transform);
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+        yield return new WaitForSeconds(0.1f);
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_DarkFlowIn"), BattleControl.Instance.transform);
+        eo.transform.position = position;
+        eo.transform.localRotation = Quaternion.identity;
+    }
+
+    public override void PreMove(BattleEntity caller, int level = 1)
+    {
+    }
+    public override void PostMove(BattleEntity caller, int level = 1)
+    {
+    }
+}
+
+public class SM_PrismaticBlast : SoulMove
+{
+    public SM_PrismaticBlast()
+    {
+        useCount = 0;
+    }
+
+    int useCount = 0;
+
+    public override int GetTextIndex()
+    {
+        return 11;
     }
     public override string GetName() => GetNameWithIndex(GetTextIndex());
     public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
@@ -1561,6 +1804,11 @@ public class SM_ChromaBlast : SoulMove
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return StandardCostCalculation(caller, level, 30);
+    }
+
+    public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
+    {
+        return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     }
 
     /*
@@ -1606,9 +1854,13 @@ public class SM_ChromaBlast : SoulMove
             {
                 foreach (BattleEntity b in targets)
                 {
-                    if (caller.GetAttackHit(b, BattleHelper.DamageType.Everything))
+                    if (caller.GetAttackHit(b, BattleHelper.DamageType.Prismatic))
                     {
-                        caller.DealDamage(b, 15, BattleHelper.DamageType.Everything, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(b, 30, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 2, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, 255));
                     }
                     else
                     {
@@ -1618,31 +1870,15 @@ public class SM_ChromaBlast : SoulMove
             }
             else
             {
-                BattleHelper.DamageType[] damageTypes = { BattleHelper.DamageType.Fire, BattleHelper.DamageType.Air, BattleHelper.DamageType.Earth, BattleHelper.DamageType.Light, BattleHelper.DamageType.Water, BattleHelper.DamageType.Dark };
-                
-                foreach (BattleHelper.DamageType t in damageTypes)
+                foreach (BattleEntity b in targets)
                 {
-                    foreach (BattleEntity b in targets)
+                    if (caller.GetAttackHit(b, BattleHelper.DamageType.Prismatic))
                     {
-                        if (caller.GetAttackHit(b, t))
-                        {
-                            if (t != damageTypes[damageTypes.Length - 1])
-                            {
-                                caller.DealDamage(b, 3, t, propertyBlockCombo, BattleHelper.ContactLevel.Infinite);
-                            }
-                            else
-                            {
-                                caller.DealDamage(b, 3, t, propertyBlock, BattleHelper.ContactLevel.Infinite);
-                            }
-                        }
-                        else
-                        {
-                            caller.InvokeMissEvents(b);
-                        }
+                        caller.DealDamage(b, 15, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
                     }
-                    if (t != damageTypes[damageTypes.Length - 1])
+                    else
                     {
-                        yield return new WaitForSeconds(0.25f);
+                        caller.InvokeMissEvents(b);
                     }
                 }
             }
@@ -1654,9 +1890,13 @@ public class SM_ChromaBlast : SoulMove
             {
                 foreach (BattleEntity b in targets)
                 {
-                    if (caller.GetAttackHit(b, BattleHelper.DamageType.Everything))
+                    if (caller.GetAttackHit(b, BattleHelper.DamageType.Prismatic))
                     {
-                        caller.DealDamage(b, 15, BattleHelper.DamageType.Everything, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(b, 20, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 1, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 1, 255));
                     }
                     else
                     {
@@ -1666,31 +1906,15 @@ public class SM_ChromaBlast : SoulMove
             }
             else
             {
-                BattleHelper.DamageType[] damageTypes = { BattleHelper.DamageType.Fire, BattleHelper.DamageType.Air, BattleHelper.DamageType.Earth, BattleHelper.DamageType.Light, BattleHelper.DamageType.Water, BattleHelper.DamageType.Dark };
-
-                foreach (BattleHelper.DamageType t in damageTypes)
+                foreach (BattleEntity b in targets)
                 {
-                    foreach (BattleEntity b in targets)
+                    if (caller.GetAttackHit(b, BattleHelper.DamageType.Prismatic))
                     {
-                        if (caller.GetAttackHit(b, t))
-                        {
-                            if (t != damageTypes[damageTypes.Length - 1])
-                            {
-                                caller.DealDamage(b, 2, t, propertyBlockCombo, BattleHelper.ContactLevel.Infinite);
-                            }
-                            else
-                            {
-                                caller.DealDamage(b, 2, t, propertyBlock, BattleHelper.ContactLevel.Infinite);
-                            }
-                        }
-                        else
-                        {
-                            caller.InvokeMissEvents(b);
-                        }
+                        caller.DealDamage(b, 10, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
                     }
-                    if (t != damageTypes[damageTypes.Length - 1])
+                    else
                     {
-                        yield return new WaitForSeconds(0.25f);
+                        caller.InvokeMissEvents(b);
                     }
                 }
             }
@@ -1720,147 +1944,13 @@ public class SM_ChromaBlast : SoulMove
 
         if (level > 1)
         {
-            val = "" + caller.DealDamageCalculation(target, 15, BattleHelper.DamageType.Everything, propertyBlock);
+            val = "" + caller.DealDamageCalculation(target, 30, BattleHelper.DamageType.Prismatic, propertyBlock);
         }
         else
         {
-            BattleHelper.DamageType[] damageTypes = { BattleHelper.DamageType.Fire, BattleHelper.DamageType.Air, BattleHelper.DamageType.Earth, BattleHelper.DamageType.Light, BattleHelper.DamageType.Water, BattleHelper.DamageType.Dark };
-
-            val = "";
-
-            int count = 0;
-            foreach (BattleHelper.DamageType t in damageTypes)
-            { 
-                if (count == 0)
-                {
-                    val = val + caller.DealDamageCalculation(target, 3, t, propertyBlock);
-                } else
-                {
-                    val = val + ", " + caller.DealDamageCalculation(target, 3, t, propertyBlock) + "?";
-                }
-                count++;
-            }            
+            val = "" + caller.DealDamageCalculation(target, 15, BattleHelper.DamageType.Prismatic, propertyBlock);
         }
 
         return val;
-    }
-}
-
-public class SM_AbyssalDawn : SoulMove
-{
-    public SM_AbyssalDawn()
-    {
-        useCount = 0;
-    }
-
-    int useCount = 0;
-
-    public override int GetTextIndex()
-    {
-        return 11;
-    }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
-    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
-    //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 30;
-
-    public override bool CanChoose(BattleEntity caller, int level = 1)
-    {
-        if (useCount >= level)
-        {
-            return false;
-        }
-        return base.CanChoose(caller, level);
-    }
-    public override CantMoveReason GetCantMoveReason(BattleEntity caller, int level = 1)
-    {
-        if (useCount >= level)
-        {
-            return CantMoveReason.MoveExpended;
-        }
-        return base.GetCantMoveReason(caller, level);
-    }
-
-    public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
-    {
-        return new TargetArea(TargetArea.TargetAreaType.Ally, true);
-    }
-
-    public override int GetCost(BattleEntity caller, int level = 1)
-    {
-        return StandardCostCalculation(caller, level, 10);
-    }
-
-    /*
-    public override int GetMaxLevel(BattleEntity caller)
-    {
-        if (caller is PlayerEntity pcaller)
-        {
-            return pcaller.GetSoulMoveMaxLevel(GetTextIndex());
-        }
-        return 2;
-    }
-    */
-
-    public override IEnumerator Execute(BattleEntity caller, int level = 1)
-    {
-        useCount++;
-        AC_PressButtonTimed actionCommand = null;
-        if (caller is PlayerEntity pcaller) //we have technology
-        {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
-            actionCommand.Init(pcaller);
-            actionCommand.Setup(0.5f);
-        }
-
-        yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
-        yield return new WaitUntil(() => actionCommand.IsComplete());
-
-        bool result = actionCommand == null ? true : actionCommand.GetSuccess();
-        if (actionCommand != null)
-        {
-            actionCommand.End();
-            Destroy(actionCommand);
-        }
-
-        if (result)
-        {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
-            List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
-            foreach (BattleEntity b in targets)
-            {
-                b.HealHealth(b.maxHP);
-            }
-            yield return new WaitForSeconds(0.5f);
-            caller.HealEnergy(BattleControl.Instance.maxEP);
-            foreach (BattleEntity b in targets)
-            {
-                b.CureCurableEffects();
-            }
-        }
-        else
-        {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
-            List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
-            foreach (BattleEntity b in targets)
-            {
-                b.HealHealth(b.maxHP / 2);
-            }
-            yield return new WaitForSeconds(0.5f);
-            caller.HealEnergy(BattleControl.Instance.maxEP / 2);
-            foreach (BattleEntity b in targets)
-            {
-                b.CureCurableEffects();
-            }
-        }
-    }
-
-    public override void PreMove(BattleEntity caller, int level = 1)
-    {
-    }
-    public override void PostMove(BattleEntity caller, int level = 1)
-    {
     }
 }

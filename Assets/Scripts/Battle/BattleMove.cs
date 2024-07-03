@@ -460,6 +460,16 @@ public abstract class PlayerMove : Move, IEntityHighlighter
 
         int cost = GetCost(caller, level);
 
+        if (UseStamina() && cost > 0 && caller.HasEffect(Effect.EffectType.Exhausted))
+        {
+            return CantMoveReason.BlockSkills;
+        }
+
+        if (UseFlow() && caller.HasEffect(Effect.EffectType.Dread))
+        {
+            return CantMoveReason.BlockSoul;
+        }
+
         switch (GetCurrency(caller))
         {
             case BattleHelper.MoveCurrency.Energy:
@@ -712,6 +722,16 @@ public abstract class PlayerMove : Move, IEntityHighlighter
         }
 
         int cost = GetCost(caller, level);
+
+        if (UseStamina() && cost > 0 && caller.HasEffect(Effect.EffectType.Exhausted))
+        {
+            return false;
+        }
+
+        if (UseFlow() && caller.HasEffect(Effect.EffectType.Dread))
+        {
+            return false;
+        }
 
         if (!MainManager.Instance.Cheat_EnergyAnarchy)
         {

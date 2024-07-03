@@ -1032,6 +1032,7 @@ MonoBehaviour:
   Cheat_SlowTimeScale: 0
   Cheat_FastTimeScale: 0
   Cheat_SuperFastTimeScale: 0
+  Cheat_Halt: 0
   Cheat_InvisibleText: 0
   Cheat_AlmostAllBadgesActive: 0
   Cheat_BadgeDoubleStrength: 0

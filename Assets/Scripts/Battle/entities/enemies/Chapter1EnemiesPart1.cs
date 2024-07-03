@@ -166,7 +166,7 @@ public class BE_BurrowTrap : BattleEntity
             new Effect.EffectType[] {
                 Effect.EffectType.Freeze,
                 Effect.EffectType.Sleep,
-                Effect.EffectType.Stop,
+                Effect.EffectType.TimeStop,
             };
 
         foreach (Effect.EffectType e in effectList)
@@ -382,7 +382,7 @@ public class BE_Sundew : BattleEntity
             new Effect.EffectType[] {
                 Effect.EffectType.Freeze,
                 Effect.EffectType.Sleep,
-                Effect.EffectType.Stop,
+                Effect.EffectType.TimeStop,
             };
 
         foreach (Effect.EffectType e in effectList)

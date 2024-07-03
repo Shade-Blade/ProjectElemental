@@ -13,10 +13,10 @@ Honeybud,3,8,0,FALSE,1,FlowerSyrup,6,Default:0.9/1|Dizzy:1/1.5,Default:0|Fire:-2
 BurrowTrap,3,8,0,TRUE,1,FlowerSyrup,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1,Default:1|Fire:-2|Light:-2,StateCounter,0.75,1.1,0|0.55|0,0.475|1.1|0,0|-0.15|0,0|1.6|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Sundew,2,8,0,TRUE,1,FlowerSyrup,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1|Poison:0/1,Default:0|Fire:-2|Light:-2,StateCounter,0.75,1.1,0|0.55|0,0.475|1.1|0,0|-0.15|0,0|1.6|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 VinePlatform,10,0,0,TRUE,1,FlowerSyrup,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:0|Fire:-1|Light:-1,NoCount,0.25,1.5,0|0.75|0,0.225|1.5|0,0|-0.15|0,0|2|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Sycamore,30,11,24,FALSE,1,FlowerSyrup,2,Default:0.7/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:0|Fire:-2|Light:-2,,0.5,0.5,0|0.25|0,0.35|0.5|0,0|-0.15|0,0|1|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Sycamore,30,11,24,FALSE,1,FlowerSyrup,2,Default:0.7/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:0|Fire:-2|Light:-2,,0.5,0.75,0|0.375|0,0.35|0.75|0,0|-0.15|0,0|1|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 GiantVine,14,0,0,TRUE,1,GoldenApple,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:1|Fire:-1|Light:-1,NoCount,1,2.5,0|1.25|0,0.6|2.5|0,0|-0.15|0,0|3|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 VineThrone,20,0,0,TRUE,1,GoldenApple,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:1|Fire:-1|Light:-1,NoCount,1,1.5,0|0.75|0,0.6|1.5|0,0|-0.15|0,0|2|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-MasterOfAutumn,80,16,49,FALSE,1,GoldenApple,2,Default:0.5/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:1,,0.5,0.5,0|0.25|0,0.35|0.5|0,0|-0.15|0,0|1|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+MasterOfAutumn,80,16,49,FALSE,1,GoldenApple,2,Default:0.5/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:1,,0.5,0.75,0|0.375|0,0.35|0.75|0,0|-0.15|0,0|1|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Bandit,3,9,0,FALSE,1,Lemon,5,Default:0.8/1,Default:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Renegade,4,10,0,TRUE,1.25,Dragonfruit,5,Default:0.8/1,Default:2,StateContactHazard,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Sentry,3,9,0,FALSE,1,StaticThorn,5,Default:0.8/1|Paralyze:0/1|Dizzy:1/1.5,Default:0|Air:N|Earth:-2,StateCounter,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8

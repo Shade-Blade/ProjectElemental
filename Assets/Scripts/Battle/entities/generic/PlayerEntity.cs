@@ -411,8 +411,8 @@ public class PlayerEntity : BattleEntity
         SM_FlashFreeze ff = ptc.GetOrAddComponent<SM_FlashFreeze>();
         SM_Cleanse c = ptc.GetOrAddComponent<SM_Cleanse>();
         SM_Blight b = ptc.GetOrAddComponent<SM_Blight>();
-        SM_ChromaBlast cb = ptc.GetOrAddComponent<SM_ChromaBlast>();
-        SM_AbyssalDawn ad = ptc.GetOrAddComponent<SM_AbyssalDawn>();
+        SM_ElementalConflux cb = ptc.GetOrAddComponent<SM_ElementalConflux>();
+        SM_PrismaticBlast ad = ptc.GetOrAddComponent<SM_PrismaticBlast>();
 
         soulMoves.Add(r);
         soulMoves.Add(sp);
@@ -1007,27 +1007,33 @@ public class PlayerEntity : BattleEntity
 
         bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Lust);
 
+        int statusTurnReduction = 0;
+
         float statusMultiplier = 1;
         if ((blockFrames == -2 || sblockFrames == -2) && (IsBlocking() || GetSafetyBlock()))
         {
             if (bol)
             {
-                statusMultiplier = 0.75f;
+                statusTurnReduction = 0;
+                //statusMultiplier = 0.75f;
             }
             else
             {
-                statusMultiplier = 0.5f;
+                statusTurnReduction = 1;
+                //statusMultiplier = 0.5f;
             }
         }
         if ((blockFrames == -2 || sblockFrames == -2) && (GetClearBlock() || IsSuperBlocking()))
         {
             if (bol)
             {
-                statusMultiplier = 0.5f;
+                statusTurnReduction = 1;
+                //statusMultiplier = 0.5f;
             }
             else
             {
-                statusMultiplier = 0;
+                statusTurnReduction = 100;
+                //statusMultiplier = 0;
             }
         }
         if (bol)
@@ -1048,7 +1054,7 @@ public class PlayerEntity : BattleEntity
             if (se.duration != 255)
             {
                 int olddur = se.duration;
-                se.duration = (byte)(Mathf.CeilToInt(se.duration * statusMultiplier));
+                se.duration = (byte)(Mathf.CeilToInt(se.duration * statusMultiplier - statusTurnReduction));
                 if (statusMultiplier < 1 && olddur == se.duration && olddur > 0)
                 {
                     se.duration--;
@@ -1056,7 +1062,7 @@ public class PlayerEntity : BattleEntity
             } else
             {
                 int oldpot = se.potency;
-                se.potency = (byte)(Mathf.CeilToInt(se.potency * statusMultiplier));
+                se.potency = (byte)(Mathf.CeilToInt(se.potency * statusMultiplier - statusTurnReduction));
                 if (statusMultiplier < 1 && oldpot == se.potency && oldpot > 0)
                 {
                     se.potency--;
@@ -1075,16 +1081,45 @@ public class PlayerEntity : BattleEntity
         //...but turn count is halved if blocking, rounded down
         //Negated if super blocking
 
+        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Lust);
+
+        int statusTurnReduction = 0;
+
         float statusMultiplier = 1;
-        if (IsBlocking() || GetSafetyBlock())
+        if ((blockFrames == -2 || sblockFrames == -2) && (IsBlocking() || GetSafetyBlock()))
         {
-            statusMultiplier = 0.5f;
+            if (bol)
+            {
+                statusTurnReduction = 0;
+                //statusMultiplier = 0.75f;
+            }
+            else
+            {
+                statusTurnReduction = 1;
+                //statusMultiplier = 0.5f;
+            }
         }
-        if (GetClearBlock() || IsSuperBlocking())
+        if ((blockFrames == -2 || sblockFrames == -2) && (GetClearBlock() || IsSuperBlocking()))
         {
-            statusMultiplier = 0;
+            if (bol)
+            {
+                statusTurnReduction = 1;
+                //statusMultiplier = 0.5f;
+            }
+            else
+            {
+                statusTurnReduction = 100;
+                //statusMultiplier = 0;
+            }
         }
-        statusMultiplier -= 0.5f * BadgeEquippedCount(Badge.BadgeType.StatusResist);
+        if (bol)
+        {
+            statusMultiplier -= 0.25f * BadgeEquippedCount(Badge.BadgeType.StatusResist);
+        }
+        else
+        {
+            statusMultiplier -= 0.5f * BadgeEquippedCount(Badge.BadgeType.StatusResist);
+        }
         if (statusMultiplier < 0)
         {
             statusMultiplier = 0;
@@ -1095,7 +1130,7 @@ public class PlayerEntity : BattleEntity
             if (se.duration != 255)
             {
                 int olddur = se.duration;
-                se.duration = (byte)(Mathf.CeilToInt(se.duration * statusMultiplier));
+                se.duration = (byte)(Mathf.CeilToInt(se.duration * statusMultiplier - statusTurnReduction));
                 if (statusMultiplier < 1 && olddur == se.duration && olddur > 0)
                 {
                     se.duration--;
@@ -1104,7 +1139,7 @@ public class PlayerEntity : BattleEntity
             else
             {
                 int oldpot = se.potency;
-                se.potency = (byte)(Mathf.CeilToInt(se.potency * statusMultiplier));
+                se.potency = (byte)(Mathf.CeilToInt(se.potency * statusMultiplier - statusTurnReduction));
                 if (statusMultiplier < 1 && oldpot == se.potency && oldpot > 0)
                 {
                     se.potency--;
@@ -1728,8 +1763,16 @@ public class PlayerEntity : BattleEntity
     //To do: change how damage calculation works?
     public override int TakeDamage(int damage, DamageType type, ulong properties) //default type damage
     {
-        if (GetEntityProperty(EntityProperties.Invulnerable))
+        if (Invulnerable())
         {
+            //note that this function is not actually the one that queues the hurt events
+            //so there may be some possibilities of desync?
+            damageEventsThisTurn++;
+            absorbDamageEvents++;
+            //Debug.Log(name + " " + damageEventsCount);
+            hitThisTurn = true;
+            //How about I just make it dink
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, 0, GetDamageEffectPosition(), this, type, properties);
             return 0;
         }
 
@@ -2048,12 +2091,26 @@ public class PlayerEntity : BattleEntity
         int preHP = hp;
 
         //Post damage calculation
+
+        if (HasEffect(Effect.EffectType.Soulbleed))
+        {
+            byte bleedDamage = (byte)(damage / 8);
+            if (damage > 0 && bleedDamage <= 0)
+            {
+                bleedDamage = 1;
+            }
+            if (bleedDamage > 0)
+            {
+                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, bleedDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
+            }
+        }
+
         if (HasEffect(Effect.EffectType.Soften))
         {
-            int softDamage = (byte)(damage / 3);
+            byte softDamage = (byte)(damage / 3);
             if (softDamage > 0)
             {
-                ReceiveEffectForce(new Effect(Effect.EffectType.Soften, (byte)(damage / 3), 3), posId, Effect.EffectStackMode.KeepDurAddPot);
+                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
             }
         }
         else
@@ -2423,6 +2480,11 @@ public class PlayerEntity : BattleEntity
 
     public override void HealHealth(int health)
     {
+        if (HasEffect(Effect.EffectType.Soulbleed) && health > 0)
+        {
+            health = 0;
+        }
+
         //Debug.Log(hp + " " + health);
         bool atFull = (hp >= maxHP);
         base.HealHealth(health);
@@ -2434,6 +2496,11 @@ public class PlayerEntity : BattleEntity
     }
     public override int HealHealthTrackOverhealPay(int health)
     {
+        if (HasEffect(Effect.EffectType.Soulbleed) && health > 0)
+        {
+            health = 0;
+        }
+
         //Debug.Log(hp + " " + health);
         bool atFull = (hp >= maxHP);
         int output = base.HealHealthTrackOverhealPay(health);
@@ -2543,6 +2610,11 @@ public class PlayerEntity : BattleEntity
                 CureEffect(Effect.EffectType.Absorb);
             }
             CureEffect(Effect.EffectType.Sunder);
+            if (HasEffect(Effect.EffectType.Brittle))
+            {
+                Effect e = GetEffectEntry(Effect.EffectType.Brittle);
+                e.potency++;
+            }
         }
         absorbDamageEvents = 0;
     }
@@ -2554,7 +2626,7 @@ public class PlayerEntity : BattleEntity
             new Effect.EffectType[] {
                 Effect.EffectType.Freeze,
                 Effect.EffectType.Sleep,
-                Effect.EffectType.Stop,
+                Effect.EffectType.TimeStop,
             };
 
         foreach (Effect.EffectType e in effectList)
@@ -2729,9 +2801,9 @@ public class PlayerEntity : BattleEntity
 
         return original + passiveEnd - passiveMEnd;
     }
-    public override int GetEffectHasteBonus(bool absolute = false)
+    public override int GetEffectAgilityBonus(bool absolute = false)
     {
-        int original = base.GetEffectHasteBonus();
+        int original = base.GetEffectAgilityBonus();
         int passiveAgi = Item.CountItemsWithProperty(Item.ItemProperty.Passive_AgilityUp, BattleControl.Instance.GetItemInventory(this));
         int passiveMAgi = Item.CountItemsWithProperty(Item.ItemProperty.Passive_AgilityDown, BattleControl.Instance.GetItemInventory(this));
 
@@ -3249,7 +3321,7 @@ public class PlayerEntity : BattleEntity
         {
             baseAgility += (agility / 2);
         }
-        return baseAgility + GetBadgeAgilityBonus() + GetEffectHasteBonus();
+        return baseAgility + GetBadgeAgilityBonus() + GetEffectAgilityBonus();
     }
 
 
@@ -3536,6 +3608,13 @@ public class PlayerEntity : BattleEntity
 
     public override void InflictEffect(BattleEntity target, Effect se, int casterID = int.MinValue, Effect.EffectStackMode mode = Effect.EffectStackMode.Default)
     {
+        if (target.HasEffect(Effect.EffectType.Inverted))
+        {
+            Effect e = se.Copy();
+            InvertEffect(e);
+            se = e;
+        }
+
         //added stuff
         bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Lust);
 
@@ -3577,7 +3656,7 @@ public class PlayerEntity : BattleEntity
         {
             bool statusWorks = true;
 
-            if (target.HasEffect(Effect.EffectType.Immunity))
+            if (target.HasEffect(Effect.EffectType.Immunity) || target.HasEffect(Effect.EffectType.TimeStop))
             {
                 if (Effect.IsCurable(se.effect))
                 {
@@ -3586,7 +3665,7 @@ public class PlayerEntity : BattleEntity
                 }
             }
 
-            if (target.HasEffect(Effect.EffectType.Seal))
+            if (target.HasEffect(Effect.EffectType.Seal) || target.HasEffect(Effect.EffectType.TimeStop))
             {
                 if (Effect.IsCleanseable(se.effect))
                 {
@@ -4023,6 +4102,26 @@ public class PlayerEntity : BattleEntity
                 {
                     TakeDamageStatus(poisonDamage * GetEffectEntry(Effect.EffectType.Poison).potency);
                 }
+                yield return new WaitForSeconds(0.5f);
+            }
+            if (HasEffect(Effect.EffectType.Sunflame))
+            {
+                statusDamage = true;
+                int sfDamage = maxHP / 10;
+
+                int powermult = 1 + GetEffectEntry(Effect.EffectType.Sunflame).potency;
+
+                if (sfDamage < 2)
+                {
+                    sfDamage = 2;
+                }
+
+                if (sfDamage > 10)
+                {
+                    sfDamage = 10;
+                }
+
+                TakeDamageStatus((int)(sfDamage * powermult * 0.5f));
                 yield return new WaitForSeconds(0.5f);
             }
             if (HasEffect(Effect.EffectType.DamageOverTime))
