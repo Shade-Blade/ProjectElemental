@@ -216,6 +216,24 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
                         badgeList.Add(badgeCostPairs[i].Item1);
                     }
                     break;
+                case SortMode.Default:  //not sure if I need this?
+                    List<Badge> listD = new List<Badge>();
+                    for (int i = 0; i < badgeList.Count; i++)
+                    {
+                        listD.Add(badgeList[i]);
+                    }
+                    badgeList = listD;
+                    badgeList.Sort((a, b) => {
+                        int alpha = a.type - b.type;
+
+                        if (alpha != 0)
+                        {
+                            return alpha;
+                        }
+
+                        return a.badgeCount - b.badgeCount;
+                    });
+                    break;
             }
         } else
         {
@@ -255,6 +273,24 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
                     }
                     ribbonList = listB;
                     ribbonList.Sort((a, b) => (a.ribbonCount - b.ribbonCount));
+                    break;
+                case SortMode.Default:
+                    List<Ribbon> listD = new List<Ribbon>();
+                    for (int i = 0; i < ribbonList.Count; i++)
+                    {
+                        listD.Add(ribbonList[i]);
+                    }
+                    ribbonList = listD;
+                    ribbonList.Sort((a, b) => {
+                        int alpha = a.type - b.type;
+
+                        if (alpha != 0)
+                        {
+                            return alpha;
+                        }
+
+                        return a.ribbonCount - b.ribbonCount;
+                    });
                     break;
             }
         }

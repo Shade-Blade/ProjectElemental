@@ -39,7 +39,7 @@ public class SignScript : MonoBehaviour, ITextSpeaker
     {
     }
 
-    public void SetAnimation(string animationID)
+    public void SetAnimation(string animationID, bool force = false)
     {
     }
 

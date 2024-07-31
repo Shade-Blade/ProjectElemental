@@ -73,7 +73,7 @@ public class BaseBattleMenu : MenuHandler
                 {
                     return "Sword";
                 }
-                if (caller.entityID == BattleHelper.EntityID.LumistarSoldier)
+                if (caller.entityID == BattleHelper.EntityID.Luna)
                 {
                     return "Hammer";
                 }
@@ -137,6 +137,18 @@ public class BaseBattleMenu : MenuHandler
             }
 
             baseMenuDescriptor.SetText(MenuNameToString(baseMenuOptions[baseMenuIndex].oname), true, true);
+
+            if (!caller.HasEffect(Effect.EffectType.Dizzy))
+            {
+                if (baseMenuOptions[baseMenuIndex].oname == BaseMenuName.Weapon)
+                {
+                    caller.SetAnimation("idleweapon");
+                }
+                else
+                {
+                    caller.SetAnimation("idlethinking");
+                }
+            }
 
             if (inputDir != 0)
             {
@@ -331,7 +343,10 @@ public class BaseBattleMenu : MenuHandler
         {
             menuOptions.Add(BaseMenuName.Weapon);
         }
-        menuOptions.Add(BaseMenuName.Items);
+        if (BattleControl.Instance.playerData.itemCounter > 0 || BattleControl.Instance.playerData.itemInventory.Count > 0)  //i.e. if you have never collected a single item, don't show the item menu
+        {
+            menuOptions.Add(BaseMenuName.Items);
+        }
         if (caller.soulMoves.Count > 0)
         {
             menuOptions.Add(BaseMenuName.Soul);
@@ -430,7 +445,7 @@ public class BaseBattleMenu : MenuHandler
 
                     //sidenote: no need to check double bite, quick bite etc because normal item use overshadows them (if you can't use items normally you can't use them either)
                     temp.canSelect &= !(caller.BadgeEquipped(Badge.BadgeType.VoraciousEater));
-                    temp.canSelect &= !(caller.quickBite > 0);
+                    temp.canSelect &= !(caller.QuickSupply > 0);    //Block you from using 2 items on the same turn using quick supply
 
                     if (!temp.canSelect)
                     {
@@ -469,6 +484,7 @@ public class BaseBattleMenu : MenuHandler
                 case BaseMenuName.BadgeSwap:
                     //logically impossible to not be able to use this?
                     //Badge swap is a badge (but cheats can let you use badgeswap without actually having the badge)
+                    //but not every badge can be badge swapped (*but there's only like 4 of them)
                     temp = new BaseMenuOption(BaseMenuName.BadgeSwap);
                     temp.canSelect = BattleControl.Instance.playerData.badgeInventory.Count > 0;
 

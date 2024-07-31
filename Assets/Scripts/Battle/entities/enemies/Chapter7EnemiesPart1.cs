@@ -84,8 +84,8 @@ public class BM_Plateshell_RageFireball : EnemyMove
                 }
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 2, 255));
-                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Sunder, 1, 255));
+                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
+                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
                 }
             }
             else

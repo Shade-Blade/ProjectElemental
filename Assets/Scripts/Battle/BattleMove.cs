@@ -435,7 +435,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
         FullItems,
         ItemOverworldOnly,
         ItemExpended,
-        ItemMultiBiteBlock,
+        ItemMultiSupplyBlock,
         MoveExpended,
         TeamMoveNoTeammate,
         TeamMoveUnavailableTeammate,
@@ -684,7 +684,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
 
                 if (BattleControl.Instance.GetEP(caller) <= 6 && pcaller.BadgeEquipped(Badge.BadgeType.NullEndurance))
                 {
-                    modifiedCost = (int)(0.5f * modifiedCost);
+                    modifiedCost = (int)((1 / (1.00001f + pcaller.BadgeEquippedCount(Badge.BadgeType.NullEndurance)) * modifiedCost));
                     if (modifiedCost < 1)
                     {
                         modifiedCost = 1;
@@ -696,7 +696,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
             {
                 if (pcaller.BadgeEquipped(Badge.BadgeType.DarkEndurance))
                 {
-                    modifiedCost *= 2;
+                    modifiedCost *= (1 + pcaller.BadgeEquippedCount(Badge.BadgeType.DarkEndurance));
                 }
 
                 if (pcaller.BadgeEquipped(Badge.BadgeType.EnergeticSoul))
@@ -899,7 +899,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
             {
                 if (pcaller.BadgeEquipped(Badge.BadgeType.HealthyExercise))
                 {
-                    int hpheal = Mathf.CeilToInt(staminaCost / 6.0f);
+                    int hpheal = Mathf.CeilToInt((staminaCost * pcaller.BadgeEquippedCount(Badge.BadgeType.HealthyExercise)) / 6.0f);
                     pcaller.HealHealth(hpheal);
                     healEffects++;
                 }
@@ -909,7 +909,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
             {
                 if (pcaller.BadgeEquipped(Badge.BadgeType.HealthyExercise))
                 {
-                    int hpheal = Mathf.CeilToInt(cost / 6.0f);
+                    int hpheal = Mathf.CeilToInt((cost * pcaller.BadgeEquippedCount(Badge.BadgeType.HealthyExercise)) / 6.0f);
                     pcaller.HealHealth(hpheal);
                     healEffects++;
                 }
@@ -941,7 +941,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                     Effect e = caller.GetEffectEntry(Effect.EffectType.Burst);
                     if (e != null)
                     {
-                        e.potency = (byte)(e.potency * ((count + 1.0001f) / (count + 2f)));
+                        e.potency = (sbyte)(e.potency * ((count + 0.0001f) / (count + 1f)));
                         if (e.potency == 0)
                         {
                             caller.CureEffect(Effect.EffectType.Burst);
@@ -1033,7 +1033,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                 //depletion burst
                 if (prevEnergy > 0 && postEnergy == 0 && pB.BadgeEquipped(Badge.BadgeType.DepletionBurst))
                 {
-                    pB.HealEnergy(5);
+                    pB.HealEnergy(5 * pB.BadgeEquippedCount(Badge.BadgeType.DepletionBurst));
                     healEffects++;
                 }
             }

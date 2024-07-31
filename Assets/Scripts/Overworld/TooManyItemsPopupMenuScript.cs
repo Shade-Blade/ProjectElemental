@@ -105,6 +105,7 @@ public class TooManyItemsPopupMenuScript : MenuHandler
 
         if (WorldPlayer.Instance != null)
         {
+            WorldPlayer.Instance.SetAnimation("itemuse");
             Vector3 position = WorldPlayer.Instance.transform.position + Vector3.up * 1f;
 
             GameObject so = new GameObject("Get Item Sprite");
@@ -123,6 +124,7 @@ public class TooManyItemsPopupMenuScript : MenuHandler
         Destroy(description.gameObject);
         //Future shade's note: I forgot to destroy the top popup
         //I'm keeping it because it looks better this way
+        WorldPlayer.Instance.SetAnimation("idle");
         if (itemSprite != null)
         {
             Destroy(itemSprite);

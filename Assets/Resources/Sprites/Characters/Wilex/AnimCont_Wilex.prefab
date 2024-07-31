@@ -26,11 +26,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2990552561006783727}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.135, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4694814609540170493}
+  m_Father: {fileID: 9118260392746194623}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7847993131263868333
@@ -53,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c55e866d1dd215044b3e0d9023b40e18, type: 2}
+  - {fileID: 2100000, guid: 6605387f8c4550247a4e18dff956df99, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d738a95bed2606a41b57eaf0bc87b0ec, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1a522998cb9dd854d90a220f222d3c37, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -105,6 +105,38 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!1 &5609905077956215769
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9118260392746194623}
+  m_Layer: 0
+  m_Name: offsetter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9118260392746194623
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5609905077956215769}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.135, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8917711609510872525}
+  m_Father: {fileID: 4694814609540170493}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6968655697695920662
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +165,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8917711609510872525}
+  - {fileID: 9118260392746194623}
   m_Father: {fileID: 2126403970110681934}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -146,7 +178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2126403970110681934}
-  - component: {fileID: 3706859908214578429}
+  - component: {fileID: 4034151720414034665}
   m_Layer: 0
   m_Name: AnimCont_Wilex
   m_TagString: Untagged
@@ -170,7 +202,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3706859908214578429
+--- !u!114 &4034151720414034665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -179,13 +211,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7871317907572131799}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eb3c5527602b82419c1206071c36ac6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b941fbe52f80b043b1053314c255709, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8691536419115998470}
   currentAnim: 
   sprite: {fileID: 7847993131263868333}
-  rightDefault: 1
+  rightDefault: 0
   subobject: {fileID: 6968655697695920662}
   materialIndex: 0
   bigradientMap: 0
@@ -201,4 +233,5 @@ MonoBehaviour:
   buffIndex: 0
   debuffIndex: 0
   lifetime: 0
+  timeSinceLastAnimChange: 0
   showBack: 0

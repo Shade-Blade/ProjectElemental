@@ -165,13 +165,13 @@ public class WorldPlayer : WorldEntity
         HazardTouch,    //Grounded hazard state (touching a hazard, i.e. landing on spikes or lava)
         Land,
         Slash,
-        Aether,
-        AetherFall,
+        Aetherize,
+        AetherizeFall,
         DoubleJump,
         SuperJump,
         Smash,
-        LightHold,
-        LightHoldFall,
+        Illuminate,
+        IlluminateFall,
         Dash,
         DashFall,
         Dig,
@@ -191,7 +191,10 @@ public class WorldPlayer : WorldEntity
     float timeSinceLastJump;
     bool enableDashLeniency;       //Used for making the dash input more lenient (allow for holding input)
                                    //Enable if you dash, disable in all other jump and airborne situations
+    public float digTimer;
     public float undigTimer;
+
+    public float animationStopDelay;
 
     //note: air time tracker already exists
     bool coyoteBool = false;    //Only enable if you are in a jumpable state, disable in all other cases (though the normal airborne state is neutral)
@@ -352,10 +355,13 @@ public class WorldPlayer : WorldEntity
     public const float HAMMER_SWING_TIME = 0.25f;
     public const float HAMMER_ANGLE_SPREAD = 150f;  //How the hammer swings (Starts behind Luna)
     public const float HAMMER_DOWN_ANGLE = -30f;    //Lowest angle the hammer goes to
-    public const float HAMMER_HITBOX_OFFSET = 0.7f;
+    public const float HAMMER_HITBOX_OFFSET = 0.625f;
     public const float HAMMER_HITBOX_RADIUS = 0.4f;
     public const float HAMMER_BIG_RADIUS = 0.75f;   //After the interrupt, the hitbox becomes a lot bigger (like it's making a shockwave or something)
     public const float HAMMER_INTERRUPT_LENIENCY = 0.075f;   //time where weapon moves can't be interrupted (Required to make the particles look right?)
+
+    private const float DIG_TIME = 0.15f;
+    private const float UNDIG_TIME = 0.15f;
 
     //Step up / down
     public const float STEP_UP_MINIMUM = 0.1f;
@@ -622,8 +628,8 @@ public class WorldPlayer : WorldEntity
             case ActionState.SuperJump:
             case ActionState.Dash:
             case ActionState.Land:
-            case ActionState.Aether:
-            case ActionState.LightHold:
+            case ActionState.Aetherize:
+            case ActionState.Illuminate:
             case ActionState.Dig:
             case ActionState.Slash:
             case ActionState.Smash:
@@ -696,8 +702,8 @@ public class WorldPlayer : WorldEntity
             case ActionState.Fall:
             case ActionState.Jump:
             case ActionState.DoubleJump:
-            case ActionState.AetherFall:
-            case ActionState.LightHoldFall:
+            case ActionState.AetherizeFall:
+            case ActionState.IlluminateFall:
             case ActionState.WallGrab:
             case ActionState.WallJump:
             case ActionState.SuperKick:
@@ -832,8 +838,8 @@ public class WorldPlayer : WorldEntity
                     newVelocity = inputXY.x * GetSpeed() * Vector3.right + inputXY.y * GetSpeed() * Vector3.forward + rb.velocity.y * Vector3.up;
                 }
                 break;
-            case ActionState.Aether:
-            case ActionState.LightHold:
+            case ActionState.Aetherize:
+            case ActionState.Illuminate:
                 float slowspeed = GetSpeed() * 0.65f;
                 newVelocity = inputXY.x * slowspeed * Vector3.right + inputXY.y * slowspeed * Vector3.forward + rb.velocity.y * Vector3.up;
                 break;
@@ -1113,8 +1119,8 @@ public class WorldPlayer : WorldEntity
         {
             case ActionState.Land:
             case ActionState.Neutral:
-            case ActionState.Aether:
-            case ActionState.LightHold:
+            case ActionState.Aetherize:
+            case ActionState.Illuminate:
                 //case ActionState.Dig:     Special exception
                 //version 1
                 /*
@@ -1610,12 +1616,12 @@ public class WorldPlayer : WorldEntity
                     TryStomp(collision);
                     groundedTime = 0;
                     break;
-                case ActionState.AetherFall:
-                    SetActionState(ActionState.Aether);
+                case ActionState.AetherizeFall:
+                    SetActionState(ActionState.Aetherize);
                     groundedTime = 0;
                     break;
-                case ActionState.LightHoldFall:
-                    SetActionState(ActionState.LightHold);
+                case ActionState.IlluminateFall:
+                    SetActionState(ActionState.Illuminate);
                     groundedTime = 0;
                     break;
                 case ActionState.HazardFall:
@@ -1680,12 +1686,12 @@ public class WorldPlayer : WorldEntity
                     }
                     groundedTime = 0;
                     break;
-                case ActionState.AetherFall:
-                    SetActionState(ActionState.Aether);
+                case ActionState.AetherizeFall:
+                    SetActionState(ActionState.Aetherize);
                     groundedTime = 0;
                     break;
-                case ActionState.LightHoldFall:
-                    SetActionState(ActionState.LightHold);
+                case ActionState.IlluminateFall:
+                    SetActionState(ActionState.Illuminate);
                     groundedTime = 0;
                     break;
                 case ActionState.HazardFall:
@@ -1784,7 +1790,7 @@ public class WorldPlayer : WorldEntity
         bool hasteStep = MainManager.Instance.playerData.BadgeEquipped(Badge.BadgeType.HasteStep);
         if (hasteStep)
         {
-            bonusSpeed = 1.2f;
+            bonusSpeed = 1f + 0.2f * MainManager.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.HasteStep);
         }
         return speed * bonusSpeed;
     }
@@ -1794,7 +1800,7 @@ public class WorldPlayer : WorldEntity
         bool hasteStep = MainManager.Instance.playerData.BadgeEquipped(Badge.BadgeType.HasteStep);
         if (hasteStep)
         {
-            bonusSpeed = 1.2f;
+            bonusSpeed = 1f + 0.2f * MainManager.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.HasteStep);
         }
         return dashSpeed * bonusSpeed;
     }
@@ -1803,6 +1809,14 @@ public class WorldPlayer : WorldEntity
     {
         timeSinceLastJump += Time.fixedDeltaTime;
 
+        if (digTimer > 0)
+        {
+            digTimer -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            digTimer = 0;
+        }
         if (undigTimer > 0)
         {
             undigTimer -= Time.fixedDeltaTime;
@@ -1857,10 +1871,10 @@ public class WorldPlayer : WorldEntity
 
         switch (actionState)
         {
-            case ActionState.AetherFall:
+            case ActionState.AetherizeFall:
                 AetherUpdate();
                 break;
-            case ActionState.LightHoldFall:
+            case ActionState.IlluminateFall:
                 LightUpdate();
                 break;
             case ActionState.Hover:
@@ -1920,6 +1934,17 @@ public class WorldPlayer : WorldEntity
                             break;
                     }
                 }
+                
+                //Undig special thing
+                if (actionState == ActionState.Neutral && undigTimer > 0)
+                {
+                    subObject.transform.localPosition = Vector3.down * 0.325f * ((undigTimer / DIG_TIME));
+                }
+                if (actionState != ActionState.Neutral)
+                {
+                    undigTimer = 0;
+                    subObject.transform.localPosition = Vector3.zero;
+                }
 
                 coyoteBool = false;
                 switch (actionState)
@@ -1934,7 +1959,7 @@ public class WorldPlayer : WorldEntity
                             TryUndig();
                         }
                         break;
-                    case ActionState.Aether:
+                    case ActionState.Aetherize:
                     //case ActionState.AetherFall:
                         if (!noAetherZone && InputManager.GetButton(InputManager.Button.B))
                         {
@@ -1946,7 +1971,7 @@ public class WorldPlayer : WorldEntity
                             SetActionState(ActionState.Neutral);
                         }
                         break;
-                    case ActionState.LightHold:
+                    case ActionState.Illuminate:
                     //case ActionState.LightHoldFall:
                         if (InputManager.GetButton(InputManager.Button.B))
                         {
@@ -2134,13 +2159,13 @@ public class WorldPlayer : WorldEntity
                         //don't question my math
                         if (Unlocked_Aetherize() && !noAetherZone && currentCharacter == MainManager.PlayerCharacter.Wilex)
                         {
-                            SetActionState(ActionState.Aether);
+                            SetActionState(ActionState.Aetherize);
                             AetherStart();
                         }
 
                         if (Unlocked_Illuminate() && currentCharacter == MainManager.PlayerCharacter.Luna)
                         {
-                            SetActionState(ActionState.LightHold);
+                            SetActionState(ActionState.Illuminate);
                             LightStart();
                         }
                     }
@@ -2175,12 +2200,12 @@ public class WorldPlayer : WorldEntity
                         SetActionState(ActionState.Fall);
                         enableDashLeniency = false;
                         break;
-                    case ActionState.Aether:
-                        SetActionState(ActionState.AetherFall);
+                    case ActionState.Aetherize:
+                        SetActionState(ActionState.AetherizeFall);
                         enableDashLeniency = false;
                         break;
-                    case ActionState.LightHold:
-                        SetActionState(ActionState.LightHoldFall);
+                    case ActionState.Illuminate:
+                        SetActionState(ActionState.IlluminateFall);
                         enableDashLeniency = false;
                         break;
                     case ActionState.Fall:
@@ -2955,13 +2980,20 @@ public class WorldPlayer : WorldEntity
                 ac.SendAnimationData("unshowback");
             }
 
-            if ((rotationB > 90 || rotationB < -90) && (rotationB < 270 && rotationB > -270))
+            if (actionState == ActionState.Slash)
             {
-                ac.SendAnimationData("xflip");
-            }
-            else
-            {
+                //important: the slash animations shouldn't be flipped
                 ac.SendAnimationData("xunflip");
+            } else
+            {
+                if ((rotationB > 90 || rotationB < -90) && (rotationB < 270 && rotationB > -270))
+                {
+                    ac.SendAnimationData("xflip");
+                }
+                else
+                {
+                    ac.SendAnimationData("xunflip");
+                }
             }
         }
     }
@@ -2980,18 +3012,51 @@ public class WorldPlayer : WorldEntity
 
         string animName = "";
 
+        if (animationStopDelay > 0)
+        {
+            animationStopDelay -= Time.deltaTime;
+            if (animationStopDelay < 0)
+            {
+                animationStopDelay = 0;
+                ac.animator.speed = 0;
+            }
+        } else
+        {
+            animationStopDelay = 0;
+        }
+
+        if (actionState != ActionState.Smash && actionState != ActionState.Slash)
+        {
+            ac.animator.speed = 1;
+            animationStopDelay = 0;
+        }
+
         switch (actionState)
         {
             case ActionState.Neutral:
-                if (actionState == ActionState.Neutral && rb.velocity.magnitude > 0.25f)
+                if (undigTimer > 0)
                 {
-                    animName = "walk";
-                }
-                else
+                    animName = "undig";
+                } else
                 {
-                    animName = "idle";
+                    if (rb.velocity.magnitude > 0.25f)
+                    {
+                        animName = "walk";
+                    }
+                    else
+                    {
+                        animName = "idle";
+                    }
                 }
                 break;
+            case ActionState.HazardTouch:
+                animName = "hurt";
+                break;
+            case ActionState.Jump:
+            case ActionState.WallJump:
+                animName = "jump";
+                break;
+            case ActionState.SuperKick:
             case ActionState.SuperJump:
             case ActionState.DoubleJump:
             case ActionState.Dash:
@@ -3000,11 +3065,40 @@ public class WorldPlayer : WorldEntity
             case ActionState.DashFall:
                 animName = "dashfall";
                 break;
-            case ActionState.Jump:
-                animName = "jump";
+            case ActionState.Dig:
+                if (digTimer > 0)
+                {
+                    animName = "dig";
+                }
+                else
+                {
+                    //??? sprite size is shrank to basically nothing so it doesn't really matter
+                }
                 break;
-            case ActionState.LightHoldFall:
-            case ActionState.AetherFall:
+            case ActionState.Slash:
+                //calculate stuff
+                //note that this has the same angles as smash but 8 possible animations instead of 5
+                animName = GetSlashAnim();
+                break;
+            case ActionState.Smash:
+                //calculate stuff
+                animName = GetSmashAnim();
+                break;
+            case ActionState.Aetherize:
+            case ActionState.Illuminate:
+                if (rb.velocity.magnitude > 0.25f)
+                {
+                    animName = "weaponholdwalk";
+                }
+                else
+                {
+                    animName = "weaponholdidle";
+                }
+                break;
+            case ActionState.IlluminateFall:
+            case ActionState.AetherizeFall:
+                animName = "weaponholdidle";
+                break;
             case ActionState.Fall:
                 if (rb != null && rb.velocity.y > 0)
                 {
@@ -3022,8 +3116,14 @@ public class WorldPlayer : WorldEntity
 
         if (ac != null)
         {
-            //Debug.Log(animName);
-            ac.SetAnimation(animName);
+            if (animName.Equals("idle"))
+            {
+                ShowIdleAnimation();
+            }
+            else
+            {
+                ac.SetAnimation(animName);
+            }
         }
     }
 
@@ -3046,10 +3146,10 @@ public class WorldPlayer : WorldEntity
             bool keep = false;
             switch (actionState)
             {
-                case ActionState.Aether:
-                case ActionState.AetherFall:
-                case ActionState.LightHold:
-                case ActionState.LightHoldFall:
+                case ActionState.Aetherize:
+                case ActionState.AetherizeFall:
+                case ActionState.Illuminate:
+                case ActionState.IlluminateFall:
                 case ActionState.Dig:
                 case ActionState.SuperJump:
                     keep = true;
@@ -3126,10 +3226,6 @@ public class WorldPlayer : WorldEntity
         perpetualParticleObject = eo;
         stalePerpetualParticles.Add(eo);
 
-        //debug: later, need to set up the actual sprite animations
-        subObject.transform.localScale = Vector3.one * 0.125f;
-        subObject.transform.localPosition = Vector3.down * 0.325f;
-
         //collision stuff
         capsuleCollider.center = Vector3.down * 0.3125f;
         capsuleCollider.radius = 0.0625f;
@@ -3140,12 +3236,23 @@ public class WorldPlayer : WorldEntity
             followers[i].gameObject.SetActive(false);
         }
 
+        digTimer = DIG_TIME;
+
         TrySnapToFloor();
     }
 
     //will make some particle effects later to indicate where you are
     public void DigUpdate()
     {
+        if (digTimer != 0)
+        {
+            subObject.transform.localPosition = Vector3.down * 0.325f * (1 - (digTimer / DIG_TIME));
+        }
+        else
+        {
+            subObject.transform.localScale = Vector3.one * 0.001f;
+            subObject.transform.localPosition = Vector3.down * 0.325f;
+        }
         if (lastFloorDigThrough)
         {
             transform.position += Vector3.down * 0.75f;
@@ -3158,7 +3265,7 @@ public class WorldPlayer : WorldEntity
     //Later it will have particle effects and won't be instantaneous (but the hitbox stuff will be)
     public void UnDig()
     {
-        undigTimer = 0.15f;
+        undigTimer = UNDIG_TIME;
         if (IsGrounded())
         {
             GameObject eoI = null;
@@ -3208,8 +3315,51 @@ public class WorldPlayer : WorldEntity
         //Debug.Log("Bonk: " + kickpos + " with normal " + kicknormal);
     }
 
+    public string GetSlashAnim()
+    {
+        string animName = "";
+        //calculate stuff
+        //note that this has the same angles as smash but 8 possible animations instead of 5
+        if ((trueFacingRotation < 22.5f || trueFacingRotation > 337.5f))
+        {
+            animName = "smash_e";
+        }
+        if ((trueFacingRotation > 157.5f && trueFacingRotation < 202.5f))
+        {
+            animName = "smash_w";
+        }
+        if ((trueFacingRotation < 337.5f && trueFacingRotation > 292.5f))
+        {
+            animName = "smash_ne";
+        }
+        if ((trueFacingRotation > 202.5f && trueFacingRotation < 247.5f))
+        {
+            animName = "smash_nw";
+        }
+        if ((trueFacingRotation < 67.5f && trueFacingRotation > 22.5f))
+        {
+            animName = "smash_se";
+        }
+        if ((trueFacingRotation > 112.5f && trueFacingRotation < 157.5f))
+        {
+            animName = "smash_sw";
+        }
+        if ((trueFacingRotation > 247.5f && trueFacingRotation < 292.5f))
+        {
+            animName = "smash_n";
+        }
+        if ((trueFacingRotation > 67.5f && trueFacingRotation < 112.5f))
+        {
+            animName = "smash_s";
+        }
+        return animName;
+    }
     public void StartSlash()
     {
+        ac.animator.speed = 1;
+        animationStopDelay = 0;
+        ac.SetAnimation(GetSlashAnim(), true);
+
         //Debug.Log("slash");
         attackTime = 0;
         visualAttackTime = 0;
@@ -3235,8 +3385,37 @@ public class WorldPlayer : WorldEntity
         swooshParticle = eoI;
     }
 
+    public string GetSmashAnim()
+    {
+        string animName = "";
+        if ((trueFacingRotation < 22.5f || trueFacingRotation > 337.5f) || (trueFacingRotation > 157.5f && trueFacingRotation < 202.5f))
+        {
+            animName = "smash_e";
+        }
+        if ((trueFacingRotation < 337.5f && trueFacingRotation > 292.5f) || (trueFacingRotation > 202.5f && trueFacingRotation < 247.5f))
+        {
+            animName = "smash_ne";
+        }
+        if ((trueFacingRotation < 67.5f && trueFacingRotation > 22.5f) || (trueFacingRotation > 112.5f && trueFacingRotation < 157.5f))
+        {
+            animName = "smash_se";
+        }
+        if ((trueFacingRotation > 247.5f && trueFacingRotation < 292.5f))
+        {
+            animName = "smash_n";
+        }
+        if ((trueFacingRotation > 67.5f && trueFacingRotation < 112.5f))
+        {
+            animName = "smash_s";
+        }
+        return animName;
+    }
     public void StartSmash()
     {
+        ac.animator.speed = 1;
+        animationStopDelay = 0;
+        ac.SetAnimation(GetSmashAnim(), true);
+
         //Debug.Log("smash");
         attackTime = 0;
         visualAttackTime = 0;
@@ -3289,6 +3468,7 @@ public class WorldPlayer : WorldEntity
     {
         if (swooshParticle != null && !attackInterrupted)
         {
+            animationStopDelay = 0.015f;
             if (actionState == ActionState.Smash)
             {
                 swooshParticle.GetComponent<Effect_Swoosh>().StopRotation();
@@ -3747,8 +3927,8 @@ public class WorldPlayer : WorldEntity
         {
             case ActionState.Neutral:
             case ActionState.Land:
-            case ActionState.Aether:
-            case ActionState.LightHold:
+            case ActionState.Aetherize:
+            case ActionState.Illuminate:
             case ActionState.Dig:
             case ActionState.Slash:
             case ActionState.Smash:
@@ -3818,8 +3998,8 @@ public class WorldPlayer : WorldEntity
         {
             switch (actionState)
             {
-                case ActionState.Aether:
-                case ActionState.AetherFall:
+                case ActionState.Aetherize:
+                case ActionState.AetherizeFall:
                     return true;
             }
         }
@@ -3849,8 +4029,8 @@ public class WorldPlayer : WorldEntity
             {
                 switch (actionState)
                 {
-                    case ActionState.Aether:
-                    case ActionState.AetherFall:
+                    case ActionState.Aetherize:
+                    case ActionState.AetherizeFall:
                         return true;
                 }
             }
@@ -3895,24 +4075,24 @@ public class WorldPlayer : WorldEntity
                         break;
                 }
                 break;
-            case ActionState.Aether:
-            case ActionState.AetherFall:
+            case ActionState.Aetherize:
+            case ActionState.AetherizeFall:
                 switch (actionState)
                 {
-                    case ActionState.Aether:
-                    case ActionState.AetherFall:
+                    case ActionState.Aetherize:
+                    case ActionState.AetherizeFall:
                         break;
                     default:
                         DeAether();
                         break;
                 }
                 break;
-            case ActionState.LightHold:
-            case ActionState.LightHoldFall:
+            case ActionState.Illuminate:
+            case ActionState.IlluminateFall:
                 switch (actionState)
                 {
-                    case ActionState.LightHold:
-                    case ActionState.LightHoldFall:
+                    case ActionState.Illuminate:
+                    case ActionState.IlluminateFall:
                         break;
                     default:
                         DeLight();
@@ -4408,12 +4588,12 @@ public class WorldPlayer : WorldEntity
 
     public bool IsAether()
     {
-        return actionState == ActionState.Aether || actionState == ActionState.AetherFall;
+        return actionState == ActionState.Aetherize || actionState == ActionState.AetherizeFall;
     }
 
     public bool IsLight()
     {
-        return actionState == ActionState.LightHold || actionState == ActionState.LightHoldFall;
+        return actionState == ActionState.Illuminate || actionState == ActionState.IlluminateFall;
     }
 
     public float GetAetherTime()
@@ -4677,7 +4857,17 @@ public class WorldPlayer : WorldEntity
     {
         isSpeaking = false;
         scriptedAnimation = false;
-        SetAnimation("idle");   //note: no way to check for what the real last anim was at this point
+        ShowIdleAnimation();
     }
 
+    public void ShowIdleAnimation()
+    {
+        if (MainManager.Instance.playerData.ShowDangerAnim(currentCharacter) && !showBack)  //I don't have idleweak_back
+        {
+            SetAnimation("idleweak");
+        } else
+        {
+            SetAnimation("idle");
+        }
+    }
 }

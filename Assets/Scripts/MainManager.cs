@@ -1501,7 +1501,22 @@ public class PlayerData
         charmEffects.Sort((a, b) => ((int)a.charmType - (int)b.charmType));
     }
 
+    public bool ShowDangerAnim(MainManager.PlayerCharacter pc)
+    {
+        BattleHelper.EntityID eid = BattleHelper.EntityID.DebugEntity;
+        Enum.TryParse(pc.ToString(), out eid);
+        return ShowDangerAnim(eid);
+    }
+    public bool ShowDangerAnim(BattleHelper.EntityID eid)
+    {
+        PlayerDataEntry pde = GetPlayerDataEntry(eid);
+        if (pde == null)
+        {
+            return false;
+        }
 
+        return pde.hp < PlayerDataEntry.GetDangerHP(eid) || GetRibbonEquipped(Ribbon.RibbonType.ThornyRibbon, eid);
+    }
 
     public static string LevelUpgradeListToString(List<LevelUpgrade> list)
     {
@@ -2067,6 +2082,7 @@ public class MainManager : MonoBehaviour
     public EncounterData nextBattle;
     public BattleStartArguments battleStartArguments;
     public int coinDrops;
+    public int dropItemCount;
     public Item.ItemType dropItemType;
 
     //Used to pass menu results outside of textboxes in some cases (coroutines can't have out parameters)
@@ -2544,6 +2560,13 @@ public class MainManager : MonoBehaviour
     public string[][] commonText;
     public string[][] systemText;
 
+    public Color[][] weaponColors;
+
+    public Vector4 testWeaponColorA;
+    public Vector4 testWeaponColorB;
+    public Vector4 testWeaponColorC;
+    public Vector4 testWeaponColorD;
+
 
     //Cheat values
     //should show up at the bottom of inspector for easier access
@@ -2563,6 +2586,7 @@ public class MainManager : MonoBehaviour
     public bool Cheat_AlmostAllBadgesActive;    //does not include certain "worse than useless" badges
     public bool Cheat_BadgeDoubleStrength;  //badges act as if you have double of them equipped (for most stackable badges) (note that a lot of 1 off badges still have stacking logic)
     public bool Cheat_BadgeNegativeStrength; //badges have negative strength (Non stackable badges don't work with this) (Effect related badges are a bit broken with this)
+    public bool Cheat_TooManyBadges;    //badge pickups are doubled
     public bool Cheat_NoEffectCaps;
     public bool Cheat_BattleWin;        //Battles are won instantly
     public bool Cheat_BattleRandomActions;  //wacky non-cheat ish actions in battle
@@ -2572,6 +2596,7 @@ public class MainManager : MonoBehaviour
     public bool Cheat_StaminaAnarchy;    //ignore stamina thing
     public bool Cheat_EnergyAnarchy;    //ignore energy thing
     public bool Cheat_TargetAnarchy;    //Single target moves act as Anyone targetting moves
+    public bool Cheat_LevelAnarchy; //makes level limits for moves really high
     public bool Cheat_SkillSwap;    //Skill swap is always active
     public bool Cheat_InfiniteBite; //Multi Bite is always active and gives infinite
     public bool Cheat_BadgeSwap;    //Badge swap is always active
@@ -2843,6 +2868,13 @@ public class MainManager : MonoBehaviour
             yield return StartCoroutine(ExecuteCutscene(DisplayTextBox(file, y, x, speaker, vars)));
         }
     }
+    public MinibubbleScript MakeMinibubble()
+    {
+        GameObject minibubble = Instantiate(MainManager.Instance.defaultMinibubble, MainManager.Instance.Canvas.transform);
+        MinibubbleScript mbs = minibubble.GetComponent<MinibubbleScript>();
+        return mbs;
+    }
+
     public IEnumerator Pickup(PickupUnion pu)
     {
         switch (pu.type)
@@ -2908,6 +2940,10 @@ public class MainManager : MonoBehaviour
                 if (pu.badge.type != Badge.BadgeType.None)
                 {
                     playerData.AddBadge(pu.badge);
+                    if (Cheat_TooManyBadges)
+                    {
+                        playerData.AddBadge(pu.badge);
+                    }
                 }
                 yield return StartCoroutine(GetItemPopupBlocking(pu));
                 yield break;
@@ -3102,6 +3138,28 @@ public class MainManager : MonoBehaviour
             return;
         }
         WorldCollectibleScript.MakeCollectible(new PickupUnion(new Item(it, Item.ItemModifier.None, Item.ItemOrigin.EnemyDrop)), position, velocity);
+    }
+    public void DropItems(Item.ItemType it, int count, Vector3 position, Vector3 firstDir, Vector3 baseVel, float spread)
+    {
+        //Debug.Log("Drop coins");
+        //actual drop count should be kept somewhere between being too low and too high
+        int dropCount = count;
+
+        int dropIndex = 0;
+        float dropAngle = 0;
+        Vector3 newVel;
+
+        float firstAngle = Mathf.Atan2(firstDir.x, firstDir.z);
+
+        for (int i = 0; i < dropCount; i++)
+        {
+            dropAngle = (dropIndex / (dropCount + 0f)) * 2 * Mathf.PI + firstAngle;
+
+            newVel = baseVel + spread * Vector3.right * Mathf.Sin(dropAngle) + spread * Vector3.forward * Mathf.Cos(dropAngle);
+            WorldCollectibleScript.MakeCollectible(new PickupUnion(new Item(it, Item.ItemModifier.None, Item.ItemOrigin.EnemyDrop)), position, newVel);
+
+            dropIndex++;
+        }
     }
 
     public float GetHyperScrollRate()
@@ -3361,6 +3419,7 @@ public class MainManager : MonoBehaviour
     }
     public Vector2 WorldPosToCanvasPosB(Vector3 wpos)   //not sure how this is different from above. Possibly occurs due to anchor positioning acting weird for some reason
     {
+        //actually: probably because it is just WorldToScreenPoint since the multiplication and division cancel out
         return WorldPosToCanvasPosProportion(wpos) * new Vector2(Screen.width, Screen.height);
     }
     public Vector2 WorldPosToCanvasPosProportion(Vector3 wpos)
@@ -3839,6 +3898,86 @@ public class MainManager : MonoBehaviour
         ReturnToStartMenu();
     }
 
+    public void LoadWeaponColors()
+    {
+        //0,1,2,3 = sword colors
+        //4,5,6,7 = hammer colors
+        //note that 0,4 shouldn't be used ("error colors")
+        weaponColors = new Color[8][];
+
+        //4 entries per table
+        //(outline), dark, medium, light
+        //swords only have light being the highlight, while the hammer can have a big region of the light color
+
+        weaponColors[0] = new Color[] { new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0) };
+        weaponColors[1] = new Color[] { new Color(0.42f, 0.34f, 0.24f, 1), new Color(0.54f, 0.44f, 0.32f, 1), new Color(0.68f, 0.57f, 0.43f, 1), new Color(0.84f, 0.74f, 0.62f, 1) };
+        weaponColors[2] = new Color[] { new Color(0.48f, 0.51f, 0.56f, 1), new Color(0.74f, 0.75f, 0.76f, 1), new Color(0.87f, 0.88f, 0.89f, 1), new Color(1f, 1f, 1f, 1) };
+        weaponColors[3] = new Color[] { new Color(0.4f, -2f, 0f, 1), new Color(0.65f, 0f, 0.1f, 1), new Color(0.8f, 0f, 0.15f, 1), new Color(1f, 0.2f, 0.3f, 1) };
+        weaponColors[4] = new Color[] { new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0) };
+        weaponColors[5] = new Color[] { new Color(0.42f, 0.34f, 0.24f, 1), new Color(0.54f, 0.44f, 0.32f, 1), new Color(0.68f, 0.57f, 0.43f, 1), new Color(0.84f, 0.74f, 0.62f, 1) };
+        weaponColors[6] = new Color[] { new Color(0.48f, 0.51f, 0.56f, 0), new Color(0.74f, 0.75f, 0.76f, 1), new Color(0.87f, 0.88f, 0.89f, 1), new Color(1f, 1f, 1f, 1) };
+        weaponColors[7] = new Color[] { new Color(0.53f, 0.46f, 0.22f, 1), new Color(1f, 0.9f, 0.5f, 1), new Color(1.3f, 1.2f, 0.6f, 1), new Color(1.4f, 1.3f, 0.82f, 1) };
+    }
+
+    public void WeaponColorUpdate()
+    {
+        if (weaponColors == null || weaponColors.Length < 6)
+        {
+            LoadWeaponColors();
+        }
+
+        PlayerData.PlayerDataEntry wilex = null;
+        PlayerData.PlayerDataEntry luna = null;
+        PlayerData pd = null;
+
+        if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
+        {
+            if (BattleControl.Instance == null)
+            {
+                return;
+            }
+            pd = BattleControl.Instance.playerData;
+            if (pd == null)
+            {
+                return;
+            }
+
+            wilex = BattleControl.Instance.playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+            luna = BattleControl.Instance.playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+        }
+        else
+        {
+            pd = MainManager.Instance.playerData;
+            if (pd == null)
+            {
+                return;
+            }
+
+            wilex = MainManager.Instance.playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+            luna = MainManager.Instance.playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+        }
+
+        if (wilex != null)
+        {
+            Color[] sc = weaponColors[wilex.weaponLevel + 1];
+
+            Shader.SetGlobalVector("_WWeaponColorA", sc[0]);
+            Shader.SetGlobalVector("_WWeaponColorB", sc[1]);
+            Shader.SetGlobalVector("_WWeaponColorC", sc[2]);
+            Shader.SetGlobalVector("_WWeaponColorD", sc[3]);
+        }
+
+        if (luna != null)
+        {
+            Color[] hc = weaponColors[luna.weaponLevel + 5];
+
+            Shader.SetGlobalVector("_LWeaponColorA", hc[0]);
+            Shader.SetGlobalVector("_LWeaponColorB", hc[1]);
+            Shader.SetGlobalVector("_LWeaponColorC", hc[2]);
+            Shader.SetGlobalVector("_LWeaponColorD", hc[3]);
+        }
+    }
+
     public void Update()
     {
         float targetTimeScale = 1;
@@ -3903,6 +4042,9 @@ public class MainManager : MonoBehaviour
                 }
             }
         }
+
+        GlobalRibbonScript.Instance.RibbonColorUpdate();
+        WeaponColorUpdate();
 
         if (curOverworldHUD != null)
         {
@@ -5207,7 +5349,8 @@ public class MainManager : MonoBehaviour
     {
         coinDrops = BattleControl.coinDrops;
         dropItemType = BattleControl.dropItem;
-        if (!BattleControl.shouldDropItem)
+        dropItemCount = BattleControl.dropItemCount;
+        if (dropItemCount < 1)
         {
             dropItemType = Item.ItemType.None;
         }
@@ -5223,7 +5366,7 @@ public class MainManager : MonoBehaviour
                 yield return StartCoroutine(ReturnFromBattleNormal(outcome));
                 break;
             case BattleHelper.BattleOutcome.Tie:
-                if (mapScript.HandleBattleLoss())
+                if (mapScript.CanHandleBattleLoss())
                 {
                     yield return StartCoroutine(ReturnFromBattleNormal(outcome));
                 }
@@ -5233,7 +5376,7 @@ public class MainManager : MonoBehaviour
                 }
                 break;
             case BattleHelper.BattleOutcome.Death:
-                if (mapScript.HandleBattleLoss())
+                if (mapScript.CanHandleBattleLoss())
                 {
                     yield return StartCoroutine(ReturnFromBattleNormal(outcome));
                 }

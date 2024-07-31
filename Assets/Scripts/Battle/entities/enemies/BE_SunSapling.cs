@@ -27,7 +27,7 @@ public class BE_SunSapling : BattleEntity
             gameObject.AddComponent<BM_SunSapling_PowerRoar>()
         };
 
-        InflictEffect(this, new Effect(Effect.EffectType.HealthRegen, 6, 255));
+        InflictEffect(this, new Effect(Effect.EffectType.HealthRegen, 6, Effect.INFINITE_DURATION));
 
         base.Initialize();
     }
@@ -76,7 +76,7 @@ public class BE_SunSapling : BattleEntity
 
     public override IEnumerator PostMove()
     {
-        InflictEffect(this, new Effect(Effect.EffectType.HealthRegen, 6, 255));
+        InflictEffect(this, new Effect(Effect.EffectType.HealthRegen, 6, Effect.INFINITE_DURATION));
 
         yield return StartCoroutine(base.PostMove());
     }
@@ -131,14 +131,14 @@ public class BM_SunSapling_FrontSlam : EnemyMove
         if (ss.summonLeft == null)
         {
             ss.summonLeft = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Sunnybud, 20);
-            ss.InflictEffectForce(ss.summonLeft, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            ss.InflictEffectForce(ss.summonLeft, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             summon = true;
         }
 
         if (ss.summonRight == null)
         {
             ss.summonRight = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Sunflower, 24);
-            ss.InflictEffectForce(ss.summonRight, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            ss.InflictEffectForce(ss.summonRight, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             summon = true;
         }
 
@@ -150,12 +150,12 @@ public class BM_SunSapling_FrontSlam : EnemyMove
                 //Debug.Log(focusTargets[i]);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 4, 255));
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Absorb, 2, 255));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 4, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
                 }
                 else
                 {
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 3, 255));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -219,7 +219,7 @@ public class BM_SunSapling_GrowCharge : EnemyMove
         yield return StartCoroutine(TrySummonOrFocus(caller));
 
         //self focus
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 6, 255));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 6, Effect.INFINITE_DURATION));
     }
 
     public IEnumerator TrySummonOrFocus(BattleEntity caller)
@@ -231,14 +231,14 @@ public class BM_SunSapling_GrowCharge : EnemyMove
         if (ss.summonLeft == null)
         {
             ss.summonLeft = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Sunnybud, 20);
-            ss.InflictEffectForce(ss.summonLeft, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            ss.InflictEffectForce(ss.summonLeft, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             summon = true;
         }
 
         if (ss.summonRight == null)
         {
             ss.summonRight = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Sunflower, 24);
-            ss.InflictEffectForce(ss.summonRight, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            ss.InflictEffectForce(ss.summonRight, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             summon = true;
         }
 
@@ -250,12 +250,12 @@ public class BM_SunSapling_GrowCharge : EnemyMove
                 //Debug.Log(focusTargets[i]);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 4, 255));
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Absorb, 2, 255));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 4, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
                 }
                 else
                 {
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 3, 255));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -280,13 +280,13 @@ public class BM_SunSapling_PowerRoar : EnemyMove
         List<BattleEntity> focusTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.AllyNotSelf, true));
         for (int i = 0; i < focusTargets.Count; i++)
         {
-            caller.InflictEffect(focusTargets[i], new Effect(Effect.EffectType.Focus, 3, 255));
+            caller.InflictEffect(focusTargets[i], new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
         }
 
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
             caller.HealHealth(3);
-            caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, 255));
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
         }
 
         yield return StartCoroutine(caller.Squish(0.067f, 0.2f));

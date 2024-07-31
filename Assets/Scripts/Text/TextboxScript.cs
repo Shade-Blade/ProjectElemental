@@ -56,6 +56,7 @@ public class TextboxScript : MonoBehaviour
 
     public bool minibubbleWait;
     List<MinibubbleScript> attachedMinibubbles;
+    public bool tailRealTimeUpdate;
 
     private MenuHandler menuHandler;
     private bool inMenu;
@@ -69,7 +70,7 @@ public class TextboxScript : MonoBehaviour
 
     public void ConvertTailPos()
     {    
-        tailPointTruePos = MainManager.Instance.WorldPosToCanvasPos(tailPointPos);
+        tailPointTruePos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);
     }
     public void PointTail()
     {
@@ -84,21 +85,21 @@ public class TextboxScript : MonoBehaviour
 
         //Point tail towards target
         Vector2 tailCenterScreenPos = tail.rectTransform.TransformPoint(Vector3.zero);
-        Vector2 ScreenToCanvasScale = new Vector2(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / Screen.width,
-    MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.height / Screen.height);
-        tailCenterScreenPos *= ScreenToCanvasScale;
+        //Vector2 ScreenToCanvasScale = new Vector2(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / Screen.width,
+    //MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.height / Screen.height);
+        //tailCenterScreenPos *= ScreenToCanvasScale;
         //finally this calculation actually works
 
         float angle = (180f / Mathf.PI) * Mathf.Atan2(tailPointTruePos[1]- tailCenterScreenPos[1], tailPointTruePos[0]- tailCenterScreenPos[0]);
 
         angle += 90;
-        if (angle > 80)
+        if (angle > 70)
         {
-            angle = 80;
+            angle = 70;
         }
-        if (angle < -80)
+        if (angle < -70)
         {
-            angle = -80;
+            angle = -70;
         }
 
 
@@ -212,8 +213,7 @@ public class TextboxScript : MonoBehaviour
                     }
                 }
 
-                GameObject minibubble = Instantiate(MainManager.Instance.defaultMinibubble, MainManager.Instance.Canvas.transform);
-                MinibubbleScript mbs = minibubble.GetComponent<MinibubbleScript>();
+                MinibubbleScript mbs = MainManager.Instance.MakeMinibubble();
                 mbs.parent = this;
                 if (miniA)
                 {
@@ -386,9 +386,26 @@ public class TextboxScript : MonoBehaviour
                     MoveTail(new Vector3(a, b, c));
                 }
                 break;
+            case TagEntry.TextTag.TailRealTimeUpdate:
+                if (t.args.Length > 0 && bool.TryParse(t.args[0], out bool trtu))
+                {
+                    if (speaker != null)
+                    {
+                        tailRealTimeUpdate = trtu;
+                    } else
+                    {
+                        Debug.LogWarning("Tail Real Time Update does not make sense without a speaker");
+                    }
+                }
+                break;
             case TagEntry.TextTag.Anim:
                 int animMEID;
                 ITextSpeaker targetSpeaker = null;
+                bool force = false;
+                if (t.args.Length > 1 && bool.TryParse(t.args[1], out force))
+                {
+
+                }
                 if (int.TryParse(t.args[0], out animMEID))
                 {
                     targetSpeaker = MainManager.Instance.GetSpeaker(animMEID);
@@ -411,7 +428,7 @@ public class TextboxScript : MonoBehaviour
                 }
                 if (targetSpeaker != null)
                 {
-                    targetSpeaker.SetAnimation(t.args[1]);
+                    targetSpeaker.SetAnimation(t.args[1], force);
                 }
                 break;
             case TagEntry.TextTag.AnimData:
@@ -1344,30 +1361,31 @@ public class TextboxScript : MonoBehaviour
         animTime = 0;
         RectTransform rt = baseObject.GetComponent<RectTransform>();
 
-        nextButton.color = new Color(0, 0, 0, 0);
         tail.enabled = hasTail;
         PointTail();
 
-        originalPos = rt.anchoredPosition;
+        originalPos = rt.anchoredPosition;  //end position?
 
-        Vector3 trueAnimOffset;
+        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);   //start position
+        newAnchoredPos.y -= Screen.height / 2;
+        newAnchoredPos.x -= Screen.width / 2;
         if (hasTail)
         {
             ConvertTailPos();
-            Vector3 newAnchoredPos = baseObject.transform.InverseTransformPoint(tailPointTruePos);
-            trueAnimOffset = Vector3.up * 25 + newAnchoredPos - originalPos;
+            //baseObject.transform.InverseTransformPoint(
         }
         else
         {
-            trueAnimOffset = animOffset;
+            newAnchoredPos = animOffset + originalPos;
         }
 
 
         while (animTime < animBaseTime)
         {
-            rt.localScale = Vector3.Lerp(new Vector3(startScale, startScale, startScale), new Vector3(1, 1, 1), animTime / animBaseTime);           
-            rt.anchoredPosition = originalPos + Mathf.Lerp(1,0,animTime/animBaseTime) * trueAnimOffset;
+            rt.localScale = Vector3.Lerp(new Vector3(startScale, startScale, startScale), new Vector3(1, 1, 1), animTime / animBaseTime);
+            rt.anchoredPosition = Vector3.Lerp(newAnchoredPos, originalPos, animTime / animBaseTime);
             animTime += Time.deltaTime;
+            PointTail();
             yield return null;
         }
 
@@ -1376,6 +1394,7 @@ public class TextboxScript : MonoBehaviour
             speaker.EnableSpeakingAnim();
         }
 
+        PointTail();
         rt.localScale = new Vector3(1, 1, 1);
         rt.anchoredPosition = originalPos;
     }
@@ -1383,27 +1402,25 @@ public class TextboxScript : MonoBehaviour
     {
         RectTransform rt = baseObject.GetComponent<RectTransform>();
 
-        nextButton.color = new Color(0,0,0,0);
-
         animTime = 0;
-        originalPos = rt.anchoredPosition;
+        originalPos = rt.anchoredPosition;  //start position
 
-        Vector3 trueAnimOffset;
+        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);   //start position
+        newAnchoredPos.y -= Screen.height / 2;
+        newAnchoredPos.x -= Screen.width / 2;
         if (hasTail)
         {
             ConvertTailPos();
-            Vector3 newAnchoredPos = baseObject.transform.InverseTransformPoint(tailPointTruePos);
-            trueAnimOffset = newAnchoredPos - originalPos;
         }
         else
         {
-            trueAnimOffset = animOffset;
+            newAnchoredPos = animOffset + originalPos;
         }
 
         while (animTime < animBaseTime)
         {
             rt.localScale = Vector3.Lerp(new Vector3(startScale, startScale, startScale), new Vector3(1, 1, 1), 1 - (animTime / animBaseTime));
-            rt.anchoredPosition = originalPos + Mathf.Lerp(0, 1, (animTime / animBaseTime)) * trueAnimOffset;
+            rt.anchoredPosition = Vector3.Lerp(originalPos, newAnchoredPos, animTime / animBaseTime);
             animTime += Time.deltaTime;
 
             yield return null;
@@ -1937,7 +1954,11 @@ public class TextboxScript : MonoBehaviour
 
     void TextUpdate()
     {
-        //Debug.Log("z");
+        //real time position change
+        if (tailRealTimeUpdate)
+        {
+            MoveTail(speaker.GetTextTailPosition());
+        }
 
         if (!inMenu)
         {

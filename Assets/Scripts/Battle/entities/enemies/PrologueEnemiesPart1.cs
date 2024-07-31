@@ -200,10 +200,10 @@ public class BM_Flowerling_Hard_SwoopBloom : EnemyMove
         switch (caller.entityID)
         {
             case BattleHelper.EntityID.Flowerling:
-                caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 1, 255));
+                caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
                 break;
             case BattleHelper.EntityID.Sunflower:
-                caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 2, 255));
+                caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
                 break;
         }
     }

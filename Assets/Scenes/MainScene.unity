@@ -953,6 +953,7 @@ MonoBehaviour:
     encounterList: []
     battleMapName: 0
   coinDrops: 0
+  dropItemCount: 0
   dropItemType: 0
   lastTextboxMenuResult: 
   lastStartedCutscene: -1
@@ -1022,6 +1023,10 @@ MonoBehaviour:
   showCoins: 0
   hudShowTime: 0
   lastCoinCount: 0
+  testWeaponColorA: {x: 0, y: 0, z: 0, w: 0}
+  testWeaponColorB: {x: 0, y: 0, z: 0, w: 0}
+  testWeaponColorC: {x: 0, y: 0, z: 0, w: 0}
+  testWeaponColorD: {x: 0, y: 0, z: 0, w: 0}
   Cheat_CheatMenuAvailable: 1
   Cheat_NoClip: 0
   Cheat_KeruAsterJump: 0
@@ -1037,6 +1042,7 @@ MonoBehaviour:
   Cheat_AlmostAllBadgesActive: 0
   Cheat_BadgeDoubleStrength: 0
   Cheat_BadgeNegativeStrength: 0
+  Cheat_TooManyBadges: 0
   Cheat_NoEffectCaps: 0
   Cheat_BattleWin: 0
   Cheat_BattleRandomActions: 0
@@ -1046,6 +1052,7 @@ MonoBehaviour:
   Cheat_StaminaAnarchy: 0
   Cheat_EnergyAnarchy: 0
   Cheat_TargetAnarchy: 0
+  Cheat_LevelAnarchy: 0
   Cheat_SkillSwap: 0
   Cheat_InfiniteBite: 0
   Cheat_BadgeSwap: 0

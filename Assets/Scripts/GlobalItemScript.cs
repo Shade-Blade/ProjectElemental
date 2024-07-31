@@ -703,8 +703,8 @@ public struct ItemDataEntry
             string tempE_P;
             string tempE_D;
             Effect.EffectType temp_E2_T = (Effect.EffectType)(-1);
-            byte temp_E2_P = 0;
-            byte temp_E2_D = 0;
+            sbyte temp_E2_P = 0;
+            sbyte temp_E2_D = 0;
 
             if (entry[6].Length > 0)
             {
@@ -735,8 +735,22 @@ public struct ItemDataEntry
                         Debug.LogError("[Item Parsing] " + i + " Can't parse effect type \"" + tempE_T + "\"");
                     }
 
-                    byte.TryParse(tempE_P, out temp_E2_P);
-                    byte.TryParse(tempE_D, out temp_E2_D);
+                    if (tempE_P.Equals("X"))
+                    {
+                        temp_E2_P = Effect.INFINITE_POTENCY;
+                    }
+                    else
+                    {
+                        sbyte.TryParse(tempE_P, out temp_E2_P);
+                    }
+                    if (tempE_D.Equals("X"))
+                    {
+                        temp_E2_D = Effect.INFINITE_DURATION;
+                    }
+                    else
+                    {
+                        sbyte.TryParse(tempE_D, out temp_E2_D);
+                    }
 
                     tempEffects[j] = new Effect(temp_E2_T, temp_E2_P, temp_E2_D);
                 }
@@ -1738,8 +1752,8 @@ public struct Item
         None = -1,
         Eat,
         Drink,
-        EatSpit,
-        DrinkSpit,
+        EatBad,
+        DrinkBad,
         EatGood,
         DrinkGood,
     }
@@ -2722,6 +2736,7 @@ public abstract class ItemMove : Move, IEntityHighlighter
     public virtual IEnumerator DefaultStartAnim(BattleEntity caller)
     {
         ItemType it = GetItemType();
+        ItemDataEntry ide = Item.GetItemDataEntry(item.type);
         Debug.Log("Item anim: "+it);
 
         //spawn a sprite
@@ -2863,7 +2878,7 @@ public abstract class ItemMove : Move, IEntityHighlighter
                 if (pcaller.itemSaver >= 2)
                 {
                     pcaller.itemSaver = 0;
-                    pcaller.InflictEffect(caller, new Effect(Effect.EffectType.Freebie, 1, 255));
+                    pcaller.InflictEffect(caller, new Effect(Effect.EffectType.Freebie, (sbyte)pcaller.BadgeEquippedCount(Badge.BadgeType.ItemSaver), Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -3014,13 +3029,13 @@ public abstract class MetaItemMove : Move
         switch (move)
         {
             case Move.Normal:
-                return "Normal";
+                return "Item";
             case Move.Multi:
-                return "Multi";
+                return "Multi Supply";
             case Move.Quick:
-                return "Quick";
+                return "Quick Supply";
             case Move.Void:
-                return "Void";
+                return "Void Supply";
         }
         return "";
     }
@@ -3032,11 +3047,11 @@ public abstract class MetaItemMove : Move
             case Move.Normal:
                 return "Use an item normally.";
             case Move.Multi:
-                return "Use 3 items.";
+                return "Use up to 3 items with one action. (In the menu, use B to cancel, or Z to end your selection early.)";
             case Move.Quick:
-                return "Use an item and then do a different move";
+                return "Use an item and get another action. (Can't do this more than once per turn.)";
             case Move.Void:
-                return "Use an already used item.";
+                return "Use an item that was used previously in battle.";
         }
         return "";
     }
@@ -3048,11 +3063,11 @@ public abstract class MetaItemMove : Move
             case Move.Normal:
                 return "<itemsprite,Carrot>";
             case Move.Multi:
-                return "<badgesprite,MultiBite>";
+                return "<badgesprite,MultiSupply>";
             case Move.Quick:
-                return "<badgesprite,QuickBite>";
+                return "<badgesprite,QuickSupply>";
             case Move.Void:
-                return "<badgesprite,VoidBite>";
+                return "<badgesprite,VoidSupply>";
         }
         return "";
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Item;
 
 public class Item_GenericConsumable : ItemMove
 {
@@ -56,10 +57,96 @@ public class Item_GenericConsumable : ItemMove
     {
         //BattleEntity target = caller.curTarget;
 
+        caller.SetAnimation("itemuse");
         yield return StartCoroutine(DefaultStartAnim(caller));
+        caller.SetIdleAnimation();
 
-        ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
-        yield return StartCoroutine(ExecuteEffect(caller, ide, 1));
+        ItemDataEntry ide = GetItemDataEntry(GetItem());
+
+        bool dual = GetProperty(ide, ItemProperty.TargetAll) != null;
+
+        TargetArea ta = GetBaseTarget();
+        //Use this to build the list of targets
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, ta);
+        if (!dual)
+        {
+            targets = new List<BattleEntity>
+            {
+                caller.curTarget
+            };
+        }
+
+        //animation
+        switch (GetItemDataEntry(item.type).useAnim)
+        {
+            case ItemUseAnim.Eat:
+            case ItemUseAnim.EatBad:
+            case ItemUseAnim.EatGood:
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    if (targets[i].CanMove())
+                    {
+                        targets[i].SetAnimation("itemeat");
+                    }
+                }
+                yield return new WaitForSeconds(1f);
+                break;
+            case ItemUseAnim.Drink:
+            case ItemUseAnim.DrinkBad:
+            case ItemUseAnim.DrinkGood:
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    if (targets[i].CanMove())
+                    {
+                        targets[i].SetAnimation("itemdrink");
+                    }
+                }
+                yield return new WaitForSeconds(1f);
+                break;
+            case ItemUseAnim.None:
+                break;
+        }
+        switch (GetItemDataEntry(item.type).useAnim)
+        {
+            case ItemUseAnim.EatBad:
+            case ItemUseAnim.DrinkBad:
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    if (targets[i].CanMove())
+                    {
+                        targets[i].SetAnimation("itembad");
+                    }
+                }
+                break;
+            case ItemUseAnim.EatGood:
+            case ItemUseAnim.DrinkGood:
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    if (targets[i].CanMove())
+                    {
+                        targets[i].SetAnimation("itemgood");
+                    }
+                }
+                break;
+            case ItemUseAnim.None:
+                break;
+            default:
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    if (targets[i].CanMove())
+                    {
+                        targets[i].SetIdleAnimation();
+                    }
+                }
+                break;
+        }
+
+        yield return StartCoroutine(ExecuteEffect(caller, ide, level));
+
+        for (int i = 0; i < targets.Count; i++)
+        {
+            targets[i].SetIdleAnimation();
+        }
 
         //
         yield return StartCoroutine(ProducerAnim(caller));
@@ -203,7 +290,7 @@ public class Item_GenericConsumable : ItemMove
 
         //bool isHealOverTime = false;
 
-        byte healOverTimeMult = 0;
+        sbyte healOverTimeMult = 0;
         if (Item.GetProperty(ide, Item.ItemProperty.HealOverTime) != null)
         {
             healOverTimeMult = 3;
@@ -232,34 +319,34 @@ public class Item_GenericConsumable : ItemMove
             int count = 0;
             if (hpheal > 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.HealthRegen, (byte)(hpheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.HealthRegen, (sbyte)(hpheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
             if (hpheal < 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.HealthLoss, (byte)(-hpheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.HealthLoss, (sbyte)(-hpheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
 
             if (epheal > 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.EnergyRegen, (byte)(epheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.EnergyRegen, (sbyte)(epheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
             if (epheal < 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.EnergyLoss, (byte)(-epheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.EnergyLoss, (sbyte)(-epheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
 
             if (seheal > 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.SoulRegen, (byte)(seheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.SoulRegen, (sbyte)(seheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
             if (seheal < 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.SoulLoss, (byte)(-seheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.SoulLoss, (sbyte)(-seheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
 
@@ -283,7 +370,7 @@ public class Item_GenericConsumable : ItemMove
             for (int i = 0; i < statusList.Length; i++)
             {
                 //boost by duration
-                //if duration == 255, boost by potency
+                //if duration == Effect.INFINITE_DURATION, boost by potency
                 //blacklist some effect types to prevent some overpowered things
                 //(the permanent stat increases, item boost itself)
                 if (Effect.GetEffectClass(statusList[i].effect) == Effect.EffectClass.Static)
@@ -437,11 +524,11 @@ public class Item_GenericConsumable : ItemMove
             overheal = 100;
         }
 
-        byte trueOverheal = 0;
+        sbyte trueOverheal = 0;
         if (ide.overhealDivisor > 0 && overheal > 0)
         {
             //Debug.Log("Ceil to int: " + overheal + " / " + ide.overhealDivisor + " = " + ((overheal + 0.0f) / ide.overhealDivisor));
-            trueOverheal = (byte)(Mathf.CeilToInt((overheal + 0.0f) / ide.overhealDivisor));
+            trueOverheal = (sbyte)(Mathf.CeilToInt((overheal + 0.0f) / ide.overhealDivisor));
 
             //cap overheal to avoid sussery
             //if (trueOverheal > 10)
@@ -487,21 +574,21 @@ public class Item_GenericConsumable : ItemMove
                         caller.InflictEffect(targets[i], new Effect(Effect.EffectType.DefenseUp, trueOverheal, 3));
                         break;
                     case Item.OverhealPayEffect.FocusAttack:
-                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Focus, trueOverheal, 255));
+                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Focus, trueOverheal, Effect.INFINITE_DURATION));
                         caller.InflictEffect(targets[i], new Effect(Effect.EffectType.AttackUp, trueOverheal, 3));
                         break;
                     case Item.OverhealPayEffect.AbsorbDefense:
-                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Absorb, trueOverheal, 255));
+                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Absorb, trueOverheal, Effect.INFINITE_DURATION));
                         caller.InflictEffect(targets[i], new Effect(Effect.EffectType.DefenseUp, trueOverheal, 3));
                         break;
                     case Item.OverhealPayEffect.Focus:
-                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Focus, trueOverheal, 255));
+                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Focus, trueOverheal, Effect.INFINITE_DURATION));
                         break;
                     case Item.OverhealPayEffect.Absorb:
-                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Absorb, trueOverheal, 255));
+                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Absorb, trueOverheal, Effect.INFINITE_DURATION));
                         break;
                     case Item.OverhealPayEffect.Burst:
-                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Burst, trueOverheal, 255));
+                        caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Burst, trueOverheal, Effect.INFINITE_DURATION));
                         break;
                     case Item.OverhealPayEffect.HPRegen:
                         caller.InflictEffect(targets[i], new Effect(Effect.EffectType.HealthRegen, trueOverheal, 3));
@@ -630,7 +717,7 @@ public class Item_GenericConsumable : ItemMove
                             continue;
                         }
 
-                        if (targets[i].effects[j].duration == 255 || targets[i].effects[j].potency >= 255 - (int)(boost * 1))
+                        if (targets[i].effects[j].duration == Effect.INFINITE_DURATION || targets[i].effects[j].potency >= Effect.INFINITE_DURATION - (int)(boost * 1))
                         {
                             continue;
                         }
@@ -643,8 +730,8 @@ public class Item_GenericConsumable : ItemMove
                         }
                         else
                         {
-                            targets[i].effects[j].potency += (byte)(boost * 1);
-                            targets[i].effects[j].duration -= (byte)(boost * 1);
+                            targets[i].effects[j].potency += (sbyte)(boost * 1);
+                            targets[i].effects[j].duration -= (sbyte)(boost * 1);
                         }
                     }
 
@@ -663,7 +750,7 @@ public class Item_GenericConsumable : ItemMove
                             continue;
                         }
 
-                        if (targets[i].effects[j].duration >= 255 - (int)(boost * 1) || targets[i].effects[j].potency == 255)
+                        if (targets[i].effects[j].duration >= Effect.INFINITE_DURATION - (int)(boost * 1) || targets[i].effects[j].potency == Effect.INFINITE_DURATION)
                         {
                             continue;
                         }
@@ -676,8 +763,8 @@ public class Item_GenericConsumable : ItemMove
                         }
                         else
                         {
-                            targets[i].effects[j].duration += (byte)(boost * 1);
-                            targets[i].effects[j].potency -= (byte)(boost * 1);
+                            targets[i].effects[j].duration += (sbyte)(boost * 1);
+                            targets[i].effects[j].potency -= (sbyte)(boost * 1);
                         }
                     }
 
@@ -808,7 +895,7 @@ public class Item_GenericConsumable : ItemMove
                 } else
                 {
                     BattleControl.Instance.CreateReviveParticles(targets[j], 4);    //note: the heal health call produces revive particles if it revives
-                    caller.InflictEffect(targets[j], new Effect(Effect.EffectType.Miracle, 1, 255));
+                    caller.InflictEffect(targets[j], new Effect(Effect.EffectType.Miracle, 1, Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -821,36 +908,36 @@ public class Item_GenericConsumable : ItemMove
                 if (ptarget.BadgeEquipped(Badge.BadgeType.WeakStomach))
                 {
                     //Poison
-                    caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Poison, 1, (byte)ptarget.BadgeEquippedCount(Badge.BadgeType.WeakStomach)));
+                    caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Poison, 1, (sbyte)(2 * ptarget.BadgeEquippedCount(Badge.BadgeType.WeakStomach))));
 
                     if (healOverTimeEffects.Length == 0)
                     {
                         if (hpheal > 0)
                         {
-                            byte heal = (byte)(hpheal / 10);
+                            sbyte heal = (sbyte)(hpheal / 10);
                             if (heal < 1)
                             {
                                 heal = 1;
                             }
-                            caller.InflictEffect(targets[i], new Effect(Effect.EffectType.HealthRegen, heal, 2));
+                            caller.InflictEffect(targets[i], new Effect(Effect.EffectType.HealthRegen, heal, (sbyte)(2 * ptarget.BadgeEquippedCount(Badge.BadgeType.WeakStomach))));
                         }
                         if (epheal > 0)
                         {
-                            byte heal = (byte)(epheal / 10);
+                            sbyte heal = (sbyte)(epheal / 10);
                             if (heal < 1)
                             {
                                 heal = 1;
                             }
-                            caller.InflictEffect(targets[i], new Effect(Effect.EffectType.EnergyRegen, heal, 2));
+                            caller.InflictEffect(targets[i], new Effect(Effect.EffectType.EnergyRegen, heal, (sbyte)(2 * ptarget.BadgeEquippedCount(Badge.BadgeType.WeakStomach))));
                         }
                         if (seheal > 0)
                         {
-                            byte heal = (byte)(seheal / 10);
+                            sbyte heal = (sbyte)(seheal / 10);
                             if (heal < 1)
                             {
                                 heal = 1;
                             }
-                            caller.InflictEffect(targets[i], new Effect(Effect.EffectType.EnergyRegen, heal, 2));
+                            caller.InflictEffect(targets[i], new Effect(Effect.EffectType.EnergyRegen, heal, (sbyte)(2 * ptarget.BadgeEquippedCount(Badge.BadgeType.WeakStomach))));
                         }
                     }
                 }
@@ -893,15 +980,15 @@ public class Item_GenericConsumable : ItemMove
     {
         for (int i = 0; i < target.effects.Count; i++)
         {
-            //don't boost duration 254 or 255 (254 is cap, 255 is infinite)
-            if (target.effects[i].duration < 254)
+            //don't boost to infinity
+            if (target.effects[i].duration < Effect.MAX_NORMAL_DURATION)
             {
-                if (target.effects[i].duration > 254 - bonus)
+                if (target.effects[i].duration > Effect.MAX_NORMAL_DURATION - bonus)
                 {
-                    target.effects[i].duration = 254;
+                    target.effects[i].duration = Effect.MAX_NORMAL_DURATION;
                 } else
                 {
-                    target.effects[i].duration = (byte)(target.effects[i].duration + bonus);
+                    target.effects[i].duration = (sbyte)(target.effects[i].duration + bonus);
                 }
             }
         }
@@ -1083,7 +1170,7 @@ public class Item_GenericConsumable : ItemMove
                 }
                 if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.AstralWall)
                 {
-                    byte min = (byte)Mathf.CeilToInt(target.maxHP / 4f);
+                    sbyte min = (sbyte)Mathf.CeilToInt(target.maxHP / 4f);
                     target.effects[conflictingStatusIndices[i]].potency = min;
                 }
                 if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.Inverted)
@@ -1186,7 +1273,7 @@ public class Item_GenericConsumable : ItemMove
             }
             if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.AstralWall)
             {
-                byte min = (byte)Mathf.CeilToInt(target.maxHP / 4f);
+                sbyte min = (sbyte)Mathf.CeilToInt(target.maxHP / 4f);
                 target.effects[conflictingStatusIndices[i]].potency = min;
             }
             if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.TimeStop)
@@ -1363,7 +1450,7 @@ public class Item_GenericConsumable : ItemMove
 
         //bool isHealOverTime = false;
 
-        byte healOverTimeMult = 0;
+        sbyte healOverTimeMult = 0;
         if (Item.GetProperty(ide, Item.ItemProperty.HealOverTime) != null)
         {
             healOverTimeMult = 3;
@@ -1392,34 +1479,34 @@ public class Item_GenericConsumable : ItemMove
             int count = 0;
             if (hpheal > 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.HealthRegen, (byte)(hpheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.HealthRegen, (sbyte)(hpheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
             if (hpheal < 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.HealthLoss, (byte)(-hpheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.HealthLoss, (sbyte)(-hpheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
 
             if (epheal > 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.EnergyRegen, (byte)(epheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.EnergyRegen, (sbyte)(epheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
             if (epheal < 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.EnergyLoss, (byte)(-epheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.EnergyLoss, (sbyte)(-epheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
 
             if (seheal > 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.SoulRegen, (byte)(seheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.SoulRegen, (sbyte)(seheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
             if (seheal < 0)
             {
-                tempHealOverTime[count] = new Effect(Effect.EffectType.SoulLoss, (byte)(-seheal / healOverTimeMult), healOverTimeMult);
+                tempHealOverTime[count] = new Effect(Effect.EffectType.SoulLoss, (sbyte)(-seheal / healOverTimeMult), healOverTimeMult);
                 count++;
             }
 
@@ -1443,7 +1530,7 @@ public class Item_GenericConsumable : ItemMove
             for (int i = 0; i < statusList.Length; i++)
             {
                 //boost by duration
-                //if duration == 255, boost by potency
+                //if duration == Effect.INFINITE_DURATION, boost by potency
                 //blacklist some effect types to prevent some overpowered things
                 //(the permanent stat increases, item boost itself)
                 if (Effect.GetEffectClass(statusList[i].effect) == Effect.EffectClass.Static)
@@ -1764,10 +1851,15 @@ public class Item_GenericThrowable : ItemMove
         }
         //note: throwables only target enemies so the special case of putting the caller first can never happen
 
+        caller.SetAnimation("itemuse");
         yield return StartCoroutine(DefaultStartAnim(caller));
         //yield return StartCoroutine(caller.SmoothScale(0.5f, new Vector3(2, 2, 2)));
 
-        yield return StartCoroutine(ExecuteEffect(caller, targets, 1));
+        caller.SetAnimation("itemthrow");
+        yield return new WaitForSeconds(0.3f);
+        caller.SetIdleAnimation();
+
+        yield return StartCoroutine(ExecuteEffect(caller, targets, level));
 
         //yield return StartCoroutine(caller.SmoothScale(0.5f, new Vector3(1, 1, 1)));
         yield return StartCoroutine(ProducerAnim(caller));
@@ -1884,7 +1976,7 @@ public class Item_GenericThrowable : ItemMove
             for (int i = 0; i < statusList.Length; i++)
             {
                 //boost by duration
-                //if duration == 255, boost by potency
+                //if duration == Effect.INFINITE_DURATION, boost by potency
                 //blacklist some effect types to prevent some overpowered things
                 //(the permanent stat increases, item boost itself)
                 if (Effect.GetEffectClass(statusList[i].effect) == Effect.EffectClass.Static)
@@ -2001,16 +2093,16 @@ public class Item_GenericThrowable : ItemMove
                                 targets[i].statusMaxTurns -= bonus;
                             }
 
-                            //don't boost duration 254 or 255 (254 is cap, 255 is infinite)
-                            if (targets[i].effects[j].duration < 254)
+                            //don't boost to infinity
+                            if (targets[i].effects[j].duration < Effect.MAX_NORMAL_DURATION)
                             {
-                                if (targets[i].effects[j].duration > 254 - bonus)
+                                if (targets[i].effects[j].duration > Effect.MAX_NORMAL_DURATION - bonus)
                                 {
-                                    targets[i].effects[j].duration = 254;
+                                    targets[i].effects[j].duration = Effect.MAX_NORMAL_DURATION;
                                 }
                                 else
                                 {
-                                    targets[i].effects[j].duration = (byte)(targets[i].effects[j].duration + bonus);
+                                    targets[i].effects[j].duration = (sbyte)(targets[i].effects[j].duration + bonus);
                                 }
                             }
                         }
@@ -2037,7 +2129,7 @@ public class Item_GenericThrowable : ItemMove
 
         ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
 
-        float multiplier = 1;
+        float multiplier = level;
         float boost = 1;
         if (caller.HasEffect(Effect.EffectType.ItemBoost))
         {
@@ -2132,7 +2224,7 @@ public class Item_GenericThrowable : ItemMove
             for (int i = 0; i < statusList.Length; i++)
             {
                 //boost by duration
-                //if duration == 255, boost by potency
+                //if duration == Effect.INFINITE_DURATION, boost by potency
                 //blacklist some effect types to prevent some overpowered things
                 //(the permanent stat increases, item boost itself)
                 if (Effect.GetEffectClass(statusList[i].effect) == Effect.EffectClass.Static)
@@ -2146,28 +2238,28 @@ public class Item_GenericThrowable : ItemMove
                     continue;
                 }
 
-                if (statusList[i].duration == 255)
+                if (statusList[i].duration == Effect.INFINITE_DURATION)
                 {
                     //Boost by potency
-                    if (statusList[i].potency * boost > 254)
+                    if (statusList[i].potency * boost > Effect.MAX_NORMAL_DURATION)
                     {
-                        statusList[i] = new Effect(statusList[i].effect, (byte)(254), statusList[i].duration);
+                        statusList[i] = new Effect(statusList[i].effect, (sbyte)(Effect.MAX_NORMAL_DURATION), statusList[i].duration);
                     }
                     else
                     {
-                        statusList[i] = new Effect(statusList[i].effect, (byte)(statusList[i].potency * boost), statusList[i].duration);
+                        statusList[i] = new Effect(statusList[i].effect, (sbyte)(statusList[i].potency * boost), statusList[i].duration);
                     }
                 }
                 else
                 {
                     //Boost by duration
-                    if (statusList[i].duration * boost > 254)
+                    if (statusList[i].duration * boost > Effect.MAX_NORMAL_DURATION)
                     {
-                        statusList[i] = new Effect(statusList[i].effect, statusList[i].potency, (byte)(254));
+                        statusList[i] = new Effect(statusList[i].effect, statusList[i].potency, (sbyte)(Effect.MAX_NORMAL_DURATION));
                     }
                     else
                     {
-                        statusList[i] = new Effect(statusList[i].effect, statusList[i].potency, (byte)(statusList[i].duration * boost));
+                        statusList[i] = new Effect(statusList[i].effect, statusList[i].potency, (sbyte)(statusList[i].duration * boost));
                     }
                 }
             }
@@ -2302,7 +2394,7 @@ public class Item_AutoConsumable : Item_GenericConsumable
         yield return StartCoroutine(DefaultStartAnim(caller));
 
         ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
-        yield return StartCoroutine(ExecuteEffect(caller, ide, 1));
+        yield return StartCoroutine(ExecuteEffect(caller, ide, level));
         yield return StartCoroutine(ProducerAnim(caller));
 
         if (caller is PlayerEntity pcaller)
@@ -2374,7 +2466,7 @@ public class Item_AutoThrowable : Item_GenericThrowable
 
         if (targets.Count > 0 && targets[0] != null)
         {
-            yield return StartCoroutine(ExecuteEffect(caller, targets, 1));
+            yield return StartCoroutine(ExecuteEffect(caller, targets, level));
         }
 
         yield return StartCoroutine(ProducerAnim(caller));
@@ -2449,7 +2541,7 @@ public class MetaItem_Quick : MetaItemMove
 
     public override void ChooseMove(BattleEntity caller, int level = 1)
     {
-        BattleControl.Instance.quickBiteUses += 1;
+        BattleControl.Instance.QuickSupplyUses += 1;
     }
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
@@ -2461,11 +2553,11 @@ public class MetaItem_Quick : MetaItemMove
         if (caller.CanMove())
         {
             caller.actionCounter--;
-            caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, 255));
+            caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
 
             if (caller is PlayerEntity pcaller)
             {
-                pcaller.quickBite = 2;
+                pcaller.QuickSupply = 2;
             }
         }
     }
@@ -2497,7 +2589,7 @@ public class MetaItem_Void : MetaItemMove
 
     public override void ChooseMove(BattleEntity caller, int level = 1)
     {
-        BattleControl.Instance.voidBiteUses += 1;
+        BattleControl.Instance.VoidSupplyUses += 1;
     }
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
@@ -2544,7 +2636,7 @@ public class MetaItem_Multi : MetaItemMove
         //Debug.Log(itemMoves.Count);
         if (itemMoves.Count > 1)
         {
-            BattleControl.Instance.multiBiteUses += 1;
+            BattleControl.Instance.MultiSupplyUses += 1;
         }
     }
 

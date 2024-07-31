@@ -166,6 +166,27 @@ public class CheatMenu : MenuHandler
             }
         }
 
+        //Scale player (this is more of a fun thing, not very practical)
+        if (input[0].Equals("sp"))
+        {
+            if (MainManager.Instance.worldMode != MainManager.WorldMode.Overworld)
+            {
+                doexit = false;
+                cs.log.SetText("Overworld only cheat!", true, true);
+            } else
+            {
+                if (float.TryParse(input[1], out float scale))
+                {
+                    WorldPlayer.Instance.transform.localScale = Vector3.one * scale;
+                }
+                else
+                {
+                    doexit = false;
+                    cs.log.SetText("Input a valid number to scale the player.", true, true);
+                }
+            }
+        }
+
         //warp delta
         if (input[0].Equals("wd"))
         {
@@ -388,6 +409,17 @@ public class CheatMenu : MenuHandler
                 else
                 {
                     MainManager.Instance.Cheat_BadgeNegativeStrength = setValue;
+                }
+            }
+            if (input[1].Equals("TooManyBadges") || input[1].Equals("tmb"))
+            {
+                if (toggle)
+                {
+                    MainManager.Instance.Cheat_TooManyBadges = !MainManager.Instance.Cheat_TooManyBadges;
+                }
+                else
+                {
+                    MainManager.Instance.Cheat_TooManyBadges = setValue;
                 }
             }
 
@@ -919,14 +951,14 @@ public class CheatMenu : MenuHandler
                         Effect.EffectType et = Effect.EffectType.Default;
                         if (input.Length > 2 && Enum.TryParse(input[2], out et))
                         {
-                            byte n1 = 1;
-                            byte n2 = 1;
+                            sbyte n1 = 1;
+                            sbyte n2 = 1;
 
-                            if (input.Length > 3 && byte.TryParse(input[3], out n1))
+                            if (input.Length > 3 && sbyte.TryParse(input[3], out n1))
                             {
                                 if (input.Length > 4)
                                 {
-                                    if (byte.TryParse(input[4], out n1))
+                                    if (sbyte.TryParse(input[4], out n1))
                                     {
                                         be.ReceiveEffectForce(new Effect(et, n1, n2));
                                     }
@@ -941,7 +973,7 @@ public class CheatMenu : MenuHandler
                                     //infer one of them
                                     if (Effect.GetEffectClass(et) == Effect.EffectClass.Token || Effect.GetEffectClass(et) == Effect.EffectClass.Static)
                                     {
-                                        be.ReceiveEffectForce(new Effect(et, n1, 255));
+                                        be.ReceiveEffectForce(new Effect(et, n1, Effect.INFINITE_DURATION));
                                     }
                                     else
                                     {
@@ -964,7 +996,7 @@ public class CheatMenu : MenuHandler
                 else
                 {
                     doexit = false;
-                    cs.log.SetText("ID must be a number (PosID)", true, true);
+                    cs.log.SetText("ID must be a number (PosID) (Usage: [posid] [effect] [potency] [duration])", true, true);
                 }
             }
         }

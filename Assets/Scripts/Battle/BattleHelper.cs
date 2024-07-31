@@ -150,13 +150,16 @@ public class Effect
         */
     }
 
-    //public byte duration; //255 = infinite
-    public byte duration;
+    //public byte duration; //Effect.INFINITE_DURATION = infinite
+    public sbyte duration;
 
-    public byte potency;
+    public sbyte potency;
     public EffectType effect;
     public int casterID;
     public const int NULL_CASTERID = int.MinValue;
+    public const sbyte INFINITE_DURATION = 127;
+    public const sbyte INFINITE_POTENCY = 127;
+    public const sbyte MAX_NORMAL_DURATION = 126;
 
     //first static effect ID is 0, no need to make that a constant though
     public const int FIRST_STATUS_ID = (int)EffectType.Berserk;
@@ -171,26 +174,155 @@ public class Effect
 
     public const int ILLUMINATE_CAP = 3;
 
-    public Effect(EffectType effect, byte potency, byte duration, int casterID)
+    public Effect(EffectType effect, sbyte potency, sbyte duration, int casterID)
     {
+        if ((potency < 0) ^ (duration < 0))
+        {
+            EffectType ne = InvertEffectType(effect);
+            if (ne != EffectType.Default)
+            {
+                effect = ne;
+                potency = (sbyte)(Mathf.Abs(potency));
+                duration = (sbyte)(Mathf.Abs(duration));
+
+                if (effect == EffectType.Sticky)
+                {
+                    duration = (sbyte)(potency + 1);
+                    potency = 1;
+                }
+                if (effect == EffectType.ItemBoost)
+                {
+                    potency = (sbyte)(duration - 1);
+                    duration = INFINITE_DURATION;
+                }
+                if (effect == Effect.EffectType.MistWall)
+                {
+                    potency = 1;
+                }
+                if (effect == Effect.EffectType.AstralWall)
+                {
+                    //make up some number I guess
+                    potency = 15;
+                }
+                if (effect == Effect.EffectType.Inverted)
+                {
+                    potency = 1;
+                }
+                if (effect == Effect.EffectType.TimeStop)
+                {
+                    potency = 1;
+                }
+            }
+        }
+        else if (potency < 0 && duration < 0)
+        {
+            potency = (sbyte)(-potency);
+            duration = (sbyte)(-duration);
+        }
+
         this.effect = effect;
         this.potency = potency;
         this.duration = duration;
         this.casterID = casterID;
     }
-    public Effect(EffectType effect, byte potency, byte duration)
+    public Effect(EffectType effect, sbyte potency, sbyte duration)
     {
+        casterID = NULL_CASTERID; //default
+
+        if ((potency < 0) ^ (duration < 0))
+        {
+            EffectType ne = InvertEffectType(effect);
+            if (ne != EffectType.Default)
+            {
+                effect = ne;
+                potency = (sbyte)(Mathf.Abs(potency));
+                duration = (sbyte)(Mathf.Abs(duration));
+
+                if (effect == EffectType.Sticky)
+                {
+                    duration = (sbyte)(potency + 1);
+                    potency = 1;
+                }
+                if (effect == EffectType.ItemBoost)
+                {
+                    potency = (sbyte)(duration - 1);
+                    duration = INFINITE_DURATION;
+                }
+                if (effect == Effect.EffectType.MistWall)
+                {
+                    potency = 1;
+                }
+                if (effect == Effect.EffectType.AstralWall)
+                {
+                    //make up some number I guess
+                    potency = 15;
+                }
+                if (effect == Effect.EffectType.Inverted)
+                {
+                    potency = 1;
+                }
+                if (effect == Effect.EffectType.TimeStop)
+                {
+                    potency = 1;
+                }
+            }
+        }
+        else if (potency < 0 && duration < 0)
+        {
+            potency = (sbyte)(-potency);
+            duration = (sbyte)(-duration);
+        }
+
         this.effect = effect;
         this.potency = potency;
         this.duration = duration;
-        casterID = NULL_CASTERID; //default
     }
-    public Effect(EffectType effect, byte duration)
+    public Effect(EffectType effect, sbyte duration)
     {
-        this.effect = effect;
-        this.duration = duration;
         potency = 1;
         casterID = NULL_CASTERID; //default
+
+        if ((potency < 0) ^ (duration < 0))
+        {
+            EffectType ne = InvertEffectType(effect);
+            if (ne != EffectType.Default)
+            {
+                effect = ne;
+                potency = (sbyte)(Mathf.Abs(potency));
+                duration = (sbyte)(Mathf.Abs(duration));
+
+                if (effect == EffectType.Sticky)
+                {
+                    duration = (sbyte)(potency + 1);
+                    potency = 1;
+                }
+                if (effect == EffectType.ItemBoost)
+                {
+                    potency = (sbyte)(duration - 1);
+                    duration = INFINITE_DURATION;
+                }
+                if (effect == Effect.EffectType.MistWall)
+                {
+                    potency = 1;
+                }
+                if (effect == Effect.EffectType.AstralWall)
+                {
+                    //make up some number I guess
+                    potency = 15;
+                }
+                if (effect == Effect.EffectType.Inverted)
+                {
+                    potency = 1;
+                }
+                if (effect == Effect.EffectType.TimeStop)
+                {
+                    potency = 1;
+                }
+            }
+        }
+
+        this.effect = effect;
+        this.duration = duration;
     }
     public Effect(EffectType effect)
     {
@@ -311,6 +443,130 @@ public class Effect
             return true;    //note: includes cooldown (But it probably isn't very exploitable)
         }
     }
+    public static EffectType InvertEffectType(EffectType se)
+    {
+        //Returns Default if the effect doesn't have a pair
+        //note: uses the ailment -> other ailment thing
+        //note 2: includes the permanent effects, exclude them specifically if you don't want them inverted
+        EffectType[] conflictingStatuses =
+        {
+            EffectType.AttackBoost,
+            EffectType.AttackReduction,
+
+            EffectType.DefenseBoost,
+            EffectType.DefenseReduction,
+
+            EffectType.EnduranceBoost,
+            EffectType.EnduranceReduction,
+
+            EffectType.AgilityBoost,
+            EffectType.AgilityReduction,
+
+            EffectType.MaxHPBoost,
+            EffectType.MaxHPReduction,
+
+            EffectType.MaxEPBoost,
+            EffectType.MaxEPReduction,
+
+            EffectType.MaxSEBoost,
+            EffectType.MaxSEReduction,
+
+            //advanced ailments
+            EffectType.Soulbleed,
+            EffectType.Ethereal,
+
+            EffectType.Sunflame,
+            EffectType.Illuminate,
+
+            EffectType.Brittle,
+            EffectType.MistWall,
+
+            EffectType.Inverted,
+            EffectType.AstralWall,
+
+            EffectType.Dread,
+            EffectType.CounterFlare,
+
+            EffectType.ArcDischarge,
+            EffectType.Supercharge,
+
+            EffectType.TimeStop,
+            EffectType.QuantumShield,
+
+            EffectType.Exhausted,
+            EffectType.Soften,
+
+            EffectType.AttackUp,
+            EffectType.AttackDown,
+
+            EffectType.DefenseUp,
+            EffectType.DefenseDown,
+
+            EffectType.EnduranceUp,
+            EffectType.EnduranceDown,
+
+            EffectType.AgilityUp,
+            EffectType.AgilityDown,
+
+            EffectType.FlowUp,
+            EffectType.FlowDown,
+
+            EffectType.HealthRegen,
+            EffectType.HealthLoss,
+
+            EffectType.EnergyRegen,
+            EffectType.EnergyLoss,
+
+            EffectType.SoulRegen,
+            EffectType.SoulLoss,
+
+            EffectType.Focus,
+            EffectType.Defocus,
+
+            EffectType.Absorb,
+            EffectType.Sunder,
+
+            EffectType.Burst,
+            EffectType.Enervate,
+
+            EffectType.Haste,
+            EffectType.Hamper,
+
+            EffectType.Awaken,
+            EffectType.Disorient,
+
+            EffectType.BonusTurns,
+            EffectType.Cooldown,
+
+            EffectType.Freeze,
+            EffectType.Poison,
+
+            EffectType.Dizzy,
+            EffectType.Paralyze,
+
+            EffectType.Sleep,
+            EffectType.Berserk,
+
+            EffectType.ParryAura,
+            EffectType.DrainSprout,
+
+            EffectType.BolsterAura,
+            EffectType.BoltSprout,
+
+            EffectType.Sticky,
+            EffectType.ItemBoost,   //Requires special handling
+        };
+
+        for (int i = 0; i < conflictingStatuses.Length; i++)
+        {
+            if (se == conflictingStatuses[i])
+            {
+                return conflictingStatuses[((i / 2) * 2) + ((i + 1) % 2)];
+            }
+        }
+
+        return EffectType.Default;
+    }
 
     public override string ToString()
     {
@@ -329,12 +585,12 @@ public class Effect
     {
         Effect output = Copy();
 
-        if (output.duration == 255)
+        if (output.duration == INFINITE_DURATION)
         {
             //Boost by potency
-            if (output.potency * boost > 254)
+            if (output.potency * boost > MAX_NORMAL_DURATION)
             {
-                output = new Effect(output.effect, (byte)(254), output.duration);
+                output = new Effect(output.effect, MAX_NORMAL_DURATION, output.duration);
             }
             else
             {
@@ -343,16 +599,16 @@ public class Effect
                     output = new Effect(output.effect, 1, output.duration);
                 } else
                 {
-                    output = new Effect(output.effect, (byte)(output.potency * boost), output.duration);
+                    output = new Effect(output.effect, (sbyte)(output.potency * boost), output.duration);
                 }                
             }
         }
         else
         {
             //Boost by duration
-            if (output.duration * boost > 254)
+            if (output.duration * boost > MAX_NORMAL_DURATION)
             {
-                output = new Effect(output.effect, output.potency, (byte)(254));
+                output = new Effect(output.effect, output.potency, MAX_NORMAL_DURATION);
             }
             else
             {
@@ -362,7 +618,7 @@ public class Effect
                 }
                 else
                 {
-                    output = new Effect(output.effect, output.potency, (byte)(output.duration * boost));
+                    output = new Effect(output.effect, output.potency, (sbyte)(output.duration * boost));
                 }                
             }
         }

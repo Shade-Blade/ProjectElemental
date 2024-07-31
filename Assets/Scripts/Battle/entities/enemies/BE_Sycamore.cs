@@ -221,7 +221,7 @@ public class BM_Sycamore_Pollenate : EnemyMove
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, 255));
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -252,7 +252,7 @@ public class BM_Sycamore_FlowerShuriken : EnemyMove
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, 255));
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -278,12 +278,12 @@ public class BM_Sycamore_Overgrowth : EnemyMove
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
             BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.BurrowTrap, 1);
-            vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
         if (BattleControl.Instance.GetEntityByID(3) == null)
         {
             BattleEntity b = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Sundew, 3);
-            vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
 
         vb.HealHealth(10);
@@ -346,7 +346,7 @@ public class BM_Sycamore_FullBloom : EnemyMove
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, 255));
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -377,7 +377,7 @@ public class BM_Sycamore_VineField : EnemyMove
                 caller.DealDamage(t, 5, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, 255));
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -405,14 +405,14 @@ public class BM_Sycamore_Fall : EnemyMove
         yield return StartCoroutine(vb.Move(vb.homePos, 8));
 
         vb.throne = null;
-        vb.InflictEffect(vb, new Effect(Effect.EffectType.DefenseBoost, 1, 255));
+        vb.InflictEffect(vb, new Effect(Effect.EffectType.DefenseBoost, 1, Effect.INFINITE_DURATION));
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
             if (BattleControl.Instance.GetEntityByID(1) == null)
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.BurrowTrap, 1);
                 //(don't let it attack immediately)
-                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
         }
         vb.SetEntityProperty(BattleHelper.EntityProperties.Grounded, true);
@@ -427,7 +427,7 @@ public class BM_Sycamore_Fall : EnemyMove
         yield return StartCoroutine(vb.Move(vb.homePos, 8));
 
         vb.throne = null;
-        vb.InflictEffect(vb, new Effect(Effect.EffectType.DefenseBoost, 1, 255));
+        vb.InflictEffect(vb, new Effect(Effect.EffectType.DefenseBoost, 1, Effect.INFINITE_DURATION));
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
             if (BattleControl.Instance.GetEntityByID(1) == null)

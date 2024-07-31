@@ -48,8 +48,8 @@ public class PlayerTurnController : MonoBehaviour
 
     //I have to handle double bite specifically
     //This feels like spaghetti but I have no choice
-    public MetaItem_Multi multiBite;
-    public bool multiBiteCancel;
+    public MetaItem_Multi MultiSupply;
+    public bool MultiSupplyCancel;
 
 
     public const bool DEBUG_PRINTING = true;
@@ -147,7 +147,7 @@ public class PlayerTurnController : MonoBehaviour
     {
         if (!b.CanMove())
         {
-            b.InflictEffect(b, new Effect(Effect.EffectType.Cooldown, 1, 255), Effect.NULL_CASTERID, Effect.EffectStackMode.AdditivePot);
+            b.InflictEffect(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION), Effect.NULL_CASTERID, Effect.EffectStackMode.AdditivePot);
         }
 
         if (b.HasEffect(Effect.EffectType.BonusTurns))
@@ -180,7 +180,7 @@ public class PlayerTurnController : MonoBehaviour
             {
                 if (!p.HasEffect(Effect.EffectType.Slow))
                 {
-                    p.InflictEffectForce(p, new Effect(Effect.EffectType.Slow, 1, 255));
+                    p.InflictEffectForce(p, new Effect(Effect.EffectType.Slow, 1, Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -256,12 +256,12 @@ public class PlayerTurnController : MonoBehaviour
             //Debug.Log(mover.actionCounter);
 
             //Normally do your turn
-            //new change: multiBiteCancel forces it to go back around
+            //new change: MultiSupplyCancel forces it to go back around
             do
             {
-                multiBiteCancel = false;
+                MultiSupplyCancel = false;
                 yield return StartCoroutine(TakeTurnSpecific(mover));
-            } while (multiBiteCancel);
+            } while (MultiSupplyCancel);
 
             //Death check
             mover.DeathCheck();
@@ -361,14 +361,14 @@ public class PlayerTurnController : MonoBehaviour
             else 
             {
                 //Tick down quick bite if necessary
-                //Debug.Log("quick bite tick " + mover.quickBite);
-                if (mover.quickBite > 0)
+                //Debug.Log("quick bite tick " + mover.QuickSupply);
+                if (mover.QuickSupply > 0)
                 {
-                    mover.quickBite--;
+                    mover.QuickSupply--;
                 }
                 if (!mover.CanMove())
                 {
-                    mover.quickBite = 0;
+                    mover.QuickSupply = 0;
                 }
 
                 //you took your turn, now you can't move anymore
@@ -425,16 +425,16 @@ public class PlayerTurnController : MonoBehaviour
         }
 
         //cleanse the state
-        if (multiBite != null)
+        if (MultiSupply != null)
         {
-            Destroy(multiBite);
+            Destroy(MultiSupply);
         }
 
 
         //if berserker: no menu
         if (caller.AutoMove())
         {
-            yield return StartCoroutine(BerserkMove(caller));
+            yield return StartCoroutine(AutoMove(caller));
 
             yield break;
         }
@@ -449,6 +449,11 @@ public class PlayerTurnController : MonoBehaviour
         menu = BaseBattleMenu.buildMenu(caller);
         mexitType = MenuExitType.None;
         menu.transform.parent = transform;
+
+        if (!caller.HasEffect(Effect.EffectType.Dizzy))
+        {
+            caller.SetAnimation("idlethinking");
+        }
 
         //new system is that they get showed at the start of your turn and hidden as you execute the move
         BattleControl.Instance.ShowHPBars();
@@ -488,6 +493,7 @@ public class PlayerTurnController : MonoBehaviour
                     BattleControl.Instance.HideHPBars();
                     BattleControl.Instance.HideEffectIcons();
 
+                    caller.SetIdleAnimation();
                     yield return b.Execute(caller);
                     //BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.Tactic);
 
@@ -546,6 +552,7 @@ public class PlayerTurnController : MonoBehaviour
                     BattleControl.Instance.HideHPBars();
                     BattleControl.Instance.HideEffectIcons();
 
+                    caller.SetIdleAnimation();
                     yield return ba2.Execute(caller);
                     yield return StartCoroutine(BattleControl.Instance.RunOutOfTurnEvents());
 
@@ -554,7 +561,7 @@ public class PlayerTurnController : MonoBehaviour
                     //failsafe thing for edge cases?
                     if (caller.AutoMove())
                     {
-                        yield return StartCoroutine(BerserkMove(caller));
+                        yield return StartCoroutine(AutoMove(caller));
                         yield break;
                     }
 
@@ -570,6 +577,7 @@ public class PlayerTurnController : MonoBehaviour
             }
             if (exit)
             {
+                caller.SetIdleAnimation();
                 break;
             }
         }
@@ -648,10 +656,10 @@ public class PlayerTurnController : MonoBehaviour
                         multi.itemMoves.Add(multi.itemMove);
                         multi.targets.Add(caller.curTarget);                        
 
-                        multiBite = multi;
+                        MultiSupply = multi;
 
 
-                        bool multiBiteActive = true;
+                        bool MultiSupplyActive = true;
 
 
                         List<Item> inv = BattleControl.Instance.playerData.itemInventory;
@@ -679,7 +687,7 @@ public class PlayerTurnController : MonoBehaviour
                         backgroundList[index] = true;
                         colorList[index] = ColorByValue(multi.itemMoves.Count - 1);
 
-                        while (multiBiteActive)
+                        while (MultiSupplyActive)
                         {
                             //Now: Make a new menu!
                             //this is extremely sus coding
@@ -710,7 +718,7 @@ public class PlayerTurnController : MonoBehaviour
                                     //execute the move
                                     //empty thing
                                     inMenu = false;
-                                    multiBiteActive = false;
+                                    MultiSupplyActive = false;
                                     mexitType = MenuExitType.MoveExecute;
                                     caller.currMove.ChooseMove(caller, 1);
                                     //Debug.Log("Z press case");
@@ -718,12 +726,12 @@ public class PlayerTurnController : MonoBehaviour
                                 {
                                     //Debug.Log("Cancel case");
                                     inMenu = false;
-                                    multiBiteCancel = true;
-                                    multiBiteActive = false;
+                                    MultiSupplyCancel = true;
+                                    MultiSupplyActive = false;
                                     menu.Clear(); //the menu can become inactive (thus GetActiveMenu returns null) so we have to make sure it gets really cleared
                                     Destroy(menu.gameObject);
                                     Destroy(multi);             //to cleanse the state
-                                    multiBite = null;
+                                    MultiSupply = null;
                                     menu = null;
                                 }
                             } else
@@ -745,7 +753,7 @@ public class PlayerTurnController : MonoBehaviour
                                 //done
                                 if (multi.itemMoves.Count >= (MainManager.Instance.Cheat_InfiniteBite ? 1000 : 3) || multi.itemMoves.Count >= BattleControl.Instance.GetItemInventory(caller).Count)
                                 {
-                                    multiBiteActive = false;
+                                    MultiSupplyActive = false;
                                     caller.currMove.ChooseMove(caller, 1);
                                 }
                             }
@@ -807,7 +815,7 @@ public class PlayerTurnController : MonoBehaviour
         }
     }
 
-    public IEnumerator BerserkMove(PlayerEntity caller)
+    public IEnumerator AutoMove(PlayerEntity caller)
     {
         //Note: automove may not be synonymous with berserk (only berserker forces targetting)
         BattleEntity berserkTarget = caller.GetBerserkTarget();

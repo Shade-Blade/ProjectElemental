@@ -209,7 +209,7 @@ public class AC_MashLeft : ActionCommand
         switch (state)
         {
             case AC_State.Idle:
-                if (InputManager.GetAxisHorizontal() < 0 && lifetime >= FADE_IN_TIME)
+                if (InputManager.GetAxisHorizontal() < -0.5f && lifetime >= FADE_IN_TIME)
                 {
                     state = AC_State.Active;
                 }
@@ -222,7 +222,7 @@ public class AC_MashLeft : ActionCommand
                     state = AC_State.Complete;
                 }
                 */
-                if (InputManager.GetAxisHorizontal() < 0)
+                if (InputManager.GetAxisHorizontal() < -0.5f)
                 {
                     if (!isHolding)
                     {

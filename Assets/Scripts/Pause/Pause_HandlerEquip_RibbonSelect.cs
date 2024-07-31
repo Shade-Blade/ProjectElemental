@@ -289,7 +289,7 @@ public class Pause_HandlerEquip_RibbonSelect : Pause_HandlerShared_BoxMenu
 
         for (int i = 0; i < sortedParty.Count; i++)
         {
-            if (sortedParty[i].ribbon.type == b.type)
+            if (sortedParty[i].ribbon.Equals(b))
             {
                 equipOrUnequip = true;
             }
@@ -300,7 +300,7 @@ public class Pause_HandlerEquip_RibbonSelect : Pause_HandlerShared_BoxMenu
             //unequip
             for (int i = 0; i < sortedParty.Count; i++)
             {
-                if (sortedParty[i].ribbon.type == b.type)
+                if (sortedParty[i].ribbon.Equals(b))
                 {
                     sortedParty[i].ribbon = new Ribbon(Ribbon.RibbonType.None);
                 }

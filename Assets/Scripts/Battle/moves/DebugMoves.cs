@@ -152,7 +152,7 @@ public class DebugCounter : EnemyMove
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
         yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, 255));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
     }
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity causer, int level = 1)

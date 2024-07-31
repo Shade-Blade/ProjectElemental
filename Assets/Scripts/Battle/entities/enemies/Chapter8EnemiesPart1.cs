@@ -435,11 +435,11 @@ public class BM_CloudJelly_FrostFortify : EnemyMove
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
         yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, 255));
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, 255));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
-            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 1, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 1, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
         }
     }
 }
@@ -502,7 +502,7 @@ public class BM_CloudJelly_BubbleBlast : EnemyMove
         }
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
-            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 1, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 1, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
         }
     }
 }
@@ -550,14 +550,14 @@ public class BM_CloudJelly_PowerCharge : EnemyMove
 
         yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
         caller.HealHealth(4);
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 4, 255));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 4, Effect.INFINITE_DURATION));
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
-            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 3, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 3, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
         }
         else
         {
-            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 2, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 2, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
         }
     }
 }
@@ -1019,7 +1019,7 @@ public class BM_Aurorawing_RubyDust : EnemyMove
             caller.InflictEffect(a, new Effect(Effect.EffectType.AttackUp, 2, 3));
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
-                caller.InflictEffect(a, new Effect(Effect.EffectType.Focus, 2, 255));
+                caller.InflictEffect(a, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
             }
         }
     }
@@ -1065,7 +1065,7 @@ public class BM_Aurorawing_SapphireDust : EnemyMove
             caller.InflictEffect(a, new Effect(Effect.EffectType.DefenseUp, 2, 3));
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
-                caller.InflictEffect(a, new Effect(Effect.EffectType.Absorb, 2, 255));
+                caller.InflictEffect(a, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
             }
         }
     }

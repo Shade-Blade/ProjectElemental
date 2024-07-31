@@ -206,6 +206,8 @@ public class MapScript : MonoBehaviour
 
         MainManager.Instance.Camera.SetCameraSettings(wcs);
 
+        //Make it so that map transitions move your camera to point in the direction you're going while first person
+        //(Irrelevant to any other camera mode)
         if (MainManager.Instance.Cheat_FirstPersonCamera || wcs.mode == WorldCamera.CameraMode.FirstPerson_DoNotUse)
         {
             //MainManager.Instance.Camera.targetYaw = (180 / Mathf.PI) * Mathf.Atan2(WorldPlayer.Instance.scriptedInput.y, WorldPlayer.Instance.scriptedInput.x);
@@ -339,7 +341,21 @@ public class MapScript : MonoBehaviour
         yield return null;
     }
 
+    //If overkill level is low enough and you have overkill on -> instantly end battle
+    public void StartBattleOrOverkill(int overkillLevel, IWorldBattleEntity entity, BattleStartArguments bsa = null)
+    {
+        if (MainManager.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.Overkill) > 0)
+        {
+            if (MainManager.Instance.playerData.level - 2 + 2 * MainManager.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.Overkill) >= overkillLevel)
+            {
+                HandleBattleOutcome(BattleHelper.BattleOutcome.Win);
+                return;
+            } 
+        }
 
+        //start normally
+        StartBattle(entity, bsa);
+    }
     public void StartBattle(IWorldBattleEntity entity, BattleStartArguments bsa = null)
     {
         if (battleHalt)
@@ -360,7 +376,7 @@ public class MapScript : MonoBehaviour
     }
 
     //Dying = no game over (map may have special stuff to handle this scenario)
-    public bool HandleBattleLoss()
+    public bool CanHandleBattleLoss()
     {
         return false;
     }

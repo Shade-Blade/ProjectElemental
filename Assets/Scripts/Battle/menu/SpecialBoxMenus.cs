@@ -373,10 +373,19 @@ public class ItemBoxMenu : BoxMenu
         if (caller.BadgeEquipped(Badge.BadgeType.ItemSaver))
         {
             descriptorString = "Freebie: " + (2 - caller.itemSaver) + " away";
+            if (caller.BadgeEquippedCount(Badge.BadgeType.ItemSaver) > 1)
+            {
+                descriptorString = "Freebie (x" + caller.BadgeEquippedCount(Badge.BadgeType.ItemSaver) + "): " + (2 - caller.itemSaver) + " away";
+            }
         }
         if (caller.HasEffect(Effect.EffectType.Freebie))
         {
-            descriptorString = "Freebie: 0 away";
+            descriptorString = "Freebie: Next item will stay in your inventory.";
+            if (caller.GetEffectEntry(Effect.EffectType.Freebie).potency > 1)
+            {
+                int p = caller.GetEffectEntry(Effect.EffectType.Freebie).potency;
+                descriptorString = "Freebie (x" + p + "): Next " + p + " items will stay in your inventory.";
+            }
         }
 
         if (descriptorString != null)
@@ -451,7 +460,7 @@ public class ItemBoxMenu : BoxMenu
             popup = new BattlePopup(PlayerMove.CantMoveReason.ItemExpended);
         } else if (blockList != null && blockList[menuIndex])
         {
-            popup = new BattlePopup(PlayerMove.CantMoveReason.ItemMultiBiteBlock);
+            popup = new BattlePopup(PlayerMove.CantMoveReason.ItemMultiSupplyBlock);
         } else
         {
             popup = new BattlePopup(PlayerMove.CantMoveReason.NoTargets);
@@ -552,15 +561,15 @@ public class MetaItemBoxMenu : BoxMenu
 
         moves.Add(MetaItemMove.Move.Normal);
 
-        if (pd.BadgeEquipped(Badge.BadgeType.MultiBite) || MainManager.Instance.Cheat_InfiniteBite)
+        if (pd.BadgeEquipped(Badge.BadgeType.MultiSupply) || MainManager.Instance.Cheat_InfiniteBite)
         {
             moves.Add(MetaItemMove.Move.Multi);
         }
-        if (pd.BadgeEquipped(Badge.BadgeType.QuickBite))
+        if (pd.BadgeEquipped(Badge.BadgeType.QuickSupply))
         {
             moves.Add(MetaItemMove.Move.Quick);
         }
-        if (pd.BadgeEquipped(Badge.BadgeType.VoidBite))
+        if (pd.BadgeEquipped(Badge.BadgeType.VoidSupply))
         {
             moves.Add(MetaItemMove.Move.Void);
         }

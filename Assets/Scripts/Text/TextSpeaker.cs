@@ -16,7 +16,7 @@ public interface ITextSpeaker
     public void DisableSpeakingAnim();
 
     //Push stuff to the animcontroller
-    public void SetAnimation(string animationID);
+    public void SetAnimation(string animationID, bool force = false);
     public void SendAnimationData(string data);
 
     public Vector3 GetTextTailPosition();

@@ -66,7 +66,7 @@ public class WorldCamera : MonoBehaviour
         RadialFollowReverse,     //points outward from center (so 180 degrees from radial follow)
         RadialFollowFixedDistance,            //fixed distance is the xz distance from point a to point b (focus distance)
         RadialFollowReverseFixedDistance,     //fixed distance is the xz distance from point a to point b (focus distance)
-        FirstPerson_DoNotUse,           //For fun (makes the camera on top of you) (Does not change worldspace yaw)
+        FirstPerson_DoNotUse,           //For fun (makes the camera on top of you) (Mouse controls camera angling, though this can be independent of your real facing angle)
     }
 
     public CameraMode mode;
@@ -246,7 +246,7 @@ public class WorldCamera : MonoBehaviour
             material = null;
             return;
         }
-        
+
         //Lazy way
         material = Resources.Load<Material>("MaterialsShaders/CameraEffects/" + ce.ToString());
 
@@ -846,7 +846,7 @@ public class WorldCamera : MonoBehaviour
                 targetEulerAngles = transform.eulerAngles;
                 targetYaw = y;
 
-                worldspaceYaw = targetYaw;  
+                worldspaceYaw = targetYaw;
             }
 
             /*
@@ -881,9 +881,18 @@ public class WorldCamera : MonoBehaviour
         mode = CameraMode.ManualSettings;
         transform.position = position;
         transform.eulerAngles = rotation;
-        targetEulerAngles = rotation;
         pointA = position;          //Target is pointA
         targetEulerAngles = rotation;
+        targetYaw = 0;
+        movementHalflife = halfLife;
+    }
+    //Exact same as SetManual, but does not instantaneously change camera settings so that it just moves to the targets
+    //Halflife controls the speed
+    public void SetManualDelayed(Vector3 targetPosition, Vector3 targetRotation, float halfLife = 0.05f)
+    {
+        mode = CameraMode.ManualSettings;
+        targetEulerAngles = targetRotation;
+        pointA = targetPosition;          //Target is pointA
         targetYaw = 0;
         movementHalflife = halfLife;
     }

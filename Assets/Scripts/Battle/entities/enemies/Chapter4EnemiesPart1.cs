@@ -169,11 +169,11 @@ public class BM_Blazecrest_Hard_CounterFlameFocus : EnemyMove
         {
             if (bl.lastHitWeakness)
             {
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, 255));
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
             }
             else
             {
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, 255));
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
             }
         }
         yield return new WaitForSeconds(0.5f);
@@ -230,8 +230,8 @@ public class BM_Embercrest_Fireball : EnemyMove
                 }
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 1, 255));
-                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Sunder, 1, 255));
+                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
+                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -312,7 +312,7 @@ public class BM_Ashcrest_SplashBomb : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
                 caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, 255));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackDown, 1, 3));

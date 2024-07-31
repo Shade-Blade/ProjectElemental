@@ -108,7 +108,7 @@ public class BM_EyeSpore_Hard_CounterSpiteBeam : EnemyMove
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, 255));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -256,15 +256,15 @@ public class BM_SpikeSpore_Hard_SpikeBomb : EnemyMove
         yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
-        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Defocus, 1, 255));
-        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Sunder, 1, 255));
+        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
+        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
         foreach (BattleEntity t in targets)
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Dark))
             {
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, 255));
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Sunder, 1, 255));
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
             }
             else
             {
@@ -756,7 +756,7 @@ public class BM_Mosquito_ShockNeedle : EnemyMove
                 {
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, 2));
                 }
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Sunder, 2, 255));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Sunder, 2, Effect.INFINITE_DURATION));
             }
             else
             {

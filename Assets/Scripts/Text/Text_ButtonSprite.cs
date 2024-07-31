@@ -218,18 +218,14 @@ public class Text_SpecialSprite : MonoBehaviour
             float[] tempArgs = set.pieces[scrambleIndex].args;
 
             //check some arguments
-            float a_probability = tempArgs != null && tempArgs.Length > 0 ? tempArgs[0] : 0.5f;
-            //probability of flipping (applied three times)
+            float a_power = tempArgs != null && tempArgs.Length > 0 ? tempArgs[0] : 1f;
+            //slows down the flipping
 
-            //vertAnim.angle = Mathf.SmoothStep(-vertAnim.angleRange, vertAnim.angleRange, Mathf.PingPong(loopCount / 25f * vertAnim.speed, 1f));
-            //Vector3 jitterOffset = new Vector3(Random.Range(-.25f, .25f) * a_x, Random.Range(-.25f, .25f) * a_y, Random.Range(-.25f, .25f) * a_z);
-
-            float a = UnityEngine.Random.Range(0, 1f);
-            float b = UnityEngine.Random.Range(0, 1f);
-            float c = UnityEngine.Random.Range(0, 1f);
-            ar = a > a_probability ? 180 : 0;
-            br = b > a_probability ? 180 : 0;
-            cr = c > a_probability ? 180 : 0;
+            //should look random enough
+            //this setup makes the text change up to 12 times per frame
+            ar = RandomGenerator.Hash(45 * ((uint)(Time.time * 4 / a_power) + (uint)set.index)) % 360 > 180 ? 180 : 0;
+            br = RandomGenerator.Hash(165 * ((uint)(Time.time * 3 / a_power) + (uint)set.index)) % 360 > 180 ? 180 : 0;
+            cr = RandomGenerator.Hash((uint)(Time.time * 2 / a_power) + (uint)set.index) % 360;
 
             //matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(ar, br, cr), Vector3.one);
         }

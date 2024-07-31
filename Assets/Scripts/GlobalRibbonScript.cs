@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Ribbon;
-using static UnityEditor.PlayerSettings;
 
 public class GlobalRibbonScript : MonoBehaviour
 {
@@ -37,6 +35,15 @@ public class GlobalRibbonScript : MonoBehaviour
     RibbonType pastWRibbonType;
     RibbonType pastLRibbonType;
 
+    //make this a data file or something?
+    //This is a (?) x 3 table (first entry is reserved for a null value)
+    [SerializeField]
+    public Color[][] ribbonColors;
+
+    public Color lTestRibbonColorA;
+    public Color lTestRibbonColorB;
+    public Color lTestRibbonColorC;
+
     public void LoadRibbonText()
     {
         ribbonText = MainManager.GetAllTextFromFile("DialogueText/RibbonText");    //MainManager.CSVParse(Resources.Load<TextAsset>("DialogueText/ItemText").text);
@@ -49,6 +56,41 @@ public class GlobalRibbonScript : MonoBehaviour
     public string[][] GetTextFile()
     {
         return ribbonText;
+    }
+
+    public void LoadRibbonColorTable()
+    {
+        ribbonColors = new Color[14][];
+
+        //dark (outline), medium, light (most of the ribbon is light colored usually, but some of Luna's sprites have a lot of medium color)
+        //Note that wilex doesn't have any medium color in his ribbon sprites
+
+        //Note: some of these use "illegal" colors
+
+        ribbonColors[0] = new Color[] { new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0) , new Color(0f, 0f, 0f, 0) };    //note: displays weirdly (silhouette shows up?)
+        ribbonColors[(int)RibbonType.SafetyRibbon] = new Color[] { new Color(0f, 0.4f, 0f, 1), new Color(0f, 0.75f, 0f, 1), new Color(0f, 1f, 0f, 1) };
+        ribbonColors[(int)RibbonType.SharpRibbon] = new Color[] { new Color(0.4f, 0f, 0f, 1), new Color(0.75f, 0f, 0f, 1), new Color(1f, 0f, 0f, 1) };
+        ribbonColors[(int)RibbonType.BeginnerRibbon] = new Color[] { new Color(0.4f, 0.25f, 0.1f, 1), new Color(0.6f, 0.36f, 0.2f, 1), new Color(0.776f, 0.533f, 0.349f, 1) };
+        ribbonColors[(int)RibbonType.ExpertRibbon] = new Color[] { new Color(0.3f, 0.3f, 0.5f, 1), new Color(0.85f, 0.87f, 0.89f, 1), new Color(0.95f, 1.05f, 1.1f, 1) };
+        ribbonColors[(int)RibbonType.ChampionRibbon] = new Color[] { new Color(0.4f, 0.2f, 0f, 1), new Color(0.8f, 0.65f, 0.2f, 1), new Color(1.5f, 1.05f, 0.5f, 1) };
+        ribbonColors[(int)RibbonType.StaticRibbon] = new Color[] { new Color(0.4f, 0.4f, 0.2f, 1), new Color(0.75f, 0.75f, 0.325f, 1), new Color(1, 1f, 0.5f, 1) };
+        ribbonColors[(int)RibbonType.SlimyRibbon] = new Color[] { new Color(0.1f, -0.1f, 0.2f, 1), new Color(0.2f, 0, 0.3f, 1), new Color(0.4f, 0, 0.6f, 1) };
+        ribbonColors[(int)RibbonType.FlashyRibbon] = new Color[] { new Color(0.4f, 0.5f, 0.4f, 1), new Color(0.7f, 1, 0.7f, 1), new Color(0.85f, 2f, 0.85f, 1) };
+        ribbonColors[(int)RibbonType.SoftRibbon] = new Color[] { new Color(0.2f, 0.2f, 0.4f, 1), new Color(0.3f, 0.3f, 0.75f, 1), new Color(0.4f, 0.4f, 1f, 1) };
+        ribbonColors[(int)RibbonType.MimicRibbon] = new Color[] { new Color(0.3f, 0.2f, 0.4f, 1), new Color(0.5f, 0.3f, 0.75f, 1), new Color(0.7f, 0.4f, 1f, 1) };
+        ribbonColors[(int)RibbonType.ThornyRibbon] = new Color[] { new Color(0.4f, -0.5f, 0.2f, 1), new Color(0.75f, 0.3f, 0.6f, 1), new Color(1f, 0.4f, 0.8f, 1) };
+        ribbonColors[(int)RibbonType.DiamondRibbon] = new Color[] { new Color(0f, 0.4f, 0.4f, 1), new Color(0.6f, 0.9f, 0.9f, 1), new Color(0.8f, 1.5f, 1.5f, 1) };
+        ribbonColors[(int)RibbonType.RainbowRibbon] = new Color[] { new Color(0.5f, 0f, 1, 1), new Color(0.75f, 0f, 1, 1), new Color(1f, 0.2f, 1, 1) };
+    }
+
+    public Color[] GetRibbonColors(RibbonType r)
+    {
+        if (ribbonColors == null || ribbonColors.Length < (int)RibbonType.EndOfTable)
+        {
+            LoadRibbonColorTable();
+        }
+
+        return ribbonColors[(int)r];
     }
 
     public string GetRibbonName(RibbonType i)
@@ -95,6 +137,11 @@ public class GlobalRibbonScript : MonoBehaviour
 
     public string GetRibbonText(RibbonType i, int index)
     {
+        if (ribbonText == null)
+        {
+            LoadRibbonText();
+        }
+
         return ribbonText[(int)i][index];
     }
 
@@ -112,42 +159,7 @@ public class GlobalRibbonScript : MonoBehaviour
         return MainManager.Instance.ribbonSprites[(int)(ribbonType) - 1];
     }
 
-    public static Color GetRibbonColor(RibbonType ribbonType)
-    {
-        switch (ribbonType)
-        {
-            case RibbonType.SafetyRibbon:
-                return new Color(0.243f, 0.933f, 0.212f, 1);
-            case RibbonType.SharpRibbon:
-                return new Color(0.965f, 0.169f, 0.169f, 1);
-            case RibbonType.BeginnerRibbon:
-                return new Color(0.776f, 0.533f, 0.349f, 1);
-            case RibbonType.ExpertRibbon:
-                return new Color(0.914f, 0.918f, 0.933f, 1);
-            case RibbonType.ChampionRibbon:
-                return new Color(0.984f, 0.886f, 0.514f, 1);
-            case RibbonType.StaticRibbon:
-                return new Color(1, 0.988f, 0.518f, 1);
-            case RibbonType.SlimyRibbon:
-                return new Color(0.314f, 0, 0.427f, 1);
-            case RibbonType.FlashyRibbon:
-                return new Color(0.769f, 1, 0.745f, 1);
-            case RibbonType.SoftRibbon:
-                return new Color(0.38f, 0.369f, 0.965f, 1);
-            case RibbonType.MimicRibbon:
-                return new Color(0.71f, 0.369f, 0.965f, 1);
-            case RibbonType.ThornyRibbon:
-                return new Color(0.965f, 0.369f, 0.792f, 1);
-            case RibbonType.DiamondRibbon:
-                return new Color(0.641f, 0.982f, 0.978f, 1);
-            case RibbonType.RainbowRibbon:
-                return new Color(1, 1, 1, 1);
-            default:
-                return new Color(0, 0, 0, 0);
-        }
-    }
-
-    public void Update()
+    public void RibbonColorUpdate()
     {
         PlayerData.PlayerDataEntry wilex = null;
         PlayerData.PlayerDataEntry luna = null;
@@ -202,17 +214,24 @@ public class GlobalRibbonScript : MonoBehaviour
 
         //if (currentW != pastWRibbonType)
         //{
-            pastWRibbonType = currentW;
-            Shader.SetGlobalVector("_WRibbonColor", GetRibbonColor(currentW));
-            Shader.SetGlobalFloat("_WRibbonMimic", wmimic ? 1 : 0);            
-            Shader.SetGlobalFloat("_WRibbonRainbow", (wrainbow || (lrainbow && wmimic)) ? 1 : 0);
+        pastWRibbonType = currentW;
+        Color[] wc = GetRibbonColors(currentW);
+        Shader.SetGlobalVector("_WRibbonColorA", wc[0]);
+        Shader.SetGlobalVector("_WRibbonColorB", wc[1]);
+        Shader.SetGlobalVector("_WRibbonColorC", wc[2]);
+        Shader.SetGlobalFloat("_WRibbonMimic", wmimic ? 1 : 0);
+        Shader.SetGlobalFloat("_WRibbonRainbow", (wrainbow || (lrainbow && wmimic)) ? 1 : 0);
         //}
         //if (currentL != pastLRibbonType)
         //{
-            pastLRibbonType = currentL;
-            Shader.SetGlobalVector("_LRibbonColor", GetRibbonColor(currentL));
-            Shader.SetGlobalFloat("_LRibbonMimic", lmimic ? 1 : 0);
-            Shader.SetGlobalFloat("_LRibbonRainbow", (lrainbow || (wrainbow && lmimic)) ? 1 : 0);
+        pastLRibbonType = currentL;
+        Color[] lc = GetRibbonColors(currentL);
+        //Shader.SetGlobalVector("_LRibbonColorA", GetRibbonColor(currentL));
+        Shader.SetGlobalVector("_LRibbonColorA", lc[0]);
+        Shader.SetGlobalVector("_LRibbonColorB", lc[1]);
+        Shader.SetGlobalVector("_LRibbonColorC", lc[2]);
+        Shader.SetGlobalFloat("_LRibbonMimic", lmimic ? 1 : 0);
+        Shader.SetGlobalFloat("_LRibbonRainbow", (lrainbow || (wrainbow && lmimic)) ? 1 : 0);
         //}
     }
 }

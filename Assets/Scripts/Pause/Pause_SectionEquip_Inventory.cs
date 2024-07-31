@@ -311,6 +311,26 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                     badgeList.Add(badgeCostPairs[i].Item1);
                 }
                 break;
+            case SortMode.Default:
+                List<Badge> listC = new List<Badge>();
+                for (int i = 0; i < badgeList.Count; i++)
+                {
+                    listC.Add(badgeList[i]);
+                }
+                badgeList = listC;
+                badgeList.Sort((a, b) =>
+                {
+                    int alpha = a.type - b.type;
+
+                    if (alpha != 0)
+                    {
+                        return alpha;
+                    }
+
+                    return a.badgeCount - b.badgeCount;
+
+                });
+                break;
         }
 
         return badgeList;
@@ -356,6 +376,25 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 }
                 ribbonList = listB;
                 ribbonList.Sort((a, b) => (a.ribbonCount - b.ribbonCount));
+                break;
+            case SortMode.Default:
+                List<Ribbon> listC = new List<Ribbon>();
+                for (int i = 0; i < ribbonList.Count; i++)
+                {
+                    listC.Add(ribbonList[i]);
+                }
+                ribbonList = listC;
+                ribbonList.Sort((a, b) =>
+                {
+                    int alpha = a.type - b.type;
+
+                    if (alpha != 0)
+                    {
+                        return alpha;
+                    }
+
+                    return a.ribbonCount - b.ribbonCount;
+                });
                 break;
         }
 

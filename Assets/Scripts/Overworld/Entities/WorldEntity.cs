@@ -947,11 +947,11 @@ public class WorldEntity : WorldObject, ITextSpeaker
         SetAnimation("idle");   //note: no way to check for what the real last anim was at this point
     }
 
-    public virtual void SetAnimation(string name)
+    public virtual void SetAnimation(string name, bool force = false)
     {
         if (ac != null)
         {
-            ac.SetAnimation(name);
+            ac.SetAnimation(name, force);
         }
     }
     public virtual void SendAnimationData(string data)

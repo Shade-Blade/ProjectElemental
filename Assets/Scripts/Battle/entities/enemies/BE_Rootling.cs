@@ -172,7 +172,7 @@ public class BM_Rootling_Dig : EnemyMove
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
             caller.HealHealth(2);
-            caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 2, 255));
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
         }
 
         //StartCoroutine(caller.RevertScale(0.1f));        

@@ -451,9 +451,9 @@ public class BM_StrangeTendril_StrangeCoil : EnemyMove
             //allow it to buff multiple :)
             if (!caller.HasEffect(Effect.EffectType.DefenseUp) || (caller.GetEffectEntry(Effect.EffectType.DefenseUp).potency < 3))
             {
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.DefenseUp, 1, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.DefenseUp, 1, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
             }
-            caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, 255));
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
 
             //find the target
             List<BattleEntity> bl = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAllyNotSelf));
@@ -484,9 +484,9 @@ public class BM_StrangeTendril_StrangeCoil : EnemyMove
             //Don't stack defense
             if (!nodefense)
             {
-                caller.InflictEffect(boostTarget, new Effect(Effect.EffectType.DefenseUp, 1, 255), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+                caller.InflictEffect(boostTarget, new Effect(Effect.EffectType.DefenseUp, 1, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
             }
-            caller.InflictEffect(boostTarget, new Effect(Effect.EffectType.Absorb, 3, 255));
+            caller.InflictEffect(boostTarget, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
         }
     }
 }

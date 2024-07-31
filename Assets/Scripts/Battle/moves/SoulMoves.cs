@@ -56,7 +56,7 @@ public class SM_Hasten : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        caller.SetAnimation("soulcaststart");
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -70,7 +70,6 @@ public class SM_Hasten : SoulMove
         EndAnimation(caller, level, result);
         if (result)
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
             if (level == 1)
             {
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 2));
@@ -86,7 +85,6 @@ public class SM_Hasten : SoulMove
         }
         else
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
             if (level == 1)
             {
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 2));
@@ -100,6 +98,8 @@ public class SM_Hasten : SoulMove
                 }
             }
         }
+        yield return new WaitForSeconds(0.5f);
+        caller.SetIdleAnimation();
     }
 
     public void CastAnimation(BattleEntity caller, int level)
@@ -111,6 +111,7 @@ public class SM_Hasten : SoulMove
     }
     public void EndAnimation(BattleEntity caller, int level, bool result)
     {
+        caller.SetAnimation("soulcastend");
         if (level == 1)
         {
             GameObject eo = null;
@@ -194,7 +195,7 @@ public class SM_Revitalize : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        caller.SetAnimation("soulcaststart");        
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -208,7 +209,7 @@ public class SM_Revitalize : SoulMove
         EndAnimation(caller, level, result);
         if (result)
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
+            //yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
             if (level > 1)
             {
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
@@ -274,6 +275,7 @@ public class SM_Revitalize : SoulMove
                 }
             }
         }
+        caller.SetIdleAnimation();
     }
 
     public void CastAnimation(BattleEntity caller, int level)
@@ -285,6 +287,7 @@ public class SM_Revitalize : SoulMove
     }
     public void EndAnimation(BattleEntity caller, int level, bool result)
     {
+        caller.SetAnimation("soulcastend");
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
         foreach (BattleEntity b in targets)
         {
@@ -820,7 +823,7 @@ public class SM_Overheat : SoulMove
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 4, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 4, Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -845,7 +848,7 @@ public class SM_Overheat : SoulMove
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -955,7 +958,7 @@ public class SM_VoidCrush : SoulMove
                     if (level > 1)
                     {
                         caller.TryVoidCrush(b, 10);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 4, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 4, Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -978,7 +981,7 @@ public class SM_VoidCrush : SoulMove
                     if (level > 1)
                     {
                         caller.TryVoidCrush(b, 1);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -1119,8 +1122,8 @@ public class SM_FlashFreeze : SoulMove
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Light, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, 255));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -1145,8 +1148,8 @@ public class SM_FlashFreeze : SoulMove
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Light, 0);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, 2));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 1, 255));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 1, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -1598,6 +1601,7 @@ public class SM_ElementalConflux : SoulMove
         StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
         StartCoroutine(CastAnimation(caller, level));
         yield return new WaitUntil(() => actionCommand.IsComplete());
+        caller.SetIdleAnimation();
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
@@ -1609,24 +1613,23 @@ public class SM_ElementalConflux : SoulMove
         //EndAnimation(caller, level, result);
         if (result)
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
             if (level == 1)
             {
                 caller.CureCurableEffects();
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 2, 3));
                 yield return new WaitForSeconds(0.1f);
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Burst, 2, 255));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Burst, 2, Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.EnduranceUp, 2, 3));
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AgilityUp, 2, 3));
                 yield return new WaitForSeconds(0.1f);
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Absorb, 2, 255));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseUp, 2, 3));
                 yield return new WaitForSeconds(0.1f);
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Focus, 2, 255));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
             }
             else
             {
@@ -1643,7 +1646,7 @@ public class SM_ElementalConflux : SoulMove
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, 3, 255));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, 3, Effect.INFINITE_DURATION));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
@@ -1658,7 +1661,7 @@ public class SM_ElementalConflux : SoulMove
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, 3, 255));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
@@ -1668,30 +1671,29 @@ public class SM_ElementalConflux : SoulMove
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, 3, 255));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
                 }
             }
         }
         else
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
             if (level == 1)
             {
                 caller.CureCurableEffects();
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 1, 3));
                 yield return new WaitForSeconds(0.1f);
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Burst, 1, 255));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Burst, 1, Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.EnduranceUp, 1, 3));
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AgilityUp, 1, 3));
                 yield return new WaitForSeconds(0.1f);
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Absorb, 1, 255));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Absorb, 1, Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseUp, 1, 3));
                 yield return new WaitForSeconds(0.1f);
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Focus, 1, 255));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
             }
             else
             {
@@ -1708,7 +1710,7 @@ public class SM_ElementalConflux : SoulMove
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, 2, 255));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, 2, Effect.INFINITE_DURATION));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
@@ -1723,7 +1725,7 @@ public class SM_ElementalConflux : SoulMove
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, 2, 255));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
@@ -1733,7 +1735,7 @@ public class SM_ElementalConflux : SoulMove
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, 2, 255));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -1741,6 +1743,7 @@ public class SM_ElementalConflux : SoulMove
 
     public IEnumerator CastAnimation(BattleEntity caller, int level)
     {
+        caller.SetAnimation("itemuse");
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_FireFlowIn"), BattleControl.Instance.transform);
         //position is the same as the one used by items
@@ -1784,13 +1787,6 @@ public class SM_ElementalConflux : SoulMove
 
 public class SM_PrismaticBlast : SoulMove
 {
-    public SM_PrismaticBlast()
-    {
-        useCount = 0;
-    }
-
-    int useCount = 0;
-
     public override int GetTextIndex()
     {
         return 11;
@@ -1832,8 +1828,9 @@ public class SM_PrismaticBlast : SoulMove
             actionCommand.Setup(0.5f);
         }
 
+        caller.SetAnimation("itemuse");
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -1842,6 +1839,8 @@ public class SM_PrismaticBlast : SoulMove
             actionCommand.End();
             Destroy(actionCommand);
         }
+        caller.SetIdleAnimation();
+
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
 
@@ -1849,7 +1848,6 @@ public class SM_PrismaticBlast : SoulMove
         ulong propertyBlockCombo = propertyBlock | (ulong)(BattleHelper.DamageProperties.Combo);
         if (result)
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
             if (level > 1)
             {
                 foreach (BattleEntity b in targets)
@@ -1859,8 +1857,8 @@ public class SM_PrismaticBlast : SoulMove
                         caller.DealDamage(b, 30, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 2, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, 255));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -1885,7 +1883,6 @@ public class SM_PrismaticBlast : SoulMove
         }
         else
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
             if (level > 1)
             {
                 foreach (BattleEntity b in targets)
@@ -1895,8 +1892,8 @@ public class SM_PrismaticBlast : SoulMove
                         caller.DealDamage(b, 20, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 1, 255));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 1, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
                     }
                     else
                     {

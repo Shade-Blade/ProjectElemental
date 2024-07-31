@@ -172,7 +172,7 @@ public class SavePointScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
     {
     }
 
-    public void SetAnimation(string animationID)
+    public void SetAnimation(string animationID, bool force = false)
     {
     }
 

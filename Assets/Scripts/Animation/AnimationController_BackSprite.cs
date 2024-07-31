@@ -6,7 +6,7 @@ public class AnimationController_BackSprite : AnimationController
 {
     public bool showBack;
 
-    public override void SetAnimation(string name)
+    public override void SetAnimation(string name, bool force = false)
     {
         string modifiedName = name;
 
@@ -18,7 +18,7 @@ public class AnimationController_BackSprite : AnimationController
 
         //bool update = (!currentAnim.Equals(modifiedName));
         //better way
-        bool update = !(animator.GetCurrentAnimatorStateInfo(0).IsName(modifiedName));
+        bool update = !(animator.GetCurrentAnimatorStateInfo(0).IsName(modifiedName)) || force;
         currentAnim = modifiedName;
 
         //fixes a problem I'm having somehow
@@ -29,7 +29,14 @@ public class AnimationController_BackSprite : AnimationController
         if (animator != null && update)
         {
             //Debug.Log(this.name + ": Play " + name);
-            animator.Play(modifiedName);
+            if (force)
+            {
+                animator.Play(name, -1, 0);
+            }
+            else
+            {
+                animator.Play(name);
+            }
         }
     }
 

@@ -7,6 +7,30 @@ public class WorldBasicNPCScript : WorldNPCEntity
     public int textIndex;
     public bool loop;   //false = keep doing last text, true = loop around to first again
 
+    //Minibubble testing
+    
+    public MinibubbleScript minibubble;
+
+    public override void WorldUpdate()
+    {
+        if (interacter.GetActive())
+        {
+            if (minibubble != null)
+            {
+                minibubble.superDeleteSignal = true;
+            }
+        } else
+        {
+            if (minibubble == null)
+            {
+                minibubble = MainManager.Instance.MakeMinibubble();
+                StartCoroutine(minibubble.CreateText("<TailRealTimeUpdate,true>A", this, null, true));
+                //Debug.Log("make minibubble");
+            }
+        }
+        base.WorldUpdate();
+    }
+
     public override IEnumerator InteractCutscene()
     {
         //inefficient

@@ -31,7 +31,7 @@ public class StatusIconScript : MonoBehaviour
             }
         }
 
-        if (s.duration < 255)
+        if (s.duration < Effect.INFINITE_DURATION)
         {
             durationText.text = s.duration.ToString();
         } else

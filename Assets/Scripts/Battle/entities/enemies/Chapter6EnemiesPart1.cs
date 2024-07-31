@@ -103,7 +103,7 @@ public class BM_Shieldwing_ChillingScreech : EnemyMove
                 }
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, 255));
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -137,7 +137,7 @@ public class BM_Shieldwing_FeatherWall : EnemyMove
             caller.InflictEffect(be, new Effect(Effect.EffectType.DefenseUp, 2, 3));
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
-                caller.InflictEffect(be, new Effect(Effect.EffectType.Absorb, 2, 255));
+                caller.InflictEffect(be, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
             }
         }
     }
@@ -478,7 +478,7 @@ public class BM_Shimmerwing_RallySong : EnemyMove
 
         foreach (BattleEntity be in targets)
         {
-            caller.InflictEffect(be, new Effect(Effect.EffectType.Focus, 1, 255));
+            caller.InflictEffect(be, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
                 caller.InflictEffect(be, new Effect(Effect.EffectType.ParryAura, 1, 3));
@@ -698,7 +698,7 @@ public class BM_LumistarSoldier_Charge : EnemyMove
             List<BattleEntity> allyTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
             foreach (BattleEntity a in allyTargets)
             {
-                caller.InflictEffect(a, new Effect(Effect.EffectType.Focus, 1, 255));
+                caller.InflictEffect(a, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
             }
         }
     }
@@ -871,7 +871,7 @@ public class BM_LumistarStriker_Charge : EnemyMove
             List<BattleEntity> allyTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
             foreach (BattleEntity a in allyTargets)
             {
-                caller.InflictEffect(a, new Effect(Effect.EffectType.Focus, 1, 255));
+                caller.InflictEffect(a, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
             }
         }
     }
@@ -922,7 +922,7 @@ public class BM_LumistarStriker_QuadSlash : EnemyMove
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, 255));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 }
                 for (int i = 0; i < 3; i++)
                 {
@@ -930,7 +930,7 @@ public class BM_LumistarStriker_QuadSlash : EnemyMove
                     caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                     if (BattleControl.Instance.GetCurseLevel() > 0)
                     {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, 255));
+                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                     }
                 }
             }

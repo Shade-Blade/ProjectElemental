@@ -361,7 +361,7 @@ public class BattlePopup
         //the status popups
 
 
-        vars = new string[11];
+        vars = new string[12];
 
         //vars[0] = (int)status.effect + "";
 
@@ -380,6 +380,25 @@ public class BattlePopup
         vars[9] = (1 + (1 * status.potency)) + "";    //Sunflame low end
         vars[10] = (5 + (5 * status.potency)) + "";   //Sunflame high end
 
+        float boost = 1;
+        switch (status.potency)
+        {
+            case 1:
+                boost = (4.00001f / 3);
+                break;
+            case 2:
+                boost = 1.5f;
+                break;
+            case 3:
+                boost = 2f;
+                break;
+            default:
+                boost = status.potency - 1;
+                break;
+        }
+
+        vars[11] = MainManager.Percent(boost - 1,1) + "";
+
         string[] entry = BattleControl.Instance.effectText[(int)(status.effect + 1)];
 
         text = "<effectsprite," + status.effect + "> " + entry[1];
@@ -388,7 +407,7 @@ public class BattlePopup
         //text += "<wavy><effectsprite," + vars[0] + "> " + (Status.StatusEffect)vars[0] + "</wavy>";
         //text = "<effectsprite," + vars[0] + "> has <rainbow>weird</rainbow> effects in it <buttonsprite,sus>";
 
-        if (status.potency == 255)
+        if (status.potency == Effect.INFINITE_DURATION)
         {
             text += " X";
         }
@@ -397,7 +416,7 @@ public class BattlePopup
             text += " " + vars[1];
         }
 
-        if (status.duration == 255)
+        if (status.duration == Effect.INFINITE_DURATION)
         {
             //text += " (Indefinite)";
         } else
@@ -693,12 +712,12 @@ public class BattleControl : MonoBehaviour
 
     public int coinDrops;
     public Item.ItemType dropItem = Item.ItemType.None;
-    public bool shouldDropItem;
+    public int dropItemCount;
     public bool forceDropItem;
 
-    public int multiBiteUses;
-    public int quickBiteUses;
-    public int voidBiteUses;
+    public int MultiSupplyUses;
+    public int QuickSupplyUses;
+    public int VoidSupplyUses;
 
     public int badgeSwapUses;
 
@@ -776,6 +795,20 @@ public class BattleControl : MonoBehaviour
             b.StartBattle(bsa);
             return b;
         }
+    }
+
+    public static int GetOverkillLevel(EncounterData ed)
+    {
+        int maxlevel = 0;
+        for (int i = 0; i < ed.encounterList.Count; i++)
+        {
+            BattleEntityData bed = BattleEntityData.GetBattleEntityData(ed.encounterList[i].GetEntityID());
+            if (bed.level + bed.bonusXP > maxlevel)
+            {
+                maxlevel = bed.level + bed.bonusXP;
+            }
+        }
+        return maxlevel;
     }
 
     public static bool GetProperty(ulong properties, BattleHelper.BattleProperties property, bool b = true)
@@ -885,9 +918,22 @@ public class BattleControl : MonoBehaviour
         //Camera vertical edges at z = 0 are y = 5.75 and y = -1.75
         //The equidistant point is at y = 2 (which is the y pos of default)
     }
-    public static void SetCameraSettings(Vector3 focus, float distance = 6.5f, float halfLife = 0.05f)
+    public static void SetCameraDefaultDelayed(float halfLife = 0.05f)
+    {
+        MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.5f, -4.8f), new Vector3(0, 0, 0), halfLife);
+
+
+        //Was 0, 2, 6.5
+        //Camera vertical edges at z = 0 are y = 5.75 and y = -1.75
+        //The equidistant point is at y = 2 (which is the y pos of default)
+    }
+    public static void SetCameraSettings(Vector3 focus, float distance = 4.8f, float halfLife = 0.05f)
     {
         MainManager.Instance.Camera.SetManual(focus + distance * Vector3.back, new Vector3(0, 0, 0), halfLife);
+    }
+    public static void SetCameraSettingsDelayed(Vector3 focus, float distance = 4.8f, float halfLife = 0.05f)
+    {
+        MainManager.Instance.Camera.SetManualDelayed(focus + distance * Vector3.back, new Vector3(0, 0, 0), halfLife);
     }
 
 
@@ -2241,6 +2287,8 @@ public class BattleControl : MonoBehaviour
         //wait until animations done
         yield return new WaitUntil(() => CheckEntitiesStationary());
 
+        //Move camera
+
         //tally max damage per turn
         int perTurnDamage = 0;
         List<PlayerEntity> pel = GetPlayerEntities();
@@ -2248,7 +2296,6 @@ public class BattleControl : MonoBehaviour
         {
             perTurnDamage += pel[i].perTurnDamageDealt;
         }
-        playerData.UpdateMaxDamageDealt(perTurnDamage);
 
         switch (outcome)
         {
@@ -2287,6 +2334,8 @@ public class BattleControl : MonoBehaviour
                 }
             }
         }
+
+        yield return new WaitUntil(() => CheckEntitiesStationary());
 
         if (outcome == BattleHelper.BattleOutcome.Win)
         {
@@ -2332,6 +2381,23 @@ public class BattleControl : MonoBehaviour
         //The "you got X xp" cutscene
         //If you level up then go to the level up cutscene
 
+        float averageX = 0;
+        List<PlayerEntity> pel = GetPlayerEntities();
+        for (int i = 0; i < pel.Count; i++)
+        {
+            averageX += pel[i].transform.position.x;
+            pel[i].SetAnimation("battlewin", true);
+        }
+        averageX /= pel.Count;
+        //Pan camera over
+        SetCameraSettingsDelayed(new Vector3(averageX, 0.85f, 0f), 2.4f, 0.125f);
+
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < pel.Count; i++)
+        {
+            pel[i].SetIdleAnimation();
+        }
+
         //xp gained
 
         bool decisive = false;
@@ -2353,13 +2419,13 @@ public class BattleControl : MonoBehaviour
 
         if (decisive)
         {
-            battleXP *= 2;
-            coinDrops *= 2;
+            battleXP *= (1 + playerData.BadgeEquippedCount(Badge.BadgeType.DecisiveVictory));
+            coinDrops *= (1 + playerData.BadgeEquippedCount(Badge.BadgeType.DecisiveVictory));
         }
         if (perfect)
         {
-            battleXP = Mathf.CeilToInt(battleXP * 1.5f);
-            coinDrops = Mathf.CeilToInt(coinDrops * 1.5f);
+            battleXP = Mathf.CeilToInt(battleXP * (1 + 0.5f * (1 + playerData.BadgeEquippedCount(Badge.BadgeType.PerfectVictory))));
+            coinDrops = Mathf.CeilToInt(coinDrops * (1 + 0.5f * (1 + playerData.BadgeEquippedCount(Badge.BadgeType.PerfectVictory))));
         }
 
         if (battleXP < 0)
@@ -2377,7 +2443,6 @@ public class BattleControl : MonoBehaviour
         //  Super/ultra curse makes 1/2, mega curse makes guaranteed
 
         int itemFinder = playerData.BadgeEquippedCount(Badge.BadgeType.ItemFinder);
-        bool checkDropItem = false;
 
         int battleBoost = 0;
         if (playerData.totalBattles % 2 == 0)
@@ -2405,31 +2470,23 @@ public class BattleControl : MonoBehaviour
             lowItemBoost = 2;
         }
 
-        int curseBoost = 0;
-        if (curseLevel >= 1)
-        {
-            curseBoost = 1;
-        }
-        if (curseLevel >= 2)
-        {
-            curseBoost = 2;
-        }
+        //if you use a massive curse level then you get a ton of items I guess
+        int curseBoost = curseLevel >= 0 ? curseLevel : 0;
 
-        if (lowItemBoost + battleBoost + xpBoost + itemFinder + curseBoost >= 2)
+        int boostAmount = lowItemBoost + battleBoost + xpBoost + itemFinder + curseBoost;
+        if (dropItemCount > 0)
         {
-            checkDropItem = true;
+            dropItemCount = boostAmount / 2;
         }
 
-        shouldDropItem &= checkDropItem;
-
-        if (forceDropItem)
+        if (forceDropItem && dropItemCount <= 0)
         {
-            shouldDropItem = true;
+            dropItemCount = 1;
         }
 
         //Debug.Log("Item drop determiners: " + itemFinder + " " + checkDropItem + " " + shouldDropItem + " " + battleXP + " " + playerData.totalBattles);
 
-        Debug.Log((perfect ? "Perfect: " : "") + (decisive ? "Decisive: " : "") + "Win battle " + playerData.totalBattles + " with " + battleXP + " xp gained. Drop item? " + shouldDropItem);
+        Debug.Log((perfect ? "Perfect: " : "") + (decisive ? "Decisive: " : "") + "Win battle " + playerData.totalBattles + " with " + battleXP + " xp gained. Drop item? " + dropItemCount);
 
         yield return new WaitUntil(() => (visualXP == battleXP));
 
@@ -2478,6 +2535,7 @@ public class BattleControl : MonoBehaviour
         {
             playerData.exp -= 100;
             playerData.level += 1;
+            SetCameraDefault(0.125f);
             yield return StartCoroutine(LevelUp());
         }
 
@@ -2485,9 +2543,11 @@ public class BattleControl : MonoBehaviour
     }
     public IEnumerator LevelUp()
     {
+        List<PlayerEntity> pe = GetPlayerEntities();
+
+        bool healdone = false;
         IEnumerator LevelUpHeal()
-        {
-            List<PlayerEntity> pe = GetPlayerEntities();
+        {            
             for (int i = 0; i < pe.Count; i++)
             {
                 pe[i].HealHealth(pe[i].maxHP);
@@ -2496,10 +2556,48 @@ public class BattleControl : MonoBehaviour
             pe[0].HealEnergy(maxEP);
             yield return new WaitForSeconds(0.5f);
             pe[0].HealSoulEnergy(maxSE);
+            healdone = true;
+        }
+
+        bool wtpA = false;
+        bool wtpB = false;
+        IEnumerator WalkToPositionTrackedA(BattleEntity be, Vector3 position)
+        {
+            yield return StartCoroutine(be.Move(position));
+            be.SetAnimation("levelup");
+            wtpA = true;
+        }
+        IEnumerator WalkToPositionTrackedB(BattleEntity be, Vector3 position)
+        {
+            yield return StartCoroutine(be.Move(position));
+            be.SetAnimation("levelup");
+            wtpB = true;
         }
 
         //do this in parallel
         StartCoroutine(LevelUpHeal());
+
+        //do this in parallel also
+        if (pe.Count == 1)
+        {
+            Vector3 targetPos = Vector3.zero;
+            StartCoroutine(WalkToPositionTrackedA(pe[0], targetPos));
+            wtpB = true;
+        } else
+        {
+            Vector3[] targetPositions = new Vector3[pe.Count];
+
+            //wacky way of making this work with 3 characters (but I'm not going to have 3 characters anyway)
+            for (int i = 0; i < pe.Count; i++)
+            {
+                targetPositions[i] = Vector3.left * 5 + (Vector3.right * i * (10 / (pe.Count - 1)));
+                StartCoroutine(WalkToPositionTrackedA(pe[0], targetPositions[i]));
+                if (i == pe.Count - 1)
+                {
+                    StartCoroutine(WalkToPositionTrackedB(pe[1], targetPositions[i]));
+                }
+            }
+        }
 
         GameObject lue = Instantiate(levelUpEffect, MainManager.Instance.Canvas.transform);
         LevelUpEffectScript lues = lue.GetComponent<LevelUpEffectScript>();
@@ -2507,6 +2605,7 @@ public class BattleControl : MonoBehaviour
         lues.Setup(playerData.level - 1, playerData.level, (playerData.level >= PlayerData.GetMaxLevel()));
 
         yield return new WaitUntil(() => lue == null);
+        yield return new WaitUntil(() => healdone && wtpA && wtpB);
 
         //Now do the actual choice thing
         GameObject lum = Instantiate(levelUpMenu, MainManager.Instance.Canvas.transform);
@@ -2625,7 +2724,7 @@ public class BattleControl : MonoBehaviour
         {
             //Dropped item is based on the front enemy (this should be the one that appears in the overworld)
             //dropItem = be.dropItemType;
-            shouldDropItem = true;      //end of battle thing will fix this
+            dropItemCount = 1;
 
             if (be.moneyMult >= 2)
             {
@@ -3963,12 +4062,12 @@ public class BattleControl : MonoBehaviour
                 }
                 else
                 {
-                    return playerData.itemInventory.Count > 1 && (multiBiteUses < (2 * playerData.BadgeEquippedCount(Badge.BadgeType.MultiBite)));
+                    return playerData.itemInventory.Count > 1 && (MultiSupplyUses < (2 * playerData.BadgeEquippedCount(Badge.BadgeType.MultiSupply)));
                 }
             case MetaItemMove.Move.Quick:
-                return playerData.itemInventory.Count > 0 && (quickBiteUses < (2 * playerData.BadgeEquippedCount(Badge.BadgeType.QuickBite)));
+                return playerData.itemInventory.Count > 0 && (QuickSupplyUses < (2 * playerData.BadgeEquippedCount(Badge.BadgeType.QuickSupply)));
             case MetaItemMove.Move.Void:
-                return usedItems.Count > 0 && (voidBiteUses < (2 * playerData.BadgeEquippedCount(Badge.BadgeType.VoidBite)));
+                return usedItems.Count > 0 && (VoidSupplyUses < (2 * playerData.BadgeEquippedCount(Badge.BadgeType.VoidSupply)));
         }
 
         return false;
@@ -3986,15 +4085,15 @@ public class BattleControl : MonoBehaviour
                 }
                 if (MainManager.Instance.Cheat_InfiniteBite)
                 {
-                    return PlayerMove.CantMoveReason.ItemMultiBiteBlock;
+                    return PlayerMove.CantMoveReason.ItemMultiSupplyBlock;
                 }
                 else
                 {
                     if (playerData.itemInventory.Count == 1)
                     {
-                        return PlayerMove.CantMoveReason.ItemMultiBiteBlock;
+                        return PlayerMove.CantMoveReason.ItemMultiSupplyBlock;
                     }
-                    return PlayerMove.CantMoveReason.ItemMultiBiteBlock;
+                    return PlayerMove.CantMoveReason.ItemMultiSupplyBlock;
                 }
             case MetaItemMove.Move.Quick:
                 if (playerData.itemInventory.Count == 0)
@@ -4003,7 +4102,7 @@ public class BattleControl : MonoBehaviour
                 }
                 return PlayerMove.CantMoveReason.MoveExpended;
             case MetaItemMove.Move.Void:
-                if (playerData.itemInventory.Count == 0)
+                if (usedItems.Count == 0)
                 {
                     return PlayerMove.CantMoveReason.NoItems;
                 }
@@ -4026,12 +4125,12 @@ public class BattleControl : MonoBehaviour
                 }
                 else
                 {
-                    return ((2 * playerData.BadgeEquippedCount(Badge.BadgeType.MultiBite)) - multiBiteUses);
+                    return ((2 * playerData.BadgeEquippedCount(Badge.BadgeType.MultiSupply)) - MultiSupplyUses);
                 }
             case MetaItemMove.Move.Quick:
-                return ((2 * playerData.BadgeEquippedCount(Badge.BadgeType.QuickBite)) - quickBiteUses);
+                return ((2 * playerData.BadgeEquippedCount(Badge.BadgeType.QuickSupply)) - QuickSupplyUses);
             case MetaItemMove.Move.Void:
-                return ((2 * playerData.BadgeEquippedCount(Badge.BadgeType.VoidBite)) - voidBiteUses);
+                return ((2 * playerData.BadgeEquippedCount(Badge.BadgeType.VoidSupply)) - VoidSupplyUses);
         }
 
         return -1;
@@ -4146,13 +4245,13 @@ public class BattleControl : MonoBehaviour
             {
                 for (int i = 0; i < party.Count; i++)
                 {
-                    party[i].InflictEffect(party[i], new Effect(Effect.EffectType.Focus, 255, (byte)(4 * playerData.BadgeEquippedCount(Badge.BadgeType.InviteDanger))));
+                    party[i].InflictEffect(party[i], new Effect(Effect.EffectType.Focus, Effect.INFINITE_DURATION, (sbyte)(4 * playerData.BadgeEquippedCount(Badge.BadgeType.InviteDanger))));
                 }
             } else
             {
                 for (int i = 0; i < party.Count; i++)
                 {
-                    party[i].InflictEffect(party[i], new Effect(Effect.EffectType.Focus, 255, (byte)(2 * playerData.BadgeEquippedCount(Badge.BadgeType.InviteDanger))));
+                    party[i].InflictEffect(party[i], new Effect(Effect.EffectType.Focus, Effect.INFINITE_DURATION, (sbyte)(2 * playerData.BadgeEquippedCount(Badge.BadgeType.InviteDanger))));
                 }
             }            
             firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ENEMY;
@@ -4164,7 +4263,7 @@ public class BattleControl : MonoBehaviour
             {
                 for (int i = 0; i < party.Count; i++)
                 {
-                    party[i].InflictEffect(party[i], new Effect(Effect.EffectType.BonusTurns, (byte)(playerData.BadgeEquippedCount(Badge.BadgeType.SmartAmbush)), 255));
+                    party[i].InflictEffect(party[i], new Effect(Effect.EffectType.BonusTurns, (sbyte)(playerData.BadgeEquippedCount(Badge.BadgeType.SmartAmbush)), Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -4173,7 +4272,7 @@ public class BattleControl : MonoBehaviour
         {
             for (int i = 0; i < party.Count; i++)
             {
-                party[i].InflictEffect(party[i], new Effect(Effect.EffectType.BonusTurns, (byte)(playerData.BadgeEquippedCount(Badge.BadgeType.HeadStart)), 255));
+                party[i].InflictEffect(party[i], new Effect(Effect.EffectType.BonusTurns, (sbyte)(playerData.BadgeEquippedCount(Badge.BadgeType.HeadStart)), Effect.INFINITE_DURATION));
             }
         }
 
@@ -4233,7 +4332,7 @@ public class BattleControl : MonoBehaviour
             if (playerEntities[i].BadgeEquipped(Badge.BadgeType.QuickNap))
             {
                 //possible higher potency status!
-                playerEntities[i].InflictEffect(playerEntities[i], new Effect(Effect.EffectType.Sleep, (byte)(playerEntities[i].BadgeEquippedCount(Badge.BadgeType.QuickNap)), 2));
+                playerEntities[i].InflictEffect(playerEntities[i], new Effect(Effect.EffectType.Sleep, (sbyte)(playerEntities[i].BadgeEquippedCount(Badge.BadgeType.QuickNap)), 2));
             }
         }
     }
@@ -4775,7 +4874,7 @@ public class BattleControl : MonoBehaviour
             {
                 if (!pe.HasEffect(Effect.EffectType.Slow))
                 {
-                    pe.InflictEffectForce(pe, new Effect(Effect.EffectType.Slow, 1, 255));
+                    pe.InflictEffectForce(pe, new Effect(Effect.EffectType.Slow, 1, Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -4786,7 +4885,7 @@ public class BattleControl : MonoBehaviour
 
             if (bl.Count > 0 && !bl[0].HasEffect(Effect.EffectType.Berserk))
             {
-                bl[0].InflictEffectForce(bl[0], new Effect(Effect.EffectType.Berserk, 1, 255));
+                bl[0].InflictEffectForce(bl[0], new Effect(Effect.EffectType.Berserk, 1, Effect.INFINITE_DURATION));
             }
         }
 

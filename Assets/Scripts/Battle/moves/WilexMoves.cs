@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Security;
 using UnityEngine;
 
@@ -35,14 +36,14 @@ public abstract class WilexMove : PlayerMove
         AstralWall
     }
 
-    public int CostCalculation(BattleEntity caller, int level = 1, int scale = 2)
+    public int CostCalculation(BattleEntity caller, int level = 1, int scale = 2, int offset = 0)
     {
         if (GetBaseCost() == 0)
         {
             return 0;
         }
 
-        return CostModification(caller, level, GetBaseCost() + ((level - 1) * scale));
+        return CostModification(caller, level, GetBaseCost() + ((level - 1) * scale) + offset);
     }
 
     public int CostModification(BattleEntity caller, int level = 1, int cost = 1)
@@ -83,7 +84,15 @@ public abstract class WilexMove : PlayerMove
 
         if (level != 1)
         {
-            output += " <color,#0000ff>(Lv. " + level + ": " + BattleControl.Instance.wilexText[index + 1][1 + level] + ")</color>";
+            if (level >= 4 || BattleControl.Instance.lunaText[index + 1][1 + level].Length < 2) //if I didn't write a description, use the infinite stacking one
+            {
+                string[] vars = new string[] { (level).ToString(), (level * 2).ToString(), (level * 3).ToString(), (level * 4).ToString(), (level * 5).ToString(), (level * 6).ToString(), (level * 7).ToString(), (level * 8).ToString() };
+                output += " <color,#5000ff>(Lv. " + level + ": " + FormattedString.ParseVars(BattleControl.Instance.wilexText[index + 1][5], vars) + ")</color>";
+            }
+            else
+            {
+                output += " <color,#0000ff>(Lv. " + level + ": " + BattleControl.Instance.wilexText[index + 1][1 + level] + ")</color>";
+            }
         }
 
         return output;
@@ -148,6 +157,8 @@ public class WM_HighStomp : WilexMove
 
             if (GetOutcome(caller))
             {
+                caller.SetAnimation("stompsquat");
+                yield return new WaitForSeconds(0.05f);
                 StompEffects(caller, result);
                 if (result)
                 {
@@ -255,7 +266,7 @@ public class WM_Focus : WilexMove
             case 2: return CostModification(caller, level, 3);
             case 3: return CostModification(caller, level, 9);
         }
-        return CostCalculation(caller, level, 3);
+        return CostCalculation(caller, level, 3, 2);
     }
 
     /*
@@ -295,13 +306,16 @@ public class WM_Focus : WilexMove
             switch (level)
             {
                 case 1:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, 255));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
                     break;
                 case 2:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, 255));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
                     break;
                 case 3:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 6, 255));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 6, Effect.INFINITE_DURATION));
+                    break;
+                default:
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(level * 2), Effect.INFINITE_DURATION));
                     break;
             }
         }
@@ -311,13 +325,16 @@ public class WM_Focus : WilexMove
             switch (level)
             {
                 case 1:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, 255));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
                     break;
                 case 2:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, 255));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
                     break;
                 case 3:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, 255));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
+                    break;
+                default:
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(level), Effect.INFINITE_DURATION));
                     break;
             }
         }
@@ -464,11 +481,11 @@ public class WM_MultiStomp : WilexMove
         {
             properties = (ulong)BattleHelper.DamageProperties.AC_SuccessStall;
         }
-        caller.DealDamage(caller.curTarget, sd - 1, BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Contact);
+        caller.DealDamage(caller.curTarget, sd - 2 + level * 2, BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Contact);
     }
     public virtual void DealDamageFailure(BattleEntity caller, int sd)
     {
-        caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd - 1) / 2f), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+        caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 + level * 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
     }
 
     public override string GetHighlightText(BattleEntity caller, BattleEntity target, int level = 1)
@@ -488,7 +505,7 @@ public class WM_MultiStomp : WilexMove
             sd = pcaller.GetStompDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd - 1, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd - 2 + level * 2, 0, 0);
 
         return val + "?";
     }
@@ -518,7 +535,7 @@ public class WM_ElectroStomp : WM_HighStomp
             case 1: return CostModification(caller, level, 5);
             case 2: return CostModification(caller, level, 9);
         }
-        return CostCalculation(caller, level, 5);
+        return CostCalculation(caller, level, 4);
     }
 
     /*
@@ -556,6 +573,10 @@ public class WM_ElectroStomp : WM_HighStomp
                 caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Air, propertyBlockB, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, 2, 3), caller.posId);
                 break;
+            default:
+                caller.DealDamage(caller.curTarget, sd + 2 * level - 4, BattleHelper.DamageType.Air, propertyBlockB, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, (sbyte)(level * 2 - 2), 3), caller.posId);
+                break;
         }
     }
     public override void DealDamageFailure(BattleEntity caller, int sd)
@@ -568,7 +589,11 @@ public class WM_ElectroStomp : WM_HighStomp
                 break;
             case 2:
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, 2, 3), caller.posId);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, 1, 3), caller.posId);
+                break;
+            default:
+                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2 * level - 4, BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, (sbyte)(level - 1), 3), caller.posId);
                 break;
         }
     }
@@ -601,6 +626,9 @@ public class WM_ElectroStomp : WM_HighStomp
             case 2:
                 val = caller.DealDamageCalculation(target, sd, BattleHelper.DamageType.Air, propertyBlock);
                 break;
+            default:
+                val = caller.DealDamageCalculation(target, sd + 2 * level - 4, BattleHelper.DamageType.Air, propertyBlock);
+                break;
         }
 
         return val + "";
@@ -622,6 +650,10 @@ public class WM_Taunt : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 2;
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return CostCalculation(caller, level, 3);
+    }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
@@ -636,8 +668,9 @@ public class WM_Taunt : WilexMove
             actionCommand.Setup(0.5f);
         }
 
+        caller.SetAnimation("taunt");
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -650,24 +683,23 @@ public class WM_Taunt : WilexMove
         if (result)
         {
             BattleControl.Instance.CreateActionCommandEffect(BattleHelper.ActionCommandText.Nice, caller.GetDamageEffectPosition(), caller);
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
 
             foreach (BattleEntity b in targets)
             {
                 BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
-                caller.InflictEffect(b, new Effect(Effect.EffectType.Berserk, 1, 2), caller.posId);
+                caller.InflictEffect(b, new Effect(Effect.EffectType.Berserk, 1, (sbyte)(1 + level * 2)), caller.posId);
             }
         }
         else
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
 
             foreach (BattleEntity b in targets)
             {
                 BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
-                caller.InflictEffect(b, new Effect(Effect.EffectType.Berserk, 1, 2), caller.posId);
+                caller.InflictEffect(b, new Effect(Effect.EffectType.Berserk, 1, (sbyte)(1 + level * 1)), caller.posId);
             }
         }
+        caller.SetIdleAnimation();
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -727,6 +759,10 @@ public class WM_ParalyzeStomp : WM_HighStomp
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 7;
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return CostCalculation(caller, level, 3);
+    }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override void StartJumpEffects(BattleEntity caller)
@@ -747,12 +783,12 @@ public class WM_ParalyzeStomp : WM_HighStomp
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
         caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
-        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, 2), caller.posId);
+        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, (sbyte)(1 + level * 2)), caller.posId);
     }
     public override void DealDamageFailure(BattleEntity caller, int sd)
     {
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
-        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, 2), caller.posId);
+        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, (sbyte)(1 + level)), caller.posId);
     }
 
     public override string GetHighlightText(BattleEntity caller, BattleEntity target, int level = 1)
@@ -834,7 +870,7 @@ public class WM_FlameStomp : WM_HighStomp
     public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost() => 5;
+    public override int GetBaseCost() => 8;
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
@@ -844,7 +880,7 @@ public class WM_FlameStomp : WM_HighStomp
             case 1: return CostModification(caller, level, 8);
             case 2: return CostModification(caller, level, 12);
         }
-        return CostCalculation(caller, level, 8);
+        return CostCalculation(caller, level, 4);
     }
 
     /*
@@ -910,7 +946,11 @@ public class WM_FlameStomp : WM_HighStomp
                 break;
             case 2:
                 caller.DealDamage(caller.curTarget, sd + 4, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
-                caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 3, 255), caller.posId);
+                caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 3, Effect.INFINITE_DURATION), caller.posId);
+                break;
+            default:
+                caller.DealDamage(caller.curTarget, sd + level * 2, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
+                caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, (sbyte)(level + 2), Effect.INFINITE_DURATION), caller.posId);
                 break;
         }
     }
@@ -924,7 +964,11 @@ public class WM_FlameStomp : WM_HighStomp
                 break;
             case 2:
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 4, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
-                caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 3, 255), caller.posId);
+                caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION), caller.posId);
+                break;
+            default:
+                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + level * 2, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
+                caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, (sbyte)(level + 1), Effect.INFINITE_DURATION), caller.posId);
                 break;
         }
     }
@@ -954,7 +998,10 @@ public class WM_FlameStomp : WM_HighStomp
                 val = caller.DealDamageCalculation(target, sd + 3, BattleHelper.DamageType.Fire, 0);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Fire, 0);
+                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Fire, 0);
+                break;
+            default:
+                val = caller.DealDamageCalculation(target, sd + level * 2, BattleHelper.DamageType.Fire, 0);
                 break;
         }
 
@@ -985,9 +1032,9 @@ public class WM_DoubleStomp : WilexMove
         switch (level)
         {
             case 1: return CostModification(caller, level, 9);
-            case 2: return CostModification(caller, level, 14);
+            case 2: return CostModification(caller, level, 12);
         }
-        return CostCalculation(caller, level, 9);
+        return CostCalculation(caller, level, 3);
     }
 
     /*
@@ -1169,6 +1216,10 @@ public class WM_Overstomp : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 10;
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return CostCalculation(caller, level, 3);
+    }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
@@ -1262,14 +1313,14 @@ public class WM_Overstomp : WilexMove
     {
         ulong propertyBlockB = (ulong)BattleHelper.DamageProperties.ContactHazard;
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
-        caller.DealDamage(caller.curTarget, sd + 12, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
-        caller.DealDamage(caller, sd, 0, propertyBlockB, BattleHelper.ContactLevel.Contact);
+        caller.DealDamage(caller.curTarget, sd + 12 + 5 * level - 5, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
+        caller.DealDamage(caller, sd + 3 * level - 3, 0, propertyBlockB, BattleHelper.ContactLevel.Contact);
     }
     public void DealDamageFailure(BattleEntity caller, int sd)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.ContactHazard;
-        caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 12, 0, 0, BattleHelper.ContactLevel.Contact);
-        caller.DealDamage(caller, Mathf.CeilToInt(sd / 2f), 0, propertyBlock, BattleHelper.ContactLevel.Contact);
+        caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 12 + 5 * level - 5, 0, 0, BattleHelper.ContactLevel.Contact);
+        caller.DealDamage(caller, Mathf.CeilToInt(sd / 2f) + 3 * level - 3, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
     }
 
     public override string GetHighlightText(BattleEntity caller, BattleEntity target, int level = 1)
@@ -1289,9 +1340,9 @@ public class WM_Overstomp : WilexMove
             sd = pcaller.GetStompDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd + 12, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd + 12 + 5 * level - 5, 0, 0);
 
-        int reval = caller.DealDamageCalculation(target, sd, 0, (ulong)BattleHelper.DamageProperties.ContactHazard);
+        int reval = caller.DealDamageCalculation(target, sd + 3 * level - 3, 0, (ulong)BattleHelper.DamageProperties.ContactHazard);
 
         return val + "<line><highlightdangercolor>Recoil: " + reval + "</highlightdangercolor>";
     }
@@ -1355,7 +1406,7 @@ public class WM_SmartStomp : WM_HighStomp
             }
         }
 
-        caller.InflictEffect(caller.curTarget, new Effect(best, 1, 2), caller.posId);
+        caller.InflictEffect(caller.curTarget, new Effect(best, 1, (sbyte)(1 + 2 * level)), caller.posId);
     }
     public override void DealDamageFailure(BattleEntity caller, int sd)
     {
@@ -1389,7 +1440,7 @@ public class WM_SmartStomp : WM_HighStomp
             }
         }
 
-        caller.InflictEffect(caller.curTarget, new Effect(best, 1, 1), caller.posId);
+        caller.InflictEffect(caller.curTarget, new Effect(best, 1, (sbyte)(1 + level)), caller.posId);
     }
 
     public override string GetHighlightText(BattleEntity caller, BattleEntity target, int level = 1)
@@ -1521,7 +1572,7 @@ public class WM_TeamQuake : WilexMove
             case 1: return CostModification(caller, level, 15);
             case 2: return CostModification(caller, level, 20);
         }
-        return CostCalculation(caller, level, 15);
+        return CostCalculation(caller, level, 5);
     }
 
     /*
@@ -1675,7 +1726,7 @@ public class WM_TeamQuake : WilexMove
         
         yield return StartCoroutine(other.JumpHeavy(other.homePos, 2, 0.5f, -0.25f));
 
-        caller.InflictEffectForce(other, new Effect(Effect.EffectType.Cooldown, 1, 255));
+        caller.InflictEffectForce(other, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         other.actionCounter++;
 
     }
@@ -1775,7 +1826,7 @@ public class WM_EggToss : WilexMove
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
-        return CostCalculation(caller, level, 3);
+        return CostCalculation(caller, level, 2);
     }
 
     /*
@@ -1785,15 +1836,13 @@ public class WM_EggToss : WilexMove
     }
     */
 
-    public IEnumerator EggAnimation(BattleEntity caller, Item.ItemType eggGenerated)
+    public GameObject MakeEggSprite(BattleEntity caller, Item.ItemType eggGenerated)
     {
-        Debug.Log("Egg anim " + eggGenerated);
-        //spawn a sprite
         Sprite isp = GlobalItemScript.GetItemSprite(eggGenerated);
 
 
-        Vector2 startPosition = caller.transform.position + caller.height * Vector3.up;
-        Vector3 endPosition = caller.transform.position + caller.height * Vector3.up + Vector3.up * 0.75f;
+        Vector2 startPosition = caller.ApplyScaledOffset(Vector3.left * 0.25f + Vector3.up * 0.4f);
+        Vector3 endPosition = caller.transform.position;
 
         GameObject so = new GameObject("Egg Sprite");
         so.transform.parent = BattleControl.Instance.transform;
@@ -1801,24 +1850,33 @@ public class WM_EggToss : WilexMove
         s.sprite = isp;
         so.transform.position = startPosition;
 
+        return so;
+    }
+    public IEnumerator EggAnimation(BattleEntity caller, Item.ItemType eggGenerated, float offset, GameObject go)
+    {
+        Vector2 startPosition = caller.ApplyScaledOffset(Vector3.left * 0.25f + Vector3.up * 0.4f) + Vector3.back * 0.05f * offset;
+        Vector3 endPosition = caller.transform.position + Vector3.left * offset + Vector3.up * 0.25f + Vector3.back * 0.05f * offset;
+
+        GameObject so = go;
+
         IEnumerator PosLerp(GameObject o, float duration, Vector3 posA, Vector3 posB)
         {
+            Vector3 mpos = ((posA + posB) / 2) + Vector3.up * ((posA.y - posB.y) / 4);
+
             float time = 0;
 
             while (time < 1)
             {
                 time += Time.deltaTime / duration;
-                o.transform.position = posA + (posB - posA) * (1 - (1 - time) * (1 - time));
+                o.transform.position = MainManager.BezierCurve(time, new Vector3[] { posA, mpos, posB });
                 yield return null;
             }
 
             o.transform.position = posB;
         }
 
-        yield return StartCoroutine(PosLerp(so, 0.4f, startPosition, endPosition));
+        yield return StartCoroutine(PosLerp(so, 0.3f, startPosition, endPosition));
         //yield return new WaitForSeconds(1f);
-
-        Destroy(so);
 
         yield return null;
     }
@@ -1848,7 +1906,7 @@ public class WM_EggToss : WilexMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        caller.SetAnimation("eggsquat");
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -1858,34 +1916,67 @@ public class WM_EggToss : WilexMove
             Destroy(actionCommand);
         }
 
-        Item.ItemType eggType = Item.ItemType.None;
+        Item.ItemType[] eggTypes = new Item.ItemType[level];
+        for (int i = 0; i < eggTypes.Length; i++)
+        {
+            eggTypes[i] = Item.ItemType.None;
+        }
+
         if (result)
         {
             BattleControl.Instance.CreateActionCommandEffect(BattleHelper.ActionCommandText.Nice, caller.GetDamageEffectPosition(), caller);
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
 
-            eggType = GetEggType(caller, BattleControl.Instance.turnCount, 0, false);
+            for (int i = 0; i < eggTypes.Length; i++)
+            {
+                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, 0, false);
+            }
         }
         else
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
-            eggType = GetEggType(caller, BattleControl.Instance.turnCount, 0, true);
+            for (int i = 0; i < eggTypes.Length; i++)
+            {
+                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, 0, true);
+            }
         }
 
-        ItemMove im = Item.GetItemMoveScript(new Item(eggType));
-
-        yield return StartCoroutine(EggAnimation(caller, eggType));
-
-        if (im.GetTargetArea(caller, 1).GetCheckerResult(caller, caller))
+        GameObject[] eggObjects = new GameObject[eggTypes.Length];
+        for (int i = 0; i < eggTypes.Length; i++)
         {
-            caller.curTarget = caller;
+            caller.SetAnimation("egglay");
+            eggObjects[i] = MakeEggSprite(caller, eggTypes[i]);
+            eggObjects[i].transform.localScale = Vector3.zero;
+            StartCoroutine(EggAnimation(caller, eggTypes[i], 0.5f, eggObjects[i]));
+            yield return new WaitForSeconds(0.3f);
         }
 
-        //Bypasses ChooseMove
-        yield return StartCoroutine(im.Execute(caller));
+        for (int i = 0; i < eggTypes.Length; i++)
+        {
+            yield return new WaitForSeconds(0.3f);
+            Destroy(eggObjects[i]);
+            ItemMove im = Item.GetItemMoveScript(new Item(eggTypes[i]));
 
-        BattleControl.Instance.playerData.GetPlayerDataEntry(caller.entityID).itemsUsed++;
-        BattleControl.Instance.playerData.itemsUsed++;
+            if (im.GetTargetArea(caller, 1).GetCheckerResult(caller, caller))
+            {
+                caller.curTarget = caller;
+            }
+
+            //Bypasses ChooseMove
+            yield return StartCoroutine(im.Execute(caller));
+
+            BattleControl.Instance.playerData.GetPlayerDataEntry(caller.entityID).itemsUsed++;
+            BattleControl.Instance.playerData.itemsUsed++;
+        }
+
+        yield return new WaitForSeconds(0.3f);
+        for (int j = 0; j < eggObjects.Length; j++)
+        {
+            Destroy(eggObjects[j]);
+            if (eggObjects[j] == null)
+            {
+                break;
+            }
+        }
+        caller.SetIdleAnimation();
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -1944,6 +2035,7 @@ public class WM_Slash : WilexMove
             }
 
             yield return new WaitUntil(() => actionCommand.IsStarted());
+            caller.SetAnimation("slashprepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -1953,6 +2045,7 @@ public class WM_Slash : WilexMove
                 Destroy(actionCommand);
             }
 
+            caller.SetAnimation("slash_e");
             yield return StartCoroutine(SwingAnimations(caller, sl, level));
             if (GetOutcome(caller))
             {
@@ -2108,9 +2201,9 @@ public class WM_MultiSlash : WM_Slash
             }
 
             yield return new WaitUntil(() => actionCommand.IsStarted());
+            caller.SetAnimation("slashprepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
@@ -2195,10 +2288,18 @@ public class WM_MultiSlash : WM_Slash
 
             int k = i / 2;
             float angle = 30 * (1 - k);
+            if (hits > 6)
+            {
+                angle = 30 * (((hits / 2f - 0.5f) - k) / (hits / 2f - 0.5f));
+            }
 
-            if (k == 1)
+            if (angle <= 10 && angle >= 0)
             {
                 angle = 15;
+            }
+            if (angle < 0 && angle >= -10)
+            {
+                angle = -15;
             }
 
             eoS.transform.localEulerAngles = Vector3.right * angle * (flip ? -1 : 1);
@@ -2209,8 +2310,15 @@ public class WM_MultiSlash : WM_Slash
             }
             flip = !flip;
 
+            //change speed to account for faster animations
+            caller.ac.animator.speed = 1;
+
+            //to do later: set up the diagonal slash animations for this
+            caller.SetAnimation("slash_e");
+
             yield return new WaitForSeconds(delay);
         }
+        caller.ac.animator.speed = 1;
 
         //slightly before the end (So that damage is dealt before the effect completes)
         //yield return new WaitForSeconds(0.1f);
@@ -2234,33 +2342,11 @@ public class WM_MultiSlash : WM_Slash
 
         if (result)
         {
-            switch (level)
-            {
-                case 1:
-                    caller.DealDamageMultihit(caller.curTarget, sd + 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
-                    break;
-                case 2:
-                    caller.DealDamageMultihit(caller.curTarget, sd + 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
-                    break;
-                case 3:
-                    caller.DealDamageMultihit(caller.curTarget, sd + 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
-                    break;
-            }
+            caller.DealDamageMultihit(caller.curTarget, sd + 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
         }
         else
         {
-            switch (level)
-            {
-                case 1:
-                    caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt((sd / 2f) + 1), BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
-                    break;
-                case 2:
-                    caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt((sd / 2f) + 1), BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
-                    break;
-                case 3:
-                    caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt((sd / 2f) + 1), BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
-                    break;
-            }
+            caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt((sd / 2f) + 1), BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
         }
     }
 
@@ -2394,7 +2480,7 @@ public class WM_SlipSlash : WilexMove
             bool move = true;
             IEnumerator MoveTracked()
             {
-                yield return caller.Move(target, caller.entitySpeed * 1.5f);
+                yield return caller.Move(target, caller.entitySpeed * 1.5f, "slipslashwalk");
                 move = false;
             }
 
@@ -2419,6 +2505,9 @@ public class WM_SlipSlash : WilexMove
                                 case 2:
                                     caller.DealDamage(targets[i], sd - 1, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
                                     break;
+                                default:
+                                    caller.DealDamage(targets[i], sd + level - 3, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
+                                    break;
                             }
                         } else
                         {
@@ -2431,8 +2520,10 @@ public class WM_SlipSlash : WilexMove
                 yield return null;
             }
 
+            caller.SetAnimation("slashprepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
+            caller.SetAnimation("slash_e");
             yield return StartCoroutine(SwingAnimations(caller, sl, level));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
@@ -2453,6 +2544,9 @@ public class WM_SlipSlash : WilexMove
                         case 2:
                             caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
                             break;
+                        default:
+                            caller.DealDamage(caller.curTarget, sd + level - 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                            break;
                     }
                 }
                 else
@@ -2464,6 +2558,9 @@ public class WM_SlipSlash : WilexMove
                             break;
                         case 2:
                             caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
+                            break;
+                        default:
+                            caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + level - 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                             break;
                     }
                 }
@@ -2532,11 +2629,15 @@ public class WM_SlipSlash : WilexMove
         {
             case 1:
                 val = caller.DealDamageCalculation(target, sd + 1, 0, 0);
-                slipVal = caller.DealDamageCalculation(target, Mathf.CeilToInt((sd / 2f)) + 1, 0, 0);
+                slipVal = caller.DealDamageCalculation(target, sd - 2, 0, 0);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 3, 0, 0);
-                slipVal = caller.DealDamageCalculation(target, Mathf.CeilToInt((sd / 2f)) + 3, 0, 0);
+                slipVal = caller.DealDamageCalculation(target, sd - 1, 0, 0);
+                break;
+            default:
+                val = caller.DealDamageCalculation(target, sd + level - 1, 0, 0);
+                slipVal = caller.DealDamageCalculation(target, sd + level - 3, 0, 0);
                 break;
         }
 
@@ -2560,6 +2661,10 @@ public class WM_PoisonSlash : WM_Slash
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return CostCalculation(caller, level, 2);
+    }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override void DealDamage(BattleEntity caller, int sd, bool result)
@@ -2568,12 +2673,12 @@ public class WM_PoisonSlash : WM_Slash
         {
             ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
             caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
-            caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 2), caller.posId);
+            caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, (sbyte)(1 + level * 2)), caller.posId);
         }
         else
         {
             caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
-            caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 1), caller.posId);
+            caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, (sbyte)(1 + level)), caller.posId);
         }
     }
 
@@ -2703,6 +2808,9 @@ public class WM_PreciseStab : WM_Slash
                 case 2:
                     caller.DealDamage(caller.curTarget, sd + 7, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
+                default:
+                    caller.DealDamage(caller.curTarget, sd + 3 + level * 2, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    break;
             }
         }
         else
@@ -2714,6 +2822,9 @@ public class WM_PreciseStab : WM_Slash
                     break;
                 case 2:
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 7, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    break;
+                default:
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 3 + level * 2, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }
@@ -2755,6 +2866,9 @@ public class WM_PreciseStab : WM_Slash
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 7, BattleHelper.DamageType.Water, propertyBlock);
                 break;
+            default:
+                val = caller.DealDamageCalculation(target, sd + 3 + level * 2, BattleHelper.DamageType.Water, propertyBlock);
+                break;
         }
 
         return val + "";
@@ -2776,6 +2890,10 @@ public class WM_SwordDischarge : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 9;
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return CostCalculation(caller, level, 4);
+    }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
@@ -2819,11 +2937,11 @@ public class WM_SwordDischarge : WilexMove
                 if (result)
                 {
                     ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
-                    caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(caller.curTarget, sd - 1 + level * 4, BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
                 }
                 else
                 {
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 3, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) - 1 + level * 4, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
                 }
             }
             else
@@ -2861,7 +2979,7 @@ public class WM_SwordDischarge : WilexMove
             sd = pcaller.GetWeaponDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd + 3, BattleHelper.DamageType.Air, 0);
+        int val = caller.DealDamageCalculation(target, sd - 1 + level * 4, BattleHelper.DamageType.Air, 0);
 
         return val + "";
     }
@@ -2882,6 +3000,10 @@ public class WM_SwordDance : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return CostCalculation(caller, level, 4);
+    }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
@@ -2919,8 +3041,10 @@ public class WM_SwordDance : WilexMove
 
             yield return StartCoroutine(caller.Move(target, caller.entitySpeed * 1.5f));
 
+            caller.SetAnimation("slashprepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
+            caller.SetAnimation("slash_e");
             yield return StartCoroutine(SwingAnimations(caller, sl, level));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
@@ -2934,13 +3058,13 @@ public class WM_SwordDance : WilexMove
                 if (result)
                 {
                     properties |= (ulong)BattleHelper.DamageProperties.AC_Success;
-                    caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Weapon);
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, 255));
+                    caller.DealDamage(caller.curTarget, sd + 3 - 3 * level, BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Weapon);
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(level * 2), Effect.INFINITE_DURATION));
                 }
                 else
                 {
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)), BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Weapon);
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, 255));
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f) + 3 - 3 * level), BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Weapon);
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(level), Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -3033,7 +3157,7 @@ public class WM_SwordDance : WilexMove
         int val = 0;
 
         ulong properties = (ulong)BattleHelper.DamageProperties.PreserveFocus;
-        val = caller.DealDamageCalculation(target, sd, 0, properties);
+        val = caller.DealDamageCalculation(target, sd + 3 - 3 * level, 0, properties);
 
         return val + "";
     }
@@ -3054,6 +3178,10 @@ public class WM_BoomerangSlash : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 11;
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return CostCalculation(caller, level, 4);
+    }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
@@ -3098,21 +3226,21 @@ public class WM_BoomerangSlash : WilexMove
                 if (result)
                 {
                     propertyBlock |= (ulong)BattleHelper.DamageProperties.AC_Success;
-                    caller.DealDamage(caller.curTarget, sd, 0, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(caller.curTarget, sd - 2 + 2 * level, 0, propertyBlock, BattleHelper.ContactLevel.Infinite);
                 }
                 else
                 {
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)), 0, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) - 2 + 2 * level, 0, propertyBlock, BattleHelper.ContactLevel.Infinite);
                 }
 
                 yield return new WaitForSeconds(0.5f);
                 if (result)
                 {
-                    caller.DealDamage(caller.curTarget, sd + 1, 0, propertyBlockB, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(caller.curTarget, sd - 1 + 2 * level, 0, propertyBlockB, BattleHelper.ContactLevel.Infinite);
                 }
                 else
                 {
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 1, 0, 0, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) - 1 + 2 * level, 0, 0, BattleHelper.ContactLevel.Infinite);
                 }
             }
             else
@@ -3150,7 +3278,7 @@ public class WM_BoomerangSlash : WilexMove
             sd = pcaller.GetWeaponDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd - 2 + 2 * level, 0, 0);
 
         int hits = 2;
 
@@ -3166,7 +3294,7 @@ public class WM_BoomerangSlash : WilexMove
             if (i < hits - 1)
             {
                 outstring += ", ";
-                val = caller.DealDamageCalculation(target, sd, 0, 0);
+                val = caller.DealDamageCalculation(target, sd - 1 + 2 * level, 0, 0);
             }
         }
 
@@ -3193,9 +3321,13 @@ public class WM_DarkSlash : WM_Slash
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
-        return CostCalculation(caller, level, 3);
+        switch (level)
+        {
+            case 1: return CostModification(caller, level, 13);
+            case 2: return CostModification(caller, level, 16);
+        }
+        return CostCalculation(caller, level, 6,-3);
     }
-
     /*
     public override int GetMaxLevel(BattleEntity caller)
     {
@@ -3222,6 +3354,9 @@ public class WM_DarkSlash : WM_Slash
                 case 2:
                     caller.DealDamage(caller.curTarget, sd + 9, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
+                default:
+                    caller.DealDamage(caller.curTarget, sd + 3 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    break;
             }
         }
         else
@@ -3233,6 +3368,9 @@ public class WM_DarkSlash : WM_Slash
                     break;
                 case 2:
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 9, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    break;
+                default:
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 3 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }
@@ -3279,10 +3417,13 @@ public class WM_DarkSlash : WM_Slash
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Dark, 0);
+                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Dark, 0);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 7, BattleHelper.DamageType.Dark, propertyBlock);
+                val = caller.DealDamageCalculation(target, sd + 9, BattleHelper.DamageType.Dark, propertyBlock);
+                break;
+            default:
+                val = caller.DealDamageCalculation(target, sd + 3 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock);
                 break;
         }
 
@@ -3326,7 +3467,7 @@ public class WM_Aetherize : WilexMove
             case 2: return CostModification(caller, level, 6);
             case 3: return CostModification(caller, level, 15);
         }
-        return CostCalculation(caller, level, 3);
+        return CostCalculation(caller, level, 6,3);
     }
 
     /*
@@ -3347,7 +3488,7 @@ public class WM_Aetherize : WilexMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        caller.SetAnimation("weaponholdidle");
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -3360,20 +3501,19 @@ public class WM_Aetherize : WilexMove
         if (result)
         {
             BattleControl.Instance.CreateActionCommandEffect(BattleHelper.ActionCommandText.Nice, caller.GetDamageEffectPosition(), caller);
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
 
             switch (level)
             {
                 case 1:
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Ethereal, 1, 1));
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, 1));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                     }
                     break;
                 case 3:
@@ -3381,25 +3521,31 @@ public class WM_Aetherize : WilexMove
                     foreach (BattleEntity b in targetsB)
                     {
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, 1));
+                    }
+                    break;
+                default:
+                    List<BattleEntity> targetsC = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+                    foreach (BattleEntity b in targetsC)
+                    {
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, (sbyte)(level - 3)));
                     }
                     break;
             }
         }
         else
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
             switch (level)
             {
                 case 1:
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Ethereal, 1, 1));
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, 1));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                     }
                     break;
                 case 3:
@@ -3407,6 +3553,13 @@ public class WM_Aetherize : WilexMove
                     foreach (BattleEntity b in targetsB)
                     {
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, 1));
+                    }
+                    break;
+                case 4:
+                    List<BattleEntity> targetsC = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+                    foreach (BattleEntity b in targetsC)
+                    {
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, (sbyte)(level - 4)));
                     }
                     break;
             }
@@ -3436,6 +3589,10 @@ public class WM_FlameBat : WilexMove
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return CostCalculation(caller, level, 3);
+    }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
@@ -3482,12 +3639,12 @@ public class WM_FlameBat : WilexMove
                 if (result)
                 {
                     ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)), BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Infinite);
-                    caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, 255));
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f) - 2 + level * 2), BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                    caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
                 }
                 else
                 {
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 4f), BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 4f) - 1 + level, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                 }
             }
             else
@@ -3525,7 +3682,7 @@ public class WM_FlameBat : WilexMove
             sd = pcaller.GetWeaponDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, Mathf.CeilToInt((sd / 2f)), BattleHelper.DamageType.Fire, 0);
+        int val = caller.DealDamageCalculation(target, Mathf.CeilToInt((sd / 2f) - 2 + level * 2), BattleHelper.DamageType.Fire, 0);
 
         return val + "";
     }
@@ -3567,7 +3724,7 @@ public class WM_AstralWall : WilexMove
             case 2: return CostModification(caller, level, 10);
             case 3: return CostModification(caller, level, 14);
         }
-        return CostCalculation(caller, level, 4);
+        return CostCalculation(caller, level, 2, 4);
     }
 
     /*
@@ -3588,7 +3745,7 @@ public class WM_AstralWall : WilexMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        caller.SetAnimation("weaponholdidle");
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -3601,51 +3758,65 @@ public class WM_AstralWall : WilexMove
         if (result)
         {
             BattleControl.Instance.CreateActionCommandEffect(BattleHelper.ActionCommandText.Nice, caller.GetDamageEffectPosition(), caller);
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 1.5f, 0.3f, 0.15f));
 
             switch (level)
             {
                 case 1:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AstralWall, (byte)Mathf.CeilToInt(caller.maxHP / 4f), 3));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(caller.maxHP / 4f), 3));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (byte)Mathf.CeilToInt(b.maxHP / 4f), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(b.maxHP / 4f), 3));
                     }
                     break;
                 case 3:
                     List<BattleEntity> targetsB = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsB)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (byte)Mathf.CeilToInt(b.maxHP / 4f), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(b.maxHP / 4f), 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AstralRecovery, 1, 3));
+                    }
+                    break;
+                default:
+                    List<BattleEntity> targetsC = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+                    foreach (BattleEntity b in targetsC)
+                    {
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(b.maxHP / (1f + level)), (sbyte)(level)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralRecovery, 1, (sbyte)(level)));
                     }
                     break;
             }
         }
         else
         {
-            yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 0.5f, 0.15f, 0.15f));
             switch (level)
             {
                 case 1:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AstralWall, (byte)Mathf.CeilToInt(caller.maxHP / 2f), 3));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(caller.maxHP / 2f), 3));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (byte)Mathf.CeilToInt(b.maxHP / 2f), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(b.maxHP / 2f), 3));
                     }
                     break;
                 case 3:
                     List<BattleEntity> targetsB = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsB)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (byte)Mathf.CeilToInt(b.maxHP / 2f), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(b.maxHP / 2f), 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AstralRecovery, 1, 3));
+                    }
+                    break;
+                default:
+                    List<BattleEntity> targetsC = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+                    foreach (BattleEntity b in targetsC)
+                    {
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt((b.maxHP * 2) / (1f + level)), (sbyte)(level)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralRecovery, 1, (sbyte)(level)));
                     }
                     break;
             }

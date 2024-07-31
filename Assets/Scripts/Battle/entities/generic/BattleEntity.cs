@@ -1006,7 +1006,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //debug status testing
         if (entityID == BattleHelper.EntityID.DebugEntity)
         {
-            ReceiveEffectForce(new Effect(Effect.EffectType.Miracle, 1, 255));
+            ReceiveEffectForce(new Effect(Effect.EffectType.Miracle, 1, Effect.INFINITE_DURATION));
         }
 
         if (entityID == BattleHelper.EntityID.DebugEntity)
@@ -1338,7 +1338,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //reset state in case sus stuff happens
         if (ac != null)
         {
-            ac.SetAnimation("idle");
+            SetIdleAnimation();
             if (flipDefault)
             {
                 ac.SendAnimationData("xflip");
@@ -1502,12 +1502,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (HasEffect(Effect.EffectType.Hustle))
         {
-            InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Hustle).potency, 255));
+            InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Hustle).potency, Effect.INFINITE_DURATION));
         }
 
         if (HasEffect(Effect.EffectType.Slow) && (BattleControl.Instance.turnCount % (GetEffectEntry(Effect.EffectType.Slow).potency + 1) != 0))
         {
-            InflictEffectForce(this, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            InflictEffectForce(this, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
 
         if (HasEffect(Effect.EffectType.AstralWall) && damageTakenThisTurn >= GetEffectEntry(Effect.EffectType.AstralWall).potency)
@@ -1521,7 +1521,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //decrement turncount
         for (int i = 0; i < effects.Count; i++)
         {
-            if (effects[i].duration != 255)
+            if (effects[i].duration != Effect.INFINITE_DURATION)
             {
                 bool applyStasis = effectStasis && effects[i].duration <= 1;
                 applyStasis &= (effects[i].effect != Effect.EffectType.EffectStasis);
@@ -1747,9 +1747,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     BattleControl.Instance.CreateEffectParticles(GetEffectEntry(Effect.EffectType.Miracle), this);
                     TokenRemoveOne(Effect.EffectType.Miracle);
                     SetEntityProperty(BattleHelper.EntityProperties.NoMiracle, true);
-                    //ReceiveEffectForce(new Effect(Effect.EffectType.NoMiracle, 255, 1));
-                    damage = 0;
-                    //damage = hp - 1;
+                    //ReceiveEffectForce(new Effect(Effect.EffectType.NoMiracle, Effect.INFINITE_DURATION, 1));
+                    damage = hp - 1;
                 }
             }
         }
@@ -1766,7 +1765,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (HasEffect(Effect.EffectType.Soulbleed))
         {
-            byte bleedDamage = (byte)(damage / 8);
+            sbyte bleedDamage = (sbyte)(damage / 8);
             if (damage > 0 && bleedDamage <= 0)
             {
                 bleedDamage = 1;
@@ -1779,7 +1778,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (HasEffect(Effect.EffectType.Soften))
         {
-            byte softDamage = (byte)(damage / 3);
+            sbyte softDamage = (sbyte)(damage / 3);
             if (softDamage > 0)
             {
                 ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
@@ -1905,7 +1904,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             if (damage >= hp)
             {
-                damage = 0;
+                damage = hp - 1;
             }
         }
 
@@ -2875,9 +2874,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
 
         int inputDamage = AttackBoostCalculation(target, damage, type, properties);
-        Debug.Log(inputDamage);
+        //Debug.Log(inputDamage);
         inputDamage += other.AttackBoostCalculation(target, damageO, type, properties);
-        Debug.Log(inputDamage);
+        //Debug.Log(inputDamage);
         int reducedDamage = DefenseCalculation(target, inputDamage, type, properties);
         int takenDamage = 0;
 
@@ -4055,8 +4054,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             //target gets defocus
             //note: inflict status
-            byte drain = target.GetEffectEntry(Effect.EffectType.DrainSprout).potency;
-            InflictEffect(target, new Effect(Effect.EffectType.Defocus, drain, 255));
+            sbyte drain = target.GetEffectEntry(Effect.EffectType.DrainSprout).potency;
+            InflictEffect(target, new Effect(Effect.EffectType.Defocus, drain, Effect.INFINITE_DURATION));
             HealHealth(2 * drain);
         }
 
@@ -4064,8 +4063,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             //target gets sunder (buffered)
             //note: inflict status
-            byte drain = target.GetEffectEntry(Effect.EffectType.BoltSprout).potency;
-            InflictEffectBuffered(target, new Effect(Effect.EffectType.Sunder, drain, 255));
+            sbyte drain = target.GetEffectEntry(Effect.EffectType.BoltSprout).potency;
+            InflictEffectBuffered(target, new Effect(Effect.EffectType.Sunder, drain, Effect.INFINITE_DURATION));
             HealEnergy(2 * drain);
         }
 
@@ -4079,7 +4078,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(1, power, cumulativeAttackHitCount);
                 if (procSeasideAir > 0)
                 {
-                    InflictEffect(this, new Effect(Effect.EffectType.Sunder, (byte)procSeasideAir, 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)procSeasideAir, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -4087,18 +4086,18 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(2f, power, cumulativeAttackHitCount);
                 if (procSeasideAir > 0)
                 {
-                    InflictEffect(this, new Effect(Effect.EffectType.Sunder, (byte)procSeasideAir, 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)procSeasideAir, Effect.INFINITE_DURATION));
                 }
             }
         }
 
         if (target.HasEffect(Effect.EffectType.ParryAura))
         {
-            InflictEffect(target, new Effect(Effect.EffectType.Focus, target.GetEffectEntry(Effect.EffectType.ParryAura).potency, 255));
+            InflictEffect(target, new Effect(Effect.EffectType.Focus, target.GetEffectEntry(Effect.EffectType.ParryAura).potency, Effect.INFINITE_DURATION));
         }
         if (target.HasEffect(Effect.EffectType.BolsterAura))
         {
-            InflictEffectBuffered(target, new Effect(Effect.EffectType.Absorb, target.GetEffectEntry(Effect.EffectType.BolsterAura).potency, 255));
+            InflictEffectBuffered(target, new Effect(Effect.EffectType.Absorb, target.GetEffectEntry(Effect.EffectType.BolsterAura).potency, Effect.INFINITE_DURATION));
         }
 
         if (target.HasEffect(Effect.EffectType.Elusive))
@@ -5101,6 +5100,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
             }
 
+            if (target.GetEntityProperty(EntityProperties.NoMiracle))
+            {
+                if (se.effect == Effect.EffectType.Miracle)
+                {
+                    BattleControl.Instance.CreateEffectBlockedParticles(se, target);
+                    return;
+                }
+            }
+
             //check status table?
             if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status)
             {
@@ -5158,10 +5166,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status)
         {
-            se.duration = (byte)(se.duration * GetStatusTurnModifier(se.effect));
+            se.duration = (sbyte)(se.duration * GetStatusTurnModifier(se.effect));
 
             //Enforce turncount restriction
-            byte maximum = (byte)statusMaxTurns;
+            sbyte maximum = (sbyte)statusMaxTurns;
 
             if (se.duration > maximum)
             {
@@ -5181,10 +5189,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status)
         {
-            se.duration = (byte)(se.duration * GetStatusTurnModifier(se.effect));
+            se.duration = (sbyte)(se.duration * GetStatusTurnModifier(se.effect));
 
             //Enforce turncount restriction
-            byte maximum = (byte)statusMaxTurns;
+            sbyte maximum = (sbyte)statusMaxTurns;
 
             if (se.duration > maximum)
             {
@@ -5243,8 +5251,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                         int total = entry.potency * entry.duration;
                         entry.potency = se.potency;
                         entry.duration = se.duration;
-                        entry.potency += (byte)(total / se.duration);
-                        if ((byte)(total / se.duration) < 1)
+                        entry.potency += (sbyte)(total / se.duration);
+                        if ((sbyte)(total / se.duration) < 1)
                         {
                             entry.potency++;
                         }
@@ -5252,15 +5260,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     else
                     {
                         int total = se.potency * se.duration;
-                        entry.potency += (byte)(total / entry.duration);
-                        if ((byte)(total / entry.duration) < 1)
+                        entry.potency += (sbyte)(total / entry.duration);
+                        if ((sbyte)(total / entry.duration) < 1)
                         {
                             entry.potency++;
                         }
                     }
                     break;
                 case Effect.EffectStackMode.KeepPotAddDur:
-                    if (entry.duration == 255 || se.duration == 255)
+                    if (entry.duration == Effect.INFINITE_DURATION || se.duration == Effect.INFINITE_DURATION)
                     {
                         //No
                     } else
@@ -5270,8 +5278,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                             int total = entry.potency * entry.duration;
                             entry.potency = se.potency;
                             entry.duration = se.duration;
-                            entry.duration += (byte)(total / se.potency);
-                            if ((byte)(total / se.potency) < 1)
+                            entry.duration += (sbyte)(total / se.potency);
+                            if ((sbyte)(total / se.potency) < 1)
                             {
                                 entry.duration++;
                             }
@@ -5279,8 +5287,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                         else
                         {
                             int total = se.potency * se.duration;
-                            entry.duration += (byte)(total / entry.potency);
-                            if ((byte)(total / entry.potency) < 1)
+                            entry.duration += (sbyte)(total / entry.potency);
+                            if ((sbyte)(total / entry.potency) < 1)
                             {
                                 entry.duration++;
                             }
@@ -5324,7 +5332,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                             break;
                         case Effect.EffectClass.BuffDebuff:
                             //KeepPotAddDur
-                            if (entry.duration == 255 || se.duration == 255)
+                            if (entry.duration == Effect.INFINITE_DURATION || se.duration == Effect.INFINITE_DURATION)
                             {
                                 //No
                             }
@@ -5335,8 +5343,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                                     int total = entry.potency * entry.duration;
                                     entry.potency = se.potency;
                                     entry.duration = se.duration;
-                                    entry.duration += (byte)(total / se.potency);
-                                    if ((byte)(total / se.potency) < 1)
+                                    entry.duration += (sbyte)(total / se.potency);
+                                    if ((sbyte)(total / se.potency) < 1)
                                     {
                                         entry.duration++;
                                     }
@@ -5344,10 +5352,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                                 else
                                 {
                                     int total = se.potency * se.duration;
-                                    entry.duration += (byte)(total / entry.potency);
-                                    if ((byte)(total / entry.potency) < 1)
+                                    entry.duration += (sbyte)(total / entry.potency);
+                                    if ((sbyte)(total / entry.potency) < 1)
                                     {
                                         entry.duration++;
+                                    }
+                                }
+
+                                //special case (to nerf stacking sticky then inverting it)
+                                if (se.effect == Effect.EffectType.Sticky)
+                                {
+                                    if (entry.duration > 5)
+                                    {
+                                        entry.duration = 5;
                                     }
                                 }
                             }
@@ -5389,7 +5406,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status && (Effect.GetEffectClass(effects[i].effect) == Effect.EffectClass.Status && effects[i].effect != se.effect))
             {
                 //Infinite turncount statuses have special priority which makes them negate other statuses
-                if (effects[i].duration == 255)
+                if (effects[i].duration == Effect.INFINITE_DURATION)
                 {
                     infinitepriority = true;
                     break;
@@ -5412,7 +5429,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             for (int i = 0; i < effects.Count; i++)
             {
-                if (Effect.GetEffectClass(effects[i].effect) == Effect.EffectClass.Status && effects[i].duration < 255)
+                if (Effect.GetEffectClass(effects[i].effect) == Effect.EffectClass.Status && effects[i].duration < Effect.INFINITE_DURATION)
                 {
                     statusMaxTurns += effects[i].duration; //refund the missing amount
                     if (statusMaxTurns > baseStatusMaxTurns)
@@ -5534,7 +5551,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             if (csi[i] != -1 && csi[i + 1] != -1)
             {
-                if (effects[csi[i]].duration != 255 && effects[csi[i + 1]].duration != 255)
+                if (effects[csi[i]].duration != Effect.INFINITE_DURATION && effects[csi[i + 1]].duration != Effect.INFINITE_DURATION)
                 {
                     temppowerA = effects[csi[i]].duration * effects[csi[i]].potency;
                     temppowerB = effects[csi[i + 1]].duration * effects[csi[i + 1]].potency;
@@ -5549,13 +5566,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                         {
                             tempduration = effects[csi[i + 1]].duration;
                         }
-                        if (tempduration > 254)
+                        if (tempduration > Effect.MAX_NORMAL_DURATION)
                         {
-                            tempduration = 254;
+                            tempduration = Effect.MAX_NORMAL_DURATION;
                         }
 
-                        effects[csi[i]].duration = (byte)tempduration;
-                        effects[csi[i]].potency = (byte)((temppowerA - temppowerB) / tempduration);
+                        effects[csi[i]].duration = (sbyte)tempduration;
+                        effects[csi[i]].potency = (sbyte)((temppowerA - temppowerB) / tempduration);
                         if (effects[csi[i]].potency < 1)
                         {
                             effects[csi[i]].potency = 1;
@@ -5575,13 +5592,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                         {
                             tempduration = effects[csi[i + 1]].duration;
                         }
-                        if (tempduration > 254)
+                        if (tempduration > Effect.MAX_NORMAL_DURATION)
                         {
-                            tempduration = 254;
+                            tempduration = Effect.MAX_NORMAL_DURATION;
                         }
 
-                        effects[csi[i + 1]].duration = (byte)tempduration;
-                        effects[csi[i + 1]].potency = (byte)((temppowerB - temppowerA) / tempduration);
+                        effects[csi[i + 1]].duration = (sbyte)tempduration;
+                        effects[csi[i + 1]].potency = (sbyte)((temppowerB - temppowerA) / tempduration);
                         if (effects[csi[i + 1]].potency < 1)
                         {
                             effects[csi[i + 1]].potency = 1;
@@ -5598,12 +5615,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                         effects[csi[i + 1]].duration = 0;
                         effects[csi[i + 1]].potency = 0;
                     }
-                } else if (effects[csi[i]].duration != 255 || effects[csi[i + 1]].duration != 255)
+                } else if (effects[csi[i]].duration != Effect.INFINITE_DURATION || effects[csi[i + 1]].duration != Effect.INFINITE_DURATION)
                 {
                     /*
                     //The infinite duration one wins
                     //By convention this really should never happen though
-                    if (effects[conflictingStatusIndices[i]].duration == 255)
+                    if (effects[conflictingStatusIndices[i]].duration == Effect.INFINITE_DURATION)
                     {
                         effects[conflictingStatusIndices[i + 1]].duration = 0;
                         effects[conflictingStatusIndices[i + 1]].potency = 0;
@@ -5962,125 +5979,54 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //some effects are off limits due to being problematic
         //(infinite attack reduction -> boost is a bit too good)
         //there are also a few "sproadic" effects
-        Effect.EffectType[] conflictingStatuses =
+
+        if (Effect.GetEffectClass(e.effect) == Effect.EffectClass.Static)
         {
-            //Effect.EffectType.AttackBoost,
-            //Effect.EffectType.AttackReduction,
-
-            //Effect.EffectType.DefenseBoost,
-            //Effect.EffectType.DefenseReduction,
-
-            //Effect.EffectType.EnduranceBoost,
-            //Effect.EffectType.EnduranceReduction,
-
-            //Effect.EffectType.AgilityBoost,
-            //Effect.EffectType.AgilityReduction,
-
-            //Effect.EffectType.MaxHPBoost,
-            //Effect.EffectType.MaxHPReduction,
-
-            //Effect.EffectType.MaxEPBoost,
-            //Effect.EffectType.MaxEPReduction,
-
-            //Effect.EffectType.MaxSEBoost,
-            //Effect.EffectType.MaxSEReduction,
-
-            //advanced ailments
-            Effect.EffectType.Soulbleed,
-            Effect.EffectType.Ethereal,
-
-            Effect.EffectType.Sunflame,
-            Effect.EffectType.Illuminate,
-
-            Effect.EffectType.Brittle,
-            Effect.EffectType.MistWall,
-
-            Effect.EffectType.Inverted,
-            Effect.EffectType.AstralWall,
-
-            Effect.EffectType.Dread,
-            Effect.EffectType.CounterFlare,
-
-            Effect.EffectType.ArcDischarge,
-            Effect.EffectType.Supercharge,
-
-            Effect.EffectType.TimeStop,
-            Effect.EffectType.QuantumShield,
-
-            Effect.EffectType.Exhausted,
-            Effect.EffectType.Soften,
-
-            Effect.EffectType.AttackUp,
-            Effect.EffectType.AttackDown,
-
-            Effect.EffectType.DefenseUp,
-            Effect.EffectType.DefenseDown,
-
-            Effect.EffectType.EnduranceUp,
-            Effect.EffectType.EnduranceDown,
-
-            Effect.EffectType.AgilityUp,
-            Effect.EffectType.AgilityDown,
-
-            Effect.EffectType.FlowUp,
-            Effect.EffectType.FlowDown,
-
-            Effect.EffectType.HealthRegen,
-            Effect.EffectType.HealthLoss,
-
-            Effect.EffectType.EnergyRegen,
-            Effect.EffectType.EnergyLoss,
-
-            Effect.EffectType.SoulRegen,
-            Effect.EffectType.SoulLoss,
-
-            Effect.EffectType.Focus,
-            Effect.EffectType.Defocus,
-
-            Effect.EffectType.Absorb,
-            Effect.EffectType.Sunder,
-
-            Effect.EffectType.Burst,
-            Effect.EffectType.Enervate,
-
-            Effect.EffectType.Haste,
-            Effect.EffectType.Hamper,
-
-            Effect.EffectType.Awaken,
-            Effect.EffectType.Disorient,
-
-            //Effect.EffectType.BonusTurns,
-            //Effect.EffectType.Cooldown,
-
-            Effect.EffectType.Freeze,
-            Effect.EffectType.Poison,
-
-            Effect.EffectType.Dizzy,
-            Effect.EffectType.Paralyze,
-
-            Effect.EffectType.Sleep,
-            Effect.EffectType.Berserk,
-
-            Effect.EffectType.ParryAura,
-            Effect.EffectType.DrainSprout,
-
-            Effect.EffectType.BolsterAura,
-            Effect.EffectType.BoltSprout,
-        };
-
-        int indexFound = -1;
-        for (int j = 0; j < conflictingStatuses.Length; j++)
-        {
-            if (e.effect == conflictingStatuses[j])
-            {
-                indexFound = j;
-            }
+            return;
         }
-        
-        if (indexFound != -1)
+
+        Effect.EffectType ne = Effect.InvertEffectType(e.effect);
+        if (ne == Effect.EffectType.Default)
         {
-            int otherIndex = (indexFound - (indexFound % 2)) + ((indexFound + 1) % 2);
-            e.effect = conflictingStatuses[otherIndex];
+            return;
+        }
+
+        e.effect = ne;
+
+
+        //audit some specific cases
+
+        //this is symmetric
+        //may lead to sussery with stacking sticky and then inverting it?
+        //But sticky is a very rare debuff only given out by very specific items
+        //Ended up making Sticky not stack past 5 duration which should be balanced?
+        //  (5 sticky -> 4 item boost = 3x items, but you need to use at least 3 items to get that to work)
+        if (e.effect == Effect.EffectType.Sticky)
+        {
+            e.duration = (sbyte)(e.potency + 1);
+            e.potency = 1;
+        }
+        if (e.effect == Effect.EffectType.ItemBoost)
+        {
+            e.potency = (sbyte)(e.duration - 1);
+            e.duration = Effect.INFINITE_DURATION;
+        }
+        if (e.effect == Effect.EffectType.MistWall)
+        {
+            e.potency = 1;
+        }
+        if (e.effect == Effect.EffectType.AstralWall)
+        {
+            sbyte min = (sbyte)Mathf.CeilToInt(maxHP / 4f);
+            e.potency = min;
+        }
+        if (e.effect == Effect.EffectType.Inverted)
+        {
+            e.potency = 1;
+        }
+        if (e.effect == Effect.EffectType.TimeStop)
+        {
+            e.potency = 1;
         }
     }
 
@@ -6865,11 +6811,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public virtual IEnumerator Idle()
     {
-        while (true)
-        {
-            SetAnimation("idle");
+        //Note: hopefully this will work in all cases (there shouldn't be a persistent thing that causes the animation to be wrong)
+        //while (true)
+        //{
+            SetIdleAnimation();
             yield return null;
-        }
+        //}
     }
 
     //Event methods
@@ -6930,19 +6877,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 break;
             case BattleHelper.Event.StatusHurt:
             case BattleHelper.Event.Hurt:
-                SetAnimation("hurt");
+                SetAnimation("hurt", true);
                 yield return StartCoroutine(DefaultHurtEvent());
-                SetAnimation("idle");
+                SetIdleAnimation();
                 break;
             case BattleHelper.Event.KnockbackHurt:
-                SetAnimation("hurt");
+                SetAnimation("hurt", true);
                 yield return StartCoroutine(DefaultKnockbackHurt(false));
-                SetAnimation("idle");
+                SetIdleAnimation();
                 break;
             case BattleHelper.Event.MetaKnockbackHurt:
-                SetAnimation("hurt");
+                SetAnimation("hurt", true);
                 yield return StartCoroutine(DefaultKnockbackHurt(true));
-                SetAnimation("idle");
+                SetIdleAnimation();
                 break;
             case BattleHelper.Event.CureStatus:
                 yield return StartCoroutine(DefaultCureEffect());
@@ -7002,25 +6949,25 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             case BattleHelper.Event.StatusHurt:
                 SetAnimation("hurt");
                 yield return StartCoroutine(DefaultHurtEvent());
-                SetAnimation("idle");
+                SetIdleAnimation();
                 break;
             case BattleHelper.Event.Hurt:
                 SetAnimation("hurt");
                 yield return StartCoroutine(DefaultHurtEvent());
                 yield return StartCoroutine(FlyingFallDown());
-                SetAnimation("idle");
+                SetIdleAnimation();
                 break;
             case BattleHelper.Event.KnockbackHurt:
                 SetAnimation("hurt");
                 yield return StartCoroutine(DefaultKnockbackHurt(false));
                 yield return StartCoroutine(FlyingFallDown());
-                SetAnimation("idle");
+                SetIdleAnimation();
                 break;
             case BattleHelper.Event.MetaKnockbackHurt:
                 SetAnimation("hurt");
                 yield return StartCoroutine(DefaultKnockbackHurt(true));
                 yield return StartCoroutine(FlyingFallDown());
-                SetAnimation("idle");
+                SetIdleAnimation();
                 break;
             case BattleHelper.Event.CureStatus:
                 yield return StartCoroutine(DefaultCureEffect());
@@ -7303,16 +7250,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (flipDefault)
             {
                 SendAnimationData("xflip");
-                SetAnimation("idle");
             }
             else
             {
                 SendAnimationData("xunflip");
-                SetAnimation("idle");
             }
+            SetIdleAnimation();
         }
     }
     public IEnumerator Move(Vector3 position, float speed, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    {
+        yield return StartCoroutine(Move(position, speed, "walk", animate, animateEnd));
+    }
+    public IEnumerator Move(Vector3 position, float speed, string anim, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
         if (transform.position == position)
         {
@@ -7338,7 +7288,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     SendAnimationData("xflip");
                 }
             }
-            SetAnimation("walk");
+            SetAnimation(anim);
         }
 
         while (true)
@@ -7376,17 +7326,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (flipDefault)
             {
                 SendAnimationData("xflip");
-                SetAnimation("idle");
             }
             else
             {
                 SendAnimationData("xunflip");
-                SetAnimation("idle");
             }
+            SetIdleAnimation();
         }
     }
 
-    public IEnumerator Jump(Vector3 targetPos, float height, float duration, bool animate = true, bool animateEnd = true)
+    public IEnumerator Jump(Vector3 targetPos, float height, float duration, string upAnim, string downAnim, bool animate = true, bool animateEnd = true)
     {
         yield return null;
         float initialTime = Time.time;
@@ -7417,10 +7366,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 if ((transform.position - pastPos).y > 0)
                 {
-                    SetAnimation("jump");
-                } else
+                    SetAnimation(upAnim);
+                }
+                else
                 {
-                    SetAnimation("fall");
+                    SetAnimation(downAnim);
                 }
             }
             completion = (Time.time - initialTime) / duration;
@@ -7434,16 +7384,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (flipDefault)
             {
                 SendAnimationData("xflip");
-                SetAnimation("idle");
             }
             else
             {
                 SendAnimationData("xunflip");
-                SetAnimation("idle");
             }
+            SetIdleAnimation();
         }
-    }   
-    public IEnumerator JumpHeavy(Vector3 targetPos, float height, float duration, float heaviness, bool animate = true, bool animateEnd = true)  //-1.0 - 1.0, negative = slow start, heavy end, positive = heavy start, slow end. Values outside the -1.0 to 1.0 range create overshooting
+    }
+    public IEnumerator Jump(Vector3 targetPos, float height, float duration, bool animate = true, bool animateEnd = true)
+    {
+        yield return StartCoroutine(Jump(targetPos, height, duration, "jump", "fall", animate, animateEnd));
+    }
+    public IEnumerator JumpHeavy(Vector3 targetPos, float height, float duration, float heaviness, string upAnim, string downAnim, bool animate = true, bool animateEnd = true)  //-1.0 - 1.0, negative = slow start, heavy end, positive = heavy start, slow end. Values outside the -1.0 to 1.0 range create overshooting
     {
         yield return null;
         float initialTime = Time.time;
@@ -7475,11 +7428,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 if ((transform.position - pastPos).y > 0)
                 {
-                    SetAnimation("jump");
+                    SetAnimation(upAnim);
                 }
                 else
                 {
-                    SetAnimation("fall");
+                    SetAnimation(downAnim);
                 }
             }
             completion = (Time.time - initialTime) / duration;
@@ -7494,81 +7447,30 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (flipDefault)
             {
                 SendAnimationData("xflip");
-                SetAnimation("idle");
             }
             else
             {
                 SendAnimationData("xunflip");
-                SetAnimation("idle");
             }
+            SetIdleAnimation();
         }
+    }
+    public IEnumerator JumpHeavy(Vector3 targetPos, float height, float duration, float heaviness, bool animate = true, bool animateEnd = true)  //-1.0 - 1.0, negative = slow start, heavy end, positive = heavy start, slow end. Values outside the -1.0 to 1.0 range create overshooting
+    {
+        yield return StartCoroutine(JumpHeavy(targetPos, height, duration, heaviness, "jump", "fall", animate, animateEnd));        
     }
     public IEnumerator Jump(Vector3 targetPos, float height, bool animate = true, bool animateEnd = true) //calculate duration from speed and x diff
     {
-        yield return null;
-        float initialTime = Time.time;
         Vector3 initialPos = transform.position;
-        Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
         float duration = (targetPos[0] - initialPos[0]) / entitySpeed;
         if (duration < 0)
         {
             duration = -duration;
         }
-
-        float completion = (Time.time - initialTime) / duration;
-        //make a bezier curve
-
-        while (completion < 1)
-        {
-            Vector3 pastPos = transform.position;
-            transform.position = MainManager.BezierCurve(completion, initialPos, midPos, targetPos);
-            if (animate)
-            {
-                if (flipDefault)
-                {
-                    if ((transform.position - pastPos).x > 0)
-                    {
-                        SendAnimationData("xunflip");
-                    }
-                }
-                else
-                {
-                    if ((transform.position - pastPos).x < 0)
-                    {
-                        SendAnimationData("xflip");
-                    }
-                }
-                if ((transform.position - pastPos).y > 0)
-                {
-                    SetAnimation("jump");
-                }
-                else
-                {
-                    SetAnimation("fall");
-                }
-            }
-            completion = (Time.time - initialTime) / duration;
-            yield return null;
-        }
-        //force position = endpoint (prevent lag glitches)
-        transform.position = targetPos;
-
-        if (animate && animateEnd)
-        {
-            if (flipDefault)
-            {
-                SendAnimationData("xflip");
-                SetAnimation("idle");
-            }
-            else
-            {
-                SendAnimationData("xunflip");
-                SetAnimation("idle");
-            }
-        }
+        yield return StartCoroutine(Jump(targetPos, height, duration, animate, animateEnd));
     }
     //calculates a jump from 100% to whenever you hit the ground
-    public IEnumerator ExtrapolateJumpHeavy(Vector3 startPos, Vector3 targetPos, float height, float duration, float heaviness, bool animate = true, bool animateEnd = true)
+    public IEnumerator ExtrapolateJumpHeavy(Vector3 startPos, Vector3 targetPos, float height, float duration, float heaviness, string upAnim, string downAnim, bool animate = true, bool animateEnd = true)
     {
         float initialTime = Time.time;
         Vector3 initialPos = startPos;
@@ -7599,11 +7501,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 if ((transform.position - pastPos).y > 0)
                 {
-                    SetAnimation("jump");
+                    SetAnimation(upAnim);
                 }
                 else
                 {
-                    SetAnimation("fall");
+                    SetAnimation(downAnim);
                 }
             }
             completion = 1 + ((Time.time - initialTime) / duration);
@@ -7618,21 +7520,28 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     if (flipDefault)
                     {
                         SendAnimationData("xflip");
-                        SetAnimation("idle");
                     }
                     else
                     {
                         SendAnimationData("xunflip");
-                        SetAnimation("idle");
                     }
+                    SetIdleAnimation();
                 }
                 yield break;
             }
             yield return null;
         }
     }
+    public IEnumerator ExtrapolateJumpHeavy(Vector3 startPos, Vector3 targetPos, float height, float duration, float heaviness, bool animate = true, bool animateEnd = true)
+    {
+        yield return StartCoroutine(ExtrapolateJumpHeavy(startPos, targetPos, height, duration, heaviness, "jump", "fall", true, true));
+    }
     //calculates a jump from 100% to whenever you hit the ground
     public IEnumerator ExtrapolateJump(Vector3 startPos, Vector3 targetPos, float height, bool animate = true, bool animateEnd = true)
+    {
+        yield return ExtrapolateJump(startPos, targetPos, height, "jump", "fall", animate, animateEnd);
+    }
+    public IEnumerator ExtrapolateJump(Vector3 startPos, Vector3 targetPos, float height, string upAnim, string downAnim, bool animate = true, bool animateEnd = true)
     {
         float initialTime = Time.time;
         Vector3 initialPos = startPos;
@@ -7668,11 +7577,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 if ((transform.position - pastPos).y > 0)
                 {
-                    SetAnimation("jump");
+                    SetAnimation(upAnim);
                 }
                 else
                 {
-                    SetAnimation("fall");
+                    SetAnimation(downAnim);
                 }
             }
             completion = 1 + ((Time.time - initialTime) / duration);
@@ -7686,13 +7595,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     if (flipDefault)
                     {
                         SendAnimationData("xflip");
-                        SetAnimation("idle");
                     }
                     else
                     {
                         SendAnimationData("xunflip");
-                        SetAnimation("idle");
                     }
+                    SetIdleAnimation();
                 }
                 yield break;
             }
@@ -7976,15 +7884,48 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual void DisableSpeakingAnim()
     {
         isSpeaking = false;
-        SetAnimation("idle");   //note: no way to check for what the real last anim was at this point
+        SetIdleAnimation(); //note: no way to check for what the real last anim was at this point (probably won't matter)
     }
 
-    public virtual void SetAnimation(string name)
+    public virtual void SetIdleAnimation()
+    {
+        if (!alive)
+        {
+            SetAnimation("dead");
+            return;
+        }
+        if (HasEffect(Effect.EffectType.Freeze) || HasEffect(Effect.EffectType.TimeStop))
+        {
+            SetAnimation("idlefrozen");
+        }
+        else if (HasEffect(Effect.EffectType.Sleep))
+        {
+            SetAnimation("idlesleep");
+        }
+        else if (HasEffect(Effect.EffectType.Dizzy) || HasEffect(Effect.EffectType.Dread))
+        {
+            SetAnimation("idledizzy");
+        }
+        else if (HasEffect(Effect.EffectType.Berserk) || HasEffect(Effect.EffectType.Sunflame))
+        {
+            SetAnimation("idleangry");
+        }
+        else if (HasEffect(Effect.EffectType.Poison) || HasEffect(Effect.EffectType.Paralyze) || HasEffect(Effect.EffectType.Soulbleed) || HasEffect(Effect.EffectType.Exhausted))
+        {
+            SetAnimation("idleweak");
+        }
+        else
+        {
+            SetAnimation("idle");
+        }
+    }
+
+    public virtual void SetAnimation(string name, bool force = false)
     {
         //Debug.Log(this.name + " animation " + name);
         if (ac != null)
         {
-            ac.SetAnimation(name);
+            ac.SetAnimation(name, force);
         }
     }
     public virtual void SendAnimationData(string data)

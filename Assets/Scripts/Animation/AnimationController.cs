@@ -16,7 +16,8 @@ public class AnimationController : MonoBehaviour
 
     public MaterialPropertyBlock propertyBlock;
 
-    public GameObject subobject;
+    public GameObject subobject;    //used for rotation
+    //Note that all sprites will have sub sub objects for sprite offsets and also to allow for a "base" offset
 
     //6 possible materials
     //0 = normal
@@ -45,15 +46,24 @@ public class AnimationController : MonoBehaviour
     public int debuffIndex;
 
     public float lifetime = 0;
+    public float timeSinceLastAnimChange = 0;
 
-    public virtual void SetAnimation(string name)
+    public virtual void SetAnimation(string name, bool force = false)
     {
-        bool update = !(animator.GetCurrentAnimatorStateInfo(0).IsName(name));
+        timeSinceLastAnimChange = 0;
+        bool update = !(animator.GetCurrentAnimatorStateInfo(0).IsName(name)) || force;
         currentAnim = name;
 
         if (animator != null && update)
         {
-            animator.Play(name);
+            if (force)
+            {
+                animator.Play(name, -1, 0);
+            }
+            else
+            {
+                animator.Play(name);
+            }
         }
     }
 
@@ -92,6 +102,40 @@ public class AnimationController : MonoBehaviour
         }
     }
 
+    public virtual void SetMaterial(int id)
+    {
+        Debug.Log("material " + id);
+        //TODO: Find a better way!!!
+        //This seems like a bad idea
+        //But keeping 6 materials permanently loaded also seems bad
+        //I guess I should find a centralized solution that only loads some of them
+
+        Material targetMaterial = null;
+        materialIndex = id;
+        switch (materialIndex)
+        {
+            case 0:
+                targetMaterial = MainManager.Instance.defaultSpriteMaterial;
+                break;
+            case 1:
+                targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect1");
+                break;
+            case 2:
+                targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect2");
+                break;
+            case 3:
+                targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect3");
+                break;
+            case 4:
+                targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect4");
+                break;
+            case 5:
+                targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect5");
+                break;
+        }
+        sprite.material = targetMaterial;
+    }
+
     public void Aetherize()
     {
         blackColor = new Color(0.5f, 0f, 0f, 0.75f);
@@ -117,7 +161,7 @@ public class AnimationController : MonoBehaviour
 
         propertyBlock.SetVector("_OcclusionColor", occlusionColor);
 
-        sprite.material = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect2");
+        SetMaterial(2);
         sprite.SetPropertyBlock(propertyBlock);
     }
     public void Illuminate()
@@ -143,7 +187,7 @@ public class AnimationController : MonoBehaviour
 
         propertyBlock.SetVector("_OcclusionColor", occlusionColor);
 
-        sprite.material = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect2");
+        SetMaterial(2);
         sprite.SetPropertyBlock(propertyBlock);
     }
     public void EffectUpdate(string data)
@@ -240,33 +284,7 @@ public class AnimationController : MonoBehaviour
             //material change time
             materialIndex = newmaterialindex;
 
-            //TODO: Find a better way!!!
-            //This seems like a bad idea
-            //But keeping 6 materials permanently loaded also seems bad
-            //I guess I should find a centralized solution that only loads some of them
-            Material targetMaterial = sprite.material;
-            switch (materialIndex)
-            {
-                case 0:
-                    targetMaterial = MainManager.Instance.defaultSpriteMaterial;
-                    break;
-                case 1:
-                    targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect1");
-                    break;
-                case 2:
-                    targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect2");
-                    break;
-                case 3:
-                    targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect3");
-                    break;
-                case 4:
-                    targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect4");
-                    break;
-                case 5:
-                    targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect5");
-                    break;
-            }
-            sprite.material = targetMaterial;
+            SetMaterial(materialIndex);
         }
 
         //In any case, update vars
@@ -313,8 +331,7 @@ public class AnimationController : MonoBehaviour
     }
     public virtual void MaterialReset()
     {
-        Material targetMaterial = MainManager.Instance.defaultSpriteMaterial;
-        sprite.material = targetMaterial;
+        SetMaterial(0);
         if (propertyBlock == null)
         {
             propertyBlock = new MaterialPropertyBlock();
@@ -332,6 +349,7 @@ public class AnimationController : MonoBehaviour
     public virtual void Update()
     {
         lifetime += Time.deltaTime;
+        timeSinceLastAnimChange += Time.deltaTime;
 
         if (materialIndex >= 3 && materialIndex <= 5)
         {

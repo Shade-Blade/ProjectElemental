@@ -30,18 +30,20 @@ public class PlayerEntity : BattleEntity
     public int energyUsed;
     public int movesUsed;
 
+    public bool lastHitWasBlocked;
+
     public int perTurnDamageDealt;
     public int perTurnDamageTaken;
 
-    public int quickBite;   //quick bite sets this to 2, postmove decrements (so using the item -> leaves you with 1, then you do something else and it becomes 0)
+    public int QuickSupply;   //quick bite sets this to 2, postmove decrements (so using the item -> leaves you with 1, then you do something else and it becomes 0)
     public int itemSaver;
     public int lastChance;
     public int undyingRage;
     public int lastRestTurn;
     public bool protectiveRushPerTurn;
-    public bool agilityRush;
+    public int agilityRush;
     public bool revivalFlameHPCheck;
-    public bool revivalFlame;
+    public int revivalFlame;
 
     public string scanTable;
 
@@ -58,7 +60,7 @@ public class PlayerEntity : BattleEntity
         tactics = new List<BattleAction>();
 
         itemSaver = 0;
-        quickBite = 0;
+        QuickSupply = 0;
 
         alive = true;
         dead = false;
@@ -90,15 +92,7 @@ public class PlayerEntity : BattleEntity
         height = 0.75f;
         offset = Vector3.up * (height / 2);
         statusOffset = Vector3.up * (height) + Vector3.right * ((width / 2) + 0.4f);
-        selectionOffset = Vector3.up * (height + 0.5f);
-
-        /*
-        if ((int)entityID == -1)
-        {
-            ReceiveStatusForce(new Status(Status.StatusEffect.BonusTurns, 255, 1));
-            ReceiveStatusForce(new Status(Status.StatusEffect.Berserk, 255, 1));
-        }
-        */        
+        selectionOffset = Vector3.up * (height + 0.5f);    
     }
 
     public void AddWilexMoves()
@@ -477,6 +471,11 @@ public class PlayerEntity : BattleEntity
         int baseLevel = GetWilexMoveBaseLevel(index);
         int maxLevel = GetWilexMoveTrueMaxLevel(index);
 
+        if (MainManager.Instance.Cheat_LevelAnarchy)
+        {
+            maxLevel = 20;  //you probably won't be able to afford any level 20 moves (unless you aggressively stack every single cost reducing thing)
+        }
+
         switch (index)
         {
             case 0:
@@ -512,7 +511,7 @@ public class PlayerEntity : BattleEntity
             case 15:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.Focus), maxLevel);
             case 16:
-                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.PreciseSlash), maxLevel);
+                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.PreciseStab), maxLevel);
             case 17:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.SwordDischarge), maxLevel);
             case 18:
@@ -522,11 +521,21 @@ public class PlayerEntity : BattleEntity
             case 20:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.DarkSlash), maxLevel);
             case 21:
-                return Mathf.Min(baseLevel + 2 * BadgeEquippedCount(Badge.BadgeType.Aetherize), maxLevel); //this one goes 0, 2, 3
+                int l = baseLevel + BadgeEquippedCount(Badge.BadgeType.Aetherize);
+                if (l > 0)
+                {
+                    l++;
+                }
+                return Mathf.Min(l, maxLevel); //this one goes 0, 2, 3, 4...
             case 22:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.FlameBat), maxLevel);
             case 23:
-                return Mathf.Min(baseLevel + 2 * BadgeEquippedCount(Badge.BadgeType.AstralWall), maxLevel);
+                int l2 = baseLevel + BadgeEquippedCount(Badge.BadgeType.AstralWall);
+                if (l2 > 0)
+                {
+                    l2++;
+                }
+                return Mathf.Min(l2, maxLevel);
         }
         return 1;
     }
@@ -659,6 +668,11 @@ public class PlayerEntity : BattleEntity
         int baseLevel = GetLunaMoveBaseLevel(index);
         int maxLevel = GetLunaMoveTrueMaxLevel(index);
 
+        if (MainManager.Instance.Cheat_LevelAnarchy)
+        {
+            maxLevel = 20;  //you probably won't be able to afford any level 20 moves (unless you aggressively stack every single cost reducing thing)
+        }
+
         switch (index)
         {
             case 0:
@@ -704,11 +718,21 @@ public class PlayerEntity : BattleEntity
             case 20:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.LightSmash), maxLevel);
             case 21:
-                return Mathf.Min(baseLevel + 2 * BadgeEquippedCount(Badge.BadgeType.Illuminate), maxLevel);
+                int l = baseLevel + BadgeEquippedCount(Badge.BadgeType.Illuminate);
+                if (l > 0)
+                {
+                    l++;
+                }
+                return Mathf.Min(l, maxLevel);
             case 22:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.HammerBeat), maxLevel);
             case 23:
-                return Mathf.Min(baseLevel + 2 * BadgeEquippedCount(Badge.BadgeType.MistWall), maxLevel);
+                int l2 = baseLevel + BadgeEquippedCount(Badge.BadgeType.MistWall);
+                if (l2 > 0)
+                {
+                    l2++;
+                }
+                return Mathf.Min(l2, maxLevel);
         }
         return 1;
     }
@@ -1051,21 +1075,33 @@ public class PlayerEntity : BattleEntity
 
         if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status || Effect.IsBlockableDebuff(se.effect))
         {
-            if (se.duration != 255)
+            if (se.duration != Effect.INFINITE_DURATION)
             {
                 int olddur = se.duration;
-                se.duration = (byte)(Mathf.CeilToInt(se.duration * statusMultiplier - statusTurnReduction));
+                se.duration = (sbyte)(Mathf.CeilToInt(se.duration * statusMultiplier));
                 if (statusMultiplier < 1 && olddur == se.duration && olddur > 0)
                 {
                     se.duration--;
                 }
+                se.duration -= (sbyte)statusTurnReduction;
+                if (statusTurnReduction > 0 && se.duration > olddur)
+                {
+                    //underflow
+                    se.duration = 0;
+                }
             } else
             {
                 int oldpot = se.potency;
-                se.potency = (byte)(Mathf.CeilToInt(se.potency * statusMultiplier - statusTurnReduction));
+                se.potency = (sbyte)(Mathf.CeilToInt(se.potency * statusMultiplier));
                 if (statusMultiplier < 1 && oldpot == se.potency && oldpot > 0)
                 {
                     se.potency--;
+                }
+                se.potency -= (sbyte)statusTurnReduction;
+                if (statusTurnReduction > 0 && se.potency > oldpot)
+                {
+                    //underflow
+                    se.potency = 0;
                 }
             }
         }
@@ -1127,22 +1163,34 @@ public class PlayerEntity : BattleEntity
 
         if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status || Effect.IsBlockableDebuff(se.effect))
         {
-            if (se.duration != 255)
+            if (se.duration != Effect.INFINITE_DURATION)
             {
                 int olddur = se.duration;
-                se.duration = (byte)(Mathf.CeilToInt(se.duration * statusMultiplier - statusTurnReduction));
+                se.duration = (sbyte)(Mathf.CeilToInt(se.duration * statusMultiplier));
                 if (statusMultiplier < 1 && olddur == se.duration && olddur > 0)
                 {
                     se.duration--;
+                }
+                se.duration -= (sbyte)statusTurnReduction;
+                if (statusTurnReduction > 0 && se.duration > olddur)
+                {
+                    //underflow
+                    se.duration = 0;
                 }
             }
             else
             {
                 int oldpot = se.potency;
-                se.potency = (byte)(Mathf.CeilToInt(se.potency * statusMultiplier - statusTurnReduction));
+                se.potency = (sbyte)(Mathf.CeilToInt(se.potency * statusMultiplier));
                 if (statusMultiplier < 1 && oldpot == se.potency && oldpot > 0)
                 {
                     se.potency--;
+                }
+                se.potency -= (sbyte)statusTurnReduction;
+                if (statusTurnReduction > 0 && se.potency > oldpot)
+                {
+                    //underflow
+                    se.potency = 0;
                 }
             }
         }
@@ -1613,8 +1661,12 @@ public class PlayerEntity : BattleEntity
 
     public override bool StatusWillWork(Effect.EffectType se, float boost = 1)
     {
+        //potential new change: hardcode something that prevents you from being status stunlocked?
+        //but if I program all the statusing moves correctly you would never encounter this?
+        return CanBlock();
+
         //you can always be statused
-        return true;
+        //return true;
     }
     public override int StatusWorkingHP(Effect.EffectType se)
     {
@@ -1633,14 +1685,14 @@ public class PlayerEntity : BattleEntity
             {
                 if (effects[i].potency > GetFocusCap() && !(!BattleControl.IsPlayerControlled(this, true) && effects[i].effect == Effect.EffectType.Focus))
                 {
-                    effects[i].potency = (byte)GetFocusCap();
+                    effects[i].potency = (sbyte)GetFocusCap();
                 }
             }
             if (effects[i].effect == Effect.EffectType.Absorb || effects[i].effect == Effect.EffectType.Sunder)
             {
                 if (effects[i].potency > GetAbsorbCap() && !(!BattleControl.IsPlayerControlled(this, true) && effects[i].effect == Effect.EffectType.Absorb))
                 {
-                    effects[i].potency = (byte)GetAbsorbCap();
+                    effects[i].potency = (sbyte)GetAbsorbCap();
                 }
 
             }
@@ -1648,7 +1700,7 @@ public class PlayerEntity : BattleEntity
             {
                 if (effects[i].potency > GetBurstCap() && !(!BattleControl.IsPlayerControlled(this, true) && effects[i].effect == Effect.EffectType.Burst))
                 {
-                    effects[i].potency = (byte)GetBurstCap();
+                    effects[i].potency = (sbyte)GetBurstCap();
                 }
             }
 
@@ -1974,7 +2026,7 @@ public class PlayerEntity : BattleEntity
 
             if (HasEffect(Effect.EffectType.Poison) && BadgeEquipped(Badge.BadgeType.ToxicShield))
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Defocus, (byte)(1 * BadgeEquippedCount(Badge.BadgeType.ToxicShield)), 255));
+                InflictEffect(this, new Effect(Effect.EffectType.Defocus, (sbyte)(1 * BadgeEquippedCount(Badge.BadgeType.ToxicShield)), Effect.INFINITE_DURATION));
             }
 
             //Supercooled
@@ -1982,7 +2034,7 @@ public class PlayerEntity : BattleEntity
             {
                 if (!HasEffect(Effect.EffectType.Freeze))
                 {
-                    InflictEffectBuffered(this, new Effect(Effect.EffectType.Freeze, (byte)(BadgeEquippedCount(Badge.BadgeType.Supercooled)), 2));
+                    InflictEffectBuffered(this, new Effect(Effect.EffectType.Freeze, (sbyte)(BadgeEquippedCount(Badge.BadgeType.Supercooled)), 2));
                 }
             }
 
@@ -1991,7 +2043,7 @@ public class PlayerEntity : BattleEntity
                 if (!other.protectiveRushPerTurn)
                 {
                     other.protectiveRushPerTurn = true;
-                    InflictEffect(other, new Effect(Effect.EffectType.Focus, (byte)(BadgeEquippedCount(Badge.BadgeType.ProtectiveRush)), 255));
+                    InflictEffect(other, new Effect(Effect.EffectType.Focus, (sbyte)(BadgeEquippedCount(Badge.BadgeType.ProtectiveRush)), Effect.INFINITE_DURATION));
                 }
             }
 
@@ -2044,7 +2096,6 @@ public class PlayerEntity : BattleEntity
                 BattleControl.Instance.CreateEffectParticles(GetEffectEntry(Effect.EffectType.Miracle), this);
                 TokenRemoveOne(Effect.EffectType.Miracle);
                 SetEntityProperty(BattleHelper.EntityProperties.NoMiracle, true);
-                //ReceiveEffectForce(new Effect(Effect.EffectType.NoMiracle, 255, 1));
                 damage = 0;
                 //damage = hp - 1;
             }
@@ -2094,7 +2145,7 @@ public class PlayerEntity : BattleEntity
 
         if (HasEffect(Effect.EffectType.Soulbleed))
         {
-            byte bleedDamage = (byte)(damage / 8);
+            sbyte bleedDamage = (sbyte)(damage / 8);
             if (damage > 0 && bleedDamage <= 0)
             {
                 bleedDamage = 1;
@@ -2107,7 +2158,7 @@ public class PlayerEntity : BattleEntity
 
         if (HasEffect(Effect.EffectType.Soften))
         {
-            byte softDamage = (byte)(damage / 3);
+            sbyte softDamage = (sbyte)(damage / 3);
             if (softDamage > 0)
             {
                 ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
@@ -2124,20 +2175,20 @@ public class PlayerEntity : BattleEntity
         {
             if (BadgeEquipped(Badge.BadgeType.RiskyRush))
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Focus, (byte)(3 * BadgeEquippedCount(Badge.BadgeType.RiskyRush)), 255));
+                InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.RiskyRush)), Effect.INFINITE_DURATION));
             }
         }
 
         //Revival flame
         if (revivalFlameHPCheck && BadgeEquipped(Badge.BadgeType.RevivalFlame))
         {
-            if (!revivalFlame && hp <= 0)
+            if (revivalFlame < BadgeEquippedCount(Badge.BadgeType.RevivalFlame) && hp <= 0)
             {
                 hp = 0;
                 HealHealth(maxHP);
                 BattleControl.Instance.CreateReviveParticles(this, 4);
-                InflictEffect(this, new Effect(Effect.EffectType.Focus, (byte)(6 * BadgeEquippedCount(Badge.BadgeType.RevivalFlame)), 255));
-                revivalFlame = true;
+                InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(6 * BadgeEquippedCount(Badge.BadgeType.RevivalFlame)), Effect.INFINITE_DURATION));
+                revivalFlame++;
             }
         }
         revivalFlameHPCheck = false;
@@ -2148,14 +2199,14 @@ public class PlayerEntity : BattleEntity
             //for clarity and implementation reasons, this is set up with MaxHPReduction
 
             int d = damage;
-            if (d > 255)
+            if (d > Effect.INFINITE_DURATION)
             {
-                d = 255;
+                d = Effect.INFINITE_DURATION;
             }
 
             //hacky
             SetEntityProperty(EntityProperties.GetEffectsAtNoHP);
-            ReceiveEffectForce(new Effect(Effect.EffectType.MaxHPReduction, (byte)d, 255), Effect.NULL_CASTERID, Effect.EffectStackMode.AdditivePot);
+            ReceiveEffectForce(new Effect(Effect.EffectType.MaxHPReduction, (sbyte)d, Effect.INFINITE_DURATION), Effect.NULL_CASTERID, Effect.EffectStackMode.AdditivePot);
             SetEntityProperty(EntityProperties.GetEffectsAtNoHP, false);
             //maxHP -= damage;
 
@@ -2183,14 +2234,17 @@ public class PlayerEntity : BattleEntity
                 {
                     if (sb)
                     {
+                        lastHitWasBlocked = true;
                         BattleControl.Instance.CreateDamageEffect(DamageEffect.SuperBlockedDamage, damage, GetDamageEffectPosition(), this, type, properties);
                     }
                     else if (b || safetyBlock)
                     {
+                        lastHitWasBlocked = true;
                         BattleControl.Instance.CreateDamageEffect(DamageEffect.BlockedDamage, damage, GetDamageEffectPosition(), this, type, properties);
                     }
                     else
                     {
+                        lastHitWasBlocked = false;
                         BattleControl.Instance.CreateDamageEffect(DamageEffect.Damage, damage, GetDamageEffectPosition(), this, type, properties);
                     }
                 }
@@ -2257,7 +2311,7 @@ public class PlayerEntity : BattleEntity
         {
             if (damage >= hp)
             {
-                damage = 0;
+                damage = hp - 1;
             }
         }
 
@@ -2265,7 +2319,7 @@ public class PlayerEntity : BattleEntity
         {
             if (damage >= hp)
             {
-                damage = 0;
+                damage = hp - 1;
             }
         }
 
@@ -2491,7 +2545,7 @@ public class PlayerEntity : BattleEntity
 
         if (BadgeEquipped(Badge.BadgeType.PerfectFocus) && !atFull && (hp >= maxHP))
         {
-            InflictEffect(this, new Effect(Effect.EffectType.Focus, 3, 255));
+            InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.PerfectFocus)), Effect.INFINITE_DURATION));
         }
     }
     public override int HealHealthTrackOverhealPay(int health)
@@ -2507,7 +2561,7 @@ public class PlayerEntity : BattleEntity
 
         if (BadgeEquipped(Badge.BadgeType.PerfectFocus) && !atFull && (hp >= maxHP))
         {
-            InflictEffect(this, new Effect(Effect.EffectType.Focus, 3, 255));
+            InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.PerfectFocus)), Effect.INFINITE_DURATION));
         }
 
         return output;
@@ -2554,28 +2608,28 @@ public class PlayerEntity : BattleEntity
         }
         */
 
-        if (!agilityRush && BadgeEquipped(Badge.BadgeType.AgilityRush) && stamina >= BattleControl.Instance.GetMaxStamina(this))
+        if (agilityRush < BadgeEquippedCount(Badge.BadgeType.AgilityRush) && stamina >= BattleControl.Instance.GetMaxStamina(this))
         {
-            agilityRush = true;
-            InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (byte)(BadgeEquippedCount(Badge.BadgeType.AgilityRush)), 255));
+            agilityRush++;
+            InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (sbyte)(BadgeEquippedCount(Badge.BadgeType.AgilityRush)), Effect.INFINITE_DURATION));
         }
     }
     public override void HealStamina(int st)
     {
         base.HealStamina(st);
-        if (!agilityRush && BadgeEquipped(Badge.BadgeType.AgilityRush) && stamina >= BattleControl.Instance.GetMaxStamina(this))
+        if (agilityRush < BadgeEquippedCount(Badge.BadgeType.AgilityRush) && stamina >= BattleControl.Instance.GetMaxStamina(this))
         {
-            agilityRush = true;
-            InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (byte)(BadgeEquippedCount(Badge.BadgeType.AgilityRush)), 255));
+            agilityRush++;
+            InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (sbyte)(BadgeEquippedCount(Badge.BadgeType.AgilityRush)), Effect.INFINITE_DURATION));
         }
     }
     public override int HealStaminaTrackOverhealPay(int st)
     {
         int output = base.HealStaminaTrackOverhealPay(st);
-        if (!agilityRush && BadgeEquipped(Badge.BadgeType.AgilityRush) && stamina >= BattleControl.Instance.GetMaxStamina(this))
+        if (agilityRush < BadgeEquippedCount(Badge.BadgeType.AgilityRush) && stamina >= BattleControl.Instance.GetMaxStamina(this))
         {
-            agilityRush = true;
-            InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (byte)(BadgeEquippedCount(Badge.BadgeType.AgilityRush)), 255));
+            agilityRush++;
+            InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (sbyte)(BadgeEquippedCount(Badge.BadgeType.AgilityRush)), Effect.INFINITE_DURATION));
         }
         return output;
     }
@@ -2598,7 +2652,7 @@ public class PlayerEntity : BattleEntity
                 Effect e = GetEffectEntry(Effect.EffectType.Absorb);
                 if (e != null)
                 {
-                    e.potency = (byte)(e.potency * ((count + 1.0001f) / (count + 2f)));
+                    e.potency = (sbyte)(e.potency * ((count + 0.0001f) / (count + 1f)));
                     if (e.potency == 0)
                     {
                         CureEffect(Effect.EffectType.Absorb);
@@ -2684,10 +2738,11 @@ public class PlayerEntity : BattleEntity
             {
                 if (BadgeEquipped(Badge.BadgeType.FocusRecycling))
                 {
+                    int count = BadgeEquippedCount(Badge.BadgeType.FocusRecycling);
                     Effect e = GetEffectEntry(Effect.EffectType.Focus);
                     if (e != null)
                     {
-                        e.potency = (byte)(e.potency / 2);
+                        e.potency = (sbyte)(e.potency * ((count + 0.001f) / (count + 1f)));
                         if (e.potency == 0)
                         {
                             CureEffect(Effect.EffectType.Focus);
@@ -2726,10 +2781,11 @@ public class PlayerEntity : BattleEntity
             {
                 if (BadgeEquipped(Badge.BadgeType.FocusRecycling))
                 {
+                    int count = BadgeEquippedCount(Badge.BadgeType.FocusRecycling);
                     Effect e = GetEffectEntry(Effect.EffectType.Focus);
                     if (e != null)
                     {
-                        e.potency = (byte)(e.potency / 2);
+                        e.potency = (sbyte)(e.potency * ((count + 0.0001f) / (count + 1f)));
                         if (e.potency == 0)
                         {
                             CureEffect(Effect.EffectType.Focus);
@@ -2758,7 +2814,7 @@ public class PlayerEntity : BattleEntity
 
     public bool ShowDangerAnim()
     {
-        return InDanger() || RibbonEquipped(Ribbon.RibbonType.ThornyRibbon, false);
+        return BattleControl.Instance.playerData.ShowDangerAnim(entityID);
     }
 
 
@@ -3407,7 +3463,7 @@ public class PlayerEntity : BattleEntity
                         if (status != null)
                         {
                             target.statusCatalyst = true;
-                            byte boost = (byte)(BadgeEquippedCount(Badge.BadgeType.StatusCatalyst));
+                            sbyte boost = (sbyte)(BadgeEquippedCount(Badge.BadgeType.StatusCatalyst));
                             status.duration += boost;
                             target.statusMaxTurns -= boost;
                         }
@@ -3418,36 +3474,36 @@ public class PlayerEntity : BattleEntity
             //the various effect inflicting things
             if (target.HasEffect(Effect.EffectType.Dizzy) && BadgeEquipped(Badge.BadgeType.HypnoStrike))
             {
-                InflictEffect(target, new Effect(Effect.EffectType.Defocus, (byte)(BadgeEquippedCount(Badge.BadgeType.HypnoStrike)), 255));
+                InflictEffect(target, new Effect(Effect.EffectType.Defocus, (sbyte)(BadgeEquippedCount(Badge.BadgeType.HypnoStrike)), Effect.INFINITE_DURATION));
             }
 
             if (target.HasEffect(Effect.EffectType.Paralyze) && BadgeEquipped(Badge.BadgeType.Conductor))
             {
-                InflictEffectBuffered(this, new Effect(Effect.EffectType.Focus, (byte)(BadgeEquippedCount(Badge.BadgeType.Conductor)), 255));
+                InflictEffectBuffered(this, new Effect(Effect.EffectType.Focus, (sbyte)(BadgeEquippedCount(Badge.BadgeType.Conductor)), Effect.INFINITE_DURATION));
             }
 
             if (BadgeEquipped(Badge.BadgeType.Overexert))
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Paralyze, 1, (byte)(2 * BadgeEquippedCount(Badge.BadgeType.Overexert))));
+                InflictEffect(this, new Effect(Effect.EffectType.Paralyze, 1, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.Overexert))));
                 if (!HasEffect(Effect.EffectType.Paralyze))
                 {
-                    InflictEffectBuffered(this, new Effect(Effect.EffectType.Defocus, (byte)(3 * BadgeEquippedCount(Badge.BadgeType.Overexert)), 255));
+                    InflictEffectBuffered(this, new Effect(Effect.EffectType.Defocus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.Overexert)), Effect.INFINITE_DURATION));
                 }
             }
 
             if (target.wakeUp && BadgeEquipped(Badge.BadgeType.NightmareStrike))
             {
-                InflictEffect(target, new Effect(Effect.EffectType.Defocus, (byte)(3 * BadgeEquippedCount(Badge.BadgeType.NightmareStrike)), 255));
+                InflictEffect(target, new Effect(Effect.EffectType.Defocus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.NightmareStrike)), Effect.INFINITE_DURATION));
             }
 
             if (target.HasEffect(Effect.EffectType.Berserk) && BadgeEquipped(Badge.BadgeType.Aggravate))
             {
-                InflictEffect(target, new Effect(Effect.EffectType.Focus, (byte)(BadgeEquippedCount(Badge.BadgeType.Aggravate)), 255));
+                InflictEffect(target, new Effect(Effect.EffectType.Focus, (sbyte)(BadgeEquippedCount(Badge.BadgeType.Aggravate)), Effect.INFINITE_DURATION));
             }
 
             if (target.HasEffect(Effect.EffectType.Poison) && BadgeEquipped(Badge.BadgeType.NerveStrike))
             {
-                InflictEffectBuffered(target, new Effect(Effect.EffectType.Sunder, (byte)(2 * BadgeEquippedCount(Badge.BadgeType.NerveStrike)), 255));
+                InflictEffectBuffered(target, new Effect(Effect.EffectType.Sunder, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.NerveStrike)), Effect.INFINITE_DURATION));
             }
 
             if (BadgeEquipped(Badge.BadgeType.HealthSteal))
@@ -3466,8 +3522,8 @@ public class PlayerEntity : BattleEntity
         {
             //target gets defocus
             //note: inflict status
-            byte drain = target.GetEffectEntry(Effect.EffectType.DrainSprout).potency;
-            InflictEffect(target, new Effect(Effect.EffectType.Defocus, drain, 255));
+            sbyte drain = target.GetEffectEntry(Effect.EffectType.DrainSprout).potency;
+            InflictEffect(target, new Effect(Effect.EffectType.Defocus, drain, Effect.INFINITE_DURATION));
             HealHealth(2 * drain);
         }
 
@@ -3475,8 +3531,8 @@ public class PlayerEntity : BattleEntity
         {
             //target gets sunder (buffered)
             //note: inflict status
-            byte drain = target.GetEffectEntry(Effect.EffectType.BoltSprout).potency;
-            InflictEffectBuffered(target, new Effect(Effect.EffectType.Sunder, drain, 255));
+            sbyte drain = target.GetEffectEntry(Effect.EffectType.BoltSprout).potency;
+            InflictEffectBuffered(target, new Effect(Effect.EffectType.Sunder, drain, Effect.INFINITE_DURATION));
             HealEnergy(2 * drain);
         }
 
@@ -3490,7 +3546,7 @@ public class PlayerEntity : BattleEntity
                 int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(1, power, cumulativeAttackHitCount);
                 if (procSeasideAir > 0)
                 {
-                    InflictEffect(this, new Effect(Effect.EffectType.Sunder, (byte)procSeasideAir, 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)procSeasideAir, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -3498,18 +3554,18 @@ public class PlayerEntity : BattleEntity
                 int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(2f, power, cumulativeAttackHitCount);
                 if (procSeasideAir > 0)
                 {
-                    InflictEffect(this, new Effect(Effect.EffectType.Sunder, (byte)procSeasideAir, 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)procSeasideAir, Effect.INFINITE_DURATION));
                 }
             }
         }
 
         if (target.HasEffect(Effect.EffectType.ParryAura))
         {
-            InflictEffect(target, new Effect(Effect.EffectType.Focus, target.GetEffectEntry(Effect.EffectType.ParryAura).potency, 255));
+            InflictEffect(target, new Effect(Effect.EffectType.Focus, target.GetEffectEntry(Effect.EffectType.ParryAura).potency, Effect.INFINITE_DURATION));
         }
         if (target.HasEffect(Effect.EffectType.BolsterAura))
         {
-            InflictEffectBuffered(target, new Effect(Effect.EffectType.Absorb, target.GetEffectEntry(Effect.EffectType.BolsterAura).potency, 255));
+            InflictEffectBuffered(target, new Effect(Effect.EffectType.Absorb, target.GetEffectEntry(Effect.EffectType.BolsterAura).potency, Effect.INFINITE_DURATION));
         }
 
         if (target.HasEffect(Effect.EffectType.Elusive))
@@ -3580,7 +3636,7 @@ public class PlayerEntity : BattleEntity
                     }
                     if (BadgeEquipped(Badge.BadgeType.Icebreaker))
                     {
-                        InflictEffect(this, new Effect(Effect.EffectType.Focus, 3, 255));
+                        InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.Icebreaker)), Effect.INFINITE_DURATION));
                     }
                 }
             }
@@ -3597,11 +3653,11 @@ public class PlayerEntity : BattleEntity
         float statusBoost = 1;
         if (BadgeEquipped(Badge.BadgeType.StatusBoost))
         {
-            statusBoost += 0.5f;
+            statusBoost += 0.5f * BadgeEquippedCount(Badge.BadgeType.StatusBoost);
         }
         if (target.HasStatus() && BadgeEquipped(Badge.BadgeType.StatusConversion))
         {
-            statusBoost += 0.5f;
+            statusBoost += 0.5f * BadgeEquippedCount(Badge.BadgeType.StatusConversion);
         }
         return statusBoost;
     }
@@ -3636,18 +3692,27 @@ public class PlayerEntity : BattleEntity
             if (target.posId >= 0 && multiplier != 1)
             {
                 se = se.Copy();
-                if (se.duration != 255)
+                if (se.duration != Effect.INFINITE_DURATION)
                 {
-                    if ((se.duration * multiplier) > 254)
+                    if ((se.duration * multiplier) > Effect.MAX_NORMAL_DURATION)
                     {
-                        se.duration = 254;
+                        se.duration = Effect.MAX_NORMAL_DURATION;
                     } else
                     {
-                        se.duration = (byte)(se.duration * multiplier);
+                        se.duration = (sbyte)(se.duration * multiplier);
                     }
                 }
             }
         }
+
+        if (se.duration < 0)
+        {
+            se.duration = (sbyte)(-se.duration);
+            Effect e = se.Copy();
+            InvertEffect(e);
+            se = e;
+        }
+
         float statusBoost = CalculateStatusBoost(target);
         //end added stuff (but statusBoost is used later)
 
@@ -3668,6 +3733,15 @@ public class PlayerEntity : BattleEntity
             if (target.HasEffect(Effect.EffectType.Seal) || target.HasEffect(Effect.EffectType.TimeStop))
             {
                 if (Effect.IsCleanseable(se.effect))
+                {
+                    BattleControl.Instance.CreateEffectBlockedParticles(se, target);
+                    return;
+                }
+            }
+
+            if (target.GetEntityProperty(EntityProperties.NoMiracle))
+            {
+                if (se.effect == Effect.EffectType.Miracle)
                 {
                     BattleControl.Instance.CreateEffectBlockedParticles(se, target);
                     return;
@@ -3720,27 +3794,55 @@ public class PlayerEntity : BattleEntity
     }
     public override void InflictEffectBuffered(BattleEntity target, Effect se, int casterID = int.MinValue, Effect.EffectStackMode mode = Effect.EffectStackMode.Default)
     {
-        //added stuff
+        if (target.HasEffect(Effect.EffectType.Inverted))
+        {
+            Effect e = se.Copy();
+            InvertEffect(e);
+            se = e;
+        }
+
+        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Lust);
+
+        float multiplier = 1;
+
+        if (BadgeEquipped(Badge.BadgeType.EffectBoost))
+        {
+            multiplier = (1f + 0.5f * BadgeEquippedCount(Badge.BadgeType.EffectBoost));
+        }
+
+        if (bol)
+        {
+            multiplier += 0.5f;
+        }
+
         if (target != null)
         {
-            if (target.posId >= 0 && BadgeEquipped(Badge.BadgeType.EffectBoost))
+            if (target.posId >= 0 && multiplier != 1)
             {
                 se = se.Copy();
-                if (se.duration != 255)
+                if (se.duration != Effect.INFINITE_DURATION)
                 {
-                    if (se.duration * (1f + 0.5f * BadgeEquippedCount(Badge.BadgeType.EffectBoost)) > 254)
+                    if ((se.duration * multiplier) > Effect.MAX_NORMAL_DURATION)
                     {
-                        se.duration = 254;
+                        se.duration = Effect.MAX_NORMAL_DURATION;
                     }
                     else
                     {
-                        se.duration = (byte)(se.duration * (1f + 0.5f * BadgeEquippedCount(Badge.BadgeType.EffectBoost)));
+                        se.duration = (sbyte)(se.duration * multiplier);
                     }
                 }
             }
         }
+
+        if (se.duration < 0)
+        {
+            se.duration = (sbyte)(-se.duration);
+            Effect e = se.Copy();
+            InvertEffect(e);
+            se = e;
+        }
+
         float statusBoost = CalculateStatusBoost(target);
-        //end added stuff (but statusBoost is used later)
 
         if (target != null)
         {
@@ -3818,7 +3920,7 @@ public class PlayerEntity : BattleEntity
                     HealEnergy(he);
                     break;
                 case InnEffect.InnType.Absorb:
-                    InflictEffect(this, new Effect(Effect.EffectType.Absorb, (byte)(longRestBoost * 3), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Absorb, (sbyte)(longRestBoost * 3), Effect.INFINITE_DURATION));
                     break;
                 case InnEffect.InnType.Stamina:
                     int hst = Mathf.CeilToInt(longRestBoost * BattleControl.Instance.GetMaxEP(this) / 10.0f);
@@ -3829,22 +3931,22 @@ public class PlayerEntity : BattleEntity
                     HealStamina(hst);
                     break;
                 case InnEffect.InnType.Burst:
-                    InflictEffect(this, new Effect(Effect.EffectType.Burst, (byte)(longRestBoost * 3), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Burst, (sbyte)(longRestBoost * 3), Effect.INFINITE_DURATION));
                     break;
                 case InnEffect.InnType.Focus:
-                    InflictEffect(this, new Effect(Effect.EffectType.Focus, (byte)(longRestBoost * 3), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(longRestBoost * 3), Effect.INFINITE_DURATION));
                     break;
                 case InnEffect.InnType.Ethereal:
-                    InflictEffect(this, new Effect(Effect.EffectType.Ethereal, 1, (byte)(longRestBoost * 1)));
+                    InflictEffect(this, new Effect(Effect.EffectType.Ethereal, 1, (sbyte)(longRestBoost * 1)));
                     break;
                 case InnEffect.InnType.Immunity:
-                    InflictEffect(this, new Effect(Effect.EffectType.Immunity, 1, (byte)(longRestBoost * 3)));
+                    InflictEffect(this, new Effect(Effect.EffectType.Immunity, 1, (sbyte)(longRestBoost * 3)));
                     break;
                 case InnEffect.InnType.BonusTurn:
-                    InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (byte)(longRestBoost * 1), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (sbyte)(longRestBoost * 1), Effect.INFINITE_DURATION));
                     break;
                 case InnEffect.InnType.ItemBoost:
-                    InflictEffect(this, new Effect(Effect.EffectType.ItemBoost, (byte)(longRestBoost * 2), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.ItemBoost, (sbyte)(longRestBoost * 2), Effect.INFINITE_DURATION));
                     break;
                 case InnEffect.InnType.Soul:
                     int hs = Mathf.CeilToInt(longRestBoost * BattleControl.Instance.GetMaxSE(this) / 5.0f);
@@ -3855,7 +3957,7 @@ public class PlayerEntity : BattleEntity
                     HealSoulEnergy(hs); 
                     break;
                 case InnEffect.InnType.Freebie:
-                    InflictEffect(this, new Effect(Effect.EffectType.Freebie, (byte)(longRestBoost * 1), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Freebie, (sbyte)(longRestBoost * 1), Effect.INFINITE_DURATION));
                     break;
             }
         }
@@ -3892,11 +3994,11 @@ public class PlayerEntity : BattleEntity
             {
                 if (pd.charmEffects[i].charmType == CharmEffect.CharmType.Attack)
                 {
-                    InflictEffect(this, new Effect(Effect.EffectType.Focus, (byte)(charmBoost * 3), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(charmBoost * 3), Effect.INFINITE_DURATION));
                 }
                 else if (pd.charmEffects[i].charmType == CharmEffect.CharmType.Defense)
                 {
-                    InflictEffect(this, new Effect(Effect.EffectType.Absorb, (byte)(charmBoost * 3), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Absorb, (sbyte)(charmBoost * 3), Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -3904,15 +4006,15 @@ public class PlayerEntity : BattleEntity
 
         if (BadgeEquipped(Badge.BadgeType.FirstPower))
         {
-            InflictEffect(this, new Effect(Effect.EffectType.Focus, (byte)(3 * BadgeEquippedCount(Badge.BadgeType.FirstPower)), 255));
+            InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.FirstPower)), Effect.INFINITE_DURATION));
         }
         if (BadgeEquipped(Badge.BadgeType.FirstShield))
         {
-            InflictEffect(this, new Effect(Effect.EffectType.Absorb, (byte)(3 * BadgeEquippedCount(Badge.BadgeType.FirstShield)), 255));
+            InflictEffect(this, new Effect(Effect.EffectType.Absorb, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.FirstShield)), Effect.INFINITE_DURATION));
         }
         if (BadgeEquipped(Badge.BadgeType.FirstEndurance))
         {
-            InflictEffect(this, new Effect(Effect.EffectType.Burst, (byte)(3 * BadgeEquippedCount(Badge.BadgeType.FirstEndurance)), 255));
+            InflictEffect(this, new Effect(Effect.EffectType.Burst, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.FirstEndurance)), Effect.INFINITE_DURATION));
         }
     }
 
@@ -3938,7 +4040,7 @@ public class PlayerEntity : BattleEntity
 
         if (BadgeEquipped(Badge.BadgeType.RagesPower))
         {
-            InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, 1, 255));
+            InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)(BadgeEquippedCount(Badge.BadgeType.RagesPower)), Effect.INFINITE_DURATION));
         }
 
         if (currMove != null)
@@ -4062,14 +4164,14 @@ public class PlayerEntity : BattleEntity
                     //Wacky formula I guess
                     poisonDamage = Mathf.CeilToInt(maxHP / (10 / (1 + 0.5f * tecount)));
 
-                    if (poisonDamage < 3)
+                    if (poisonDamage < 2 + tecount)
                     {
-                        poisonDamage = 3;
+                        poisonDamage = 2 + tecount;
                     }
 
-                    if (poisonDamage > 15)
+                    if (poisonDamage > 10 + 5 * tecount)
                     {
-                        poisonDamage = 15;
+                        poisonDamage = 10 + 5 * tecount;
                     }
                     HealEnergy(3 * tecount);
                     yield return new WaitForSeconds(0.5f);
@@ -4212,12 +4314,12 @@ public class PlayerEntity : BattleEntity
 
             if (HasEffect(Effect.EffectType.Hustle))
             {
-                InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Hustle).potency, 255));
+                InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Hustle).potency, Effect.INFINITE_DURATION));
             }
 
             if (HasEffect(Effect.EffectType.Slow) && (BattleControl.Instance.turnCount % (GetEffectEntry(Effect.EffectType.Slow).potency + 1) != 0))
             {
-                InflictEffectForce(this, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                InflictEffectForce(this, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
 
             if (HasEffect(Effect.EffectType.Illuminate) && attackHitCount > 0)
@@ -4328,19 +4430,19 @@ public class PlayerEntity : BattleEntity
 
             if (HasEffect(Effect.EffectType.Poison) && BadgeEquipped(Badge.BadgeType.ToxicStrength))
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Sunder, (byte)(2 * BadgeEquippedCount(Badge.BadgeType.ToxicStrength)), 255));
+                InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.ToxicStrength)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
 
             if (HasEffect(Effect.EffectType.Paralyze) && BadgeEquipped(Badge.BadgeType.Capacitor))
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Focus, (byte)(2 * BadgeEquippedCount(Badge.BadgeType.Capacitor)), 255));
+                InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.Capacitor)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
 
             if (HasEffect(Effect.EffectType.Freeze) && BadgeEquipped(Badge.BadgeType.Glacier))
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Focus, (byte)(2 * BadgeEquippedCount(Badge.BadgeType.Glacier)), 255));
+                InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.Glacier)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
 
@@ -4348,12 +4450,12 @@ public class PlayerEntity : BattleEntity
             //moved this down here so you can get more benefit from regen
             if (hp >= maxHP && BadgeEquipped(Badge.BadgeType.HealthGrowth))
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Absorb, (byte)(2 * BadgeEquippedCount(Badge.BadgeType.HealthGrowth)), 255));
+                InflictEffect(this, new Effect(Effect.EffectType.Absorb, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.HealthGrowth)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
             if (BattleControl.Instance.GetEP(this) >= BattleControl.Instance.GetMaxEP(this) && BadgeEquipped(Badge.BadgeType.EnergyGrowth))
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Burst, (byte)(2 * BadgeEquippedCount(Badge.BadgeType.EnergyGrowth)), 255));
+                InflictEffect(this, new Effect(Effect.EffectType.Burst, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.EnergyGrowth)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
 
@@ -4427,11 +4529,11 @@ public class PlayerEntity : BattleEntity
             {
                 if (pd.charmEffects[i].charmType == CharmEffect.CharmType.Attack)
                 {
-                    InflictEffect(this, new Effect(Effect.EffectType.Focus, (byte)(charmBoost * 3), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(charmBoost * 3), Effect.INFINITE_DURATION));
                 }
                 else if (pd.charmEffects[i].charmType == CharmEffect.CharmType.Defense)
                 {
-                    InflictEffect(this, new Effect(Effect.EffectType.Absorb, (byte)(charmBoost * 3), 255));
+                    InflictEffect(this, new Effect(Effect.EffectType.Absorb, (sbyte)(charmBoost * 3), Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -4439,7 +4541,7 @@ public class PlayerEntity : BattleEntity
         //decrement turn count of effects
         for (int i = 0; i < effects.Count; i++)
         {
-            if (effects[i].duration != 255)
+            if (effects[i].duration != Effect.INFINITE_DURATION)
             {
                 bool applyStasis = (effectStasis || preservative) && effects[i].duration <= 1;
                 applyStasis &= (!effectStasis || effects[i].effect != Effect.EffectType.EffectStasis);
@@ -4491,14 +4593,14 @@ public class PlayerEntity : BattleEntity
                 {
                     if (every2turn > 0)
                     {
-                        InflictEffect(this, new Effect(Effect.EffectType.DefenseDown, (byte)every2turn, 255), Effect.NULL_CASTERID, Effect.EffectStackMode.KeepDurAddPot);
+                        InflictEffect(this, new Effect(Effect.EffectType.DefenseDown, (sbyte)every2turn, Effect.INFINITE_DURATION), Effect.NULL_CASTERID, Effect.EffectStackMode.KeepDurAddPot);
                     }
                 }
                 else
                 {
                     if (every2turn > 0)
                     {
-                        InflictEffect(this, new Effect(Effect.EffectType.DefenseDown, (byte)every2turn, 2));
+                        InflictEffect(this, new Effect(Effect.EffectType.DefenseDown, (sbyte)every2turn, 2));
                     }
                 }
                 break;
@@ -4507,14 +4609,14 @@ public class PlayerEntity : BattleEntity
                 {
                     if (every3turn > 0)
                     {
-                        InflictEffect(this, new Effect(Effect.EffectType.EnduranceDown, (byte)every3turn, 255), Effect.NULL_CASTERID, Effect.EffectStackMode.KeepDurAddPot);
+                        InflictEffect(this, new Effect(Effect.EffectType.EnduranceDown, (sbyte)every3turn, Effect.INFINITE_DURATION), Effect.NULL_CASTERID, Effect.EffectStackMode.KeepDurAddPot);
                     }
                 }
                 else
                 {
                     if (every3turn > 0)
                     {
-                        InflictEffect(this, new Effect(Effect.EffectType.EnduranceDown, (byte)every3turn, 3));
+                        InflictEffect(this, new Effect(Effect.EffectType.EnduranceDown, (sbyte)every3turn, 3));
                     }
                 }
                 break;
@@ -4523,14 +4625,14 @@ public class PlayerEntity : BattleEntity
                 {
                     if (every2turn > 0)
                     {
-                        InflictEffect(this, new Effect(Effect.EffectType.AttackDown, (byte)every2turn, 255), Effect.NULL_CASTERID, Effect.EffectStackMode.KeepDurAddPot);
+                        InflictEffect(this, new Effect(Effect.EffectType.AttackDown, (sbyte)every2turn, Effect.INFINITE_DURATION), Effect.NULL_CASTERID, Effect.EffectStackMode.KeepDurAddPot);
                     }
                 }
                 else
                 {
                     if (every2turn > 0)
                     {
-                        InflictEffect(this, new Effect(Effect.EffectType.AttackDown, (byte)every2turn, 2));
+                        InflictEffect(this, new Effect(Effect.EffectType.AttackDown, (sbyte)every2turn, 2));
                     }
                 }
                 break;
@@ -4647,7 +4749,7 @@ public class PlayerEntity : BattleEntity
                     Effect e = GetEffectEntry(Effect.EffectType.Focus);
                     if (e != null)
                     {
-                        e.potency = (byte)(e.potency * ((count + 1.0001f) / (count + 2f)));
+                        e.potency = (sbyte)(e.potency * ((count + 0.0001f) / (count + 1f)));
                         if (e.potency == 0)
                         {
                             CureEffect(Effect.EffectType.Focus);
@@ -4727,7 +4829,7 @@ public class PlayerEntity : BattleEntity
     {
         if (MainManager.Instance.Cheat_NoEffectCaps)
         {
-            return 255;
+            return Effect.INFINITE_POTENCY;
         }
         return BattleControl.Instance.playerData.focusCap;
     }
@@ -4735,7 +4837,7 @@ public class PlayerEntity : BattleEntity
     {
         if (MainManager.Instance.Cheat_NoEffectCaps)
         {
-            return 255;
+            return Effect.INFINITE_POTENCY;
         }
         return BattleControl.Instance.playerData.absorbCap;
     }
@@ -4743,7 +4845,7 @@ public class PlayerEntity : BattleEntity
     {
         if (MainManager.Instance.Cheat_NoEffectCaps)
         {
-            return 255;
+            return Effect.INFINITE_POTENCY;
         }
         return BattleControl.Instance.playerData.burstCap;
     }
@@ -4768,8 +4870,31 @@ public class PlayerEntity : BattleEntity
         //check in case stuff changes
         switch (eventID)
         {
+            case BattleHelper.Event.Hurt:
+            case BattleHelper.Event.ComboHurt:
+            case BattleHelper.Event.StatusInflicted:    //? needed to fix something
+                if (lastHitWasBlocked)
+                {
+                    SetAnimation("block", true);
+                }
+                else
+                {
+                    SetAnimation("hurt", true);
+                }
+
+                IEnumerator animReset()
+                {
+                    yield return new WaitForSeconds(0.2f);
+                    if (ac.timeSinceLastAnimChange >= 0.16f)// && (ac.GetCurrentAnim().Equals("hurt") || ac.GetCurrentAnim().Equals("block")))
+                    {
+                        SetIdleAnimation();
+                    }
+                }
+                StartCoroutine(animReset());
+                break;
             case BattleHelper.Event.StatusDeath:
             case BattleHelper.Event.Death:
+                SetAnimation("hurt", true);
                 alive = false;
                 //BattleControl.Instance.RemoveEntity(BattleControl.Instance.GetIndexFromID(id)); //create consistent death timing
                 if (!GetEntityProperty(EntityProperties.KeepEffectsAtNoHP))
@@ -4782,6 +4907,8 @@ public class PlayerEntity : BattleEntity
                     yield return StartCoroutine(Move(homePos, 10,false)); //so you die from counters properly
                     yield return StartCoroutine(Spin(Vector3.left * 90, 0.125f));
                 }
+                SetRotation(Vector3.zero);
+                SetAnimation("dead");
                 yield return new WaitForSeconds(0.2f);
                 //on death stuff
                 if (!dead)
@@ -4790,7 +4917,6 @@ public class PlayerEntity : BattleEntity
                 }
                 dead = true;
                 staminaBlock = false;
-                SetAnimation("dead");
                 break;
             case BattleHelper.Event.KnockbackHurt:
                 yield return StartCoroutine(DefaultKnockbackHurt(false));
@@ -4834,12 +4960,12 @@ public class PlayerEntity : BattleEntity
         if (other != null && other.alive && other.BadgeEquipped(Badge.BadgeType.VengefulRage))
         {
             InflictEffect(other, new Effect(Effect.EffectType.Berserk, 1, 2));
-            InflictEffect(other, new Effect(Effect.EffectType.Focus, 3, 255));
+            InflictEffect(other, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.VengefulRage)), Effect.INFINITE_DURATION));
         }
 
         if (BadgeEquipped(Badge.BadgeType.LastBurst))
         {
-            int heal = Mathf.CeilToInt(BattleControl.Instance.GetMaxEP(this) / 2.0f);
+            int heal = Mathf.CeilToInt((BadgeEquippedCount(Badge.BadgeType.LastBurst) * BattleControl.Instance.GetMaxEP(this)) / 2.0f);
             HealEnergy(heal);
         }
     }
@@ -4890,6 +5016,39 @@ public class PlayerEntity : BattleEntity
         //{
         //    sblockFrames = 0;
         //}
+    }
+
+    public override void SetIdleAnimation()
+    {
+        if (!alive || dead)
+        {
+            SetAnimation("dead");
+            return;
+        }
+        if (HasEffect(Effect.EffectType.Freeze) || HasEffect(Effect.EffectType.TimeStop))
+        {
+            SetAnimation("idlefrozen");
+        }
+        else if (HasEffect(Effect.EffectType.Sleep))
+        {
+            SetAnimation("idlesleep");
+        }
+        else if (HasEffect(Effect.EffectType.Dizzy) || HasEffect(Effect.EffectType.Dread))
+        {
+            SetAnimation("idledizzy");
+        }
+        else if (HasEffect(Effect.EffectType.Berserk) || HasEffect(Effect.EffectType.Sunflame))
+        {
+            SetAnimation("idleangry");
+        }
+        else if (ShowDangerAnim() || HasEffect(Effect.EffectType.Poison) || HasEffect(Effect.EffectType.Paralyze) || HasEffect(Effect.EffectType.Soulbleed) || HasEffect(Effect.EffectType.Exhausted))
+        {
+            SetAnimation("idleweak");
+        }
+        else
+        {
+            SetAnimation("idle");
+        }
     }
 
     public void SetScanTable(string s)

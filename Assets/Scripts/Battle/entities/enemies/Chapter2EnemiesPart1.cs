@@ -258,7 +258,7 @@ public class BM_Renegade_Hard_SandSplash : EnemyMove
             if (caller.GetAttackHit(t, 0))
             {
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Enervate, 2, 255));
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Enervate, 2, Effect.INFINITE_DURATION));
             }
             else
             {
@@ -415,7 +415,7 @@ public class BM_Sentry_CounterFling : EnemyMove
                 }
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 1, 255));
+                    caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
                 }
             }
             else

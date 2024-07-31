@@ -63,7 +63,7 @@ namespace TMPro.Examples
                 //m_textMeshPro.enableWordWrapping = true;    
                 //m_textMeshPro.lineLength = 60;          
                 //m_textMeshPro.characterSpacing = 0.2f;
-                //m_textMeshPro.fontColor = new Color32(255, 255, 255, 255);
+                //m_textMeshPro.fontColor = new Color32(Effect.INFINITE_DURATION, Effect.INFINITE_DURATION, Effect.INFINITE_DURATION, Effect.INFINITE_DURATION);
 
                 m_material01 = m_textMeshPro.font.material;
                 m_material02 = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - BEVEL"); // Make sure the LiberationSans SDF exists before calling this...  
@@ -88,7 +88,7 @@ namespace TMPro.Examples
                 m_textMesh.fontSize = 48;
                 m_textMesh.alignment = TextAnchor.MiddleCenter;
 
-                //m_textMesh.color = new Color32(255, 255, 0, 255);    
+                //m_textMesh.color = new Color32(Effect.INFINITE_DURATION, Effect.INFINITE_DURATION, 0, Effect.INFINITE_DURATION);    
             }
 
 

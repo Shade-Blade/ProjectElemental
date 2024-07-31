@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 using UnityEngine.UI;
 using static TMPString;
+using static UnityEditor.PlayerSettings;
 
 //copy of textbox script with some stuff added
 //Differences:
@@ -13,6 +15,7 @@ using static TMPString;
 public class MinibubbleScript : MonoBehaviour
 {
     public bool detached;
+    public bool free;   //not bound to a parent
     public bool deleteSignal = false;
     public bool superDeleteSignal = false;
 
@@ -32,6 +35,8 @@ public class MinibubbleScript : MonoBehaviour
     private Vector2 tailPointTruePos;
     private float maxTailMovement = 70;
 
+    public bool tailRealTimeUpdate;
+
     //All the important stuff for running the dialogue
     //public string[] lines;
     public List<string> lines;
@@ -49,7 +54,7 @@ public class MinibubbleScript : MonoBehaviour
     protected float animBaseTime = 0.1f;
     private float animTime;
     protected float startScale = 0.1f; //scale ends at 1
-    private Vector3 originalPos = Vector3.negativeInfinity;
+    public Vector3 originalPos = Vector3.negativeInfinity;
 
     public const float scrollBufferBaseTime = 0.1f; //0.2f;
     protected float scrollBufferTime = 0.0f;
@@ -87,7 +92,7 @@ public class MinibubbleScript : MonoBehaviour
             canvasPos.x = 300;
         }
 
-        Debug.Log("Canvas pos " + canvasPos);
+        //Debug.Log("Canvas pos " + canvasPos);
 
         RectTransform rt = baseObject.GetComponent<RectTransform>();
 
@@ -105,6 +110,12 @@ public class MinibubbleScript : MonoBehaviour
         //Tail position is +-300 off original position
         //This position is calculated based on how far along the screen the real point is
         tail.enabled = hasTail && detached;
+
+        if (!tail.enabled)
+        {
+            return;
+        }
+
         //Debug.Log("tail enabled = " + hasTail + " " + detached);
         float offset = maxTailMovement * Mathf.Clamp(2 * (((tailPointTruePos.x) / Screen.width) - 0.5f), -1, 1);
         tail.rectTransform.anchoredPosition = (offset) * Vector3.right + tail.rectTransform.anchoredPosition[1] * Vector3.up;
@@ -113,21 +124,27 @@ public class MinibubbleScript : MonoBehaviour
 
         //Point tail towards target
         Vector2 tailCenterScreenPos = tail.rectTransform.TransformPoint(Vector3.zero);
-        Vector2 ScreenToCanvasScale = new Vector2(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / Screen.width,
-    MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.height / Screen.height);
-        tailCenterScreenPos *= ScreenToCanvasScale;
+        //Vector2 ScreenToCanvasScale = new Vector2(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / Screen.width,
+    //MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.height / Screen.height);
+        //tailCenterScreenPos *= ScreenToCanvasScale;
         //finally this calculation actually works
 
         float angle = (180f / Mathf.PI) * Mathf.Atan2(tailPointTruePos[1] - tailCenterScreenPos[1], tailPointTruePos[0] - tailCenterScreenPos[0]);
 
         angle += 90;
-        if (angle > 80)
+
+        //Change: impossible angles won't get displayed
+        if (angle > 70 || angle < -70)
         {
-            angle = 80;
+            tail.enabled = false;
+            //Debug.Log("Fail condition A " + angle);
         }
-        if (angle < -80)
+
+        //Tail won't be displayed if it's too close to the speaker
+        if (tailCenterScreenPos[1] - tailPointTruePos[1] < 25)
         {
-            angle = -80;
+            tail.enabled = false;
+            //Debug.Log("Fail condition B " + (tailCenterScreenPos[1] - tailPointTruePos[1]));
         }
 
         //Debug.Log(angle + " "  + tailPointPos + " " + tailPointTruePos + " " + tailCenterScreenPos);
@@ -278,12 +295,30 @@ public class MinibubbleScript : MonoBehaviour
                     MoveTail(new Vector3(a, b, c));
                 }
                 break;
+            case TagEntry.TextTag.TailRealTimeUpdate:
+                if (t.args.Length > 0 && bool.TryParse(t.args[0], out bool trtu))
+                {
+                    if (speaker != null)
+                    {
+                        tailRealTimeUpdate = trtu;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Tail Real Time Update does not make sense without a speaker");
+                    }
+                }
+                break;
             case TagEntry.TextTag.Anim:
                 int animMEID;
                 ITextSpeaker targetSpeaker = null;
+                bool force = false;
                 if (int.TryParse(t.args[0], out animMEID))
                 {
                     targetSpeaker = MainManager.Instance.GetSpeaker(animMEID);
+                }
+                if (t.args.Length > 1 && bool.TryParse(t.args[1], out force))
+                {
+
                 }
                 if (t.args[0].Equals("o"))
                 {
@@ -303,7 +338,7 @@ public class MinibubbleScript : MonoBehaviour
                 }
                 if (targetSpeaker != null)
                 {
-                    targetSpeaker.SetAnimation(t.args[1]);
+                    targetSpeaker.SetAnimation(t.args[1], force);
                 }
                 break;
             case TagEntry.TextTag.AnimData:
@@ -510,26 +545,29 @@ public class MinibubbleScript : MonoBehaviour
         tail.enabled = hasTail && detached;
         PointTail();
 
-        originalPos = rt.anchoredPosition;
+        DetachedPosition(tailPointPos);
+        originalPos = rt.anchoredPosition;  //end position?
 
-        Vector3 trueAnimOffset;
+        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);   //start position
+        newAnchoredPos.y -= Screen.height / 2;
+        newAnchoredPos.x -= Screen.width / 2;
         if (hasTail)
         {
             ConvertTailPos();
-            Vector3 newAnchoredPos = baseObject.transform.InverseTransformPoint(tailPointTruePos);
-            trueAnimOffset = Vector3.up * 25 + newAnchoredPos - originalPos;
+            //baseObject.transform.InverseTransformPoint(
         }
         else
         {
-            trueAnimOffset = animOffset;
+            newAnchoredPos = animOffset + originalPos;
         }
 
 
         while (animTime < animBaseTime)
         {
             rt.localScale = Vector3.Lerp(new Vector3(startScale, startScale, startScale), new Vector3(1, 1, 1), animTime / animBaseTime);
-            rt.anchoredPosition = originalPos + Mathf.Lerp(1, 0, animTime / animBaseTime) * trueAnimOffset;
+            rt.anchoredPosition = Vector3.Lerp(newAnchoredPos, originalPos, animTime / animBaseTime);
             animTime += Time.deltaTime;
+            PointTail();
             yield return null;
         }
 
@@ -538,6 +576,7 @@ public class MinibubbleScript : MonoBehaviour
             speaker.EnableSpeakingAnim();
         }
 
+        PointTail();
         rt.localScale = new Vector3(1, 1, 1);
         rt.anchoredPosition = originalPos;
     }
@@ -546,24 +585,24 @@ public class MinibubbleScript : MonoBehaviour
         RectTransform rt = baseObject.GetComponent<RectTransform>();
 
         animTime = 0;
-        originalPos = rt.anchoredPosition;
+        originalPos = rt.anchoredPosition;  //start position
 
-        Vector3 trueAnimOffset;
+        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);   //start position
+        newAnchoredPos.y -= Screen.height / 2;
+        newAnchoredPos.x -= Screen.width / 2;
         if (hasTail)
         {
             ConvertTailPos();
-            Vector3 newAnchoredPos = baseObject.transform.InverseTransformPoint(tailPointTruePos);
-            trueAnimOffset = newAnchoredPos - originalPos;
         }
         else
         {
-            trueAnimOffset = animOffset;
+            newAnchoredPos = animOffset + originalPos;
         }
 
         while (animTime < animBaseTime)
         {
             rt.localScale = Vector3.Lerp(new Vector3(startScale, startScale, startScale), new Vector3(1, 1, 1), 1 - (animTime / animBaseTime));
-            rt.anchoredPosition = originalPos + Mathf.Lerp(0, 1, (animTime / animBaseTime)) * trueAnimOffset;
+            rt.anchoredPosition = Vector3.Lerp(originalPos, newAnchoredPos, animTime / animBaseTime);
             animTime += Time.deltaTime;
 
             yield return null;
@@ -579,8 +618,9 @@ public class MinibubbleScript : MonoBehaviour
     }
 
     //To do later: consolidate these 3 creation methods since they do a lot of the same stuff
-    public IEnumerator CreateText(string dialogue, string[] vars = null) //string[] lines
+    public IEnumerator CreateText(string dialogue, string[] vars = null, bool free = false) //string[] lines
     {
+        this.free = free;        
         //Debug.Log("Create");
         tail.enabled = false;
         this.vars = vars;
@@ -679,6 +719,19 @@ public class MinibubbleScript : MonoBehaviour
                         MoveTail(new Vector3(a, b, c));
                     }
                     break;
+                case TagEntry.TextTag.TailRealTimeUpdate:
+                    if (t.args.Length > 0 && bool.TryParse(t.args[0], out bool trtu))
+                    {
+                        if (speaker != null)
+                        {
+                            tailRealTimeUpdate = trtu;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Tail Real Time Update does not make sense without a speaker");
+                        }
+                    }
+                    break;
                 case TagEntry.TextTag.BoxStyle:
                     TagEntry.BoxStyle bs = TagEntry.BoxStyle.Default;
                     if (t.args.Length > 0)
@@ -766,14 +819,14 @@ public class MinibubbleScript : MonoBehaviour
 
         while (!textDone)
         {
-            if (parent == null || (deleteSignal && !detached) || superDeleteSignal)
+            if ((!free && parent == null) || (deleteSignal && !detached) || superDeleteSignal)
             {
                 textDone = true;
             }
             yield return null;
         }
 
-        while (!(superDeleteSignal || parent == null || detached || deleteSignal))
+        while (!(superDeleteSignal || (!free && parent == null) || detached || deleteSignal))
         {
             yield return null;
         }
@@ -785,8 +838,13 @@ public class MinibubbleScript : MonoBehaviour
             yield return StartCoroutine(EndAnim());
         }
     }
-    public IEnumerator CreateText(string dialogue, Vector3 tailPos, string[] vars = null)
+    public IEnumerator CreateText(string dialogue, Vector3 tailPos, string[] vars = null, bool free = false)
     {
+        this.free = free;
+        if (free)
+        {
+            DetachedPosition(tailPos);
+        }
         Debug.Log("Create with tail");
         tail.enabled = true && detached;
         tailPointPos = tailPos;
@@ -889,6 +947,19 @@ public class MinibubbleScript : MonoBehaviour
                         MoveTail(new Vector3(a, b, c));
                     }
                     break;
+                case TagEntry.TextTag.TailRealTimeUpdate:
+                    if (t.args.Length > 0 && bool.TryParse(t.args[0], out bool trtu))
+                    {
+                        if (speaker != null)
+                        {
+                            tailRealTimeUpdate = trtu;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Tail Real Time Update does not make sense without a speaker");
+                        }
+                    }
+                    break;
                 case TagEntry.TextTag.BoxStyle:
                     TagEntry.BoxStyle bs = TagEntry.BoxStyle.Default;
                     if (t.args.Length > 0)
@@ -976,14 +1047,14 @@ public class MinibubbleScript : MonoBehaviour
 
         while (!textDone)
         {
-            if (parent == null || (deleteSignal && !detached) || superDeleteSignal)
+            if ((!free && parent == null) || (deleteSignal && !detached) || superDeleteSignal)
             {
                 textDone = true;
             }
             yield return null;
         }
 
-        while (!(superDeleteSignal || parent == null || detached || deleteSignal))
+        while (!(superDeleteSignal || (!free && parent == null) || detached || deleteSignal))
         {
             yield return null;
         }
@@ -999,7 +1070,7 @@ public class MinibubbleScript : MonoBehaviour
     }
 
     //attached version is separate
-    public IEnumerator CreateText(string dialogue, ITextSpeaker speaker, string[] vars = null)
+    public IEnumerator CreateText(string dialogue, ITextSpeaker speaker, string[] vars = null, bool free = false)
     {
         Debug.Log("Create with speaker");
         this.originalSpeaker = speaker;
@@ -1010,7 +1081,7 @@ public class MinibubbleScript : MonoBehaviour
         {
             position = speaker.GetTextTailPosition();
         }
-        yield return StartCoroutine(CreateText(dialogue, position, vars));
+        yield return StartCoroutine(CreateText(dialogue, position, vars, free));
     }
 
 
@@ -1052,7 +1123,17 @@ public class MinibubbleScript : MonoBehaviour
 
     void TextUpdate()
     {
-        if (text.scrollDone)
+        //real time position change
+        if (tailRealTimeUpdate)
+        {
+            if (detached)
+            {
+                DetachedPosition(speaker.GetTextTailPosition());
+            }
+            MoveTail(speaker.GetTextTailPosition());
+        }
+
+        if (text.scrollDone)    //note: auto scrolls forwards, so use <wait> to prevent it from immediately skipping
         {
             if (currLine > lines.Count - 1)
             {

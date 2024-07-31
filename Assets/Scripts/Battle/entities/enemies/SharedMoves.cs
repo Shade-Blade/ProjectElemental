@@ -535,7 +535,7 @@ public class BM_Shared_Hard_CounterEnrage : EnemyMove
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, 255));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
         yield return new WaitForSeconds(0.5f);
     }
 }
@@ -623,10 +623,10 @@ public class BM_Shared_Hard_CounterHarden : EnemyMove
         switch (caller.entityID)
         {
             case BattleHelper.EntityID.VineThrone:
-                caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Absorb, 2, 255));
+                caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
                 break;
             default:
-                caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Absorb, 1, 255));
+                caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Absorb, 1, Effect.INFINITE_DURATION));
                 break;
         }
         yield return new WaitForSeconds(0.5f);
@@ -654,8 +654,8 @@ public class BM_Shared_Hard_CounterReinforce : EnemyMove
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, 255));
-        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Absorb, 1, 255));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
+        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Absorb, 1, Effect.INFINITE_DURATION));
         yield return new WaitForSeconds(0.5f);
     }
 }
@@ -671,7 +671,7 @@ public class BM_Shared_Hard_CounterRally : EnemyMove
         List<BattleEntity> entityList = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
         foreach (BattleEntity entity in entityList)
         {
-            caller.InflictEffect(entity, new Effect(Effect.EffectType.Focus, 1, 255));
+            caller.InflictEffect(entity, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
         }
         yield return new WaitForSeconds(0.5f);
     }
@@ -696,7 +696,7 @@ public class BM_Shared_Hard_CounterRoar : EnemyMove
         foreach (BattleEntity entity in battleEntityList)
         {
             caller.DealDamage(entity, 0, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
-            caller.InflictEffect(entity, new Effect(Effect.EffectType.Sunder, 1, 255));
+            caller.InflictEffect(entity, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
         }
     }
 }
@@ -736,7 +736,7 @@ public class BM_Shared_Hard_CounterProtect : EnemyMove
         List<BattleEntity> entityList = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
         foreach (BattleEntity entity in entityList)
         {
-            caller.InflictEffect(entity, new Effect(Effect.EffectType.Absorb, 1, 255));
+            caller.InflictEffect(entity, new Effect(Effect.EffectType.Absorb, 1, Effect.INFINITE_DURATION));
         }
         yield return new WaitForSeconds(0.5f);
     }

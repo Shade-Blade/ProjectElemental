@@ -311,14 +311,14 @@ public class BM_Slimeworm_Charge : EnemyMove
             caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, 255));
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, 255));
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
                 caller.HealHealth(4);
             }
             else
             {
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, 255));
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, 255));
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
             }
         }
     }
@@ -400,7 +400,7 @@ public class BM_Slimebloom_Zap : EnemyMove
                 }
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 1, 255));
+                    caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -438,7 +438,7 @@ public class BM_Slimebloom_Lob : EnemyMove
                 }
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, 255));
+                    caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -563,7 +563,7 @@ public class BM_Sirenfish_PowerSong : EnemyMove
 
         foreach (BattleEntity be in targets)
         {
-            caller.InflictEffect(be, new Effect(Effect.EffectType.Focus, 1, 255));
+            caller.InflictEffect(be, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
         }
     }
 }

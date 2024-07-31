@@ -608,7 +608,7 @@ public class BM_GiantVine_Throw : EnemyMove
             gv.grabbed.SetEntityProperty(BattleHelper.EntityProperties.NoCount, false);
             gv.grabbed.SetEntityProperty(BattleHelper.EntityProperties.NoTarget, false);
 
-            yield return StartCoroutine(gv.grabbed.Jump(gv.grabbed.homePos, 2));
+            yield return StartCoroutine(gv.grabbed.Jump(gv.grabbed.homePos, 2, 0.5f));
 
             gv.grabbed = null;
             gv.grabTargetPos = int.MinValue;
@@ -712,7 +712,7 @@ public class BM_MasterOfAutumn_PollenStorm : EnemyMove
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, 255));
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -743,7 +743,7 @@ public class BM_MasterOfAutumn_FlowerShuriken : EnemyMove
                 caller.DealDamage(t, 6, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, 255));
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -769,12 +769,12 @@ public class BM_MasterOfAutumn_Overgrowth : EnemyMove
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
             BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
-            vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
         if (BattleControl.Instance.GetEntityByID(3) == null)
         {
             BattleEntity b = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
-            vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
 
         vb.HealHealth(10);
@@ -845,7 +845,7 @@ public class BM_MasterOfAutumn_FullBloom : EnemyMove
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, 255));
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -876,7 +876,7 @@ public class BM_MasterOfAutumn_VineField : EnemyMove
                 caller.DealDamage(t, 10, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, 255));
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
                 }
             }
             else
@@ -903,11 +903,11 @@ public class BM_MasterOfAutumn_Resummon : EnemyMove
             if (vb.lastSummonPos == 1)
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
-                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             } else
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
-                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
         }
 
@@ -922,12 +922,12 @@ public class BM_MasterOfAutumn_Resummon : EnemyMove
             if (vb.lastSummonPos == 1)
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
-                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
             else
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
-                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
         }
 
@@ -950,19 +950,19 @@ public class BM_MasterOfAutumn_Fall : EnemyMove
         yield return StartCoroutine(vb.Move(vb.homePos, 8));
 
         vb.throne = null;
-        vb.InflictEffect(vb, new Effect(Effect.EffectType.DefenseBoost, 1, 255));
+        vb.InflictEffect(vb, new Effect(Effect.EffectType.DefenseBoost, 1, Effect.INFINITE_DURATION));
         //Front vine is guaranteed, back vine is super curse exclusive
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
             BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
-            vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
             if (BattleControl.Instance.GetEntityByID(3) == null)
             {
                 BattleEntity b = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
-                vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
         }
         vb.SetEntityProperty(BattleHelper.EntityProperties.NoTarget, false);
@@ -978,20 +978,20 @@ public class BM_MasterOfAutumn_Fall : EnemyMove
         yield return StartCoroutine(vb.Move(vb.homePos, 8));
 
         vb.throne = null;
-        vb.InflictEffect(vb, new Effect(Effect.EffectType.DefenseBoost, 1, 255));
+        vb.InflictEffect(vb, new Effect(Effect.EffectType.DefenseBoost, 1, Effect.INFINITE_DURATION));
 
         //Front vine is guaranteed, back vine is super curse exclusive
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
             BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
-            vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, 255));
+            vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
             if (BattleControl.Instance.GetEntityByID(3) == null)
             {
                 BattleEntity b = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
-                vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, 255));
+                vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
         }
         vb.SetEntityProperty(BattleHelper.EntityProperties.NoTarget, false);

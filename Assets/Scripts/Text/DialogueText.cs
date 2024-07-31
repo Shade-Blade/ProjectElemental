@@ -792,6 +792,7 @@ public class TagEntry
 
         //Tail Tags
         Tail,      //Move tail around (Changes the speaker object) (Can either use IDs or Vector3 positions)
+        TailRealTimeUpdate,     //Does tail constantly move to speaker.GetTextTailPosition()? (use for if the speaker is moving around while talking, or if the camera is moving while the text is open)
         //Note: tail,keru changes box style
 
         //other speaker related things
@@ -1640,7 +1641,21 @@ public class FormattedString
                 }
                 else
                 {
-                    output = output.Insert(tags[i].trueStartIndex, vars[arg]);
+                    bool special = false;
+                    //new special thing: offsets
+                    if (tags[i].args.Length > 1)
+                    {
+                        if (int.TryParse(tags[i].args[0], out int number) && int.TryParse(tags[i].args[1], out int offset))
+                        {
+                            special = true;
+                            output = output.Insert(tags[i].trueStartIndex, (number + offset).ToString());
+                        }
+                    }
+
+                    if (!special)
+                    {
+                        output = output.Insert(tags[i].trueStartIndex, vars[arg]);
+                    }
                 }
             }
         }

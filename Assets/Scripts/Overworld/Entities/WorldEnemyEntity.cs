@@ -176,7 +176,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
     {
         //Debug.Log(MainManager.Instance.coinDrops + " " + MainManager.Instance.dropItemType);
         MainManager.Instance.DropCoins(MainManager.Instance.coinDrops, transform.position, Vector3.up * 6, 3);
-        MainManager.Instance.DropItem(MainManager.Instance.dropItemType, transform.position, Vector3.up * 6 - 1.5f * FacingVector());
+        MainManager.Instance.DropItems(MainManager.Instance.dropItemType, MainManager.Instance.dropItemCount, transform.position, Vector3.up * 6 - 1.5f * FacingVector(), Vector3.up * 6, 3);
     }
 
     public virtual void DeathFlags()
@@ -259,6 +259,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
     public bool AggroCheck(Vector3 facingVector, float maxRadius)   //Flying enemies should have viewcones pointed closer to the ground (so you can't hide directly below them)
     {
         bool stealthStep = MainManager.Instance.playerData.BadgeEquipped(Badge.BadgeType.StealthStep);
+        int stealthStepCount = MainManager.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.StealthStep);
 
         float dot = Vector3.Dot(facingVector, (WorldPlayer.Instance.transform.position - transform.position));
 
@@ -272,7 +273,10 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
             return false;
         }
 
-        if (dot > (stealthStep ? -0.1f : -0.5f))    //makes them somewhat hard to bypass but you can still sneak up on their back in a 120 degree range (-0.5)
+        float maxDot = -0.5f + 0.8f * (stealthStepCount / (1f + stealthStepCount));
+
+
+        if (dot > maxDot)    //makes them somewhat hard to bypass but you can still sneak up on their back in a 120 degree range (-0.5)
         {
             return !WorldPlayer.Instance.Concealed();
         }
