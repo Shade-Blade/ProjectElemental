@@ -129,23 +129,49 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
     //debug stuff
     public override void SpriteAnimationUpdate()
     {
-        if (ac != null)
+        if (ac == null)
         {
-            if (showBack)
+            return;
+        }
+
+        if (SpeakingAnimActive())
+        {
+            return;
+        }
+
+        if (mapScript.halted || mapScript.battleHalt)
+        {
+            return;
+        }
+
+        string animName = "";
+
+        if (IsGrounded())
+        {
+            if (rb != null && rb.velocity.magnitude > 0.25f)
             {
-                ac.SetAnimation("idle_back");
-            } else
-            {
-                ac.SetAnimation("idle");
-            }
-            if (facingRotation > 90 || facingRotation < -90)
-            {
-                ac.SendAnimationData("xflip");
+                animName = "walk";
             }
             else
             {
-                ac.SendAnimationData("xunflip");
+                animName = "idle";
             }
+        }
+        else
+        {
+            if (rb != null && rb.velocity.y > 0)
+            {
+                animName = "jump";
+            }
+            else
+            {
+                animName = "fall";
+            }
+        }
+
+        if (ac != null)
+        {
+            ac.SetAnimation(animName);
         }
     }
 
@@ -250,7 +276,7 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
                 wanderTime += Time.deltaTime;
 
                 //move
-                newVelocity = wanderDir.x * Vector3.right + wanderDir.y * Vector3.forward + rb.velocity.y * Vector3.up;
+                newVelocity = speed * (wanderDir.x * Vector3.right + wanderDir.y * Vector3.forward) + rb.velocity.y * Vector3.up;
 
                 //if you escape the bounds, stop wandering early
                 //but if you are walking back towards the center you can keep wandering (so that it corrects itself)

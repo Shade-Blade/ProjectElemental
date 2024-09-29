@@ -300,7 +300,7 @@ public class BoxMenu : MenuHandler
         if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries.Length > 0 && (menuEntries[menuIndex].canUse || canUseDisabled) && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME) //Press A to select stuff
         {
             SelectOption();
-        } else if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries.Length > 0)
+        } else if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME)
         {
             SelectDisabled();
         }

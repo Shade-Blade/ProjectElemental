@@ -1126,11 +1126,18 @@ public class MinibubbleScript : MonoBehaviour
         //real time position change
         if (tailRealTimeUpdate)
         {
-            if (detached)
+            if (speaker != null)
             {
-                DetachedPosition(speaker.GetTextTailPosition());
+                if (detached)
+                {
+                    DetachedPosition(speaker.GetTextTailPosition());
+                }
+                MoveTail(speaker.GetTextTailPosition());
+            } else
+            {
+                //This is partially redundant (but this method fixes the tail's position on the screen
+                MoveTail(tailPointPos);
             }
-            MoveTail(speaker.GetTextTailPosition());
         }
 
         if (text.scrollDone)    //note: auto scrolls forwards, so use <wait> to prevent it from immediately skipping

@@ -38,13 +38,19 @@ public class WorldShopkeeperNPCScript : WorldNPCEntity, IShopkeeperEntity
         testTextFile[3] = new string[1];
         testTextFile[4] = new string[1];
 
-        testTextFile[0][0] = "Shopkeeper buy text: <var,0> costs <var,1> <var,2>. Buy it?<prompt,Yes,1,No,2,1>";
+        testTextFile[0][0] = "Shopkeeper buy text: <var,0> costs <var,1> <var,2>. You have <var,3> right now. Buy it?<prompt,Yes,1,No,2,1>";
         testTextFile[1][0] = "You bought a thing";
         testTextFile[2][0] = "You didn't buy a thing";
         testTextFile[3][0] = "Too poor to buy a thing";
         testTextFile[4][0] = "Inventory too full to buy a thing";
 
-        string[] tempVars = new string[] { PickupUnion.GetName(sis.shopItem.pickupUnion), sis.shopItem.cost.ToString(), sis.shopItem.currency.ToString() };
+        PlayerData pd = MainManager.Instance.playerData;
+        string countstring = "";
+        if (sis.shopItem.pickupUnion.type == PickupUnion.PickupType.Item)
+        {
+            countstring = pd.itemInventory.FindAll((e) => (e.type == sis.shopItem.pickupUnion.item.type)).Count.ToString();
+        }
+        string[] tempVars = new string[] { PickupUnion.GetName(sis.shopItem.pickupUnion), sis.shopItem.cost.ToString(), sis.shopItem.currency.ToString(), countstring };
 
         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 0, this, tempVars));
 
@@ -59,7 +65,6 @@ public class WorldShopkeeperNPCScript : WorldNPCEntity, IShopkeeperEntity
             yield break;
         }
 
-        PlayerData pd = MainManager.Instance.playerData;
         bool canBuy = true;
         switch (sis.shopItem.currency)
         {

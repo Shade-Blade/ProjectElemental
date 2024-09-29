@@ -328,9 +328,9 @@ Shader "Custom/ProperSpriteBuffDebuffWilex" {
 			//w = 0 negates translation?
 			//normalize negates scale?
 			//so only rotation is left (?????)
-			half3 newnormal = normalize(mul(unity_ObjectToWorld, half4(mapnormal, 0)));
+			//half3 newnormal = normalize(mul(unity_ObjectToWorld, half4(mapnormal, 0)));
 
-			o.Normal = newnormal;
+			o.Normal = mapnormal;
 
 			o.Albedo = c.rgb;
 			

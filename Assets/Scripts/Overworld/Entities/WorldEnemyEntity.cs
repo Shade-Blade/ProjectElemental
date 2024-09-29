@@ -106,6 +106,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
             firstStrikeTimer = -1;
             bsa.move = BattleStartArguments.FirstStrikeMove.Default;
             bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ENEMY;
+            WorldPlayer.Instance.SetAnimation("hurt", true);
             MainManager.Instance.mapScript.StartBattle(this);
         }
     }
@@ -124,6 +125,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
                     firstStrikeTimer = -1;
                     bsa.move = BattleStartArguments.FirstStrikeMove.Dig;
                     bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
+                    SetAnimation("hurt", true);
                     MainManager.Instance.mapScript.StartBattle(this);
                 }
                 else
@@ -210,6 +212,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
                 break;
         }
         bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
+        SetAnimation("hurt", true);
         MainManager.Instance.mapScript.StartBattle(this);
     }
 
@@ -222,6 +225,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
 
         bsa.move = BattleStartArguments.FirstStrikeMove.Weapon;
         bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
+        SetAnimation("hurt", true);
         MainManager.Instance.mapScript.StartBattle(this);
         return true;
     }
@@ -235,6 +239,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
 
         bsa.move = BattleStartArguments.FirstStrikeMove.Weapon;
         bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
+        SetAnimation("hurt", true);
         MainManager.Instance.mapScript.StartBattle(this);
         return true;
     }
@@ -248,6 +253,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
 
         bsa.move = BattleStartArguments.FirstStrikeMove.DashHop;
         bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
+        SetAnimation("hurt", true);
         MainManager.Instance.mapScript.StartBattle(this);
     }
 

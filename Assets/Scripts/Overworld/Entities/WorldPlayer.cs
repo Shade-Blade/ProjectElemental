@@ -471,6 +471,43 @@ public class WorldPlayer : WorldEntity
         if (isIdle)
         {
             idleTime += Time.deltaTime;
+
+            //Item sight
+            if (MainManager.Instance.playerData.BadgeEquipped(Badge.BadgeType.ItemSight))
+            {
+                if (idleTime > 1f && (idleTime - Time.deltaTime) % 0.5f > (idleTime) % 0.5f)  //check if idletime is next to an increment of 0.25 seconds
+                {
+                    WorldCollectibleScript[] items = FindObjectsOfType<WorldCollectibleScript>();
+                    Vector3 nearestPos = items.Length > 0 ? items[0].transform.position : Vector3.positiveInfinity;
+                    foreach (WorldCollectibleScript wcs in items)
+                    {
+                        if ((transform.position - nearestPos).magnitude > (transform.position - wcs.transform.position).magnitude)
+                        {
+                            nearestPos = wcs.transform.position;
+                        }
+                    }
+
+                    float dist = (transform.position - nearestPos).magnitude;
+
+                    bool doEffect = false;
+                    if (dist < 3)
+                    {
+                        doEffect = true;
+                    } else
+                    {
+                        doEffect = (idleTime % 1f > 0.4f);
+                    }
+
+                    if (doEffect)
+                    {
+                        GameObject itemSightDot = Instantiate(Resources.Load<GameObject>("Overworld/Other/ItemSightDot"), MainManager.Instance.mapScript.transform);
+                        itemSightDot.transform.position = transform.position;
+                        ItemSightDotScript isds = itemSightDot.GetComponent<ItemSightDotScript>();
+
+                        isds.velocity = (nearestPos - transform.position).normalized;
+                    }
+                }
+            }
         }
         else
         {
@@ -533,12 +570,14 @@ public class WorldPlayer : WorldEntity
         {
             ControlUpdate();
             scriptedAnimation = false;
-        } else 
+        }
+        else 
         {
             switchBuffered = false;
             ScriptedUpdate();
         }
         SpecialUpdate();
+
         lastIntendedMovement = intendedMovement;
 
         if (switchTime > 0)
@@ -2784,9 +2823,9 @@ public class WorldPlayer : WorldEntity
                 break;
         }
 
-        if (!lockRotation && ((usedMovement.x != 0 || usedMovement.z != 0) || pastTrueFacingRotation != trueFacingRotation))
+        if (!lockRotation && (usedMovement.magnitude > 0.01f) || pastTrueFacingRotation != trueFacingRotation)
         {
-            if (!movementRotationDisabled && (usedMovement.x != 0 || usedMovement.z != 0))
+            if (!movementRotationDisabled && (usedMovement.magnitude > 0.01f))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
                 //transform this with respect to worldspace yaw
@@ -2794,7 +2833,8 @@ public class WorldPlayer : WorldEntity
                 //Debug.Log("reset P " + trueFacingRotation);
             }
 
-            realOrientationObject.transform.eulerAngles = trueFacingRotation * Vector3.up;
+            //Worldspace yaw needs to be added back
+            realOrientationObject.transform.eulerAngles = (trueFacingRotation + MainManager.Instance.GetWorldspaceYaw()) * Vector3.up;
 
             //Debug.Log(trueFacingRotation);
 
@@ -3006,6 +3046,11 @@ public class WorldPlayer : WorldEntity
         }
 
         if (SpeakingAnimActive() || scriptedAnimation)
+        {
+            return;
+        }
+
+        if (mapScript.halted || mapScript.battleHalt)
         {
             return;
         }
@@ -3322,35 +3367,35 @@ public class WorldPlayer : WorldEntity
         //note that this has the same angles as smash but 8 possible animations instead of 5
         if ((trueFacingRotation < 22.5f || trueFacingRotation > 337.5f))
         {
-            animName = "smash_e";
+            animName = "slash_e";
         }
         if ((trueFacingRotation > 157.5f && trueFacingRotation < 202.5f))
         {
-            animName = "smash_w";
+            animName = "slash_w";
         }
         if ((trueFacingRotation < 337.5f && trueFacingRotation > 292.5f))
         {
-            animName = "smash_ne";
+            animName = "slash_ne";
         }
         if ((trueFacingRotation > 202.5f && trueFacingRotation < 247.5f))
         {
-            animName = "smash_nw";
+            animName = "slash_nw";
         }
         if ((trueFacingRotation < 67.5f && trueFacingRotation > 22.5f))
         {
-            animName = "smash_se";
+            animName = "slash_se";
         }
         if ((trueFacingRotation > 112.5f && trueFacingRotation < 157.5f))
         {
-            animName = "smash_sw";
+            animName = "slash_sw";
         }
         if ((trueFacingRotation > 247.5f && trueFacingRotation < 292.5f))
         {
-            animName = "smash_n";
+            animName = "slash_n";
         }
         if ((trueFacingRotation > 67.5f && trueFacingRotation < 112.5f))
         {
-            animName = "smash_s";
+            animName = "slash_s";
         }
         return animName;
     }
@@ -3380,7 +3425,7 @@ public class WorldPlayer : WorldEntity
                 eoI = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash2"), realOrientationObject.transform);
                 break;
         }
-        eoI.transform.localPosition = Vector3.zero;
+        eoI.transform.localPosition = Vector3.up * 0.1f;
         eoI.transform.localRotation = Quaternion.identity;
         swooshParticle = eoI;
     }

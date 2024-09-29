@@ -14,7 +14,7 @@ public class AnimationController_Luna : AnimationController_Player
 
         //Debug.Log(showBack + " " + !name.Contains("smash") + " " + !name.Contains("slash") + " " + name);
         //also making talk animations not have back variants
-        if (showBack && !name.Contains("smash") && !name.Contains("slash") && !name.Contains("talk"))
+        if (showBack && !name.Contains("smash") && !name.Contains("slash") && !name.Contains("talk") && !name.Contains("hurt"))
         {
             modifiedName = name + "_back";
         }

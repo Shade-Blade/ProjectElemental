@@ -10,6 +10,7 @@ public class AnimationController : MonoBehaviour
 {
     public Animator animator;
     public string currentAnim;
+    public string currentEffect;    //Effect data changes this. (This is useful if you want to copy all the visual effects of one sprite to another, like if you have projectiles)
     public SpriteRenderer sprite;
 
     public bool rightDefault;
@@ -74,15 +75,18 @@ public class AnimationController : MonoBehaviour
             //Flip X breaks lighting in certain cases
             //Rotation does not
 
-            //sprite.flipX = true;
+            //^ Past shade is wrong
+            //As it turns out, my shader is set up incorrectly, which means that the exact opposite should be the case (flip should be fine, rotation should not be)
+
+            sprite.flipX = true;
             //sprite.gameObject.transform.localEulerAngles = Vector3.up * 180;
-            subobject.transform.localEulerAngles = Vector3.up * 180;
+            //subobject.transform.localEulerAngles = Vector3.up * 180;
         }
         if (data.Equals("xunflip"))
         {
-            //sprite.flipX = false;
+            sprite.flipX = false;
             //sprite.gameObject.transform.localEulerAngles = Vector3.up * 0;
-            subobject.transform.localEulerAngles = Vector3.up * 0;
+            //subobject.transform.localEulerAngles = Vector3.up * 0;
         }
         if (data.Equals("aetherize"))
         {
@@ -192,6 +196,14 @@ public class AnimationController : MonoBehaviour
     }
     public void EffectUpdate(string data)
     {
+        currentEffect = data;
+
+        if (data.Length <= 2)
+        {
+            MaterialReset();
+            return;
+        }
+
         //Debug.Log("effect " + data);
         string[] split = data.Split('_');
 
@@ -331,6 +343,7 @@ public class AnimationController : MonoBehaviour
     }
     public virtual void MaterialReset()
     {
+        currentEffect = "";
         SetMaterial(0);
         if (propertyBlock == null)
         {

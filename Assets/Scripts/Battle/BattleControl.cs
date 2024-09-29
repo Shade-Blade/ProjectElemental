@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static BattleHelper;
 
 //list where you can add and remove elements while still being able to iterate over all of them exactly once
 //Can result in endless loops if you keep adding to it
@@ -323,6 +324,7 @@ public class MoveListEntry
 }
 */
 
+[System.Serializable]
 public class ReactionMoveListEntry
 {
     public BattleEntity user;       //Theoretically can be null ("world" reactions) (but in that case the move must be built specifically to handle that)
@@ -603,6 +605,8 @@ public class BattleControl : MonoBehaviour
     public GameObject actionCommandGreat;
     public GameObject actionCommandPerfect;
     public GameObject actionCommandMiss;
+    public GameObject actionCommandImmune;
+    public GameObject actionCommandAbsorb;
 
     public GameObject hitNormal;
     public GameObject hitNormalTriple;
@@ -737,6 +741,7 @@ public class BattleControl : MonoBehaviour
     [SerializeField]
     private SafeList<BattleEntity> entities = new SafeList<BattleEntity>();
 
+    [SerializeField]
     private List<ReactionMoveListEntry> reactionMoveList = new List<ReactionMoveListEntry>();   //List of reaction moves to invoke
     private BattleHelper.Event lastEventID;   //Last event that occured to an entity (broadcasted to all entities for special reactions)
     private BattleEntity lastEventEntity;                //Entity that was affected by last event (broadcasted to all entities for special reactions)
@@ -1220,6 +1225,10 @@ public class BattleControl : MonoBehaviour
     } //if entity is not on the list, this returns int min value
     public bool EntityValid(BattleEntity b)
     {
+        if (b == null)
+        {
+            return false;
+        }
         if (entities.InnerList.Contains(b))
         {
             return true;
@@ -1250,10 +1259,12 @@ public class BattleControl : MonoBehaviour
             //so that is how height and width are measured
 
             //X check
-            if (Mathf.Abs(b.homePos.x - entities[i].homePos.x) < entities[i].width)
+            if (Mathf.Abs(b.homePos.x - entities[i].homePos.x) < entities[i].width * 0.5f)  //note: b.width does not contribute to this, because the topmost check is only really meant to see if the spot you jump on is possible to jump to
             {
                 //Y check
-                if (entities[i].homePos.y > b.homePos.y)
+                //Enemies far above the target don't block
+                //Enemies clipping inside the target but not enough to block the topmost thing are fine also
+                if (entities[i].homePos.y - b.homePos.y - b.height < 1.5f && entities[i].homePos.y - b.homePos.y + entities[i].height > b.height)
                 {
                     //ceiling check (ceiling enemies do not trigger the topmost blocking)
                     if (!entities[i].GetEntityProperty(BattleHelper.EntityProperties.Ceiling))
@@ -1267,7 +1278,45 @@ public class BattleControl : MonoBehaviour
             //(so z shenanigans should be avoided always)
         }
 
-        return true;
+        return b.GetEntityProperty(BattleHelper.EntityProperties.Ceiling, false);
+    }
+    public bool IsBottommost(BattleEntity b)
+    {
+        for (int i = 0; i < entities.Count; i++)
+        {
+            //don't check the other side (this topmost check is usually used for trying to target enemies)
+            if (b.posId < 0 ^ entities[i].posId < 0)
+            {
+                continue;
+            }
+
+            //obviously don't check yourself
+            if (entities[i] == b)
+            {
+                continue;
+            }
+
+            //use homePos because idle animations might make them move around?
+            //note that enemies have a bottom center anchor
+            //so that is how height and width are measured
+
+            //X check
+            if (Mathf.Abs(b.homePos.x - entities[i].homePos.x) < entities[i].width * 0.5f)
+            {
+                //Y check
+                //this is basically the opposite of the topmost checking
+                //note that this is mostly for checking if there is a clean line of sight from the ground below the enemy to the enemy (that is how bottommost attacks generally work)
+                if (entities[i].homePos.y - b.homePos.y < 0)
+                {
+                    return false;
+                }
+            }
+
+            //There is no Z check because depth perception is pretty bad in this system
+            //(so z shenanigans should be avoided always)
+        }
+
+        return b.GetEntityProperty(BattleHelper.EntityProperties.Ceiling, false);
     }
 
     public bool IsFrontmostLow(BattleEntity caller, BattleEntity check, bool ignoreNoTarget = false)
@@ -2014,6 +2063,8 @@ public class BattleControl : MonoBehaviour
         actionCommandGreat = Resources.Load<GameObject>("VFX/Battle/ActionCommand/Effect_ActionCommandGreat");
         actionCommandPerfect = Resources.Load<GameObject>("VFX/Battle/ActionCommand/Effect_ActionCommandPerfect");
         actionCommandMiss = Resources.Load<GameObject>("VFX/Battle/ActionCommand/Effect_ActionCommandMiss");
+        actionCommandImmune = Resources.Load<GameObject>("VFX/Battle/ActionCommand/Effect_ActionCommandImmune");
+        actionCommandAbsorb = Resources.Load<GameObject>("VFX/Battle/ActionCommand/Effect_ActionCommandAbsorb");
 
         hitNormal = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_Normal");
         hitNormalTriple = Resources.Load<GameObject>("VFX/Battle/Hit/Effect_Hit_NormalTriple");
@@ -2381,16 +2432,21 @@ public class BattleControl : MonoBehaviour
         //The "you got X xp" cutscene
         //If you level up then go to the level up cutscene
 
+        //Pan camera over
         float averageX = 0;
         List<PlayerEntity> pel = GetPlayerEntities();
         for (int i = 0; i < pel.Count; i++)
         {
             averageX += pel[i].transform.position.x;
+        }
+
+        averageX /= pel.Count;
+        SetCameraSettingsDelayed(new Vector3(averageX, 0.85f, 0f), 2.4f, 0.125f);
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < pel.Count; i++)
+        {
             pel[i].SetAnimation("battlewin", true);
         }
-        averageX /= pel.Count;
-        //Pan camera over
-        SetCameraSettingsDelayed(new Vector3(averageX, 0.85f, 0f), 2.4f, 0.125f);
 
         yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < pel.Count; i++)
@@ -2819,6 +2875,12 @@ public class BattleControl : MonoBehaviour
                 break;
             case BattleHelper.ActionCommandText.Miss:
                 o = Instantiate(actionCommandMiss);
+                break;
+            case BattleHelper.ActionCommandText.Immune:
+                o = Instantiate(actionCommandImmune);
+                break;
+            case BattleHelper.ActionCommandText.Absorb:
+                o = Instantiate(actionCommandAbsorb);
                 break;
             default:
                 return null;
@@ -4341,6 +4403,14 @@ public class BattleControl : MonoBehaviour
     //Executes after every player / enemy turn
     public IEnumerator RunOutOfTurnEvents()
     {
+        for (int i = 0; i < entities.Count; i++)
+        {
+            entities[i].DeathCheck();
+        }
+
+        //create some delay between each turn I guess
+        yield return new WaitForSeconds(0.25f);
+
         //Debug.Log("RunOutOfTurnEvents " + reactionMoveList.Count);
         //wait until animations done
         yield return new WaitUntil(() => CheckEntitiesStationary());
@@ -4428,6 +4498,10 @@ public class BattleControl : MonoBehaviour
         //Debug.Log(reactionMoveList.Count + " reaction moves in queue (should be 0)");
         //Debug.Log("Check End Battle");
         yield return StartCoroutine(CheckEndBattle());
+    }
+    public bool ReactionExists()
+    {
+        return reactionMoveList.Count > 0;
     }
     public bool ItemReactionExists(Item.ItemType it)
     {
@@ -4889,6 +4963,22 @@ public class BattleControl : MonoBehaviour
             }
         }
 
+
+        /*
+        //debug setup (testing interrupts)
+        BattleEntity be = GetEntityByID(2);
+        if (be != null && be.entityID == EntityID.DebugEntity)
+        {
+            if (!ReactionExists())
+            {
+                AddReactionMoveEvent(be, BattleControl.Instance.GetEntitiesSorted(be, new TargetArea(TargetArea.TargetAreaType.LiveEnemy))[0], be.moveset[2]);
+                AddReactionMoveEvent(be, BattleControl.Instance.GetEntitiesSorted(be, new TargetArea(TargetArea.TargetAreaType.LiveEnemy))[0], be.moveset[2]);
+                AddReactionMoveEvent(be, BattleControl.Instance.GetEntitiesSorted(be, new TargetArea(TargetArea.TargetAreaType.LiveEnemy))[0], be.moveset[2]);
+                AddReactionMoveEvent(be, BattleControl.Instance.GetEntitiesSorted(be, new TargetArea(TargetArea.TargetAreaType.LiveEnemy))[0], be.moveset[2]);
+                AddReactionMoveEvent(be, BattleControl.Instance.GetEntitiesSorted(be, new TargetArea(TargetArea.TargetAreaType.LiveEnemy))[0], be.moveset[2]);
+            }
+        }
+        */
 
         //let player choose move
         yield return StartCoroutine(PlayerTurnController.Instance.TakeTurn());

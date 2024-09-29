@@ -26,6 +26,7 @@ public class TargetArea
         AnyoneNotSelf,
         LiveAnyoneNotSelf,
         LiveEnemyLow,
+        LiveEnemyLowBottommost,
         LiveEnemyGrounded,
         LiveEnemyTopmost,
         LiveEnemyLowStompable,
@@ -103,27 +104,10 @@ public class TargetArea
                     return ((c, e) => (e.posId >= 0 ^ c.posId >= 0));
                 case TargetAreaType.LiveEnemy:
                     return ((c, e) => (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0)));
-                    /*
-                    return (c, e) =>
-                    {
-                        Debug.Log(c.name + ": " + e.name + " " + e.hp + " " + (e.posId >= 0 ^ c.posId >= 0));
-                        return (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0));
-                    };
-                    */
                 case TargetAreaType.Ally:
                     return ((c, e) => !(e.posId >= 0 ^ c.posId >= 0));
                 case TargetAreaType.AllyNotSelf:
                     return ((c, e) => e.posId != c.posId && !(e.posId >= 0 ^ c.posId >= 0));
-                case TargetAreaType.PlayerCanSwitch:
-                    //return (c, e) => PlayerTurnController.Instance.movableParty.Contains(e);
-                    //return PlayerTurnController.Instance.movableParty.Contains(e) || e.hp <= 0;
-                    return (c, e) => BattleControl.IsPlayerControlled(e, true);
-                case TargetAreaType.PlayerCanSwitchNoHP:
-                    //return (c, e) => PlayerTurnController.Instance.movableParty.Contains(e);
-                    return (c, e) =>
-                    {
-                        return BattleControl.IsPlayerControlled(e, true) && e.hp <= 0;
-                    };
                 case TargetAreaType.LiveAlly:
                     return ((c, e) => (e.hp > 0 && !(e.posId >= 0 ^ c.posId >= 0)));
                 case TargetAreaType.LiveAllyNotSelf:
@@ -142,6 +126,8 @@ public class TargetArea
                     return ((c, e) => (e.posId != c.posId && e.hp > 0));
                 case TargetAreaType.LiveEnemyLow:
                     return ((c, e) => (e.GetEntityProperty(BattleHelper.EntityProperties.Airborne, false) && (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0))));
+                case TargetAreaType.LiveEnemyLowBottommost:
+                    return ((c, e) => (BattleControl.Instance.IsBottommost(e) && e.GetEntityProperty(BattleHelper.EntityProperties.Airborne, false) && (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0))));
                 case TargetAreaType.LiveEnemyGrounded:
                     return ((c, e) => (e.GetEntityProperty(BattleHelper.EntityProperties.Grounded) && (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0))));
                 case TargetAreaType.LiveEnemyTopmost:

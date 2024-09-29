@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Fire
-  m_Shader: {fileID: 4800000, guid: 3a37b6a4188471a46af093e5eb872f32, type: 3}
+  m_Shader: {fileID: 4800000, guid: 809192812afaa2b469a6a0be4d12a5b0, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -77,6 +77,6 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorMultiply: {r: 2.5, g: 1.5, b: 1, a: 1}
+    - _ColorMultiply: {r: 5, g: 5, b: 5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

@@ -595,6 +595,38 @@ public class BaseBattleMenu : MenuHandler
         active = false;
         //Destroy(gameObject);
     }
+    public virtual void Hide()
+    {
+        for (int i = 0; i < baseMenuOptionsO.Count; i++)
+        {
+            baseMenuOptionsO[i].SetActive(true);
+        }
+
+        if (baseMenuDescriptor != null)
+        {
+            Destroy(baseMenuDescriptor.gameObject);
+        }
+        if (baseMenuBSwap != null)
+        {
+            Destroy(baseMenuBSwap.gameObject);
+        }
+    }
+    public virtual void Unhide()
+    {
+        for (int i = 0; i < baseMenuOptionsO.Count; i++)
+        {
+            Destroy(baseMenuOptionsO[i]);
+        }
+
+        if (baseMenuDescriptor != null)
+        {
+            Destroy(baseMenuDescriptor.gameObject);
+        }
+        if (baseMenuBSwap != null)
+        {
+            Destroy(baseMenuBSwap.gameObject);
+        }
+    }
 
     public int IndexFromOffset(int i)
     {

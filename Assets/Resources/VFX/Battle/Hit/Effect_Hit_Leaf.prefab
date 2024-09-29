@@ -4910,7 +4910,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5016e86e86ac1a40a7e0227951aa2c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ps: {fileID: 7202051674606019059}
 --- !u!1 &8968861689680451193
 GameObject:
   m_ObjectHideFlags: 0
@@ -5029,9 +5028,9 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0.4
-      minScalar: 5
+      minMaxState: 3
+      scalar: 0.5
+      minScalar: 0.3
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5082,9 +5081,9 @@ ParticleSystem:
         m_RotationOrder: 4
     startSpeed:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 5
-      minScalar: 5
+      minMaxState: 3
+      scalar: 6
+      minScalar: 4
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5198,9 +5197,9 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     startSize:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0.25
-      minScalar: 1
+      minMaxState: 3
+      scalar: 0.3
+      minScalar: 0.2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5251,7 +5250,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -5304,7 +5303,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -9823,4 +9822,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5016e86e86ac1a40a7e0227951aa2c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ps: {fileID: 8968861689680451195}

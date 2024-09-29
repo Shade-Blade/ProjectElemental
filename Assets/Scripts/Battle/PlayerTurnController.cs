@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class PlayerTurnController : MonoBehaviour
@@ -39,7 +40,6 @@ public class PlayerTurnController : MonoBehaviour
     */
     //public MenuState menuState; //unused
 
-    public bool menuSuspended;
     public bool inMenu;
     public MenuHandler menu; //holds the base menu
     public List<PlayerEntity> movableParty; //can move, and hasn't moved
@@ -61,9 +61,10 @@ public class PlayerTurnController : MonoBehaviour
         Switch,
         SuperSwap,
         Null,       //error condition (can't do anything)
-        Suspend
+        Interrupt
     }
     public MenuExitType mexitType = MenuExitType.None;
+    public bool interruptQueued;
     public MenuResult mresult;
     //public PlayerData.PlayerDataEntry toSwitch;
 
@@ -267,10 +268,13 @@ public class PlayerTurnController : MonoBehaviour
             mover.DeathCheck();
             yield return new WaitUntil(() => (!mover.immediateInEvent));
 
-            //Check for enemy special events
-            yield return StartCoroutine(BattleControl.Instance.RunOutOfTurnEvents());
-
             List<PlayerEntity> newImmovable = movableParty.FindAll((e) => (!e.CanMove() || e.HasEffect(Effect.EffectType.Cooldown)));
+
+            //Check for enemy special events
+            if (mexitType != MenuExitType.Switch || newImmovable.Count > 0)
+            {
+                yield return StartCoroutine(BattleControl.Instance.RunOutOfTurnEvents());
+            }
 
             if (newImmovable.Count > 0)
             {
@@ -302,7 +306,11 @@ public class PlayerTurnController : MonoBehaviour
 
             //yield return StartCoroutine(BattleControl.Instance.CheckEndBattle());
 
-            if (mexitType == MenuExitType.Switch) 
+            if (mexitType == MenuExitType.Interrupt)
+            {
+                //Do nothing
+                Debug.Log("interrupt");
+            } else if (mexitType == MenuExitType.Switch) 
             {
                 PlayerEntity b = mover;
                 if (movableParty.Contains(b))
@@ -463,8 +471,45 @@ public class PlayerTurnController : MonoBehaviour
         while (true) //Repeat menu stuff since some menu stuff doesn't lose your turn
         {
             bool exit = false;  //escape the while loop (*but I set it up like this for some reason)
+
+            //New setup: I can make the menu be interrupted
+            //Problem is that if anything happens I have to delete the menu
+            while (inMenu)
+            {
+                List<PlayerEntity> pel = BattleControl.Instance.GetPlayerEntities();
+                bool specialInterrupt = false;
+                foreach (PlayerEntity pe in pel)
+                {
+                    if (pe.alive && pe.hp == 0)
+                    {
+                        //Illegal condition, force the game to interrupt stuff
+                        specialInterrupt = true;
+                    }
+                }
+                if (interruptQueued || specialInterrupt)
+                {
+                    menu.gameObject.SetActive(false);
+                    bool interrupt = BattleControl.Instance.ReactionExists() || specialInterrupt;
+                    if (interrupt)
+                    {
+                        menu.ActiveClear(); //make sure everything related to the current menu is gone
+                        Destroy(menu.gameObject);
+                        yield return StartCoroutine(BattleControl.Instance.RunOutOfTurnEvents());
+                        interruptQueued = false;
+                        mexitType = MenuExitType.Interrupt;
+                        break;
+                    }
+                    else
+                    {
+                        interruptQueued = false;
+                        menu.gameObject.SetActive(true);
+                    }
+                }
+                yield return null;
+            }
             //Wait for menu to resolve
-            yield return new WaitUntil(() => (!inMenu));
+            //yield return new WaitUntil(() => (!inMenu));
+
 
             //menu exited, but how?
             BattleControl.Instance.RebuildStatDisplayers();
@@ -511,7 +556,7 @@ public class PlayerTurnController : MonoBehaviour
                     //rebuild menu
                     inMenu = true;
                     menu = BaseBattleMenu.buildMenu(caller);
-                    mexitType = MenuExitType.None;
+                    mexitType = MenuExitType.ActionExecute;
                     menu.transform.parent = transform;
 
                     BattleControl.Instance.ShowHPBars();
@@ -554,7 +599,7 @@ public class PlayerTurnController : MonoBehaviour
 
                     caller.SetIdleAnimation();
                     yield return ba2.Execute(caller);
-                    yield return StartCoroutine(BattleControl.Instance.RunOutOfTurnEvents());
+                    //yield return StartCoroutine(BattleControl.Instance.RunOutOfTurnEvents());
 
                     BattleControl.Instance.RebuildStatDisplayers();
 
@@ -568,7 +613,18 @@ public class PlayerTurnController : MonoBehaviour
                     //rebuild menu
                     inMenu = true;
                     menu = BaseBattleMenu.buildMenu(caller);
-                    mexitType = MenuExitType.None;
+                    mexitType = MenuExitType.SuperSwap;
+                    menu.transform.parent = transform;
+
+                    BattleControl.Instance.ShowHPBars();
+                    BattleControl.Instance.ShowEffectIcons();
+                    break;
+                case MenuExitType.Interrupt:
+                    exit = true;    //act like switch but don't actually do anything
+                    //rebuild menu
+                    inMenu = true;
+                    menu = BaseBattleMenu.buildMenu(caller);
+                    mexitType = MenuExitType.Interrupt;
                     menu.transform.parent = transform;
 
                     BattleControl.Instance.ShowHPBars();
@@ -973,9 +1029,6 @@ public class PlayerTurnController : MonoBehaviour
                 menu.ActiveClear();
                 break;
             case MenuExitType.Switch:
-                break;
-            case MenuExitType.Suspend:
-                menuSuspended = true;
                 break;
         }
         mexitType = t;

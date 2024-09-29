@@ -123,30 +123,6 @@ public class WorldEnemy_Chaser : WorldEnemyEntity
         ProcessCollision(collision);
     }
 
-    //debug stuff
-    public override void SpriteAnimationUpdate()
-    {
-        if (ac != null)
-        {
-            if (showBack)
-            {
-                ac.SetAnimation("idle_back");
-            }
-            else
-            {
-                ac.SetAnimation("idle");
-            }
-            if (facingRotation > 90 || facingRotation < -90)
-            {
-                ac.SendAnimationData("xflip");
-            }
-            else
-            {
-                ac.SendAnimationData("xunflip");
-            }
-        }
-    }
-
     public override void WorldUpdate()
     {
         Vector3 newVelocity = Vector3.zero;
@@ -224,7 +200,7 @@ public class WorldEnemy_Chaser : WorldEnemyEntity
                 wanderTime += Time.deltaTime;
 
                 //move
-                newVelocity = wanderDir.x * Vector3.right + wanderDir.y * Vector3.forward + rb.velocity.y * Vector3.up;
+                newVelocity = speed * (wanderDir.x * Vector3.right + wanderDir.y * Vector3.forward) + rb.velocity.y * Vector3.up;
 
                 //if you escape the bounds, stop wandering early
                 //but if you are walking back towards the center you can keep wandering (so that it corrects itself)
@@ -261,7 +237,7 @@ public class WorldEnemy_Chaser : WorldEnemyEntity
             case ActionState.Chasing:
                 //Same as wander logic except it goes towards you
                 //move
-                newVelocity = diffPlayer.x * Vector3.right + diffPlayer.y * Vector3.forward + rb.velocity.y * Vector3.up;
+                newVelocity = speed * (diffPlayer.x * Vector3.right + diffPlayer.y * Vector3.forward) + rb.velocity.y * Vector3.up;
 
                 //if you escape the bounds, stop wandering early
                 //but if you are walking back towards the center you can keep wandering (so that it corrects itself)

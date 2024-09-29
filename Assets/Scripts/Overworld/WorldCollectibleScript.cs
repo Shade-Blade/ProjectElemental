@@ -4,6 +4,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditorInternal;
 using UnityEngine;
 
+
 public class WorldCollectibleScript : WorldObject
 {
     public const float ITEM_HITBOX_SIZE = 0.275f;
@@ -12,6 +13,8 @@ public class WorldCollectibleScript : WorldObject
     public float attractRadius;
     public float attractDelta;
     public bool attract;
+    public bool antigravity;
+    public bool intangible; //blocks you from collecting or attracting
     private bool doAttract;
 
     public WorldPlayer worldPlayer;
@@ -109,6 +112,11 @@ public class WorldCollectibleScript : WorldObject
             startPos = transform.position;
         }
 
+        if (antigravity)
+        {
+            rb.useGravity = false;
+        }
+
         bool delete = false;
         if (globalFlag != MainManager.GlobalFlag.GF_None)
         {
@@ -149,6 +157,13 @@ public class WorldCollectibleScript : WorldObject
         {
             worldPlayer = WorldPlayer.Instance;
         }
+        if (antigravity)
+        {
+            rb.useGravity = false;
+        } else if (!doAttract)
+        {
+            rb.useGravity = true;
+        }
         if (worldPlayer != null && MainManager.Instance.inCutscene)
         {
             rb.isKinematic = true;
@@ -156,7 +171,7 @@ public class WorldCollectibleScript : WorldObject
         {
             rb.isKinematic = false;
         }
-        if (lifetime > NO_INTERACT_TIME && attract && worldPlayer != null)
+        if (lifetime > NO_INTERACT_TIME && !intangible && attract && worldPlayer != null)
         {
             Vector3 delta = (transform.position - worldPlayer.transform.position);
             if (doAttract || delta.magnitude < attractRadius && delta != Vector3.zero)
@@ -196,7 +211,7 @@ public class WorldCollectibleScript : WorldObject
     {
         WorldPlayer w = other.transform.GetComponent<WorldPlayer>();
 
-        if (lifetime > NO_INTERACT_TIME && w != null && !MainManager.Instance.inCutscene)
+        if (lifetime > NO_INTERACT_TIME && !intangible && w != null && !MainManager.Instance.inCutscene)
         {
             if (!isCollected)
             {

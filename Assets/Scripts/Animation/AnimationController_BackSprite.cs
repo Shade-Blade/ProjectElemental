@@ -10,7 +10,8 @@ public class AnimationController_BackSprite : AnimationController
     {
         string modifiedName = name;
 
-        if (showBack)
+        //Hardcode talking animations not having back sprites (Note: also need to force this for special cases as well)
+        if (showBack && !name.Contains("talk") && !name.Contains("hurt"))
         {
             modifiedName = name + "_back";
         }
@@ -25,17 +26,17 @@ public class AnimationController_BackSprite : AnimationController
         //update = true;
         //Debug.Log("Play " + currentAnim + " " + update);
 
-
+        //Debug.Log(this + " " + currentAnim);
         if (animator != null && update)
         {
             //Debug.Log(this.name + ": Play " + name);
             if (force)
             {
-                animator.Play(name, -1, 0);
+                animator.Play(modifiedName, -1, 0);
             }
             else
             {
-                animator.Play(name);
+                animator.Play(modifiedName);
             }
         }
     }
@@ -45,13 +46,13 @@ public class AnimationController_BackSprite : AnimationController
         //Debug.Log(data);
         if (data.Equals("xflip"))
         {
-            //sprite.flipX = true;
-            subobject.transform.localEulerAngles = Vector3.up * 180;
+            sprite.flipX = true;
+            //subobject.transform.localEulerAngles = Vector3.up * 180;
         }
         if (data.Equals("xunflip"))
         {
-            //sprite.flipX = false;
-            subobject.transform.localEulerAngles = Vector3.up * 0;
+            sprite.flipX = false;
+            //subobject.transform.localEulerAngles = Vector3.up * 0;
         }
 
         if (data.Equals("showback"))

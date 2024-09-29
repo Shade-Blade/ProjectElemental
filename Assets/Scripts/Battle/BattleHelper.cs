@@ -1020,6 +1020,8 @@ public static class BattleHelper
         Great,
         Perfect,
         Miss,
+        Immune,
+        Absorb
     }
 
     //Note: mostly just used to make the state sprites

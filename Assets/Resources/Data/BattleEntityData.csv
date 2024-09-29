@@ -68,7 +68,7 @@ MoonSpider,140,26,59,TRUE,1,DiamondMushroom,1,Default:0.1/1|Freeze:0.5/0.5|Sleep
 Shieldwing,12,22,0,TRUE,1,IcePumpkin,5,Default:0.4/0.75|Poison:1/1.5,Default:4|Light:4|Dark:-2|Fire:-2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Honeywing,8,21,0,FALSE,1.25,IceNectar,3,Default:0.4/1|Dizzy:0.8/1.5|Paralyze:0.8/1,Default:0|Light:3|Dark:-2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Shimmerwing,10,20,0,FALSE,1,CrystalLeaf,3,Default:0.4/1|Dizzy:0.8/1.5,Default:0|Light:3|Dark:-2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-LumistarVanguard,9,22,0,FALSE,1.5,SnowTuft,3,Default:0.4/1|Berserk:0/1|Sleep:0/1|Dizzy:0.8/1,Default:2|Water:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+LumistarVanguard,9,22,0,FALSE,1.5,SnowTuft,3,Default:0.4/1|Berserk:0/1|Sleep:0/1|Dizzy:0.8/1,Default:0|Water:-2|Dark:N,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 LumistarSoldier,14,23,0,TRUE,1.5,IcePotato,3,Default:0.4/1|Freeze:0/1|Berserk:0.25/1|Poison:0.8/1.5|Sleep:0.8/1,Default:4|Dark:-2|Fire:-2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 LumistarStriker,10,22,0,FALSE,1,MintIcicle,3,Default:0.4/1|Freeze:0/1|Berserk:0.8/1.5,Default:2|Light:4,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 KingIlum,80,25,35,TRUE,1,MintSalad,1,Default:0.2/1|Sleep:0/1|Freeze:0/1,Default:4|Dark:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8

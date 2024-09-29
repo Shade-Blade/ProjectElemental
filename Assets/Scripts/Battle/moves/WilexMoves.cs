@@ -86,7 +86,7 @@ public abstract class WilexMove : PlayerMove
         {
             if (level >= 4 || BattleControl.Instance.lunaText[index + 1][1 + level].Length < 2) //if I didn't write a description, use the infinite stacking one
             {
-                string[] vars = new string[] { (level).ToString(), (level * 2).ToString(), (level * 3).ToString(), (level * 4).ToString(), (level * 5).ToString(), (level * 6).ToString(), (level * 7).ToString(), (level * 8).ToString() };
+                string[] vars = new string[] { "0", (level).ToString(), (level * 2).ToString(), (level * 3).ToString(), (level * 4).ToString(), (level * 5).ToString(), (level * 6).ToString(), (level * 7).ToString(), (level * 8).ToString() };
                 output += " <color,#5000ff>(Lv. " + level + ": " + FormattedString.ParseVars(BattleControl.Instance.wilexText[index + 1][5], vars) + ")</color>";
             }
             else
@@ -1840,10 +1840,7 @@ public class WM_EggToss : WilexMove
     {
         Sprite isp = GlobalItemScript.GetItemSprite(eggGenerated);
 
-
         Vector2 startPosition = caller.ApplyScaledOffset(Vector3.left * 0.25f + Vector3.up * 0.4f);
-        Vector3 endPosition = caller.transform.position;
-
         GameObject so = new GameObject("Egg Sprite");
         so.transform.parent = BattleControl.Instance.transform;
         SpriteRenderer s = so.AddComponent<SpriteRenderer>();
@@ -1867,11 +1864,13 @@ public class WM_EggToss : WilexMove
 
             while (time < 1)
             {
+                o.transform.localScale = Vector3.one * time;
                 time += Time.deltaTime / duration;
                 o.transform.position = MainManager.BezierCurve(time, new Vector3[] { posA, mpos, posB });
                 yield return null;
             }
 
+            o.transform.localScale = Vector3.one;
             o.transform.position = posB;
         }
 
@@ -1945,7 +1944,8 @@ public class WM_EggToss : WilexMove
             caller.SetAnimation("egglay");
             eggObjects[i] = MakeEggSprite(caller, eggTypes[i]);
             eggObjects[i].transform.localScale = Vector3.zero;
-            StartCoroutine(EggAnimation(caller, eggTypes[i], 0.5f, eggObjects[i]));
+            yield return new WaitForSeconds(0.2f);
+            StartCoroutine(EggAnimation(caller, eggTypes[i], 0.25f + 0.25f * i, eggObjects[i]));
             yield return new WaitForSeconds(0.3f);
         }
 
@@ -1958,6 +1958,28 @@ public class WM_EggToss : WilexMove
             if (im.GetTargetArea(caller, 1).GetCheckerResult(caller, caller))
             {
                 caller.curTarget = caller;
+            }
+
+            if (!BattleControl.Instance.EntityValid(caller.curTarget))
+            {
+                List<BattleEntity> list = BattleControl.Instance.GetEntitiesSorted(caller, im.GetTargetArea(caller, 1), false);
+
+                if (list.Count == 0)
+                {
+                    yield return new WaitForSeconds(0.3f);
+                    for (int j = 0; j < eggObjects.Length; j++)
+                    {
+                        Destroy(eggObjects[j]);
+                        if (eggObjects[j] == null)
+                        {
+                            continue;
+                        }
+                    }
+                    caller.SetIdleAnimation();
+                    yield break;
+                }
+
+                caller.curTarget = list[0];
             }
 
             //Bypasses ChooseMove
@@ -1973,7 +1995,7 @@ public class WM_EggToss : WilexMove
             Destroy(eggObjects[j]);
             if (eggObjects[j] == null)
             {
-                break;
+                continue;
             }
         }
         caller.SetIdleAnimation();
@@ -2035,7 +2057,7 @@ public class WM_Slash : WilexMove
             }
 
             yield return new WaitUntil(() => actionCommand.IsStarted());
-            caller.SetAnimation("slashprepare");
+            PreparationAnimation(caller, sl, level);
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -2045,7 +2067,6 @@ public class WM_Slash : WilexMove
                 Destroy(actionCommand);
             }
 
-            caller.SetAnimation("slash_e");
             yield return StartCoroutine(SwingAnimations(caller, sl, level));
             if (GetOutcome(caller))
             {
@@ -2065,8 +2086,15 @@ public class WM_Slash : WilexMove
     {
         return 0.5f;
     }
+
+    public virtual void PreparationAnimation(BattleEntity caller, int sl, int level = 1)
+    {
+        caller.SetAnimation("slash_prepare");
+    }
+
     public virtual IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
     {
+        caller.SetAnimation("slash_e");
         GameObject eoS = null;
         switch (sl)
         {
@@ -2201,7 +2229,7 @@ public class WM_MultiSlash : WM_Slash
             }
 
             yield return new WaitUntil(() => actionCommand.IsStarted());
-            caller.SetAnimation("slashprepare");
+            caller.SetAnimation("slash_prepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -2249,6 +2277,7 @@ public class WM_MultiSlash : WM_Slash
     }
     public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int hits = 1)
     {
+        caller.SetAnimation("slash_e");
         if (!GetOutcome(caller))
         {
             hits = 1;
@@ -2308,13 +2337,42 @@ public class WM_MultiSlash : WM_Slash
             {
                 eoS.transform.localScale = new Vector3(0.65f, 0.8f, -0.65f);
             }
-            flip = !flip;
 
-            //change speed to account for faster animations
+            //change speed to account for flipping
+            //maybe I'll make the animations faster later too (but right now the slash fx doesn't speed up so it might not look right)
             caller.ac.animator.speed = 1;
 
-            //to do later: set up the diagonal slash animations for this
-            caller.SetAnimation("slash_e");
+            if (flip)
+            {
+                if (angle > 15)
+                {
+                    caller.SetAnimation("slash_diagrightreverse", true);
+                }
+                else if (angle < -15)
+                {
+                    caller.SetAnimation("slash_diagleftreverse", true);
+                }
+                else
+                {
+                    caller.SetAnimation("slash_ereverse", true);
+                }
+            }
+            else
+            {
+                if (angle > 15)
+                {
+                    caller.SetAnimation("slash_diagleft", true);
+                }
+                else if (angle < -15)
+                {
+                    caller.SetAnimation("slash_diagright", true);
+                }
+                else
+                {
+                    caller.SetAnimation("slash_e", true);
+                }
+            }
+            flip = !flip;
 
             yield return new WaitForSeconds(delay);
         }
@@ -2520,7 +2578,7 @@ public class WM_SlipSlash : WilexMove
                 yield return null;
             }
 
-            caller.SetAnimation("slashprepare");
+            caller.SetAnimation("slash_prepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
             caller.SetAnimation("slash_e");
@@ -2780,8 +2838,14 @@ public class WM_PreciseStab : WM_Slash
     }
     */
 
+    public override void PreparationAnimation(BattleEntity caller, int sl, int level = 1)
+    {
+        caller.SetAnimation("stab_prepare");
+    }
+
     public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
     {
+        caller.SetAnimation("stab_e");
         //Particles
         GameObject particle = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_PreciseStab"), BattleControl.Instance.transform);
         particle.transform.position = caller.ApplyScaledOffset(Vector3.up * 0.5f) + Vector3.right * 0.3f;
@@ -3041,7 +3105,7 @@ public class WM_SwordDance : WilexMove
 
             yield return StartCoroutine(caller.Move(target, caller.entitySpeed * 1.5f));
 
-            caller.SetAnimation("slashprepare");
+            caller.SetAnimation("slash_prepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
             caller.SetAnimation("slash_e");
@@ -3378,6 +3442,7 @@ public class WM_DarkSlash : WM_Slash
 
     public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
     {
+        caller.SetAnimation("slash_e");
         GameObject eoS = null;
         eoS = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_DarkSlash"), BattleControl.Instance.transform);
         eoS.transform.position = transform.position + Vector3.up * 0.325f;

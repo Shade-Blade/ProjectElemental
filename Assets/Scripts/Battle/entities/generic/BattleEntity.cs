@@ -1071,7 +1071,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         yield return StartCoroutine(ExecuteMoveCoroutine());
     }
 
-
     //called before turn, before ChooseMove()
     public virtual IEnumerator PreMove() 
     {
@@ -1134,7 +1133,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public virtual void ChooseMoveInternal()
     {
-
         //Debug
         //RandomGenerator r = new RandomGenerator();
 
@@ -6872,6 +6870,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             case BattleHelper.Event.HiddenHurt:
                 break;
             case BattleHelper.Event.ComboHurt:
+                SetAnimation("hurt", true);
                 //yield return StartCoroutine(Shake(0.1f, 0.05f));
                 inCombo = true;
                 break;
@@ -7096,7 +7095,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual IEnumerator DefaultHurtEvent()
     {
         inCombo = false;
-        yield return StartCoroutine(Shake(0.6f, 0.05f));
+        yield return StartCoroutine(Shake(0.5f, 0.05f));
         if (!BattleControl.Instance.showHPBars)
         {
             HideHPBar();
@@ -7765,7 +7764,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         yield return StartCoroutine(SmoothScale(duration, Vector3.one));
     }
 
-    public IEnumerator Spin(Vector3 angle, float duration) //euler angle rotation
+    public IEnumerator Spin(Vector3 angle, float duration, bool animate = true) //euler angle rotation
     {
         float initialTime = Time.time;
         Vector3 initialAngle = subObject.transform.eulerAngles;
@@ -7773,15 +7772,53 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         while (completion < 1)
         {
-            subObject.transform.eulerAngles = initialAngle + angle * completion;
+            if (animate)
+            {
+                float newangle = (initialAngle + angle * completion).y;
+                if ((newangle > 90 || newangle < -90) && (newangle < 270 && newangle > -270))
+                {
+                    if (flipDefault)
+                    {
+                        SendAnimationData("xunflip");
+                    }
+                    else
+                    {
+                        SendAnimationData("xflip");
+                    }
+                    subObject.transform.eulerAngles = initialAngle + angle * completion + Vector3.up * 180;
+                }
+                else
+                {
+                    if (flipDefault)
+                    {
+                        SendAnimationData("xflip");
+                    }
+                    else
+                    {
+                        SendAnimationData("xunflip");
+                    }
+                    subObject.transform.eulerAngles = initialAngle + angle * completion;
+                }
+            } else
+            {
+                subObject.transform.eulerAngles = initialAngle + angle * completion;
+            }
             completion = (Time.time - initialTime) / duration;
             yield return null;
+        }
+        if (flipDefault)
+        {
+            SendAnimationData("xflip");
+        }
+        else
+        {
+            SendAnimationData("xunflip");
         }
         //force position = endpoint (prevent lag glitches)
         //Debug.Log("end");
         subObject.transform.eulerAngles = initialAngle + angle;
     }
-    public IEnumerator Spin(Vector3 angle, Func<float, float> easing, float duration) //euler angle rotation
+    public IEnumerator Spin(Vector3 angle, Func<float, float> easing, float duration, bool animate = true) //euler angle rotation
     {
         float initialTime = Time.time;
         Vector3 initialAngle = subObject.transform.eulerAngles;
@@ -7796,9 +7833,48 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 //Debug.LogWarning("Easing function returned value outside normal bounds.");
             }
 
-            subObject.transform.eulerAngles = initialAngle + angle * completion;
+            if (animate)
+            {
+                float newangle = (initialAngle + angle * completion).y;
+                if ((newangle > 90 || newangle < -90) && (newangle < 270 && newangle > -270))
+                {
+                    if (flipDefault)
+                    {
+                        SendAnimationData("xunflip");
+                    }
+                    else
+                    {
+                        SendAnimationData("xflip");
+                    }
+                    subObject.transform.eulerAngles = initialAngle + angle * completion + Vector3.up * 180;
+                }
+                else
+                {
+                    if (flipDefault)
+                    {
+                        SendAnimationData("xflip");
+                    }
+                    else
+                    {
+                        SendAnimationData("xunflip");
+                    }
+                    subObject.transform.eulerAngles = initialAngle + angle * completion;
+                }
+            }
+            else
+            {
+                subObject.transform.eulerAngles = initialAngle + angle * completion;
+            }
             completion = (Time.time - initialTime) / duration;
             yield return null;
+        }
+        if (flipDefault)
+        {
+            SendAnimationData("xflip");
+        }
+        else
+        {
+            SendAnimationData("xunflip");
         }
         //force position = endpoint (prevent lag glitches)
         //Debug.Log("end");

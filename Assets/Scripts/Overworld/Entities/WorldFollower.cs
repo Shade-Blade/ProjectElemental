@@ -587,9 +587,9 @@ public class WorldFollower : WorldEntity
 
         Vector3 usedMovement = useIntended ? intendedMovement : rb.velocity;
 
-        if ((usedMovement.x != 0 || usedMovement.z != 0) || pastTrueFacingRotation != trueFacingRotation)
+        if ((usedMovement.magnitude > 0.01f) || pastTrueFacingRotation != trueFacingRotation)
         {
-            if (!movementRotationDisabled && (usedMovement.x != 0 || usedMovement.z != 0))
+            if (!movementRotationDisabled && (usedMovement.magnitude > 0.01f))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
                 //transform this with respect to worldspace yaw

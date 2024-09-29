@@ -228,6 +228,20 @@ public class CheatMenu : MenuHandler
             }
         }
 
+        //interrput turn
+        if (input[0].Equals("i"))
+        {
+            if (MainManager.Instance.worldMode != MainManager.WorldMode.Battle)
+            {
+                doexit = false;
+                cs.log.SetText("Battle only cheat!", true, true);
+            }
+            else
+            {
+                PlayerTurnController.Instance.interruptQueued = true;
+            }
+        }
+
         //set cheat
         if (input[0].Equals("sc"))
         {
@@ -562,6 +576,19 @@ public class CheatMenu : MenuHandler
                 }
             }
 
+            if (input[1].Equals("LevelAnarchy") || input[1].Equals("la"))
+            {
+                if (toggle)
+                {
+                    MainManager.Instance.Cheat_LevelAnarchy = !MainManager.Instance.Cheat_LevelAnarchy;
+                }
+                else
+                {
+                    MainManager.Instance.Cheat_LevelAnarchy = setValue;
+                }
+            }
+
+
             if (input[1].Equals("SkillSwap") || input[1].Equals("ss"))
             {
                 if (toggle)
@@ -837,6 +864,10 @@ public class CheatMenu : MenuHandler
             if (input[1].Equals("TargetAnarchy") || input[1].Equals("ta"))
             {
                 getText = "" + MainManager.Instance.Cheat_TargetAnarchy;
+            }
+            if (input[1].Equals("LevelAnarchy") || input[1].Equals("la"))
+            {
+                getText = "" + MainManager.Instance.Cheat_LevelAnarchy;
             }
 
             if (input[1].Equals("SkillSwap") || input[1].Equals("ss"))

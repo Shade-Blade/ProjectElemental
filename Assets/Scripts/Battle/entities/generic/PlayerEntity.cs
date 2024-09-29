@@ -473,7 +473,10 @@ public class PlayerEntity : BattleEntity
 
         if (MainManager.Instance.Cheat_LevelAnarchy)
         {
-            maxLevel = 20;  //you probably won't be able to afford any level 20 moves (unless you aggressively stack every single cost reducing thing)
+            if (index != 0 && index != 12)
+            {
+                return 20;
+            }
         }
 
         switch (index)
@@ -601,6 +604,9 @@ public class PlayerEntity : BattleEntity
     }
     public int GetWilexMoveTrueMaxLevel(int index)
     {
+        return 20; //;)
+
+        /*
         //Note: these moves aren't set up properly to have higher levels than these
         //(Most of them do nothing)
         switch (index)
@@ -655,6 +661,7 @@ public class PlayerEntity : BattleEntity
                 return 3;
         }
         return 1;
+        */
     }
     public int GetLunaMoveMaxLevel(int index)
     {
@@ -670,7 +677,10 @@ public class PlayerEntity : BattleEntity
 
         if (MainManager.Instance.Cheat_LevelAnarchy)
         {
-            maxLevel = 20;  //you probably won't be able to afford any level 20 moves (unless you aggressively stack every single cost reducing thing)
+            if (index != 0 && index != 12)
+            {
+                return 20;
+            }
         }
 
         switch (index)
@@ -798,6 +808,9 @@ public class PlayerEntity : BattleEntity
     }
     public int GetLunaMoveTrueMaxLevel(int index)
     {
+        return 20;
+
+        /*
         //Note: these moves aren't set up properly to have higher levels than these
         //(Most of them do nothing)
         switch (index)
@@ -852,6 +865,7 @@ public class PlayerEntity : BattleEntity
                 return 3;
         }
         return 1;
+        */
     }
 
     public int GetSoulMoveMaxLevel(int index)
@@ -1314,7 +1328,18 @@ public class PlayerEntity : BattleEntity
 
 
         //note: the dealdamage function takes place in 1 frame so doing this first will still look right
-        if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AC_Success) || BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AC_SuccessStall))
+        bool immune = target.GetDefense(type) == DefenseTableEntry.IMMUNITY_CONSTANT;
+        bool absorb = target.GetDefense(type) > DefenseTableEntry.IMMUNITY_CONSTANT;
+
+        if (absorb)
+        {
+            BattleControl.Instance.CreateActionCommandEffect(ActionCommandText.Absorb, target.GetDamageEffectPosition(), target);
+        }
+        else if (immune)
+        {
+            BattleControl.Instance.CreateActionCommandEffect(ActionCommandText.Immune, target.GetDamageEffectPosition(), target);
+        }
+        else if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AC_Success) || BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AC_SuccessStall))
         {
             BattleControl.Instance.CreateActionCommandEffect(actionCommandSuccesses, target.GetDamageEffectPosition(), target);
         }
@@ -4873,28 +4898,30 @@ public class PlayerEntity : BattleEntity
             case BattleHelper.Event.Hurt:
             case BattleHelper.Event.ComboHurt:
             case BattleHelper.Event.StatusInflicted:    //? needed to fix something
-                if (lastHitWasBlocked)
+                if (!dead)
                 {
-                    SetAnimation("block", true);
-                }
-                else
-                {
-                    SetAnimation("hurt", true);
-                }
-
-                IEnumerator animReset()
-                {
-                    yield return new WaitForSeconds(0.2f);
-                    if (ac.timeSinceLastAnimChange >= 0.16f)// && (ac.GetCurrentAnim().Equals("hurt") || ac.GetCurrentAnim().Equals("block")))
+                    if (lastHitWasBlocked)
                     {
-                        SetIdleAnimation();
+                        SetAnimation("block", true);
                     }
+                    else
+                    {
+                        SetAnimation("hurt", true);
+                    }
+
+                    IEnumerator animReset()
+                    {
+                        yield return new WaitForSeconds(0.6f);
+                        if (ac.timeSinceLastAnimChange >= 0.56f)// && (ac.GetCurrentAnim().Equals("hurt") || ac.GetCurrentAnim().Equals("block")))
+                        {
+                            SetIdleAnimation();
+                        }
+                    }
+                    StartCoroutine(animReset());
                 }
-                StartCoroutine(animReset());
                 break;
             case BattleHelper.Event.StatusDeath:
             case BattleHelper.Event.Death:
-                SetAnimation("hurt", true);
                 alive = false;
                 //BattleControl.Instance.RemoveEntity(BattleControl.Instance.GetIndexFromID(id)); //create consistent death timing
                 if (!GetEntityProperty(EntityProperties.KeepEffectsAtNoHP))
@@ -4903,12 +4930,13 @@ public class PlayerEntity : BattleEntity
                 }
                 if (!dead)
                 {
+                    SetAnimation("hurt", true);
                     yield return StartCoroutine(Spin(Vector3.up * 360, 0.5f));
                     yield return StartCoroutine(Move(homePos, 10,false)); //so you die from counters properly
                     yield return StartCoroutine(Spin(Vector3.left * 90, 0.125f));
                 }
                 SetRotation(Vector3.zero);
-                SetAnimation("dead");
+                SetAnimation("dead",true);
                 yield return new WaitForSeconds(0.2f);
                 //on death stuff
                 if (!dead)

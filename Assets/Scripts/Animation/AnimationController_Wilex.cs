@@ -13,7 +13,7 @@ public class AnimationController_Wilex : AnimationController_Player
         sprite.transform.localRotation = Quaternion.identity;
 
         //also making talk animations not have back variants
-        if (showBack && !name.Contains("slash") && !name.Contains("smash") && !name.Contains("talk"))
+        if (showBack && !name.Contains("slash") && !name.Contains("smash") && !name.Contains("talk") && !name.Contains("hurt"))
         {
             modifiedName = name + "_back";
         }

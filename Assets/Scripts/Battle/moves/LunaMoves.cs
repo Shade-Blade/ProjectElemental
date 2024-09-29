@@ -84,7 +84,7 @@ public abstract class LunaMove : PlayerMove
         {
             if (level >= 4 || BattleControl.Instance.lunaText[index + 1][1 + level].Length < 2) //if I didn't write a description, use the infinite stacking one
             {
-                string[] vars = new string[] { (level).ToString(), (level * 2).ToString(), (level * 3).ToString(), (level * 4).ToString(), (level * 5).ToString(), (level * 6).ToString(), (level * 7).ToString(), (level * 8).ToString() };
+                string[] vars = new string[] { "0", (level).ToString(), (level * 2).ToString(), (level * 3).ToString(), (level * 4).ToString(), (level * 5).ToString(), (level * 6).ToString(), (level * 7).ToString(), (level * 8).ToString() };
                 output += " <color,#5000ff>(Lv. " + level + ": " + FormattedString.ParseVars(BattleControl.Instance.lunaText[index + 1][5], vars) + ")</color>";
             } else
             {
@@ -1076,7 +1076,7 @@ public class LM_UnderStrike : LunaMove
     }
     public override string GetName() => GetNameWithIndex(GetTextIndex());
     public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
-    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, false);
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowBottommost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 7;
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
@@ -1799,7 +1799,7 @@ public class LM_TeamThrow : LunaMove
         }
         for (int i = 0; i < players.Count; i++)
         {
-            if (!players[i].CanBlock())
+            if (!(players[i].CanMove() && !players[i].AutoMove()))
             {
                 return false;
             }
@@ -1850,7 +1850,7 @@ public class LM_TeamThrow : LunaMove
 
             int sd = 2;
 
-            Vector3 grabPos = caller.transform.position + Vector3.up * 0.5f * caller.height + Vector3.right * (caller.width * 0.5f + other.width);
+            Vector3 grabPos = caller.transform.position + Vector3.up * 0.05f + Vector3.right * (caller.width * 0.5f + other.width * 0.5f - 0.05f) + Vector3.back * 0.002f;
             yield return StartCoroutine(other.JumpHeavy(grabPos, 2, 0.5f, -0.25f));
 
             AC_MashLeft actionCommand = null;
@@ -1881,11 +1881,11 @@ public class LM_TeamThrow : LunaMove
                     radialPos -= 360;
                 }
 
-                caller.SetRotation(Vector3.up * -radialPos);
-                other.SetRotation(Vector3.up * (-radialPos + 180));
+                caller.SetRotation(Vector3.up * (-radialPos));
+                other.SetRotation(Vector3.up * (-radialPos));
 
-                float xoffset = (caller.width * 0.5f + other.width);
-                Vector3 wPos = Vector3.up * 0.5f * caller.height + Vector3.right * xoffset * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset * Mathf.Sin(radialPos * (Mathf.PI / 180));
+                float xoffset = (caller.width * 0.5f + other.width * 0.5f - 0.05f);
+                Vector3 wPos = Vector3.up * 0.05f * caller.height + Vector3.right * xoffset * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset * Mathf.Sin(radialPos * (Mathf.PI / 180)) + Vector3.back * 0.002f;
                 other.Warp(caller.transform.position + wPos);
 
                 yield return null;
@@ -1907,10 +1907,10 @@ public class LM_TeamThrow : LunaMove
                 }
 
                 caller.SetRotation(Vector3.up * -radialPos);
-                other.SetRotation(Vector3.up * (-radialPos + 180));
+                other.SetRotation(Vector3.up * (-radialPos));
 
-                float xoffset2 = (caller.width * 0.5f + other.width);
-                Vector3 wPos2 = Vector3.up * 0.5f * caller.height + Vector3.right * xoffset2 * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset2 * Mathf.Sin(radialPos * (Mathf.PI / 180));
+                float xoffset2 = (caller.width * 0.5f + other.width * 0.5f - 0.05f);
+                Vector3 wPos2 = Vector3.up * 0.05f * caller.height + Vector3.right * xoffset2 * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset2 * Mathf.Sin(radialPos * (Mathf.PI / 180)) + Vector3.back * 0.002f;
                 other.Warp(caller.transform.position + wPos2);
 
                 yield return null;
@@ -2009,21 +2009,24 @@ public class LM_TeamThrow : LunaMove
 
                     if (failWidth > 3)
                     {
-                        yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * 1.5f));
+                        yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * 1.5f, "teamthrowfly", "teamthrowfall"));
                     }
                     else
                     {
                         if (failWidth < 0.5f)
                         {
-                            yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * (0.5f / 2)));
+                            yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * (0.5f / 2), "teamthrowfly", "teamthrowfall"));
                         }
                         else
                         {
-                            yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * (failWidth / 2)));
+                            yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * (failWidth / 2), "teamthrowfly", "teamthrowfall"));
                         }
                     }
 
-                    other.Warp(other.homePos + Vector3.left * 4);
+                    if (other.transform.position.x > 5)
+                    {
+                        other.Warp(other.homePos + Vector3.left * 4);
+                    }
                     yield return StartCoroutine(other.Move(other.homePos));
                 }
             }
@@ -2046,17 +2049,17 @@ public class LM_TeamThrow : LunaMove
                 {
                     if (failWidth > 3)
                     {
-                        yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * 1.5f));
+                        yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * 1.5f, "teamthrowfly", "teamthrowfall"));
                     }
                     else
                     {
                         if (failWidth < 0.5f)
                         {
-                            yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * (0.5f / 2)));
+                            yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * (0.5f / 2), "teamthrowfly", "teamthrowfall"));
                         }
                         else
                         {
-                            yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * (failWidth / 2)));
+                            yield return StartCoroutine(other.Jump(tpos4, failHeight, 1f * (failWidth / 2), "teamthrowfly", "teamthrowfall"));
                         }
                     }
                     move = false;
@@ -2077,6 +2080,10 @@ public class LM_TeamThrow : LunaMove
                     yield return null;
                 }
 
+                if (other.transform.position.x > 5)
+                {
+                    other.Warp(other.homePos + Vector3.left * 4);
+                }
                 yield return StartCoroutine(other.Move(other.homePos));
             }
 
@@ -2362,7 +2369,7 @@ public class LM_DoubleEgg : LunaMove
             eggObjects[i] = MakeEggSprite(caller, eggTypes[i]);
             eggObjects[i].transform.localScale = Vector3.zero;
             yield return new WaitForSeconds(0.2f);
-            StartCoroutine(EggAnimation(caller, eggTypes[i], 0.5f + 0.25f * i, eggObjects[i]));
+            StartCoroutine(EggAnimation(caller, eggTypes[i], 0.25f + 0.25f * i, eggObjects[i]));
             yield return new WaitForSeconds(0.5f);
 
             BattleControl.Instance.playerData.AddItem(new Item(eggTypes[i], Item.ItemModifier.None, Item.ItemOrigin.Egg, 0, 0));
@@ -2375,7 +2382,7 @@ public class LM_DoubleEgg : LunaMove
                     Destroy(eggObjects[j]);
                     if (eggObjects[j] == null)
                     {
-                        break;
+                        continue;
                     }
                 }
                 caller.SetIdleAnimation();
@@ -3241,7 +3248,7 @@ public class LM_MomentumSmash : LM_Smash
         }
 
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
-        target += Vector3.left * 0.4f * caller.width;
+        target += Vector3.left * 0.5f * caller.width + 0.4f * Vector3.left;
         yield return StartCoroutine(caller.Move(target));
 
         bool miss = true;
@@ -3258,7 +3265,7 @@ public class LM_MomentumSmash : LM_Smash
             }
 
             yield return new WaitUntil(() => actionCommand.IsStarted());
-            caller.SetAnimation("slashprepare");    //note: animation parallelism means that Luna has "slash-like" animations
+            caller.SetAnimation("slash_prepare");    //note: animation parallelism means that Luna has "slash-like" animations
             yield return new WaitUntil(() => actionCommand.IsComplete());
             caller.SetAnimation("slash_e");
 
@@ -3870,7 +3877,7 @@ public class LM_HammerBeat : LunaMove
                 foreach (BattleEntity b in targets)
                 {
                     b.HealHealth(2 + level * 3);
-                    b.InflictEffectForce(caller, new Effect(Effect.EffectType.Focus, (sbyte)level, Effect.INFINITE_DURATION));
+                    b.InflictEffectForce(caller, new Effect(Effect.EffectType.Absorb, (sbyte)level, Effect.INFINITE_DURATION));
                 }
                 caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
             }
@@ -3880,7 +3887,7 @@ public class LM_HammerBeat : LunaMove
                 foreach (BattleEntity b in targets)
                 {
                     b.HealHealth(2 + level);
-                    b.InflictEffectForce(caller, new Effect(Effect.EffectType.Focus, (sbyte)(1 + (level/2)), Effect.INFINITE_DURATION));
+                    b.InflictEffectForce(caller, new Effect(Effect.EffectType.Absorb, (sbyte)(1 + (level/2)), Effect.INFINITE_DURATION));
                 }
             }
         }

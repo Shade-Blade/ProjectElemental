@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0, g: 0.40625, b: 1, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: b82863fc6a8eb23449c55392586054e8, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: a251b8cf4c695fe41bf587bf4044f805, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -216,7 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9daf0682d850d84385fb74c29e131e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exploder: {fileID: 4541666379423316088, guid: 03e8f5046360df441a67cc464bfa7543,
+  exploder: {fileID: 3802168086269013468, guid: 579e381bfd5972144b5ecf94f76991c4,
     type: 3}
   timePer: 1
   count: 1
@@ -1023,10 +1023,6 @@ MonoBehaviour:
   showCoins: 0
   hudShowTime: 0
   lastCoinCount: 0
-  testWeaponColorA: {x: 0, y: 0, z: 0, w: 0}
-  testWeaponColorB: {x: 0, y: 0, z: 0, w: 0}
-  testWeaponColorC: {x: 0, y: 0, z: 0, w: 0}
-  testWeaponColorD: {x: 0, y: 0, z: 0, w: 0}
   Cheat_CheatMenuAvailable: 1
   Cheat_NoClip: 0
   Cheat_KeruAsterJump: 0

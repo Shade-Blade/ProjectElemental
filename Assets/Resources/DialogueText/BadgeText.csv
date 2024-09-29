@@ -178,7 +178,7 @@ DefenseSight,Defense Sight,Reveals enemy defense. (when their health bars are di
 StatusSight,Status Sight,Reveals information about enemy status weaknesses (when you select the move and hover over an enemy),,No additional effect when stacked.
 CharmSight,Charm Sight,Reveals information about your currently active charms.,,No additional effect when stacked.
 PowerSight,Power Sight,Reveals information about the attack power of your moves.,,No additional effect when stacked.
-ItemSight,Item Sight,Reveals information about what effects your items will have.,,No additional effect when stacked.
+ItemSight,Item Sight,"Reveals information about what effects your items will have. In the overworld, when you stand still, you will see particles that point you towards items in the map.",,No additional effect when stacked.
 BattleSight,Battle Sight,"Reveals various statistics about your time in battle. (Turn count, damage dealt, number of hits, items used)",,No additional effect when stacked.
 SoftTouch,Soft Touch,"No longer wake enemies on hit or break freeze, half damage from contact hazards in general",,No additional effect when stacked.
 PerfectVictory,Perfect Victory,"If you defeat all enemies with perfect damage, XP gained is multiplied by 1.5x at the end of battle.",,Multiplier increases by 0.5 for each badge equipped.

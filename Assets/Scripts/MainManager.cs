@@ -552,7 +552,10 @@ public class PlayerData
             copied.innEffects[i] = new InnEffect(copied.innEffects[i].innType, copied.innEffects[i].charges);
         }
 
-        copied.bonusFollowers = new List<SpriteID>(bonusFollowers);
+        if (bonusFollowers != null)
+        {
+            copied.bonusFollowers = new List<SpriteID>(bonusFollowers);
+        }
 
         return copied;
     }
@@ -2562,12 +2565,6 @@ public class MainManager : MonoBehaviour
 
     public Color[][] weaponColors;
 
-    public Vector4 testWeaponColorA;
-    public Vector4 testWeaponColorB;
-    public Vector4 testWeaponColorC;
-    public Vector4 testWeaponColorD;
-
-
     //Cheat values
     //should show up at the bottom of inspector for easier access
     public bool Cheat_CheatMenuAvailable;   //note: cheat menu cannot unset this
@@ -3033,7 +3030,7 @@ public class MainManager : MonoBehaviour
             if (index == 0)
             {
                 //In this case, the new item is not in your inventory yet
-                Vector3 position = WorldPlayer.Instance.transform.position + Vector3.up * 1f;
+                Vector3 position = WorldPlayer.Instance.transform.position + Vector3.up * 0.8f;
                 Vector3 velocity = Vector3.up * 4 + WorldPlayer.Instance.FacingVector() * 4;
                 WorldCollectibleScript.MakeCollectible(pu, position, velocity);
             }
@@ -3047,7 +3044,7 @@ public class MainManager : MonoBehaviour
                 playerData.AddItem(pu.item);
 
                 //toss
-                Vector3 position = WorldPlayer.Instance.transform.position + Vector3.up * 1f;
+                Vector3 position = WorldPlayer.Instance.transform.position + Vector3.up * 0.8f;
                 Vector3 velocity = Vector3.up * 4 + WorldPlayer.Instance.FacingVector() * 4;
                 WorldCollectibleScript.MakeCollectible(new PickupUnion(removedItem), position, velocity);
             }
@@ -5480,11 +5477,24 @@ public class MainManager : MonoBehaviour
         curOverworldHUD.Build();
     }
 
+    public void MapChangeCleanup()
+    {
+        ResetCutsceneSystem();
+
+        MinibubbleScript[] minibubbles = FindObjectsOfType<MinibubbleScript>();
+
+        foreach (MinibubbleScript mbs in minibubbles)
+        {
+            Destroy(mbs.gameObject);
+        }
+    }
+
     public IEnumerator ChangeMap(MapID mapName, int exit, Vector3 offsetPos = default, float yawOffset = 0)
     {
         WorldLocation wl = WorldLocation.None;
         SkyboxID sid = curSkybox;
         //delete current map
+        MapChangeCleanup();
         if (mapScript == null)
         {
             //sus
@@ -5497,7 +5507,6 @@ public class MainManager : MonoBehaviour
 
         //the old script is persistent for some reason?
         yield return new WaitForSeconds(0.15f);
-        ResetCutsceneSystem();
 
         //load in new map
         LoadMap(mapName, exit, offsetPos, yawOffset);
@@ -6304,8 +6313,22 @@ public class MainManager : MonoBehaviour
 
     //Useful for shuffling
     //Keep stored later for reasons (so you can shuffle things in specific ways)
-    public static List<int> CreateShufflePermutation(int size)
+    public static List<int> CreateShufflePermutation(int size, int hashOffset = 0)
     {
+        UnityEngine.Random.State preState = UnityEngine.Random.state;
+
+        int hash = 0;
+        if (MainManager.Instance.saveName != null)
+        {
+            //salt the hash I guess?
+            hash = (MainManager.Instance.saveName + " " + size + " " + hashOffset).GetHashCode();
+        } else
+        {
+            hash = (size + " " + hashOffset).GetHashCode();
+        }
+
+        UnityEngine.Random.InitState(hash);
+
         List<int> output = new List<int>();
         for (int i = 0; i < size; i++)
         {
@@ -6319,6 +6342,7 @@ public class MainManager : MonoBehaviour
             output[targetIndex] = temp;
         }
 
+        UnityEngine.Random.state = preState;
         return output;
     }
     public static List<int> InvertShufflePermutation(List<int> perm)

@@ -97,7 +97,7 @@ public class BM_SunSapling_FrontSlam : EnemyMove
 
         if (caller.curTarget != null)
         {
-            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + caller.curTarget.width) * Vector3.right;
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + caller.curTarget.width / 2) * Vector3.right;
 
             yield return StartCoroutine(caller.Move(tpos));
 

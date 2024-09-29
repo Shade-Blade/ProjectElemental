@@ -163,9 +163,9 @@ Shader "Custom/ProperSpriteFlicker" {
 			//normalize negates scale?
 			//skew doesn't exist?
 			//so only rotation is left (?????)
-			half3 newnormal = normalize(mul(unity_ObjectToWorld, half4(mapnormal, 0)));
+			//half3 newnormal = normalize(mul(unity_ObjectToWorld, half4(mapnormal, 0)));
 
-			o.Normal = newnormal;
+			o.Normal = mapnormal;
 
 			o.Albedo = c.rgb;
 			

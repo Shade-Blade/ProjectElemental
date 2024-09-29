@@ -73,9 +73,9 @@ public class WorldEntity : WorldObject, ITextSpeaker
     public const int PLAYER_LAYER_MASK = 311;
 
     protected float targetFacingRotation;   //sprite
-    protected float facingRotation;   //sprite
+    public float facingRotation;   //sprite
     protected bool showBack;
-    protected float trueFacingRotation; //determined by movement
+    public float trueFacingRotation; //determined by movement
     protected float pastTrueFacingRotation;
 
     [HideInInspector]
@@ -603,6 +603,11 @@ public class WorldEntity : WorldObject, ITextSpeaker
             showBack = trueFacingRotation < 360 && trueFacingRotation > 180;
         }
 
+        while (correctedRotation > 360)
+        {
+            correctedRotation -= 360;
+        }
+        float rotationB = correctedRotation;
         while (correctedRotation > 90)
         {
             correctedRotation -= 180;
@@ -618,6 +623,27 @@ public class WorldEntity : WorldObject, ITextSpeaker
         subObject.transform.eulerAngles = Vector3.up * (correctedRotation);
 
         pastTrueFacingRotation = trueFacingRotation;
+
+        if (ac != null)
+        {
+            if (showBack)
+            {
+                ac.SendAnimationData("showback");
+            }
+            else
+            {
+                ac.SendAnimationData("unshowback");
+            }
+
+            if ((rotationB > 90 || rotationB < -90) && (rotationB < 270 && rotationB > -270))
+            {
+                ac.SendAnimationData("xflip");
+            }
+            else
+            {
+                ac.SendAnimationData("xunflip");
+            }
+        }
     }
 
     public virtual void SpriteAnimationUpdate()
@@ -628,6 +654,11 @@ public class WorldEntity : WorldObject, ITextSpeaker
         }
 
         if (SpeakingAnimActive())
+        {
+            return;
+        }
+
+        if (mapScript.halted || mapScript.battleHalt)
         {
             return;
         }

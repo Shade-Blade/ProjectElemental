@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 91279607548153484}
   currentAnim: 
+  currentEffect: 
   sprite: {fileID: 1527683648505163303}
   rightDefault: 1
   subobject: {fileID: 6088884969689411227}
@@ -64,6 +65,7 @@ MonoBehaviour:
   buffIndex: 0
   debuffIndex: 0
   lifetime: 0
+  timeSinceLastAnimChange: 0
   showBack: 0
 --- !u!1 &5790032314806517605
 GameObject:
@@ -139,7 +141,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a8501564833af2c4fa32bd79f018861d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 854ca3cf9f93ddf4ca9fa763745e756c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -1643,9 +1643,9 @@ public class FormattedString
                 {
                     bool special = false;
                     //new special thing: offsets
-                    if (tags[i].args.Length > 1)
+                    if (tags[i].args.Length > 1 && vars.Length > arg)
                     {
-                        if (int.TryParse(tags[i].args[0], out int number) && int.TryParse(tags[i].args[1], out int offset))
+                        if (int.TryParse(vars[arg], out int number) && int.TryParse(tags[i].args[1], out int offset))
                         {
                             special = true;
                             output = output.Insert(tags[i].trueStartIndex, (number + offset).ToString());

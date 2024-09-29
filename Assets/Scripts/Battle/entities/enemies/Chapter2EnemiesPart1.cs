@@ -322,7 +322,7 @@ public class BE_Sentry : BattleEntity
 
             if (contact <= BattleHelper.ContactLevel.Contact)
             {
-                DealDamage(target, 2, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Contact);
+                DealDamage(target, 2, BattleHelper.DamageType.Air, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Contact);
                 target.contactImmunityList.Add(posId);
             }
         }
