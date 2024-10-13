@@ -13,7 +13,8 @@ public class AnimationController : MonoBehaviour
     public string currentEffect;    //Effect data changes this. (This is useful if you want to copy all the visual effects of one sprite to another, like if you have projectiles)
     public SpriteRenderer sprite;
 
-    public bool rightDefault;
+    //Use for left facing sprites (inverts all the flips so things are consistent)
+    public bool leftFacing;
 
     public MaterialPropertyBlock propertyBlock;
 
@@ -49,6 +50,23 @@ public class AnimationController : MonoBehaviour
     public float lifetime = 0;
     public float timeSinceLastAnimChange = 0;
 
+    //stuff doesn't necessarily read this, but it's good to have to check consistency in things
+    public float height = 0.75f;
+    public float width = 0.5f;
+
+    public void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1f, 1f, 1f, 0.5f);
+        Vector3 down = Vector3.down * height / 2;
+        Vector3 left = Vector3.left * width / 2;
+
+        Gizmos.DrawLine(transform.position + down + left, transform.position + down - left);
+        Gizmos.DrawLine(transform.position + down - left, transform.position - down - left);
+        Gizmos.DrawLine(transform.position - down - left, transform.position - down + left);
+        Gizmos.DrawLine(transform.position - down + left, transform.position + down + left);
+    }
+
+
     public virtual void SetAnimation(string name, bool force = false)
     {
         timeSinceLastAnimChange = 0;
@@ -78,13 +96,13 @@ public class AnimationController : MonoBehaviour
             //^ Past shade is wrong
             //As it turns out, my shader is set up incorrectly, which means that the exact opposite should be the case (flip should be fine, rotation should not be)
 
-            sprite.flipX = true;
+            sprite.flipX = true ^ leftFacing;
             //sprite.gameObject.transform.localEulerAngles = Vector3.up * 180;
             //subobject.transform.localEulerAngles = Vector3.up * 180;
         }
         if (data.Equals("xunflip"))
         {
-            sprite.flipX = false;
+            sprite.flipX = false ^ leftFacing;
             //sprite.gameObject.transform.localEulerAngles = Vector3.up * 0;
             //subobject.transform.localEulerAngles = Vector3.up * 0;
         }
@@ -352,6 +370,11 @@ public class AnimationController : MonoBehaviour
         propertyBlock.SetTexture("_MainTex", sprite.sprite.texture);
         propertyBlock.SetVector("_OcclusionColor", new Color(0, 0, 0, 0.2f));
         sprite.SetPropertyBlock(propertyBlock);
+    }
+
+    public virtual void Awake()
+    {
+        sprite.flipX = leftFacing;
     }
 
     public virtual string GetCurrentAnim()

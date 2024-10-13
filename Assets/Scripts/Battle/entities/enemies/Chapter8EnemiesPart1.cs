@@ -621,7 +621,7 @@ public class BE_CrystalCrab : BattleEntity
         //also reset here in case something weird happens
         counterCount = 0;
 
-        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
         BasicTargetChooser();
     }
 
@@ -647,6 +647,7 @@ public class BE_CrystalCrab : BattleEntity
         {
             return false;
         }
+
 
         if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
         {
@@ -947,6 +948,161 @@ public class BM_CrystalSlug_ChillingStare : EnemyMove
                 caller.InvokeMissEvents(t);
             }
         }
+    }
+}
+
+public class BE_CrystalClam : BattleEntity
+{
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_CrystalClam_HealingBreath>(), gameObject.AddComponent<BM_CrystalClam_CleansingBreath>(), gameObject.AddComponent<BM_CrystalClam_Explode>() };
+
+        base.Initialize();
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        //ai
+        //heal if possible, or use cleanse
+        //(Hard mode: use cleanse sometimes anyway)
+        //  Cleanse is bad so I want to throw more curveballs to hard mode players >:)
+
+        //If alone or all crystal clams, use explode
+        //(Hard mode: explode on turn 5)
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3 == 0 ? 1 : 0];
+        }
+        else
+        {
+            currMove = moveset[0];
+        }
+
+        int healPossible = 0;
+
+        List<BattleEntity> healTargets = BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
+
+        for (int i = 0; i < healTargets.Count; i++)
+        {
+            healPossible += healTargets[i].maxHP - healTargets[i].hp;
+        }
+
+        if (healPossible == 0)
+        {
+            currMove = moveset[1];
+        }
+
+        //Explode logic
+        bool doExplode = true;
+        for (int i = 0; i < healTargets.Count; i++)
+        {
+            if (healTargets[i].entityID != BattleHelper.EntityID.CrystalClam)
+            {
+                doExplode = false;
+            }
+        }
+        if (doExplode || (BattleControl.Instance.GetCurseLevel() > 0 && BattleControl.Instance.turnCount > 3))
+        {
+            currMove = moveset[2];
+        }
+
+        BasicTargetChooser();
+    }
+}
+
+public class BM_CrystalClam_HealingBreath : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CrystalClam_HealingBreath;
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        yield return DoHeal(caller);
+    }
+
+    public IEnumerator DoHeal(BattleEntity caller)
+    {
+        int multiHealAmount = 3;
+
+        List<BattleEntity> healTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
+
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < healTargets.Count; i++)
+        {
+            healTargets[i].HealHealth(multiHealAmount);
+        }
+        yield return new WaitForSeconds(0.5f);
+    }
+}
+
+public class BM_CrystalClam_CleansingBreath : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CrystalClam_CleansingBreath;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
+            {
+                t.CureCleanseableEffects(false);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+    }
+}
+
+public class BM_CrystalClam_Explode : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CrystalClam_Explode;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Normal))
+            {
+                caller.DealDamage(t, 12, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+
+        //die
+        caller.SetAnimation("dead");
+        yield return StartCoroutine(caller.DefaultDeathEvent());
+        yield break;
     }
 }
 

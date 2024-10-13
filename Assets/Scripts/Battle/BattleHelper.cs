@@ -1163,8 +1163,8 @@ public static class BattleHelper
         Ceiling =       1L << 10, //fails the topmost check (so you can't target them with jumps)
         NoVoidCrush =   1L << 11, //Not void crushable, even if the formula says so
         Toughness =     1L << 12, //3 damage or less is negated
-        Limiter =       1L << 13, //1 damage max
-        Critical =      1L << 14, //can only take lethal damage (damage below max hp is negated)
+        Tempered =       1L << 13, //1 damage max
+        Hardened =      1L << 14, //can only take lethal damage (damage below max hp is negated)
         Sturdy =        1L << 15, //at max hp, damage capped at max hp - 1
         ExactDamageKill =   1L << 16, //will heal if not exact damage killed
         NoMiracle =     1L << 17, //can't get miracle effect (flag set when Miracle activates)
@@ -1193,6 +1193,9 @@ public static class BattleHelper
 
         SuppressMovesetWarning = NoTattle | ScanHideMoves | ScanMovesetMismatch
     }
+
+    public const float AIRBORNE_CUTOFFHEIGHT = 0.8f;
+    public const float LOWSTOMPABLE_CUTOFFHEIGHT = 1.6f;
 
     [Flags]
     public enum BattleProperties : ulong
@@ -1342,6 +1345,7 @@ public static class BattleHelper
         CloudJelly,
         CrystalCrab,
         CrystalSlug,
+        CrystalClam,
         AuroraWing,
         FinalBoss,
         FinalSuperboss,
@@ -1408,6 +1412,7 @@ public static class BattleHelper
         //10-19 are above (off ground)
         //20-29 are further above
         //30-39 are even further above
+        /*
         if (id < 0)
         {
             //remnant of further out camera
@@ -1419,6 +1424,22 @@ public static class BattleHelper
             //was 5 per line but 10 is easier to tell at a glance
             return new Vector3(0.4f, 0.0f, 0.15f) +
                 1.2f * Vector3.right * (id % 10) + 1.2f * Vector3.up * (id / 10) - 0.15f * Vector3.forward * (id % 10);
+        }
+        */
+
+        //newer: make things 80% x ish
+
+        if (id < 0)
+        {
+            //remnant of further out camera
+            //return Vector3.left * 2.0f + Vector3.right * 1.5f * id + Vector3.forward * (id + 1) * 0.15f;
+            return Vector3.left * 1.05f + Vector3.right * 1f * id + Vector3.forward * (id + 1) * 0.15f;
+        }
+        else
+        {
+            //was 5 per line but 10 is easier to tell at a glance
+            return new Vector3(-0.05f, 0.0f, 0.12f) +
+                1.1f * Vector3.right * (id % 10) + 1.1f * Vector3.up * (id / 10) - 0.15f * Vector3.forward * (id % 10);
         }
     }
 

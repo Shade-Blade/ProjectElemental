@@ -167,7 +167,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: E_Plaguebud_Vali
     speed: 3
     wandering: 0
     wanderRadius: 0
@@ -539,7 +539,7 @@ MonoBehaviour:
   spriteID: aster
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C5_Mosquito_Male
     speed: 3
     wandering: 1
     wanderRadius: 1.5
@@ -2390,7 +2390,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Keru
+    spriteID: C8_Hydromander_Meryl
     speed: 3
     wandering: 0
     wanderRadius: 0
@@ -4184,7 +4184,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C7_Chaintail_Alumi
     speed: 3
     wandering: 0
     wanderRadius: 0
@@ -79653,7 +79653,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: P_Gryphon_Stella
     speed: 3
     wandering: 0
     wanderRadius: 0
@@ -79987,7 +79987,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C4_Flamecrest_Sizzle
     speed: 3
     wandering: 0
     wanderRadius: 0
@@ -85826,7 +85826,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C1_GrizzlyBear_Waxwell
     speed: 3
     wandering: 0
     wanderRadius: 0
@@ -91424,7 +91424,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Luna
+    spriteID: C1_Rabbit_Hazel
     speed: 3
     wandering: 0
     wanderRadius: 0
@@ -91963,7 +91963,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C3_Jellyfish_FemaleNoble
     speed: 3
     wandering: 0
     wanderRadius: 0
@@ -94027,7 +94027,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Keru
+    spriteID: C7_Chaintail_Palla
     speed: 3
     wandering: 0
     wanderRadius: 0
@@ -98630,7 +98630,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Wilex
+    spriteID: C1_Rabbit_Torstrum
     speed: 3
     wandering: 0
     wanderRadius: 0

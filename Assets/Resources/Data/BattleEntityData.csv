@@ -73,10 +73,10 @@ LumistarSoldier,14,23,0,TRUE,1.5,IcePotato,3,Default:0.4/1|Freeze:0/1|Berserk:0.
 LumistarStriker,10,22,0,FALSE,1,MintIcicle,3,Default:0.4/1|Freeze:0/1|Berserk:0.8/1.5,Default:2|Light:4,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 KingIlum,80,25,35,TRUE,1,MintSalad,1,Default:0.2/1|Sleep:0/1|Freeze:0/1,Default:4|Dark:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 TyrantBlade,160,30,60,TRUE,1,VoidIcicle,1,Default:0/1,Default:4|Dark:2|Light:A,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Plateshell,9,25,0,TRUE,1.5,GoldenLeaf,3,Default:0.3/0.5|Paralyze:0/1|Freeze:0/1|Berserk:0.8/1,Default:8|Air:N|Water:4|Earth:4,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Speartongue,12,25,0,FALSE,1,BrightMushroom,3,Default:0.3/1|Poison:0/1|Freeze:1/1.5,Default:2|Dark:N|Light:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Plateshell,9,25,0,TRUE,1.5,GoldenLeaf,3,Default:0.3/0.5|Paralyze:0/1|Freeze:0/1|Berserk:0.8/1,Default:8|Air:N|Water:4|Earth:4,,0.5,0.85,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Speartongue,12,25,0,FALSE,1,BrightMushroom,3,Default:0.3/1|Poison:0/1|Freeze:1/1.5,Default:2|Dark:N|Light:0,,0.3,0.7,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Chaintail,14,24,0,FALSE,1.25,GoldenPineapple,3,Default:0.3/1|Paralyze:0/1|Sleep:0.8/1,Default:4|Fire:N|Water:2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Sawcrest,11,24,0,TRUE,1,HalfCarrot,3,Default:0.3/1|Sleep:0.8/1,Default:2|Water:0,StateContactHazard,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Sawcrest,14,24,0,TRUE,1,HalfCarrot,3,Default:0.3/1|Sleep:0.8/1,Default:2|Water:0,StateContactHazard,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Coiler,8,24,0,FALSE,1.5,BoltSeed,3,Default:0.3/0.5|Paralyze:0/1|Freeze:0.8/1,Default:5|Light:2|Water:2|Air:A,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Drillbeak,11,25,0,FALSE,1,DrainSeed,3,Default:0.3/1|Dizzy:0.8/1|Paralyze:0.8/1,Default:0|Fire:-1|Light:-1,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 AetherBoss,90,28,37,FALSE,1,TwinCarrot,1,Default:0.2/1|Berserk:1/1.5,Default:4|Air:N|Water:2|Earth:2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
@@ -86,11 +86,12 @@ Fluffling,2,7,0,FALSE,1,MistWater,2,Default:1/1,Default:0|Fire:-2,,1,1,0|0.5|0,0
 CloudJelly,18,27,0,FALSE,1,GoldenCarrot,2,Default:0.2/1|Dizzy:0.8/1,Default:0|Fire:-2,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 CrystalCrab,12,28,0,TRUE,1.5,FlashBud,2,Default:0.2/0.5|Paralyze:0/1|Freeze:0.8/1,Default:6|Air:N|Light:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 CrystalSlug,15,27,0,TRUE,1,FlashBud,2,Default:0.2/0.5|Paralyze:0/1|Poison:0.8/1,Default:3|Air:N|Dark:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+CrystalClam,12,27,0,FALSE,1,FlashBud,2,Default:0.2/0.5|Berserk:0/1|Freeze:0.8/1|Poison:0.8/1,Default:0,Hardened,0.4,0.4,0|0.2|0,0.35|0.6|0,0|-0.15|0,0|0.9|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 AuroraWing,16,28,5,FALSE,1.5,RoyalSyrup,2,Default:1/1.5,Default:1|Dark:-4|Light:A,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 FinalBoss,150,31,39,TRUE,1,MoonPop,1,Default:0/1,Default:4,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 FinalSuperboss,210,36,84,TRUE,1,CrystalCarrot,1,Default:0/1,Default:4,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Plaguebud,22,36,4,TRUE,1.5,StellarSyrup,2,Default:0.1/0.5,Default:1|Fire:-1|Light:-1|Water:A,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Starfish,2,28,4,FALSE,1,PlagueRoot,2,Default:0.1/0.5|Paralyze:0.5/1,Default:0|Air:-2|Earth:A,Limiter,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Starfish,2,28,4,FALSE,1,PlagueRoot,2,Default:0.1/0.5|Paralyze:0.5/1,Default:0|Air:-2|Earth:A,Resistant,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 CursedEye,16,32,4,FALSE,1,StellarSyrup,2,Default:0/0,Default:0|Earth:-2|Light:-4|Dark:A,StateCounter,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 StrangeTendril,11,34,4,TRUE,1,PlagueRoot,6,Default:1/1.5,Default:7|Air:7,,0.75,2,0|1|0,0.475|1|0,0|-0.15|0,0|2.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 DrainBud,12,33,4,FALSE,1.5,DrainSeed,6,Default:1/1.5,Default:A|Light:0|Fire:0|Air:0,,1,1,0|0.5|0,0.6|1|0,0|-0.15|0,0|1.5|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8

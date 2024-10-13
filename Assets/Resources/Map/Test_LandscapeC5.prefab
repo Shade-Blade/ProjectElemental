@@ -871,6 +871,8 @@ MonoBehaviour:
   dropShadow: {fileID: 0}
   noShadowUpdate: 0
   speed: 3
+  facingRotation: 0
+  trueFacingRotation: 0
   lastFrameVel: {x: 0, y: 0, z: 0}
   isGrounded: 0
   groundedTime: 0
@@ -881,6 +883,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
   intendedMovement: {x: 0, y: 0, z: 0}
@@ -1728,7 +1731,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C5_Mosquito_Female
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -1747,6 +1750,8 @@ MonoBehaviour:
   dropShadow: {fileID: 0}
   noShadowUpdate: 0
   speed: 3
+  facingRotation: 0
+  trueFacingRotation: 0
   lastFrameVel: {x: 0, y: 0, z: 0}
   isGrounded: 0
   groundedTime: 0
@@ -1757,6 +1762,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
   intendedMovement: {x: 0, y: 0, z: 0}
@@ -1911,6 +1917,8 @@ MonoBehaviour:
   dropShadow: {fileID: 0}
   noShadowUpdate: 0
   speed: 3
+  facingRotation: 0
+  trueFacingRotation: 0
   lastFrameVel: {x: 0, y: 0, z: 0}
   isGrounded: 0
   groundedTime: 0
@@ -1921,6 +1929,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
   intendedMovement: {x: 0, y: 0, z: 0}

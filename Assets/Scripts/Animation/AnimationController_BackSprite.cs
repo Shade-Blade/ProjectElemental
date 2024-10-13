@@ -46,12 +46,12 @@ public class AnimationController_BackSprite : AnimationController
         //Debug.Log(data);
         if (data.Equals("xflip"))
         {
-            sprite.flipX = true;
+            sprite.flipX = true ^ leftFacing;
             //subobject.transform.localEulerAngles = Vector3.up * 180;
         }
         if (data.Equals("xunflip"))
         {
-            sprite.flipX = false;
+            sprite.flipX = false ^ leftFacing;
             //subobject.transform.localEulerAngles = Vector3.up * 0;
         }
 

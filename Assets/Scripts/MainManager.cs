@@ -2711,7 +2711,164 @@ public class MainManager : MonoBehaviour
         Aster,
         Leafling,
         Flowerling,
-        Shrublet
+        Shrublet,
+
+        P_Gryphon_Male,
+        P_Gryphon_MaleOveralls,
+        P_Gryphon_Female,
+        P_Gryphon_Stella,
+
+        C1_GrizzlyBear_ChildFemaleTown,
+        C1_GrizzlyBear_ChildFemaleTemple,
+        C1_GrizzlyBear_ChildMaleTown,
+        C1_GrizzlyBear_ChildMaleTemple,
+        C1_GrizzlyBear_MaleTown,
+        C1_GrizzlyBear_MaleTemple,
+        C1_GrizzlyBear_MaleTempleMasked,
+        C1_GrizzlyBear_FemaleTown,
+        C1_GrizzlyBear_FemaleTemple,
+        C1_GrizzlyBear_Gourmand,
+        C1_GrizzlyBear_Waxwell,
+
+        C1_Rabbit_Aurelia,
+        C1_Rabbit_FemaleFatTemple,
+        C1_Rabbit_FemaleFatTown,
+        C1_Rabbit_FemaleSkinnyTemple,
+        C1_Rabbit_FemaleSkinnyTown,
+        C1_Rabbit_Hazel,
+        C1_Rabbit_MaleFatTemple,
+        C1_Rabbit_MaleFatTempleMasked,
+        C1_Rabbit_MaleFatTown,
+        C1_Rabbit_MaleSkinnyTemple,
+        C1_Rabbit_MaleSkinnyTown,
+        C1_Rabbit_Pyri,
+        C1_Rabbit_Sycamore,
+        C1_Rabbit_Torstrum,
+
+        C1_Squirrel_FemaleTemple,
+        C1_Squirrel_FemaleTown,
+        C1_Squirrel_MaleTemple,
+        C1_Squirrel_MaleTempleMasked,
+        C1_Squirrel_MaleTown,
+        C1_Squirrel_Spruce,
+
+        C2_FrogNormal_FemaleBandit,
+        C2_FrogNormal_FemaleCitizen,
+        C2_FrogNormal_FemaleFoxBandit,
+        C2_FrogNormal_FemaleFoxCitizen,
+        C2_FrogNormal_MaleBandit,
+        C2_FrogNormal_MaleCitizen,
+        C2_FrogNormal_MaleFoxBandit,
+        C2_FrogNormal_MaleFoxCitizen,
+        C2_FrogNormal_Rosette,
+        C2_FrogNormal_Bead,
+
+        C2_FrogCrested_Male,
+        C2_FrogCrested_Female,
+
+        C2_FrogPuffer_Amethyst,
+        C2_FrogPuffer_Aqua,
+        C2_FrogPuffer_Ruby,
+        C2_FrogPuffer_FemaleBandit,
+        C2_FrogPuffer_FemaleCitizen,
+        C2_FrogPuffer_MaleBandit,
+        C2_FrogPuffer_MaleCitizen,
+
+        C2_FrogSpiky_Anchor,
+        C2_FrogSpiky_FemaleBandit,
+        C2_FrogSpiky_FemaleCitizen,
+        C2_FrogSpiky_Glaive,
+        C2_FrogSpiky_Halberd,
+        C2_FrogSpiky_MaleBandit,
+        C2_FrogSpiky_MaleCitizen,
+
+        C3_Jellyfish_FemaleCommoner,
+        C3_Jellyfish_FemaleNoble,
+        C3_Jellyfish_MaleCommoner,
+        C3_Jellyfish_MaleNoble,
+        C3_Jellyfish_Muthi,
+
+        C4_Flamecrest_AshcrestFemale,
+        C4_Flamecrest_AshcrestMale,
+        C4_Flamecrest_BlazecrestFemale,
+        C4_Flamecrest_BlazecrestMale,
+        C4_Flamecrest_EmbercrestFemale,
+        C4_Flamecrest_EmbercrestMale,
+        C4_Flamecrest_Rogen,
+        C4_Flamecrest_Sizzle,
+
+        C4_Flametongue_Ashcrest,
+        C4_Flametongue_Embercrest,
+        C4_Flametongue_Embra,
+        C4_Flametongue_Ferra,
+        C4_Flametongue_Islander,
+
+        C5_Mosquito_Cyano,
+        C5_Mosquito_Male,
+        C5_Mosquito_Female,
+
+        C6_Crow_FemaleCommoner,
+        C6_Crow_FemaleNoble,
+        C6_Crow_Iris,
+        C6_Crow_MaleCommoner,
+        C6_Crow_MaleNoble,
+
+        C6_Hawk_FemaleCommoner,
+        C6_Hawk_FemaleNoble,
+        C6_Hawk_MaleCommoner,
+        C6_Hawk_MaleNoble,
+        C6_Hawk_FemaleSoldier,
+        C6_Hawk_MaleStriker,
+        C6_Hawk_Polaris,
+        C6_Hawk_Ilum,
+        C6_Hawk_Hoarf,
+        C6_Hawk_Sleet,
+
+        C6_PolarBear_FemaleCommoner,
+        C6_PolarBear_FemaleNoble,
+        C6_PolarBear_MaleCommoner,
+        C6_PolarBear_MaleNoble,
+        C6_PolarBear_MaleSoldier,
+        C6_PolarBear_Arctos,
+
+        C6_Sparrow_FemaleCommoner,
+        C6_Sparrow_FemaleNoble,
+        C6_Sparrow_FemaleVanguard,
+        C6_Sparrow_MaleCommoner,
+        C6_Sparrow_MaleNoble,
+        C6_Sparrow_MaleVanguard,
+        C6_Sparrow_Squalle,
+        C6_Sparrow_Lanche,
+
+        C7_Chaintail_Alumi,
+        C7_Chaintail_Female,
+        C7_Chaintail_Male,
+        C7_Chaintail_Palla,
+        C7_Chaintail_Rhoda,
+        C7_Chaintail_Thallia,
+
+        C7_Plateshell_Cutle,
+        C7_Plateshell_Female,
+        C7_Plateshell_Male,
+        C7_Plateshell_Osmi,
+
+        C7_Speartongue_Female,
+        C7_Speartongue_Male,
+        C7_Speartongue_Lim,
+        C7_Speartongue_Ridi,
+
+        C8_Hydromander_Cloudmander,
+        C8_Hydromander_Watermander,
+        C8_Hydromander_Icemander,
+        C8_Hydromander_Cyclus,
+        C8_Hydromander_Sparchon,
+        C8_Hydromander_Meryl,
+        C8_Hydromander_Blanca,
+
+        E_Plaguebud_Female,
+        E_Plaguebud_Male,
+        E_Plaguebud_Pestel,
+        E_Plaguebud_Vali,
     }
 
     //this is mostly just a reference
@@ -2777,9 +2934,14 @@ public class MainManager : MonoBehaviour
 
     public static AnimationController CreateAnimationController(SpriteID spriteID, GameObject parent = null)
     {
-        string path = "Sprites/Characters/" + spriteID + "/AnimCont_" + spriteID;
-
-        //Debug.Log("Create sprite at " + path);
+        string path;
+        if (!spriteID.ToString().Contains("_"))
+        {
+            path = "Sprites/Characters/Common/" + spriteID + "/AnimCont_" + spriteID;
+        } else
+        {
+            path = "Sprites/Characters/" + spriteID.ToString().Replace("_", "/") + "/AnimCont_" + spriteID;
+        }
 
         GameObject aco;
         if (parent == null)

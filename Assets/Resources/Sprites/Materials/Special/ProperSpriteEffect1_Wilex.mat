@@ -63,7 +63,7 @@ Material:
     m_Ints: []
     m_Floats:
     - PixelSnap: 0
-    - _BacklightBorder: 3
+    - _BacklightBorder: 1.5
     - _BidirCutoff: 0.1
     - _BidirectionalLight: 0
     - _BumpScale: 1

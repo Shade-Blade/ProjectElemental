@@ -1925,7 +1925,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
 
         //critical = negate hits that are weaker than current HP (*feel like this is better than "weaker than max hp" as it opens up hp down strats)
-        if (GetEntityProperty(BattleHelper.EntityProperties.Critical))
+        if (GetEntityProperty(BattleHelper.EntityProperties.Hardened))
         {
             if (damage < hp)
             {
@@ -1952,7 +1952,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
         }
         //limiter = alternate version of Sturdy (Caps damage at N)
-        if (GetEntityProperty(BattleHelper.EntityProperties.Limiter))
+        if (GetEntityProperty(BattleHelper.EntityProperties.Tempered))
         {
             if (damage > 1)
             {
@@ -2410,13 +2410,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             output++;
         }
 
-        if (GetEntityProperty(BattleHelper.EntityProperties.Limiter))
+        if (GetEntityProperty(BattleHelper.EntityProperties.Tempered))
         {
             MakeStateIcon(output, BattleHelper.EntityState.Limiter);
             output++;
         }
 
-        if (GetEntityProperty(BattleHelper.EntityProperties.Critical))
+        if (GetEntityProperty(BattleHelper.EntityProperties.Hardened))
         {
             MakeStateIcon(output, BattleHelper.EntityState.Critical);
             output++;
@@ -4348,13 +4348,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         //hard code stuff implying flags
         
-        if ((property & BattleHelper.EntityProperties.Airborne) != 0 && homePos.y > 1)
+        if ((property & BattleHelper.EntityProperties.Airborne) != 0 && homePos.y > AIRBORNE_CUTOFFHEIGHT)
         {
             //Debug.Log("high");
             return b; //high enough
         }
 
-        if ((property & BattleHelper.EntityProperties.LowStompable) != 0 && (stompOffset.y * height + homePos.y) < 1.6f)
+        if ((property & BattleHelper.EntityProperties.LowStompable) != 0 && (stompOffset.y * height + homePos.y) < LOWSTOMPABLE_CUTOFFHEIGHT)
         {
             //Debug.Log("high");
             return b; //high enough

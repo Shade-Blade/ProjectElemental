@@ -209,6 +209,17 @@ public class PlayerTurnController : MonoBehaviour
         GlobalItemScript.Instance.ClearItemMoves();
 
         Debug.Log("--PLAYER TURN--");
+
+        //failsafe to prevent wrong animations
+        foreach (PlayerEntity pe in movableParty)
+        {
+            pe.SetIdleAnimation();
+        }
+        foreach (PlayerEntity pe in immovableParty)
+        {
+            pe.SetIdleAnimation();
+        }
+
         //BattleControl.Instance.UpdatePlayerData();
 
         //Make the front character move first by default (just a personal stylistic thing)

@@ -916,7 +916,9 @@ public class BattleControl : MonoBehaviour
 
     public static void SetCameraDefault(float halfLife = 0.05f)
     {
-        MainManager.Instance.Camera.SetManual(new Vector3(0, 1.5f, -4.8f), new Vector3(0, 0, 0), halfLife);
+        MainManager.Instance.Camera.SetManual(new Vector3(0, 1.4f, -4.25f), new Vector3(0, 0, 0), halfLife);
+
+        //MainManager.Instance.Camera.SetManual(new Vector3(0, 1.5f, -4.8f), new Vector3(0, 0, 0), halfLife);
 
 
         //Was 0, 2, 6.5
@@ -925,18 +927,20 @@ public class BattleControl : MonoBehaviour
     }
     public static void SetCameraDefaultDelayed(float halfLife = 0.05f)
     {
-        MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.5f, -4.8f), new Vector3(0, 0, 0), halfLife);
+        MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.4f, -4.25f), new Vector3(0, 0, 0), halfLife);
+
+        //MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.5f, -4.8f), new Vector3(0, 0, 0), halfLife);
 
 
         //Was 0, 2, 6.5
         //Camera vertical edges at z = 0 are y = 5.75 and y = -1.75
         //The equidistant point is at y = 2 (which is the y pos of default)
     }
-    public static void SetCameraSettings(Vector3 focus, float distance = 4.8f, float halfLife = 0.05f)
+    public static void SetCameraSettings(Vector3 focus, float distance = 4.25f, float halfLife = 0.05f)
     {
         MainManager.Instance.Camera.SetManual(focus + distance * Vector3.back, new Vector3(0, 0, 0), halfLife);
     }
-    public static void SetCameraSettingsDelayed(Vector3 focus, float distance = 4.8f, float halfLife = 0.05f)
+    public static void SetCameraSettingsDelayed(Vector3 focus, float distance = 4.25f, float halfLife = 0.05f)
     {
         MainManager.Instance.Camera.SetManualDelayed(focus + distance * Vector3.back, new Vector3(0, 0, 0), halfLife);
     }

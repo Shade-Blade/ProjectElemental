@@ -136,7 +136,7 @@ public class BaseBattleMenu : MenuHandler
                 baseMenuIndex = baseMenuOptions.Count - 1;
             }
 
-            baseMenuDescriptor.SetText(MenuNameToString(baseMenuOptions[baseMenuIndex].oname), true, true);
+            baseMenuDescriptor.SetText(MenuNameToString(baseMenuOptions[baseMenuIndex].oname, caller), true, true);
 
             if (!caller.HasEffect(Effect.EffectType.Dizzy))
             {

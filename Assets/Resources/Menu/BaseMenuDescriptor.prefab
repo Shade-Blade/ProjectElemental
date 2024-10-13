@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1173973642938462951}
   - component: {fileID: 6244450195029851948}
   - component: {fileID: 7675783939337279726}
-  - component: {fileID: 3968173084424300468}
   m_Layer: 5
   m_Name: BaseMenuDescriptor
   m_TagString: Untagged
@@ -150,27 +149,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMesh: {fileID: 6244450195029851948}
-  inputString: 
-  cleanString: 
-  charsVisible: 0
-  scrollDone: 0
-  lockButtons: 0
-  aPressTime: 0
-  bPress: 0
-  hasTextChanged: 0
---- !u!114 &3968173084424300468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4297684296842258303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc6d571cb7203ab4fa8722db637b2129, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textMesh: {fileID: 0}
   inputString: 
   cleanString: 
   charsVisible: 0

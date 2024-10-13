@@ -129,7 +129,10 @@ public class EnemyBuilder : MonoBehaviour
                 break;
             case BattleHelper.EntityID.Sycamore:
                 b = g.AddComponent<BE_Sycamore>();
-                s.color = new Color(0.65f, 1, 0.65f);
+                //s.color = new Color(0.65f, 1, 0.65f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C1_Rabbit_Sycamore);
                 break;
             case BattleHelper.EntityID.GiantVine:
                 b = g.AddComponent<BE_GiantVine>();
@@ -145,15 +148,24 @@ public class EnemyBuilder : MonoBehaviour
                 break;
             case BattleHelper.EntityID.Bandit:
                 b = g.AddComponent<BE_Bandit>();
-                s.color = new Color(0.8f, 0.8f, 0.55f);
+                //s.color = new Color(0.8f, 0.8f, 0.55f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C2_FrogNormal_MaleBandit);
                 break;
             case BattleHelper.EntityID.Renegade:
                 b = g.AddComponent<BE_Renegade>();
-                s.color = new Color(0.9f, 0.9f, 0.65f);
+                //s.color = new Color(0.9f, 0.9f, 0.65f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C2_FrogSpiky_MaleBandit);
                 break;
             case BattleHelper.EntityID.Sentry:
                 b = g.AddComponent<BE_Sentry>();
-                s.color = new Color(1, 1f, 0.75f);
+                //s.color = new Color(1, 1f, 0.75f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C2_FrogPuffer_MaleBandit);
                 break;
             case BattleHelper.EntityID.Cactupole:
                 b = g.AddComponent<BE_Cactupole>();
@@ -177,12 +189,38 @@ public class EnemyBuilder : MonoBehaviour
                 s.color = new Color(0.8f, 0.8f, 0.65f);
                 break;
             case BattleHelper.EntityID.TournamentPawn:
+                s.color = new Color(1, 0.9f, 0.25f);
+                break;
             case BattleHelper.EntityID.TournamentKnight:
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C2_FrogCrested_Male);
+                break;
             case BattleHelper.EntityID.TournamentBishopA:
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C2_FrogPuffer_Ruby);
+                break;
             case BattleHelper.EntityID.TournamentBishopB:
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C2_FrogPuffer_Aqua);
+                break;
             case BattleHelper.EntityID.TournamentRook:
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C2_FrogSpiky_MaleCitizen);
+                break;
             case BattleHelper.EntityID.TournamentQueenA:
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C2_FrogPuffer_Amethyst);
+                break;
             case BattleHelper.EntityID.TournamentQueenB:
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C2_FrogSpiky_Glaive);
+                break;
             case BattleHelper.EntityID.TournamentKing:
             case BattleHelper.EntityID.TournamentChampion:
                 s.color = new Color(1, 0.9f, 0.25f);
@@ -216,19 +254,31 @@ public class EnemyBuilder : MonoBehaviour
                 break;
             case BattleHelper.EntityID.Blazecrest:
                 b = g.AddComponent<BE_Blazecrest>();
-                s.color = new Color(1, 0.5f, 0.5f);
+                //s.color = new Color(1, 0.5f, 0.5f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C4_Flamecrest_BlazecrestMale);
                 break;
             case BattleHelper.EntityID.Embercrest:
                 b = g.AddComponent<BE_Embercrest>();
-                s.color = new Color(0.8f, 0.4f, 0.4f);
+                //s.color = new Color(0.8f, 0.4f, 0.4f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C4_Flamecrest_EmbercrestMale);
                 break;
             case BattleHelper.EntityID.Ashcrest:
                 b = g.AddComponent<BE_Ashcrest>();
-                s.color = new Color(0.7f, 0.4f, 0.4f);
+                //s.color = new Color(0.7f, 0.4f, 0.4f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C4_Flamecrest_AshcrestMale);
                 break;
             case BattleHelper.EntityID.Flametongue:
                 b = g.AddComponent<BE_Flametongue>();
-                s.color = new Color(0.5f, 0.2f, 0.2f);
+                //s.color = new Color(0.5f, 0.2f, 0.2f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C4_Flametongue_Ashcrest);
                 break;
             case BattleHelper.EntityID.Heatwing:
                 b = g.AddComponent<BE_Heatwing>();
@@ -260,7 +310,10 @@ public class EnemyBuilder : MonoBehaviour
                 break;
             case BattleHelper.EntityID.Mosquito:
                 b = g.AddComponent<BE_Mosquito>();
-                s.color = new Color(0.1f, 0.1f, 0.1f);
+                //s.color = new Color(0.1f, 0.1f, 0.1f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C5_Mosquito_Male);
                 break;
             case BattleHelper.EntityID.SporeSpider:
             case BattleHelper.EntityID.MoonSpider:
@@ -280,31 +333,52 @@ public class EnemyBuilder : MonoBehaviour
                 break;
             case BattleHelper.EntityID.LumistarVanguard:
                 b = g.AddComponent<BE_LumistarVanguard>();
-                s.color = new Color(0.8f, 0.9f, 0.9f);
+                //s.color = new Color(0.8f, 0.9f, 0.9f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C6_Sparrow_MaleVanguard);
                 break;
             case BattleHelper.EntityID.LumistarSoldier:
                 b = g.AddComponent<BE_LumistarSoldier>();
-                s.color = new Color(0.6f, 0.7f, 0.7f);
+                //s.color = new Color(0.6f, 0.7f, 0.7f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C6_Hawk_FemaleSoldier);
                 break;
             case BattleHelper.EntityID.LumistarStriker:
                 b = g.AddComponent<BE_LumistarStriker>();
-                s.color = new Color(0.7f, 0.8f, 0.8f);
+                //s.color = new Color(0.7f, 0.8f, 0.8f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C6_Hawk_MaleStriker);
                 break;
             case BattleHelper.EntityID.KingIlum:
             case BattleHelper.EntityID.TyrantBlade:
-                s.color = new Color(0.8f, 0.9f, 0.9f);
+                //s.color = new Color(0.8f, 0.9f, 0.9f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C6_Hawk_Ilum);
                 break;
             case BattleHelper.EntityID.Plateshell:
                 b = g.AddComponent<BE_Plateshell>();
-                s.color = new Color(0.5f, 0.4f, 0.3f);
+                //s.color = new Color(0.5f, 0.4f, 0.3f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C7_Plateshell_Male);
                 break;
             case BattleHelper.EntityID.Speartongue:
                 b = g.AddComponent<BE_Speartongue>();
-                s.color = new Color(0.4f, 0.3f, 0.2f);
+                //s.color = new Color(0.4f, 0.3f, 0.2f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C7_Speartongue_Male);
                 break;
             case BattleHelper.EntityID.Chaintail:
                 b = g.AddComponent<BE_Chaintail>();
-                s.color = new Color(1, 0.9f, 0.2f);
+                //s.color = new Color(1, 0.9f, 0.2f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C7_Chaintail_Male);
                 break;
             case BattleHelper.EntityID.Sawcrest:
                 b = g.AddComponent<BE_Sawcrest>();
@@ -320,7 +394,10 @@ public class EnemyBuilder : MonoBehaviour
                 break;
             case BattleHelper.EntityID.AetherBoss:
             case BattleHelper.EntityID.AetherSuperboss:
-                s.color = new Color(1, 0.85f, 0.7f);
+                //s.color = new Color(1, 0.85f, 0.7f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C7_Plateshell_Cutle);
                 break;
             case BattleHelper.EntityID.PuffJelly:
                 b = g.AddComponent<BE_PuffJelly>();
@@ -342,17 +419,27 @@ public class EnemyBuilder : MonoBehaviour
                 b = g.AddComponent<BE_CrystalSlug>();
                 s.color = new Color(0.5f, 0.8f, 0.8f);
                 break;
+            case BattleHelper.EntityID.CrystalClam:
+                b = g.AddComponent<BE_CrystalClam>();
+                s.color = new Color(0.5f, 0.8f, 0.9f);
+                break;
             case BattleHelper.EntityID.AuroraWing:
                 b = g.AddComponent<BE_AuroraWing>();
                 s.color = new Color(0.6f, 1, 1);
                 break;
             case BattleHelper.EntityID.FinalBoss:
             case BattleHelper.EntityID.FinalSuperboss:
-                s.color = new Color(0.5f, 1, 1);
+                //s.color = new Color(0.5f, 1, 1);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.C8_Hydromander_Cyclus);
                 break;
             case BattleHelper.EntityID.Plaguebud:
                 b = g.AddComponent<BE_Plaguebud>();
-                s.color = new Color(0.75f, 0.5f, 1f);
+                debugSprite = false;
+                Destroy(so);
+                so = AnimationControllerSetup(b, h, MainManager.SpriteID.E_Plaguebud_Male);
+                //s.color = new Color(0.75f, 0.5f, 1f);
                 break;
             case BattleHelper.EntityID.Starfish:
                 b = g.AddComponent<BE_Starfish>();
