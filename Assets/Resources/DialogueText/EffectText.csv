@@ -48,7 +48,7 @@ BolsterAura,Bolster Aura,"Gain <var,1> Absorb at the end of turn when hit."
 AstralRecovery,Astral Recovery,"Gain <var,1> HP when hit except when the hit reduces the entity to 0 hp."
 Elusive,Elusive,"Get <var,1> turn(s) of Ethereal when hit."
 CounterFlare,Counter Flare,Damage taken will be healed back and returned to all enemies at the end of turn. (Effect potency is reduced by 1 if the counter activates)
-Supercharge,Supercharge,Preserve Focus after it is used
+Supercharge,Supercharge,"Deal <var,5>% more damage. Guaranteed to increase damage by at least <var, 1>."
 QuantumShield,Quantum Shield,"Block the next <var,1> hits completely"
 Soften,Soften,Damage you take is softened so that the damage happens over the course of 3 turns.
 AttackDown,Attack Down,"Attack is decreased by <var,1>"

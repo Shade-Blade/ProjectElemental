@@ -131,6 +131,8 @@ public class StartMenu_FileSelect : MenuHandler
 
     public void MenuUpdate()
     {
+        lifetime += Time.deltaTime;
+
         //improper to make the menu work like this but ehh
         if (prompt != null && !prompt.menuDone)
         {
@@ -182,7 +184,7 @@ public class StartMenu_FileSelect : MenuHandler
         }
 
 
-        if (Mathf.Sign(InputManager.GetAxisVertical()) != inputDir || InputManager.GetAxisVertical() == 0)
+        if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) != inputDir) || InputManager.GetAxisVertical() == 0)
         {
             inputDir = Mathf.Sign(InputManager.GetAxisVertical());
             if (InputManager.GetAxisVertical() == 0)
@@ -221,7 +223,7 @@ public class StartMenu_FileSelect : MenuHandler
             horizontalInputDir = 0;
         } else
         {
-            if (Mathf.Sign(InputManager.GetAxisHorizontal()) != horizontalInputDir || InputManager.GetAxisHorizontal() == 0)
+            if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisHorizontal()) != horizontalInputDir) || InputManager.GetAxisHorizontal() == 0)
             {
                 horizontalInputDir = Mathf.Sign(InputManager.GetAxisHorizontal());
                 if (InputManager.GetAxisHorizontal() == 0)
@@ -290,11 +292,11 @@ public class StartMenu_FileSelect : MenuHandler
             selector.anchoredPosition = MainManager.EasingQuadraticTime(selector.anchoredPosition, Vector2.left * (400) + Vector2.up * menuEntries[menuIndex].gameObject.transform.localPosition.y, 2000);
         }
 
-        if (InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
         {
             SelectOption();
         }
-        if (InputManager.GetButtonDown(InputManager.Button.B))
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B))
         {
             if (selectMode != FileSelectMode.None)
             {

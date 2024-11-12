@@ -1647,7 +1647,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C4_Lavaswimmer
     speed: 3
     wandering: 1
     wanderRadius: 2

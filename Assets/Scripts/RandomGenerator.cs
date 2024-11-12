@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
 public class GlobalRandomGenerator : IRandomSource //weird way to use global random
 {
     public float Get()
     {
-        return Random.Range(0, 1.0f);
+        return RandomGenerator.Get();
     }
 }
 
-public class RandomGenerator : IRandomSource
+
+public class RandomGenerator// : IRandomSource
 {
+    /*
     private Random.State state;
 
     public RandomGenerator()
@@ -34,7 +37,8 @@ public class RandomGenerator : IRandomSource
         state = Random.state;
         Random.state = preState;
     }
-
+    */
+    /*
     public float Get()
     {
         Random.State preState = Random.state;
@@ -45,16 +49,27 @@ public class RandomGenerator : IRandomSource
         Random.state = preState; //hide the effect of our randomization
         return o;
     }
-    public float GetRange(float a, float b)
+    */
+
+    public static float Get()
+    {
+        return Random.Range(0, 1f);
+    }
+
+    public static float GetRange(float a, float b)
     {
         return a + (b - a) * Get(); //this formula still works no matter if a > b or b > a
     }
-    public int GetIntRange(int a, int b) //inclusive, exclusive
+    public static int GetIntRange(int a, int b) //inclusive, exclusive
     {
         return (int)(a + 0f + (b - a) * Get()); //this formula still works no matter if a > b or b > a
     }
+    public static int PsuedoIntGenerate(int a, int b, float c)
+    {
+        return Get() < ((c - b) / (a - b)) ? a : b;
+    }
     //box muller transform
-    public float GetNormalDistribution(float mean, float stdev) //clamp this if you want to prevent very rare, high value events
+    public static float GetNormalDistribution(float mean, float stdev) //clamp this if you want to prevent very rare, high value events
     {
         float a = Get();
         float b = Get();
@@ -68,18 +83,18 @@ public class RandomGenerator : IRandomSource
     }
     //exponential distribution with a minimum possible value of min
     //looks like decay * e ^ (-decay * x)
-    public float GetExponentialDistribution(float min, float decay)
+    public static float GetExponentialDistribution(float min, float decay)
     {
         return min + (- Mathf.Log(1 - Get()) / decay);
     }
-    public float GetExponentialDistribution(float decay)
+    public static float GetExponentialDistribution(float decay)
     {
         return GetExponentialDistribution(0, decay);
     }
 
     //mean = lambda
     //poi(A) + poi(B) = poi(A + B)
-    public int GetPoissonDistribution(float lambda)
+    public static int GetPoissonDistribution(float lambda)
     {
         if (lambda < 0)
         {
@@ -96,7 +111,7 @@ public class RandomGenerator : IRandomSource
         return i - 1;
     }
 
-    public int GetBinomialDistribution(float probability, int tries)
+    public static int GetBinomialDistribution(float probability, int tries)
     {
         int output = 0;
         float num = 0.0f;
@@ -113,7 +128,7 @@ public class RandomGenerator : IRandomSource
     }
 
     //1 to max (inclusive)
-    public int rollDie(int max)
+    public static int rollDie(int max)
     {
         float num = Get() * max;
         int output = (int)Mathf.Ceil(num);
@@ -123,7 +138,7 @@ public class RandomGenerator : IRandomSource
         }
         return output;
     }
-    public int rollDice(int max, int count)
+    public static int rollDice(int max, int count)
     {
         int output = 0;
         for (int i = 0; i < count; i++)
@@ -137,7 +152,7 @@ public class RandomGenerator : IRandomSource
     //from 1 to max
     //probability goes down linearly
     //First probability is (2 / max + 1)
-    public int WedgeDistribution(int max)
+    public static int WedgeDistribution(int max)
     {
         //Debug.Log("Roll for " + max);
 
@@ -169,13 +184,13 @@ public class RandomGenerator : IRandomSource
         }
     }
     //1 to max (with opposite shape as triangle distribution)
-    public int ReverseWedgeDistribution(int max)
+    public static int ReverseWedgeDistribution(int max)
     {
         return max + 1 - WedgeDistribution(max);
     }
 
     //spread = max - mid + 1
-    public int TriangleDistribution(int center, int spread, bool plusHalf = false) //calls Get() twice!
+    public static int TriangleDistribution(int center, int spread, bool plusHalf = false) //calls Get() twice!
     {
         if (plusHalf)
         {
@@ -214,7 +229,7 @@ public class RandomGenerator : IRandomSource
             }
         }
     }
-    public int TriangleDistributionB(int min, int max)
+    public static int TriangleDistributionB(int min, int max)
     {
         return TriangleDistribution((min + max) / 2, 1 + (max - min)/2, max-min % 2 == 0);
     }

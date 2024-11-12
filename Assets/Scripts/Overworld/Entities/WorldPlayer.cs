@@ -398,13 +398,13 @@ public class WorldPlayer : WorldEntity
         prevAttached = null;
         //if (GetComponent<CapsuleCollider>() != null)
         //{
-        capsuleCollider = GetComponent<CapsuleCollider>();
+        characterCollider = GetComponent<CapsuleCollider>();
         //}
 
-        if (capsuleCollider != null)
+        if (characterCollider is CapsuleCollider cc)
         {
-            height = capsuleCollider.height;
-            width = capsuleCollider.radius;
+            height = cc.height;
+            width = cc.radius;
         }
 
         mapScript = FindObjectOfType<MapScript>();
@@ -1139,12 +1139,12 @@ public class WorldPlayer : WorldEntity
         {
             if (inputXY.magnitude == 0 && !(lastFloorSlippery || lastMovementDamping != 0 || !IsGrounded()))
             {
-                capsuleCollider.material = MainManager.Instance.allFrictionMaterial;
+                characterCollider.material = MainManager.Instance.allFrictionMaterial;
                 useAllFriction = true;
             }
             else
             {
-                capsuleCollider.material = MainManager.Instance.noFrictionMaterial;
+                characterCollider.material = MainManager.Instance.noFrictionMaterial;
                 useAllFriction = false;
             }
         }
@@ -2832,6 +2832,7 @@ public class WorldPlayer : WorldEntity
                 trueFacingRotation -= MainManager.Instance.GetWorldspaceYaw();
                 //Debug.Log("reset P " + trueFacingRotation);
             }
+            //Debug.Log(movementRotationDisabled + " " + trueFacingRotation);
 
             //Worldspace yaw needs to be added back
             realOrientationObject.transform.eulerAngles = (trueFacingRotation + MainManager.Instance.GetWorldspaceYaw()) * Vector3.up;
@@ -3272,9 +3273,12 @@ public class WorldPlayer : WorldEntity
         stalePerpetualParticles.Add(eo);
 
         //collision stuff
-        capsuleCollider.center = Vector3.down * 0.3125f;
-        capsuleCollider.radius = 0.0625f;
-        capsuleCollider.height = 0.125f;
+        if (characterCollider is CapsuleCollider cc)
+        {
+            cc.center = Vector3.down * 0.3125f;
+            cc.radius = 0.0625f;
+            cc.height = 0.125f;
+        }
 
         for (int i = 0; i < followers.Count; i++)
         {
@@ -3329,9 +3333,11 @@ public class WorldPlayer : WorldEntity
         subObject.transform.localScale = Vector3.one;
         subObject.transform.localPosition = Vector3.zero;
 
-        capsuleCollider.center = Vector3.zero;
-        capsuleCollider.radius = 0.25f;
-        capsuleCollider.height = 0.75f;
+        if (characterCollider is CapsuleCollider cc) {
+            cc.center = Vector3.zero;
+            cc.radius = 0.25f;
+            cc.height = 0.75f;
+        }
 
         for (int i = 0; i < followers.Count; i++)
         {
@@ -3826,13 +3832,13 @@ public class WorldPlayer : WorldEntity
 
     public void NoClipSetup()
     {
-        capsuleCollider.isTrigger = true;
+        characterCollider.isTrigger = true;
         rb.useGravity = false;
     }
 
     public void NoClipUnsetup()
     {
-        capsuleCollider.isTrigger = false;
+        characterCollider.isTrigger = false;
         rb.useGravity = true;
     }
 
@@ -4104,6 +4110,16 @@ public class WorldPlayer : WorldEntity
             Debug.Log(actionState);
         }
         */
+
+        //Some states set this to true
+        movementRotationDisabled = false;
+        switch (actionState)
+        {
+            case ActionState.Smash:
+            case ActionState.Slash:
+                movementRotationDisabled = true;
+                break;
+        }
 
         //enforce certain things
         //the "exit state" functions occur here

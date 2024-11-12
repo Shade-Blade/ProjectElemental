@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using static PlayerMove;
+using static UnityEngine.GraphicsBuffer;
 
 //things that interrupt the battle system that aren't regular moves
 
@@ -430,13 +431,13 @@ public class BA_Rest : BattleAction
             case Ribbon.RibbonType.ExpertRibbon:
                 if (ribbonPower)
                 {
-                    caller.CureCurableEffects();
+                    caller.CureEffects();
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Seal, 1, (sbyte)(3 * ribbonMult)));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Immunity, 1, (sbyte)(longRestBoost * ribbonMult * 3)));
                 }
                 else
                 {
-                    caller.CureCurableEffects();
+                    caller.CureEffects();
                     //secret
                     if (longRestBoost > 1)
                     {
@@ -620,6 +621,8 @@ public class BA_Check : BattleAction
 
         BestiaryCardScript bcs = bestiaryCard.GetComponent<BestiaryCardScript>();
 
+        MainManager.Instance.SetBestiaryFlag(caller.curTarget.entityID);
+
         string name = BestiaryOrderEntry.GetBestiaryOrderNumberString(caller.curTarget.entityID) + ". " + BattleEntity.GetNameStatic(caller.curTarget.entityID);
         //Get sprite somehow
         Sprite sp = BattleEntity.GetBestiarySprite(caller.curTarget.entityID);
@@ -639,7 +642,7 @@ public class BA_Scan : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Enemy, false);
     public override string GetName() => "Scan";
-    public override string GetDescription() => "Learn more about an enemy and reveal its max HP as well as all of its moves.";
+    public override string GetDescription() => "Learn more about an enemy and reveal its max HP as well as all of its moves. <descriptionnoticecolor>Unlike Check, this does cost your turn.</descriptionnoticecolor>";
     public override bool ForfeitTurn() => true;
 
     public override int GetBaseCost() => 0;
@@ -652,6 +655,8 @@ public class BA_Scan : BattleAction
         GameObject bestiaryCard = Instantiate(Resources.Load<GameObject>("Menu/BestiaryCard"), MainManager.Instance.Canvas.transform);
 
         BestiaryCardScript bcs = bestiaryCard.GetComponent<BestiaryCardScript>();
+
+        MainManager.Instance.SetBestiaryFlag(target.entityID);
 
         string name = BestiaryOrderEntry.GetBestiaryOrderNumberString(caller.curTarget.entityID) + ". " + BattleEntity.GetNameStatic(caller.curTarget.entityID);
         //Get sprite somehow
@@ -678,7 +683,9 @@ public class BA_Scan : BattleAction
             yield break;
         }
 
-        string movesetViewer = "<tail,k>Here is their moveset. (<buttonsprite,A> to exit, <buttonsprite,B> to go back)<dataget,arg,0><genericmenu,arg,4>";
+        string movesetViewer = "<tail,k>Here is their moveset. (<buttonsprite,A> to exit, <buttonsprite,B> to go back)<dataget," + caller.posId + ",arg,0><genericmenu,arg,4>";
+
+        Debug.Log(target.moveset.Count);
 
         //name, right, usage, desc
         List<string> nameList = new List<string>();
@@ -691,7 +698,7 @@ public class BA_Scan : BattleAction
         }
 
         string scanTable = GenericBoxMenu.PackMenuString(null, null, nameList, null, null, descList);
-        //Debug.Log(scanTable);
+        Debug.Log(scanTable);
         ((PlayerEntity)caller).SetScanTable(scanTable);
 
         int index = -1;
@@ -705,7 +712,6 @@ public class BA_Scan : BattleAction
             int.TryParse(FormattedString.ParseArg(menuResult, "arg1"), out index);
         }
         BattleControl.Instance.BroadcastEvent(target, BattleHelper.Event.Check);
-
         bcs.Fadeout();
     }
 }
@@ -782,7 +788,7 @@ public class BA_SuperSwapEntities : BattleAction //switches everyone around 1 po
                 {
                     if (!pe.BadgeEquipped(Badge.BadgeType.RagesPower) && pe.HasEffect(Effect.EffectType.Berserk) && pe.GetEffectEntry(Effect.EffectType.Berserk).duration == Effect.INFINITE_DURATION)
                     {
-                        pe.CureEffect(Effect.EffectType.Berserk);
+                        pe.RemoveEffect(Effect.EffectType.Berserk);
                     }
                 }
             }
@@ -912,6 +918,18 @@ public class BA_SwapEntities : BattleAction
 
     public override int GetBaseCost() => 0;
 
+    //Has same limitations as Z button since you have 2 characters
+    public override bool CanChoose(BattleEntity caller)
+    {
+        //reuse this condition from base battle menu
+        if (!BaseBattleMenu.ZUsable())
+        {
+            return false;
+        }
+
+        return base.CanChoose(caller);
+    }
+
     //use caller's target
     public override IEnumerator Execute(BattleEntity caller)
     {
@@ -939,7 +957,7 @@ public class BA_Flee : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.None, false);
     public override string GetName() => "Flee";
-    public override string GetDescription() => "Run from the current battle. Stamina cost is based on the level of the strongest enemy that can move. Some battles may forbid you from fleeing, while others may allow you to flee for free.";
+    public override string GetDescription() => "Run from the current battle. Stamina cost is based on the level of the strongest enemy that can move, but is capped at your max Stamina. Some battles may forbid you from fleeing, while others may allow you to flee for free.";
     public override bool ForfeitTurn() => false;
 
 
@@ -963,6 +981,16 @@ public class BA_Flee : BattleAction
         }
 
         return cost;
+    }
+    public override int GetCost(BattleEntity caller)
+    {
+        int c =  base.GetCost(caller);
+        //Cap at half max EP so there are no unescapable overworld encounters
+        if (c > BattleControl.Instance.GetMaxStamina(caller))
+        {
+            c = BattleControl.Instance.GetMaxStamina(caller);
+        }
+        return c;
     }
 
     public override BattleHelper.MoveCurrency GetCurrency(BattleEntity caller)
@@ -1493,11 +1521,25 @@ public class BA_BadgeSwap : BattleAction
         //update max stats in BattleControl
         //but I need to check for the permanent effects that mess with max stats
 
-        //do this a lazy way
-        //(validate effects shouldn't cause problems if called more often)
+        //refresh entire moveset
         List<PlayerEntity> pe = BattleControl.Instance.GetPlayerEntities();
         foreach (PlayerEntity p in pe)
         {
+            p.jumpMoves = new List<PlayerMove>();
+            p.weaponMoves = new List<PlayerMove>();
+            p.AddMoves();
+            foreach (PlayerMove des in p.GetComponents<PlayerMove>())
+            {
+                Destroy(des);
+            }
+            p.tactics = new List<BattleAction>();
+            foreach (BattleAction des in p.GetComponents<BattleAction>())
+            {
+                Destroy(des);
+            }
+            p.AddTactics();
+
+
             p.ValidateEffects();
         }
 

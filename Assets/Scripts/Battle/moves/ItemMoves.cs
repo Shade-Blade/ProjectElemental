@@ -400,7 +400,7 @@ public class Item_GenericConsumable : ItemMove
         {
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].CureCurableEffects();
+                targets[i].CureEffects();
             }
         }
 
@@ -1216,7 +1216,7 @@ public class Item_GenericConsumable : ItemMove
             Effect.EffectType.CounterFlare,
 
             Effect.EffectType.Illuminate,
-            Effect.EffectType.Supercharge,  //doesn't use potency right now
+            Effect.EffectType.Supercharge,
 
             Effect.EffectType.MistWall,
             Effect.EffectType.QuantumShield,
@@ -1268,6 +1268,10 @@ public class Item_GenericConsumable : ItemMove
 
             //audit some specific cases
             if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.MistWall)
+            {
+                target.effects[conflictingStatusIndices[i]].potency = 1;
+            }
+            if (target.effects[conflictingStatusIndices[i]].effect == Effect.EffectType.Supercharge)
             {
                 target.effects[conflictingStatusIndices[i]].potency = 1;
             }
@@ -2047,6 +2051,11 @@ public class Item_GenericThrowable : ItemMove
                 properties |= (ulong)BattleHelper.DamageProperties.HitsWhileDizzy;
                 properties |= (ulong)BattleHelper.DamageProperties.Item;
                 //
+
+                if (k != hits - 1)
+                {
+                    properties |= (ulong)BattleHelper.DamageProperties.Combo;
+                }
 
                 if (caller.GetAttackHit(targets[i], ide.damageType, properties))
                 {

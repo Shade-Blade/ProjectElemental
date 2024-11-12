@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static EnemyMove;
 
 public class BE_SunSapling : BattleEntity
 {
@@ -150,8 +149,8 @@ public class BM_SunSapling_FrontSlam : EnemyMove
                 //Debug.Log(focusTargets[i]);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 4, Effect.INFINITE_DURATION));
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Illuminate, 1, 3));
                 }
                 else
                 {
@@ -250,8 +249,8 @@ public class BM_SunSapling_GrowCharge : EnemyMove
                 //Debug.Log(focusTargets[i]);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 4, Effect.INFINITE_DURATION));
-                    caller.InflictEffect(target, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(target, new Effect(Effect.EffectType.Illuminate, 1, 3));
                 }
                 else
                 {
@@ -294,7 +293,11 @@ public class BM_SunSapling_PowerRoar : EnemyMove
         {
             if (caller.GetAttackHit(t, 0))
             {
-                caller.DealDamage(t, 6, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 4, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
+                if (BattleControl.Instance.GetCurseLevel() > 0)
+                {
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Sunflame, 1, 3));
+                }
             } else
             {
                 //Miss

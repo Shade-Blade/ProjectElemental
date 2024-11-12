@@ -78,6 +78,7 @@ public class WorldCollectibleScript : WorldObject
             case PickupUnion.PickupType.KeyItem:
             case PickupUnion.PickupType.Badge:
             case PickupUnion.PickupType.Ribbon:
+            case PickupUnion.PickupType.Misc:
                 attract = false;
                 break;
         }
@@ -135,7 +136,10 @@ public class WorldCollectibleScript : WorldObject
     public override void WorldUpdate()
     {
         sprite.transform.eulerAngles = Vector3.up * MainManager.Instance.GetWorldspaceYaw();
-        lifetime += Time.deltaTime;
+        if (!MainManager.Instance.inCutscene)   //Pause despawn timer in cutscenes
+        {
+            lifetime += Time.deltaTime;
+        }
         if (maxLifetime != 0)
         {
             if (!isFlickering && lifetime > maxLifetime - FLICKER_LIFETIME)

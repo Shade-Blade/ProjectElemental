@@ -7,7 +7,7 @@ public class BE_Sunflower : BattleEntity
 {
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_SwoopDown>(), gameObject.AddComponent<BM_Shared_BiteThenFly>(), gameObject.AddComponent<BM_Flowerling_Hard_SwoopBloom>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_SwoopDown>(), gameObject.AddComponent<BM_Shared_BiteThenFly>(), gameObject.AddComponent<BM_Sunflower_Hard_SolarBite>() };
 
         base.Initialize();
     }
@@ -87,9 +87,14 @@ public class BE_Sunnybud : BattleEntity
     int counterCount;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Honeybud_SwoopHeal>(), gameObject.AddComponent<BM_Honeybud_FrontBite>(), gameObject.AddComponent<BM_Shared_Hard_CounterRush>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Honeybud_SwoopHealIlluminate>(), gameObject.AddComponent<BM_Honeybud_FrontBiteIlluminate>(), gameObject.AddComponent<BM_Shared_Hard_CounterRush>() };
 
         base.Initialize();
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateCounter, true);
+        }
     }
 
     public override void ChooseMoveInternal()
@@ -167,9 +172,14 @@ public class BE_MiracleBloom : BattleEntity
     int counterCount;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Honeybud_SwoopHeal>(), gameObject.AddComponent<BM_Honeybud_FrontBite>(), gameObject.AddComponent<BM_Shared_Hard_CounterRush>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Honeybud_SwoopHealMiracle>(), gameObject.AddComponent<BM_Honeybud_FrontBiteMiracle>(), gameObject.AddComponent<BM_Shared_Hard_CounterRush>() };
 
         base.Initialize();
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateCounter, true);
+        }
     }
 
     public override void ChooseMoveInternal()
@@ -308,27 +318,22 @@ public class BM_Honeybud_FrontBite : EnemyMove
     public IEnumerator DoHeal(BattleEntity caller)
     {
         int singleHealAmount = 0;
-        int multiHealAmount = 0;
 
         switch (caller.entityID)
         {
             case BattleHelper.EntityID.Honeybud:
                 singleHealAmount = 2;
-                multiHealAmount = 1;
                 break;
             case BattleHelper.EntityID.Sunnybud:
                 singleHealAmount = 4;
-                multiHealAmount = 2;
                 break;
             case BattleHelper.EntityID.MiracleBloom:
                 singleHealAmount = 16;
-                multiHealAmount = 8;
                 break;
         }
 
         //heal
         int singularHeal = 0;
-        int spreadHeal = 0;
 
         BattleEntity singleHealTarget = null; //note: if all targets have 0 missing hp then this will stay null (and so no heal)
         List<BattleEntity> healTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
@@ -344,37 +349,17 @@ public class BM_Honeybud_FrontBite : EnemyMove
                 singularHeal = tempHeal;
                 singleHealTarget = healTargets[i];
             }
-
-            if (tempHeal > multiHealAmount)
-            {
-                spreadHeal += multiHealAmount;
-            }
-            else
-            {
-                spreadHeal += tempHeal;
-            }
         }
 
-        if (spreadHeal > Mathf.Min(singularHeal, singleHealAmount))
+
+        //Single heal?
+        if (singleHealTarget != null)
         {
-            //Spread heal
+            //heal the target
             yield return new WaitForSeconds(0.5f);
-            for (int i = 0; i < healTargets.Count; i++)
-            {
-                healTargets[i].HealHealth(multiHealAmount);
-            }
+            singleHealTarget.HealHealth(singleHealAmount);
+            ApplyHealEffect(caller, singleHealTarget);
             yield return new WaitForSeconds(0.5f);
-        }
-        else
-        {
-            //Single heal?
-            if (singleHealTarget != null)
-            {
-                //heal the target
-                yield return new WaitForSeconds(0.5f);
-                singleHealTarget.HealHealth(singleHealAmount);
-                yield return new WaitForSeconds(0.5f);
-            }
         }
 
         if (caller.entityID == BattleHelper.EntityID.Honeybud)
@@ -387,6 +372,35 @@ public class BM_Honeybud_FrontBite : EnemyMove
                 yield return StartCoroutine(caller.Jump(caller.homePos, 0, dist / 8));
                 caller.SetEntityProperty(BattleHelper.EntityProperties.Grounded, true);
             }
+        }
+    }
+
+    public virtual void ApplyHealEffect(BattleEntity caller, BattleEntity target)
+    {
+
+    }
+}
+
+public class BM_Honeybud_FrontBiteIlluminate : BM_Honeybud_FrontBite
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sunnybud_BiteFlyHealIlluminate;
+    public override void ApplyHealEffect(BattleEntity caller, BattleEntity target)
+    {
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffect(target, new Effect(Effect.EffectType.Illuminate, 1, 3));
+        }
+    }
+}
+
+public class BM_Honeybud_FrontBiteMiracle : BM_Honeybud_FrontBite
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sunnybud_BiteFlyHealMiracle;
+    public override void ApplyHealEffect(BattleEntity caller, BattleEntity target)
+    {
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffect(target, new Effect(Effect.EffectType.Miracle, 1, Effect.INFINITE_DURATION));
         }
     }
 }
@@ -526,6 +540,7 @@ public class BM_Honeybud_SwoopHeal : EnemyMove
             {
                 healTargets[i].HealHealth(multiHealAmount);
             }
+            ApplyHealEffect(caller, caller);
             yield return new WaitForSeconds(0.5f);
         }
         else
@@ -536,6 +551,7 @@ public class BM_Honeybud_SwoopHeal : EnemyMove
                 //heal the target
                 yield return new WaitForSeconds(0.5f);
                 singleHealTarget.HealHealth(singleHealAmount);
+                ApplyHealEffect(caller, singleHealTarget);
                 yield return new WaitForSeconds(0.5f);
             }
         }
@@ -550,6 +566,37 @@ public class BM_Honeybud_SwoopHeal : EnemyMove
                 yield return StartCoroutine(caller.Jump(caller.homePos, 0, dist / 8));
                 caller.SetEntityProperty(BattleHelper.EntityProperties.Grounded, true);
             }
+        }
+    }
+
+    public virtual void ApplyHealEffect(BattleEntity caller, BattleEntity target)
+    {
+
+    }
+}
+
+public class BM_Honeybud_SwoopHealIlluminate : BM_Honeybud_SwoopHeal
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Honeybud_SwoopHealIlluminate;
+
+    public override void ApplyHealEffect(BattleEntity caller, BattleEntity target)
+    {
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffect(target, new Effect(Effect.EffectType.Illuminate, 1, 3));
+        }
+    }
+}
+
+public class BM_Honeybud_SwoopHealMiracle : BM_Honeybud_SwoopHeal
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Honeybud_SwoopHealMiracle;
+
+    public override void ApplyHealEffect(BattleEntity caller, BattleEntity target)
+    {
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffect(target, new Effect(Effect.EffectType.Miracle, 1, Effect.INFINITE_DURATION));
         }
     }
 }

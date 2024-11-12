@@ -105,8 +105,8 @@ public class BaseBattleMenu : MenuHandler
     void MenuUpdate()
     {
         //BattleControl.Instance.ShowHPBars();
-
-        if (Mathf.Sign(InputManager.GetAxisHorizontal()) != inputDir || InputManager.GetAxisHorizontal() == 0)
+        lifetime += Time.deltaTime;
+        if ((lifetime > BoxMenu.MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisHorizontal()) != inputDir) || InputManager.GetAxisHorizontal() == 0)
         {
             inputDir = Mathf.Sign(InputManager.GetAxisHorizontal());
             if (InputManager.GetAxisHorizontal() == 0)
@@ -198,7 +198,7 @@ public class BaseBattleMenu : MenuHandler
         }
 
 
-        if (InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
         {
             if (baseMenuOptions[baseMenuIndex].canSelect)
             {
@@ -249,7 +249,7 @@ public class BaseBattleMenu : MenuHandler
                 s.menuExit += InvokeExit;
             }
         }
-        if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to switch active characters
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to switch active characters
         {
             if (BUsable())
             {
@@ -257,7 +257,7 @@ public class BaseBattleMenu : MenuHandler
                 PlayerTurnController.Instance.ExitMenu(PlayerTurnController.MenuExitType.Switch);
             }
         }
-        if (InputManager.GetButtonDown(InputManager.Button.Z)) //Press Z to switch character positions
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Z)) //Press Z to switch character positions
         {
             if (ZUsable())
             {
@@ -372,7 +372,7 @@ public class BaseBattleMenu : MenuHandler
             baseMenuIndex = 0;
         }
         inputDir = 0;
-        active = true;
+        base.Init();
 
         //the "front" angle
         angle = baseMenuIndex * (360f / menuOptions.Count);

@@ -20,6 +20,7 @@ public class NumberMenu : MenuHandler
     public GameObject baseObject;
     public NumberMenuScript nms;
 
+
     public override event EventHandler<MenuExitEventArgs> menuExit;
 
     public static NumberMenu BuildMenu(int max, int currentNum, int min = 0)
@@ -35,7 +36,7 @@ public class NumberMenu : MenuHandler
 
     public override void Init()
     {
-        active = true;
+        base.Init();
         cancel = false;
 
         baseObject = Instantiate(MainManager.Instance.numberMenu, MainManager.Instance.Canvas.transform);
@@ -66,7 +67,8 @@ public class NumberMenu : MenuHandler
             nms = baseObject.GetComponent<NumberMenuScript>();
         }
 
-        if (Mathf.Sign(InputManager.GetAxisVertical()) != inputDir || InputManager.GetAxisVertical() == 0)
+        lifetime += Time.deltaTime;
+        if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) != inputDir) || InputManager.GetAxisVertical() == 0)
         {
             holdDuration = 0;
             holdValue = 0;
@@ -102,7 +104,7 @@ public class NumberMenu : MenuHandler
             nms.upArrow.enabled = (currentNum < max);
             nms.downArrow.enabled = (currentNum > min);
         }
-        if (Mathf.Sign(InputManager.GetAxisVertical()) == inputDir && InputManager.GetAxisVertical() != 0)
+        if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) == inputDir) && InputManager.GetAxisVertical() != 0)
         {
             holdDuration += Time.deltaTime;
 
@@ -158,7 +160,7 @@ public class NumberMenu : MenuHandler
             }
         }
 
-        if (InputManager.GetButton(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButton(InputManager.Button.A)) //Press A to select stuff
         {
             SelectOption();
         }

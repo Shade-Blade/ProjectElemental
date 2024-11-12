@@ -32,7 +32,7 @@ public class TextEntryMenu : MenuHandler
 
     public override void Init()
     {
-        active = true;
+        base.Init();
         cancel = false;
 
         baseObject = Instantiate(MainManager.Instance.textEntryMenu, MainManager.Instance.Canvas.transform);
@@ -73,7 +73,7 @@ public class TextEntryMenu : MenuHandler
 
     public void OnGUI()
     {
-        if (!active)
+        if (!active || lifetime < MIN_SELECT_TIME)
         {
             return;
         }
@@ -125,7 +125,8 @@ public class TextEntryMenu : MenuHandler
 
     public void MenuUpdate()
     {
-        //???
+        //most of this is set up in OnGUI
+        lifetime += Time.deltaTime;
     }
 
     public void SelectOption()

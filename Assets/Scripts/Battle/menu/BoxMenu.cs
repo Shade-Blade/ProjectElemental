@@ -39,8 +39,8 @@ public class BoxMenu : MenuHandler
 
     public event EventHandler<int> indexEvent;
 
-    public float lifetime;
-    public const float MIN_SELECT_TIME = 0.1f;
+    //public float lifetime;
+    //public const float MIN_SELECT_TIME = 0.0667f;
 
 
     public static BoxMenu BuildMenu(PlayerEntity caller, BaseBattleMenu.BaseMenuName p_menuName)
@@ -118,7 +118,7 @@ public class BoxMenu : MenuHandler
     {
         lifetime += Time.deltaTime;
         bool indexChange = false;
-        if (Mathf.Sign(InputManager.GetAxisVertical()) != inputDir || InputManager.GetAxisVertical() == 0)
+        if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) != inputDir) || InputManager.GetAxisVertical() == 0)
         {
             holdDur = 0;
             holdValue = 0;
@@ -179,7 +179,7 @@ public class BoxMenu : MenuHandler
             bm.upArrow.enabled = menuTopIndex > 0;
             bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
         }
-        if (Mathf.Sign(InputManager.GetAxisVertical()) == inputDir && InputManager.GetAxisVertical() != 0)
+        if (lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) == inputDir && InputManager.GetAxisVertical() != 0)
         {
             holdDur += Time.deltaTime;
 
@@ -275,7 +275,7 @@ public class BoxMenu : MenuHandler
             //Debug.Log(menuEntries[menuIndex].description);
         }
 
-        if (Mathf.Sign(InputManager.GetAxisHorizontal()) != lrinputDir || InputManager.GetAxisHorizontal() == 0)
+        if (lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisHorizontal()) != lrinputDir || InputManager.GetAxisHorizontal() == 0)
         {
             lrinputDir = Mathf.Sign(InputManager.GetAxisHorizontal());
             if (InputManager.GetAxisHorizontal() == 0)
@@ -304,11 +304,11 @@ public class BoxMenu : MenuHandler
         {
             SelectDisabled();
         }
-        if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+        if (InputManager.GetButtonDown(InputManager.Button.B) && lifetime > MIN_SELECT_TIME) //Press B to go back
         {
             Cancel();
         }
-        if (InputManager.GetButtonDown(InputManager.Button.Z))
+        if (InputManager.GetButtonDown(InputManager.Button.Z) && lifetime > MIN_SELECT_TIME)
         {
             ZOption();
         }

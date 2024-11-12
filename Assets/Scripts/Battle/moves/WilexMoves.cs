@@ -1095,7 +1095,7 @@ public class WM_DoubleStomp : WilexMove
                 {
                     if (result)
                     {
-                        DealDamageSuccess(caller, sd, i);
+                        DealDamageSuccess(caller, sd, i, i == hits - 1);
                         //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                         //StartCoroutine(caller.RevertScale(0.1f));                                            
                     }
@@ -1150,9 +1150,13 @@ public class WM_DoubleStomp : WilexMove
     {
         return caller.GetAttackHit(caller.curTarget, 0);
     }
-    public virtual void DealDamageSuccess(BattleEntity caller, int sd, int h)
+    public virtual void DealDamageSuccess(BattleEntity caller, int sd, int h, bool last)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        if (!last)
+        {
+            propertyBlock |= (ulong)BattleHelper.DamageProperties.Combo;
+        }
         caller.DealDamageMultihit(caller.curTarget, sd + 2, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, h, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
     }
     public virtual void DealDamageFailure(BattleEntity caller, int sd, int h)

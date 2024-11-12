@@ -137,7 +137,7 @@ public class BM_Shieldwing_FeatherWall : EnemyMove
             caller.InflictEffect(be, new Effect(Effect.EffectType.DefenseUp, 2, 3));
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
-                caller.InflictEffect(be, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
+                caller.InflictEffect(be, new Effect(Effect.EffectType.MistWall, 1, 3));
             }
         }
     }
@@ -148,7 +148,7 @@ public class BE_Honeywing : BattleEntity
     int counterCount = 0;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Honeywing_SpitHeal>(), gameObject.AddComponent<BM_Honeybud_SwoopHeal>(), gameObject.AddComponent<BM_Shared_Hard_CounterRally>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Honeywing_SpitHeal>(), gameObject.AddComponent<BM_Honeywing_SwoopHealSoften>(), gameObject.AddComponent<BM_Shared_Hard_CounterProtect>() };
 
         base.Initialize();
     }
@@ -343,19 +343,30 @@ public class BM_Honeywing_SpitHeal : EnemyMove
     }
 }
 
+public class BM_Honeywing_SwoopHealSoften : BM_Honeybud_SwoopHeal
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Honeywing_SwoopHealSoften;
+
+    public override void ApplyHealEffect(BattleEntity caller, BattleEntity target)
+    {
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffect(target, new Effect(Effect.EffectType.Soften, 1, 3));
+        }
+    }
+}
+
 public class BE_Shimmerwing : BattleEntity
 {
-    int counterCount = 0;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Shimmerwing_DazzlingScreech>(), gameObject.AddComponent<BM_Shimmerwing_RallySong>(), gameObject.AddComponent<BM_Shared_Hard_CounterProtect>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Shimmerwing_DazzlingScreech>(), gameObject.AddComponent<BM_Shimmerwing_RallySong>(), gameObject.AddComponent<BM_Shimmerwing_Hard_StaticFlurry>() };
 
         base.Initialize();
     }
 
     public override void ChooseMoveInternal()
     {
-        counterCount = 0;
         //Debug
         //RandomGenerator r = new RandomGenerator();
 
@@ -374,7 +385,14 @@ public class BE_Shimmerwing : BattleEntity
             }
             else
             {
-                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+                if (BattleControl.Instance.GetCurseLevel() > 0)
+                {
+                    currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+                }
+                else
+                {
+                    currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+                }
             }
         }
 
@@ -384,38 +402,6 @@ public class BE_Shimmerwing : BattleEntity
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
     {
         yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
-    }
-
-
-    public override IEnumerator PostMove()
-    {
-        //also reset here in case something weird happens
-        counterCount = 0;
-        yield return StartCoroutine(base.PostMove());
-    }
-    public override IEnumerator PreReact(Move move, BattleEntity target)
-    {
-        counterCount = 0;
-
-        Effect_ReactionDefend();
-
-        yield return new WaitForSeconds(0.5f);
-    }
-    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
-    {
-        if (BattleControl.Instance.GetCurseLevel() <= 0)
-        {
-            return false;
-        }
-
-        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
-        {
-            counterCount++;
-            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
-            return true;
-        }
-
-        return false;
     }
 }
 
@@ -444,7 +430,7 @@ public class BM_Shimmerwing_DazzlingScreech : EnemyMove
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
                 bool hasStatus = t.HasStatus();
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
                     caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 2));
@@ -487,56 +473,72 @@ public class BM_Shimmerwing_RallySong : EnemyMove
     }
 }
 
+public class BM_Shimmerwing_Hard_StaticFlurry : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Shimmerwing_Hard_StaticFlurry;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Air))
+            {
+                bool hasStatus = t.HasStatus();
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Contact);
+                if (!hasStatus)
+                {
+                    caller.InflictEffect(t, new Effect(Effect.EffectType.Brittle, 1, 2));
+                }
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+    }
+}
+
 public class BE_LumistarVanguard : BattleEntity
 {
-    int counterCount;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_LumistarVanguard_HornBlast>(), gameObject.AddComponent<BM_LumistarVanguard_LanternRally>(), gameObject.AddComponent<BM_Shared_Hard_CounterShield>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_LumistarVanguard_HornBlast>(), gameObject.AddComponent<BM_LumistarVanguard_LanternRally>(), gameObject.AddComponent<BM_LumistarVanguard_Hard_SoftGlow>() };
 
         base.Initialize();
     }
 
     public override void ChooseMoveInternal()
     {
-        //also reset here in case something weird happens
-        counterCount = 0;
-        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % moveset.Count];
+        }
+        else
+        {
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % (moveset.Count - 1)];
+        }
 
         BasicTargetChooser();
-    }
 
-
-    public override IEnumerator PostMove()
-    {
-        //also reset here in case something weird happens
-        counterCount = 0;
-        yield return StartCoroutine(base.PostMove());
-    }
-
-    public override IEnumerator PreReact(Move move, BattleEntity target)
-    {
-        counterCount = 0;
-
-        Effect_ReactionCounter();
-
-        yield return new WaitForSeconds(0.5f);
-    }
-    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
-    {
-        if (BattleControl.Instance.GetCurseLevel() <= 0)
+        if (currMove == moveset[2])
         {
-            return false;
+            SpecialTargetChooserFirst(TargetStrategy.TargetStrategyType.LowHP);
         }
-
-        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
-        {
-            counterCount++;
-            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
-            return true;
-        }
-
-        return false;
     }
 }
 
@@ -561,7 +563,7 @@ public class BM_LumistarVanguard_HornBlast : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
             {
@@ -593,7 +595,7 @@ public class BM_LumistarVanguard_LanternRally : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
-                caller.DealDamage(t, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
             {
@@ -608,6 +610,25 @@ public class BM_LumistarVanguard_LanternRally : EnemyMove
         {
             caller.InflictEffect(a, new Effect(Effect.EffectType.DefenseUp, 2, 3));
         }
+    }
+}
+
+public class BM_LumistarVanguard_Hard_SoftGlow : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.LumistarVanguard_Hard_SoftGlow;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Soften, 1, 3));
     }
 }
 
@@ -744,7 +765,7 @@ public class BM_LumistarSoldier_ChargeSlash : EnemyMove
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                caller.DealDamage(caller.curTarget, 11, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, 11, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
             }
             else
             {
@@ -838,9 +859,9 @@ public class BM_LumistarStriker_DualSlash : EnemyMove
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                 yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
-                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
             }
             else
             {
@@ -919,19 +940,15 @@ public class BM_LumistarStriker_QuadSlash : EnemyMove
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                }
+                caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                 for (int i = 0; i < 3; i++)
                 {
                     yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
-                    caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
-                    if (BattleControl.Instance.GetCurseLevel() > 0)
-                    {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                    }
+                    caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
+                }
+                if (BattleControl.Instance.GetCurseLevel() > 0)
+                {
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Brittle, 1, 3));
                 }
             }
             else

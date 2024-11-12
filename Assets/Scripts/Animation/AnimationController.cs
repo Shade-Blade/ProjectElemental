@@ -54,11 +54,11 @@ public class AnimationController : MonoBehaviour
     public float height = 0.75f;
     public float width = 0.5f;
 
-    public void OnDrawGizmosSelected()
+    public void OnDrawGizmos()
     {
         Gizmos.color = new Color(1f, 1f, 1f, 0.5f);
-        Vector3 down = Vector3.down * height / 2;
-        Vector3 left = Vector3.left * width / 2;
+        Vector3 down = transform.up * -1 * height / 2;
+        Vector3 left = transform.right * -1 * width / 2;
 
         Gizmos.DrawLine(transform.position + down + left, transform.position + down - left);
         Gizmos.DrawLine(transform.position + down - left, transform.position - down - left);
@@ -251,6 +251,9 @@ public class AnimationController : MonoBehaviour
         {
             occlusion = true;
             occlusionColor = MainManager.ParseColor(split[2]).GetValueOrDefault();
+        } else
+        {
+            occlusionColor = new Color(0, 0, 0, 0.2f);
         }
 
         buffdebuff = false;

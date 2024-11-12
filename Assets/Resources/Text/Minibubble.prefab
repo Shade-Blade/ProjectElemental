@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -40}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 315, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1143223251429870989
@@ -309,7 +309,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 120}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 315, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2710265019669869159
@@ -325,6 +325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detached: 0
+  free: 0
   deleteSignal: 0
   superDeleteSignal: 0
   parent: {fileID: 0}
@@ -335,10 +336,12 @@ MonoBehaviour:
   tail: {fileID: 3131961893760049285}
   hasTail: 0
   tailPointPos: {x: 0, y: 0, z: 0}
+  tailRealTimeUpdate: 0
   lines: []
   vars: []
   currLine: 0
   textDone: 0
+  originalPos: {x: -Infinity, y: -Infinity, z: -Infinity}
 --- !u!1 &6163812728908135606
 GameObject:
   m_ObjectHideFlags: 0

@@ -97,6 +97,26 @@ public class WorldSpecialShopkeeperNPCScript : WorldShopkeeperNPCScript, IShopke
             case ShopItem.Currency.Shard:
                 canBuy = pd.shards >= sis.shopItem.cost;
                 break;
+            case ShopItem.Currency.HP:
+                canBuy = false;
+                foreach (PlayerData.PlayerDataEntry pde in pd.party)
+                {
+                    //only one needs to have the hp to pay the cost (but it gets paid by both still
+                    if (pde.hp > sis.shopItem.cost)
+                    {
+                        canBuy = true;
+                    }
+                }
+                break;
+            case ShopItem.Currency.EP:
+                canBuy = pd.ep >= sis.shopItem.cost;
+                break;
+            case ShopItem.Currency.SE:
+                canBuy = pd.se >= sis.shopItem.cost;
+                break;
+            case ShopItem.Currency.AstralToken:
+                canBuy = pd.astralTokens >= sis.shopItem.cost;
+                break;
         }
 
         if (!canBuy)
@@ -122,6 +142,26 @@ public class WorldSpecialShopkeeperNPCScript : WorldShopkeeperNPCScript, IShopke
                 break;
             case ShopItem.Currency.Shard:
                 pd.shards -= sis.shopItem.cost;
+                break;
+            case ShopItem.Currency.HP:
+                foreach (PlayerData.PlayerDataEntry pde in pd.party)
+                {
+                    //only one needs to have the hp to pay the cost (but it gets paid by both still)
+                    pde.hp -= sis.shopItem.cost;
+                    if (pde.hp < 1)
+                    {
+                        pde.hp = 1;
+                    }
+                }
+                break;
+            case ShopItem.Currency.EP:
+                pd.ep -= sis.shopItem.cost;
+                break;
+            case ShopItem.Currency.SE:
+                pd.se -= sis.shopItem.cost;
+                break;
+            case ShopItem.Currency.AstralToken:
+                pd.astralTokens -= sis.shopItem.cost;
                 break;
         }
 

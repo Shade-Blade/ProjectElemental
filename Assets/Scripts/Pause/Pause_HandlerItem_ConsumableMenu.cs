@@ -176,7 +176,7 @@ public class Pause_HandlerItem_ConsumableMenu : Pause_HandlerShared_BoxMenu
     {
         base.MenuUpdate();
 
-        if (Mathf.Sign(InputManager.GetAxisHorizontal()) != lrDir || InputManager.GetAxisHorizontal() == 0)
+        if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisHorizontal()) != lrDir) || InputManager.GetAxisHorizontal() == 0)
         {
             lrDir = Mathf.Sign(InputManager.GetAxisHorizontal());
 

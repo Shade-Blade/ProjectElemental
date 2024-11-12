@@ -3,7 +3,7 @@ sus
 
 ForsakenMountains,Test_LandscapeC9,8.445898|0.8749998|-9.521571
 790.0048
-25,0,60,60,60,60,60,60,0,0,0,0,10,32,6,6,6,0,0,2,0,0,0,0,2,0,2,2
+25,0,60,60,60,60,60,60,0,0,0,0,10,32,6,6,6,0,0,2,0,0,0,0,2,0,2,1
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP
 
 RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,SupremeDinner|None|Overworld,GoldenSalad|None|Overworld,GoldenSalad|None|Overworld,MiracleNeedle|None|Overworld,MiracleShroom|None|Overworld

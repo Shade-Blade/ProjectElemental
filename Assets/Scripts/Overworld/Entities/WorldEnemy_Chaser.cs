@@ -81,14 +81,7 @@ public class WorldEnemy_Chaser : WorldEnemyEntity
         durationVariance = wed.durationVariance;
         height = wed.height;
         width = wed.width;
-        if (height != 0 && capsuleCollider != null)
-        {
-            capsuleCollider.height = height;
-        }
-        if (width != 0 && capsuleCollider != null)
-        {
-            capsuleCollider.radius = width; //note this (width is half of what it "should" be)
-        }
+        SetColliderInformation();
     }
 
     public override void Start()
@@ -300,6 +293,13 @@ public class WorldEnemy_Chaser : WorldEnemyEntity
         intendedMovement = newVelocity;
         rb.velocity = newVelocity;
         //Debug.Log(rb.isKinematic);
+
+        //Failsafe
+        if (transform.position.y < WorldPlayer.WARP_BARRIER_Y_COORD)
+        {
+            transform.position = startPosition;
+            rb.velocity = Vector3.up;
+        }
 
         BattleSetupUpdate();
     }

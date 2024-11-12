@@ -10,6 +10,11 @@ public class BE_EyeSpore : BattleEntity
         moveset = new List<Move> { gameObject.AddComponent<BM_EyeSpore_SporeBeam>(), gameObject.AddComponent<BM_EyeSpore_Hard_CounterSpiteBeam>() };
 
         base.Initialize();
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateCounter, true);
+        }
     }
 
     public override void ChooseMoveInternal()
@@ -74,7 +79,7 @@ public class BM_EyeSpore_SporeBeam : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Dark))
             {
-                caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
+                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
             {
@@ -105,7 +110,7 @@ public class BM_EyeSpore_Hard_CounterSpiteBeam : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Dark))
             {
-                caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
+                caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
@@ -224,7 +229,7 @@ public class BM_SpikeSpore_PoisonSpikes : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
-                caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 3));
@@ -256,15 +261,14 @@ public class BM_SpikeSpore_Hard_SpikeBomb : EnemyMove
         yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
-        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
+        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
+        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Sunder, 2, Effect.INFINITE_DURATION));
         foreach (BattleEntity t in targets)
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Dark))
             {
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Soulbleed, 1, 3));
             }
             else
             {
@@ -451,7 +455,7 @@ public class BE_HoarderFly : BattleEntity
 
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_HoarderFly_PoisonHeal>(), gameObject.AddComponent<BM_Shared_TripleSwoop>(), gameObject.AddComponent<BM_HoarderFly_Hard_FinalHeal>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_HoarderFly_PoisonHeal>(), gameObject.AddComponent<BM_Shared_TripleSwoop>(), gameObject.AddComponent<BM_HoarderFly_Hard_DustWind>(), gameObject.AddComponent<BM_HoarderFly_Hard_FinalHeal>() };
 
         base.Initialize();
     }
@@ -471,7 +475,14 @@ public class BE_HoarderFly : BattleEntity
             }
             else
             {
-                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+                if (BattleControl.Instance.GetCurseLevel() > 0)
+                {
+                    currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+                }
+                else
+                {
+                    currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+                }
             }
         }
 
@@ -553,7 +564,7 @@ public class BE_HoarderFly : BattleEntity
         if (e == BattleHelper.Event.Death && target == this && counterCount <= 0)
         {
             counterCount++;
-            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
+            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[3]);
             return true;
         }
 
@@ -622,6 +633,41 @@ public class BM_HoarderFly_PoisonHeal : EnemyMove
         }
 
         yield return StartCoroutine(caller.Move(caller.homePos));
+    }
+}
+
+public class BM_HoarderFly_Hard_DustWind : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.HoarderFly_Hard_DustWind;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Earth))
+            {
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
     }
 }
 
@@ -751,7 +797,7 @@ public class BM_Mosquito_ShockNeedle : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
-                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Weapon);
                 if (!hasStatus)
                 {
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, 2));
@@ -816,7 +862,7 @@ public class BM_Mosquito_DrainBite : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, (uint)BattleHelper.DamageProperties.HPDrainOneToOne, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, (uint)BattleHelper.DamageProperties.HPDrainOneToOne, BattleHelper.ContactLevel.Contact);
             }
             else
             {

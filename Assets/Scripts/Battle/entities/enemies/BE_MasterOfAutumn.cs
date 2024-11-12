@@ -29,6 +29,9 @@ public class BE_MasterOfAutumn : BattleEntity
             gameObject.AddComponent<BM_MasterOfAutumn_VineField>(),
             gameObject.AddComponent<BM_MasterOfAutumn_Resummon>(),
             gameObject.AddComponent<BM_MasterOfAutumn_Fall>(),
+
+            gameObject.AddComponent<BM_MasterOfAutumn_Hard_RootShake>(),
+            gameObject.AddComponent<BM_MasterOfAutumn_Hard_RootDrain>(),
         };
 
         base.Initialize();
@@ -66,6 +69,17 @@ public class BE_MasterOfAutumn : BattleEntity
                             break;
                         case 2:
                             currMove = moveset[6];
+                            if (BattleControl.Instance.GetCurseLevel() > 0)
+                            {
+                                ai_state = 3;
+                            }
+                            else
+                            {
+                                ai_state = 0;
+                            }
+                            break;
+                        case 3:
+                            currMove = moveset[9];
                             ai_state = 0;
                             break;
                     }
@@ -84,6 +98,17 @@ public class BE_MasterOfAutumn : BattleEntity
                             break;
                         case 2:
                             currMove = moveset[2];
+                            if (BattleControl.Instance.GetCurseLevel() > 0)
+                            {
+                                ai_state = 3;
+                            }
+                            else
+                            {
+                                ai_state = 0;
+                            }
+                            break;
+                        case 3:
+                            currMove = moveset[8];
                             ai_state = 0;
                             break;
                     }
@@ -137,7 +162,7 @@ public class BE_VineThrone : BattleEntity
     {
         moveset = new List<Move>()
         {
-            gameObject.AddComponent<BM_Shared_Hard_CounterHarden>()
+            gameObject.AddComponent<BM_VinePlatform_Hard_CounterSoften>()
         };
 
         base.Initialize();
@@ -710,10 +735,6 @@ public class BM_MasterOfAutumn_PollenStorm : EnemyMove
             {
                 caller.DealDamage(t, 4, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
-                }
             }
             else
             {
@@ -741,10 +762,6 @@ public class BM_MasterOfAutumn_FlowerShuriken : EnemyMove
             if (caller.GetAttackHit(t, 0))
             {
                 caller.DealDamage(t, 6, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
-                }
             }
             else
             {
@@ -768,13 +785,21 @@ public class BM_MasterOfAutumn_Overgrowth : EnemyMove
 
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
-            BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
+            BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);         
             vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                vb.InflictEffectForce(a, new Effect(Effect.EffectType.Soften, 1, 2));
+            }
         }
         if (BattleControl.Instance.GetEntityByID(3) == null)
         {
             BattleEntity b = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
             vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                vb.InflictEffectForce(b, new Effect(Effect.EffectType.Soften, 1, 2));
+            }
         }
 
         vb.HealHealth(10);
@@ -843,10 +868,6 @@ public class BM_MasterOfAutumn_FullBloom : EnemyMove
             {
                 caller.DealDamage(t, 8, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
-                }
             }
             else
             {
@@ -874,10 +895,6 @@ public class BM_MasterOfAutumn_VineField : EnemyMove
             if (caller.GetAttackHit(t, 0))
             {
                 caller.DealDamage(t, 10, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
-                }
             }
             else
             {
@@ -904,10 +921,19 @@ public class BM_MasterOfAutumn_Resummon : EnemyMove
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
                 vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
-            } else
+                if (BattleControl.Instance.GetCurseLevel() > 0)
+                {
+                    vb.InflictEffectForce(a, new Effect(Effect.EffectType.Soften, 1, 2));
+                }
+            }
+            else
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
                 vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+                if (BattleControl.Instance.GetCurseLevel() > 0)
+                {
+                    vb.InflictEffectForce(a, new Effect(Effect.EffectType.Soften, 1, 2));
+                }
             }
         }
 
@@ -997,5 +1023,61 @@ public class BM_MasterOfAutumn_Fall : EnemyMove
         vb.SetEntityProperty(BattleHelper.EntityProperties.NoTarget, false);
         vb.SetEntityProperty(BattleHelper.EntityProperties.NoCount, false);
         vb.SetEntityProperty(BattleHelper.EntityProperties.Grounded, true);
+    }
+}
+
+public class BM_MasterOfAutumn_Hard_RootShake : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_Hard_RootShake;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, 0))
+            {
+                caller.DealDamage(t, 4, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 4, Effect.INFINITE_DURATION));
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+    }
+}
+
+public class BM_MasterOfAutumn_Hard_RootDrain : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.MasterOfAutumn_Hard_RootDrain;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, 0))
+            {
+                caller.DealDamage(t, 6, BattleHelper.DamageType.Earth, (ulong)BattleHelper.DamageProperties.HPDrainOneToOne, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Exhausted, 1, 2));
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
     }
 }

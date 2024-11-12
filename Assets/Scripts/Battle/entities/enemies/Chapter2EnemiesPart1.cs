@@ -10,6 +10,11 @@ public class BE_Bandit : BattleEntity
         moveset = new List<Move> { gameObject.AddComponent<BM_Bandit_Slash>(), gameObject.AddComponent<BM_Bandit_Hard_TeamCounter>() };
 
         base.Initialize();
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateCounterHeavy, true);
+        }
     }
 
     public override void ChooseMoveInternal()
@@ -103,7 +108,7 @@ public class BM_Bandit_Slash : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
             }
             else
             {
@@ -173,7 +178,7 @@ public class BE_Renegade : BattleEntity
     public override void Initialize()
     {
         //This is pretty sus
-        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Slash>(), gameObject.AddComponent<BM_Shared_DualSlash>(), gameObject.AddComponent<BM_Renegade_Hard_SandSplash>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Slash>(), gameObject.AddComponent<BM_Shared_DualSlash>(), gameObject.AddComponent<BM_Renegade_Hard_HeatWave>() };
         base.Initialize();
     }
 
@@ -226,9 +231,9 @@ public class BE_Renegade : BattleEntity
     }
 }
 
-public class BM_Renegade_Hard_SandSplash : EnemyMove
+public class BM_Renegade_Hard_HeatWave : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Renegade_Hard_SandSplash;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Renegade_Hard_HeatWave;
     //public override string GetName() => "Rootling Front Bite";
     //public override string GetDescription() => "";
 
@@ -257,7 +262,7 @@ public class BM_Renegade_Hard_SandSplash : EnemyMove
         {
             if (caller.GetAttackHit(t, 0))
             {
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Enervate, 2, Effect.INFINITE_DURATION));
             }
             else
@@ -281,6 +286,28 @@ public class BE_Sentry : BattleEntity
         moveset = new List<Move> { gameObject.AddComponent<BM_Sentry_Fling>(), gameObject.AddComponent<BM_Sentry_CounterFling>() };
 
         base.Initialize();
+    }
+    public override void PostPositionInitialize()
+    {
+        base.PostPositionInitialize();
+
+        if (GetEntityProperty(BattleHelper.EntityProperties.Airborne, true))
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateContactHazard, true);
+        }
+    }
+    public override IEnumerator PostMove()
+    {
+        yield return StartCoroutine(base.PostMove());
+
+        if (GetEntityProperty(BattleHelper.EntityProperties.Airborne, true))
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateContactHazard, true);
+        }
+        else
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateContactHazard, false);
+        }
     }
 
     public override void ChooseMoveInternal()
@@ -331,6 +358,14 @@ public class BE_Sentry : BattleEntity
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
     {
         yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
+
+        if (GetEntityProperty(BattleHelper.EntityProperties.Airborne, true))
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateContactHazard, true);
+        } else
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateContactHazard, false);
+        }
     }
 
     public override IEnumerator PreReact(Move move, BattleEntity target)
@@ -433,7 +468,7 @@ public class BE_Cactupole : BattleEntity
 
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_BiteThenFly>(), gameObject.AddComponent<BM_Cactupole_ThornShock>(), gameObject.AddComponent<BM_Shared_Hard_CounterRush>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_BiteThenFly>(), gameObject.AddComponent<BM_Cactupole_ThornShock>(), gameObject.AddComponent<BM_Cactupole_Hard_StormFortify>() };
 
         base.Initialize();
     }
@@ -453,7 +488,14 @@ public class BE_Cactupole : BattleEntity
             }
             else
             {
-                currMove = moveset[1];
+                if (BattleControl.Instance.GetCurseLevel() > 0)
+                {
+                    currMove = moveset[((posId) + BattleControl.Instance.turnCount - 1) % 2 + 1];
+                }
+                else
+                {
+                    currMove = moveset[1];
+                }
             }
         }
 
@@ -494,26 +536,6 @@ public class BE_Cactupole : BattleEntity
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
     {
         yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
-    }
-
-    public override IEnumerator PreReact(Move move, BattleEntity target)
-    {
-        counterCount = 0;
-
-        Effect_ReactionCounter();
-
-        yield return new WaitForSeconds(0.5f);
-    }
-    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
-    {
-        if ((e == BattleHelper.Event.Hurt) && target == this && counterCount <= 0)
-        {
-            counterCount++;
-            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
-            return true;
-        }
-
-        return false;
     }
 }
 
@@ -580,13 +602,27 @@ public class BM_Cactupole_ThornShock : EnemyMove
     }
 }
 
+public class BM_Cactupole_Hard_StormFortify : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Cactupole_Hard_StormFortify;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.QuantumShield, 1, 3));
+    }
+}
+
 public class BE_Sandswimmer : BattleEntity
 {
     //public bool grounded = false;
 
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Sandswimmer_Bite>(), gameObject.AddComponent<BM_Renegade_Hard_SandSplash>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Sandswimmer_Bite>(), gameObject.AddComponent<BM_Sandswimmer_Hard_FlashDischarge>() };
 
         base.Initialize();
     }
@@ -698,6 +734,52 @@ public class BM_Sandswimmer_Bite : EnemyMove
                 caller.InvokeMissEvents(caller.curTarget);
             }
         }
+
+        yield return StartCoroutine(caller.Move(caller.homePos));
+    }
+}
+
+public class BM_Sandswimmer_Hard_FlashDischarge : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sandswimmer_Hard_FlashDischarge;
+    //public override string GetName() => "Rootling Front Bite";
+    //public override string GetDescription() => "";
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //iterate through ground targets
+        //To do: get a better way to do this?
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        float accumulatedX = 0;
+        foreach (BattleEntity t in targets)
+        {
+            accumulatedX += t.transform.position.x;
+        }
+
+        accumulatedX /= targets.Count;
+
+        Vector3 tpos = accumulatedX * Vector3.right;
+
+        yield return StartCoroutine(caller.JumpHeavy(tpos, 2, 0.5f, -0.25f));
+
+        yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, 0))
+            {
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.ArcDischarge, 1, 3));
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+        StartCoroutine(caller.RevertScale(0.1f));
 
         yield return StartCoroutine(caller.Move(caller.homePos));
     }

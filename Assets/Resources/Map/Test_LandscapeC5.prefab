@@ -852,7 +852,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C5_SpikeShroom
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -1898,7 +1898,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C5_EyeSpore
     speed: 3
     wandering: 1
     wanderRadius: 2

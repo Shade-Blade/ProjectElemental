@@ -72,9 +72,9 @@ public class BM_Leafling_Hard_TailWhip : EnemyMove
                 yield return StartCoroutine(caller.Move(tpos));
             }
 
+            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Earth))
             {
-                yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Contact);
                 StartCoroutine(caller.RevertScale(0.1f));
             }
@@ -206,6 +206,75 @@ public class BM_Flowerling_Hard_SwoopBloom : EnemyMove
                 caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
                 break;
         }
+    }
+}
+
+public class BM_Sunflower_Hard_SolarBite : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sunflower_Hard_SolarBite;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //Debug.Log(caller.id + " jump");
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 offset = Vector3.right * 3f + Vector3.up * 2f;
+            Vector3 tposA = caller.curTarget.transform.position + offset;
+            Vector3 tposend = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right + (caller.curTarget.height / 2) * Vector3.up;
+
+
+            bool backFlag = false;
+
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                tposA = BattleControl.Instance.GetFrontmostLow(caller).transform.position + offset + Vector3.back * 0.5f;
+                backFlag = true;
+            }
+
+            Vector3 tposmid = (tposA + tposend) / 2 + Vector3.down * 0.5f;
+
+            float dist = tposA.x - tposend.x - 0.25f;
+
+            yield return StartCoroutine(caller.Move(tposA));
+
+            Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
+
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.25f : 0.15f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
+
+                //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
+
+                switch (caller.entityID)
+                {
+                    case BattleHelper.EntityID.Sunflower:
+                        bool hasStatus = caller.curTarget.HasStatus();
+                        caller.DealDamage(caller.curTarget, 7, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        if (!hasStatus)
+                        {
+                            caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Sunflame, 1, 3));
+                        }
+                        break;
+                }
+
+                //StartCoroutine(caller.RevertScale(0.1f));
+            }
+            else
+            {
+                positions[2] = tposend + Vector3.left * 0.5f;
+                yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.3f : 0.2f, (float a) => MainManager.EasingQuadratic(a, -0.2f), 1.25f, positions));
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.Move(caller.homePos));
     }
 }
 

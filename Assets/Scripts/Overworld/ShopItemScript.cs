@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.ProBuilder.Shapes;
-using static ShopItem;
 
 [System.Serializable]
 public class ShopItem
@@ -12,9 +10,41 @@ public class ShopItem
     public enum Currency
     {
         Coin,
-        Shard
+        Shard,
+        HP,
+        EP,
+        SE,
+        AstralToken,
     }
     public Currency currency;
+
+    public static int ConvertCost(Currency target, int cost)
+    {
+        switch (target)
+        {
+            case Currency.Coin:
+                return cost;
+            case Currency.Shard:
+                return Mathf.CeilToInt(cost / 75f);
+            case Currency.HP:
+                //1 coin = 1 hp
+                //50 coins = 50 hp
+                return Mathf.CeilToInt(cost / 1.5f);
+            case Currency.EP:
+                return Mathf.CeilToInt(cost / 1f);
+            case Currency.SE:
+                return Mathf.CeilToInt(cost / 1f);
+            case Currency.AstralToken:
+                return Mathf.CeilToInt(cost / 175f);
+        }
+        return cost;
+    }
+
+    //encounter level to difficulty level
+    //(sum level - 12)/4
+
+    //cost to encounter level
+    //cost = 2f * sum level
 }
 
 public class ShopItemScript : InteractTrigger

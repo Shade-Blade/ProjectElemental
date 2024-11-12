@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 using UnityEngine.UI;
 using static TMPString;
-using static UnityEditor.PlayerSettings;
 
 //copy of textbox script with some stuff added
 //Differences:
@@ -64,12 +62,20 @@ public class MinibubbleScript : MonoBehaviour
 
     public void DetachedPosition(Vector3 position)
     {
-        Vector2 canvasPos = MainManager.Instance.WorldPosToCanvasPosB(position);
+        Vector2 canvasPos = MainManager.Instance.WorldPosToCanvasPosC(position);
 
-        canvasPos.y -= Screen.height / 2;
-        canvasPos.x -= Screen.width / 2;
+        //currently it is center anchored so I have to offset that
+        canvasPos.y -= MainManager.CanvasHeight() / 2;
+        canvasPos.x -= MainManager.CanvasWidth() / 2;
 
         //canvasPos.x -= 150;
+
+        if (MainManager.Instance.IsPositionBehindCamera(position))
+        {
+            canvasPos.y *= -1;
+            canvasPos.x *= -1;
+        }
+
 
         //???
         canvasPos.y += 150;
@@ -100,7 +106,7 @@ public class MinibubbleScript : MonoBehaviour
     }
     public void ConvertTailPos()
     {
-        tailPointTruePos = MainManager.Instance.WorldPosToCanvasPos(tailPointPos);
+        tailPointTruePos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);
     }
     public void PointTail()
     {
@@ -548,9 +554,15 @@ public class MinibubbleScript : MonoBehaviour
         DetachedPosition(tailPointPos);
         originalPos = rt.anchoredPosition;  //end position?
 
-        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);   //start position
-        newAnchoredPos.y -= Screen.height / 2;
-        newAnchoredPos.x -= Screen.width / 2;
+        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosC(tailPointPos);   //start position
+        newAnchoredPos.y -= MainManager.CanvasHeight() / 2;
+        newAnchoredPos.x -= MainManager.CanvasWidth() / 2;
+        if (MainManager.Instance.IsPositionBehindCamera(tailPointPos))
+        {
+            newAnchoredPos.y *= -1;
+            newAnchoredPos.x *= -1;
+        }
+
         if (hasTail)
         {
             ConvertTailPos();
@@ -587,9 +599,14 @@ public class MinibubbleScript : MonoBehaviour
         animTime = 0;
         originalPos = rt.anchoredPosition;  //start position
 
-        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);   //start position
-        newAnchoredPos.y -= Screen.height / 2;
-        newAnchoredPos.x -= Screen.width / 2;
+        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosC(tailPointPos);   //start position
+        newAnchoredPos.y -= MainManager.CanvasHeight() / 2;
+        newAnchoredPos.x -= MainManager.CanvasWidth() / 2;
+        if (MainManager.Instance.IsPositionBehindCamera(tailPointPos))
+        {
+            newAnchoredPos.y *= -1;
+            newAnchoredPos.x *= -1;
+        }
         if (hasTail)
         {
             ConvertTailPos();
@@ -845,7 +862,7 @@ public class MinibubbleScript : MonoBehaviour
         {
             DetachedPosition(tailPos);
         }
-        Debug.Log("Create with tail");
+        //Debug.Log("Create with tail");
         tail.enabled = true && detached;
         tailPointPos = tailPos;
         ConvertTailPos();
@@ -1072,7 +1089,7 @@ public class MinibubbleScript : MonoBehaviour
     //attached version is separate
     public IEnumerator CreateText(string dialogue, ITextSpeaker speaker, string[] vars = null, bool free = false)
     {
-        Debug.Log("Create with speaker");
+        //Debug.Log("Create with speaker");
         this.originalSpeaker = speaker;
         this.speaker = speaker;
         detached = true;
@@ -1087,7 +1104,7 @@ public class MinibubbleScript : MonoBehaviour
 
     public IEnumerator CreateTextAttached(string dialogue, ITextSpeaker speaker, float offset, string[] vars = null)
     {
-        Debug.Log("Create with speaker");
+        //Debug.Log("Create with speaker");
         this.originalSpeaker = speaker;
         this.speaker = speaker;
         Vector3 position = Vector3.zero;

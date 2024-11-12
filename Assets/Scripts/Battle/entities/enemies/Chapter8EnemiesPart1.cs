@@ -257,33 +257,56 @@ public class BE_CloudJelly : BattleEntity
     }
     public void SetForm(CloudJellyForm cjf)
     {
-        SpriteRenderer s = subObject.GetComponentInChildren<SpriteRenderer>();
+        //delete old one
+        AnimationController oac = GetComponentInChildren<AnimationController>();
+        Destroy(oac.gameObject);
+
+        GameObject ac = null;
         form = cjf;
         switch (form)
         {
             case CloudJellyForm.Ice:
-                s.color = new Color(0.4f, 1, 1);
+                //s.color = new Color(0.4f, 1, 1);
+                ac = AnimationControllerSetup(this, subObject, MainManager.SpriteID.C8_IceJelly);
                 break;
             case CloudJellyForm.Water:
-                s.color = new Color(0.2f, 0.5f, 0.7f);
+                //s.color = new Color(0.2f, 0.5f, 0.7f);
+                ac = AnimationControllerSetup(this, subObject, MainManager.SpriteID.C8_WaterJelly);
                 break;
             case CloudJellyForm.Cloud:
-                s.color = new Color(0.8f, 0.9f, 1);
+                //s.color = new Color(0.8f, 0.9f, 1);
+                ac = AnimationControllerSetup(this, subObject, MainManager.SpriteID.C8_CloudJelly);
                 break;
+        }
+        ac.transform.localPosition = offset + Vector3.up * (height / 2);
+        this.ac = ac.GetComponent<AnimationController>();
+        if (flipDefault && this.ac != null)
+        {
+            this.ac.SendAnimationData("xflip");
         }
     }
 
+    public static GameObject AnimationControllerSetup(BattleEntity be, GameObject sub, MainManager.SpriteID sid)
+    {
+        AnimationController ac = MainManager.CreateAnimationController(sid, sub);
+        be.ac = ac;
+        ac.gameObject.transform.parent = sub.transform;
+        return ac.gameObject;
+    }
+
+
+
     public override void SetEncounterVariables(string variable)
     {
-        if (variable.Contains("cloud"))
+        if (variable != null && variable.Contains("cloud"))
         {
             form = CloudJellyForm.Cloud;
         }
-        if (variable.Contains("water"))
+        if (variable != null && variable.Contains("water"))
         {
             form = CloudJellyForm.Water;
         }
-        if (variable.Contains("ice"))
+        if (variable != null && variable.Contains("ice"))
         {
             form = CloudJellyForm.Ice;
         }
@@ -461,7 +484,7 @@ public class BM_CloudJelly_BubbleToss : EnemyMove
 
         if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
         {
-            caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+            caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
         }
         else
         {
@@ -492,7 +515,7 @@ public class BM_CloudJelly_BubbleBlast : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
             {
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
             {
@@ -527,7 +550,7 @@ public class BM_CloudJelly_PowerBolt : EnemyMove
 
         if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
         {
-            caller.DealDamage(caller.curTarget, 8, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Contact);
+            caller.DealDamage(caller.curTarget, 8, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
         }
         else
         {
@@ -573,7 +596,7 @@ public class BM_CloudJelly_CounterFormChange : EnemyMove
         yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
         if (caller is BE_CloudJelly cj)
         {
-            if (((caller.lastDamageType & BattleHelper.DamageType.Light) != 0) || ((caller.lastDamageType & BattleHelper.DamageType.Water) != 0))
+            if (((caller.lastDamageType & BattleHelper.DamageType.Light) != 0) || ((caller.lastDamageType & BattleHelper.DamageType.Water) != 0) || ((caller.lastDamageType & BattleHelper.DamageType.Air) != 0))
             {
                 switch (cj.form)
                 {
@@ -796,7 +819,8 @@ public class BM_CrystalCrab_Hard_CounterClearClaw : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
-                caller.curTarget.CureCleanseableEffects(false);
+                caller.curTarget.CleanseEffects(false);
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Inverted, 1, 3));
             }
             else
             {
@@ -902,6 +926,11 @@ public class BM_CrystalSlug_Slap : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                bool hasStatus = caller.curTarget.HasStatus();
+                if (!hasStatus)
+                {
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Brittle, 1, 3));
+                }
             }
             else
             {
@@ -935,7 +964,7 @@ public class BM_CrystalSlug_ChillingStare : EnemyMove
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
                 bool hasStatus = t.HasStatus();
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
                     caller.InflictEffect(t, new Effect(Effect.EffectType.Freeze, 1, 2));
@@ -1027,9 +1056,16 @@ public class BM_CrystalClam_HealingBreath : EnemyMove
 
         List<BattleEntity> healTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
 
+        bool applyMistWall = false;
+
         yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < healTargets.Count; i++)
         {
+            if (!applyMistWall && !healTargets[i].HasEffect(Effect.EffectType.MistWall))
+            {
+                applyMistWall = true;
+                caller.InflictEffect(healTargets[i], new Effect(Effect.EffectType.MistWall, 1, 3));
+            }
             healTargets[i].HealHealth(multiHealAmount);
         }
         yield return new WaitForSeconds(0.5f);
@@ -1057,7 +1093,8 @@ public class BM_CrystalClam_CleansingBreath : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
-                t.CureCleanseableEffects(false);
+                t.CleanseEffects(false);
+                caller.DealDamage(t, 0, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
             }
             else
@@ -1090,7 +1127,7 @@ public class BM_CrystalClam_Explode : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Normal))
             {
-                caller.DealDamage(t, 12, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 12, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
             {
@@ -1159,7 +1196,7 @@ public class BM_Aurorawing_RubyDust : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
             {
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
             {
@@ -1205,7 +1242,7 @@ public class BM_Aurorawing_SapphireDust : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
             {
-                caller.DealDamage(t, 2, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
             {
@@ -1251,7 +1288,7 @@ public class BM_Aurorawing_EmeraldDust : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Earth))
             {
-                caller.DealDamage(t, 2, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
             {

@@ -19,11 +19,16 @@ public class BestiaryCardScript : MonoBehaviour
         if (fadeout)
         {
             rect.anchoredPosition = MainManager.EasingQuadraticTime(rect.anchoredPosition, Vector2.right * 150, 12500);
+            if (animtime > 0.15f)
+            {
+                Destroy(gameObject);
+            }
         }
         else
         {
             rect.anchoredPosition = MainManager.EasingQuadraticTime(rect.anchoredPosition, Vector2.left * 125, 12500);
         }
+        animtime += Time.deltaTime;
     }
 
     public void Setup(Sprite sprite, string name, string text)

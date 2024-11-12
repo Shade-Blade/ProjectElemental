@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.UI;
 using static BattleHelper;
 
 //This menu is full of elements
@@ -34,6 +35,8 @@ public class Pause_SectionStatus : Pause_SectionShared
     public TextDisplayer charmEffectText;
     public GameObject restEffectObject;
     public TextDisplayer restEffectText;
+
+    public Sprite[] weaponMedalSprites;
 
     public GameObject characterObjectA;
     public GameObject abilityMedalA1;
@@ -210,6 +213,13 @@ public class Pause_SectionStatus : Pause_SectionShared
                 healthObjectA.transform.localPosition = new Vector3(0, 5, 0);
 
                 abilityMedalA1.SetActive(lone.weaponLevel >= 0);
+
+                Image sr = abilityMedalA1.GetComponentInChildren<Image>();
+                if (lone.weaponLevel > 0)
+                {
+                    sr.sprite = weaponMedalSprites[lone.weaponLevel];
+                }
+
                 abilityMedalA2.SetActive(lone.weaponLevel >= 2);
                 abilityMedalA3.SetActive(lone.jumpLevel >= 2);
                 abilityMedalA4.SetActive(lone.jumpLevel >= 1);
@@ -223,6 +233,12 @@ public class Pause_SectionStatus : Pause_SectionShared
 
                 characterObjectB.transform.localPosition = new Vector3(0, 0, 0);
                 healthObjectB.transform.localPosition = new Vector3(0, 5, 0);
+
+                Image sr = abilityMedalB1.GetComponentInChildren<Image>();
+                if (lone.weaponLevel > 0)
+                {
+                    sr.sprite = weaponMedalSprites[lone.weaponLevel + 3];
+                }
 
                 abilityMedalB1.SetActive(lone.weaponLevel >= 0);
                 abilityMedalB2.SetActive(lone.weaponLevel >= 2);
@@ -240,6 +256,19 @@ public class Pause_SectionStatus : Pause_SectionShared
             characterObjectB.transform.localPosition = new Vector3(80, 0, 0);
             healthObjectA.transform.localPosition = new Vector3(-80, 5, 0);
             healthObjectB.transform.localPosition = new Vector3(80, 5, 0);
+
+            Image sr = abilityMedalA1.GetComponentInChildren<Image>();
+            if (wilex.weaponLevel > 0)
+            {
+                sr.sprite = weaponMedalSprites[wilex.weaponLevel];
+            }
+            sr = abilityMedalB1.GetComponentInChildren<Image>();
+            if (luna.weaponLevel > 0)
+            {
+                sr.sprite = weaponMedalSprites[luna.weaponLevel + 3];
+            }
+
+
             abilityMedalA1.SetActive(wilex.weaponLevel >= 0);
             abilityMedalA2.SetActive(wilex.weaponLevel >= 2);
             abilityMedalA3.SetActive(wilex.jumpLevel >= 2);

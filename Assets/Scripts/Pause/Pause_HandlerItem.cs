@@ -109,6 +109,8 @@ public class Pause_HandlerItem : Pause_HandlerShared_SideTabs
     public override void Init()
     {
         active = true;
+        lifetime = 0;
+
         tabindex = 0;
         playerData = MainManager.Instance.playerData;
         sortedParty = playerData.GetSortedParty();

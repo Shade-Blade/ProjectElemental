@@ -35,17 +35,17 @@ public class TestSpeedCookNPCScript : WorldNPCEntity
         testTextFile[8] = new string[1];
         testTextFile[9] = new string[1];
         testTextFile[10] = new string[1];
-        testTextFile[0][0] = "Cook NPC start text<prompt,Single item,1,Two items,2,Cancel,3,2>";
-        testTextFile[1][0] = "Cook single item menu (Use <buttonsprite,z> to end selection) <dataget,arg,1><itemMenu,arg,overworldhighlightedblockz>";
-        testTextFile[2][0] = "Cook double item menu A (Use <buttonsprite,z> to end selection)<dataget,arg,2><itemMenu,arg,overworldhighlightedblockz>";
-        testTextFile[3][0] = "Cook double item menu B (Select another item then use <buttonsprite,z> to end selection)<dataget,arg,2><itemMenu,arg,overworldhighlightedblock>";
-        testTextFile[4][0] = "Cook canceled<set,arg,1>";
-        testTextFile[5][0] = "Cook <var,0> items?<prompt,yes,1,no,0,1>";
-        testTextFile[6][0] = "Cook <var,0> pairs of items?<prompt,yes,1,no,0,1>";
-        testTextFile[7][0] = "Bye (some didn't work)";
-        testTextFile[8][0] = "Bye";
-        testTextFile[9][0] = "Single item cook no items";
-        testTextFile[10][0] = "Double item cook no items";
+        testTextFile[0][0] = "I've got a big cooking pot here, hungry for ingredients! Just give me everything you wanna cook, and I'll have it done in a flash!<next>Make sure you give me the right recipes, or they'll go bad.<prompt,1 Ingredient Recipes,1,2 Ingredient Recipes,2,Cancel,3,2>";
+        testTextFile[1][0] = "So we're cooking items one at a time? (Use <buttonsprite,z> to end selection, <buttonsprite,b> to cancel.) <dataget,arg,1><itemMenu,arg,overworldhighlightedblockz>";
+        testTextFile[2][0] = "So we're cooking items two at a time? (Use <buttonsprite,z> to end selection, <buttonsprite,b> to cancel.)<dataget,arg,2><itemMenu,arg,overworldhighlightedblockz>";
+        testTextFile[3][0] = "Now give me another item to pair with that one. (Select another item then use <buttonsprite,z> to end selection, <buttonsprite,b> to cancel.)<dataget,arg,2><itemMenu,arg,overworldhighlightedblock>";
+        testTextFile[4][0] = "Aww. Guess my pot's gonna go hungry. Come back if you want your stuff cooked.<set,arg,1>";
+        testTextFile[5][0] = "So you want me to cook <var,0> items one at a time?<prompt,yes,1,no,0,1>";
+        testTextFile[6][0] = "So you want me to cook <var,0> pairs of items?<prompt,yes,1,no,0,1>";
+        testTextFile[7][0] = "Looks like some of them went bad. I'll still be here if you want to try again.";
+        testTextFile[8][0] = "That's everything you wanted. Come back when you've got more stuff to throw in my pot!";
+        testTextFile[9][0] = "Looks like you're all out of food to cook. Unless you wanna jump in the pot yourself...";
+        testTextFile[10][0] = "Looks like you don't have enough for that.";
 
         int state = 0;
 
@@ -170,6 +170,13 @@ public class TestSpeedCookNPCScript : WorldNPCEntity
 
                     RecipeDataEntry rde = GlobalItemScript.Instance.GetRecipeDataFromIngredientsBigTable(targetItem.type);
 
+                    //specialty
+                    if (rde.quality == Item.ItemQuality.SpecialtyRecipe || rde.quality == Item.ItemQuality.SupremeRecipe)
+                    {
+                        rde.quality = Item.ItemQuality.Mistake;
+                        rde.result = Item.ItemType.Mistake;
+                    }
+
                     Item.ItemType outputType = rde.result;
                     Item.ItemQuality quality = rde.quality;
 
@@ -178,7 +185,8 @@ public class TestSpeedCookNPCScript : WorldNPCEntity
                         noMistakes = false;
                     }
 
-                    Item resItem = new Item(outputType, targetItem.modifier, Item.ItemOrigin.CookMagic, 0, 0);
+                    Item resItem = new Item(outputType, targetItem.modifier, Item.ItemOrigin.CookSizzle, 0, 0);
+                    MainManager.Instance.SetRecipeFlag(resItem.type);
                     string[] tempResVars = new string[] { Item.GetName(resItem), quality.ToString() };
                     //yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 7, this, tempResVars));
 
@@ -309,6 +317,13 @@ public class TestSpeedCookNPCScript : WorldNPCEntity
 
                     RecipeDataEntry rde = GlobalItemScript.Instance.GetRecipeDataFromIngredientsBigTable(targetItem.type, targetItemB.type);
 
+                    //specialty
+                    if (rde.quality == Item.ItemQuality.SpecialtyRecipe || rde.quality == Item.ItemQuality.SupremeRecipe)
+                    {
+                        rde.quality = Item.ItemQuality.Mistake;
+                        rde.result = Item.ItemType.Mistake;
+                    }
+
                     Item.ItemType outputType = rde.result;
                     Item.ItemQuality quality = rde.quality;
 
@@ -317,7 +332,8 @@ public class TestSpeedCookNPCScript : WorldNPCEntity
                         noMistakes = false;
                     }
 
-                    Item resItem = new Item(outputType, targetItem.modifier, Item.ItemOrigin.CookMagic, 0, 0);
+                    Item resItem = new Item(outputType, targetItem.modifier, Item.ItemOrigin.CookSizzle, 0, 0);
+                    MainManager.Instance.SetRecipeFlag(resItem.type);
                     string[] tempResVars = new string[] { Item.GetName(resItem), quality.ToString() };
 
                     yield return StartCoroutine(MainManager.Instance.Pickup(new PickupUnion(resItem)));

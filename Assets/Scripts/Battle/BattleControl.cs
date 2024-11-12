@@ -1351,6 +1351,8 @@ public class BattleControl : MonoBehaviour
 
         //Different sign from FrontmostLow check above because that check is done on the enemies of caller (different sign)
         //(while this check is done on entities with the same sign)
+        //note: only checks living allies so that if one character is dead you still get the benefits of being in the front regardless of positioning
+        bl = bl.FindAll((x) => (x.alive));
         bl.Sort((a, b) => ((posId < 0 ? -1 : 1) * MainManager.FloatCompare(a.homePos.x, b.homePos.x)));
 
         return bl[0];  //pointer match
@@ -1681,14 +1683,14 @@ public class BattleControl : MonoBehaviour
     {
         for (int i = 0; i < entities.Count; i++)
         {
-            entities[i].CureEffectsFromCaster(casterID);
+            entities[i].RemoveEffectsFromCaster(casterID);
         }
     }
     public void CureStatusesFromCaster(int casterID, Effect.EffectType effect)
     {
         for (int i = 0; i < entities.Count; i++)
         {
-            entities[i].CureEffectsFromCaster(casterID, effect);
+            entities[i].RemoveEffectsFromCaster(casterID, effect);
         }
     }
 
@@ -2382,7 +2384,7 @@ public class BattleControl : MonoBehaviour
             List<PlayerEntity> pe = GetPlayerEntities();
             for (int i = 0; i < pe.Count; i++)
             {
-                pe[i].CureAllEffects();
+                pe[i].RemoveAllEffects();
                 if (pe[i].hp < 1)
                 {
                     pe[i].HealHealth(1);
@@ -2625,13 +2627,33 @@ public class BattleControl : MonoBehaviour
         {
             yield return StartCoroutine(be.Move(position));
             be.SetAnimation("levelup");
+            if (be.entityID == EntityID.Luna)
+            {
+                StartCoroutine(SetLevelUpEndDelayed(be, 0.4f));
+            }
+            else
+            {
+                StartCoroutine(SetLevelUpEndDelayed(be, 0.2f));
+            }
             wtpA = true;
         }
         IEnumerator WalkToPositionTrackedB(BattleEntity be, Vector3 position)
         {
             yield return StartCoroutine(be.Move(position));
             be.SetAnimation("levelup");
+            if (be.entityID == EntityID.Luna)
+            {
+                StartCoroutine(SetLevelUpEndDelayed(be, 0.4f));
+            } else
+            {
+                StartCoroutine(SetLevelUpEndDelayed(be, 0.2f));
+            }
             wtpB = true;
+        }
+        IEnumerator SetLevelUpEndDelayed(BattleEntity be, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            be.SetAnimation("levelup_end");
         }
 
         //do this in parallel
@@ -2650,11 +2672,13 @@ public class BattleControl : MonoBehaviour
             //wacky way of making this work with 3 characters (but I'm not going to have 3 characters anyway)
             for (int i = 0; i < pe.Count; i++)
             {
-                targetPositions[i] = Vector3.left * 5 + (Vector3.right * i * (10 / (pe.Count - 1)));
-                StartCoroutine(WalkToPositionTrackedA(pe[0], targetPositions[i]));
+                targetPositions[i] = Vector3.left * 2.5f + (Vector3.right * i * (5 / (pe.Count - 1)));
                 if (i == pe.Count - 1)
                 {
                     StartCoroutine(WalkToPositionTrackedB(pe[1], targetPositions[i]));
+                } else
+                {
+                    StartCoroutine(WalkToPositionTrackedA(pe[0], targetPositions[i]));
                 }
             }
         }
@@ -2771,7 +2795,7 @@ public class BattleControl : MonoBehaviour
         int coinsDropped = Mathf.CeilToInt(be.level * be.moneyMult / 2f);   //15-20 ish per encounter in a chapter 1 state (Should be enough to buy everything you need)
         //Balancing note
         //Roughly 20 ish encounters per chapter (???)
-        //20 ish coints per encounter in chapter 1 is enough to buy 1 item per encounter
+        //20 ish coins per encounter in chapter 1 is enough to buy 1 item per encounter
         //  So if you need to grind 10 items you fight 10 encounters (but you will probably do that anyway)
         //  You will probably have surplus but that is good because you need that to buy badges and other expensive stuff
 
@@ -2794,14 +2818,19 @@ public class BattleControl : MonoBehaviour
 
 
         int xpDropped = MainManager.XPCalculation(startEnemyCount, playerData.level, be.level, be.bonusLevel);
-        //curse multiplication
 
+
+        //curse multiplication
         //Not what the attack calculation should be used for but it works
         //(attack calculation forces curse + 1 to have at least 1 more damage than curse)
         xpDropped = CurseAttackCalculation(xpDropped);
         coinsDropped = CurseAttackCalculation(coinsDropped);
 
-        //Debug.Log(coinsDropped);
+
+        //For the pit demo only (you should level up ~3 per 10 floors? So 4x faster than what the formula says)
+        //My normal formula is roughly 1 level up every 10 battles which seems to be roughly what Paper Mario has?
+        xpDropped *= 2;
+        coinsDropped *= 2;
 
         bool fortuneCoins = false;
 
@@ -2851,6 +2880,10 @@ public class BattleControl : MonoBehaviour
         }
 
         battleXP += xpDropped;
+        if (battleXP > 100)
+        {
+            battleXP = 100;
+        }
     }
 
     public GameObject CreateActionCommandEffect(BattleHelper.ActionCommandText a, Vector3 position, BattleEntity target = null)
@@ -4409,6 +4442,7 @@ public class BattleControl : MonoBehaviour
     {
         for (int i = 0; i < entities.Count; i++)
         {
+            entities[i].SetIdleAnimation();
             entities[i].DeathCheck();
         }
 
@@ -4421,6 +4455,7 @@ public class BattleControl : MonoBehaviour
 
 
         PlayerTurnController.Instance.ResetActionCommands();
+        PlayerTurnController.Instance.ResetPlayerSprites();
 
         AbsorbFocusCheck();
         //apply buffered effects
@@ -4878,6 +4913,9 @@ public class BattleControl : MonoBehaviour
             {
                 AddBattlePopup(enviroEffect);
             }
+
+            //??? fix a problem
+            PlayerTurnController.Instance.ResetActionCommands();
         }
 
         //why not
@@ -5161,11 +5199,12 @@ public class BattleControl : MonoBehaviour
         while (entities.hasNext())
         {
             BattleEntity current = entities.next();
-            if (current.damageTakenThisTurn > 0)
+            if (current.counterFlareTrackedDamage > 0)
             {
                 if (current.TokenRemoveOne(Effect.EffectType.CounterFlare))
                 {
-                    current.counterFlareDamage = current.damageTakenThisTurn;
+                    current.counterFlareDamage = current.counterFlareTrackedDamage;
+                    current.counterFlareTrackedDamage = 0;
                 }
                 else
                 {
@@ -5174,14 +5213,16 @@ public class BattleControl : MonoBehaviour
             }
             if (current.HasEffect(Effect.EffectType.ArcDischarge))
             {
-                current.arcDischargeDamage = Mathf.CeilToInt(0.125f * current.damageTakenThisTurn);
+                current.arcDischargeDamage = Mathf.CeilToInt(0.125f * current.arcDischargeTrackedDamage);
+                current.arcDischargeTrackedDamage = 0;
             } else
             {
                 current.arcDischargeDamage = 0;
             }
             if (current.HasEffect(Effect.EffectType.Splotch))
             {
-                current.splotchDamage = Mathf.CeilToInt(0.5f * current.damageTakenThisTurn);
+                current.splotchDamage = Mathf.CeilToInt(0.5f * current.splotchTrackedDamage);
+                current.splotchTrackedDamage = 0;
             } else
             {
                 current.splotchDamage = 0;

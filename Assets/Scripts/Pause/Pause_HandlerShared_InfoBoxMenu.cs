@@ -54,6 +54,13 @@ public class Pause_HandlerShared_InfoBoxMenu : Pause_HandlerShared_BoxMenu
         //a lot of casting :P
         InformationMenuEntry ime = (InformationMenuEntry)(((Pause_SectionShared_BoxMenu)section).GetMenuEntry(index));
 
+        //Debug.Log(ime.infoText);
+        if (ime.infoText == null || ime.infoText.Length < 1)
+        {
+            //can't
+            return;
+        }
+
         //build the menu
         MenuHandler b = null;
         b = Pause_HandlerShared_InfoBox.BuildMenu(newSection, 0, ime.infoText);

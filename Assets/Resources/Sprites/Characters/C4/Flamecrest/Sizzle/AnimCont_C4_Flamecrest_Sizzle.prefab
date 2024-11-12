@@ -203,6 +203,8 @@ MonoBehaviour:
   debuffIndex: 0
   lifetime: 0
   timeSinceLastAnimChange: 0
+  height: 0.75
+  width: 0.3
   showBack: 0
   spriteIdle: {fileID: 21300000, guid: e74d3e4824e1dca45903c471e6728c6a, type: 3}
   spriteIdleBack: {fileID: 21300000, guid: f0a6599d22c0aa34193f9d052763f975, type: 3}

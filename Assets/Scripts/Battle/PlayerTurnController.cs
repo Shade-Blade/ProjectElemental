@@ -86,8 +86,27 @@ public class PlayerTurnController : MonoBehaviour
         return BattleControl.Instance.GetEntities((e) => (e.posId <= 0) && e.hp > 0).Count;
     }
 
+    public void SetPlayerSprites()
+    {
+        foreach (PlayerEntity p in movableParty)
+        {
+            p.SetInactiveColor(false);
+        }
+        foreach (PlayerEntity p in immovableParty)
+        {
+            p.SetInactiveColor(true);
+        }
+    }
+    public void ResetPlayerSprites()
+    {
+        foreach (PlayerEntity p in BattleControl.Instance.GetPlayerEntities())
+        {
+            p.SetInactiveColor(false);
+        }
+    }
     public void ResetActionCommands()
     {
+        /*
         if (movableParty != null)
         {
             for (int i = 0; i < movableParty.Count; i++)
@@ -103,6 +122,13 @@ public class PlayerTurnController : MonoBehaviour
                 immovableParty[i].actionCommandSuccesses = 0;
                 immovableParty[i].blockSuccesses = 0;
             }
+        }
+        */
+        List<PlayerEntity> players = BattleControl.Instance.GetPlayerEntities(false);
+        foreach (PlayerEntity p in players)
+        {
+            p.actionCommandSuccesses = 0;
+            p.blockSuccesses = 0;
         }
     }
 
@@ -142,6 +168,7 @@ public class PlayerTurnController : MonoBehaviour
         {
             movableParty.Remove(b);
             immovableParty.Add(b);
+            b.SetInactiveColor(true);
         }
     }
     public void MakeImmobileStacking(PlayerEntity b)
@@ -160,6 +187,7 @@ public class PlayerTurnController : MonoBehaviour
             {
                 movableParty.Remove(b);
                 immovableParty.Add(b);
+                b.SetInactiveColor(true);
             }
         }
     }
@@ -169,6 +197,11 @@ public class PlayerTurnController : MonoBehaviour
 
         //movableParty = BattleControl.Instance.GetEntities((e) => (e.posId < 0));
         movableParty = BattleControl.Instance.GetPlayerEntities();
+
+        foreach (PlayerEntity p in movableParty)
+        {
+            p.SetInactiveColor(false);
+        }
 
         foreach (PlayerEntity p in movableParty)
         {
@@ -196,12 +229,18 @@ public class PlayerTurnController : MonoBehaviour
         movableParty = movableParty.FindAll((e) => e.CanMove());
         maxMovable = movableParty.Count;
 
+        foreach (PlayerEntity p in immovableParty)
+        {
+            p.SetInactiveColor(true);
+        }
+
         //redeem cooldown tokens
         List<PlayerEntity> cooldownParty = movableParty.FindAll((e) => e.HasEffect(Effect.EffectType.Cooldown));
         for (int i = 0; i < cooldownParty.Count; i++)
         {
             movableParty.Remove(cooldownParty[i]);
             immovableParty.Add(cooldownParty[i]);
+            cooldownParty[i].SetInactiveColor(true);
             cooldownParty[i].TokenRemoveOne(Effect.EffectType.Cooldown);
         }
 
@@ -241,6 +280,7 @@ public class PlayerTurnController : MonoBehaviour
         //Dispatch scripts specific for each player
         while (movableParty.Count > 0)
         {
+            SetPlayerSprites();
             int movableCount = movableParty.Count;
 
             PlayerEntity mover = movableParty[0];
@@ -299,6 +339,7 @@ public class PlayerTurnController : MonoBehaviour
                         newImmovable[i].TokenRemoveOne(Effect.EffectType.Cooldown);
                     }
                     immovableParty.Add(newImmovable[i]);
+                    newImmovable[i].SetInactiveColor(true);
                 }
             }
 
@@ -313,7 +354,7 @@ public class PlayerTurnController : MonoBehaviour
             {
                 immovableParty = immovableParty.FindAll((e) => (BattleControl.IsPlayerControlled(e, true)));
             }
-
+            SetPlayerSprites();
 
             //yield return StartCoroutine(BattleControl.Instance.CheckEndBattle());
 
@@ -402,6 +443,7 @@ public class PlayerTurnController : MonoBehaviour
                     else
                     {
                         immovableParty.Add(mover);
+                        mover.SetInactiveColor(true);
                         movableParty.RemoveAt(0);
                     }
                 }
@@ -415,14 +457,20 @@ public class PlayerTurnController : MonoBehaviour
                         pe.TokenRemoveOne(Effect.EffectType.BonusTurns);
                         movableParty.Add(pe);
                         immovableParty.Remove(pe);
+                        pe.SetInactiveColor(false);
                     }
                 }
+
+                //SetPlayerSprites();
             }
         }
 
         //need to keep item moves around due to reaction moves
         //GlobalItemScript.Instance.ClearItemMoves();
         Debug.Log("--PLAYER TURN END--");
+
+        ResetPlayerSprites();
+
         yield return null;
     }
 
@@ -430,6 +478,8 @@ public class PlayerTurnController : MonoBehaviour
     //controls battle menu at a higher level (handles what you choose)
     public IEnumerator TakeTurnSpecific(PlayerEntity caller)
     {
+        SetPlayerSprites();
+
         //debug
         if (DEBUG_PRINTING)
         {
@@ -880,6 +930,8 @@ public class PlayerTurnController : MonoBehaviour
                 //yield return caller.currMove.Execute(caller);
             }
         }
+
+        SetPlayerSprites();
     }
 
     public IEnumerator AutoMove(PlayerEntity caller)
@@ -954,7 +1006,7 @@ public class PlayerTurnController : MonoBehaviour
                     {
                         //Do nothing
                         caller.currMove = null;
-                        caller.curTarget = null;
+                        caller.curTarget = null;                                              
                     }
                 }
             }
@@ -997,9 +1049,40 @@ public class PlayerTurnController : MonoBehaviour
             }
             else
             {
-                //Do nothing
-                caller.currMove = null;
-                caller.curTarget = null;
+                //try the other move?
+                if (moveType)
+                {
+                    caller.currMove = caller.jumpMoves[0];
+                    if (caller.BadgeEquipped(Badge.BadgeType.MetalPower))
+                    {
+                        caller.currMove = null;
+                    }
+                }
+                else
+                {
+                    caller.currMove = caller.weaponMoves[0];
+                    if (caller.BadgeEquipped(Badge.BadgeType.SoftPower))
+                    {
+                        caller.currMove = null;
+                    }
+                }
+                if (caller.BadgeEquipped(Badge.BadgeType.SoftPower) && caller.BadgeEquipped(Badge.BadgeType.MetalPower))
+                {
+                    caller.currMove = null;
+                }
+                targetList = caller.currMove != null ? BattleControl.Instance.GetEntitiesSorted(caller, caller.currMove.GetTargetArea(caller)) : null;
+
+                if (targetList != null && targetList.Count > 0)
+                {
+                    caller.currMove.ChooseMove(caller);
+                    caller.curTarget = targetList[0];
+                }
+                else
+                {
+                    //Do nothing
+                    caller.currMove = null;
+                    caller.curTarget = null;
+                }
             }
         }
 

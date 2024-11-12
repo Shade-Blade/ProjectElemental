@@ -335,6 +335,15 @@ public class TMPString
                 output = "<size=1%>I</size><space=" + Text_CommonSprite.GetWidth(tag.args[0]) + "><size=1%>I</size>";
                 //output = "zz";
                 break;
+            case TagEntry.TextTag.Misc:
+            case TagEntry.TextTag.MiscSprite:
+                if (tag.args == null || tag.args.Length == 0)
+                {
+                    break;
+                }
+                output = "<size=1%>I</size><space=" + Text_MiscSprite.GetMiscWidth(tag.args[0]) + "><size=1%>I</size>";
+                //output = "z";
+                break;
             case TagEntry.TextTag.ZeroSpace:
             case TagEntry.TextTag.LArrow:
             case TagEntry.TextTag.RArrow:
@@ -439,7 +448,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkRed Outline + Overlay\"><color=#00ff00>";
+                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkGreen Outline + Overlay\"><color=#00ff00>";
                 }
                 break;
             case TagEntry.TextTag.HighlightEPColor:
@@ -846,6 +855,7 @@ public class TagEntry
         BadgeSprite,    //(...)
         RibbonSprite,
         CommonSprite,
+        MiscSprite,
 
         //Equivalents to above
         Effect,
@@ -856,6 +866,7 @@ public class TagEntry
         Badge,
         Ribbon,
         Common,
+        Misc,
 
         //hacky fix for certain things
         ZeroSpace,  //zero width space

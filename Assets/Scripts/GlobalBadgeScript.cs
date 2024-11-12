@@ -89,6 +89,15 @@ public class GlobalBadgeScript : MonoBehaviour
         {
             output += " <descriptionnoticecolor>(" + badgeText[(int)(i)][3] + ")</descriptionnoticecolor>";
         }
+
+        if (MainManager.Instance.Cheat_TooManyBadges)
+        {
+            if (length > 4 && badgeText[(int)(i)][4].Length > 0)
+            {
+                output += " <descriptionnoticecolor>(Stacking: " + badgeText[(int)(i)][4] + ")</descriptionnoticecolor>";
+            }
+        }
+
         //Debug.Log(output);
         //Debug.Log((int)itemText[(int)(i)][5][0]);
 
@@ -126,6 +135,8 @@ public struct BadgeDataEntry
     public bool singleOrParty;  //false = single, true = party
     public Badge.BadgeType copy;    //none = does not copy (Whenever you check GetBadgeCount, you will get all the badges with copy value set to the target type, and also the type itself)
     public bool badgeSwap;
+    public int normalStackLimit;
+    public int chapter;
 
     public static BadgeDataEntry? ParseBadgeDataEntry(string[] entry, Badge.BadgeType i = (Badge.BadgeType)(-1))
     {
@@ -182,6 +193,21 @@ public struct BadgeDataEntry
         {
             bool.TryParse(entry[4], out tempBool);
             bde.badgeSwap = tempBool;
+        }
+
+
+        temp = 0;
+        if (entry.Length > 5)
+        {
+            int.TryParse(entry[5], out temp);
+            bde.normalStackLimit = temp;
+        }
+
+        temp = 0;
+        if (entry.Length > 6)
+        {
+            int.TryParse(entry[6], out temp);
+            bde.chapter = temp;
         }
 
         return bde;

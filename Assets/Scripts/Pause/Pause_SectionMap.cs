@@ -29,6 +29,24 @@ public class Pause_SectionMap : Pause_SectionShared
 
         pointer.transform.localPosition = uo.position;
 
+        ApplyBounds();
+
+        selectedDot = dots.Find((e) => (uo.location == e.worldLocation));
+
+        if (selectedDot != null)
+        {
+            nameBox.SetText(MainManager.GetAreaName(selectedDot.worldLocation), true, true);
+            textbox.SetText(MainManager.GetAreaDesc(selectedDot.worldLocation), true, true);
+        }
+        else
+        {
+            nameBox.SetText("", true, true);
+            textbox.SetText("", true, true);
+        }
+    }
+
+    public void ApplyBounds()
+    {
         //270, 110
         Vector3 delta = pointer.transform.localPosition + mapImage.transform.localPosition;
         //Move map image such that the max pointer delta is 270, 110
@@ -66,20 +84,6 @@ public class Pause_SectionMap : Pause_SectionShared
         {
             mapImage.transform.localPosition = mapImage.transform.localPosition - Vector3.up * mapImage.transform.localPosition.y + Vector3.down * 275;
         }
-
-
-        selectedDot = dots.Find((e) => (uo.location == e.worldLocation));
-
-        if (selectedDot != null)
-        {
-            nameBox.SetText(MainManager.GetAreaName(selectedDot.worldLocation), true, true);
-            textbox.SetText(MainManager.GetAreaDesc(selectedDot.worldLocation), true, true);
-        }
-        else
-        {
-            nameBox.SetText("", true, true);
-            textbox.SetText("", true, true);
-        }
     }
 
     public List<MapDotScript> GetDots()
@@ -95,7 +99,7 @@ public class Pause_SectionMap : Pause_SectionShared
     public override void Init()
     {
         //move it to the current worldlocation
-        MainManager.WorldLocation curLocation;
+        MainManager.WorldLocation curLocation = MainManager.WorldLocation.None;
         Enum.TryParse(MainManager.Instance.mapScript.worldLocation, out curLocation);
 
         //move pointer to right place
@@ -122,6 +126,10 @@ public class Pause_SectionMap : Pause_SectionShared
         {
             textbox.SetText("", true, true);
         }
+
+        //Center pointer on map
+        mapImage.transform.localPosition = -pointer.transform.localPosition;
+        ApplyBounds();
 
         base.Init();
     }

@@ -852,7 +852,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C1_BurrowTrap
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -871,6 +871,8 @@ MonoBehaviour:
   dropShadow: {fileID: 0}
   noShadowUpdate: 0
   speed: 3
+  facingRotation: 0
+  trueFacingRotation: 0
   lastFrameVel: {x: 0, y: 0, z: 0}
   isGrounded: 0
   groundedTime: 0
@@ -881,6 +883,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
   intendedMovement: {x: 0, y: 0, z: 0}
@@ -901,6 +904,7 @@ MonoBehaviour:
   semisolidSnapBelow: 0
   areaFlag: 
   touchEncounter: 1
+  firstStrikeable: 0
   encounter:
     encounterList:
     - entid: BurrowTrap
@@ -1728,7 +1732,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C1_BurrowTrap
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -1747,6 +1751,8 @@ MonoBehaviour:
   dropShadow: {fileID: 0}
   noShadowUpdate: 0
   speed: 3
+  facingRotation: 0
+  trueFacingRotation: 0
   lastFrameVel: {x: 0, y: 0, z: 0}
   isGrounded: 0
   groundedTime: 0
@@ -1757,6 +1763,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
   intendedMovement: {x: 0, y: 0, z: 0}
@@ -1777,6 +1784,7 @@ MonoBehaviour:
   semisolidSnapBelow: 0
   areaFlag: 
   touchEncounter: 1
+  firstStrikeable: 0
   encounter:
     encounterList:
     - entid: BurrowTrap
@@ -1892,7 +1900,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C1_Rockling
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -1911,6 +1919,8 @@ MonoBehaviour:
   dropShadow: {fileID: 0}
   noShadowUpdate: 0
   speed: 3
+  facingRotation: 0
+  trueFacingRotation: 0
   lastFrameVel: {x: 0, y: 0, z: 0}
   isGrounded: 0
   groundedTime: 0
@@ -1921,6 +1931,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
   intendedMovement: {x: 0, y: 0, z: 0}
@@ -1941,6 +1952,7 @@ MonoBehaviour:
   semisolidSnapBelow: 0
   areaFlag: 
   touchEncounter: 1
+  firstStrikeable: 1
   encounter:
     encounterList:
     - entid: Rockling

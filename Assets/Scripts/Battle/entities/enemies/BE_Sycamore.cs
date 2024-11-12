@@ -27,6 +27,9 @@ public class BE_Sycamore : BattleEntity
             gameObject.AddComponent<BM_Sycamore_FullBloom>(),
             gameObject.AddComponent<BM_Sycamore_VineField>(),
             gameObject.AddComponent<BM_Sycamore_Fall>(),
+
+            gameObject.AddComponent<BM_Sycamore_Hard_RootShake>(),
+            gameObject.AddComponent<BM_Sycamore_Hard_RootGrasp>(),
         };
 
         base.Initialize();
@@ -62,6 +65,17 @@ public class BE_Sycamore : BattleEntity
                             break;
                         case 2:
                             currMove = moveset[6];
+                            if (BattleControl.Instance.GetCurseLevel() > 0)
+                            {
+                                ai_state = 3;
+                            }
+                            else
+                            {
+                                ai_state = 0;
+                            }
+                            break;
+                        case 3:
+                            currMove = moveset[9];
                             ai_state = 0;
                             break;
                     }
@@ -80,6 +94,17 @@ public class BE_Sycamore : BattleEntity
                             break;
                         case 2:
                             currMove = moveset[2];
+                            if (BattleControl.Instance.GetCurseLevel() > 0)
+                            {
+                                ai_state = 3;
+                            }
+                            else
+                            {
+                                ai_state = 0;
+                            }
+                            break;
+                        case 3:
+                            currMove = moveset[8];
                             ai_state = 0;
                             break;
                     }
@@ -172,6 +197,19 @@ public class BE_VinePlatform : BattleEntity
     }
 }
 
+public class BM_VinePlatform_Hard_CounterSoften : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.VinePlatform_Hard_CounterSoften;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
+
+    public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
+    {
+        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Soften, 1, 1));
+        yield return new WaitForSeconds(0.5f);
+    }
+}
+
 public class BM_Sycamore_ThornToss : EnemyMove
 {
     public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_ThornToss;
@@ -219,10 +257,6 @@ public class BM_Sycamore_Pollenate : EnemyMove
             {
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                }
             }
             else
             {
@@ -250,10 +284,6 @@ public class BM_Sycamore_FlowerShuriken : EnemyMove
             if (caller.GetAttackHit(t, 0))
             {
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                }
             }
             else
             {
@@ -344,10 +374,6 @@ public class BM_Sycamore_FullBloom : EnemyMove
             {
                 caller.DealDamage(t, 4, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                }
             }
             else
             {
@@ -375,10 +401,6 @@ public class BM_Sycamore_VineField : EnemyMove
             if (caller.GetAttackHit(t, 0))
             {
                 caller.DealDamage(t, 5, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                }
             }
             else
             {
@@ -433,6 +455,62 @@ public class BM_Sycamore_Fall : EnemyMove
             if (BattleControl.Instance.GetEntityByID(1) == null)
             {
                 BattleControl.Instance.SummonEntity(BattleHelper.EntityID.BurrowTrap, 1);
+            }
+        }
+    }
+}
+
+public class BM_Sycamore_Hard_RootShake : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_Hard_RootShake;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, 0))
+            {
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+    }
+}
+
+public class BM_Sycamore_Hard_RootGrasp : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sycamore_Hard_RootGrasp;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, 0))
+            {
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Exhausted, 1, 2));
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
             }
         }
     }

@@ -188,7 +188,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &171730508
 Transform:
   m_ObjectHideFlags: 0
@@ -991,6 +991,7 @@ MonoBehaviour:
   text_BadgeSprite: {fileID: 0}
   text_RibbonSprite: {fileID: 0}
   text_CommonSprite: {fileID: 0}
+  text_MiscSprite: {fileID: 0}
   text_EffectSprite: {fileID: 0}
   text_StateSprite: {fileID: 0}
   gameOverObject: {fileID: 0}
@@ -1008,6 +1009,7 @@ MonoBehaviour:
   badgeSprites: []
   ribbonSprites: []
   commonSprites: []
+  miscSprites: []
   effectSprites: []
   stateSprites: []
   pauseMenu: {fileID: 0}

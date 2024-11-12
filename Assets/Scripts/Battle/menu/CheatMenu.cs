@@ -473,6 +473,10 @@ public class CheatMenu : MenuHandler
                         foreach (PlayerEntity pe in pel)
                         {
                             pe.tactics = new List<BattleAction>();
+                            foreach (BattleAction des in pe.GetComponents<BattleAction>())
+                            {
+                                Destroy(des);
+                            }
                             pe.AddTactics();
                         }
                     }
@@ -495,6 +499,10 @@ public class CheatMenu : MenuHandler
                         foreach (PlayerEntity pe in pel)
                         {
                             pe.tactics = new List<BattleAction>();
+                            foreach (BattleAction des in pe.GetComponents<BattleAction>())
+                            {
+                                Destroy(des);
+                            }
                             pe.AddTactics();
                         }
                     }
@@ -517,6 +525,10 @@ public class CheatMenu : MenuHandler
                         foreach (PlayerEntity pe in pel)
                         {
                             pe.tactics = new List<BattleAction>();
+                            foreach (BattleAction des in pe.GetComponents<BattleAction>())
+                            {
+                                Destroy(des);
+                            }
                             pe.AddTactics();
                         }
                     }

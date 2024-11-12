@@ -342,7 +342,7 @@ public class GlobalItemScript : MonoBehaviour
     {
         ItemType itemType;
 
-        Enum.TryParse(item, out itemType);
+        Enum.TryParse(item, true, out itemType);
 
         return GetItemSprite(itemType);
     }
@@ -620,6 +620,8 @@ public struct ItemDataEntry
     public BattleHelper.DamageType damageType; //note: the table can have | entries (they get ORed)
     public BattleHelper.DamageProperties damageProperties;   //note: the table can have | entries (they get ORed)
     public int baseDamage;
+    public int chapter;
+    public bool isRecipe;
 
     public static ItemDataEntry? ParseItemDataEntry(string[] entry, ItemType i = (ItemType)(-1))
     {
@@ -988,6 +990,23 @@ public struct ItemDataEntry
             ide.baseDamage = temp;
         }
 
+
+        //chapter
+        temp = 0;
+        if (entry.Length > 16)
+        {
+            int.TryParse(entry[17], out temp);
+            ide.chapter = temp;
+        }
+
+        //recipe
+        tempBool = false;
+        if (entry.Length > 10)
+        {
+            bool.TryParse(entry[18], out tempBool);
+            ide.isRecipe = tempBool;
+        }
+
         return ide;
     }
 }
@@ -1230,6 +1249,11 @@ public struct KeyItem
     public static bool IsStackable(KeyItem ki)
     {
         return GlobalItemScript.Instance.keyItemDataTable[(int)(ki.type) - 1].stackable;
+    }
+
+    public static int GetCost(KeyItem ki)
+    {
+        return GlobalItemScript.Instance.keyItemDataTable[(int)(ki.type) - 1].buyPrice;
     }
 
 
@@ -1654,11 +1678,12 @@ public struct Item
         EnemyDrop,
         NPCGift,
         Shop,
-        CookSolar,
-        CookCrystal,
-        CookCaldera,
-        CookValley,
+        CookStella,
+        CookTorstrum,
+        CookSizzle,
+        CookGourmand,
         CookMagic,
+        Aurelia,
         Producer,   //produced by a different item
         Egg,
         Cheating,
@@ -2243,15 +2268,33 @@ public struct Item
 
         if (hpheal != 0)
         {
-            player.hp += hpheal;
-            if (player.hp < 0)
+            if (dual)
             {
-                player.hp = 0;
-            }
+                foreach (PlayerData.PlayerDataEntry pde in players.party)
+                {
+                    pde.hp += hpheal;
+                    if (pde.hp < 0)
+                    {
+                        pde.hp = 0;
+                    }
 
-            if (player.hp > player.maxHP)
+                    if (pde.hp > pde.maxHP)
+                    {
+                        pde.hp = pde.maxHP;
+                    }
+                }
+            } else
             {
-                player.hp = player.maxHP;
+                player.hp += hpheal;
+                if (player.hp < 0)
+                {
+                    player.hp = 0;
+                }
+
+                if (player.hp > player.maxHP)
+                {
+                    player.hp = player.maxHP;
+                }
             }
         }
         if (epheal != 0)

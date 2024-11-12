@@ -49,9 +49,18 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
                 for (int i = 0; i < menuEntries.Length; i++)
                 {
                     Item.ItemType it = GlobalItemScript.Instance.recipeOrder[i];
-                    //Debug.Log(it);
-                    menuEntries[i] = new InformationMenuEntry(GlobalItemScript.GetItemSprite(it), null, (i + 1) + ". " + Item.GetName(it), GlobalItemScript.Instance.GetRecipeText(it), null, GlobalItemScript.Instance.GetItemDescription(it));
-                    menuEntries[i].canUse = true;
+                    if (MainManager.Instance.GetRecipeFlag(it))
+                    {
+                        //Debug.Log(it);
+                        menuEntries[i] = new InformationMenuEntry(GlobalItemScript.GetItemSprite(it), null, (i + 1) + ". " + Item.GetName(it), GlobalItemScript.Instance.GetRecipeText(it), null, GlobalItemScript.Instance.GetItemDescription(it));
+                        menuEntries[i].canUse = true;
+                    }
+                    else
+                    {
+                        //Debug.Log(it);
+                        menuEntries[i] = new InformationMenuEntry(null, null, (i + 1) + ". ???", null, null, null);
+                        menuEntries[i].canUse = true;
+                    }
                 }
                 break;
             case Pause_HandlerJournal.JournalSubpage.Bestiary:
@@ -59,17 +68,34 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
                 for (int i = 0; i < menuEntries.Length; i++)
                 {
                     BattleHelper.EntityID eid = MainManager.Instance.bestiaryOrder[i].eid;
-                    string bestiaryOrderNumber = MainManager.Instance.bestiaryOrder[i].index.ToString();
-                    if (MainManager.Instance.bestiaryOrder[i].subindex != 0)
-                    {
-                        bestiaryOrderNumber += (char)('a' + MainManager.Instance.bestiaryOrder[i].subindex);
-                    }
 
-                    menuEntries[i] = new InformationMenuEntry(BattleEntity.GetBestiarySprite(eid), null, bestiaryOrderNumber + ". " + BattleEntity.GetNameStatic(eid), BattleEntity.GetBestiarySideText(eid), BattleEntity.GetBestiaryEntry(eid));
-                    menuEntries[i].canUse = true;
+                    if (BattleEntity.GetBestiaryFlag(eid))
+                    {
+                        string bestiaryOrderNumber = MainManager.Instance.bestiaryOrder[i].index.ToString();
+                        if (MainManager.Instance.bestiaryOrder[i].subindex != 0)
+                        {
+                            bestiaryOrderNumber += (char)('a' + MainManager.Instance.bestiaryOrder[i].subindex);
+                        }
+
+                        menuEntries[i] = new InformationMenuEntry(BattleEntity.GetBestiarySprite(eid), null, bestiaryOrderNumber + ". " + BattleEntity.GetNameStatic(eid), BattleEntity.GetBestiarySideText(eid), BattleEntity.GetBestiaryEntry(eid));
+                        menuEntries[i].canUse = true;
+                    }
+                    else
+                    {
+                        //Empty
+                        string bestiaryOrderNumber = MainManager.Instance.bestiaryOrder[i].index.ToString();
+                        if (MainManager.Instance.bestiaryOrder[i].subindex != 0)
+                        {
+                            bestiaryOrderNumber += (char)('a' + MainManager.Instance.bestiaryOrder[i].subindex);
+                        }
+
+                        menuEntries[i] = new InformationMenuEntry(null, null, bestiaryOrderNumber + ". ???", null, null, null);
+                        menuEntries[i].canUse = true;   //note: null infotext is not usable
+                    }
                 }
                 break;
             case Pause_HandlerJournal.JournalSubpage.Lore:
+                //Todo: flag check
                 menuEntries = new BoxMenuEntry[loreText.Length - 2];
                 for (int i = 1; i < menuEntries.Length + 1; i++)
                 {
@@ -77,6 +103,7 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
                 }
                 break;
             case Pause_HandlerJournal.JournalSubpage.Information:
+                //Todo: flag check
                 menuEntries = new BoxMenuEntry[infoText.Length - 2];
                 for (int i = 1; i < menuEntries.Length + 1; i++)
                 {

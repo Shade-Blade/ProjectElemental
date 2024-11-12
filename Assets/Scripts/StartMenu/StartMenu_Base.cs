@@ -97,7 +97,8 @@ public class StartMenu_Base : MenuHandler
 
     public void MenuUpdate()
     {
-        if (Mathf.Sign(InputManager.GetAxisVertical()) != inputDir || InputManager.GetAxisVertical() == 0)
+        lifetime += Time.deltaTime;
+        if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) != inputDir) || InputManager.GetAxisVertical() == 0)
         {
             inputDir = Mathf.Sign(InputManager.GetAxisVertical());
             if (InputManager.GetAxisVertical() == 0)
@@ -134,7 +135,7 @@ public class StartMenu_Base : MenuHandler
         logo.anchoredPosition = Vector2.up * MainManager.EasingQuadraticTime(logo.anchoredPosition.y, endHeight, 3333);
         selector.anchoredPosition = MainManager.EasingQuadraticTime(selector.anchoredPosition, Vector2.left * (150) + Vector2.up * menuEntries[menuIndex].anchoredPosition.y, 2000);
 
-        if (InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
         {
             SelectOption();
         }

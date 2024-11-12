@@ -1241,12 +1241,13 @@ public class TextboxScript : MonoBehaviour
                         if (dataGetSpeaker != null)
                         {
                             value = dataGetSpeaker.RequestTextData(argdg2a);
+                            //Debug.Log("dataget: " + value);
                         }
                         else
                         {
                             Debug.LogWarning("DataGet used in a null speaker context (using a different MEID) with request " + argdg2a);
                         }
-                        menuResult = FormattedString.SetMenuResult(menuResult, value, t.args[0]);
+                        menuResult = FormattedString.SetMenuResult(menuResult, value, t.args[1]);
                         //menuResult = new MenuResult(value);
                         Debug.Log("Set arg to " + value);
                     }
@@ -1331,6 +1332,14 @@ public class TextboxScript : MonoBehaviour
                 }
                 break;
         }
+
+        //hacky fix?
+        //wasn't actually the problem at the time but I think I should keep this in here anyway
+        if (inMenu)
+        {
+            text.bPress = false;
+            text.aPressTime = 0;
+        }
     }
 
     public void Bleep()
@@ -1340,6 +1349,7 @@ public class TextboxScript : MonoBehaviour
 
     public void MenuExit(object sender, MenuExitEventArgs meea)
     {
+        Debug.Log("Menu exit");
         inMenu = false;
         if (speaker != null && !speaker.SpeakingAnimActive())
         {
@@ -1366,9 +1376,24 @@ public class TextboxScript : MonoBehaviour
 
         originalPos = rt.anchoredPosition;  //end position?
 
-        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);   //start position
-        newAnchoredPos.y -= Screen.height / 2;
-        newAnchoredPos.x -= Screen.width / 2;
+        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosC(tailPointPos);   //start position
+        //Debug.Log(newAnchoredPos);
+
+        //currently I anchored it at top middle so I have to offset that
+        newAnchoredPos.y = -MainManager.CanvasHeight() + newAnchoredPos.y;
+        newAnchoredPos.x -= MainManager.CanvasWidth() / 2;
+        if (MainManager.Instance.IsPositionBehindCamera(tailPointPos))
+        {
+            //Debug.Log("behind");
+            newAnchoredPos.y *= -1;
+            newAnchoredPos.y += MainManager.CanvasHeight();
+            newAnchoredPos.x *= -1;
+        }
+
+        //fixing this
+        //
+        //should be (-247, -383)
+
         if (hasTail)
         {
             ConvertTailPos();
@@ -1405,9 +1430,20 @@ public class TextboxScript : MonoBehaviour
         animTime = 0;
         originalPos = rt.anchoredPosition;  //start position
 
-        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosB(tailPointPos);   //start position
-        newAnchoredPos.y -= Screen.height / 2;
-        newAnchoredPos.x -= Screen.width / 2;
+        Vector3 newAnchoredPos = MainManager.Instance.WorldPosToCanvasPosC(tailPointPos);   //start position
+        //Debug.Log(newAnchoredPos);
+
+        //currently I anchored it at top middle so I have to offset that
+        newAnchoredPos.y = -MainManager.CanvasHeight() + newAnchoredPos.y;
+        newAnchoredPos.x -= MainManager.CanvasWidth() / 2;
+        if (MainManager.Instance.IsPositionBehindCamera(tailPointPos))
+        {
+            //Debug.Log("behind");
+            newAnchoredPos.y *= -1;
+            newAnchoredPos.y += MainManager.CanvasHeight();
+            newAnchoredPos.x *= -1;
+        }
+
         if (hasTail)
         {
             ConvertTailPos();

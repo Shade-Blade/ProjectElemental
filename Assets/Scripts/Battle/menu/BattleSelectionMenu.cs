@@ -30,6 +30,7 @@ public class BattleSelectionMenu : MenuHandler
     bool diff = false;
 
     int selectionIndex = 0;
+    //public float lifetime = 0;
 
     public override event EventHandler<MenuExitEventArgs> menuExit;
 
@@ -71,6 +72,7 @@ public class BattleSelectionMenu : MenuHandler
 
     void MenuUpdate()
     {
+        lifetime += Time.deltaTime;
         if (possibleEntities.Count == 0 && targetArea.range != TargetArea.TargetAreaType.None) //note that the no target range will skip the selection menu
         {
             //Debug.Log("No target");
@@ -79,7 +81,7 @@ public class BattleSelectionMenu : MenuHandler
         //moving selection arrow around (can't do that if you are selecting all targets)
         if (!targetArea.allPossible && possibleEntities.Count > 1)
         {
-            if (Mathf.Sign(InputManager.GetAxisHorizontal()) != inputDir || InputManager.GetAxisHorizontal() == 0)
+            if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisHorizontal()) != inputDir) || InputManager.GetAxisHorizontal() == 0)
             {
                 inputDir = Mathf.Sign(InputManager.GetAxisHorizontal());
                 if (InputManager.GetAxisHorizontal() == 0)
@@ -113,7 +115,7 @@ public class BattleSelectionMenu : MenuHandler
 
                 if (possibleEntities.Count > 0)
                 {
-                    pointers[0].transform.position = possibleEntities[selectionIndex].transform.position + possibleEntities[selectionIndex].selectionOffset;
+                    pointers[0].transform.position = possibleEntities[selectionIndex].transform.position + possibleEntities[selectionIndex].selectionOffset + Vector3.up * (possibleEntities[selectionIndex].height + 0.5f);
                 }
 
                 if (diff)
@@ -166,7 +168,7 @@ public class BattleSelectionMenu : MenuHandler
 
         //Note: This code basically makes it so that if the range is none, the selection menu appears for up to 1 frame before getting closed instantly
         //this also happens before the B button is checked so you can't somehow back out in that 1 frame window
-        if ((InputManager.GetButtonDown(InputManager.Button.A) && possibleEntities.Count != 0) || targetArea.range == TargetArea.TargetAreaType.None) //Time to move!
+        if (lifetime > MIN_SELECT_TIME && ((InputManager.GetButtonDown(InputManager.Button.A) && possibleEntities.Count != 0) || targetArea.range == TargetArea.TargetAreaType.None)) //Time to move!
         {
             menuExit?.Invoke(this, new MenuExitEventArgs(GetFullResult()));
             switch (parentMenuName)
@@ -188,7 +190,7 @@ public class BattleSelectionMenu : MenuHandler
                 //    break;
             }
         }
-        if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
             Debug.Log("Going back");
             PopSelf();
@@ -197,7 +199,7 @@ public class BattleSelectionMenu : MenuHandler
 
     public override void Init()
     {
-        active = true;
+        base.Init();
 
         selectionIndex = 0;
 
@@ -237,7 +239,7 @@ public class BattleSelectionMenu : MenuHandler
                     for (int i = 0; i < possibleEntities.Count; i++)
                     {
                         GameObject p = Instantiate(BattleControl.Instance.pointerBase, transform);
-                        p.transform.position = possibleEntities[i].transform.position + possibleEntities[i].selectionOffset;
+                        p.transform.position = possibleEntities[i].transform.position + possibleEntities[i].selectionOffset + Vector3.up * (possibleEntities[i].height + 0.5f);
                         SelectPointerScript sps = p.GetComponent<SelectPointerScript>();
                         sps.SetText(eh.GetHighlightText(caller, possibleEntities[i], level));
                         pointers.Add(p);
@@ -247,7 +249,7 @@ public class BattleSelectionMenu : MenuHandler
                 {
                     nameBoxScript.SetText(possibleEntities[selectionIndex].GetName());
                     GameObject p = Instantiate(BattleControl.Instance.pointerBase, transform);
-                    p.transform.position = possibleEntities[selectionIndex].transform.position + possibleEntities[selectionIndex].selectionOffset;
+                    p.transform.position = possibleEntities[selectionIndex].transform.position + possibleEntities[selectionIndex].selectionOffset + Vector3.up * (possibleEntities[selectionIndex].height + 0.5f);
                     SelectPointerScript sps = p.GetComponent<SelectPointerScript>();
                     sps.SetText(eh.GetHighlightText(caller, possibleEntities[selectionIndex], level));
                     pointers.Add(p);

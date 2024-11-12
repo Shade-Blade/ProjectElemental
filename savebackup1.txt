@@ -1,9 +1,9 @@
 sus
 
 
-ForsakenMountains,Test_LandscapeC9,8.601145|0.8749998|-9.666781
-769.257
-25,0,60,60,60,60,60,60,0,0,0,0,10,32,6,6,6,0,0,2,0,0,0,0,2,0,2,2
+ForsakenMountains,Test_LandscapeC9,8.445898|0.8749998|-9.521571
+790.0048
+25,0,60,60,60,60,60,60,0,0,0,0,10,32,6,6,6,0,0,2,0,0,0,0,2,0,2,1
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP
 
 RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,SupremeDinner|None|Overworld,GoldenSalad|None|Overworld,GoldenSalad|None|Overworld,MiracleNeedle|None|Overworld,MiracleShroom|None|Overworld
@@ -16,7 +16,7 @@ SafetyRibbon|1,SharpRibbon|2,BeginnerRibbon|3,ExpertRibbon|4,ChampionRibbon|5,St
 Defense|4|5|5,Fortune|3|3|0
 None|0
 2,0
-Luna,60,60,2,2,MimicRibbon|10,0,0,0,0,31,1,217.2526
-PerfectShield|79,FirstEndurance|83,DefenseBoost|104,DefenseBoostB|105
-Wilex,40,40,2,2,SoftRibbon|9,0,0,0,0,0,0,12.51479
+Wilex,40,40,2,2,SoftRibbon|9,0,0,0,0,0,0,27.66022
 PerfectPower|78,FirstPower|81,FirstShield|82,AttackBoost|102,AttackBoostB|103,EnduranceBoost|106,EnduranceBoostB|107,AgilityBoost|108
+Luna,60,60,2,2,MimicRibbon|10,0,0,0,0,31,1,222.8541
+PerfectShield|79,FirstEndurance|83,DefenseBoost|104,DefenseBoostB|105

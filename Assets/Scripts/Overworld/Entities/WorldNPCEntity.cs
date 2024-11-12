@@ -88,14 +88,7 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
 
         height = wed.height;
         width = wed.width;
-        if (height != 0 && capsuleCollider != null)
-        {
-            capsuleCollider.height = height;
-        }
-        if (width != 0 && capsuleCollider != null)
-        {
-            capsuleCollider.radius = width; //note this (width is half of what it "should" be)
-        }
+        SetColliderInformation();
         interactRadius = wed.interactRadius;
         if (interactRadius != 0 && interactSphere != null)
         {

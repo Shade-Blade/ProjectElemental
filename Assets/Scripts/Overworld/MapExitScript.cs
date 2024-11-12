@@ -193,6 +193,7 @@ public class MapExitScript : MapExit
 
     public override IEnumerator DoExit()
     {
+        mapScript.OnExit(exitID);
         //Debug.Log("Exit " + exitID);
         yield return StartCoroutine(DoWalkExit());
         (Vector3 playerPos, float playerYaw) = GetRelativeOffset(WorldPlayer.Instance.transform.position, WorldPlayer.Instance.GetTrueFacingRotation());

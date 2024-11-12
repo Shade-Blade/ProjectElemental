@@ -64,7 +64,7 @@ public class MapScript : MonoBehaviour
         }
     }
 
-    public void MapInit()
+    public virtual void MapInit()
     {
         init = true;
 
@@ -168,6 +168,11 @@ public class MapScript : MonoBehaviour
         //vars = new string[MainManager.MAP_VAR_COUNT];
         flags = new Dictionary<string, bool>();
         vars = new Dictionary<string, string>();
+    }
+
+    public virtual void OnExit(int exitID)
+    {
+
     }
 
     public void Halt()

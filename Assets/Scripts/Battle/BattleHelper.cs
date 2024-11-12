@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro.EditorUtilities;
 using UnityEngine;
 
 [System.Serializable]
@@ -1150,52 +1151,52 @@ public static class BattleHelper
     public enum EntityProperties : ulong //(Future note: if I make more than 32 flags, I need to make this a ulong, which means I have to modify all my uint methods)
     {
         None = 0,
-        NoTarget =      1L, //can't be targetted through normal means
-        NoCount =       1L << 1, //not counted when determining live players and enemies
-        CountAtZero =   1L << 2, //Counted for determining battle end if hp = 0 (i.e. battle won't end even if they are at 0. Note that they still have to be in the battle to count)
-        Invulnerable =  1L << 3, //can't be damaged through normal means
-        Airborne =      1L << 4, //"high up (so low moves like melee attacks don't work)"    (*Hardcoded to occur with homepos.y > 1, but can be set manually)
-        LowStompable =  1L << 5, //Can be low stomped
-        Grounded =      1L << 6, //"touching a surface (so earthquake moves will work)"
-        Illusory =      1L << 7, //"all attacks miss" (this is independent from ethereal)
-        Unpiercable =   1L << 8, //defense cannot be pierced
-        DebuffImmune =  1L << 9, //can't be debuffed (may be independent from status immunity)
-        Ceiling =       1L << 10, //fails the topmost check (so you can't target them with jumps)
-        NoVoidCrush =   1L << 11, //Not void crushable, even if the formula says so
-        Toughness =     1L << 12, //3 damage or less is negated
-        Tempered =       1L << 13, //1 damage max
-        Hardened =      1L << 14, //can only take lethal damage (damage below max hp is negated)
-        Sturdy =        1L << 15, //at max hp, damage capped at max hp - 1
-        ExactDamageKill =   1L << 16, //will heal if not exact damage killed
-        NoMiracle =     1L << 17, //can't get miracle effect (flag set when Miracle activates)
-        GetEffectsAtNoHP = 1L << 18, //can you receive effects at 0 hp? (only set for special enemies that don't die at 0 hp)
-        KeepEffectsAtNoHP = 1L << 19, //Death will cure curable stuff normally
-        NoTattle =      1L << 20,   //Can't tattle
-        ScanHideMoves = 1L << 21,   //Scan does not reveal moveset
-        ScanMovesetMismatch = 1L << 22, //For enemies whose movesets dont match the data table (The three of these quiet the warning message for the data table not having the right moveset)
+        NoTarget =      1uL, //can't be targetted through normal means
+        NoCount =       1uL << 1, //not counted when determining live players and enemies
+        CountAtZero =   1uL << 2, //Counted for determining battle end if hp = 0 (i.e. battle won't end even if they are at 0. Note that they still have to be in the battle to count)
+        Invulnerable =  1uL << 3, //can't be damaged through normal means
+        Airborne =      1uL << 4, //"high up (so low moves like melee attacks don't work)"    (*Hardcoded to occur with homepos.y > 1, but can be set manually)
+        LowStompable =  1uL << 5, //Can be low stomped
+        Grounded =      1uL << 6, //"touching a surface (so earthquake moves will work)"
+        Illusory =      1uL << 7, //"all attacks miss" (this is independent from ethereal)
+        Unpiercable =   1uL << 8, //defense cannot be pierced
+        DebuffImmune =  1uL << 9, //can't be debuffed (may be independent from status immunity)
+        Ceiling =       1uL << 10, //fails the topmost check (so you can't target them with jumps)
+        NoVoidCrush =   1uL << 11, //Not void crushable, even if the formula says so
+        Toughness =     1uL << 12, //3 damage or less is negated
+        Resistant =       1uL << 13, //1 damage max
+        Hardened =      1uL << 14, //can only take lethal damage (damage below max hp is negated)
+        Sturdy =        1uL << 15, //at max hp, damage capped at max hp - 1
+        ExactDamageKill =   1uL << 16, //will heal if not exact damage killed
+        NoMiracle =     1uL << 17, //can't get miracle effect (flag set when Miracle activates)
+        GetEffectsAtNoHP = 1uL << 18, //can you receive effects at 0 hp? (only set for special enemies that don't die at 0 hp)
+        KeepEffectsAtNoHP = 1uL << 19, //Death will cure curable stuff normally
+        NoTattle =      1uL << 20,   //Can't tattle
+        ScanHideMoves = 1uL << 21,   //Scan does not reveal moveset
+        ScanMovesetMismatch = 1uL << 22, //For enemies whose movesets dont match the data table (The three of these quiet the warning message for the data table not having the right moveset)
 
-        SoftTouch =     1L << 23,
-        DeepSleep =     1L << 24,
-        Glacier =       1L << 25,
+        SoftTouch =     1uL << 23,
+        DeepSleep =     1uL << 24,
+        Glacier =       1uL << 25,
 
-        StateStunned =  1L << 26,
-        StateCharge =   1L << 27,
-        StateDefensive = 1L << 28,
-        StateRage =     1L << 29,
-        StateCounter = 1L << 30,
-        StateCounterHeavy = 1L << 31,
-        StateContactHazard = 1L << 32,
-        StateContactHazardHeavy = 1L << 33,
-        CharacterMark = 1L << 34,
-        PositionMark =  1L << 35,
+        StateStunned =  1uL << 26,
+        StateCharge =   1uL << 27,
+        StateDefensive = 1uL << 28,
+        StateRage =     1uL << 29,
+        StateCounter = 1uL << 30,
+        StateCounterHeavy = 1uL << 31,
+        StateContactHazard = 1uL << 32,
+        StateContactHazardHeavy = 1uL << 33,
+        CharacterMark = 1uL << 34,
+        PositionMark =  1uL << 35,
 
-        HideHP = 1L << 36,  //Replaces the hp number with a ?, also replaces the hp bar with an ambiguous thing
+        HideHP = 1uL << 36,  //Replaces the hp number with a ?, also replaces the hp bar with an ambiguous thing
 
         SuppressMovesetWarning = NoTattle | ScanHideMoves | ScanMovesetMismatch
     }
 
     public const float AIRBORNE_CUTOFFHEIGHT = 0.8f;
-    public const float LOWSTOMPABLE_CUTOFFHEIGHT = 1.6f;
+    public const float LOWSTOMPABLE_CUTOFFHEIGHT = 1.35f;   //was 1.6 before, but now is 1.35 so that Cactupoles are not low stompable, (But you can still low stomp Burrow Traps and Sundews as they are 1.25 height)
 
     [Flags]
     public enum BattleProperties : ulong
@@ -1568,12 +1569,17 @@ public class EncounterData
 
         public BattleHelper.EntityID GetEntityID()
         {
-            Enum.TryParse(entid, out BattleHelper.EntityID eid);
+            Enum.TryParse(entid, true, out BattleHelper.EntityID eid);
             if (eid == BattleHelper.EntityID.DebugEntity && !entid.Equals("DebugEntity"))
             {
                 Debug.LogError("Could not parse entity id: " + entid);
             }
             return eid;
+        }
+
+        public override string ToString()
+        {
+            return "(" + entid + " " + posid + " " + bonusdata + ")";
         }
     }
 
@@ -1601,5 +1607,214 @@ public class EncounterData
         {
             encounterList.Add(new EncounterDataEntry(eids[i],i));
         }
+    }
+
+    public static EncounterData GeneratePitEncounter(int floor, float weirdnessFactor = 1)
+    {
+        string[][] pitEnemyData = MainManager.CSVParse(Resources.Load<TextAsset>("Data/PitEnemyPool").text);
+
+
+        BattleHelper.EntityID[] idArray = new BattleHelper.EntityID[pitEnemyData.Length];
+        int[] levelArray = new int[pitEnemyData.Length - 1];
+        for (int i = 1; i < pitEnemyData.Length - 1; i++)
+        {
+            idArray[i - 1] = Enum.Parse<BattleHelper.EntityID>(pitEnemyData[i][0], true);
+            levelArray[i - 1] = int.Parse(pitEnemyData[i][1]);
+        }
+
+        //formula breaks since 36 is the max level of the enemies I have?
+        if (floor > 124)
+        {
+            floor = 124;
+        }
+
+        float levelNormal = 3 + (30f * floor / 100f); //5 + (25f * floor / 100f);
+
+        //range = +-2
+
+        //Debug.Log(levelNormal);
+
+        List<BattleHelper.EntityID> startEnemies = new List<BattleHelper.EntityID>();
+        List<int> startIndices = new List<int>();
+        for (int i = 0; i < levelArray.Length; i++)
+        {
+            if (levelArray[i] < levelNormal + 2 && levelArray[i] > levelNormal - 2)
+            {
+                startIndices.Add(i);
+            }
+        }
+
+        //sus static syntax
+        int randomIndex = RandomTable<int>.ChooseRandom(startIndices);
+
+        //Now add enemies to a new list
+        List<BattleHelper.EntityID> newEnemyList = new List<BattleHelper.EntityID>();
+        List<int> newLevelList = new List<int>();
+
+        int levelTotal = (int)(levelNormal * (2.7f + floor / 50f));        
+
+        while (levelTotal > 0)
+        {
+            int newRandomIndex = 0;
+            if (RandomGenerator.Get() < 0.05f * weirdnessFactor)
+            {
+                //Choose a later enemy
+                //Range = +-4 from randomIndex + 16
+                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 12, randomIndex + 20);
+            } else if (RandomGenerator.Get() < 0.1f * weirdnessFactor)
+            {
+                //Choose from a bigger range
+                //Range = +-8 from randomIndex
+                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 8, randomIndex + 8);
+            }
+            else
+            {
+                //Choose normally
+                //Range = +-2 from randomIndex
+                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 2, randomIndex + 3);
+            }
+
+            //if out of bounds, choose again
+            //(Choose from the 5 enemies at the start of the table)
+            if (newRandomIndex < 0)
+            {
+                newRandomIndex = RandomGenerator.GetIntRange(0, 6);
+            }
+
+            //(Choose from the 5 enemies at the end of the table)
+            if (newRandomIndex >= levelArray.Length)
+            {
+                newRandomIndex = RandomGenerator.GetIntRange(levelArray.Length - 5, levelArray.Length);
+            }
+
+            //no
+            if (idArray[newRandomIndex] == BattleHelper.EntityID.DebugEntity)
+            {
+                continue;
+            }
+
+            //Now add
+            newEnemyList.Add(idArray[newRandomIndex]);
+            newLevelList.Add(levelArray[newRandomIndex]);
+            levelTotal -= levelArray[newRandomIndex];
+
+            if (newEnemyList.Count > 3)
+            {
+                break;
+            }
+        }
+
+        if (levelTotal < 0)
+        {
+            for (int i = 0; i < newEnemyList.Count; i++)
+            {
+                if (newLevelList[i] < -2 * levelTotal)
+                {
+                    newLevelList.RemoveAt(i);
+                    newEnemyList.RemoveAt(i);
+                }
+            }
+        }
+
+        //swap indices such that the front enemy is the highest level one (with some small margin of error)
+        //(Stops that situation where a low level enemy is on the field but a really high level enemy is in the battle behind it)
+        for (int i = 1; i < newEnemyList.Count; i++)
+        {
+            if (newLevelList[i] > newLevelList[0] + 4)
+            {
+                int swaplevel = newLevelList[0];
+                BattleHelper.EntityID swapEID = newEnemyList[0];
+
+                newLevelList[0] = newLevelList[i];
+                newEnemyList[0] = newEnemyList[i];
+
+                newLevelList[i] = swaplevel;
+                newEnemyList[i] = swapEID;
+            }
+        }
+
+        //build an encounter with this information
+        EncounterData ed = new EncounterData();
+        ed.encounterList = new List<EncounterDataEntry>();
+
+        int offset = 0;
+        if (newEnemyList.Count < 3)
+        {
+            offset = 1;
+        }
+        if (newEnemyList.Count < 2)
+        {
+            offset = 2;
+        }
+        for (int i = 0; i < newEnemyList.Count; i++)
+        {
+            bool airborne = false;
+
+            airborne = (BattleEntityData.GetBattleEntityData(newEnemyList[i]).entityProperties & (ulong)BattleHelper.EntityProperties.Airborne) != 0;
+
+            EncounterDataEntry ede = new EncounterDataEntry(newEnemyList[i], airborne ? 10 + i + offset : i + offset);
+
+            if (newEnemyList[i] == BattleHelper.EntityID.CloudJelly)
+            {
+                switch (RandomGenerator.GetIntRange(0, 3))
+                {
+                    case 0:
+                        ede.bonusdata = "cloud";
+                        break;
+                    case 1:
+                        ede.bonusdata = "water";
+                        break;
+                    case 2:
+                        ede.bonusdata = "ice";
+                        break;
+                }
+            }
+
+            if (newEnemyList[i] == BattleHelper.EntityID.Sawcrest)
+            {
+                if (RandomGenerator.Get() < 0.5f)
+                {
+                    ede.bonusdata = "active";
+                }
+            }
+
+            ed.encounterList.Add(ede);
+        }
+
+        return ed;
+    }
+
+    public int GetOverkillLevel()
+    {
+        BattleEntityData bed = BattleEntityData.GetBattleEntityData(Enum.Parse<BattleHelper.EntityID>(encounterList[0].entid, true));
+        return bed.level;
+    }
+
+    public float GetEncounterDifficultyLevel()
+    {
+        float sumlevel = 0;
+        foreach (var e in encounterList)
+        {
+            BattleEntityData bed = BattleEntityData.GetBattleEntityData(Enum.Parse<BattleHelper.EntityID>(encounterList[0].entid, true));
+            sumlevel += bed.level;
+        }
+
+        return (sumlevel - 12) / 4f;
+    }
+
+    public override string ToString()
+    {
+        string output = "";
+
+        for (int i = 0; i < encounterList.Count; i++)
+        {
+            output += encounterList[i].ToString();
+            if (i < encounterList.Count - 1)
+            {
+                output += " ";
+            }
+        }
+
+        return output;
     }
 }

@@ -6,9 +6,11 @@ public class BE_Blazecrest : BattleEntity
 {
     int counterCount;
     public bool lastHitWeakness;
+    public bool usedRageFlare = false;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Blazecrest_FlameBreath>(), gameObject.AddComponent<BM_Blazecrest_Roar>(), gameObject.AddComponent<BM_Blazecrest_Hard_CounterFlameFocus>() };
+        usedRageFlare = false;
+        moveset = new List<Move> { gameObject.AddComponent<BM_Blazecrest_FlameBreath>(), gameObject.AddComponent<BM_Blazecrest_Roar>(), gameObject.AddComponent<BM_Blazecrest_Hard_CounterRageFlare>() };
 
         base.Initialize();
     }
@@ -73,15 +75,20 @@ public class BE_Blazecrest : BattleEntity
             return false;
         }
 
-        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
+        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0 && !usedRageFlare)
         {
-            counterCount++;
+
             if ((target.lastDamageType & (BattleHelper.DamageType.Light | BattleHelper.DamageType.Water)) != 0)
             {
                 lastHitWeakness = true;
             }
-            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
-            return true;
+            if (hp * 2 <= maxHP || lastHitWeakness)
+            {
+                usedRageFlare = true;
+                counterCount++;
+                BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
+                return true;
+            }
         }
 
         return false;
@@ -157,25 +164,15 @@ public class BM_Blazecrest_Roar : EnemyMove
     }
 }
 
-public class BM_Blazecrest_Hard_CounterFlameFocus : EnemyMove
+public class BM_Blazecrest_Hard_CounterRageFlare: EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Blazecrest_Hard_CounterFlameFocus;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Blazecrest_Hard_CounterRageFlare;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        if (caller is BE_Blazecrest bl)
-        {
-            if (bl.lastHitWeakness)
-            {
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
-            }
-            else
-            {
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
-            }
-        }
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.CounterFlare, 1, 3));
         yield return new WaitForSeconds(0.5f);
     }
 }
@@ -216,22 +213,22 @@ public class BM_Embercrest_Fireball : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Fire))
             {
+                //note that the illuminate effect also boosts this pretty high
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Lavaswimmer:
-                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                         break;
                     case BattleHelper.EntityID.Embercrest:
-                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                         break;
                     default:
-                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                         break;
                 }
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
-                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
-                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
+                    caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Illuminate, 1, 3));
                 }
             }
             else
@@ -244,9 +241,10 @@ public class BM_Embercrest_Fireball : EnemyMove
 
 public class BE_Ashcrest : BattleEntity
 {
+    int counterCount = 0;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Ashcrest_ThornBomb>(), gameObject.AddComponent<BM_Ashcrest_SplashBomb>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Ashcrest_ThornBomb>(), gameObject.AddComponent<BM_Ashcrest_SplashBomb>(), gameObject.AddComponent<BM_Shared_Hard_CounterHide>() };
 
         base.Initialize();
     }
@@ -256,6 +254,36 @@ public class BE_Ashcrest : BattleEntity
         currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
 
         BasicTargetChooser();
+    }
+
+    public override IEnumerator PostMove()
+    {
+        counterCount = 0;
+        yield return StartCoroutine(base.PostMove());
+    }
+
+    public override IEnumerator PreReact(Move move, BattleEntity target)
+    {
+        counterCount = 0;
+
+        Effect_ReactionDefend();
+
+        yield return new WaitForSeconds(0.5f);
+    }
+    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
+    {
+        if (BattleControl.Instance.GetCurseLevel() <= 0)
+        {
+            return false;
+        }
+
+        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
+        {
+            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
+            return true;
+        }
+
+        return false;
     }
 }
 
@@ -278,7 +306,7 @@ public class BM_Ashcrest_ThornBomb : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
             {
-                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
+                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, 1, 3));
@@ -311,7 +339,7 @@ public class BM_Ashcrest_SplashBomb : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
-                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
+                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
@@ -328,51 +356,25 @@ public class BM_Ashcrest_SplashBomb : EnemyMove
 
 public class BE_Flametongue : BattleEntity
 {
-    int counterCount;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Flametongue_FlameLick>(), gameObject.AddComponent<BM_Shared_Hard_CounterHarden>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Flametongue_FlameLick>(), gameObject.AddComponent<BM_Flametongue_Hard_HustleLick>() };
 
         base.Initialize();
     }
 
     public override void ChooseMoveInternal()
     {
-        currMove = moveset[0];
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            currMove = moveset[((posId + BattleControl.Instance.turnCount - 1) % 3 == 1) ? 1 : 0];
+        }
+        else
+        {
+            currMove = moveset[0];
+        }
 
         BasicTargetChooser();
-    }
-
-    public override IEnumerator PostMove()
-    {
-        //also reset here in case something weird happens
-        counterCount = 0;
-        yield return StartCoroutine(base.PostMove());
-    }
-
-    public override IEnumerator PreReact(Move move, BattleEntity target)
-    {
-        counterCount = 0;
-
-        Effect_ReactionDefend();
-
-        yield return new WaitForSeconds(0.5f);
-    }
-    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
-    {
-        if (BattleControl.Instance.GetCurseLevel() <= 0)
-        {
-            return false;
-        }
-
-        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
-        {
-            counterCount++;
-            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[1]);
-            return true;
-        }
-
-        return false;
     }
 }
 
@@ -408,20 +410,35 @@ public class BM_Flametongue_FlameLick : EnemyMove
     }
 }
 
+public class BM_Flametongue_Hard_HustleLick : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Flametongue_Hard_HustleLick;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 1));
+    }
+}
+
 public class BE_Heatwing : BattleEntity
 {
-    int counterCount;
-
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Heatwing_FlameSpread>(), gameObject.AddComponent<BM_Shared_DoubleSwoop>(), gameObject.AddComponent<BM_Shared_Hard_CounterRally>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Heatwing_FlameSpread>(), gameObject.AddComponent<BM_Shared_DoubleSwoop>(), gameObject.AddComponent<BM_Heatwing_Hard_DreadScreech>() };
 
         base.Initialize();
     }
 
     public override void ChooseMoveInternal()
     {
-        counterCount = 0;
         if (moveset.Count == 0)
         {
             currMove = null;
@@ -434,7 +451,14 @@ public class BE_Heatwing : BattleEntity
             }
             else
             {
-                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+                if (BattleControl.Instance.GetCurseLevel() > 0)
+                {
+                    currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+                }
+                else
+                {
+                    currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+                }
             }
         }
 
@@ -444,38 +468,6 @@ public class BE_Heatwing : BattleEntity
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
     {
         yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
-    }
-
-    public override IEnumerator PostMove()
-    {
-        //also reset here in case something weird happens
-        counterCount = 0;
-        yield return StartCoroutine(base.PostMove());
-    }
-
-    public override IEnumerator PreReact(Move move, BattleEntity target)
-    {
-        counterCount = 0;
-
-        Effect_ReactionDefend();
-
-        yield return new WaitForSeconds(0.5f);
-    }
-    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
-    {
-        if (BattleControl.Instance.GetCurseLevel() <= 0)
-        {
-            return false;
-        }
-
-        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
-        {
-            counterCount++;
-            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
-            return true;
-        }
-
-        return false;
     }
 }
 
@@ -503,7 +495,43 @@ public class BM_Heatwing_FlameSpread : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
             {
-                caller.DealDamage(t, 1, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+    }
+}
+
+public class BM_Heatwing_Hard_DreadScreech : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Heatwing_Hard_DreadScreech;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //fly back up        
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Dark))
+            {
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Dread, 1, 1));
             }
             else
             {
@@ -523,6 +551,11 @@ public class BE_Lavaswimmer : BattleEntity
         moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Bite>(), gameObject.AddComponent<BM_Embercrest_Fireball>(), gameObject.AddComponent<BM_Shared_Hard_CounterRoar>() };
 
         base.Initialize();
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateCounter, true);
+        }
     }
 
     public override void ChooseMoveInternal()

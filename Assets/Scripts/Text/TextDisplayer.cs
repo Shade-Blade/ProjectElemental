@@ -702,6 +702,21 @@ public class TextDisplayer : MonoBehaviour
                             offset++;
                         }
                         break;
+                    case TagEntry.TextTag.Misc:
+                    case TagEntry.TextTag.MiscSprite:
+                        offset++;
+
+                        Vector3 Mposition;
+                        float Msize;
+                        (Msize, Mposition) = SpritePosition(textInfo, j + offset, 50);
+
+                        GameObject mis = Text_MiscSprite.Create(tags[i].args, j + offset, Msize);
+                        SpriteSetup(mis, Mposition, BuildTextEffectSet(j + offset));
+
+                        specialSprites.Add(mis);
+
+                        offset++;
+                        break;
                 }
             }
 

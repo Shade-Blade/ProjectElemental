@@ -21,28 +21,38 @@ Hard_CounterShield,(Hard) Counter - Shield,"<color,red>(Only on higher difficult
 Hard_CounterMarshall,(Hard) Counter - Marshall,"<color,red>(Only on higher difficulties)</color> (Targets All Allies) Give Attack Up to all allies after being attacked.",
 Leafling_Hard_TailWhip,(Hard) Tail Whip,"<color,red>(Only on higher difficulties)</color> Tail whip a single target to deal Earth damage. (Earth damage is 66% stronger if you took damage this turn.)",
 Flowerling_Hard_SwoopBloom,(Hard) Swoop Bloom,"<color,red>(Only on higher difficulties)</color> Swoop down and hit a single target. Get some Focus at the end of your turn.",
+Sunflower_Hard_SolarBite,(Hard) Solar Bite,"<color,red>(Only on higher difficulties)</color> Swoop down and hit a single target and inflict 3 turns of Sunflame, which deals increasing damage over time but also increases attack power.",
 Sunnybud_BiteFlyHeal,Sweet Bite,"(Targets Any Enemy, Targets Any Ally) Bite a single target then start flying, then heal a single ally.",
+Sunnybud_BiteFlyHeaIlluminate,Luminous Bite,"(Targets Any Enemy, Targets Any Ally) Bite a single target then start flying, then heal a single ally.","(Higher Difficulties: Applies Illuminate to the heal target, or to self if there are multiple heal targets.)"
+Sunnybud_BiteFlyHealMiracle,Miracle Bite,"(Targets Any Enemy, Targets Any Ally) Bite a single target then start flying, then heal a single ally.","(Higher Difficulties: Applies Miracle to the heal target, or to self if there are multiple heal targets.)"
 Rootling_FrontSlam,Slam,(Targets Any Enemy) Slam down onto a single target.,
 Rootling_DoubleSlam,Big Slam,(Targets Any Enemy) Slam down onto all targets.,
 Rootling_Dig,Dig,(Targets Self) Dig down and become untargettable for a single turn.,(Higher difficulties: Heal for a small amount of HP and get a small amount of Absorb.)
 Rootling_Uproot,Uproot,(Targets Any Enemy) Emerge from the ground and slam down onto all targets.,
-SunSapling_FrontSlam,Slam,"(Targets Any Enemy) Slam down onto a single target. Summon a Sunnybud and a Sunflower if there is space. If there is no space, give both of them some Focus.",(Higher difficulties: Allies gain slightly more Focus and some Absorb.)
+SunSapling_FrontSlam,Slam,"(Targets Any Enemy) Slam down onto a single target. Summon a Sunnybud and a Sunflower if there is space. If there is no space, give both of them some Focus.",(Higher difficulties: Allies gain 3 turns of Illuminate)
 SunSapling_BigSlam,Big Slam,(Targets Any Enemy) Slam down onto all targets.,
-SunSapling_GrowCharge,Growth Charge,"(Targets Self) Absorb solar energy to gain a large amount of Focus. Summon a Sunnybud and a Sunflower if there is space. If there is no space, give both of them some Focus.",(Higher difficulties: Allies gain slightly more Focus and some Absorb.)
-SunSapling_Roar,Power Roar,(Targets Any Enemy) Roar powerfully to hit all targets and give all allies some Focus.,(Higher difficulties: User gains some Absorb and heals a small amount.)
+SunSapling_GrowCharge,Growth Charge,"(Targets Self) Absorb solar energy to gain a large amount of Focus. Summon a Sunnybud and a Sunflower if there is space. If there is no space, give both of them some Focus.",(Higher difficulties: Allies gain 3 turns of Illuminate)
+SunSapling_Roar,Power Roar,(Targets Any Enemy) Roar powerfully to hit all targets for Fire damage and give all allies some Focus.,(Higher difficulties: Inflicts Sunflame for 3 turns. User gains some Absorb and heals a small amount.)
 Honeybud_SwoopHeal,Sweet Swoop,(Targets Any Enemy) Swoop down and hit a single target and then heal a single ally or all allies for a smaller amount.,
+Honeybud_SwoopHealIlluminate,Luminous Swoop,(Targets Any Enemy) Swoop down and hit a single target and then heal a single ally or all allies for a smaller amount.,"Apply Illuminate to the heal target, or to self if healing multiple allies."
+Honeybud_SwoopHealMiracle,Miracle Swoop,(Targets Any Enemy) Swoop down and hit a single target and then heal a single ally or all allies for a smaller amount.,"Apply Miracle to the heal target, or to self if healing multiple allies."
 BurrowTrap_PollenBite,Pollen Bite,(Targets Any Enemy) Bite a target and cover them with pollen to inflict Dizzy.,
-BurrowTrap_CounterPollenBite,Counter - Pollen Bite,(Targets Attacker) Bite a target and cover them with pollen to inflict Dizzy. Counter still happens even if they are reduced to 0 hp.,(Higher difficulties: Inflicts 2 turns of Dizzy instead of 1.)
+BurrowTrap_CounterPollenBite,Counter - Pollen Bite,(Targets Attacker) Bite a target and cover them with pollen to inflict Dizzy. Counter still happens even if they are reduced to 0 hp.,
+BurrowTrap_Hard_SunBloom,(Hard) Sun Bloom,"<color,red>(Only on higher difficulties)</color> Give yourself 3 turns of Illuminate, which gives increasing attack power buffs over time.",
 Sundew_PoisonToss,Poison Toss,(Targets Any Enemy) Fling a poison droplet at a single target to deal Earth damage and inflict Poison.,
-Sundew_CounterPoisonToss,Counter - Poison Toss,(Targets Attacker) Fling a poison droplet at a single target to deal Earth damage and inflict Poison. Counter still happens even if they are reduced to 0 hp.,(Higher difficulties: Inflicts 2 turns of Poison instead of 1.)
+Sundew_CounterPoisonToss,Counter - Poison Toss,(Targets Attacker) Fling a poison droplet at a single target to deal Earth damage and inflict Poison. Counter still happens even if they are reduced to 0 hp.,
+Sundew_Hard_ExhaustBall,(Hard) Exhaust Ball,"(Targets Any Enemy) Fling a watery ball at a single target to deal Water damage and inflict Exhausted, which prevents Stamina from being used.",
+VinePlatform_Hard_CounterSoften,(Hard) Counter - Soften,"<color,red>(Only on higher difficulties)</color> (Targets Self) Get Soften for 1 turn after being attacked.",
 Sycamore_ThornToss,Thorn Toss,(Targets Any Enemy) Throw a thorn to deal normal damage to a single target,
-Sycamore_Pollenate,Pollenate,(Targets All Enemies) Shoot a cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 1 Defocus.)
-Sycamore_FlowerShuriken,Flower Shuriken,(Targets All Enemies) Throw a sharp flower to deal Earth damage to all targets.,(Higher difficulties: Inflicts 1 Defocus.)
+Sycamore_Pollenate,Pollenate,(Targets All Enemies) Shoot a cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,
+Sycamore_FlowerShuriken,Flower Shuriken,(Targets All Enemies) Throw a sharp flower to deal Earth damage to all targets.,
 Sycamore_Overgrowth,Overgrowth,"(Targets Self) (Activates at or below 2/3 health) Summon a Burrow Trap in front and a Sundew behind the user, heal for 10 HP and raise a Vine Platform to stand on.",
 Sycamore_VineStab,Vine Stab,(Targets Any Enemy) Send a vine to deal normal damage to a single target.,
-Sycamore_FullBloom,Full Bloom,(Targets All Enemies) Create a large cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 1 Defocus.)
-Sycamore_VineField,Vine Field,(Targets All Enemies) Grow many vines in order to deal Earth damage to all targets.,(Higher difficulties: Inflicts 1 Defocus.)
+Sycamore_FullBloom,Full Bloom,(Targets All Enemies) Create a large cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,
+Sycamore_VineField,Vine Field,(Targets All Enemies) Grow many vines in order to deal Earth damage to all targets.,
 Sycamore_Fall,Reaction - Fall,(Activates when the Vine Platform is destroyed) Fall down and permanently increase the user's defense by 1.,(Higher Difficulties: A Burrow Trap is summoned in front.)
+Sycamore_Hard_RootShake,(Hard) Root Shake,(Targets All Enemies) Shake the ground with many roots to deal Earth damage and inflict 2 Defocus.,
+Sycamore_Hard_RootGrasp,(Hard) Root Grasp,(Targets All Enemies) Grab the targets with many roots to deal Earth damage to all targets and inflict Exhausted for 2 turns.,
 GiantVine_Slam,Slam,(Targets Any Enemy) Slam down onto a single target to deal Normal damage.,
 GiantVine_BigSlam,Big Slam,(Targets All Enemies) Slam onto all targets to deal Normal damage.,
 GiantVine_Telegraph,Telegraph,(Targets Front Enemy) Prepare to grab an enemy. (Cannot grab if there is only 1 player left alive or not grabbed),
@@ -51,64 +61,77 @@ GiantVine_Constrict,Constrict,(Targets Grabbed Character) Hurt the grabbed chara
 GiantVine_Throw,Reaction - Throw,(Activates when the Giant Vine or the grabbed character is at 0 hp) Throw the grabbed character to release them.,
 GiantVine_Hard_LashOut,(Hard) Lash Out,"<color,red>(Only on higher difficulties)</color> (Targets Any Enemy) Slash a single target to deal Earth Damage. (Occurs instead of Slam.)",
 MasterOfAutumn_ThornToss,Thorn Toss,(Targets Any Enemy) Throw two thorns to deal normal damage to a single target,
-MasterOfAutumn_PollenStorm,Pollen Storm,(Targets All Enemies) Shoot a cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 2 Defocus.)
-MasterOfAutumn_FlowerShuriken,Flower Shuriken,(Targets All Enemies) Throw a sharp flower to deal Earth damage to all targets.,(Higher difficulties: Inflicts 2 Defocus.)
-MasterOfAutumn_Overgrowth,Overgrowth,"(Targets Self) (Activates at or below 2/3 health) Summon two Giant Vines, heal for 10 HP and raise a Vine Throne to stand on to become untargettable until the Throne is destroyed.",
+MasterOfAutumn_PollenStorm,Pollen Storm,(Targets All Enemies) Shoot a cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,
+MasterOfAutumn_FlowerShuriken,Flower Shuriken,(Targets All Enemies) Throw a sharp flower to deal Earth damage to all targets.,
+MasterOfAutumn_Overgrowth,Overgrowth,"(Targets Self) (Activates at or below 2/3 health) Summon two Giant Vines, heal for 10 HP and raise a Vine Throne to stand on to become untargettable until the Throne is destroyed.","(Higher difficulties: Giant Vines are spawned with 2 turns of Soften, which reduces incoming damage to damage over time.)"
 MasterOfAutumn_VineStab,Vine Stab,(Targets Any Enemy) Send two vines to deal normal damage to a single target.,
-MasterOfAutumn_FullBloom,Full Bloom,(Targets All Enemies) Create a large cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,(Higher difficulties: Inflicts 2 Defocus.)
-MasterOfAutumn_VineField,Vine Field,(Targets All Enemies) Grow many vines in order to deal Earth damage to all targets.,(Higher difficulties: Inflicts 2 Defocus.)
-MasterOfAutumn_Resummon,Reaction - Resummon,(Activates when both Giant Vines are destroyed in Phase 2) Summon a new Giant Vine. The summon position of the Giant Vine will alternate if this is repeatedly triggered.,
+MasterOfAutumn_FullBloom,Full Bloom,(Targets All Enemies) Create a large cloud of pollen from a flower to deal Earth damage and inflict Dizzy.,
+MasterOfAutumn_VineField,Vine Field,(Targets All Enemies) Grow many vines in order to deal Earth damage to all targets.,
+MasterOfAutumn_Resummon,Reaction - Resummon,(Activates when both Giant Vines are destroyed in Phase 2) Summon a new Giant Vine. The summon position of the Giant Vine will alternate if this is repeatedly triggered.,"(Higher difficulties: Giant Vines are spawned with 2 turns of Soften, which reduces incoming damage to damage over time.)"
 MasterOfAutumn_Fall,Reaction - Fall,"(Activates when the Vine Platform is destroyed) Fall down and permanently increase the user's defense by 1, and summon a Giant Vine.",(Higher Difficulties: Two Giant Vines are spawned instead of one.)
+MasterOfAutumn_Hard_RootShake,(Hard) Root Shake,(Targets All Enemies) Shake the ground with many roots to deal Earth damage and inflict 4 Defocus.,
+MasterOfAutumn_Hard_RootDrain,(Hard) Root Drain,"(Targets All Enemies) Grab the targets with many roots to deal Earth damage to all targets, draining health from them and inflict Exhausted for 2 turns.",
 Bandit_Slash,Slash,(Targets Any Enemy) Slash a single target. May feint before actually striking.,
 Bandit_Hard_TeamCounter,(Hard) Team Counter,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Counter an attack made on any ally.",
-Renegade_Hard_SandSplash,(Hard) Sand Splash,"<color,red>(Only on higher difficulties)</color> (Targets All Enemies) Deal Electric damage to all targets and inflict Enervate on all targets.",
+Renegade_Hard_HeatWave,(Hard) Heat Wave,"<color,red>(Only on higher difficulties)</color> (Targets All Enemies) Deal Fire damage to all targets and inflict Enervate on all targets.",
 Sentry_Fling,Sling,"(Targets Lowest Health Enemy) Sling a rock at the lowest HP target. (Usable while grounded, will fly up before the move.)",
 Sentry_CounterFling,Counter - Sling,(Targets Attacker) Sling a rock at the attacker to deal Electric damage and inflict Paralyze.,(Higher difficulties: Inflicts 1 Sunder.)
 Cactupole_ThornShock,Thorn Shock,(Targets Any Enemy) Stab a target with thorns to deal Electric damage and inflict Paralyze. Also fall down to the ground after the move.,
+Cactupole_Hard_StormFortify,(Hard) Storm Fortify,"<color,red>(Only on higher difficulties)</color> Give yourself 3 turns of Quantum Shield and 1 Focus. Quantum Shield fully blocks 1 hit.",
 Sandswimmer_Bite,Bite,(Targets Any Enemy) Bite a single target to deal normal damage and paralyze them.,
+Renegade_Hard_HeatWave,(Hard) Flash Discharge,"<color,red>(Only on higher difficulties)</color> (Targets All Enemies) Deal Light damage to all targets and inflict Arc Discharge on all targets, an effect that causes damage taken to also be reapplied to all allies at reduced strength at the end of turn.",
 Slime_Stomp,Stomp,(Targets Any Enemy) Stomp a single target.,
 Slime_SplashStomp,Splash Stomp,(Targets Any Enemy) Jump high and splash a single target to deal Water damage.,
+Slime_Hard_CounterMistWall,(Hard) Counter - Mist Wall,"<color,red>(Only on higher difficulties)</color> (Targets Self) Get Mist Wall for 2 turns after being attacked, which reduces incoming damage by 33%.",
 Slimewalker_WaterCannon,Water Cannon,(Targets Any Enemy) Shoot a ball of water at a single target to deal Water damage. (This will prioritize the target that will take the most damage.),
 Slimewalker_Hard_SoftSplash,(Hard) Soft Splash,"<color,red>(Only on higher difficulties)</color> (Targets Any Enemy) Stomp on a single target to deal weak Water damage but inflict Defense Down 2 for 3 turns.",
-Slimeworm_Charge,Charge,(Targets Self) Get 3 Focus and 3 Absorb.,(Higher difficulties: Also heal for 4 HP.)
+Slimeworm_Charge,Charge,(Targets Self) Get 2 Focus and 2 Absorb.,(Higher difficulties: Also heal for 2 HP.)
 Slimeworm_Mortar,Mortar,(Targets All Enemies) Shoot a large ball of water to deal Water damage to all enemies.,
+Slimeworm_Hard_DeepMortar,(Hard) Deep Mortar,"<color,red>(Only on higher difficulties)</color>  (Targets All Enemies) Shoot a large ball of oil to deal Fire damage and inflict Splotch for 2 turns to all enemies. Splotch causes incoming damage to be repeated at the end of turn.",
 Slimebloom_Zap,Zap,(Targets Any Enemy) Zap a single target to deal Electric damage and inflict Paralyze,(Higher difficulties: Inflicts 1 Sunder)
 Slimebloom_Lob,Lob,(Targets Any Enemy) Lob a ball of water at a single target to deal Water damage and inflict Sleep,(Higher difficulties: Inflicts 1 Defocus)
+Slimebloom_Hard_Flash,(Hard) Flash,"(Targets Front Enemy) Shoot a beam of light to deal Light damage and inflict Time Stop, which stops movement but prevents all damage taken.",
 Sirenfish_BubbleSong,Bubble Song,"(Targets Any Enemy) Send a bubble towards the target to deal Water damage and inflict Sleep for 2 turns. (Usable while grounded, will fly up before the move.)",(Higher difficulties: Inflicts 3 turns of Sleep.)
 Sirenfish_PowerSong,Power Song,(Targets All Allies) Gives 1 Focus to all allies.,
 Sirenfish_Hard_NightmareBite,(Hard) Nightmare Bite,"<color,red>(Only on higher difficulties)</color> (Targets Any Sleeping Enemy) Bite a sleeping target to deal strong Dark damage.",
 Blazecrest_FlameBreath,Flame Breath,(Targets All Enemies) Breathe fire to deal Fire damage to all targets.,
 Blazecrest_Roar,Roar,(Targets All Enemies) Roar powerfully to hit all targets to deal normal damage and inflict Berserk.,
-Blazecrest_Hard_CounterFlameFocus,(Hard) Counter - Flame Focus,"<color,red>(Only on higher difficulties)</color> (Targets Self) Get 1 Focus after being attacked. (If the incoming damage is Water or Light type, get 2 Focus instead.)",
-Embercrest_Fireball,Fireball,(Targets Any Enemy) Breathe a fireball that hits a single target and deals Fire damage.,(Higher Difficulties: Gives 1 Focus and 1 Sunder.)
+Blazecrest_Hard_CounterFlameFocus,(Hard) Counter - Rage Flare,"<color,red>(Only on higher difficulties)</color> (Targets Self) (1/battle) Get 3 turns of Counter Flare. (Triggers when below half health, or when the last incoming hit was Water or Light damage.)",
+Embercrest_Fireball,Fireball,(Targets Any Enemy) Breathe a fireball that hits a single target and deals Fire damage.,(Higher Difficulties: Gives 3 turns of Illuminate.)
 Ashcrest_ThornBomb,Thorn Bomb,(Targets Any Enemy) Hits a single target with Electric damage.,(Higher difficulties: Inflicts Defense Down)
 Ashcrest_SplashBomb,Splash Bomb,(Targets Any Enemy) Hits a single target with Water damage and inflicts Defocus.,(Higher difficulties: Inflicts Attack Down)
 Flametongue_FlameLick,Flame Lick,(Targets All Enemies) Lick with a long fiery tongue to deal Fire damage to all targets.,
+Flametongue_Hard_HustleLick,(Hard) Hustle Lick,(Targets Any Ally) Apply Hustle for 1 turn to one ally.,
 Heatwing_FlameSpread,Flame Spread,"(Targets Any Enemy) Spread fire by flapping your wings to deal Fire damage to all targets. (Usable while grounded, will fly up before the move.)",
+Heatwing_Hard_DreadScreech,(Hard) Dread Screech,(Targets All Enemies) Screech to deal Dark damage and inflict Dread for 1 turn. Dread reduces damage dealt to 0 and prevents Soul Moves from being used.,
 EyeSpore_SporeBeam,Spore Beam,(Targets Lowest Health Enemy) Shoot spores at the weakest target to deal Dark damage.,
 EyeSpore_Hard_CounterSpiteBeam,(Hard) Counter - Spite Beam,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Shoot a cloud of spores at the attacker to deal Dark damage.",(Higher difficulties: Inflicts Defocus)
 SpikeSpore_PoisonSpikes,Poison Spikes,(Targets Any Enemy) Stab the target to deal normal damage and inflict Poison.,
-SpikeSpore_Hard_SpikeBomb,(Hard) Spike Bomb,"(Targets All Enemies) Shoot out many spikes to deal moderate Dark damage and inflict Defocus and Sunder on all targets. However, the user gets Defocus and Sunder.",
+SpikeSpore_Hard_SpikeBomb,(Hard) Spike Bomb,"(Targets All Enemies) Shoot out many spikes to deal moderate Dark damage and inflict Soulbleed on all targets. However, the user gets Defocus and Sunder. Soulbleed causes incoming damage to also apply over time, and prevents healing.",
 Shrouder_SporeCloud,Spore Cloud,"(Targets All Enemies) Shoot a spore cloud to deal normal damage to all targets and inflict Endurance Down. (Usable while grounded, will fly up before the move.)",
 Shrouder_SporeCloak,Spore Cloak,"(Targets Any Ally) Make an ally Ethereal for 2 turns, making it impossible to hit them with non-Light damage.",
-HoarderFly_PoisonHeal,Poison Heal,"(Targets Any Enemy) Bite a target to heal them. However, the target is also inflicted with Poison. (Usable while grounded, will fly up before the move.)",
+HoarderFly_PoisonHeal,Poisonous Heal,"(Targets Any Enemy) Bite a target to heal them. However, the target is also inflicted with Poison. (Usable while grounded, will fly up before the move.)",
+HoarderFly_Hard_DustWind,(Hard) Dust Wind,(Targets All Enemies) Blow some dusty wind to deal Earth damage.,
 HoarderFly_Hard_FinalHeal,(Hard) Reaction - Final Heal,"<color,red>(Only on higher difficulties)</color> (Activates when the Hoarder Fly dies) (Targets All Allies) Heals all allies.",
 Mosquito_ShockNeedle,Shock Needle,(Targets Any Enemy) Stab a target to deal Electric damage and inflict Paralyze and Sunder.,
 Mosquito_DrainBite,Drain Bite,(Targets Highest Health Enemy) Deal damage and drain health from the target.,
 Mosquito_Hard_Shroud,(Hard) Shroud,"<color,red>(Only on higher difficulties)</color> (Targets Self) Apply Ethereal to yourself for 2 turns.",
 Shieldwing_DualPeck,Dual Peck,(Targets Highest Health Enemy) Peck the target twice to deal normal damage.,
 Shieldwing_ChillingScreech,Chilling Screech,(Targets All Enemies) Screech loudly to deal weak Light damage to all targets and inflict Freeze.,(Higher difficulties: Inflicts 2 Defocus.)
-Shieldwing_FeatherWall,Feather Wall,(Targets All Allies) Applies Defense Up 2 for 3 turns to all allies.,(Higher Difficulties: Also applies 2 Absorb.)
+Shieldwing_FeatherWall,Feather Wall,(Targets All Allies) Applies Defense Up 2 for 3 turns to all allies.,(Higher Difficulties: Also applies Mist Wall for 3 turns.)
 Honeywing_SpitHeal,Spit Heal,"(Targets Any Enemy) Spit at the target to deal Water damage and then heal an ally or all allies for a smaller amount. (Usable while grounded, will fly up before the move.)",
+Honeywing_SwoopHealSoften,Soft Swoop,(Targets Any Enemy) Swoop down and hit a single target and then heal a single ally or all allies for a smaller amount.,"(Higher Difficulties: Applies Soften to the heal target, or to self if there are multiple heal targets.)"
 Shimmerwing_DazzlingScreech,Dazzling Screech,"(Targets All Enemies) Screech loudly to deal strong Light damage to all targets and inflict Dizzy. (Usable while grounded, will fly up before the move.)",
 Shimmerwing_RallySong,Rally Song,(Targets All Allies) Applies 1 Focus to all allies.,(Higher Difficulties: Also applies Parry Aura for 3 turns.)
+Shimmerwing_DazzlingScreech,(Hard) Static Flurry,"<color,red>(Only on higher difficulties)</color>  (Targets All Enemies) Blow some electric wind that inflicts Brittle for 3 turns. (Brittle lowers defense an increasing amount each turn if you were hit that turn.)",
 LumistarVanguard_HornBlast,Horn Blast,(Targets All Enemies) Blast with your horn to deal Light damage to all targets.,
 LumistarVanguard_LanternRally,Lantern Rally,"(Targets All Enemies, Target All Allies) Shine your lantern brightly to deal weak Light damage to all targets and apply Defense Up 2 for 3 turns to all allies.",
+LumistarVanguard_Hard_SoftGlow,(Hard) Soft Glow,(Targets Lowest Health Ally) Apply Soften for 3 turns.,
 LumistarSoldier_Charge,Charge,(Targets Self) Charge up for a Charge Slice.,(Higher Difficulties: Also applies 1 Focus to all allies.)
 LumistarSoldier_ChargeSlash,Charge Slash,(Targets Front) Slice the target hard to deal normal damage.,
 LumistarStriker_DualSlash,Dual Slash,(Targets Any Enemy) Slash a single target twice to deal normal damage. Fly up after attacking.,
 LumistarStriker_Charge,Charge,(Targets Self) Charge up for a Quad Slash. Become grounded if you are airborne.,(Higher Difficulties: Also applies 1 Focus to all allies.)
-LumistarStriker_QuadSlash,Quad Slash,(Targets Front) Hit the target with four slashes to deal normal damage.,(Higher Difficulties: Each hit applies Defocus 1.)
+LumistarStriker_QuadSlash,Quad Slash,(Targets Front) Hit the target with four slashes to deal normal damage.,(Higher Difficulties: The final hit inflicts Brittle for 3 turns.)
 Plateshell_Slam,Slam,(Targets Any Enemy) Slam down on the target to deal normal damage and inflict Sunder.,
 Plateshell_RageFireball,Rage Fireball,(Targets Any Enemy) Shoot a fireball at the target to deal Fire damage and inflict Berserk.,(Higher difficulties: Gives 2 Focus and 1 Sunder.)
 Speartongue_TongueStab,Tongue Stab,(Targets Any Enemy) Stab a target with your tongue to deal Dark damage and inflict Poison.,
@@ -116,14 +139,17 @@ Speartongue_Shroud,Shroud,"<color,blue>(Not used in higher difficulties)</color>
 Speartongue_Stare,Stare,(Targets Any Enemy) Stare strongly at an enemy to deal weak Light damage. (Prefers targetting Ethereal targets.),
 Chaintail_ShockClaw,Shock Claw,(Targets Any Enemy) Slash a target with a claw strike to deal Electric damage and inflict Paralyze and Sunder.,(Higher Difficulties: Drains 4 energy as well.)
 Chaintail_TailWhip,Tail Whip,(Targets Any Enemy) Whip your tail around to hit a target for strong normal damage.,
+Chaintail_Hard_PowerFlash,(Hard) Power Flash,"<color,red>(Only on higher difficulties)</color> (Targets Any Enemy) Create a flash with your claws to deal Light damage and apply Supercharge to self. Supercharge increases damage dealt by 33%.",
 Sawcrest_SawRush,Saw Rush,(Targets All Enemies) Rush through all targets to hit each target twice.,
 Sawcrest_CounterSawToggle,Counter - Saw Toggle,(Targets Self) Saws become active or inactive (the opposite of their previous state).,
+Sawcrest_Hard_DeepCut,(Hard) Deep Cut,(Targets Any Enemy) Cut into someone deeply to deal strong normal damage and inflict Soulbleed for 3 turns.,
 Sawcrest_Hard_CounterRevUp,(Hard) Counter - Rev Up,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) When going from the inactive to the active state, hit the attacker with a dark cloud for weak Dark damage.",
 Coiler_Slap,Slap,(Targets Any Enemy) Slap your body into a target to deal moderate normal damage.,
 Coiler_Charge,Charge,(Targets Any Enemy) Hide in your shell to draw in electric charge and become more defensive.,
-Coiler_ElectroStorm,Electro Storm,(Targets All Enemies) Hit all targets for massive Electric damage.,
+Coiler_ElectroStorm,Electro Storm,(Targets All Enemies) Hit all targets for massive Electric damage.,(Higher Difficulties: Inflicts Arc Discharge for 3 turns as well)
 Coiler_Hard_CounterRollerShell,(Hard) Counter - Roller Shell,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) While in your shell, counter attacks by rolling into the target for weak normal damage.",
 Drillbeak_Drill,Drill,(Targets Any Enemy) Drill into the target with your beak to quickly deal normal damage 4 times.,
+Drillbeak_Hard_DreadStab,(Hard) Dread Stab,(Targets Any Enemy) Stab the target hard to deal Dark damage and inflict Dread for 2 turns.,
 PuffJelly_Slam,Slam,(Targets Any Enemy) Slam down on the target to deal normal damage.,
 PuffJelly_Hard_BlinkSlam,(Hard) Blink Slam,"<color,red>(Only on higher difficulties)</color> (Targets Any Enemy) A flashy stomp that deals Light damage.",
 Fluffling_Bash,Bash,(Targets Any Enemy) Jump and ram into the target to deal normal damage. Has different timing variations.,
@@ -137,10 +163,10 @@ CloudJelly_PowerCharge,Power Charge,"(Targets Self) Give yourself Attack Up 2 in
 CloudJelly_CounterFormChange,Counter - Form Change,"(Targets Self) Assume a more defensive form if hit by Light, Water or Air attacks, or a more offensive form if hit by other damage types. (The Ice form is the most defensive and the Cloud form is the most offensive.)",
 CrystalCrab_TripleClaw,Triple Claw,(Targets Any Enemy) Slash with your claw to deal normal damage to a single target 3 times. First hit is weaker but the second and third hits are stronger.,
 CrystalCrab_DarkClaw,Dark Claw,(Targets All Enemies) Create a blast from your claw to deal Dark damage and inflict Sleep and Attack Down to all targets.,
-CrystalCrab_Hard_CounterClearClaw,(Hard) Counter - Clear Claw,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Hit an attacker with your claw to deal weak normal damage and remove their buffs .",
-CrystalSlug_Slap,Slap,(Targets Any Enemy) Slap your body into a target to deal moderate normal damage.,
+CrystalCrab_Hard_CounterClearClaw,(Hard) Counter - Clear Claw,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Hit an attacker with your claw to deal weak normal damage and remove their buffs, as well as inflicting Inverted for 3 turns. Inverted causes effects inflicted by the target to be inverted.",
+CrystalSlug_Slap,Slap,(Targets Any Enemy) Slap your body into a target to deal moderate normal damage.,(Higher Difficulties: Also inflicts Brittle for 3 turns.)
 CrystalSlug_ChillingStare,Chilling Stare,(Targets All Enemies) Stare strongly at all enemies to deal strong Light damage and inflict Freeze and Defense Down.,
-CrystalClam_HealingBreath,Healing Breath,(Targets All Allies) Heal all allies for a small amount.,
+CrystalClam_HealingBreath,Healing Breath,(Targets All Allies) Heal all allies for a small amount.,(Higher Difficulties: Applies Mist Wall for 3 turns to one ally.)
 CrystalClam_CleansingBreath,Cleansing Breath,"(Targets All Enemies) Remove all positive effects from all enemies, and inflict Defocus 1 on them. Used only when all allies are at max HP.",(Higher Difficulties: Sometimes used instead of Healing Breath.)
 CrystalClam_Explode,Explode,"(Targets All Enemies) Explode to deal high Normal damage to all enemies, dying in the process. (Used when alone, or when all allies are also Crystal Clams.)",(Higher Difficulties: Used on turn 4 and later.)
 AuroraWing_RubyDust,Ruby Dust,"(Targets All Enemies, Targets All Allies) Spread Ruby mist around the battlefield to deal weak Fire damage to all targets and then apply Attack Up to all allies.",
@@ -154,7 +180,8 @@ Starfish_LeafStorm,Leaf Storm,(Targets All Enemies) Summon a storm of fast movin
 CursedEye_UnnervingStare,Unnerving Stare,(Targets All Enemies) Stare down all enemies to deal weak Light damage.,
 CursedEye_MaliciousStare,Malicious Stare,(Targets Lowest Health Enemy) Stare down the weakest target to deal strong Dark damage.,"(Higher Difficulties: Inflicts Seal, preventing you from gaining buffs.)"
 CursedEye_CounterSpitefulStare,Counter - Spiteful Stare,(Targets Attacker) Stare down your attacker to deal moderate Dark damage.,
-StrangeTendril_StrangeCoil,Strange Coil,"(Targets Self, Targets Any Ally) Coil around to apply Defense Up 1 indefinitely and Absorb 3 to yourself and one ally.",
+CursedEye_Hard_InvertedStare,(Hard) Inverted Stare,(Targets All Enemies) Stare down all enemies to deal weak Water damage and inflict Inverted.,
+StrangeTendril_StrangeCoil,Strange Coil,"(Targets Self, Targets Any Ally) Coil around to apply Defense Up 1 indefinitely and Absorb 3 to yourself and one ally.",(Higher Difficulties: Applies Astral Wall with potency equal to half the target's max HP.)
 StrangeTendril_Slam,Slam,(Targets Any Enemy) Slam down on one target to deal strong normal damage.,"(Higher Difficulties: Inflicts Sticky, preventing you from using items.)"
 DrainBud_PowerDrain,Power Drain,(Targets Any Enemy) Wrap around a target to drain their health with 3 normal damage hits.,
 DrainBud_Hard_DrainBloom,(Hard) Drain Bloom,"<color,red>(Only on higher difficulties)</color> (Targets All Enemies) Create a vortex that deals normal damage, inflicts Drain Sprout and drains some health and energy from all targets.",

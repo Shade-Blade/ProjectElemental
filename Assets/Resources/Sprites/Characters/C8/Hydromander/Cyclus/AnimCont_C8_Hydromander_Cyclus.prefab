@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3708101264875496809}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.135, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1125, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -203,6 +203,8 @@ MonoBehaviour:
   debuffIndex: 0
   lifetime: 0
   timeSinceLastAnimChange: 0
+  height: 0.8
+  width: 0.25
   showBack: 0
   spriteIdle: {fileID: 21300000, guid: be2a0d1ad6314924685bd34c76ae33e3, type: 3}
   spriteIdleBack: {fileID: 21300000, guid: c98a02734c93ed349a35f32dd45b108d, type: 3}

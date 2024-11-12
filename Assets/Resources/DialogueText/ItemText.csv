@@ -45,7 +45,7 @@ JuiceMix,Juice Mix,some,A healthy mixture of fruit juices that provides a mixtur
 LemonCandy,Lemon Candy,a,"Very sour, but very invigorating.","Restores 3hp, 14 ep to one ally, and gives them Paralyze for 2 turns and 3 focus.",,
 WarpedCookie,Warped Cookie,a,A weirdly shaped cookie that equalizes your stats.,"Restores an amount of hp equal to your ally's ep, and an amount of ep equal to your ally's hp.",,
 WarpedTea,Warped Tea,a,This tea tastes a little weird…,"Halves the difference between an ally's hp and max hp, and the difference between an ally's ep and max ep.",,
-ThornBundle,Thorn Bundle,a,A bunch of Static Thorns tied together. Useful if you need to hit a target multiple times with one attack.,Deals 2 damage to any target 3 times.,,
+ThornBundle,Thorn Bundle,a,A bunch of Static Thorns tied together. Useful if you need to hit a target multiple times with one attack.,Deals 2 Air damage to any target 3 times.,,
 Lemonade,Lemonade,some,"A super sour drink that makes you hit harder, but the sourness is a lot to handle.","Restores 11 ep to one ally, and gives them Paralyze for 2 turns and 4 focus.",,
 CarrotBunch,Carrot Bunch,a,Two carrots tied together. It's hard to cook them like this but you can still eat them.,Restores 12 hp to one ally. Becomes a Carrot when used.,,
 Watermelon,Watermelon,a,A massive fruit too large to eat all at once that has a refreshing taste.,"Restores 10 hp and 20 ep to one ally, and gives then 6 burst. Becomes a Watermelon Slice when used.",,

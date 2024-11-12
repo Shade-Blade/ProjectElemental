@@ -63,6 +63,11 @@ public class BE_Honeybud : BattleEntity
         moveset = new List<Move> { gameObject.AddComponent<BM_Honeybud_SwoopHeal>(), gameObject.AddComponent<BM_Shared_BiteThenFly>(), gameObject.AddComponent<BM_Shared_Hard_CounterRush>() };
 
         base.Initialize();
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateCounter, true);
+        }
     }
 
     public override void ChooseMoveInternal()
@@ -140,7 +145,7 @@ public class BE_BurrowTrap : BattleEntity
     int counterCount = 0;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_BurrowTrap_PollenBite>(), gameObject.AddComponent<BM_BurrowTrap_CounterPollenBite>()};
+        moveset = new List<Move> { gameObject.AddComponent<BM_BurrowTrap_PollenBite>(), gameObject.AddComponent<BM_BurrowTrap_CounterPollenBite>(), gameObject.AddComponent<BM_BurrowTrap_Hard_SunBloom>() };
 
         base.Initialize();
     }
@@ -148,7 +153,14 @@ public class BE_BurrowTrap : BattleEntity
     public override void ChooseMoveInternal()
     {
         counterCount = 0;
-        currMove = moveset[0];
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3 == 0 ? 2 : 0];
+        } else
+        {
+            currMove = moveset[0];
+        }
 
         BasicTargetChooser();
     }
@@ -260,14 +272,7 @@ public class BM_BurrowTrap_PollenBite : EnemyMove
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
-                    if (BattleControl.Instance.GetCurseLevel() > 0)
-                    {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 2));
-                    }
-                    else
-                    {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 1));
-                    }
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 1));
                 }
             }
             else
@@ -314,14 +319,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
-                    if (BattleControl.Instance.GetCurseLevel() > 0)
-                    {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 2));
-                    }
-                    else
-                    {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 1));
-                    }
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 1));
                 }
             }
             else
@@ -350,12 +348,25 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
     }
 }
 
+public class BM_BurrowTrap_Hard_SunBloom : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.BurrowTrap_Hard_SunBloom;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Illuminate, 1, 3));
+    }
+}
+
 public class BE_Sundew : BattleEntity
 {
     int counterCount = 0;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Sundew_PoisonToss>(), gameObject.AddComponent<BM_Sundew_CounterPoisonToss>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Sundew_PoisonToss>(), gameObject.AddComponent<BM_Sundew_CounterPoisonToss>(), gameObject.AddComponent<BM_Sundew_Hard_ExhaustBall>() };
 
         base.Initialize();
     }
@@ -363,7 +374,14 @@ public class BE_Sundew : BattleEntity
     public override void ChooseMoveInternal()
     {
         counterCount = 0;
-        currMove = moveset[0];
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3 == 0 ? 2 : 0];
+        }
+        else
+        {
+            currMove = moveset[0];
+        }
 
         BasicOffsetTargetChooser(1,2);
     }
@@ -469,14 +487,7 @@ public class BM_Sundew_PoisonToss : EnemyMove
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
-                    if (BattleControl.Instance.GetCurseLevel() > 0)
-                    {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 2));
-                    }
-                    else
-                    {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 1));
-                    }
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 1));
                 }
             }
             else
@@ -511,14 +522,7 @@ public class BM_Sundew_CounterPoisonToss : EnemyMove
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
-                    if (BattleControl.Instance.GetCurseLevel() > 0)
-                    {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 2));
-                    }
-                    else
-                    {
-                        caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 1));
-                    }
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 1));
                 }
             }
             else
@@ -532,6 +536,40 @@ public class BM_Sundew_CounterPoisonToss : EnemyMove
             caller.SetAnimation("dead");
             yield return StartCoroutine(caller.DefaultDeathEvent());
             yield break;
+        }
+    }
+}
+
+public class BM_Sundew_Hard_ExhaustBall : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Sundew_Hard_ExhaustBall;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        if (caller.curTarget != null)
+        {
+            if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
+            {
+                bool hasStatus = caller.curTarget.HasStatus();
+                caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
+                if (!hasStatus)
+                {
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Exhausted, 1, 1));
+                }
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
         }
     }
 }

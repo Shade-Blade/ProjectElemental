@@ -1,9 +1,9 @@
 Index (unused),Name,Description,L2 Description,L3 Description,Infinite Stacking
 0,Heavy Stomp,Jump on an enemy. Can't target enemies that are too high off the ground.,,,
 1,Brace,Increases your defense against the next enemy's attack by 2.,+3 defense,+6 defense,"Defense given is <var,2>."
-2,Dash Through,Dash through all grounded enemies. (Damage is equal to stomp damage - 1.),"Ignores contact hazards, deals 1 more damage.",,"Ignores contact hazards, damage is stomp + <var,2,-4>"
+2,Dash Through,Dash through all grounded enemies. (Damage is equal to stomp damage - 2.),"Ignores contact hazards, deals 1 more damage.",,"Ignores contact hazards, damage is stomp + <var,2,-5>"
 3,Flip Kick,A special kick that can hit any position.,,,"Damage is stomp + <var,4,-5>"
-4,Recover,Gives the target Health Regen 4 for 3 turns.,Targets both.,,"Potency of regeneration is <var,2,4>"
+4,Fluff Heal,Gives the target Health Regen 4 for 3 turns.,Targets both.,,"Potency of regeneration is <var,2,4>"
 5,Sleep Stomp,"Jump on an enemy and put it to sleep for up to 3 turns. Can't target enemies that are too high off the ground. (Sleeping enemies can't move and heal 10% of their max hp per turn, clamped between 2 and 10 hp.)",,,"Duration of Sleep inflicted is <var,2,1>"
 6,Meteor Stomp,Jump on an enemy from slightly higher above. Can't target enemies that are too high off the ground. (Fire damage gets boosted up to 0.66x based on how much the enemy took damage this turn and last turn),"Inflicts Attack Down 2 for 3 turns. Element damage formula changes: Treats debuffs as buffs, also gets boosted based on your own damage taken this turn and last turn.",,"Inflicts Attack Down <var,2,-4> for 3 turns. Element damage formula changes: Treats debuffs as buffs, also gets boosted based on your own damage taken this turn and last turn. Base damage is stomp + <var,2,-2>"
 7,Under Strike,"Strike an enemy from below, dealing Dark type damage (Dark type damage is stronger against enemies at low hp)","Hits twice, Second hit is a normal type stomp hit that has base damage equal to half your normal stomp damage. Second hit inflicts 3 defocus.",,"Hits twice, Second hit is a normal type stomp hit. Second hit inflicts <var,3> defocus. First hit damage base is stomp + <var,2,-2>, second hit is stomp/2 + <var,2,-4>"

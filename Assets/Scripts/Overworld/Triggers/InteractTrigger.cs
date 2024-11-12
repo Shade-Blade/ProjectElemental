@@ -95,13 +95,21 @@ public class InteractTrigger : MonoBehaviour
             interactable.Interact();
         } else
         {
-            Debug.Log("Interact");
+            Debug.Log("Interact default");
             StartCoroutine(TestCutscene());
         }
     }
 
     public IEnumerator TestCutscene()
     {
+        for (int i = 0; i < 100; i++)
+        {
+            EncounterData ed = EncounterData.GeneratePitEncounter(i);
+            Debug.Log("Floor " + i + ": " + ed.ToString());
+        }
+
+        yield break;
+        /*
         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.Instance.testTextFile, 0));
 
         string pdParse = MainManager.Instance.playerData.ToString();
@@ -121,6 +129,7 @@ public class InteractTrigger : MonoBehaviour
         //Debug.Log("B");
 
         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.Instance.testTextFile, 6, null, vars));
+        */
     }
 }
 

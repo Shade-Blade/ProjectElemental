@@ -853,7 +853,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C8_IceJelly
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -1731,7 +1731,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C8_CrystalCrab
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -1898,7 +1898,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C8_Fluffling
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -2060,7 +2060,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C8_CrystalCrab
     speed: 3
     wandering: 1
     wanderRadius: 2

@@ -72,7 +72,7 @@ public class GlobalRibbonScript : MonoBehaviour
         ribbonColors[(int)RibbonType.SharpRibbon] = new Color[] { new Color(0.4f, 0f, 0f, 1), new Color(0.75f, 0f, 0f, 1), new Color(1f, 0f, 0f, 1) };
         ribbonColors[(int)RibbonType.BeginnerRibbon] = new Color[] { new Color(0.4f, 0.25f, 0.1f, 1), new Color(0.6f, 0.36f, 0.2f, 1), new Color(0.776f, 0.533f, 0.349f, 1) };
         ribbonColors[(int)RibbonType.ExpertRibbon] = new Color[] { new Color(0.3f, 0.3f, 0.5f, 1), new Color(0.85f, 0.87f, 0.89f, 1), new Color(0.95f, 1.05f, 1.1f, 1) };
-        ribbonColors[(int)RibbonType.ChampionRibbon] = new Color[] { new Color(0.4f, 0.2f, 0f, 1), new Color(0.8f, 0.65f, 0.2f, 1), new Color(1.5f, 1.05f, 0.5f, 1) };
+        ribbonColors[(int)RibbonType.ChampionRibbon] = new Color[] { new Color(0.4f, 0.2f, 0f, 1), new Color(0.9f, 0.8f, 0.2f, 1), new Color(1.4f, 0.95f, 0.5f, 1) };
         ribbonColors[(int)RibbonType.StaticRibbon] = new Color[] { new Color(0.4f, 0.4f, 0.2f, 1), new Color(0.75f, 0.75f, 0.325f, 1), new Color(1, 1f, 0.5f, 1) };
         ribbonColors[(int)RibbonType.SlimyRibbon] = new Color[] { new Color(0.1f, -0.1f, 0.2f, 1), new Color(0.2f, 0, 0.3f, 1), new Color(0.4f, 0, 0.6f, 1) };
         ribbonColors[(int)RibbonType.FlashyRibbon] = new Color[] { new Color(0.4f, 0.5f, 0.4f, 1), new Color(0.7f, 1, 0.7f, 1), new Color(0.85f, 2f, 0.85f, 1) };

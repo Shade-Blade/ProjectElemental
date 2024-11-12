@@ -57,7 +57,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
     protected bool isSpeaking;
 
     protected bool hasCapsuleCollider;
-    protected CapsuleCollider capsuleCollider;
+    protected Collider characterCollider;
     protected float width;
     protected float height;
     protected float interactRadius;
@@ -184,6 +184,17 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
     public override void Awake()
     {
+        Setup();
+    }
+    public void Resetup()
+    {
+        Destroy(subObject);
+        subObject = null;
+        ac = null;
+        Setup();
+    }
+    public virtual void Setup()
+    {
         if (wed != null && !wed.inactive)
         {
             SetWorldEntityData(wed);
@@ -198,14 +209,16 @@ public class WorldEntity : WorldObject, ITextSpeaker
         prevAttached = null;
         //if (GetComponent<CapsuleCollider>() != null)
         //{
-            capsuleCollider = GetComponent<CapsuleCollider>();
+        characterCollider = GetComponent<CapsuleCollider>();
         //}
 
+        /*
         if (capsuleCollider != null)
         {
             height = capsuleCollider.height;
             width = capsuleCollider.radius;
         }
+        */
 
         mapScript = FindObjectOfType<MapScript>();
 
@@ -220,6 +233,57 @@ public class WorldEntity : WorldObject, ITextSpeaker
             MakeAnimationController();
         }
 
+        if (height == 0 || width == 0)
+        {
+            height = ac.height;
+            width = ac.width;
+            if (characterCollider != null)
+            {
+                Destroy(characterCollider);
+            }
+            if (height < width)
+            {
+                characterCollider = gameObject.AddComponent<BoxCollider>();
+                //Debug.Log(gameObject.GetComponent<CapsuleCollider>() != null);
+                if (gameObject.GetComponent<CapsuleCollider>() != null)
+                {
+                    Destroy(gameObject.GetComponent<CapsuleCollider>());
+                }
+            }
+            else
+            {
+                characterCollider = gameObject.AddComponent<CapsuleCollider>();
+                if (gameObject.GetComponent<BoxCollider>() != null)
+                {
+                    Destroy(gameObject.GetComponent<BoxCollider>());
+                }
+            }
+            characterCollider.material = MainManager.Instance.noFrictionMaterial;
+            if (characterCollider is CapsuleCollider cc)
+            {
+                if (height != 0)
+                {
+                    cc.height = height;
+                }
+                if (width != 0)
+                {
+                    cc.radius = width / 2; //note this (width is half of what it "should" be)
+                }
+            }
+            if (characterCollider is BoxCollider bc)
+            {
+                if (width == 0)
+                {
+                    width = bc.size.x;
+                }
+                if (height == 0)
+                {
+                    height = bc.size.y;
+                }
+                bc.size = new Vector3(width * 0.8f, height, width * 0.8f);
+            }
+        }
+
         //Fix bug with the shadows of newly spawned in entities
         DropShadowUpdate(true);
     }
@@ -230,17 +294,34 @@ public class WorldEntity : WorldObject, ITextSpeaker
         speed = wed.speed;
         height = wed.height;
         width = wed.width;
-        if (height != 0)
-        {
-            Debug.LogWarning("Zero height in World Entity Data");
-            capsuleCollider.height = height;
-        }
-        if (width != 0)
-        {
-            Debug.LogWarning("Zero width in World Entity Data");
-            capsuleCollider.radius = width; //note this (width is half of what it "should" be)
-        }
+        SetColliderInformation();
         interactRadius = wed.interactRadius;
+    }
+
+    public void SetColliderInformation()
+    {
+        if (characterCollider is CapsuleCollider cc)
+        {
+            if (height != 0)
+            {
+                cc.height = height;
+            }
+            if (width != 0)
+            {
+                cc.radius = width; //note this (width is half of what it "should" be)
+            }
+        }
+        if (characterCollider is BoxCollider bc)
+        {
+            if (height != 0)
+            {
+                bc.size = Vector3.up * height + bc.size - Vector3.down * bc.size.y;
+            }
+            if (width != 0)
+            {
+                bc.size = Vector3.one * width - Vector3.up * width + Vector3.up * bc.size.y;
+            }
+        }
     }
 
     /*
@@ -672,7 +753,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
                 animName = "walk";
             } else
             {
-                animName = "idle";
+                animName = GetIdleAnimation();
             }
         } else
         {
@@ -690,6 +771,11 @@ public class WorldEntity : WorldObject, ITextSpeaker
         {
             ac.SetAnimation(animName);
         }
+    }
+
+    public virtual string GetIdleAnimation()
+    {
+        return "idle";
     }
 
     public void DropShadowUpdate(bool force = false)
@@ -1215,5 +1301,15 @@ public class WorldEntity : WorldObject, ITextSpeaker
         }
         //Debug.Log((output.collider != null) + " " + start + " " + (output.point));
         return output;
+    }
+
+    public float GetHeight()
+    {
+        return height;
+    }
+
+    public float GetWidth()
+    {
+        return width;
     }
 }

@@ -279,16 +279,16 @@ public class BM_Shared_Slash : EnemyMove
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Renegade:
-                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                     case BattleHelper.EntityID.Slimewalker:
-                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                     case BattleHelper.EntityID.LumistarSoldier:
-                        caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                     default:
-                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                 }
             }
@@ -345,32 +345,32 @@ public class BM_Shared_DualSlash : EnemyMove
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Renegade:
-                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                     case BattleHelper.EntityID.Embercrest:
-                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                     case BattleHelper.EntityID.LumistarStriker:
-                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                     default:
-                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                 }
                 yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Renegade:
-                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                     case BattleHelper.EntityID.Embercrest:
-                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                     case BattleHelper.EntityID.LumistarStriker:
-                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                     default:
-                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                 }
             }
@@ -695,8 +695,8 @@ public class BM_Shared_Hard_CounterRoar : EnemyMove
         yield return new WaitForSeconds(0.5f);
         foreach (BattleEntity entity in battleEntityList)
         {
-            caller.DealDamage(entity, 0, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
-            caller.InflictEffect(entity, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
+            caller.DealDamage(entity, 0, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
+            caller.InflictEffectBuffered(entity, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
         }
     }
 }

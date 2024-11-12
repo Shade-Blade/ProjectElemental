@@ -7,6 +7,7 @@ public class MapExitSkyScript : MapExitScript
 {
     public override IEnumerator DoExit()
     {
+        mapScript.OnExit(exitID);
         //Debug.Log("Exit " + exitID);
         yield return StartCoroutine(DoFlyExit());
         (Vector3 playerPos, float playerYaw) = GetRelativeOffset(WorldPlayer.Instance.transform.position, WorldPlayer.Instance.GetTrueFacingRotation());

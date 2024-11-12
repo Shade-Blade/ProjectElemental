@@ -7,7 +7,7 @@ public class BE_Slime : BattleEntity
     int counterCount;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Slime_Stomp>(), gameObject.AddComponent<BM_Slime_SplashStomp>(), gameObject.AddComponent<BM_Shared_Hard_CounterRecover>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Slime_Stomp>(), gameObject.AddComponent<BM_Slime_SplashStomp>(), gameObject.AddComponent<BM_Slime_Hard_CounterMistWall>() };
 
         base.Initialize();
     }
@@ -124,7 +124,7 @@ public class BM_Slime_SplashStomp : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
-                caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
                 yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 2, 0.5f, 0.15f));
             }
             else
@@ -141,11 +141,24 @@ public class BM_Slime_SplashStomp : EnemyMove
     }
 }
 
+public class BM_Slime_Hard_CounterMistWall : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Slime_Hard_CounterMistWall;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
+
+    public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
+    {
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.MistWall, 1, 2));
+        yield return new WaitForSeconds(0.5f);
+    }
+}
+
 public class BE_Slimewalker : BattleEntity
 {
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Slash>(), gameObject.AddComponent<BM_Slimewalker_WaterCannon>(), gameObject.AddComponent<BM_Slimewalker_SoftSplash>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Slash>(), gameObject.AddComponent<BM_Slimewalker_WaterCannon>(), gameObject.AddComponent<BM_Slimewalker_Hard_SoftSplash>() };
 
         base.Initialize();
     }
@@ -226,7 +239,7 @@ public class BM_Slimewalker_WaterCannon : EnemyMove
     }
 }
 
-public class BM_Slimewalker_SoftSplash : EnemyMove
+public class BM_Slimewalker_Hard_SoftSplash : EnemyMove
 {
     public override MoveIndex GetMoveIndex() => MoveIndex.Slimewalker_Hard_SoftSplash;
 
@@ -270,7 +283,7 @@ public class BE_Slimeworm : BattleEntity
 {
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Slimeworm_Charge>(), gameObject.AddComponent<BM_Slimeworm_Mortar>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Slimeworm_Charge>(), gameObject.AddComponent<BM_Slimeworm_Mortar>(), gameObject.AddComponent<BM_Slimeworm_DeepMortar>() };
 
         base.Initialize();
     }
@@ -279,7 +292,14 @@ public class BE_Slimeworm : BattleEntity
     {
         if (GetEntityProperty(BattleHelper.EntityProperties.StateCharge))
         {
-            currMove = moveset[1];
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                currMove = moveset[(BattleControl.Instance.turnCount + posId) % 4 > 1 ? 2 : 1];
+            }
+            else
+            {
+                currMove = moveset[1];
+            }
             SetEntityProperty(BattleHelper.EntityProperties.StateCharge, false);
         }
         else
@@ -311,14 +331,14 @@ public class BM_Slimeworm_Charge : EnemyMove
             caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
-                caller.HealHealth(4);
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
+                caller.HealHealth(2);
             }
             else
             {
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
+                caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
             }
         }
     }
@@ -357,19 +377,85 @@ public class BM_Slimeworm_Mortar : EnemyMove
     }
 }
 
+public class BM_Slimeworm_DeepMortar : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Slimeworm_Hard_DeepMortar;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
+            {
+                //Note that the focus last turn makes this pretty dangerous
+                caller.DealDamage(t, 1, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Splotch, 1, 2));
+            }
+            else
+            {
+                //Miss
+                caller.InvokeMissEvents(t);
+            }
+        }
+    }
+}
+
 public class BE_Slimebloom : BattleEntity
 {
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Slimebloom_Zap>(), gameObject.AddComponent<BM_Slimebloom_Lob>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Slimebloom_Zap>(), gameObject.AddComponent<BM_Slimebloom_Lob>(), gameObject.AddComponent<BM_Slimebloom_Hard_Flash>() };
 
         base.Initialize();
     }
 
     public override void ChooseMoveInternal()
     {
-        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            currMove = moveset[((posId % 2) + BattleControl.Instance.turnCount - 1) % 3];
+        }
+        else
+        {
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+        }
         BasicTargetChooser();
+    }
+
+    public override void TryContactHazard(BattleEntity target, BattleHelper.ContactLevel contact, BattleHelper.DamageType type, int damage)
+    {
+        EnvironmentalContactHazards(target, contact, type, damage);
+
+        if (target.CanTriggerContactHazard(contact, type, damage))
+        {
+            //do
+
+            //Check for contact hazard immunity list
+            //(prevents multihits on the same target from hurting multiple times)
+            //(does not prevent multitarget moves from doing the same!)
+
+            if (target.contactImmunityList.Contains(posId))
+            {
+                return;
+            }
+
+            if (contact <= BattleHelper.ContactLevel.Contact)
+            {
+                DealDamage(target, 2, BattleHelper.DamageType.Air, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Contact);
+                target.contactImmunityList.Add(posId);
+            }
+        }
     }
 }
 
@@ -439,6 +525,40 @@ public class BM_Slimebloom_Lob : EnemyMove
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
                     caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
+                }
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+    }
+}
+
+public class BM_Slimebloom_Hard_Flash : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Slimebloom_Hard_Flash;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+
+        if (caller.curTarget != null)
+        {
+            if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Light))
+            {
+                bool hasStatus = caller.curTarget.HasStatus();
+                caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
+                if (!hasStatus)
+                {
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.TimeStop, 1, 2));
                 }
             }
             else
@@ -523,7 +643,7 @@ public class BM_Sirenfish_BubbleSong : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
-                caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
+                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
                     if (BattleControl.Instance.GetCurseLevel() > 0)

@@ -1629,6 +1629,13 @@ MonoBehaviour:
   charmEffectText: {fileID: 3070543138587916697}
   restEffectObject: {fileID: 5440642321661839910}
   restEffectText: {fileID: 7362572682725140643}
+  weaponMedalSprites:
+  - {fileID: 21300000, guid: 726d06274cc3ec64da75f33a4d05e7ed, type: 3}
+  - {fileID: 21300000, guid: b8a02e6c308d829459826c427f8b1e13, type: 3}
+  - {fileID: 21300000, guid: c8c68e7cfcae20c42a67d74c46887571, type: 3}
+  - {fileID: 21300000, guid: 157804fff3971aa47bb440ff000fa1b9, type: 3}
+  - {fileID: 21300000, guid: 9d5a3c4379af5764896579c935352735, type: 3}
+  - {fileID: 21300000, guid: 1f088142b8bf5f14589d73dcad8074fc, type: 3}
   characterObjectA: {fileID: 4455745508637574716}
   abilityMedalA1: {fileID: 5619454451394928192}
   abilityMedalA2: {fileID: 2367723327647628264}

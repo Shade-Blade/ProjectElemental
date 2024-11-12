@@ -373,6 +373,12 @@ public class LM_DashThrough : LunaMove
         //get list of entities to pass through
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
+        //fix for first strikes
+        if (caller.curTarget != null && !targets.Contains(caller.curTarget))
+        {
+            targets.Insert(0, caller.curTarget);
+        }
+
         //somewhere offscreen
         Vector3 target = transform.position + Vector3.right * 16f;
 
@@ -439,13 +445,13 @@ public class LM_DashThrough : LunaMove
                         switch (level)
                         {
                             case 1:
-                                caller.DealDamage(targets[i], sd - 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact);
+                                caller.DealDamage(targets[i], sd - 2, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact);
                                 break;
                             case 2:
-                                caller.DealDamage(targets[i], sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                                caller.DealDamage(targets[i], sd - 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
                                 break;
                             default:
-                                caller.DealDamage(targets[i], sd + 2 * level - 4, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                                caller.DealDamage(targets[i], sd + 2 * level - 5, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
                                 break;
                         }
                     } else
@@ -493,13 +499,13 @@ public class LM_DashThrough : LunaMove
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd - 1, 0, 0);
+                val = caller.DealDamageCalculation(target, sd - 2, 0, 0);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd, 0, 0);
+                val = caller.DealDamageCalculation(target, sd - 1, 0, 0);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd + level * 2 - 4, 0, 0);
+                val = caller.DealDamageCalculation(target, sd + level * 2 - 5, 0, 0);
                 break;
         }
 
@@ -3978,7 +3984,7 @@ public class LM_MistWall : LunaMove
             switch (level)
             {
                 case 1:
-                    caller.CureCurableEffects(false);
+                    caller.CureEffects(false);
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.MistWall, 1, 3));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Immunity, 1, 3));
                     break;
@@ -3986,7 +3992,7 @@ public class LM_MistWall : LunaMove
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
-                        b.CureCurableEffects(false);
+                        b.CureEffects(false);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.MistWall, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Immunity, 1, 3));
                     }
@@ -3995,7 +4001,7 @@ public class LM_MistWall : LunaMove
                     List<BattleEntity> targetsB = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsB)
                     {
-                        b.CureCurableEffects(false);
+                        b.CureEffects(false);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.MistWall, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Immunity, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.BolsterAura, 1, 3));
@@ -4005,7 +4011,7 @@ public class LM_MistWall : LunaMove
                     List<BattleEntity> targetsC = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsC)
                     {
-                        b.CureCurableEffects(false);
+                        b.CureEffects(false);
                         caller.InflictEffect(b, new Effect(Effect.EffectType.MistWall, (sbyte)(level - 2), 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Immunity, 1, 3));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.BolsterAura, 1, 3));

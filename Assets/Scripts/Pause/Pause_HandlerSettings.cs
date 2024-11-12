@@ -38,6 +38,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
 
     public override void MenuUpdate()
     {
+        lifetime += Time.deltaTime;
         //improper to make the menu work like this but ehh
         if (prompt != null && !prompt.menuDone)
         {
@@ -78,7 +79,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
         int oc = GetObjectCount();
         if (oc > 0)
         {
-            if (Mathf.Sign(InputManager.GetAxisVertical()) != -inputDir || InputManager.GetAxisVertical() == 0)
+            if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) != -inputDir) || InputManager.GetAxisVertical() == 0)
             {
                 holdDur = 0;
                 holdValue = 0;
@@ -123,7 +124,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                 }
             }
 
-            if (InputManager.GetButtonDown(InputManager.Button.Z))
+            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Z))
             {
                 if (index == oc - 1)
                 {
@@ -144,7 +145,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                 SendUpdate();
             }
 
-            if (InputManager.GetButtonDown(InputManager.Button.Y))
+            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Y))
             {
                 if (index == 0)
                 {
@@ -165,7 +166,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                 SendUpdate();
             }
 
-            if (Mathf.Sign(InputManager.GetAxisVertical()) == -inputDir && InputManager.GetAxisVertical() != 0)
+            if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) == -inputDir) && InputManager.GetAxisVertical() != 0)
             {
                 holdDur += Time.deltaTime;
 
@@ -236,12 +237,12 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                 }
             }
 
-            if (InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
             {
                 //go to submenu
                 Select();
             }
-            if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
                 PopSelf();
             }
@@ -250,7 +251,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
         {
             //No items
 
-            if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
                 PopSelf();
             }

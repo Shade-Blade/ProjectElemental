@@ -159,7 +159,7 @@ public class BM_Starfish_FeebleWave : EnemyMove
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
             {
                 //Note that the focus last turn makes this pretty dangerous
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.AttackDown, 2, 3));
             }
             else
@@ -193,7 +193,7 @@ public class BM_Starfish_FatigueFog : EnemyMove
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Dark))
             {
                 //Note that the focus last turn makes this pretty dangerous
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.EnduranceDown, 2, 3));
             }
             else
@@ -227,7 +227,7 @@ public class BM_Starfish_LeafStorm : EnemyMove
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Earth))
             {
                 //Note that the focus last turn makes this pretty dangerous
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.DefenseDown, 2, 3));
             }
             else
@@ -245,7 +245,7 @@ public class BE_CursedEye : BattleEntity
     public int counterCount = 0;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_CursedEye_UnnervingStare>(), gameObject.AddComponent<BM_CursedEye_MaliciousStare>(), gameObject.AddComponent<BM_CursedEye_CounterSpitefulStare>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_CursedEye_UnnervingStare>(), gameObject.AddComponent<BM_CursedEye_MaliciousStare>(), gameObject.AddComponent<BM_CursedEye_CounterSpitefulStare>(), gameObject.AddComponent<BM_CursedEye_Hard_InvertedStare>() };
 
         base.Initialize();
     }
@@ -259,7 +259,18 @@ public class BE_CursedEye : BattleEntity
         }
         else
         {
-            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+                if (currMove == moveset[2])
+                {
+                    currMove = moveset[3];
+                }
+            }
+            else
+            {
+                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+            }
         }
 
         SpecialTargetChooserFirst(TargetStrategy.TargetStrategyType.LowHP);
@@ -401,6 +412,37 @@ public class BM_CursedEye_CounterSpitefulStare : EnemyMove
     }
 }
 
+public class BM_CursedEye_Hard_InvertedStare : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CursedEye_Hard_InvertedStare;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+        foreach (BattleEntity t in targets)
+        {
+            if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
+            {
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Inverted, 1, 3));
+            }
+            else
+            {
+                caller.InvokeMissEvents(t);
+            }
+        }
+    }
+}
+
 public class BE_StrangeTendril : BattleEntity
 {
     public override void Initialize()
@@ -453,6 +495,13 @@ public class BM_StrangeTendril_StrangeCoil : EnemyMove
             {
                 caller.InflictEffect(caller, new Effect(Effect.EffectType.DefenseUp, 1, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
             }
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                if (!caller.HasEffect(Effect.EffectType.AstralWall))
+                {
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AstralWall, (sbyte)(caller.maxHP / 2), 3));
+                }
+            }
             caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
 
             //find the target
@@ -485,6 +534,13 @@ public class BM_StrangeTendril_StrangeCoil : EnemyMove
             if (!nodefense)
             {
                 caller.InflictEffect(boostTarget, new Effect(Effect.EffectType.DefenseUp, 1, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.KeepDurAddPot);
+            }
+            if (BattleControl.Instance.GetCurseLevel() > 0)
+            {
+                if (!caller.HasEffect(Effect.EffectType.AstralWall))
+                {
+                    caller.InflictEffect(boostTarget, new Effect(Effect.EffectType.AstralWall, (sbyte)(boostTarget.maxHP / 2), 3));
+                }
             }
             caller.InflictEffect(boostTarget, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
         }

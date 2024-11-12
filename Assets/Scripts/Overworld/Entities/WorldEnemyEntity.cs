@@ -113,12 +113,17 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
 
     public override void ProcessCollision(Collision collision)
     {
+        if (!touchEncounter)
+        {
+            return;
+        }
+
         if (touchEncounter && frameTimer == -1)
         {
             WorldPlayer wp = collision.collider.GetComponent<WorldPlayer>();
             if (wp != null && !wp.NoTouchEncounter())
             {
-                Debug.Log(wp.undigTimer);
+                //Debug.Log(wp.undigTimer);
                 if (wp.undigTimer > 0)
                 {
                     frameTimer = -1;
@@ -191,6 +196,11 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
 
     public void Stomp(WorldPlayer.StompType stompType)
     {
+        if (!touchEncounter)
+        {
+            return;
+        }
+
         if (WorldPlayer.Instance.GetEncounterCooldown() > 0)
         {
             return;
@@ -213,11 +223,16 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
         }
         bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
         SetAnimation("hurt", true);
-        MainManager.Instance.mapScript.StartBattle(this);
+        MainManager.Instance.mapScript.StartBattleOrOverkill(encounter.GetOverkillLevel(), this);
     }
 
     public bool Slash(Vector3 slashvector, Vector3 playerpos)
     {
+        if (!touchEncounter)
+        {
+            return true;
+        }
+
         if (WorldPlayer.Instance.GetEncounterCooldown() > 0)
         {
             return false;
@@ -226,12 +241,17 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
         bsa.move = BattleStartArguments.FirstStrikeMove.Weapon;
         bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
         SetAnimation("hurt", true);
-        MainManager.Instance.mapScript.StartBattle(this);
+        MainManager.Instance.mapScript.StartBattleOrOverkill(encounter.GetOverkillLevel(), this);
         return true;
     }
 
     public bool Smash(Vector3 smashvector, Vector3 playerpos)
     {
+        if (!touchEncounter)
+        {
+            return true;
+        }
+
         if (WorldPlayer.Instance.GetEncounterCooldown() > 0)
         {
             return false;
@@ -240,12 +260,17 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
         bsa.move = BattleStartArguments.FirstStrikeMove.Weapon;
         bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
         SetAnimation("hurt", true);
-        MainManager.Instance.mapScript.StartBattle(this);
+        MainManager.Instance.mapScript.StartBattleOrOverkill(encounter.GetOverkillLevel(), this);
         return true;
     }
 
     public void Bonk(Vector3 kickpos, Vector3 kicknormal)
     {
+        if (!touchEncounter)
+        {
+            return;
+        }
+
         if (WorldPlayer.Instance.GetEncounterCooldown() > 0)
         {
             return;
@@ -254,7 +279,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
         bsa.move = BattleStartArguments.FirstStrikeMove.DashHop;
         bsa.firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
         SetAnimation("hurt", true);
-        MainManager.Instance.mapScript.StartBattle(this);
+        MainManager.Instance.mapScript.StartBattleOrOverkill(encounter.GetOverkillLevel(), this);
     }
 
 

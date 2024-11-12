@@ -37,6 +37,7 @@ public class Pause_HandlerStatus : Pause_HandlerShared
 
     void MenuUpdate()
     {
+        lifetime += Time.deltaTime;
         Vector3 lastInput = inputDir;
         inputDir = InputManager.GetAxisVertical() * Vector3.up + InputManager.GetAxisHorizontal() * Vector3.right;
 
@@ -114,12 +115,12 @@ public class Pause_HandlerStatus : Pause_HandlerShared
             }
         }
 
-        if (InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
         {
             //go to submenu
             Select();
         }
-        if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
             section.ApplyUpdate(null);
             PopSelf();

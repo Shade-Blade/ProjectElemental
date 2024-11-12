@@ -852,7 +852,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: E_DrainBud
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -1731,7 +1731,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: E_CursedEye
     speed: 3
     wandering: 1
     wanderRadius: 2

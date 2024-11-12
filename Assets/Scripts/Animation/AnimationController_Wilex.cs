@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AnimationController_Wilex : AnimationController_Player
 {
+    public GameObject offsetter;
+
     public override void SetAnimation(string name, bool force = false)
     {
         string modifiedName = name;
@@ -75,5 +77,20 @@ public class AnimationController_Wilex : AnimationController_Player
         }
         Debug.Log(targetMaterial);
         sprite.material = targetMaterial;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        //Fix for an offsetting problem I'm having
+        //doesn't work for some dumb reason
+        /*
+        if (sprite.flipX)
+        {
+            //2x so that it reverses the x offset
+            offsetter.transform.localPosition = 2 * Vector3.left * sprite.transform.localPosition.x;
+        }
+        */
     }
 }

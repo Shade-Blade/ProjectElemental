@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AnimationController_Luna : AnimationController_Player
 {
+    public GameObject offsetter;
+
     public override void SetAnimation(string name, bool force = false)
     {
         //Hacky fix
@@ -17,6 +19,11 @@ public class AnimationController_Luna : AnimationController_Player
         if (showBack && !name.Contains("smash") && !name.Contains("slash") && !name.Contains("talk") && !name.Contains("hurt"))
         {
             modifiedName = name + "_back";
+        }
+
+        if (modifiedName.Equals("smash_e") && sprite.flipX)
+        {
+            modifiedName = "smash_w";
         }
 
 
@@ -76,5 +83,21 @@ public class AnimationController_Luna : AnimationController_Player
         }
         Debug.Log(targetMaterial);
         sprite.material = targetMaterial;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        //Fix for an offsetting problem I'm having
+        //doesn't work for some dumb reason
+        /*
+        Debug.Log(sprite.transform.position);
+        if (sprite.flipX)
+        {
+            //2x so that it reverses the x offset
+            offsetter.transform.localPosition = 2 * Vector3.left * sprite.gameObject.transform.localPosition.x;
+        }
+        */
     }
 }

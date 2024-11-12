@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using static MainManager;
@@ -770,6 +772,54 @@ public class PlayerData
         se = maxSE;
     }
 
+    public void HealHealth(int hp)
+    {
+        UpdateMaxStats();
+        for (int i = 0; i < party.Count; i++)
+        {
+            party[i].hp += hp;
+            if (party[i].hp < 1)
+            {
+                party[i].hp = 1;
+            }
+            if (party[i].hp > party[i].maxHP)
+            {
+                party[i].hp = party[i].maxHP;
+            }
+        }
+    }
+    public void HealEnergy(int ep)
+    {
+        UpdateMaxStats();
+        this.ep += ep;
+        if (this.ep > maxEP)
+        {
+            this.ep = maxEP;
+        }
+    }
+    public void HealSoul(int se)
+    {
+        UpdateMaxStats();
+        this.se += se;
+        if (this.se > maxSE)
+        {
+            this.se = maxSE;
+        }
+    }
+    public void AddXP(int xp)
+    {
+        if (level == GetMaxLevel())
+        {
+            return;
+        }
+
+        this.exp += xp;
+        if (this.exp > 99)
+        {
+            this.exp = 99;
+        }
+    }
+
     public bool AtMaxStats()
     {
         for (int i = 0; i < party.Count; i++)
@@ -1091,6 +1141,18 @@ public class PlayerData
         {
             if (keyInventory[i].type == t)
             {
+                return true;
+            }
+        }
+        return false;
+    }
+    public bool RemoveKeyItem(KeyItem.KeyItemType t)
+    {
+        for (int i = 0; i < keyInventory.Count; i++)
+        {
+            if (keyInventory[i].type == t)
+            {
+                keyInventory.RemoveAt(i);
                 return true;
             }
         }
@@ -1518,7 +1580,7 @@ public class PlayerData
             return false;
         }
 
-        return pde.hp < PlayerDataEntry.GetDangerHP(eid) || GetRibbonEquipped(Ribbon.RibbonType.ThornyRibbon, eid);
+        return pde.hp <= PlayerDataEntry.GetDangerHP(eid) || GetRibbonEquipped(Ribbon.RibbonType.ThornyRibbon, eid);
     }
 
     public static string LevelUpgradeListToString(List<LevelUpgrade> list)
@@ -1922,10 +1984,13 @@ public class PlayerData
         output += ",";
         output += hiddenParty.Count;
         
-        for (int i = 0; i < bonusFollowers.Count; i++)
+        if (bonusFollowers != null)
         {
-            output += ",";
-            output += bonusFollowers[i];
+            for (int i = 0; i < bonusFollowers.Count; i++)
+            {
+                output += ",";
+                output += bonusFollowers[i];
+            }
         }
 
         for (int i = 0; i < party.Count; i++)
@@ -2174,6 +2239,7 @@ public class MainManager : MonoBehaviour
     public GameObject text_BadgeSprite;
     public GameObject text_RibbonSprite;
     public GameObject text_CommonSprite;
+    public GameObject text_MiscSprite;
     public GameObject text_EffectSprite;
     public GameObject text_StateSprite;
 
@@ -2196,8 +2262,8 @@ public class MainManager : MonoBehaviour
     public Sprite[] keyItemSprites;
     public Sprite[] badgeSprites;
     public Sprite[] ribbonSprites;
-    public Sprite[] commonSprites;
-
+    public Sprite[] commonSprites;    
+    public Sprite[] miscSprites;
     public Sprite[] effectSprites;
     public Sprite[] stateSprites;
 
@@ -2261,6 +2327,7 @@ public class MainManager : MonoBehaviour
         GV_StoryProgress = 1,
         GV_BadgeRandomPermutation,
         GV_RibbonRandomPermutation,
+        GV_PitFloor,
     }
     public enum GlobalFlag //so the save file will have these as text (cross version compatibility)
     {
@@ -2472,25 +2539,58 @@ public class MainManager : MonoBehaviour
         GF_Bestiary_Leafling,
         GF_Bestiary_Flowerling,
         GF_Bestiary_Shrublet,
-        GF_Bestiary_Rootling,
         GF_Bestiary_Sunflower,
         GF_Bestiary_Sunnybud,
         GF_Bestiary_MiracleBloom,
-        GF_Bestiary_SunSapling,
         GF_Bestiary_Rockling,
         GF_Bestiary_Honeybud,
         GF_Bestiary_BurrowTrap,
         GF_Bestiary_Sundew,
-        GF_Bestiary_VinePlatform,
-        GF_Bestiary_Sycamore,
-        GF_Bestiary_GiantVine,
-        GF_Bestiary_VineThrone,
-        GF_Bestiary_MasterOfAutumn,
         GF_Bestiary_Bandit,
         GF_Bestiary_Renegade,
         GF_Bestiary_Sentry,
         GF_Bestiary_Cactupole,
         GF_Bestiary_Sandswimmer,
+        GF_Bestiary_Slime,
+        GF_Bestiary_Slimewalker,
+        GF_Bestiary_Slimeworm,
+        GF_Bestiary_Slimebloom,
+        GF_Bestiary_SirenFish,
+        GF_Bestiary_Blazecrest,
+        GF_Bestiary_Embercrest,
+        GF_Bestiary_Ashcrest,
+        GF_Bestiary_Flametongue,
+        GF_Bestiary_Heatwing,
+        GF_Bestiary_Lavaswimmer,
+        GF_Bestiary_EyeSpore,
+        GF_Bestiary_SpikeShroom,
+        GF_Bestiary_Shrouder,
+        GF_Bestiary_HoarderFly,
+        GF_Bestiary_Mosquito,
+        GF_Bestiary_Shieldwing,
+        GF_Bestiary_Honeywing,
+        GF_Bestiary_Shimmerwing,
+        GF_Bestiary_LumistarVanguard,
+        GF_Bestiary_LumistarSoldier,
+        GF_Bestiary_LumistarStriker,
+        GF_Bestiary_Plateshell,
+        GF_Bestiary_Speartongue,
+        GF_Bestiary_Chaintail,
+        GF_Bestiary_Sawcrest,
+        GF_Bestiary_Coiler,
+        GF_Bestiary_Drillbeak,
+        GF_Bestiary_PuffJelly,
+        GF_Bestiary_Fluffling,
+        GF_Bestiary_CloudJelly,
+        GF_Bestiary_CrystalCrab,
+        GF_Bestiary_CrystalSlug,
+        GF_Bestiary_CrystalClam,
+        GF_Bestiary_AuroraWing,
+        GF_Bestiary_Plaguebud,
+        GF_Bestiary_Starfish,
+        GF_Bestiary_CursedEye,
+        GF_Bestiary_StrangeTendril,
+        GF_Bestiary_DrainBud,
     }
     public enum StoryProgress
     {
@@ -2531,7 +2631,8 @@ public class MainManager : MonoBehaviour
         ACH_Chapter6,
         ACH_Chapter7,
         ACH_Chapter8,
-        ACH_Epilogue,
+        ACH_EpilogueOrder,
+        ACH_EpilogueChaos,
         ACH_HardPrologue,
         ACH_HardChapter1,
         ACH_HardChapter2,
@@ -2541,9 +2642,51 @@ public class MainManager : MonoBehaviour
         ACH_HardChapter6,
         ACH_HardChapter7,
         ACH_HardChapter8,
-        ACH_HardEpilogue,
+        ACH_HardEpilogueOrder,
+        ACH_HardEpilogueChaos,
 
         EndOfTable
+    }
+
+    public enum MiscSprite
+    {
+        Default = 0,
+        MysteryItem,
+        MysteryRecipe,
+        MysteryBadge,
+        MysteryRibbon,
+        NoItem,
+        NoRecipe,
+        NoBadge,
+        NoRibbon,
+        AbilitySlash,
+        AbilitySlash2,
+        AbilitySlash3,
+        AbilityAetherize,
+        AbilityDoubleJump,
+        AbilitySuperJump,
+        AbilitySmash,
+        AbilitySmash2,
+        AbilitySmash3,
+        AbilityIlluminate,
+        AbilityDashHop,
+        AbilityDig,
+        Health6,
+        Health12,
+        Health30,
+        Health60,
+        Energy6,
+        Energy12,
+        Energy30,
+        Energy60,
+        Soul6,
+        Soul12,
+        Soul30,
+        Soul60,
+        XP10,
+        XP25,
+        XP50,
+        XP99
     }
 
     //area flags are stored per area, but are cleared when leaving area (used for things like enemy spawning)
@@ -2673,7 +2816,11 @@ public class MainManager : MonoBehaviour
         Test_LandscapeC7,
         Test_LandscapeC8,
         Test_LandscapeC9,
-        Test_VertexWarp
+        Test_VertexWarp,
+        Test_PitLobby,
+        Test_PitFloor,
+        Test_PitRestFloor,
+        Test_PitFinalFloor
     }
     public enum BattleMapID
     {
@@ -2705,6 +2852,8 @@ public class MainManager : MonoBehaviour
     }
     public enum SpriteID
     {
+        Default = -1,   //error condition
+
         Wilex = 0,
         Luna = 1,
         Keru,
@@ -2717,6 +2866,13 @@ public class MainManager : MonoBehaviour
         P_Gryphon_MaleOveralls,
         P_Gryphon_Female,
         P_Gryphon_Stella,
+
+        P_Leafling,
+        P_Flowerling,
+        P_Shrublet,
+        P_Sunnybud,
+        P_Sunflower,
+        P_MiracleBloom,
 
         C1_GrizzlyBear_ChildFemaleTown,
         C1_GrizzlyBear_ChildFemaleTemple,
@@ -2752,6 +2908,11 @@ public class MainManager : MonoBehaviour
         C1_Squirrel_MaleTown,
         C1_Squirrel_Spruce,
 
+        C1_BurrowTrap,
+        C1_Sundew,
+        C1_Rockling,
+        C1_Honeybud,
+
         C2_FrogNormal_FemaleBandit,
         C2_FrogNormal_FemaleCitizen,
         C2_FrogNormal_FemaleFoxBandit,
@@ -2782,11 +2943,24 @@ public class MainManager : MonoBehaviour
         C2_FrogSpiky_MaleBandit,
         C2_FrogSpiky_MaleCitizen,
 
+        C2_Cactupole,
+        C2_Sandswimmer,
+
         C3_Jellyfish_FemaleCommoner,
         C3_Jellyfish_FemaleNoble,
         C3_Jellyfish_MaleCommoner,
         C3_Jellyfish_MaleNoble,
         C3_Jellyfish_Muthi,
+
+        C3_Slime,
+        C3_RigidSlime,
+        C3_SoftSlime,
+        C3_ElementalSlime,
+        C3_NormalSlime,
+        C3_Slimeworm,
+        C3_Slimewalker,
+        C3_Slimebloom,
+        C3_Sirenfish,
 
         C4_Flamecrest_AshcrestFemale,
         C4_Flamecrest_AshcrestMale,
@@ -2803,9 +2977,17 @@ public class MainManager : MonoBehaviour
         C4_Flametongue_Ferra,
         C4_Flametongue_Islander,
 
+        C4_Lavaswimmer,
+        C4_Heatwing,
+
         C5_Mosquito_Cyano,
         C5_Mosquito_Male,
         C5_Mosquito_Female,
+
+        C5_EyeSpore,
+        C5_SpikeShroom,
+        C5_Shrouder,
+        C5_HoarderFly,
 
         C6_Crow_FemaleCommoner,
         C6_Crow_FemaleNoble,
@@ -2840,6 +3022,10 @@ public class MainManager : MonoBehaviour
         C6_Sparrow_Squalle,
         C6_Sparrow_Lanche,
 
+        C6_Shimmerwing,
+        C6_Shieldwing,
+        C6_Honeywing,
+
         C7_Chaintail_Alumi,
         C7_Chaintail_Female,
         C7_Chaintail_Male,
@@ -2857,6 +3043,10 @@ public class MainManager : MonoBehaviour
         C7_Speartongue_Lim,
         C7_Speartongue_Ridi,
 
+        C7_Sawcrest,
+        C7_Drillbeak,
+        C7_Coiler,
+
         C8_Hydromander_Cloudmander,
         C8_Hydromander_Watermander,
         C8_Hydromander_Icemander,
@@ -2865,10 +3055,26 @@ public class MainManager : MonoBehaviour
         C8_Hydromander_Meryl,
         C8_Hydromander_Blanca,
 
+        C8_PuffJelly,
+        C8_Fluffling,
+
+        C8_CloudJelly,
+        C8_WaterJelly,
+        C8_IceJelly,
+        C8_CrystalCrab,
+        C8_CrystalSlug,
+        C8_CrystalClam,
+        C8_AuroraWing,
+
         E_Plaguebud_Female,
         E_Plaguebud_Male,
         E_Plaguebud_Pestel,
         E_Plaguebud_Vali,
+
+        E_CursedEye,
+        E_StrangeTendril,
+        E_Starfish,
+        E_DrainBud,
     }
 
     //this is mostly just a reference
@@ -3112,6 +3318,306 @@ public class MainManager : MonoBehaviour
                 {
                     playerData.AddRibbon(pu.ribbon);
                 }
+                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                yield break;
+            case PickupUnion.PickupType.Misc:
+                //Hardcoded what this does
+                PlayerData.PlayerDataEntry pde;
+                switch (pu.misc)
+                {
+                    case MiscSprite.MysteryItem:
+                        //Transform into the item to give to you
+                        Item.ItemType it;
+                        while (true)
+                        {
+                            it = (Item.ItemType)RandomGenerator.GetIntRange(0, 256);
+                            if (!Item.GetItemDataEntry(it).isRecipe)
+                            {
+                                break;
+                            }
+                        }
+                        bool mi = true;
+                        pu.type = PickupUnion.PickupType.Item;
+                        pu.item = new Item(it, Item.ItemModifier.None);
+                        if (pu.item.type != Item.ItemType.None)
+                        {
+                            mi = playerData.AddItem(pu.item);
+                        }
+                        Debug.Log(pu.item);
+                        if (mi)
+                        {
+                            yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        }
+                        else
+                        {
+                            //Too many items!
+                            yield return StartCoroutine(TooManyItemsPopupBlocking(pu));
+                        }
+                        yield break;
+                    case MiscSprite.MysteryRecipe:
+                        Item.ItemType rt;
+                        while (true)
+                        {
+                            rt = (Item.ItemType)RandomGenerator.GetIntRange(1, (int)Item.ItemType.EndOfTable);
+                            if (Item.GetItemDataEntry(rt).isRecipe)
+                            {
+                                break;
+                            }
+                        }
+                        bool mr = true;
+                        pu.type = PickupUnion.PickupType.Item;
+                        pu.item = new Item(rt, Item.ItemModifier.None);
+                        if (pu.item.type != Item.ItemType.None)
+                        {
+                            mr = playerData.AddItem(pu.item);
+                        }
+                        if (mr)
+                        {
+                            yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        }
+                        else
+                        {
+                            //Too many items!
+                            yield return StartCoroutine(TooManyItemsPopupBlocking(pu));
+                        }
+                        yield break;
+                    case MiscSprite.MysteryBadge:
+                        pu.badge.type = (Badge.BadgeType)RandomGenerator.GetIntRange(1, (int)Badge.BadgeType.EndOfTable);
+                        pu.type = PickupUnion.PickupType.Badge;
+                        if (pu.badge.type != Badge.BadgeType.None)
+                        {
+                            playerData.AddBadge(pu.badge);
+                            if (Cheat_TooManyBadges)
+                            {
+                                playerData.AddBadge(pu.badge);
+                            }
+                        }
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.MysteryRibbon:
+                        pu.ribbon.type = (Ribbon.RibbonType)RandomGenerator.GetIntRange(1, (int)Ribbon.RibbonType.EndOfTable); ;
+                        pu.type = PickupUnion.PickupType.Ribbon;
+                        if (pu.ribbon.type != Ribbon.RibbonType.None)
+                        {
+                            playerData.AddRibbon(pu.ribbon);
+                        }
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.NoItem:
+                    case MiscSprite.NoRecipe:
+                    case MiscSprite.NoBadge:
+                    case MiscSprite.NoRibbon:
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.AbilitySlash:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null) {
+                            if (pde.weaponLevel < 0)
+                            {
+                                pde.weaponLevel = 0;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilitySlash2:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 1)
+                            {
+                                pde.weaponLevel = 1;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilitySlash3:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 2)
+                            {
+                                pde.weaponLevel = 2;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilityAetherize:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 2)
+                            {
+                                pde.weaponLevel = 2;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilityDoubleJump:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.jumpLevel < 1)
+                            {
+                                pde.jumpLevel = 1;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilitySuperJump:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.jumpLevel < 2)
+                            {
+                                pde.jumpLevel = 2;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilitySmash:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 0)
+                            {
+                                pde.weaponLevel = 0;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilitySmash2:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 1)
+                            {
+                                pde.weaponLevel = 1;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilitySmash3:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 2)
+                            {
+                                pde.weaponLevel = 2;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilityIlluminate:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 2)
+                            {
+                                pde.weaponLevel = 2;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilityDashHop:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.jumpLevel < 1)
+                            {
+                                pde.jumpLevel = 1;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.AbilityDig:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.jumpLevel < 2)
+                            {
+                                pde.jumpLevel = 2;
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                                yield break;
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.Health6:
+                        playerData.HealHealth(6);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Health12:
+                        playerData.HealHealth(12);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Health30:
+                        playerData.HealHealth(30);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Health60:
+                        playerData.HealHealth(60);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Energy6:
+                        playerData.HealEnergy(6);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Energy12:
+                        playerData.HealEnergy(12);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Energy30:
+                        playerData.HealEnergy(30);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Energy60:
+                        playerData.HealEnergy(60);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Soul6:
+                        playerData.HealSoul(6);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Soul12:
+                        playerData.HealSoul(12);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Soul30:
+                        playerData.HealSoul(30);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.Soul60:
+                        playerData.HealSoul(60);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.XP10:
+                        playerData.AddXP(10);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.XP25:
+                        playerData.AddXP(25);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.XP50:
+                        playerData.AddXP(50);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                    case MiscSprite.XP99:
+                        playerData.AddXP(99);
+                        yield return StartCoroutine(GetItemPopupBlocking(pu));
+                        yield break;
+                }
+
                 yield return StartCoroutine(GetItemPopupBlocking(pu));
                 yield break;
         }
@@ -3445,6 +3951,11 @@ public class MainManager : MonoBehaviour
     }
     public void SetGlobalFlag(GlobalFlag gf, bool set)
     {
+        if (gf == GlobalFlag.GF_None)
+        {
+            Debug.LogWarning("Attempt to set GF_None");
+            return;
+        }
         globalFlags[gf] = set;
     }
     /*
@@ -3490,6 +4001,11 @@ public class MainManager : MonoBehaviour
     }
     public void SetGlobalVar(GlobalVar gv, string set)
     {
+        if (gv == GlobalVar.GV_None)
+        {
+            Debug.LogWarning("Attempt to set GV_None");
+            return;
+        }
         globalVars[gv] = set;
     }
     /*
@@ -3552,6 +4068,48 @@ public class MainManager : MonoBehaviour
     }
     //Map flags and vars are handled per map so we don't really need reset methods
 
+    public GlobalFlag ItemToRecipeFlag(Item.ItemType it)
+    {
+        GlobalFlag gf = GlobalFlag.GF_None;
+        Enum.TryParse<MainManager.GlobalFlag>(("GF_Recipe_" + it.ToString()), true, out gf);
+        return gf;
+    }
+    public bool GetRecipeFlag(Item.ItemType it)
+    {
+        GlobalFlag gf = ItemToRecipeFlag(it);
+
+        return GetGlobalFlag(gf);
+        //return true;
+    }
+    public void SetRecipeFlag(Item.ItemType it)
+    {
+        GlobalFlag gf = ItemToRecipeFlag(it);
+        SetGlobalFlag(gf, true);
+    }
+
+    public GlobalFlag EntityIDToBestiaryFlag(BattleHelper.EntityID eid)
+    {
+        GlobalFlag gf = GlobalFlag.GF_None;
+        Enum.TryParse<MainManager.GlobalFlag>(("GF_Bestiary_" + eid.ToString()), true, out gf);
+        return gf;
+    }
+    //Todo: subindex checking (note: I will probably set this up to work in one direction, i.e. a checks b but b does not check a)
+    public bool GetBestiaryFlag(BattleHelper.EntityID eid)
+    {
+        GlobalFlag gf = EntityIDToBestiaryFlag(eid);
+
+        return GetGlobalFlag(gf);
+        //return true;
+    }
+    //Todo: subindex checking (note: I will probably set this up to work in one direction, i.e. b sets a but a does not check b)
+    public void SetBestiaryFlag(BattleHelper.EntityID eid)
+    {
+        GlobalFlag gf = EntityIDToBestiaryFlag(eid);
+        SetGlobalFlag(gf, true);
+    }
+
+
+
     //Bottom Left = (0,0)
     public Vector2 WorldPosToCanvasPos(Vector3 wpos)
     {
@@ -3576,10 +4134,27 @@ public class MainManager : MonoBehaviour
         //newPos *= ScreenToCanvasScale;
         return newPos;
     }
+    public bool IsPositionBehindCamera(Vector3 wpos)
+    {
+        Vector3 offset = wpos - Camera.transform.position;
+        return Vector3.Dot(offset, Camera.transform.forward) < 0;
+    }
     public Vector2 WorldPosToCanvasPosB(Vector3 wpos)   //not sure how this is different from above. Possibly occurs due to anchor positioning acting weird for some reason
     {
         //actually: probably because it is just WorldToScreenPoint since the multiplication and division cancel out
         return WorldPosToCanvasPosProportion(wpos) * new Vector2(Screen.width, Screen.height);
+    }
+    public Vector2 WorldPosToCanvasPosC(Vector3 wpos)
+    {
+        return WorldPosToCanvasPosProportion(wpos) * new Vector2(CanvasWidth(), CanvasHeight());
+    }
+    public static float CanvasHeight()
+    {
+        return 600;
+    }
+    public static float CanvasWidth()
+    {
+        return (Screen.width / (0.0f + Screen.height)) * 600;
     }
     public Vector2 WorldPosToCanvasPosProportion(Vector3 wpos)
     {
@@ -3732,6 +4307,21 @@ public class MainManager : MonoBehaviour
         return InputManager.GetButtonString(b);
     }
 
+
+    public void PitReset()
+    {
+        playerData = new PlayerData(BattleHelper.EntityID.Wilex, BattleHelper.EntityID.Luna);
+        playerData.AddBadge(new Badge(Badge.BadgeType.SuperCurse));
+        playerData.AddBadge(new Badge(Badge.BadgeType.UltraCurse));
+        playerData.AddBadge(new Badge(Badge.BadgeType.MegaCurse));
+        playerData.AddRibbon(new Ribbon(Ribbon.RibbonType.SharpRibbon));
+        playerData.AddRibbon(new Ribbon(Ribbon.RibbonType.SafetyRibbon));
+
+        //???
+        //Debug.Log(playerData.ribbonInventory[0] + " " + playerData.ribbonInventory[1]);
+        playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex).ribbon = playerData.ribbonInventory[1];
+        playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna).ribbon = playerData.ribbonInventory[0];
+    }
 
     public void OnGUI()
     {
@@ -4308,7 +4898,7 @@ public class MainManager : MonoBehaviour
         }
         else
         {
-            if (!inCutscene && worldMode == WorldMode.Overworld && (worldPlayer == null || worldPlayer.IsGrounded()))
+            if (!inCutscene && !mapHalted && worldMode == WorldMode.Overworld && (worldPlayer == null || worldPlayer.IsGrounded()))
             {
                 if (InputManager.GetButtonDown(InputManager.Button.Start))
                 {
@@ -4510,6 +5100,7 @@ public class MainManager : MonoBehaviour
         text_BadgeSprite = text_BadgeSprite ? text_BadgeSprite : (GameObject)Resources.Load("Menu/BadgeSprite");
         text_RibbonSprite = text_RibbonSprite ? text_RibbonSprite : (GameObject)Resources.Load("Menu/RibbonSprite");
         text_CommonSprite = text_CommonSprite ? text_CommonSprite : (GameObject)Resources.Load("Menu/CommonSprite");
+        text_MiscSprite = text_MiscSprite ? text_MiscSprite : (GameObject)Resources.Load("Menu/MiscSprite");
         text_EffectSprite = text_EffectSprite ? text_EffectSprite : (GameObject)Resources.Load("Menu/EffectSprite");
         text_StateSprite = text_StateSprite ? text_StateSprite : (GameObject)Resources.Load("Menu/StateSprite");
         gameOverObject = gameOverObject ? gameOverObject : (GameObject)Resources.Load("GameOver/GameOverControl");
@@ -4530,6 +5121,7 @@ public class MainManager : MonoBehaviour
         badgeSprites = Resources.LoadAll<Sprite>("Sprites/Badges/BadgeSpritesV6");
         ribbonSprites = Resources.LoadAll<Sprite>("Sprites/Ribbons/RibbonSpritesV2");
         commonSprites = Resources.LoadAll<Sprite>("Sprites/CommonSpritesV2");
+        miscSprites = Resources.LoadAll<Sprite>("Sprites/Misc/MiscSpritesV1");
 
         effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV10");
         stateSprites = Resources.LoadAll<Sprite>("Sprites/Battle/StateIconsV4");
@@ -5079,7 +5671,7 @@ public class MainManager : MonoBehaviour
         output += "\n";
         output += WorldLocation.SolarGrove;
         output += ",";
-        output += MapID.Test_Main;
+        output += MapID.Test_PitFloor;
         output += ",";
         output += Vector3ToString(Vector3.up * 15);
         output += "\n";
@@ -5730,15 +6322,18 @@ public class MainManager : MonoBehaviour
             }
 
             //Bonus followers
-            for (int i = 0; i < playerData.bonusFollowers.Count; i++)
+            if (playerData.bonusFollowers != null)
             {
-                WorldFollower wf2 = SpawnFollower(offsetPos, yawOffset, playerData.bonusFollowers[i]);
-                wp.followers.Add(wf2);
+                for (int i = 0; i < playerData.bonusFollowers.Count; i++)
+                {
+                    WorldFollower wf2 = SpawnFollower(offsetPos, yawOffset, playerData.bonusFollowers[i]);
+                    wp.followers.Add(wf2);
 
-                wf2.followTarget = wp.followers[wp.followers.Count - 2].transform;
-                wf2.followerIndex = i + 1;
+                    wf2.followTarget = wp.followers[wp.followers.Count - 2].transform;
+                    wf2.followerIndex = i + 1;
 
-                wf2.transform.parent = ms.playerHolder.transform;
+                    wf2.transform.parent = ms.playerHolder.transform;
+                }
             }
         }
         //camera needs to snap to the right position (but it needs to be done right as the player gets positioned in the entrance script)
@@ -6005,7 +6600,9 @@ public class MainManager : MonoBehaviour
         //Debug.Log("Cutscene (normal) end: " + cutsceneID);
 
         //hacky fix for a problem I'm having
-        WorldPlayer.Instance.rb.velocity = Vector3.zero;
+        //WorldPlayer.Instance.rb.velocity = Vector3.zero;
+        //I forgot what this was fixing, so I hope only zeroing out the y velocity is not a problem
+        WorldPlayer.Instance.rb.velocity -= XZProjectPreserve(WorldPlayer.Instance.rb.velocity);
     }
 
 
@@ -7183,12 +7780,12 @@ public class MainManager : MonoBehaviour
 
     public static int XPCalculation(int startEnemyCount, int playerLevel, int enemyLevel, int enemyBonusXP)
     {
-        float bonus = 0.5f;
-        bonus = 0.55f + 0.05f * (startEnemyCount - 2) * (startEnemyCount - 3);
+        float bonus = 0.75f;
+        bonus = 0.775f + 0.075f * (startEnemyCount - 2) * (startEnemyCount - 3);
 
-        if (bonus > 0.8f)
+        if (bonus > 1.2f)
         {
-            bonus = 0.8f;
+            bonus = 1.2f;
         }
 
         int levelDiff = (enemyLevel - playerLevel);

@@ -72,14 +72,14 @@ public class SM_Hasten : SoulMove
         {
             if (level == 1)
             {
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 2));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 1));
             }
             else
             {
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 2));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 1));
                 }
             }
         }
@@ -87,14 +87,14 @@ public class SM_Hasten : SoulMove
         {
             if (level == 1)
             {
-                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 2));
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Hustle, 1, 1));
             }
             else
             {
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 2));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 1));
                 }
             }
         }
@@ -162,7 +162,7 @@ public class SM_Revitalize : SoulMove
         switch (level)
         {
             case 1:
-                return new TargetArea(TargetArea.TargetAreaType.Ally, true);
+                return new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
             default:
                 return new TargetArea(TargetArea.TargetAreaType.Ally, true);
         }
@@ -222,7 +222,7 @@ public class SM_Revitalize : SoulMove
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureCurableEffects();
+                    b.CureEffects();
                 }
             }
             else
@@ -237,7 +237,7 @@ public class SM_Revitalize : SoulMove
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureCurableEffects();
+                    b.CureEffects();
                 }
             }
         }
@@ -256,7 +256,7 @@ public class SM_Revitalize : SoulMove
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureCurableEffects();
+                    b.CureEffects();
                 }
             }
             else
@@ -271,7 +271,7 @@ public class SM_Revitalize : SoulMove
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureCurableEffects();
+                    b.CureEffects();
                 }
             }
         }
@@ -1301,7 +1301,7 @@ public class SM_Cleanse : SoulMove
                 if (caller.GetAttackHit(b, BattleHelper.DamageType.Spectral))
                 {
                     BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Spectral, 0);
-                    b.CureCleanseableEffects(false);
+                    b.CleanseEffects(false);
                     if (level > 1)
                     {
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Seal, 1, 2));
@@ -1321,7 +1321,7 @@ public class SM_Cleanse : SoulMove
                 if (caller.GetAttackHit(b, BattleHelper.DamageType.Spectral))
                 {
                     BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Spectral, 0);
-                    b.CureCleanseableEffects(false);
+                    b.CleanseEffects(false);
                     if (level > 1)
                     {
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Seal, 1, 1));
@@ -1615,7 +1615,7 @@ public class SM_ElementalConflux : SoulMove
         {
             if (level == 1)
             {
-                caller.CureCurableEffects();
+                caller.CureEffects();
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 2, 3));
                 yield return new WaitForSeconds(0.1f);
@@ -1636,7 +1636,7 @@ public class SM_ElementalConflux : SoulMove
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureCurableEffects();
+                    b.CureEffects();
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
@@ -1679,7 +1679,7 @@ public class SM_ElementalConflux : SoulMove
         {
             if (level == 1)
             {
-                caller.CureCurableEffects();
+                caller.CureEffects();
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 1, 3));
                 yield return new WaitForSeconds(0.1f);
@@ -1700,7 +1700,7 @@ public class SM_ElementalConflux : SoulMove
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureCurableEffects();
+                    b.CureEffects();
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)

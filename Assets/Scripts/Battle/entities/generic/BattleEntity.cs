@@ -714,6 +714,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int splotchDamage;                                                //Damage to deal by Splotch
     public int magmaDamage;
     public int damageTakenThisTurn;                                        //Non-status damage taken since last PostMove call (Used to calculate Astral Wall stuff)
+
+    //
+    public int counterFlareTrackedDamage;
+    public int arcDischargeTrackedDamage;
+    public int splotchTrackedDamage;
+    //note: no special handling for magma since that isn't something that just turns on mid turn (while the other effects might be applied some turn)
+
     public int damageTakenLastTurn;
     public bool alive;
 
@@ -850,6 +857,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         output += "<next>" + bemd.GetMovesetBestiaryString();
 
         return output;
+    }
+    public static bool GetBestiaryFlag(BattleHelper.EntityID entityID)
+    {
+        return MainManager.Instance.GetBestiaryFlag(entityID);
     }
     public static string GetTattleStatic(BattleHelper.EntityID tattlerID, BattleHelper.EntityID entityID)
     {
@@ -1001,6 +1012,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         damageEventsThisTurn = 0;
 
         damageTakenThisTurn = 0;
+        counterFlareDamage = 0;
+        counterFlareTrackedDamage = 0;
+        arcDischargeDamage = 0;
+        arcDischargeTrackedDamage = 0;
+        splotchDamage = 0;
+        splotchTrackedDamage = 0;
         damageTakenLastTurn = 0;
 
         //debug status testing
@@ -1510,9 +1527,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (HasEffect(Effect.EffectType.AstralWall) && damageTakenThisTurn >= GetEffectEntry(Effect.EffectType.AstralWall).potency)
         {
-            CureEffect(Effect.EffectType.AstralWall);
+            RemoveEffect(Effect.EffectType.AstralWall);
         }
         damageTakenLastTurn = damageTakenThisTurn;
+        counterFlareDamage = 0;
+        counterFlareTrackedDamage = 0;
+        arcDischargeDamage = 0;
+        arcDischargeTrackedDamage = 0;
+        splotchDamage = 0;
+        splotchTrackedDamage = 0;
         damageTakenThisTurn = 0;
 
 
@@ -1551,6 +1574,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             DeathCheck();
         }
+
+        //Fix a problem I'm having
+        SetIdleAnimation();
 
         if (!idleRunning && hasIdle && idleActive)
         {
@@ -1720,6 +1746,18 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             //Apply Astral Wall
             damageTakenThisTurn += damage;
+            if (HasEffect(Effect.EffectType.CounterFlare))
+            {
+                counterFlareTrackedDamage += damage;
+            }
+            if (HasEffect(Effect.EffectType.ArcDischarge))
+            {
+                arcDischargeDamage += damage;
+            }
+            if (HasEffect(Effect.EffectType.Splotch))
+            {
+                splotchDamage += damage;
+            }
 
             if (HasEffect(Effect.EffectType.AstralWall))
             {
@@ -1753,6 +1791,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.TrueMinOne))
         {
+            //Debug.Log("tenacious");
             if (damage < 1)
             {
                 damage = 1;
@@ -1897,6 +1936,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //Apply special properties
         damage = ApplyDefensiveProperties(damage, properties);
 
+        //Quantum Shield
+        if (HasEffect(Effect.EffectType.QuantumShield))
+        {
+            damage = 0;
+        }
+
         //Anti-death statuses
         if (HasEffect(Effect.EffectType.Miracle))
         {
@@ -1952,7 +1997,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
         }
         //limiter = alternate version of Sturdy (Caps damage at N)
-        if (GetEntityProperty(BattleHelper.EntityProperties.Tempered))
+        if (GetEntityProperty(BattleHelper.EntityProperties.Resistant))
         {
             if (damage > 1)
             {
@@ -2390,7 +2435,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             GameObject g = Instantiate(BattleControl.Instance.statusIcon);
             g.transform.SetParent(transform);
-            g.transform.localPosition = statusOffset + Vector3.up * StatusIconScript.VOFFSET * (i + numStateIcons);
+            g.transform.localPosition = statusOffset + new Vector3(width * 0.5f + 0.1f, height, 0) + Vector3.up * StatusIconScript.VOFFSET * (i + numStateIcons);
 
             statusIcons.Add(g);
 
@@ -2410,7 +2455,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             output++;
         }
 
-        if (GetEntityProperty(BattleHelper.EntityProperties.Tempered))
+        if (GetEntityProperty(BattleHelper.EntityProperties.Resistant))
         {
             MakeStateIcon(output, BattleHelper.EntityState.Limiter);
             output++;
@@ -2523,7 +2568,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         GameObject g = Instantiate(BattleControl.Instance.stateIcon);
         g.transform.SetParent(transform);
-        g.transform.localPosition = statusOffset + Vector3.up * StateIconScript.VOFFSET * (offset);
+        g.transform.localPosition = statusOffset + new Vector3(width * 0.5f + 0.1f, height, 0) + Vector3.up * StateIconScript.VOFFSET * (offset);
         statusIcons.Add(g);
         StateIconScript s = g.GetComponent<StateIconScript>();
         s.Setup(state, potency, duration);
@@ -2549,7 +2594,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             GameObject g = Instantiate(BattleControl.Instance.hpbar);
             g.transform.SetParent(transform);
-            g.transform.localPosition = healthBarOffset;
+            g.transform.localPosition = healthBarOffset + Vector3.down * (0.15f);
 
             hpbar = g;
 
@@ -2561,8 +2606,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public bool ShouldShowHPBar()
     {
-        //TODO: Bestiary flag check
-        bool bestiaryFlag = true;
+        bool bestiaryFlag = MainManager.Instance.GetBestiaryFlag(entityID);
 
         return bestiaryFlag || BattleControl.Instance.playerData.BadgeEquipped(Badge.BadgeType.HealthSight);
     }
@@ -2607,7 +2651,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //(virtual only because I want to insert some stuff before the player version)
     public int DealDamage(BattleEntity target, int damage, BattleHelper.DamageType type, ulong properties = 0, BattleHelper.ContactLevel contact = BattleHelper.ContactLevel.Infinite)
     {
-        PreDealDamage(target, type, properties, contact);
+        properties |= PreDealDamage(target, type, properties, contact);
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
             if (applyCurseAttack)
@@ -2702,7 +2746,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         //this is literally just DealDamage with one line added
         //Refactor later?
-        PreDealDamage(target, type, properties, contact);
+        properties |= PreDealDamage(target, type, properties, contact);
 
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
@@ -2811,7 +2855,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public int DealDamagePooled(BattleEntity other, BattleEntity target, int damage, int damageO, BattleHelper.DamageType type, ulong properties, BattleHelper.ContactLevel contact)
     {
-        PreDealDamage(target, type, properties, contact);
+        properties |= PreDealDamage(target, type, properties, contact);
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
             if (applyCurseAttack)
@@ -2907,7 +2951,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int DealDamagePooledMultihit(BattleEntity other, BattleEntity target, int damage, int damageO, BattleHelper.DamageType type, ulong properties, BattleHelper.ContactLevel contact,
                                         int hitIndex, Func<int, int, int> reductionFormula)
     {
-        PreDealDamage(target, type, properties, contact);
+        properties |= PreDealDamage(target, type, properties, contact);
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
             if (applyCurseAttack)
@@ -3106,6 +3150,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 if (!GetDamageProperty(properties, dp))
                 {
                     output /= 2;
+                }
+            }
+
+            if (target.HasEffect(Effect.EffectType.Supercharge))
+            {
+                int oldoutput = output;
+                output = (int)(output * (1f + 0.334f * target.GetEffectEntry(Effect.EffectType.Supercharge).potency));
+                if (output < oldoutput + target.GetEffectEntry(Effect.EffectType.Supercharge).potency)
+                {
+                    output = oldoutput + target.GetEffectEntry(Effect.EffectType.Supercharge).potency;
                 }
             }
         }
@@ -4353,11 +4407,21 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //Debug.Log("high");
             return b; //high enough
         }
+        if ((property & BattleHelper.EntityProperties.Airborne) != 0 && homePos.y <= AIRBORNE_CUTOFFHEIGHT)
+        {
+            //Debug.Log("high");
+            return !b; //high enough
+        }
 
         if ((property & BattleHelper.EntityProperties.LowStompable) != 0 && (stompOffset.y * height + homePos.y) < LOWSTOMPABLE_CUTOFFHEIGHT)
         {
             //Debug.Log("high");
             return b; //high enough
+        }
+        if ((property & BattleHelper.EntityProperties.LowStompable) != 0 && (stompOffset.y * height + homePos.y) >= LOWSTOMPABLE_CUTOFFHEIGHT)
+        {
+            //Debug.Log("high");
+            return !b; //high enough
         }
 
 
@@ -4370,6 +4434,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public void SetEntityProperty(BattleHelper.EntityProperties property, bool b = true)
     {
+        //Debug.Log(entityProperties + " |= " + (ulong)property);
         if (b)
         {
             entityProperties |= (ulong)property;
@@ -4378,7 +4443,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             entityProperties &= ~((ulong)property);
         }
-        //Debug.Log(entityProperties);
     }
     public void ForceEntityProperties(ulong propertyBlock)
     {
@@ -4435,7 +4499,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public Vector3 GetDamageEffectPosition()
     {
-        return transform.position + offset - Vector3.forward * 0.1f;
+        return transform.position + offset + Vector3.up * (height / 2) - Vector3.forward * 0.1f;
     }
 
     public virtual int GetDefense()
@@ -4879,7 +4943,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         int half = Mathf.CeilToInt(agility / 2f);
 
-        if (BattleControl.Instance.playerData.BadgeEquipped(Badge.BadgeType.HeadStart))
+        if (posId < 0 && BattleControl.Instance.playerData.BadgeEquipped(Badge.BadgeType.HeadStart) && BattleControl.Instance.turnCount < 1)
         {
             realAgility += half;
         }
@@ -5813,12 +5877,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         return false;
     }
-    public void CureAllEffects()
+    public void RemoveAllEffects()
     {
         effects.RemoveAll((e) => true);
         ValidateEffects();
     }
-    public void CureCleanseableEffects(bool curePermanents = true)
+    public void CleanseEffects(bool curePermanents = true)
     {
         //(note: 1 + count because I want the effect to be noticeable even if you have nothing)
         int power = 1 + effects.FindAll((e) => Effect.IsCleanseable(e.effect, curePermanents)).Count;
@@ -5830,9 +5894,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
 
         BattleControl.Instance.CreateCleanseParticles(this, power);
+        if (power > 1)
+        {
+            QueueEvent(BattleHelper.Event.CureStatus);
+        }
         ValidateEffects();
     }
-    public void CureCurableEffects(bool curePermanents = true)
+    public void CureEffects(bool curePermanents = true)
     {
         //(note: 1 + count because I want the effect to be noticeable even if you have nothing)
         int power = 1 + effects.FindAll((e) => Effect.IsCurable(e.effect, curePermanents)).Count;
@@ -5844,6 +5912,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
 
         BattleControl.Instance.CreateCureParticles(this, power);
+        if (power > 1)
+        {
+            QueueEvent(BattleHelper.Event.CureStatus);
+        }
         ValidateEffects();
     }
     public void CureDeathCurableEffects()
@@ -5851,17 +5923,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         effects.RemoveAll((e) => Effect.IsDeathCurable(e.effect));
         ValidateEffects();
     }
-    public void CureEffect(Effect.EffectType i)
+    public void RemoveEffect(Effect.EffectType i)
     {
         effects.RemoveAll((Effect s) => s.effect == i);
         ValidateEffects();
     }
-    public void CureEffectsFromCaster(int casterID) //cure statuses from a certain ID
+    public void RemoveEffectsFromCaster(int casterID) //cure statuses from a certain ID
     {
         effects.RemoveAll((Effect s) => s.casterID == casterID);
         ValidateEffects();
     }
-    public void CureEffectsFromCaster(int casterID, Effect.EffectType e) //cure statuses from a certain ID
+    public void RemoveEffectsFromCaster(int casterID, Effect.EffectType e) //cure statuses from a certain ID
     {
         effects.RemoveAll((Effect s) => s.casterID == casterID && s.effect == e);
         ValidateEffects();
@@ -6663,8 +6735,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //Debug.Log(name + " check " + absorbDamageEvents);
         if (absorbDamageEvents > 0)
         {
-            CureEffect(Effect.EffectType.Absorb);
-            CureEffect(Effect.EffectType.Sunder);
+            RemoveEffect(Effect.EffectType.Absorb);
+            RemoveEffect(Effect.EffectType.Sunder);
             if (HasEffect(Effect.EffectType.Brittle))
             {
                 Effect e = GetEffectEntry(Effect.EffectType.Brittle);
@@ -6678,14 +6750,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (chargedAttackCount > 0)
         {
             chargedAttackCount = 0;
-            if (bufferRemoveCharge || HasEffect(Effect.EffectType.Supercharge))
+            if (bufferRemoveCharge)
             {
                 bufferRemoveCharge = false;
             }
             else
             {
-                CureEffect(Effect.EffectType.Focus);
-                CureEffect(Effect.EffectType.Defocus);
+                RemoveEffect(Effect.EffectType.Focus);
+                RemoveEffect(Effect.EffectType.Defocus);
             }
         }
         if (bufferRemoveCharge)
@@ -7073,7 +7145,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         alive = false;
         BattleControl.Instance.AddToDeathList(this);
-        CureAllEffects();
+        RemoveAllEffects();
         BattleControl.Instance.RemoveEntityAtId(posId); //create consistent death timing
         yield return StartCoroutine(Spin(Vector3.up * 360, 0.5f));
         BattleControl.Instance.CreateDeathSmoke(this);
@@ -8074,16 +8146,21 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
 
 
+    public void OnDrawGizmosSelected()
+    {
+        DebugDrawHitbox();
+    }
+
     //reveals the hidden values with Debug.DrawRay
     public void DebugDrawHitbox()
     {
         DebugDrawX(transform.position, Color.white);
-        DebugDrawX(transform.position + offset, new Color(0.8f, 0.8f, 0.8f));
+        DebugDrawX(transform.position + offset + Vector3.up * (height/2), new Color(0.8f, 0.8f, 0.8f));
         DebugDrawX(subObject.transform.position, new Color(0.5f, 0.5f, 0.5f));
 
-        DebugDrawX(transform.position + healthBarOffset, new Color(0.8f, 0.8f, 0));
-        DebugDrawX(transform.position + statusOffset, new Color(0.8f, 0, 0.8f));
-        DebugDrawX(transform.position + selectionOffset, new Color(0, 0, 0.8f));
+        DebugDrawX(transform.position + healthBarOffset + Vector3.down * 0.15f, new Color(0.8f, 0.8f, 0));
+        DebugDrawX(transform.position + statusOffset + new Vector3(width * 0.5f + 0.1f, height, 0), new Color(0.8f, 0, 0.8f));
+        DebugDrawX(transform.position + selectionOffset + Vector3.up * (height + 0.5f), new Color(0, 0, 0.8f));
 
         //hitbox is bottom centered on transform position
 

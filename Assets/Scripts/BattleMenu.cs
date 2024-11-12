@@ -70,6 +70,9 @@ public abstract class MenuHandler : MonoBehaviour, IMenuHandler
     protected IMenuHandler submenu;
     protected IMenuHandler parent;
 
+    public float lifetime = 0;
+    public const float MIN_SELECT_TIME = 0.0667f;
+
     public abstract event EventHandler<MenuExitEventArgs> menuExit;
 
     public void SetParent(IMenuHandler menuHandler)
@@ -112,6 +115,7 @@ public abstract class MenuHandler : MonoBehaviour, IMenuHandler
     public virtual void Init()
     {
         active = true;
+        lifetime = 0;
     }
     public virtual void Clear()
     {

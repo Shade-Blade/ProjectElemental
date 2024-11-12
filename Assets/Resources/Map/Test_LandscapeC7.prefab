@@ -852,7 +852,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C7_Sawcrest
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -1732,7 +1732,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: Aster
+    spriteID: C7_Sawcrest
     speed: 3
     wandering: 1
     wanderRadius: 2

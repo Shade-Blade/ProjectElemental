@@ -48,7 +48,7 @@ public class Text_RibbonSprite : Text_SpecialSprite
 
     public static GameObject Create(string item)
     {
-        GameObject obj = Instantiate(MainManager.Instance.text_ItemSprite);
+        GameObject obj = Instantiate(MainManager.Instance.text_RibbonSprite);
         Text_RibbonSprite its = obj.GetComponent<Text_RibbonSprite>();
         its.args = new string[] { item };
         its.index = -1;

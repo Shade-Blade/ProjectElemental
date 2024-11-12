@@ -66,7 +66,8 @@ public class Pause_HandlerMap : Pause_HandlerShared
 
     public virtual void MenuUpdate()
     {
-        if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+        lifetime += Time.deltaTime;
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
             PopSelf();
         }

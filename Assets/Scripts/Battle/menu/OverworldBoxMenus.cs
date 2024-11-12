@@ -704,30 +704,34 @@ public class GenericBoxMenu : BoxMenu
         Color? tempColor = null;
 
         //Debug.Log(list.Count + " " + rightTextList.Count + " " + descriptionList.Count + " " + usageList.Count);
+        MainManager.ListPrint(list);
+        MainManager.ListPrint(rightTextList);
+        MainManager.ListPrint(descriptionList);
+        MainManager.ListPrint(usageList);
 
         for (int i = 0; i < list.Count; i++)
         {
-            if (rightTextList != null)
+            if (rightTextList != null && i < rightTextList.Count)
             {
                 tempRT = FormattedString.ParseEscapeSequences(rightTextList[i]);
             }
 
-            if (descriptionList != null)
+            if (descriptionList != null && i < descriptionList.Count)
             {
                 tempD = FormattedString.ParseEscapeSequences(descriptionList[i]);
             }
 
-            if (usageList != null)
+            if (usageList != null && i < usageList.Count)
             {
                 tempUsage = usageList[i];
             }
 
-            if (maxLevelList != null)
+            if (maxLevelList != null && i < maxLevelList.Count)
             {
                 tempLevel = maxLevelList[i];
             }
 
-            if (colorList != null)
+            if (colorList != null && i < colorList.Count)
             {
                 tempColor = colorList[i];
             }
@@ -1293,11 +1297,11 @@ public class PromptBoxMenu : BoxMenu
             //bm.selectorArrow.transform.localPosition = Vector3.left * 150f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 2.5f;
         }
 
-        if (InputManager.GetButton(InputManager.Button.A) && menuEntries[menuIndex].canUse && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME) //Press A to select stuff
+        if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries[menuIndex].canUse && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME) //Press A to select stuff
         {
             SelectOption();
         }
-        if (InputManager.GetButton(InputManager.Button.B) && cancelIndex != -1)
+        if (InputManager.GetButtonDown(InputManager.Button.B) && cancelIndex != -1 && lifetime > MIN_SELECT_TIME)
         {
             menuIndex = cancelIndex;
             SelectOption();

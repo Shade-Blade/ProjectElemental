@@ -84,6 +84,15 @@ public class RandomTable<T>
     {
         return Output(new GlobalRandomGenerator());
     }
+
+    public static T ChooseRandom(T[] array)
+    {
+        return array[RandomGenerator.GetIntRange(0, array.Length)];
+    }
+    public static T ChooseRandom(List<T> list)
+    {
+        return list[RandomGenerator.GetIntRange(0, list.Count)];
+    }
 }
 
 //return a thing

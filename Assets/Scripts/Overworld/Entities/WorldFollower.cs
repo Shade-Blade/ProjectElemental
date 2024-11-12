@@ -72,13 +72,13 @@ public class WorldFollower : WorldEntity
         prevAttached = null;
         //if (GetComponent<CapsuleCollider>() != null)
         //{
-        capsuleCollider = GetComponent<CapsuleCollider>();
+        characterCollider = GetComponent<CapsuleCollider>();
         //}
 
-        if (capsuleCollider != null)
+        if (characterCollider is CapsuleCollider cc)
         {
-            height = capsuleCollider.height;
-            width = capsuleCollider.radius;
+            height = cc.height;
+            width = cc.radius;
         }
 
         mapScript = FindObjectOfType<MapScript>();
@@ -201,12 +201,12 @@ public class WorldFollower : WorldEntity
         {
             if (MainManager.XZProject(intendedMovement).magnitude == 0)
             {
-                capsuleCollider.material = MainManager.Instance.allFrictionMaterial;
+                characterCollider.material = MainManager.Instance.allFrictionMaterial;
                 useAllFriction = true;
             }
             else
             {
-                capsuleCollider.material = MainManager.Instance.noFrictionMaterial;
+                characterCollider.material = MainManager.Instance.noFrictionMaterial;
                 useAllFriction = false;
             }
         }
@@ -451,12 +451,12 @@ public class WorldFollower : WorldEntity
         {
             if (MainManager.XZProject(intendedMovement).magnitude == 0)
             {
-                capsuleCollider.material = MainManager.Instance.allFrictionMaterial;
+                characterCollider.material = MainManager.Instance.allFrictionMaterial;
                 useAllFriction = true;
             }
             else
             {
-                capsuleCollider.material = MainManager.Instance.noFrictionMaterial;
+                characterCollider.material = MainManager.Instance.noFrictionMaterial;
                 useAllFriction = false;
             }
         }
@@ -765,6 +765,29 @@ public class WorldFollower : WorldEntity
             {
                 ac.SendAnimationData("xunflip");
             }
+        }
+    }
+
+    public override string GetIdleAnimation()
+    {
+        bool condition = false;
+
+        if (currentCharacter == MainManager.SpriteID.Luna && MainManager.Instance.playerData.ShowDangerAnim(BattleHelper.EntityID.Luna) && !showBack)
+        {
+            condition = true;
+        }
+        if (currentCharacter == MainManager.SpriteID.Wilex && MainManager.Instance.playerData.ShowDangerAnim(BattleHelper.EntityID.Wilex) && !showBack)
+        {
+            condition = true;
+        }
+
+        if (condition)  //I don't have idleweak_back
+        {
+            return "idleweak";
+        }
+        else
+        {
+            return "idle";
         }
     }
 

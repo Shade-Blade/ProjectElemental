@@ -34,7 +34,8 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
 
     public virtual void MenuUpdate()
     {
-        if (Mathf.Sign(InputManager.GetAxisVertical()) != inputDir || InputManager.GetAxisVertical() == 0)
+        lifetime += Time.deltaTime;
+        if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) != inputDir) || InputManager.GetAxisVertical() == 0)
         {
             inputDir = Mathf.Sign(InputManager.GetAxisVertical());
             if (InputManager.GetAxisVertical() == 0)
@@ -72,21 +73,21 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
             }
         }
 
-        if (InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
         {
             //go to submenu
             Select();
         }
-        if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
             PopSelf();
         }
-        if (InputManager.GetButtonDown(InputManager.Button.Z)) //Z
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Z)) //Z
         {
             ZOption();
         }
 
-        if (Mathf.Sign(InputManager.GetAxisHorizontal()) != lrDir || InputManager.GetAxisHorizontal() == 0)
+        if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisHorizontal()) != lrDir) || InputManager.GetAxisHorizontal() == 0)
         {
             lrDir = Mathf.Sign(InputManager.GetAxisHorizontal());
 

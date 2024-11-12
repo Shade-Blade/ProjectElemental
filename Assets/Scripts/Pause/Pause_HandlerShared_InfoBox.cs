@@ -58,6 +58,7 @@ public class Pause_HandlerShared_InfoBox : Pause_HandlerShared
 
     void MenuUpdate()
     {
+        lifetime += Time.deltaTime;
         if (Mathf.Sign(InputManager.GetAxisHorizontal()) != inputDir || InputManager.GetAxisHorizontal() == 0)
         {
             inputDir = Mathf.Sign(InputManager.GetAxisHorizontal());

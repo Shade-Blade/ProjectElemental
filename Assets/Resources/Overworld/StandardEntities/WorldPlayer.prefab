@@ -377,6 +377,7 @@ MonoBehaviour:
   collider: {fileID: 8785854051368876303}
   visualCollider: {fileID: 0}
   hitboxActive: 0
+  lastPos: {x: 0, y: 0, z: 0}
 --- !u!1 &8785854051518514217
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +471,7 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: f989dffb8cf36914e9d2465f7f50eca3, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.25
+  m_Radius: 0.175
   m_Height: 0.75
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -528,6 +529,8 @@ MonoBehaviour:
   dropShadow: {fileID: 893807658837282251}
   noShadowUpdate: 0
   speed: 3
+  facingRotation: 0
+  trueFacingRotation: 0
   lastFrameVel: {x: 0, y: 0, z: 0}
   isGrounded: 0
   groundedTime: 0
@@ -538,6 +541,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
   intendedMovement: {x: 0, y: 0, z: 0}
@@ -593,7 +597,9 @@ MonoBehaviour:
   applySuperKickLift: 0
   hasTouchedObject: 0
   currentCharacter: 0
+  digTimer: 0
   undigTimer: 0
+  animationStopDelay: 0
   switchRotation: 0
   landShockwavePossible: 0
   jumpStomp: 0

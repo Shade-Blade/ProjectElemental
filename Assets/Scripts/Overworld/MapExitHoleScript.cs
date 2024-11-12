@@ -20,6 +20,7 @@ public class MapExitHoleScript : MapExitScript
 
     public override IEnumerator DoExit()
     {
+        mapScript.OnExit(exitID);
         //Debug.Log("Exit " + exitID);
         yield return StartCoroutine(DoFallExit());
         (Vector3 playerPos, float playerYaw) = GetRelativeOffset(WorldPlayer.Instance.transform.position, WorldPlayer.Instance.GetTrueFacingRotation());

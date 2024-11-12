@@ -111,8 +111,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 681873077957232357}
   currentAnim: 
+  currentEffect: 
   sprite: {fileID: 2090050165426398798}
-  rightDefault: 0
+  leftFacing: 0
   subobject: {fileID: 924671078344970424}
   materialIndex: 0
   bigradientMap: 0
@@ -129,7 +130,10 @@ MonoBehaviour:
   debuffIndex: 0
   lifetime: 0
   timeSinceLastAnimChange: 0
+  height: 0.75
+  width: 0.35
   showBack: 0
+  offsetter: {fileID: 1633742022331681341}
 --- !u!1 &6370453912301680396
 GameObject:
   m_ObjectHideFlags: 0

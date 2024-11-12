@@ -55,9 +55,10 @@ public class Pause_HandlerItem_CharacterSelect : Pause_HandlerShared
 
     void MenuUpdate()
     {
+        lifetime += Time.deltaTime;
         //if (!allPossible)
         //{
-        if (Mathf.Sign(InputManager.GetAxisHorizontal()) != -inputDir || InputManager.GetAxisHorizontal() == 0)
+        if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisHorizontal()) != -inputDir) || InputManager.GetAxisHorizontal() == 0)
         {
             inputDir = -Mathf.Sign(InputManager.GetAxisHorizontal());
             if (InputManager.GetAxisHorizontal() == 0)
@@ -99,12 +100,12 @@ public class Pause_HandlerItem_CharacterSelect : Pause_HandlerShared
         }
         //}
 
-        if (InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
         {
             //go to submenu
             Select();
         }
-        if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
             PopSelf();
         }
@@ -124,6 +125,7 @@ public class Pause_HandlerItem_CharacterSelect : Pause_HandlerShared
     public override void Init()
     {
         //index = 0;
+        lifetime = 0;
         BattleHelper.EntityID eid = (BattleHelper.EntityID)section.GetState();
         index = sortedParty.IndexOf(playerData.GetPlayerDataEntry(eid));
 
