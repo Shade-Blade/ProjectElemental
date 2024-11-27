@@ -99,7 +99,7 @@ public class EnemyBuilder : MonoBehaviour
             case BattleHelper.EntityID.HoarderFly:
                 return MainManager.SpriteID.C5_HoarderFly;
             case BattleHelper.EntityID.Mosquito:
-                return MainManager.SpriteID.C5_Mosquito_Male;
+                return MainManager.SpriteID.C5_Mosquito_Female;
             case BattleHelper.EntityID.Shieldwing:
                 return MainManager.SpriteID.C6_Shieldwing;
             case BattleHelper.EntityID.Honeywing:

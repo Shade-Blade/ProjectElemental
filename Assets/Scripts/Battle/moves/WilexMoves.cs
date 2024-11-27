@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 
 public abstract class WilexMove : PlayerMove
@@ -725,7 +726,7 @@ public class WM_Taunt : WilexMove
             statusBoost = pcaller.CalculateStatusBoost(target);
         }
 
-        int hp = (int)(target.StatusWorkingHP(Effect.EffectType.Berserk) * statusBoost);
+        int hp = (int)(target.StatusWorkingHP(Effect.EffectType.Berserk) / statusBoost);
 
         bool doesWork = (target.hp > 0) && (target.hp <= hp);
 
@@ -823,9 +824,9 @@ public class WM_ParalyzeStomp : WM_HighStomp
 
         int val = caller.DealDamageCalculation(target, sd, 0, 0);
 
-        int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Paralyze) * statusBoost);
+        int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Paralyze) / statusBoost);
 
-        bool doesWork = (target.hp > 0) && (target.hp <= statusHP);
+        bool doesWork = (target.hp > 0) && (target.hp - val <= statusHP);
 
         //bool realDoesWork = target.StatusWillWork(Effect.EffectType.Freeze);
 
@@ -1398,9 +1399,15 @@ public class WM_SmartStomp : WM_HighStomp
         Effect.EffectType best = Effect.EffectType.Freeze;
         float bestMod = 0;
 
+        float statusBoost = 1;
+        if (caller is PlayerEntity pcaller)
+        {
+            statusBoost = pcaller.CalculateStatusBoost(caller.curTarget);
+        }
+
         foreach (Effect.EffectType status in statuses)
         {
-            if (caller.curTarget.StatusWillWork(status))
+            if (caller.curTarget.StatusWillWork(status, statusBoost))
             {
                 if (caller.curTarget.GetStatusTurnModifier(status) > bestMod)
                 {
@@ -1431,9 +1438,15 @@ public class WM_SmartStomp : WM_HighStomp
         Effect.EffectType best = Effect.EffectType.Freeze;
         float bestMod = 0;
 
+        float statusBoost = 1;
+        if (caller is PlayerEntity pcaller)
+        {
+            statusBoost = pcaller.CalculateStatusBoost(caller.curTarget);
+        }
+
         foreach (Effect.EffectType status in statuses)
         {
-            if (caller.curTarget.StatusWillWork(status))
+            if (caller.curTarget.StatusWillWork(status, statusBoost))
             {
                 //ties go to the one checked later (the better one)
                 if (caller.curTarget.GetStatusTurnModifier(status) >= bestMod)
@@ -1488,7 +1501,7 @@ public class WM_SmartStomp : WM_HighStomp
 
         foreach (Effect.EffectType status in statuses)
         {
-            if (target.StatusWillWork(status, statusBoost))
+            if (target.StatusWillWork(status, statusBoost, val))
             {
                 if (target.GetStatusTurnModifier(status) > bestMod)
                 {
@@ -1512,9 +1525,9 @@ public class WM_SmartStomp : WM_HighStomp
         //this is the most accurate number (the hp for the status that it will inflict)
         //though this isn't necessarily the status with the highest working HP (so the number may seem inconsistent)
 
-        int statusHP = (int)(target.StatusWorkingHP(best) * statusBoost);
+        int statusHP = (int)(target.StatusWorkingHP(best) / statusBoost);
 
-        bool doesWork = (target.hp > 0) && (target.hp <= statusHP);
+        bool doesWork = (target.hp > 0) && (target.hp - val <= statusHP);
 
         //bool realDoesWork = target.StatusWillWork(Effect.EffectType.Freeze);
 
@@ -2784,9 +2797,9 @@ public class WM_PoisonSlash : WM_Slash
 
         int val = caller.DealDamageCalculation(target, sd, 0, 0);
 
-        int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Poison) * statusBoost);
+        int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Poison) / statusBoost);
 
-        bool doesWork = (target.hp > 0) && (target.hp <= statusHP);
+        bool doesWork = (target.hp > 0) && (target.hp - val <= statusHP);
 
         string outString = "";
         if (damageDisplay)

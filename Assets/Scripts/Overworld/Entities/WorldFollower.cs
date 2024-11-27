@@ -56,42 +56,6 @@ public class WorldFollower : WorldEntity
 
     //public bool isGrounded = false;
 
-    public override void Awake()
-    {
-        if (wed != null && !wed.inactive)
-        {
-            SetWorldEntityData(wed);
-        }
-
-        rb = GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.WakeUp();
-        }
-        attached = null;
-        prevAttached = null;
-        //if (GetComponent<CapsuleCollider>() != null)
-        //{
-        characterCollider = GetComponent<CapsuleCollider>();
-        //}
-
-        if (characterCollider is CapsuleCollider cc)
-        {
-            height = cc.height;
-            width = cc.radius;
-        }
-
-        mapScript = FindObjectOfType<MapScript>();
-
-        if (subObject != null && ac == null)
-        {
-            ac = subObject.GetComponent<AnimationController>();
-        }
-        //subObject = transform.GetChild(0).gameObject;   //hardcoded for now
-
-        //Fix bug with the shadows of newly spawned in entities
-        DropShadowUpdate(true);
-    }
 
     void Start()
     {
@@ -115,6 +79,10 @@ public class WorldFollower : WorldEntity
         {
             spriteID = ((MainManager.SpriteID)currentCharacter).ToString();
             MakeAnimationController();
+            if (height == 0 || width == 0)
+            {
+                SetColliderInformationWithAnimationController();
+            }
         }
 
         isGrounded = true;
@@ -1064,6 +1032,10 @@ public class WorldFollower : WorldEntity
         Destroy(subObject);
         this.spriteID = spriteID.ToString();
         MakeAnimationController();
+        if (height == 0 || width == 0)
+        {
+            SetColliderInformationWithAnimationController();
+        }
     }
 
     public void Aetherize()

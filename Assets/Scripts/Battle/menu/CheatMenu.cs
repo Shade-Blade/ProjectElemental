@@ -242,6 +242,19 @@ public class CheatMenu : MenuHandler
             }
         }
 
+        //Greed
+        if (input[0].Equals("g"))
+        {
+            if (MainManager.Instance.worldMode != MainManager.WorldMode.Battle)
+            {
+                BattleControl.Instance.AddCoins(BattleControl.Instance.GetPlayerEntities()[0], 999);
+            }
+            else
+            {
+                MainManager.Instance.playerData.coins = 999;
+            }
+        }
+
         //set cheat
         if (input[0].Equals("sc"))
         {
@@ -742,6 +755,18 @@ public class CheatMenu : MenuHandler
                 else
                 {
                     MainManager.Instance.Cheat_OverworldHazardImmunity = setValue;
+                }
+            }
+
+            if (input[1].Equals("OverworldEncounterImmunity") || input[1].Equals("oei"))
+            {
+                if (toggle)
+                {
+                    MainManager.Instance.Cheat_OverworldEncounterImmunity = !MainManager.Instance.Cheat_OverworldEncounterImmunity;
+                }
+                else
+                {
+                    MainManager.Instance.Cheat_OverworldEncounterImmunity = setValue;
                 }
             }
 

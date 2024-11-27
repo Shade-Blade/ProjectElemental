@@ -15,7 +15,7 @@ public class WorldZone : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (!mapScript.GetHalted())
+        if (mapScript != null && !mapScript.GetHalted())
         {
             ProcessTrigger(other);
         }

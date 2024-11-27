@@ -630,6 +630,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     //Important enemy specific values
     public GameObject subObject;                                                    //affected by offset (where visuals should go)
+    public GameObject dropShadow;
+    public bool noShadow;                                                           //Block shadow creation
         //AnimationController is glued to the Subobject (Implementation note: In the future I will make it so that all the animation controllers are prefabs and they get put in the subobject slot here)
     public float entitySpeed = 8;                                                       //how fast entity should go (can be overridden)
 
@@ -1038,6 +1040,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             moveset.Add(dr);
 
             currMove = d;
+        }
+
+        //Dropshadow is parallel to subobject (because it should not inherit subobject's rotation)
+        if (!noShadow && dropShadow == null)
+        {
+            dropShadow = Instantiate(Resources.Load<GameObject>("Overworld/Other/DropShadow"), transform);
         }
     }
 
@@ -4502,6 +4510,31 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         return transform.position + offset + Vector3.up * (height / 2) - Vector3.forward * 0.1f;
     }
 
+    //Read defense table from data
+    public void ResetDefenseTable()
+    {
+        BattleEntityData bed = BattleEntityData.GetBattleEntityData(entityID);
+        List<DefenseTableEntry> tempDT = new List<DefenseTableEntry>();
+        for (int i = 0; i < bed.defenseTable.Count; i++)
+        {
+            tempDT.Add(new DefenseTableEntry(bed.defenseTable[i].type, bed.defenseTable[i].amount));
+        }
+        defenseTable = tempDT;
+    }
+    public void SetDefense(DamageType dt, int set)
+    {
+        for (int i = 0; i < defenseTable.Count; i++)
+        {
+            if (dt == defenseTable[i].type)
+            {
+                defenseTable[i].amount = set;
+            }
+            return;
+        }
+
+        //add new entry
+        defenseTable.Add(new DefenseTableEntry(dt, set));
+    }
     public virtual int GetDefense()
     {
         //Check defense table for untyped defense
@@ -5135,7 +5168,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         if (target != null)
         {
-            if (target.HasEffect(Effect.EffectType.Inverted))
+            if (HasEffect(Effect.EffectType.Inverted))
             {
                 Effect e = se.Copy();
                 InvertEffect(e);
@@ -5825,7 +5858,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
 
     //will this status work on you
-    public virtual bool StatusWillWork(Effect.EffectType se, float boost = 1)
+    public virtual bool StatusWillWork(Effect.EffectType se, float boost = 1, int lostHP = 0)
     {
         //StatusTableEntry ste = GetStatusTableEntry(se);
 
@@ -5837,7 +5870,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //Debug.Log(hp + " " + StatusWorkingHP(se));
 
         //meh, use the statusworkinghp to make things consistent
-        return (hp > 0) && hp <= StatusWorkingHP(se) * boost;
+        return (hp > 0) && hp - lostHP <= StatusWorkingHP(se) * boost;
     }
     public virtual int StatusWorkingHP(Effect.EffectType se)
     {
@@ -6705,6 +6738,24 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
     }
 
+    public void DropShadowUpdate(bool force = false)
+    {
+        if (!force && (dropShadow == null || noShadow))    //assumes that the floor doesn't drop from under you (but you would also have to be perfectly stationary)
+        {
+            return;
+        }
+
+        if (dropShadow == null)
+        {
+            return;
+        }
+
+        float shadowHeight = transform.position.y + 0.5f;
+
+        dropShadow.transform.localPosition = Vector3.down * (shadowHeight / 2 - 0.005f);
+        dropShadow.transform.localScale = (Vector3.right + Vector3.forward) * width * 1.4f + Vector3.up * (shadowHeight);
+    }
+
     //return false if you do not have effect, true if you have effect (but effect is cured by this)
     public bool TokenRemove(Effect.EffectType e)
     {
@@ -7098,6 +7149,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //inEvent = true;
             eventQueue.RemoveAt(0);
         }
+
+        DropShadowUpdate();
     }
 
     public virtual void LateUpdate()

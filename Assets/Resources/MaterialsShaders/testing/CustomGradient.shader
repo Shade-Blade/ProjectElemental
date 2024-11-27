@@ -34,6 +34,10 @@ Shader "Custom/CustomGradient"
             float nh = max (0, dot (s.Normal, h));
             float spec = pow (nh, _SpecPower);
 
+            //Without this line there may be glitchy bright spots (bloom makes them very obvious and distracting)
+            //(not always necessary, bright spots don't always appear for all models)
+            spec = clamp(spec, 0, 1);
+
             if (_LightColor0.a == 0) {
                 atten = -atten;
             }

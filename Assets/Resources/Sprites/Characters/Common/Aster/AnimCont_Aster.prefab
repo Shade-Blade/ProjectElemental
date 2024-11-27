@@ -49,7 +49,7 @@ MonoBehaviour:
   currentAnim: 
   currentEffect: 
   sprite: {fileID: 2164537146261219838}
-  rightDefault: 1
+  leftFacing: 0
   subobject: {fileID: 8550564096699219732}
   materialIndex: 0
   bigradientMap: 0
@@ -66,6 +66,8 @@ MonoBehaviour:
   debuffIndex: 0
   lifetime: 0
   timeSinceLastAnimChange: 0
+  height: 0.75
+  width: 0.35
   showBack: 0
 --- !u!1 &6584478749889673404
 GameObject:

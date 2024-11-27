@@ -81,6 +81,12 @@ public class PlayerEntity : BattleEntity
         //statusOffset = Vector3.up * (height) + Vector3.right * ((width / 2) + 0.4f);
         //selectionOffset = Vector3.up * (height + 0.5f);    
         statusOffset = Vector3.right * (0.3f);
+
+        //Dropshadow is parallel to subobject (because it should not inherit subobject's rotation)
+        if (!noShadow && dropShadow == null)
+        {
+            dropShadow = Instantiate(Resources.Load<GameObject>("Overworld/Other/DropShadow"), transform);
+        }
     }
 
     public void AddMoves()
@@ -1698,7 +1704,7 @@ public class PlayerEntity : BattleEntity
     }
     */
 
-    public override bool StatusWillWork(Effect.EffectType se, float boost = 1)
+    public override bool StatusWillWork(Effect.EffectType se, float boost = 1, int lostHP = 0)
     {
         //potential new change: hardcode something that prevents you from being status stunlocked?
         //but if I program all the statusing moves correctly you would never encounter this?
@@ -3111,7 +3117,7 @@ public class PlayerEntity : BattleEntity
 
         if (BadgeEquipped(Badge.BadgeType.Overexert))
         {
-            bonus += 3 * BadgeEquippedCount(Badge.BadgeType.Overexert);
+            bonus += 2 * BadgeEquippedCount(Badge.BadgeType.Overexert);
         }
 
         if (BadgeEquipped(Badge.BadgeType.RagesPower) && HasEffect(Effect.EffectType.Berserk))

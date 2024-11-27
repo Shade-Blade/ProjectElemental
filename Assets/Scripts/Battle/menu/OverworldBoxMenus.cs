@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -1069,7 +1070,7 @@ public class PromptBoxMenu : BoxMenu
             }
             else
             {
-                newMenu.table[i][1] = args[i];
+                newMenu.table[i][1] = FormattedString.ReplaceTextFileShorthand(args[i]);
             }
         }
 

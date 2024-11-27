@@ -96,7 +96,7 @@ public class BM_Shieldwing_ChillingScreech : EnemyMove
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
                 bool hasStatus = t.HasStatus();
-                caller.DealDamage(t, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
                     caller.InflictEffect(t, new Effect(Effect.EffectType.Freeze, 1, 3));
@@ -430,7 +430,7 @@ public class BM_Shimmerwing_DazzlingScreech : EnemyMove
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
                 bool hasStatus = t.HasStatus();
-                caller.DealDamage(t, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
                     caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 2));
@@ -498,7 +498,7 @@ public class BM_Shimmerwing_Hard_StaticFlurry : EnemyMove
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Air))
             {
                 bool hasStatus = t.HasStatus();
-                caller.DealDamage(t, 3, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(t, 3, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
                     caller.InflictEffect(t, new Effect(Effect.EffectType.Brittle, 1, 2));

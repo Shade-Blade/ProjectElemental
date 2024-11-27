@@ -1527,11 +1527,11 @@ public class BA_BadgeSwap : BattleAction
         {
             p.jumpMoves = new List<PlayerMove>();
             p.weaponMoves = new List<PlayerMove>();
-            p.AddMoves();
             foreach (PlayerMove des in p.GetComponents<PlayerMove>())
             {
                 Destroy(des);
             }
+            p.AddMoves();
             p.tactics = new List<BattleAction>();
             foreach (BattleAction des in p.GetComponents<BattleAction>())
             {

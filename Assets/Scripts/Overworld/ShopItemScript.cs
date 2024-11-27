@@ -34,8 +34,8 @@ public class ShopItem
                 return Mathf.CeilToInt(cost / 1f);
             case Currency.SE:
                 return Mathf.CeilToInt(cost / 1f);
-            case Currency.AstralToken:
-                return Mathf.CeilToInt(cost / 175f);
+            case Currency.AstralToken:  //Permanently losing a level up is a massive cost (But I also chose this so that almost everything that costs Astral Tokens only costs 1)
+                return Mathf.CeilToInt(cost / 600f);
         }
         return cost;
     }
@@ -61,7 +61,7 @@ public class ShopItemScript : InteractTrigger
     public bool selectedItem = false;
 
     //note: shopkeeperEntity has a failsafe to make this be set correctly
-    public WorldShopkeeperNPCScript shopkeeperEntity;
+    public WorldNPC_Shopkeeper shopkeeperEntity;
 
     public Transform menuPoint;
     public WorldspaceShopEntryScript menu;

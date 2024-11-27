@@ -29,6 +29,9 @@ public class WorldEntityData
     public bool stompBoostable;
     public float stompLaunch;
 
+    public bool noShadow;
+    public float initialFacingAngle;
+
     //Can (Should) accept shorthand
     //  (Use file shorthand because that will avoid having to hunt down dialogue)
     public string tattleString;
@@ -100,6 +103,11 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
     [HideInInspector]
     public float timeSinceLaunch = 0;
+
+    [HideInInspector]
+    public bool noShadow = false;
+    [HideInInspector]
+    public float initialFacingAngle = 0;
 
     protected Rigidbody attached;
     protected Rigidbody prevAttached;
@@ -178,7 +186,15 @@ public class WorldEntity : WorldObject, ITextSpeaker
         Gizmos.DrawLine(transform.position + new Vector3(0f, 0f, 0f), transform.position + new Vector3(0.5f, -0.5f, 0f));
 
         Gizmos.color = Color.white;
-        Gizmos.DrawLine(transform.position + Vector3.up * 0.5f, transform.position + Vector3.up * 0.5f + FacingVector());
+        //time > 0 = hacky way of distinguishing non play mode vs play mode
+        if (Time.time > 0 || (wed == null || wed.inactive))
+        {
+            Gizmos.DrawLine(transform.position + Vector3.up * 0.5f, transform.position + Vector3.up * 0.5f + FacingVector());
+        }
+        else
+        {
+            Gizmos.DrawLine(transform.position + Vector3.up * 0.5f, transform.position + Vector3.up * 0.5f + FacingVector(wed.initialFacingAngle));
+        }
     }
 
 
@@ -198,6 +214,11 @@ public class WorldEntity : WorldObject, ITextSpeaker
         if (wed != null && !wed.inactive)
         {
             SetWorldEntityData(wed);
+        }
+
+        if (!noShadow && dropShadow == null)
+        {
+            dropShadow = Instantiate(Resources.Load<GameObject>("Overworld/Other/DropShadow"), transform);
         }
 
         rb = GetComponent<Rigidbody>();
@@ -220,6 +241,8 @@ public class WorldEntity : WorldObject, ITextSpeaker
         }
         */
 
+        trueFacingRotation = initialFacingAngle;
+
         mapScript = FindObjectOfType<MapScript>();
 
         if (subObject != null && ac == null)
@@ -235,53 +258,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
         if (height == 0 || width == 0)
         {
-            height = ac.height;
-            width = ac.width;
-            if (characterCollider != null)
-            {
-                Destroy(characterCollider);
-            }
-            if (height < width)
-            {
-                characterCollider = gameObject.AddComponent<BoxCollider>();
-                //Debug.Log(gameObject.GetComponent<CapsuleCollider>() != null);
-                if (gameObject.GetComponent<CapsuleCollider>() != null)
-                {
-                    Destroy(gameObject.GetComponent<CapsuleCollider>());
-                }
-            }
-            else
-            {
-                characterCollider = gameObject.AddComponent<CapsuleCollider>();
-                if (gameObject.GetComponent<BoxCollider>() != null)
-                {
-                    Destroy(gameObject.GetComponent<BoxCollider>());
-                }
-            }
-            characterCollider.material = MainManager.Instance.noFrictionMaterial;
-            if (characterCollider is CapsuleCollider cc)
-            {
-                if (height != 0)
-                {
-                    cc.height = height;
-                }
-                if (width != 0)
-                {
-                    cc.radius = width / 2; //note this (width is half of what it "should" be)
-                }
-            }
-            if (characterCollider is BoxCollider bc)
-            {
-                if (width == 0)
-                {
-                    width = bc.size.x;
-                }
-                if (height == 0)
-                {
-                    height = bc.size.y;
-                }
-                bc.size = new Vector3(width * 0.8f, height, width * 0.8f);
-            }
+            SetColliderInformationWithAnimationController();
         }
 
         //Fix bug with the shadows of newly spawned in entities
@@ -296,6 +273,8 @@ public class WorldEntity : WorldObject, ITextSpeaker
         width = wed.width;
         SetColliderInformation();
         interactRadius = wed.interactRadius;
+        noShadow = wed.noShadow;
+        initialFacingAngle = wed.initialFacingAngle;
     }
 
     public void SetColliderInformation()
@@ -660,7 +639,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
                 }
 
                 //apply wraparound after to make sure the above conditions make sense
-                if (facingRotation > 360)
+                if (facingRotation >= 360)
                 {
                     facingRotation -= 360;
                 }
@@ -780,12 +759,12 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
     public void DropShadowUpdate(bool force = false)
     {
-        if (!force && (dropShadow == null || noShadowUpdate || rb.velocity == Vector3.zero))    //assumes that the floor doesn't drop from under you (but you would also have to be perfectly stationary)
+        if (rb == null || dropShadow == null)
         {
             return;
         }
 
-        if (dropShadow == null)
+        if (!force && (noShadowUpdate || rb.velocity == Vector3.zero))    //assumes that the floor doesn't drop from under you (but you would also have to be perfectly stationary)
         {
             return;
         }
@@ -827,7 +806,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
 
         dropShadow.transform.localPosition = Vector3.down * ((height / 2) + shadowHeight / 2 - 0.005f);
-        dropShadow.transform.localScale = (Vector3.right + Vector3.forward) * width * 2f + Vector3.up * (shadowHeight); 
+        dropShadow.transform.localScale = (Vector3.right + Vector3.forward) * width * 1.4f + Vector3.up * (shadowHeight); 
     }
 
     public Vector3 MLerp(Vector3 inputVel)
@@ -1016,6 +995,11 @@ public class WorldEntity : WorldObject, ITextSpeaker
     {
         AnimationController ac = null;
 
+        if (spriteID.Equals("") || spriteID == null)
+        {
+            return;
+        }
+
         MainManager.SpriteID realSprite;
         Enum.TryParse(spriteID, true, out realSprite);
         if (realSprite == MainManager.SpriteID.Wilex && !spriteID.Equals("Wilex"))
@@ -1026,6 +1010,64 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
         this.ac = ac;
         subObject = ac.gameObject;
+    }
+    //Also corrects the height and width values to the animation controller's values
+    public void SetColliderInformationWithAnimationController()
+    {
+        if (ac == null)
+        {
+            return;
+        }
+
+
+        height = ac.height;
+        width = ac.width;
+        //Debug.Log(height + " " + width);
+        if (characterCollider != null)
+        {
+            Destroy(characterCollider);
+        }
+        if (height < width)
+        {
+            characterCollider = gameObject.AddComponent<BoxCollider>();
+            //Debug.Log(gameObject.GetComponent<CapsuleCollider>() != null);
+            if (gameObject.GetComponent<CapsuleCollider>() != null)
+            {
+                Destroy(gameObject.GetComponent<CapsuleCollider>());
+            }
+        }
+        else
+        {
+            characterCollider = gameObject.AddComponent<CapsuleCollider>();
+            if (gameObject.GetComponent<BoxCollider>() != null)
+            {
+                Destroy(gameObject.GetComponent<BoxCollider>());
+            }
+        }
+        characterCollider.material = MainManager.Instance.noFrictionMaterial;
+        if (characterCollider is CapsuleCollider cc)
+        {
+            if (height != 0)
+            {
+                cc.height = height;
+            }
+            if (width != 0)
+            {
+                cc.radius = width / 2; //note this (width is half of what it "should" be)
+            }
+        }
+        if (characterCollider is BoxCollider bc)
+        {
+            if (width == 0)
+            {
+                width = bc.size.x;
+            }
+            if (height == 0)
+            {
+                height = bc.size.y;
+            }
+            bc.size = new Vector3(width * 0.8f, height, width * 0.8f);
+        }
     }
 
 
@@ -1177,9 +1219,13 @@ public class WorldEntity : WorldObject, ITextSpeaker
         return -Vector2.SignedAngle(Vector2.right, xz.x * Vector2.right + xz.z * Vector2.up);
     }
 
+    public Vector3 FacingVector(float angle)
+    {
+        return Vector3.right * Mathf.Cos(angle * Mathf.PI / 180) + Vector3.back * Mathf.Sin(angle * Mathf.PI / 180);
+    }
     public Vector3 FacingVector()
     {
-        return Vector3.right * Mathf.Cos(trueFacingRotation * Mathf.PI / 180) + Vector3.back * Mathf.Sin(trueFacingRotation * Mathf.PI / 180);
+        return FacingVector(trueFacingRotation + MainManager.Instance.GetWorldspaceYaw());
     }
     public Vector3 FeetPosition()
     {

@@ -812,12 +812,13 @@ public class TagEntry
         Emote,      //target, emote
 
         //Box and Tail style tags
-        BoxStyle,   //[Currently unimplemented]
+        BoxStyle,   //(changes box border)
         BoxColor,   //(inner color, resets to default if 0 args are given), (border color, uses inner color if only 1 arg is given) also changes tail color for consistency
 
         Sign,   //special preset boxstyle and boxcolor (also applies NoScroll)
         System, //likewise
         KeruDistant,    //note that tail,keru should be used in most cases instead (Use this if you manually want the text to have keru's style of text)   
+        BoxReset,  //reset style and color
 
         //Scroll tags
         NoScroll,  //Reveal all text instantly (same as infinite scroll speed)

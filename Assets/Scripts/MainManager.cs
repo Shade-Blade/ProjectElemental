@@ -813,11 +813,36 @@ public class PlayerData
             return;
         }
 
-        this.exp += xp;
-        if (this.exp > 99)
+        exp += xp;
+        if (exp > 99)
         {
-            this.exp = 99;
+            exp = 99;
         }
+    }
+
+    public float GetHealthPercentage()
+    {
+        UpdateMaxStats();
+        float h = 0;
+        for (int i = 0; i < party.Count; i++)
+        {
+            h += (0.0f + party[i].hp) / party[i].maxHP;
+        }
+        return h / party.Count;
+    }
+    public float GetEnergyPercentage()
+    {
+        UpdateMaxStats();
+        return (0.0f + ep) / maxEP;
+    }
+    public float GetSoulEnergyPercentage()
+    {
+        UpdateMaxStats();
+        return (0.0f + se) / maxSE;
+    }
+    public float GetStatPercentage()
+    {
+        return (GetHealthPercentage() + GetEnergyPercentage() + GetSoulEnergyPercentage()) / 3;
     }
 
     public bool AtMaxStats()
@@ -2749,6 +2774,7 @@ public class MainManager : MonoBehaviour
     public bool Cheat_QuadrupleStrengthEnviroEffects;
     public bool Cheat_UnrestrictedTextEntry;    //removes the escape sequences and lets you type infinite characters
     public bool Cheat_OverworldHazardImmunity;  //hazard states don't happen
+    public bool Cheat_OverworldEncounterImmunity;  //Block mapscript from starting battles
     public bool Cheat_ControlNeverDisabled; //ignore the disable control thing
 
     public enum GameConst
@@ -3094,6 +3120,14 @@ public class MainManager : MonoBehaviour
         AngryTalk,
         Hurt,   //paralyze will use this?
         Dead,   //not really used in most cases
+    }
+
+    public enum CommonTextLine
+    {
+        HP,
+        EP,
+        SP,
+        Coin,
     }
 
     //Nonstatic methods

@@ -530,6 +530,19 @@ public class PickupUnion
             case PickupType.KeyItem:
                 return KeyItem.GetCost(pu.keyItem);
             case PickupType.Badge:
+                if (pu.badge.type == Badge.BadgeType.SuperCurse)
+                {
+                    return 0;
+                }
+                if (pu.badge.type == Badge.BadgeType.UltraCurse)
+                {
+                    return 0;
+                }
+                if (pu.badge.type == Badge.BadgeType.MegaCurse)
+                {
+                    return 0;
+                }
+
                 //Made up formula
                 return 20 * (1 + Badge.GetBadgeDataEntry(pu.badge).chapter);
             case PickupType.Ribbon:
@@ -537,8 +550,8 @@ public class PickupUnion
                 {
                     case Ribbon.RibbonType.RainbowRibbon:
                         return 250;
-                    case Ribbon.RibbonType.DiamondRibbon:
-                        return 500;
+                    case Ribbon.RibbonType.DiamondRibbon:   //probably not worth 999 in reality but big number is funny
+                        return 999;
                 }
                 //most ribbons are pretty balanced
                 return 60;

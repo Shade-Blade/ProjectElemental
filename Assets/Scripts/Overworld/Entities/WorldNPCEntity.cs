@@ -74,8 +74,12 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
 
     public override void SetWorldEntityData(WorldEntityData wed)
     {
-        spriteID = wed.spriteID;
-        speed = wed.speed;
+        base.SetWorldEntityData(wed);
+        wanderDuration = wed.wanderDuration;
+        idleDuration = wed.idleDuration;
+        wanderRadius = wed.wanderRadius;
+        durationVariance = wed.durationVariance;
+
         wandering = wed.wandering;
         wanderDuration = wed.wanderDuration;
         idleDuration = wed.idleDuration;
@@ -86,10 +90,6 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
         stompBoostable = wed.stompBoostable;
         tattle = wed.tattleString;
 
-        height = wed.height;
-        width = wed.width;
-        SetColliderInformation();
-        interactRadius = wed.interactRadius;
         if (interactRadius != 0 && interactSphere != null)
         {
             interactSphere.radius = interactRadius;
@@ -192,7 +192,7 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
                 indicatorActive = true;
             }
 
-            trueFacingRotation = ConvertVectorToRotation(WorldPlayer.Instance.transform.position - transform.position);
+            trueFacingRotation = ConvertVectorToRotation(WorldPlayer.Instance.transform.position - transform.position) - MainManager.Instance.GetWorldspaceYaw();
             timeSinceInteractActive += Time.deltaTime;
 
             if (wandering)

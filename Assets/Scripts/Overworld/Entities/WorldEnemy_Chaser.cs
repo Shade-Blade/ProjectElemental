@@ -73,15 +73,11 @@ public class WorldEnemy_Chaser : WorldEnemyEntity
 
     public override void SetWorldEntityData(WorldEntityData wed)
     {
-        spriteID = wed.spriteID;
-        speed = wed.speed;
+        base.SetWorldEntityData(wed);
         wanderDuration = wed.wanderDuration;
         idleDuration = wed.idleDuration;
         wanderRadius = wed.wanderRadius;
         durationVariance = wed.durationVariance;
-        height = wed.height;
-        width = wed.width;
-        SetColliderInformation();
     }
 
     public override void Start()

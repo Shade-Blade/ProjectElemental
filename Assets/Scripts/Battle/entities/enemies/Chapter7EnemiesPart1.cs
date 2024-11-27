@@ -785,6 +785,7 @@ public class BE_Coiler : BattleEntity
         if (GetEntityProperty(BattleHelper.EntityProperties.StateCharge))
         {
             SetEntityProperty(BattleHelper.EntityProperties.StateCharge, false);
+            ResetDefenseTable();
             currMove = moveset[2];
         }
         else
@@ -922,6 +923,7 @@ public class BM_Coiler_Charge : EnemyMove
     {
         yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
+        caller.SetDefense(BattleHelper.DamageType.Normal, 8);
     }
 }
 

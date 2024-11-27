@@ -2331,7 +2331,8 @@ public class Item_GenericThrowable : ItemMove
             statusHP = (int)(target.StatusWorkingHP(status) * statusBoost);
         }
 
-        bool doesWork = (target.hp > 0) && (target.hp <= statusHP);
+        //note: factors in damage dealt
+        bool doesWork = (target.hp > 0) && (target.hp - val <= statusHP);
 
 
         int hits = 1;

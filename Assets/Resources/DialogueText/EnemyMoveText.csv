@@ -145,7 +145,7 @@ Sawcrest_CounterSawToggle,Counter - Saw Toggle,(Targets Self) Saws become active
 Sawcrest_Hard_DeepCut,(Hard) Deep Cut,(Targets Any Enemy) Cut into someone deeply to deal strong normal damage and inflict Soulbleed for 3 turns.,
 Sawcrest_Hard_CounterRevUp,(Hard) Counter - Rev Up,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) When going from the inactive to the active state, hit the attacker with a dark cloud for weak Dark damage.",
 Coiler_Slap,Slap,(Targets Any Enemy) Slap your body into a target to deal moderate normal damage.,
-Coiler_Charge,Charge,(Targets Any Enemy) Hide in your shell to draw in electric charge and become more defensive.,
+Coiler_Charge,Charge,(Targets Any Enemy) Hide in your shell to draw in electric charge and increase your defense.,
 Coiler_ElectroStorm,Electro Storm,(Targets All Enemies) Hit all targets for massive Electric damage.,(Higher Difficulties: Inflicts Arc Discharge for 3 turns as well)
 Coiler_Hard_CounterRollerShell,(Hard) Counter - Roller Shell,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) While in your shell, counter attacks by rolling into the target for weak normal damage.",
 Drillbeak_Drill,Drill,(Targets Any Enemy) Drill into the target with your beak to quickly deal normal damage 4 times.,

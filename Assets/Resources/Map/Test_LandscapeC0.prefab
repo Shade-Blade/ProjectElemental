@@ -1561,6 +1561,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 310
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -1580,6 +1582,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -2941,6 +2945,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 388424778832944420}
     m_Modifications:
+    - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
+        type: 3}
+      propertyPath: wed.initialFacingAngle
+      value: 80
+      objectReference: {fileID: 0}
     - target: {fileID: 4188132789149607737, guid: 10fd124b792c9be419865c07f8a24688,
         type: 3}
       propertyPath: m_RootOrder
@@ -6280,6 +6289,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: trueFacingRotation
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: wed.initialFacingAngle
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 6213000682675710652, guid: 453de82eec53d64479e0ce262eafa944,
         type: 3}

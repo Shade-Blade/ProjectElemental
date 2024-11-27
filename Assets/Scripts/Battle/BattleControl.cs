@@ -1355,7 +1355,7 @@ public class BattleControl : MonoBehaviour
         bl = bl.FindAll((x) => (x.alive));
         bl.Sort((a, b) => ((posId < 0 ? -1 : 1) * MainManager.FloatCompare(a.homePos.x, b.homePos.x)));
 
-        return bl[0];  //pointer match
+        return bl.Count > 0 ? bl[0] : null;  //pointer match
     }
 
     public BattleEntity GetKnockbackTarget(BattleEntity caller)
@@ -2830,6 +2830,9 @@ public class BattleControl : MonoBehaviour
         //For the pit demo only (you should level up ~3 per 10 floors? So 4x faster than what the formula says)
         //My normal formula is roughly 1 level up every 10 battles which seems to be roughly what Paper Mario has?
         xpDropped *= 2;
+
+        //you get way too many coins?
+        //real problem: not enough things to spend your coins on?
         coinsDropped *= 2;
 
         bool fortuneCoins = false;
@@ -4075,7 +4078,11 @@ public class BattleControl : MonoBehaviour
         visualXP = MainManager.EasingQuadraticTime(visualXP, battleXP, 50);
 
         //stat thing
-        playerData.GetPlayerDataEntry(GetFrontmostAlly(-1).entityID).timeInFront += Time.deltaTime;
+        BattleEntity be = GetFrontmostAlly(-1);
+        if (be != null)
+        {
+            playerData.GetPlayerDataEntry(GetFrontmostAlly(-1).entityID).timeInFront += Time.deltaTime;
+        }
 
         playerData.ep = ep;
         playerData.maxEP = maxEP;
@@ -4287,6 +4294,9 @@ public class BattleControl : MonoBehaviour
             {
                 pd.innEffects.RemoveAt(i);
                 i--;
+
+                AddBattlePopup(new BattlePopup(null, "Your Rest Effect has been depleted."));
+
                 continue;
             }
         }
@@ -4592,6 +4602,29 @@ public class BattleControl : MonoBehaviour
         }
     }
 
+    //note: blocks duplicate popups with the exact same text
+    public void AddBattlePopup(BattlePopup bp)
+    {
+        //Safer version
+        BattlePopup newPopup = bp;
+
+        bool doAdd = true;
+        if (battlePopupList.Count > 0)
+        {
+            for (int i = 0; i < battlePopupList.Count; i++)
+            {
+                if (battlePopupList[i].text.Equals(newPopup.text))
+                {
+                    doAdd = false;
+                }
+            }
+        }
+
+        if (doAdd)
+        {
+            battlePopupList.Add(newPopup);
+        }
+    }
     public void AddBattlePopup(BattleEntity target, Effect se)
     {
         //forbid you from adding it if one already exists
@@ -5344,8 +5377,19 @@ public class BattleControl : MonoBehaviour
 
             if (pd.charmEffects[i].duration <= 0 || pd.charmEffects[i].charges <= 0)
             {
+                if (pd.charmEffects[i].charmType == CharmEffect.CharmType.Fortune)
+                {
+                    AddBattlePopup(new BattlePopup(null, "Your Fortune Charm has been depleted."));
+                }
+                else
+                {
+                    AddBattlePopup(new BattlePopup(null, "Your Power Charm has been depleted."));
+                }
+
                 pd.charmEffects.RemoveAt(i);
                 i--;
+
+
                 continue;
             }
         }

@@ -221,6 +221,7 @@ public class MinibubbleScript : MonoBehaviour
         switch (t.tag)
         {
             case TagEntry.TextTag.Tail:
+                bool speakerPreNull = (speaker == null);
                 if (t.args.Length == 1)
                 {
                     bool a;
@@ -288,6 +289,18 @@ public class MinibubbleScript : MonoBehaviour
                         {
                             MoveTail(speaker.GetTextTailPosition());
                         }
+                    }
+
+                    //Semi hacky setup for keru (to make sure text afterwards is reset automatically)
+                    //I could just put a boxreset tag after every single instance of keru dialogue but that seems tedious (and potentially allow for mistakes)
+                    //(It usually isn't the case that I want to keep box styles in this scenario anyway)
+                    if (speakerPreNull && speaker != null)
+                    {
+                        ChangeBoxStyle(TagEntry.BoxStyle.Default);
+                        //tail and inner box are forced to have the same color
+                        innerBox.color = Color.white;
+                        borderBox.color = Color.white;
+                        tail.color = Color.white;
                     }
                 }
                 //check for a vector3
@@ -536,6 +549,13 @@ public class MinibubbleScript : MonoBehaviour
                 tail.enabled = false;
                 speaker = null;
                 break;
+            case TagEntry.TextTag.BoxReset:
+                ChangeBoxStyle(TagEntry.BoxStyle.Default);
+                //tail and inner box are forced to have the same color
+                innerBox.color = Color.white;
+                borderBox.color = Color.white;
+                tail.color = Color.white;
+                break;
             case TagEntry.TextTag.Goto:
             case TagEntry.TextTag.Branch:
                 seeSpecialTag?.Invoke(this, new TextDisplayer.ScrollEventArgs(t));
@@ -652,6 +672,7 @@ public class MinibubbleScript : MonoBehaviour
             switch (t.tag)
             {
                 case TagEntry.TextTag.Tail:
+                    bool speakerPreNull = (speaker == null);
                     if (speaker != null && speaker.SpeakingAnimActive())
                     {
                         speaker.DisableSpeakingAnim();
@@ -723,6 +744,18 @@ public class MinibubbleScript : MonoBehaviour
                             {
                                 MoveTail(speaker.GetTextTailPosition());
                             }
+                        }
+
+                        //Semi hacky setup for keru (to make sure text afterwards is reset automatically)
+                        //I could just put a boxreset tag after every single instance of keru dialogue but that seems tedious (and potentially allow for mistakes)
+                        //(It usually isn't the case that I want to keep box styles in this scenario anyway)
+                        if (speakerPreNull && speaker != null)
+                        {
+                            ChangeBoxStyle(TagEntry.BoxStyle.Default);
+                            //tail and inner box are forced to have the same color
+                            innerBox.color = Color.white;
+                            borderBox.color = Color.white;
+                            tail.color = Color.white;
                         }
                     }
                     //check for a vector3
@@ -817,6 +850,13 @@ public class MinibubbleScript : MonoBehaviour
                     hasTail = false;
                     tail.enabled = false;
                     speaker = null;
+                    break;
+                case TagEntry.TextTag.BoxReset:
+                    ChangeBoxStyle(TagEntry.BoxStyle.Default);
+                    //tail and inner box are forced to have the same color
+                    innerBox.color = Color.white;
+                    borderBox.color = Color.white;
+                    tail.color = Color.white;
                     break;
             }
         }
@@ -880,6 +920,7 @@ public class MinibubbleScript : MonoBehaviour
             switch (t.tag)
             {
                 case TagEntry.TextTag.Tail:
+                    bool speakerPreNull = (speaker == null);
                     if (speaker != null && speaker.SpeakingAnimActive())
                     {
                         speaker.DisableSpeakingAnim();
@@ -951,6 +992,18 @@ public class MinibubbleScript : MonoBehaviour
                             {
                                 MoveTail(speaker.GetTextTailPosition());
                             }
+                        }
+
+                        //Semi hacky setup for keru (to make sure text afterwards is reset automatically)
+                        //I could just put a boxreset tag after every single instance of keru dialogue but that seems tedious (and potentially allow for mistakes)
+                        //(It usually isn't the case that I want to keep box styles in this scenario anyway)
+                        if (speakerPreNull && speaker != null)
+                        {
+                            ChangeBoxStyle(TagEntry.BoxStyle.Default);
+                            //tail and inner box are forced to have the same color
+                            innerBox.color = Color.white;
+                            borderBox.color = Color.white;
+                            tail.color = Color.white;
                         }
                     }
                     //check for a vector3
@@ -1045,6 +1098,13 @@ public class MinibubbleScript : MonoBehaviour
                     hasTail = false;
                     tail.enabled = false;
                     speaker = null;
+                    break;
+                case TagEntry.TextTag.BoxReset:
+                    ChangeBoxStyle(TagEntry.BoxStyle.Default);
+                    //tail and inner box are forced to have the same color
+                    innerBox.color = Color.white;
+                    borderBox.color = Color.white;
+                    tail.color = Color.white;
                     break;
             }
         }

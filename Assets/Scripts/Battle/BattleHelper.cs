@@ -771,7 +771,22 @@ public class CharmEffect
 
         for (int i = 0; i < split.Count(); i++)
         {
-            output.Add(Parse(split[i]));
+            CharmEffect newEffect = Parse(split[i]);
+
+            bool doadd = true;
+            if (newEffect.charmType == CharmType.Fortune && (newEffect.charges <= 0 || newEffect.duration <= 0))
+            {
+                doadd = false;
+            }
+            if ((newEffect.charmType == CharmType.Attack || newEffect.charmType == CharmType.Defense) && newEffect.charges <= 0)
+            {
+                doadd = false;
+            }
+
+            if (doadd)
+            {
+                output.Add(newEffect);
+            }
         }
 
         return output;
@@ -895,7 +910,12 @@ public class InnEffect
 
         for (int i = 0; i < split.Count(); i++)
         {
-            output.Add(Parse(split[i]));
+            InnEffect newEffect = Parse(split[i]);
+
+            if (newEffect.innType != InnType.None && newEffect.charges > 0)
+            {
+                output.Add(newEffect);
+            }
         }
 
         return output;
@@ -1191,6 +1211,8 @@ public static class BattleHelper
         PositionMark =  1uL << 35,
 
         HideHP = 1uL << 36,  //Replaces the hp number with a ?, also replaces the hp bar with an ambiguous thing
+
+        NoShadow = 1uL << 37,
 
         SuppressMovesetWarning = NoTattle | ScanHideMoves | ScanMovesetMismatch
     }

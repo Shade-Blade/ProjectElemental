@@ -66,6 +66,8 @@ MonoBehaviour:
   debuffIndex: 0
   lifetime: 0
   timeSinceLastAnimChange: 0
+  height: 0.75
+  width: 0.35
   showBack: 0
 --- !u!1 &5790032314806517605
 GameObject:

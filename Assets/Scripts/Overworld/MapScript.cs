@@ -170,6 +170,12 @@ public class MapScript : MonoBehaviour
         vars = new Dictionary<string, string>();
     }
 
+    //Conventionally, these are called instantly when the entrance / exit coroutines start
+    //(Note that the map script handles DoEntrance while DoExit is called by the specific MapExit scripts)
+    public virtual void OnEnter(int exitID, Vector3 offset, float yawOffset)
+    {
+
+    }
     public virtual void OnExit(int exitID)
     {
 
@@ -306,9 +312,10 @@ public class MapScript : MonoBehaviour
         exitsActive = a;
     }
 
-
     public IEnumerator DoEntrance(int entrance, Vector3 offset, float yawOffset)
     {
+        OnEnter(entrance, offset, yawOffset);
+
         //Entrance -1 is a special case (used by save file loading)
         if (entrance == -1)
         {
@@ -364,7 +371,7 @@ public class MapScript : MonoBehaviour
     }
     public void StartBattle(IWorldBattleEntity entity, BattleStartArguments bsa = null)
     {
-        if (battleHalt)
+        if (battleHalt || MainManager.Instance.Cheat_OverworldEncounterImmunity)
         {
             return;
         }

@@ -382,42 +382,12 @@ public class WorldPlayer : WorldEntity
     //public GameObject jumpSpark;
     //public GameObject jumpFire;
 
+    /*
     public override void Awake()
     {
-        if (wed != null && !wed.inactive)
-        {
-            SetWorldEntityData(wed);
-        }
-
-        rb = GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.WakeUp();
-        }
-        attached = null;
-        prevAttached = null;
-        //if (GetComponent<CapsuleCollider>() != null)
-        //{
-        characterCollider = GetComponent<CapsuleCollider>();
-        //}
-
-        if (characterCollider is CapsuleCollider cc)
-        {
-            height = cc.height;
-            width = cc.radius;
-        }
-
-        mapScript = FindObjectOfType<MapScript>();
-
-        if (subObject != null && ac == null)
-        {
-            ac = subObject.GetComponent<AnimationController>();
-        }
-        //subObject = transform.GetChild(0).gameObject;   //hardcoded for now
-
-        //Fix bug with the shadows of newly spawned in entities
-        DropShadowUpdate(true);
+        Setup();
     }
+    */
 
     // Start is called before the first frame update
     void Start()
@@ -453,6 +423,10 @@ public class WorldPlayer : WorldEntity
         {
             spriteID = ((MainManager.SpriteID)currentCharacter).ToString();
             MakeAnimationController();
+            if (height == 0 || width == 0)
+            {
+                SetColliderInformationWithAnimationController();
+            }
         }
     }
 
@@ -2825,7 +2799,8 @@ public class WorldPlayer : WorldEntity
 
         if (!lockRotation && (usedMovement.magnitude > 0.01f) || pastTrueFacingRotation != trueFacingRotation)
         {
-            if (!movementRotationDisabled && (usedMovement.magnitude > 0.01f))
+            //don't rotate in hazard state, if rotation is disabled, or if you are still
+            if (!movementRotationDisabled && !HazardState() && (usedMovement.magnitude > 0.01f))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
                 //transform this with respect to worldspace yaw
@@ -3096,6 +3071,7 @@ public class WorldPlayer : WorldEntity
                 }
                 break;
             case ActionState.HazardTouch:
+            case ActionState.HazardFall:
                 animName = "hurt";
                 break;
             case ActionState.Jump:
@@ -4230,6 +4206,10 @@ public class WorldPlayer : WorldEntity
         spriteID = ((MainManager.SpriteID)currentCharacter).ToString();
         Destroy(subObject);
         MakeAnimationController();
+        if (height == 0 || width == 0)
+        {
+            SetColliderInformationWithAnimationController();
+        }
     }
 
     /*

@@ -148,7 +148,7 @@ Resistor,Resistor,"While Paralyzed, you get 33% resistance to damage.",,Resistan
 Generator,Generator,"While Paralyzed, you regenerate 5% of your Max EP every turn (rounds up).",,
 Inductor,Inductor,"While Paralyzed, enemies take 3 Electric contact hazard damage from you if they use a contact attack.",,
 Conductor,Conductor,"While Paralyzed target, you get 1 Focus at the end of your turn.",,
-Overexert,Overexert,"You get Paralyzed for 2 turns every time you attack, but you have +3 Attack. If you don't receive the Paralyze effect, you receive 3 Defocus instead.",,
+Overexert,Overexert,"You get Paralyzed for 2 turns every time you attack, but you have +2 Attack. If you don't receive the Paralyze effect, you receive 3 Defocus instead.",,
 Sleepwalk,Sleepwalk,"While Sleeping, you will attack automatically every turn with 50% attack power.",,No additional effect when stacked.
 DeepSleep,Deep Sleep,"While Sleeping, you can't get hit out of sleep but you heal twice as much (20% max hp (min 4)) every turn.",,
 SweetDreams,Sweet Dreams,"While Sleeping, you heal Energy instead of Health.",,No additional effect when stacked.

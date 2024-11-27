@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 2331503536425764081}
   - component: {fileID: 3489846210896869719}
   m_Layer: 8
-  m_Name: TestStatChanger
+  m_Name: WorldNPC_StatChanger_Vali
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,7 +179,10 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
-    tattleString: 
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: <tail,w>Mom looks like she's doing well for herself.<next><tail,l>She
+      looks kinda lonely though. Maybe we could keep her company a little longer.
     talkStrings: []
   subObject: {fileID: 0}
   ac: {fileID: 0}
@@ -198,6 +201,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -551,6 +556,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: <tail,w>Tattle stuff<next><tail,l>Other tattle stuff
     talkStrings:
     - l1
@@ -573,6 +580,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -2052,6 +2061,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 1176930641867989957}
@@ -2071,6 +2082,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -2444,6 +2457,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -2463,6 +2478,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -2686,6 +2703,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -2705,6 +2724,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -2853,6 +2874,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -2872,6 +2895,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -4239,6 +4264,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -4258,6 +4285,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -6106,6 +6135,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 2911223388773864067}
@@ -6125,6 +6156,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -36386,6 +36419,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 3868111841305456035}
@@ -36405,6 +36440,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -42294,6 +42331,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 3868111841460962528}
@@ -42313,6 +42352,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -48110,6 +48151,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -48129,6 +48172,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -68119,6 +68164,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -68138,6 +68185,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -79572,7 +79621,7 @@ GameObject:
   - component: {fileID: 3694557667330802783}
   - component: {fileID: 7669263500642337725}
   m_Layer: 8
-  m_Name: TestCook
+  m_Name: WorldNPC_Cook_Stella
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79655,6 +79704,8 @@ MonoBehaviour:
     interactRadius: 0.6
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 180
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -79674,6 +79725,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -79906,7 +79959,7 @@ GameObject:
   - component: {fileID: 8311924071656613432}
   - component: {fileID: 5704173828089628897}
   m_Layer: 8
-  m_Name: TestCookSpeed
+  m_Name: WorldNPC_SpeedCook_Sizzle
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79989,6 +80042,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -80008,6 +80063,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -85828,6 +85885,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -85847,6 +85906,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -91345,7 +91406,7 @@ GameObject:
   - component: {fileID: 8827416182437437454}
   - component: {fileID: 5719540757997511428}
   m_Layer: 8
-  m_Name: TestInnkeeper
+  m_Name: WorldNPC_Innkeeper_Gryphon
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91428,8 +91489,29 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
-    tattleString: 
-    talkStrings: []
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: <tail,k>She appears to be really fluffy. I wonder if there's something
+      she's doing to her fur to make it that way.<next><tail,l>I think she's just
+      a natural fluffball, like me.
+    talkStrings:
+    - Hi there! I have my bed open to travellers who need it. It's 15 coins a night
+      and 30 coins for the candle.
+    - Hi there! You look fine to me, but my bed's to travellers who want it. It's
+      15 coins a night and 30 coins for the candle.
+    - Hope you sleep well!
+    - Here's your Peach Candle, made with love!
+    - I'm sorry, but I don't have any candles ready to give to you. I'll probably
+      have the next one done once you are done with the candle you have right now
+      though.
+    - Aw, shucks. You don't have enough to stay here. I can't let people stay here
+      for free, sorry.
+    - Aw shucks. You don't have enough for the candle.
+    - A good night's sleep is sure to keep you happy and <color,red>healthy</color>!
+    - My bed's always open to you two, so come back soon!
+    - Well, it was nice talking to you two.
+    - Sorry, I'll have to clean up before you can sleep here again. I'll have it
+      ready in a moment though!
   subObject: {fileID: 0}
   ac: {fileID: 0}
   dropShadow: {fileID: 0}
@@ -91447,6 +91529,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -91491,6 +91575,7 @@ MonoBehaviour:
   stompBoostable: 0
   cost: 1
   type: 1
+  candle: 12
   respawnSpot: {x: -8, y: 0, z: -2}
   respawnOffset: {x: 0.5, y: 0, z: 0}
   wasHere: 0
@@ -91967,6 +92052,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -91986,6 +92073,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -92662,6 +92751,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -92681,6 +92772,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -93348,7 +93441,7 @@ GameObject:
   - component: {fileID: 391316125695966369}
   - component: {fileID: 7512883695821911579}
   m_Layer: 8
-  m_Name: TestCookSingle
+  m_Name: WorldNPC_CookSingle_Gourmand
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93431,6 +93524,8 @@ MonoBehaviour:
     interactRadius: 0.6
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -93450,6 +93545,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -93907,7 +94004,7 @@ GameObject:
   - component: {fileID: 5200003960933837978}
   - component: {fileID: 1632935384459044566}
   m_Layer: 8
-  m_Name: TestStorage
+  m_Name: WorldNPC_Storage_Palla
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93990,7 +94087,15 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
-    tattleString: 
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: <tail,k>That's Palla. She's one of the girls running a fledgling
+      item storage business. She'll store your items for free.<next><tail,l>But where
+      is she storing everything? All those bags she has don't look very big.<next><tail,k>She's
+      using portals that lead to wherever their storage building is.<next><tail,w>Free
+      storage? That sounds we'll give her stuff and never see it again.<next><tail,k>No,
+      you can trust her. I've kept some of my own things with them and gotten them
+      back fine.<next><tail,w>Well, if you say so.
     talkStrings: []
   subObject: {fileID: 0}
   ac: {fileID: 0}
@@ -94009,6 +94114,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -98511,7 +98618,7 @@ GameObject:
   - component: {fileID: 1128614630453914332}
   - component: {fileID: 7407835374383167779}
   m_Layer: 8
-  m_Name: TestCookCBR
+  m_Name: WorldNPC_CBRCook_Torstrum
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98594,6 +98701,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 1
     stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -98613,6 +98722,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0

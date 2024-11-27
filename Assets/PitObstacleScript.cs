@@ -56,6 +56,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
         if (floorNo == null)
         {
             MainManager.Instance.SetGlobalVar(MainManager.GlobalVar.GV_PitFloor, 1.ToString());
+            floorNo = MainManager.Instance.GetGlobalVar(MainManager.GlobalVar.GV_PitFloor);
         }
         floor = int.Parse(floorNo);
 
@@ -180,6 +181,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
         collectible.Setup(pu);
     }
 
+    //Called after determining the reward (and the reward's cost)
     public void ChooseRandomType()
     {
         PlayerData pd = MainManager.Instance.playerData;
@@ -189,23 +191,14 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
             new RandomTableEntry<PitObstacleType>(PitObstacleType.DoubleJump, 0.25f),
             new RandomTableEntry<PitObstacleType>(PitObstacleType.Smash, 0.25f),
             new RandomTableEntry<PitObstacleType>(PitObstacleType.DashHop, 0.25f),
-            new RandomTableEntry<PitObstacleType>(PitObstacleType.CoinLock, 1),
-            new RandomTableEntry<PitObstacleType>(PitObstacleType.HealthLock, 0.5f),
-            new RandomTableEntry<PitObstacleType>(PitObstacleType.EnergyLock, 0.5f),
-            new RandomTableEntry<PitObstacleType>(PitObstacleType.SoulLock, 0.5f)
+            new RandomTableEntry<PitObstacleType>(PitObstacleType.CoinLock, pd.coins > 250 ? pd.coins / 250 : 1),
+            new RandomTableEntry<PitObstacleType>(PitObstacleType.HealthLock, pd.GetHealthPercentage() > 0.5f ? pd.GetHealthPercentage() : 0.5f),
+            new RandomTableEntry<PitObstacleType>(PitObstacleType.EnergyLock, pd.GetEnergyPercentage() > 0.5f ? pd.GetEnergyPercentage() : 0.5f),
+            new RandomTableEntry<PitObstacleType>(PitObstacleType.SoulLock, pd.GetSoulEnergyPercentage() > 0.5f ? pd.GetSoulEnergyPercentage() : 0.5f),
+            new RandomTableEntry<PitObstacleType>(PitObstacleType.AstralLock, pd.astralTokens > 0 ? 0.5f : 0.1f),
+            new RandomTableEntry<PitObstacleType>(PitObstacleType.EnemyLock, 0.5f),
+            new RandomTableEntry<PitObstacleType>(PitObstacleType.CrystalLock, 0.25f)
         };
-
-        if (pd.astralTokens > 0)
-        {
-            randomtableEntries.Add(new RandomTableEntry<PitObstacleType>(PitObstacleType.AstralLock, 0.5f));
-        }
-        else
-        {
-            randomtableEntries.Add(new RandomTableEntry<PitObstacleType>(PitObstacleType.AstralLock, 0.1f));
-        }
-
-        randomtableEntries.Add(new RandomTableEntry<PitObstacleType>(PitObstacleType.EnemyLock, 0.5f));
-        randomtableEntries.Add(new RandomTableEntry<PitObstacleType>(PitObstacleType.CrystalLock, 0.25f));
 
         RandomTable<PitObstacleType> obstacleTable = new RandomTable<PitObstacleType>(randomtableEntries);
 
@@ -230,10 +223,16 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
             {
                 resultLegal = false;
             }
-            if (type == PitObstacleType.AstralLock && cost < 125)
+            if (type == PitObstacleType.AstralLock && cost <= 200)
             {
                 resultLegal = false;
             }
+
+            //Don't lock the crystal key behind the crystal key only lock
+            if (pu.type == PickupUnion.PickupType.KeyItem && pu.keyItem.type == KeyItem.KeyItemType.CrystalKey && type == PitObstacleType.CrystalLock)
+            {
+                resultLegal = false;
+            } 
 
             if (pd.GetPlayerDataEntry(BattleHelper.EntityID.Wilex) == null && (type == PitObstacleType.DoubleJump || type == PitObstacleType.Slash))
             {
@@ -287,23 +286,25 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                 }
             }
 
-            //Cost ceilings for abilities (Don't let you get strong stuff for free
-            if (type == PitObstacleType.Slash && cost >= 150)
+            //Cost ceilings for abilities (Don't let you get strong stuff for free)
+            if (type == PitObstacleType.Slash && cost >= 225)
             {
                 resultLegal = false;
             }
-            if (type == PitObstacleType.Smash && cost >= 150)
+            if (type == PitObstacleType.Smash && cost >= 225)
             {
                 resultLegal = false;
             }
-            if (type == PitObstacleType.DashHop && cost >= 150)
+            if (type == PitObstacleType.DashHop && cost >= 225)
             {
                 resultLegal = false;
             }
-            if (type == PitObstacleType.DoubleJump && cost >= 150)
+            if (type == PitObstacleType.DoubleJump && cost >= 225)
             {
                 resultLegal = false;
             }
+
+            //note: Coin locks are always legal so this will always terminate eventually (however, this system becomes biased towards coin costs at high values)
         }
         type = result;
 

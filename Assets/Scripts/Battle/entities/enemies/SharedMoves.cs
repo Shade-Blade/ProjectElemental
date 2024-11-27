@@ -709,17 +709,22 @@ public class BM_Shared_Hard_CounterHide : EnemyMove
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        switch (caller.entityID)
+        //note: It is possible to take damage while ethereal, which will extend the effect which is bad
+        //Possible if you use light element attacks, sticky spore
+        if (!caller.HasEffect(Effect.EffectType.Ethereal))
         {
-            case BattleHelper.EntityID.Shrouder:
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Ethereal, 1, 1));
-                break;
-            case BattleHelper.EntityID.Speartongue:
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Ethereal, 1, 2));
-                break;
-            default:
-                caller.InflictEffect(caller, new Effect(Effect.EffectType.Ethereal, 1, 2));
-                break;
+            switch (caller.entityID)
+            {
+                case BattleHelper.EntityID.Shrouder:
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Ethereal, 1, 2));
+                    break;
+                case BattleHelper.EntityID.Speartongue:
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Ethereal, 1, 2));
+                    break;
+                default:
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Ethereal, 1, 2));
+                    break;
+            }
         }
         yield return new WaitForSeconds(0.5f);
     }

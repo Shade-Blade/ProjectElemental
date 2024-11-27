@@ -843,9 +843,9 @@ public class LM_SleepStomp : LM_HeavyStomp
 
         int val = caller.DealDamageCalculation(target, sd, 0, 0);
 
-        int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Sleep) * statusBoost);
+        int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Sleep) / statusBoost);
 
-        bool doesWork = (target.hp > 0) && (target.hp <= statusHP);
+        bool doesWork = (target.hp > 0) && (target.hp - val <= statusHP);
 
         //bool realDoesWork = target.StatusWillWork(Effect.EffectType.Freeze);
 
@@ -2819,9 +2819,9 @@ public class LM_DazzleSmash : LM_Smash
 
         int val = caller.DealDamageCalculation(target, sd, 0, 0);
 
-        int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Dizzy) * statusBoost);
+        int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Dizzy) / statusBoost);
 
-        bool doesWork = (target.hp > 0) && (target.hp <= statusHP);
+        bool doesWork = (target.hp > 0) && (target.hp - val <= statusHP);
 
 
         string outString = "";
