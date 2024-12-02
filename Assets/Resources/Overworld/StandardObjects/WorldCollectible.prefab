@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2662552016040517552}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -70,6 +70,8 @@ MonoBehaviour:
   attractRadius: 0.75
   attractDelta: 200
   attract: 1
+  antigravity: 0
+  intangible: 0
   worldPlayer: {fileID: 0}
   pickupUnion:
     type: 0
@@ -90,6 +92,7 @@ MonoBehaviour:
       type: 0
       ribbonCount: 0
       bonusData: 0
+    misc: 0
   colliderC: {fileID: 2662552017001622623}
   colliderI: {fileID: 2662552017172820447}
   sprite: {fileID: 2662552016767426048}

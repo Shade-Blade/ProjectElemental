@@ -626,7 +626,6 @@ MonoBehaviour:
   stompBoostable: 1
   textIndex: 0
   loop: 0
-  minibubble: {fileID: 0}
 --- !u!1 &211086560977027292
 GameObject:
   m_ObjectHideFlags: 0
@@ -1290,6 +1289,67 @@ Transform:
   m_Father: {fileID: 3868111840677909318}
   m_RootOrder: 38
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &486931356879464593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2973247409563305088}
+  - component: {fileID: 1548297587217207917}
+  - component: {fileID: 9050465057041204787}
+  m_Layer: 7
+  m_Name: Interacter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2973247409563305088
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486931356879464593}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4699312737359623306}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1548297587217207917
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486931356879464593}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &9050465057041204787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486931356879464593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc11cb0463b56043a6b42e25560f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  relativeEvaluationPoint: {x: 0, y: 0, z: 0}
+  dotProductBonus: 0.5
+  active: 0
 --- !u!1 &536743073608580457
 GameObject:
   m_ObjectHideFlags: 0
@@ -4400,6 +4460,7 @@ MonoBehaviour:
       misc: 0
     cost: 10
     currency: 0
+  canSell: 0
 --- !u!1 &2037432125252677798
 GameObject:
   m_ObjectHideFlags: 0
@@ -4568,6 +4629,191 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2097252232702754370
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3524556523479071131}
+  - component: {fileID: 4535041810084699022}
+  - component: {fileID: 6835312925971406597}
+  - component: {fileID: 7068801153429873911}
+  m_Layer: 8
+  m_Name: WorldNPC_Alumi
+  m_TagString: NPC
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3524556523479071131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097252232702754370}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -16.58, y: 0.375, z: 4.11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6904188036540775788}
+  m_Father: {fileID: 3868111840460031728}
+  m_RootOrder: 27
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &4535041810084699022
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097252232702754370}
+  m_Material: {fileID: 13400000, guid: f989dffb8cf36914e9d2465f7f50eca3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.25
+  m_Height: 0.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &6835312925971406597
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097252232702754370}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &7068801153429873911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097252232702754370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0f85af90e57384f99fa744676609d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapScript: {fileID: 0}
+  rb: {fileID: 0}
+  forceKinematic: 0
+  meid: 0
+  spriteID: 
+  wed:
+    inactive: 0
+    spriteID: C7_Chaintail_Alumi
+    speed: 3
+    wandering: 0
+    wanderRadius: 0
+    idleDuration: 0
+    wanderDuration: 0
+    durationVariance: 0
+    height: 0
+    width: 0
+    interactRadius: 0
+    stompBoostable: 1
+    stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: <tail,k>That's Alumi. She's a world famous dancer known for her
+      flashy outfit.<next><next><tail,w>It's way too flashy, in my opinion. She looks
+      like she's full of herself.<next><next><tail,l>Yeah, she isn't very nice if
+      you get to know her.
+    talkStrings:
+    - Did you come here to admire my beauty? Right now I'm selling some Ribbons that
+      might make you more beautiful too. I'll also give you money for all your ugly
+      old rags you think are fashionable.<prompt,Buy Ribbon,1,Sell Ribbon,2,Cancel,3,-1>
+    - Any of them dazzle you?<dataget,arg,menu><genericmenu,arg,4>
+    - You can't put a price on beauty, but I'll let you have that <var,0> for <var,1>
+      <var,2>.
+    - Fashion doesn't come cheap, you know.
+    - (should not be possible)
+    - Hmmm... That's a start, but it'll take more than that one ribbon to be fashionable.
+    - Now a little sliver of my beauty is in your hands. Make sure not to waste it!
+    - So you only wanted to talk to me? Maybe I should start charging for that.
+    - Yes... I'd hate to see anything good go to waste on you.<dataget,arg,sellmenu><genericmenu,arg,4>
+    - Yes... I'd hate to see anything good go to waste on you.<dataget,arg,sellmenu><genericmenu,arg,4>
+    - That ugly <var,0> is only worth <var,1>. Ready to give it up?<prompt,Yes,1,No,2,1>
+    - You got rid of all your ribbons.? Well, I'm not buying any other part of your
+      ridiculous getup. Come back when you have something actually fashionable.
+    - Hmmm... Now you can spend those coins on something a little more fashionable.
+    - Wow, it looks like you have one of every ribbon! But even you can see that
+      none of them can make you even half as beautful as me <heart>. Why don't you
+      let me take some of those ugly rags off your hands for you?
+  subObject: {fileID: 0}
+  ac: {fileID: 0}
+  dropShadow: {fileID: 0}
+  noShadowUpdate: 0
+  speed: 0
+  facingRotation: 0
+  trueFacingRotation: 0
+  lastFrameVel: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundedTime: 0
+  airTime: 0
+  airFrames: 0
+  floorNormal: {x: 0, y: 0, z: 0}
+  lastGroundedHeight: 0
+  lastHighestHeight: 0
+  touchingNonGround: 0
+  timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
+  usedFirstBounce: 0
+  applyDefaultJumpLift: 0
+  defaultJumpLift: 0
+  intendedMovement: {x: 0, y: 0, z: 0}
+  lastIntendedMovement: {x: 0, y: 0, z: 0}
+  useIntended: 1
+  useAllFriction: 0
+  movementRotationDisabled: 0
+  oneWayVector: {x: 0, y: 0, z: 0}
+  oneWayMinAllowable: 0
+  conveyerVector: {x: 0, y: 0, z: 0}
+  lastConveyerVector: {x: 0, y: 0, z: 0}
+  movementDamping: 0
+  lastMovementDamping: 0
+  semisolidFloorNormal: {x: 0, y: 0, z: 0}
+  semisolidFloorPosition: {x: 0, y: 0, z: 0}
+  semisolidFloorActive: 0
+  lastSemiSolidFloorActive: 0
+  semisolidSnapBelow: 0
+  encounter:
+    encounterList: []
+    battleMapName: 0
+  interacter: {fileID: 0}
+  interactSphere: {fileID: 0}
+  interactIndicator: {fileID: 0}
+  indicatorActive: 0
+  questIndicator: 0
+  startPosition: {x: 0, y: 0, z: 0}
+  timeSinceInteractActive: 0
+  wandering: 0
+  wanderRadius: 0
+  idleDuration: 0
+  wanderDuration: 0
+  durationVariance: 0
+  tattle: 
+  currentlyWandering: 0
+  wanderDir: {x: 0, y: 0}
+  idleTime: 0
+  wanderTime: 0
+  idlePos: {x: 0, y: 0, z: 0}
+  stompLaunch: 0
+  stompBoostable: 0
+  inventory: []
 --- !u!1 &2121976018407650723
 GameObject:
   m_ObjectHideFlags: 0
@@ -6558,6 +6804,193 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3552986429501551178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2171066554404142629}
+  - component: {fileID: 181794047334090177}
+  - component: {fileID: 1944249814423832011}
+  - component: {fileID: 2069831039346982247}
+  m_Layer: 8
+  m_Name: WorldNPC_Wolfram
+  m_TagString: NPC
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2171066554404142629
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552986429501551178}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -14.96, y: 0.375, z: 4.11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1283839829737819378}
+  m_Father: {fileID: 3868111840460031728}
+  m_RootOrder: 26
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &181794047334090177
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552986429501551178}
+  m_Material: {fileID: 13400000, guid: f989dffb8cf36914e9d2465f7f50eca3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.25
+  m_Height: 0.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1944249814423832011
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552986429501551178}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &2069831039346982247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552986429501551178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c20aab33e040a141bc36afad224f76c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapScript: {fileID: 0}
+  rb: {fileID: 0}
+  forceKinematic: 0
+  meid: 0
+  spriteID: 
+  wed:
+    inactive: 0
+    spriteID: C7_Plateshell_Male
+    speed: 3
+    wandering: 0
+    wanderRadius: 0
+    idleDuration: 0
+    wanderDuration: 0
+    durationVariance: 0
+    height: 0
+    width: 0
+    interactRadius: 0
+    stompBoostable: 1
+    stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: <tail,k>That's Wolfram. He's a badge merchant who can sell you
+      badges or buy any of your badges you don't want.<next><tail,w>Some of our badges
+      seem kinda useless. How much do you think we'll get for them?<next><tail,k>You
+      should be careful about selling them, you never know when something might become
+      useful later.<next><tail,l>We worked hard for some of these, there's no way
+      we can give them all away!
+    talkStrings:
+    - I've got some shiny badges in my collection for the best prices around! I'm
+      also in the market for buying your badges too, if you're interested. So what
+      will it be?<prompt,Buy Badges,1,Sell Badges,2,Cancel,3,-1>
+    - Any of them catch your eye?<dataget,arg,menu><genericmenu,arg,4>
+    - That shiny <var,0> is worth <var,1> <var,2>. Does that sound good to you?<prompt,Yes,1,No,2,1>
+    - Sorry, but you don't have enough coins for that one.
+    - (should not be possible)
+    - Hope you use it well!
+    - That's a few more badges for your collection. Maybe one day yours will be bigger
+      than mine?
+    - Well, I'll still be around if you want to talk about badges.
+    - Every badge is good for something, so I'll take whatever you can give me.<dataget,arg,sellmenu><genericmenu,arg,4>
+    - Every badge is good for something, so I'll take whatever you can give me.<dataget,arg,sellmenu><genericmenu,arg,4>
+    - I'll pay you <var,0> coins for that <var,1>. Do we have a deal?<prompt,Yes,1,No,2,1>
+    - Oh, sorry, but it looks like you have no Badges for me. But don't worry, I'll
+      be here if you find any.
+    - My collection keeps growing every day, Maybe one day I'll have every kind of
+      badge out there?
+    - Looks like I'm all out of badges to sell. But don't worry, I'll probably have
+      some more by the time you see me again.
+  subObject: {fileID: 0}
+  ac: {fileID: 0}
+  dropShadow: {fileID: 0}
+  noShadowUpdate: 0
+  speed: 0
+  facingRotation: 0
+  trueFacingRotation: 0
+  lastFrameVel: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundedTime: 0
+  airTime: 0
+  airFrames: 0
+  floorNormal: {x: 0, y: 0, z: 0}
+  lastGroundedHeight: 0
+  lastHighestHeight: 0
+  touchingNonGround: 0
+  timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
+  usedFirstBounce: 0
+  applyDefaultJumpLift: 0
+  defaultJumpLift: 0
+  intendedMovement: {x: 0, y: 0, z: 0}
+  lastIntendedMovement: {x: 0, y: 0, z: 0}
+  useIntended: 1
+  useAllFriction: 0
+  movementRotationDisabled: 0
+  oneWayVector: {x: 0, y: 0, z: 0}
+  oneWayMinAllowable: 0
+  conveyerVector: {x: 0, y: 0, z: 0}
+  lastConveyerVector: {x: 0, y: 0, z: 0}
+  movementDamping: 0
+  lastMovementDamping: 0
+  semisolidFloorNormal: {x: 0, y: 0, z: 0}
+  semisolidFloorPosition: {x: 0, y: 0, z: 0}
+  semisolidFloorActive: 0
+  lastSemiSolidFloorActive: 0
+  semisolidSnapBelow: 0
+  encounter:
+    encounterList: []
+    battleMapName: 0
+  interacter: {fileID: 0}
+  interactSphere: {fileID: 0}
+  interactIndicator: {fileID: 0}
+  indicatorActive: 0
+  questIndicator: 0
+  startPosition: {x: 0, y: 0, z: 0}
+  timeSinceInteractActive: 0
+  wandering: 0
+  wanderRadius: 0
+  idleDuration: 0
+  wanderDuration: 0
+  durationVariance: 0
+  tattle: 
+  currentlyWandering: 0
+  wanderDir: {x: 0, y: 0}
+  idleTime: 0
+  wanderTime: 0
+  idlePos: {x: 0, y: 0, z: 0}
+  stompLaunch: 0
+  stompBoostable: 0
+  inventory: []
 --- !u!1 &3631088341048916185
 GameObject:
   m_ObjectHideFlags: 0
@@ -13075,6 +13508,12 @@ Transform:
   - {fileID: 5581338840038291146}
   - {fileID: 1155145831598916403}
   - {fileID: 7302084541531103624}
+  - {fileID: 548140890499424300}
+  - {fileID: 7085776130828180182}
+  - {fileID: 8208166884714246766}
+  - {fileID: 4699312737359623306}
+  - {fileID: 2171066554404142629}
+  - {fileID: 3524556523479071131}
   m_Father: {fileID: 3868111840974364226}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -79852,6 +80291,185 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5008423069942500600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4699312737359623306}
+  - component: {fileID: 1222456725992450944}
+  - component: {fileID: 2404235915441558230}
+  - component: {fileID: 2460166720666462814}
+  m_Layer: 8
+  m_Name: WorldNPC_Spruce
+  m_TagString: NPC
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4699312737359623306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5008423069942500600}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -13.1, y: 0.375, z: 4.11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2973247409563305088}
+  m_Father: {fileID: 3868111840460031728}
+  m_RootOrder: 25
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1222456725992450944
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5008423069942500600}
+  m_Material: {fileID: 13400000, guid: f989dffb8cf36914e9d2465f7f50eca3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.25
+  m_Height: 0.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &2404235915441558230
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5008423069942500600}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &2460166720666462814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5008423069942500600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb62fac4102e4b64d9e2856bec83d23e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapScript: {fileID: 0}
+  rb: {fileID: 0}
+  forceKinematic: 0
+  meid: 0
+  spriteID: 
+  wed:
+    inactive: 0
+    spriteID: C1_Squirrel_Spruce
+    speed: 3
+    wandering: 0
+    wanderRadius: 0
+    idleDuration: 0
+    wanderDuration: 0
+    durationVariance: 0
+    height: 0
+    width: 0
+    interactRadius: 0
+    stompBoostable: 1
+    stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: 
+    talkStrings:
+    - Hey, I've got some cool stuff for you, if you have the coins for it.<prompt,Buy
+      Items,1,Sell Items,2,Cancel,3,-1>
+    - Here's what I have for you.<dataget,arg,menu><genericmenu,arg,4>
+    - Looks like that <var,0> is worth <var,1> <var,2>. Are you ok with that?<prompt,Yes,1,No,2,1>
+    - Sorry, I can't let you have stuff for free. It took me a while to get all of
+      it together for you, so I don't really want to give it all away.
+    - Oh, it looks like you have too much to carry. You can sell me some of your
+      stuff you don't want.
+    - Great! Anything else you want?
+    - Have a good day, you two!
+    - Have a good day, you two!
+    - You have something for me?<itemmenu,selling>
+    - You have something else for me?<itemmenu,selling>
+    - I'll buy that <var,0> for <var,1> coins. Are you ok with that?<prompt,Yes,1,No,2,1>
+    - It doesn't like like you have any items I can buy off you. There's some other
+      people who'll buy your other stuff though.
+    - Have a good day, you two!
+  subObject: {fileID: 0}
+  ac: {fileID: 0}
+  dropShadow: {fileID: 0}
+  noShadowUpdate: 0
+  speed: 0
+  facingRotation: 0
+  trueFacingRotation: 0
+  lastFrameVel: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundedTime: 0
+  airTime: 0
+  airFrames: 0
+  floorNormal: {x: 0, y: 0, z: 0}
+  lastGroundedHeight: 0
+  lastHighestHeight: 0
+  touchingNonGround: 0
+  timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
+  usedFirstBounce: 0
+  applyDefaultJumpLift: 0
+  defaultJumpLift: 0
+  intendedMovement: {x: 0, y: 0, z: 0}
+  lastIntendedMovement: {x: 0, y: 0, z: 0}
+  useIntended: 1
+  useAllFriction: 0
+  movementRotationDisabled: 0
+  oneWayVector: {x: 0, y: 0, z: 0}
+  oneWayMinAllowable: 0
+  conveyerVector: {x: 0, y: 0, z: 0}
+  lastConveyerVector: {x: 0, y: 0, z: 0}
+  movementDamping: 0
+  lastMovementDamping: 0
+  semisolidFloorNormal: {x: 0, y: 0, z: 0}
+  semisolidFloorPosition: {x: 0, y: 0, z: 0}
+  semisolidFloorActive: 0
+  lastSemiSolidFloorActive: 0
+  semisolidSnapBelow: 0
+  encounter:
+    encounterList: []
+    battleMapName: 0
+  interacter: {fileID: 0}
+  interactSphere: {fileID: 0}
+  interactIndicator: {fileID: 0}
+  indicatorActive: 0
+  questIndicator: 0
+  startPosition: {x: 0, y: 0, z: 0}
+  timeSinceInteractActive: 0
+  wandering: 0
+  wanderRadius: 0
+  idleDuration: 0
+  wanderDuration: 0
+  durationVariance: 0
+  tattle: 
+  currentlyWandering: 0
+  wanderDir: {x: 0, y: 0}
+  idleTime: 0
+  wanderTime: 0
+  idlePos: {x: 0, y: 0, z: 0}
+  stompLaunch: 0
+  stompBoostable: 0
+  inventory: []
 --- !u!1 &5025987721602358180
 GameObject:
   m_ObjectHideFlags: 0
@@ -80139,6 +80757,194 @@ Transform:
   m_Father: {fileID: 3868111840603187872}
   m_RootOrder: 64
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 63}
+--- !u!1 &5150967007312337032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 548140890499424300}
+  - component: {fileID: 4701731950715348859}
+  - component: {fileID: 225229646084499875}
+  - component: {fileID: 8730670809712741106}
+  m_Layer: 8
+  m_Name: WorldNPC_Charmer_Rosette
+  m_TagString: NPC
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &548140890499424300
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5150967007312337032}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -11.45, y: 0.375, z: 5.48}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4942857410610695777}
+  m_Father: {fileID: 3868111840460031728}
+  m_RootOrder: 22
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &4701731950715348859
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5150967007312337032}
+  m_Material: {fileID: 13400000, guid: f989dffb8cf36914e9d2465f7f50eca3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.25
+  m_Height: 0.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &225229646084499875
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5150967007312337032}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &8730670809712741106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5150967007312337032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f73839f4637e114dbeed7a562cebfa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapScript: {fileID: 0}
+  rb: {fileID: 225229646084499875}
+  forceKinematic: 0
+  meid: 0
+  spriteID: 
+  wed:
+    inactive: 0
+    spriteID: C2_FrogNormal_Rosette
+    speed: 3
+    wandering: 0
+    wanderRadius: 1.5
+    idleDuration: 3
+    wanderDuration: 1
+    durationVariance: 0.75
+    height: 0
+    width: 0
+    interactRadius: 0
+    stompBoostable: 1
+    stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: <tail,k>That's Rosette. She can cast a charm on you to make you
+      stronger sometimes, or increase your defense sometimes.<next><tail,w>Hmm, maybe
+      we should get one of those. What's the catch?<next><tail,k>Well, it only activates
+      once every few turns. Her more expensive charms activate more times, but they
+      also activate less often.
+    talkStrings:
+    - Did you come here for a charm? I have something that'll make you stronger,
+      or more defensive. You can also buy a totem that has a bit of my power in them
+      too, if you want to do it yourself.<prompt,Buy Charm,1,Buy Totem,2,Explain,3,Cancel,-1>
+    - Here's the charms I can do. The expensive ones are better, so buy them!<prompt,Lesser
+      Charm (30 coins),1,Normal Charm (60 coins),2,Greater Charm (90 coins),3,Cancel,-1>
+    - There you go! You're all charmed up now.
+    - Oh, you don't have enough for that one. Come back when you have money for it.
+    - Looks like you already got one of my totems. I can't make another while you
+      have that, I think those things explode if two of them get too close to each
+      other.
+    - Here's what I can make. The expensive ones are better, so buy them!<prompt,Lesser
+      Totem (30 coins),1,Normal Totem (60 coins),2,Greater Totem (90 coins),3,Cancel,-1>
+    - Good choice! You can use it right now, if you want.
+    - Oh, you don't have enough for that one. All my charms are cheaper than the
+      totems, so you can probably buy one of those.
+    - My power will give you some Focus or some Absorb sometimes. The cheaper charms
+      activate more often but you don't get as many charges out of it. The expensive
+      ones last a really long time, so it's a good idea to buy them.<next>You can
+      see how long until your charm activates again in the Pause Menu.
+    - My powers are really strong. You're really missing out!
+  subObject: {fileID: 0}
+  ac: {fileID: 0}
+  dropShadow: {fileID: 0}
+  noShadowUpdate: 0
+  speed: 0
+  facingRotation: 0
+  trueFacingRotation: 0
+  lastFrameVel: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundedTime: 0
+  airTime: 0
+  airFrames: 0
+  floorNormal: {x: 0, y: 0, z: 0}
+  lastGroundedHeight: 0
+  lastHighestHeight: 0
+  touchingNonGround: 0
+  timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
+  usedFirstBounce: 0
+  applyDefaultJumpLift: 0
+  defaultJumpLift: 0
+  intendedMovement: {x: 0, y: 0, z: 0}
+  lastIntendedMovement: {x: 0, y: 0, z: 0}
+  useIntended: 1
+  useAllFriction: 0
+  movementRotationDisabled: 0
+  oneWayVector: {x: 0, y: 0, z: 0}
+  oneWayMinAllowable: 0
+  conveyerVector: {x: 0, y: 0, z: 0}
+  lastConveyerVector: {x: 0, y: 0, z: 0}
+  movementDamping: 0
+  lastMovementDamping: 0
+  semisolidFloorNormal: {x: 0, y: 0, z: 0}
+  semisolidFloorPosition: {x: 0, y: 0, z: 0}
+  semisolidFloorActive: 0
+  lastSemiSolidFloorActive: 0
+  semisolidSnapBelow: 0
+  encounter:
+    encounterList: []
+    battleMapName: 0
+  interacter: {fileID: 9067936160151889593}
+  interactSphere: {fileID: 2237704504075795325}
+  interactIndicator: {fileID: 0}
+  indicatorActive: 0
+  questIndicator: 0
+  startPosition: {x: 0, y: 0, z: 0}
+  timeSinceInteractActive: 0
+  wandering: 0
+  wanderRadius: 0
+  idleDuration: 0
+  wanderDuration: 0
+  durationVariance: 0
+  tattle: 
+  currentlyWandering: 0
+  wanderDir: {x: 0, y: 0}
+  idleTime: 0
+  wanderTime: 0
+  idlePos: {x: 0, y: 0, z: 0}
+  stompLaunch: 0
+  stompBoostable: 0
+  charm: 1
+  charmPrices: 1e0000003c0000005a000000
+  totemPrices: 3c00000078000000b4000000
 --- !u!1 &5176502815881856293
 GameObject:
   m_ObjectHideFlags: 0
@@ -80223,6 +81029,67 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &5218409769598695975
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6121911755490006438}
+  - component: {fileID: 8654405466229348429}
+  - component: {fileID: 6626006218132986737}
+  m_Layer: 7
+  m_Name: Interacter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6121911755490006438
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5218409769598695975}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8208166884714246766}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &8654405466229348429
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5218409769598695975}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6626006218132986737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5218409769598695975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc11cb0463b56043a6b42e25560f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  relativeEvaluationPoint: {x: 0, y: 0, z: 0}
+  dotProductBonus: 0.5
+  active: 0
 --- !u!1 &5239772231884509945
 GameObject:
   m_ObjectHideFlags: 0
@@ -85174,6 +86041,180 @@ MonoBehaviour:
   relativeEvaluationPoint: {x: 0, y: 0, z: 0}
   dotProductBonus: 0.5
   active: 0
+--- !u!1 &5883483967619567134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8208166884714246766}
+  - component: {fileID: 2263847353061895073}
+  - component: {fileID: 7135601635871336173}
+  - component: {fileID: 2179577890455853448}
+  m_Layer: 8
+  m_Name: WorldNPC_Lim
+  m_TagString: NPC
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8208166884714246766
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883483967619567134}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -10.24, y: 0.375, z: 7.86}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6121911755490006438}
+  m_Father: {fileID: 3868111840460031728}
+  m_RootOrder: 24
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &2263847353061895073
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883483967619567134}
+  m_Material: {fileID: 13400000, guid: f989dffb8cf36914e9d2465f7f50eca3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.25
+  m_Height: 0.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &7135601635871336173
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883483967619567134}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &2179577890455853448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883483967619567134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18eef8102a395d64b9c23f82ec148cf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapScript: {fileID: 0}
+  rb: {fileID: 0}
+  forceKinematic: 0
+  meid: 0
+  spriteID: 
+  wed:
+    inactive: 0
+    spriteID: C7_Speartongue_Lim
+    speed: 3
+    wandering: 0
+    wanderRadius: 1.5
+    idleDuration: 3
+    wanderDuration: 1
+    durationVariance: 0.75
+    height: 0
+    width: 0
+    interactRadius: 0
+    stompBoostable: 1
+    stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: <tail,w>Lim has portals all over the place. Looks like we can skip
+      ahead by quite a lot.<next><tail,k>But that would mean you wouldn't get anything
+      from the floors you skipped. It might be better to take the portal going back
+      a few floors instead.<next><tail,w>Spending more time in this place? Why would
+      we ever want to do that?<next><tail,l>I think there's some stuff back there
+      we could go back for.<next><tail,w>The floors up there are probably already
+      changed. But I guess going back for whatever's there might be a good idea.
+    talkStrings:
+    - I have portals that'll get you around this place, if you have the coin for
+      it. Two of them go further down while one goes back up a few floors.
+    - Alright, here we go. Keep your eyes closed for this, my techniques are a trade
+      secret.
+    - I thought you two would understand the value of portal transport. Maybe I thought
+      too highly of you.
+    - Time is money, so don't be afraid to spend a little to save time.
+  subObject: {fileID: 0}
+  ac: {fileID: 0}
+  dropShadow: {fileID: 0}
+  noShadowUpdate: 0
+  speed: 0
+  facingRotation: 0
+  trueFacingRotation: 0
+  lastFrameVel: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundedTime: 0
+  airTime: 0
+  airFrames: 0
+  floorNormal: {x: 0, y: 0, z: 0}
+  lastGroundedHeight: 0
+  lastHighestHeight: 0
+  touchingNonGround: 0
+  timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
+  usedFirstBounce: 0
+  applyDefaultJumpLift: 0
+  defaultJumpLift: 0
+  intendedMovement: {x: 0, y: 0, z: 0}
+  lastIntendedMovement: {x: 0, y: 0, z: 0}
+  useIntended: 1
+  useAllFriction: 0
+  movementRotationDisabled: 0
+  oneWayVector: {x: 0, y: 0, z: 0}
+  oneWayMinAllowable: 0
+  conveyerVector: {x: 0, y: 0, z: 0}
+  lastConveyerVector: {x: 0, y: 0, z: 0}
+  movementDamping: 0
+  lastMovementDamping: 0
+  semisolidFloorNormal: {x: 0, y: 0, z: 0}
+  semisolidFloorPosition: {x: 0, y: 0, z: 0}
+  semisolidFloorActive: 0
+  lastSemiSolidFloorActive: 0
+  semisolidSnapBelow: 0
+  encounter:
+    encounterList: []
+    battleMapName: 0
+  interacter: {fileID: 0}
+  interactSphere: {fileID: 0}
+  interactIndicator: {fileID: 0}
+  indicatorActive: 0
+  questIndicator: 0
+  startPosition: {x: 0, y: 0, z: 0}
+  timeSinceInteractActive: 0
+  wandering: 0
+  wanderRadius: 0
+  idleDuration: 0
+  wanderDuration: 0
+  durationVariance: 0
+  tattle: 
+  currentlyWandering: 0
+  wanderDir: {x: 0, y: 0}
+  idleTime: 0
+  wanderTime: 0
+  idlePos: {x: 0, y: 0, z: 0}
+  stompLaunch: 0
+  stompBoostable: 0
 --- !u!1 &5912190677418738127
 GameObject:
   m_ObjectHideFlags: 0
@@ -92121,6 +93162,67 @@ MonoBehaviour:
   itemScripts:
   - {fileID: 7592163860061013988}
   - {fileID: 8134355081057906579}
+--- !u!1 &6827630155458129725
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1283839829737819378}
+  - component: {fileID: 3671699801503339680}
+  - component: {fileID: 1143526037313696010}
+  m_Layer: 7
+  m_Name: Interacter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1283839829737819378
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6827630155458129725}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2171066554404142629}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &3671699801503339680
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6827630155458129725}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1143526037313696010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6827630155458129725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc11cb0463b56043a6b42e25560f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  relativeEvaluationPoint: {x: 0, y: 0, z: 0}
+  dotProductBonus: 0.5
+  active: 0
 --- !u!1 &6901173643973831451
 GameObject:
   m_ObjectHideFlags: 0
@@ -92827,6 +93929,67 @@ MonoBehaviour:
   idleTime: 0
   wanderTime: 0
   idlePos: {x: 0, y: 0, z: 0}
+--- !u!1 &7261083139785500239
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6904188036540775788}
+  - component: {fileID: 3774780638835548768}
+  - component: {fileID: 1263438164128237008}
+  m_Layer: 7
+  m_Name: Interacter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6904188036540775788
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7261083139785500239}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3524556523479071131}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &3774780638835548768
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7261083139785500239}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1263438164128237008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7261083139785500239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc11cb0463b56043a6b42e25560f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  relativeEvaluationPoint: {x: 0, y: 0, z: 0}
+  dotProductBonus: 0.5
+  active: 0
 --- !u!1 &7280884507362947808
 GameObject:
   m_ObjectHideFlags: 0
@@ -92943,6 +94106,67 @@ MonoBehaviour:
   damping: 5
   snapBelow: 0
   noEffectAway: 1
+--- !u!1 &7287811114365018478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4942857410610695777}
+  - component: {fileID: 2237704504075795325}
+  - component: {fileID: 9067936160151889593}
+  m_Layer: 7
+  m_Name: Interacter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4942857410610695777
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7287811114365018478}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 548140890499424300}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &2237704504075795325
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7287811114365018478}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &9067936160151889593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7287811114365018478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc11cb0463b56043a6b42e25560f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  relativeEvaluationPoint: {x: 0, y: 0, z: 0}
+  dotProductBonus: 0.5
+  active: 0
 --- !u!1 &7348321241663455012
 GameObject:
   m_ObjectHideFlags: 0
@@ -92987,6 +94211,67 @@ Transform:
   m_Father: {fileID: 3868111840603187872}
   m_RootOrder: 93
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7385613300558224807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 925507475043167415}
+  - component: {fileID: 1100207519339060674}
+  - component: {fileID: 3278164175141662462}
+  m_Layer: 7
+  m_Name: Interacter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &925507475043167415
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385613300558224807}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7085776130828180182}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1100207519339060674
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385613300558224807}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3278164175141662462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385613300558224807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc11cb0463b56043a6b42e25560f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  relativeEvaluationPoint: {x: 0, y: 0, z: 0}
+  dotProductBonus: 0.5
+  active: 0
 --- !u!1 &7402031986476410678
 GameObject:
   m_ObjectHideFlags: 0
@@ -95117,6 +96402,197 @@ MonoBehaviour:
   damping: 0
   snapBelow: 0
   noEffectAway: 1
+--- !u!1 &8363401159048103722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7085776130828180182}
+  - component: {fileID: 2395419359966617709}
+  - component: {fileID: 2964375827165649347}
+  - component: {fileID: 1040842442490260740}
+  m_Layer: 8
+  m_Name: WorldNPC_Charmer_Bead
+  m_TagString: NPC
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7085776130828180182
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363401159048103722}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.79, y: 0.375, z: 5.48}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 925507475043167415}
+  m_Father: {fileID: 3868111840460031728}
+  m_RootOrder: 23
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &2395419359966617709
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363401159048103722}
+  m_Material: {fileID: 13400000, guid: f989dffb8cf36914e9d2465f7f50eca3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.25
+  m_Height: 0.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &2964375827165649347
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363401159048103722}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &1040842442490260740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363401159048103722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f73839f4637e114dbeed7a562cebfa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapScript: {fileID: 0}
+  rb: {fileID: 2964375827165649347}
+  forceKinematic: 0
+  meid: 0
+  spriteID: 
+  wed:
+    inactive: 0
+    spriteID: C2_FrogNormal_Bead
+    speed: 3
+    wandering: 0
+    wanderRadius: 1.5
+    idleDuration: 3
+    wanderDuration: 1
+    durationVariance: 0.75
+    height: 0
+    width: 0
+    interactRadius: 0
+    stompBoostable: 1
+    stompLaunch: 3
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: <tail,k>That's Bead. She can cast a charm on you that gives you
+      more money and experience from fighting.<next><tail,w>So we can pay her to
+      make us make more money? That doesn't seem real, couldn't she make herself
+      rich with it?<next><tail,k>Well, she isn't well suited to being a fighter.<next><tail,w>I
+      guess that makes sense.<next><tail,l>Not everyone's cut out to be an adventurer,
+      so that's we we should help everyone in need!
+    talkStrings:
+    - Um... Hi. I'm offering some charms that will give you more money and experience
+      from battles. If you pay me more, I'll give you a charm that lasts longer,
+      but it isn't as strong.<prompt,Buy Charm,1,Buy Totem,2,Explain,3,Cancel,-1>
+    - I can cast a charm for you if you want. The expensive ones last longer but
+      don't give you as much of a boost. I also have totems that give you the same
+      charms, but on your own time.<prompt,Lesser Charm (50 coins),1,Normal Charm
+      (70 coins),2,Greater Charm (90 coins),3,Cancel,-1>
+    - Okay, I casted it on you now.
+    - Sorry, but you don't have enough money for that charm.
+    - Oh, you already have one of mine. Sorry, but I can't make another one for you
+      until you use up the one you have. It's dangerous to put two of the same totems
+      next to each other.
+    - I can make a totem for you if you want. The expensive ones last longer but
+      don't give you as much of a boost.<prompt,Lesser Totem (100 coins),1,Normal
+      Totem (140 coins),2,Greater Totem (180 coins),3,Cancel,-1>
+    - There's the totem you wanted. Did I do a good job?
+    - I'm sorry, but you don't have enough to pay for that totem. My charms usually
+      cost less than these totems, so you might be able to buy one of those.
+    - My charms last a certain number of turns, and will boost your rewards from
+      battle if you finish a battle while they're active. The Pause Menu also tells
+      you how long your charm will last.
+    - Oh, well thanks for stopping by.
+  subObject: {fileID: 0}
+  ac: {fileID: 0}
+  dropShadow: {fileID: 0}
+  noShadowUpdate: 0
+  speed: 0
+  facingRotation: 0
+  trueFacingRotation: 0
+  lastFrameVel: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundedTime: 0
+  airTime: 0
+  airFrames: 0
+  floorNormal: {x: 0, y: 0, z: 0}
+  lastGroundedHeight: 0
+  lastHighestHeight: 0
+  touchingNonGround: 0
+  timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
+  usedFirstBounce: 0
+  applyDefaultJumpLift: 0
+  defaultJumpLift: 0
+  intendedMovement: {x: 0, y: 0, z: 0}
+  lastIntendedMovement: {x: 0, y: 0, z: 0}
+  useIntended: 1
+  useAllFriction: 0
+  movementRotationDisabled: 0
+  oneWayVector: {x: 0, y: 0, z: 0}
+  oneWayMinAllowable: 0
+  conveyerVector: {x: 0, y: 0, z: 0}
+  lastConveyerVector: {x: 0, y: 0, z: 0}
+  movementDamping: 0
+  lastMovementDamping: 0
+  semisolidFloorNormal: {x: 0, y: 0, z: 0}
+  semisolidFloorPosition: {x: 0, y: 0, z: 0}
+  semisolidFloorActive: 0
+  lastSemiSolidFloorActive: 0
+  semisolidSnapBelow: 0
+  encounter:
+    encounterList: []
+    battleMapName: 0
+  interacter: {fileID: 3278164175141662462}
+  interactSphere: {fileID: 1100207519339060674}
+  interactIndicator: {fileID: 0}
+  indicatorActive: 0
+  questIndicator: 0
+  startPosition: {x: 0, y: 0, z: 0}
+  timeSinceInteractActive: 0
+  wandering: 0
+  wanderRadius: 0
+  idleDuration: 0
+  wanderDuration: 0
+  durationVariance: 0
+  tattle: 
+  currentlyWandering: 0
+  wanderDir: {x: 0, y: 0}
+  idleTime: 0
+  wanderTime: 0
+  idlePos: {x: 0, y: 0, z: 0}
+  stompLaunch: 0
+  stompBoostable: 0
+  charm: 3
+  charmPrices: 32000000460000005a000000
+  totemPrices: 640000008c000000b4000000
 --- !u!1 &8392805039940349714
 GameObject:
   m_ObjectHideFlags: 0
@@ -98818,7 +100294,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c55e866d1dd215044b3e0d9023b40e18, type: 2}
+  - {fileID: 2100000, guid: d01e649cff67a3a48b2405412baf3d54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100912,7 +102388,7 @@ PrefabInstance:
     - target: {fileID: 1233203785286363785, guid: 49f41113baf7f4140aaf93fa680d96dc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1233203785286363785, guid: 49f41113baf7f4140aaf93fa680d96dc,
         type: 3}

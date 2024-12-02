@@ -452,7 +452,7 @@ public class BattlePopup
         string[] entry = BattleControl.Instance.enviroEffectText[(int)ee];
 
 
-        vars = new string[14];
+        vars = new string[16];
 
         //var 0,1 = every 1 turn values (lose X every Y turns)
         //var 2,3 = every 2 turn values
@@ -461,6 +461,7 @@ public class BattlePopup
         //var 8,9 = (3 * e1t, 3 * e2t)
         //var 10,11 = (6 * e1t, 6 * e2t)
         //var 12,13 = (12 * e1t, 12 * e2t)
+        //var 14,15 = every 4 turn values
 
         (int a, int b) = BattleControl.EnviroXEveryYTurns(1, power);
         vars[0] = a.ToString();
@@ -485,6 +486,10 @@ public class BattlePopup
         (a, b) = BattleControl.EnviroXEveryYTurns(0.5f, power);
         vars[6] = a.ToString();
         vars[7] = b.ToString();
+
+        (a, b) = BattleControl.EnviroXEveryYTurns(4f, power);
+        vars[14] = a.ToString();
+        vars[15] = b.ToString();
 
         //state enum has all the enviro effects in it so this works
         text = "<statesprite," + ee + "> " + entry[1];
@@ -2598,6 +2603,12 @@ public class BattleControl : MonoBehaviour
             playerData.exp -= 100;
             playerData.level += 1;
             SetCameraDefault(0.125f);
+
+            if ((playerData.level >= PlayerData.GetMaxLevel()))
+            {
+                playerData.exp = 0;
+            }
+
             yield return StartCoroutine(LevelUp());
         }
 

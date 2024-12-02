@@ -9,6 +9,7 @@ using UnityEngine;
 public class WorldNPC_FiniteShopkeeper : WorldNPC_Shopkeeper, IShopkeeperEntity
 {
     public List<ShopItem> items;
+    public bool canSell;
 
     public override void Start()
     {
@@ -84,13 +85,21 @@ public class WorldNPC_FiniteShopkeeper : WorldNPC_Shopkeeper, IShopkeeperEntity
         testTextFile[3] = new string[1];
         testTextFile[4] = new string[1];
 
+        /*
         testTextFile[0][0] = "Shopkeeper buy text: <var,0> costs <var,1> <var,2>. Buy it?<prompt,Yes,1,No,2,1>";
         testTextFile[1][0] = "You bought a thing";
         testTextFile[2][0] = "You didn't buy a thing";
         testTextFile[3][0] = "Too poor to buy a thing";
         testTextFile[4][0] = "Inventory too full to buy a thing";
+        */
 
-        string[] tempVars = new string[] { PickupUnion.GetName(sis.shopItem.pickupUnion), sis.shopItem.cost.ToString(), sis.shopItem.currency.ToString() };
+        testTextFile[0][0] = wed.talkStrings[9];
+        testTextFile[1][0] = wed.talkStrings[10];
+        testTextFile[2][0] = wed.talkStrings[11];
+        testTextFile[3][0] = wed.talkStrings[12];
+        testTextFile[4][0] = wed.talkStrings[13];
+
+        string[] tempVars = new string[] { PickupUnion.GetName(sis.shopItem.pickupUnion), sis.shopItem.cost.ToString(), sis.shopItem.ConvertCurrencyToString() };
 
         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 0, this, tempVars));
 
@@ -217,7 +226,17 @@ public class WorldNPC_FiniteShopkeeper : WorldNPC_Shopkeeper, IShopkeeperEntity
         testTextFile[7] = new string[1];
         testTextFile[8] = new string[1];
 
-        testTextFile[0][0] = "Shop NPC main text<prompt,Buy stuff,1,Sell stuff,2,Reset Shop Inventory,3,Cancel,4,3>";
+        //Note: easy way to block selling is to not have the sell menu option in the prompt
+
+        /*
+        if (items.Count <= itemScripts.Count)
+        {
+            testTextFile[0][0] = "Shop NPC main text<prompt,Buy stuff,1,Sell stuff,2,Cancel,-1>";
+        }
+        else
+        {
+            testTextFile[0][0] = "Shop NPC main text<prompt,Buy stuff,1,Sell stuff,2,Reset Shop Inventory,3,Cancel,-1>";
+        }
         testTextFile[1][0] = "Buy stuff by going up to the item and pressing <buttonsprite,a>";
         testTextFile[2][0] = "Can't buy stuff";
         testTextFile[3][0] = "Selling menu<itemmenu,selling>";
@@ -226,8 +245,25 @@ public class WorldNPC_FiniteShopkeeper : WorldNPC_Shopkeeper, IShopkeeperEntity
         testTextFile[6][0] = "Sell no items";
         testTextFile[7][0] = "Reset items";
         testTextFile[8][0] = "Shop bye";
+        */
+
+        testTextFile[0][0] = wed.talkStrings[0];
+        testTextFile[1][0] = wed.talkStrings[1];
+        testTextFile[2][0] = wed.talkStrings[2];
+        testTextFile[3][0] = wed.talkStrings[3];
+        testTextFile[4][0] = wed.talkStrings[4];
+        testTextFile[5][0] = wed.talkStrings[5];
+        testTextFile[6][0] = wed.talkStrings[6];
+        testTextFile[7][0] = wed.talkStrings[7];
+        testTextFile[8][0] = wed.talkStrings[8];
 
         int state = 0;
+
+        if (items.Count == 0 && !canSell)
+        {
+            yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 2, this));
+            yield break;
+        }
 
         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 0, this));
 
@@ -237,7 +273,7 @@ public class WorldNPC_FiniteShopkeeper : WorldNPC_Shopkeeper, IShopkeeperEntity
         switch (state)
         {
             case 0:
-            case 4:
+            case -1:
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 8, this));
                 yield break;
             case 1:
@@ -262,8 +298,18 @@ public class WorldNPC_FiniteShopkeeper : WorldNPC_Shopkeeper, IShopkeeperEntity
                 }
                 break;
             case 3:
-                yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 7, this));
+                //should not be possible
+                if (items.Count > 0)
+                {
+                    yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 7, this));
+                }
+                else
+                {
+                    yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 2, this));
+                }
                 ItemInventoryReset();
+                yield break;
+            default:
                 yield break;
         }
 

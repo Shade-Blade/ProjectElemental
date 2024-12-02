@@ -542,18 +542,30 @@ public class PickupUnion
                 {
                     return 0;
                 }
+                if (pu.badge.type == Badge.BadgeType.RiskyStart)
+                {
+                    return 0;
+                }
 
                 //Made up formula
                 return 20 * (1 + Badge.GetBadgeDataEntry(pu.badge).chapter);
             case PickupType.Ribbon:
                 switch (pu.ribbon.type)
                 {
-                    case Ribbon.RibbonType.RainbowRibbon:
+                    case Ribbon.RibbonType.SharpRibbon: //these ribbons are intentionally worse because you start with them
+                    case Ribbon.RibbonType.SafetyRibbon:
+                        return 30;
+                    case Ribbon.RibbonType.ThornyRibbon: //thorny is not that good
+                        return 45;
+                    case Ribbon.RibbonType.MimicRibbon:     //Relatively strong / versatile
+                    case Ribbon.RibbonType.ChampionRibbon:
+                        return 150;
+                    case Ribbon.RibbonType.RainbowRibbon:   //Very strong
                         return 250;
                     case Ribbon.RibbonType.DiamondRibbon:   //probably not worth 999 in reality but big number is funny
                         return 999;
                 }
-                //most ribbons are pretty balanced
+                //most other ribbons are pretty balanced around each other
                 return 60;
             case PickupType.Misc:
                 //arbitrary numbers

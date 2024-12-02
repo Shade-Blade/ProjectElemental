@@ -47,10 +47,10 @@ public class SM_Hasten : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -186,10 +186,10 @@ public class SM_Revitalize : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -222,7 +222,7 @@ public class SM_Revitalize : SoulMove
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureEffects();
+                    b.CureEffects(false);
                 }
             }
             else
@@ -237,7 +237,7 @@ public class SM_Revitalize : SoulMove
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureEffects();
+                    b.CureEffects(false);
                 }
             }
         }
@@ -256,7 +256,7 @@ public class SM_Revitalize : SoulMove
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureEffects();
+                    b.CureEffects(false);
                 }
             }
             else
@@ -271,7 +271,7 @@ public class SM_Revitalize : SoulMove
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureEffects();
+                    b.CureEffects(false);
                 }
             }
         }
@@ -340,10 +340,10 @@ public class SM_LeafStorm : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -497,10 +497,10 @@ public class SM_ElectroDischarge : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -633,10 +633,10 @@ public class SM_MistWave : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -666,11 +666,11 @@ public class SM_MistWave : SoulMove
                 {
                     if (level > 1)
                     {
-                        caller.DealDamage(b, 12, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(b, 10, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Infinite);
                     }
                     else
                     {
-                        caller.DealDamage(b, 6, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(b, 5, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Infinite);
                     }
                 }
                 else
@@ -789,10 +789,10 @@ public class SM_Overheat : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -925,10 +925,10 @@ public class SM_VoidCrush : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -1088,10 +1088,10 @@ public class SM_FlashFreeze : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -1270,10 +1270,10 @@ public class SM_Cleanse : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -1404,10 +1404,10 @@ public class SM_Blight : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -1589,10 +1589,10 @@ public class SM_ElementalConflux : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(1.0f);
         }
@@ -1615,7 +1615,7 @@ public class SM_ElementalConflux : SoulMove
         {
             if (level == 1)
             {
-                caller.CureEffects();
+                caller.CureEffects(false);
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 2, 3));
                 yield return new WaitForSeconds(0.1f);
@@ -1636,7 +1636,7 @@ public class SM_ElementalConflux : SoulMove
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureEffects();
+                    b.CureEffects(false);
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
@@ -1679,7 +1679,7 @@ public class SM_ElementalConflux : SoulMove
         {
             if (level == 1)
             {
-                caller.CureEffects();
+                caller.CureEffects(false);
                 yield return new WaitForSeconds(0.1f);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackUp, 1, 3));
                 yield return new WaitForSeconds(0.1f);
@@ -1700,7 +1700,7 @@ public class SM_ElementalConflux : SoulMove
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    b.CureEffects();
+                    b.CureEffects(false);
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
@@ -1820,10 +1820,10 @@ public class SM_PrismaticBlast : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }

@@ -390,8 +390,9 @@ public class WorldPlayer : WorldEntity
     */
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
+        base.Start();
         /*
         actionState = ActionState.Neutral;
         currentCharacter = MainManager.PlayerCharacter.Wilex;
@@ -2818,7 +2819,7 @@ public class WorldPlayer : WorldEntity
             {
                 trueFacingRotation += 360;
             }
-            while (trueFacingRotation > 360)
+            while (trueFacingRotation >= 360)
             {
                 trueFacingRotation -= 360;
             }
@@ -2890,7 +2891,7 @@ public class WorldPlayer : WorldEntity
                 }
 
                 //apply wraparound after to make sure the above conditions make sense
-                if (facingRotation > 360)
+                if (facingRotation >= 360)
                 {
                     facingRotation -= 360;
                 }
@@ -3911,7 +3912,7 @@ public class WorldPlayer : WorldEntity
     public bool Unlocked_Illuminate()
     {
         PlayerData.PlayerDataEntry pde = MainManager.Instance.playerData.GetPlayerDataEntry(EntityID.Luna);
-        return pde == null ? false : pde.jumpLevel >= 2;
+        return pde == null ? false : pde.weaponLevel >= 2;
     }
 
     public int SwordLevel()
@@ -4764,13 +4765,41 @@ public class WorldPlayer : WorldEntity
         //Debug.Log((output.collider != null) + " " + start + " " + (output.point));
         return output;
     }
+    public RaycastHit FacingRaycastVOffset(float maxDist, float voffset, int layerMask = PLAYER_LAYER_MASK, QueryTriggerInteraction q = QueryTriggerInteraction.Ignore, float delta = 0)
+    {
+        RaycastHit output;
+        Vector3 start = GetEyePoint() + Vector3.up * voffset;
+
+        Vector3 cross = Vector3.Cross(Vector3.up, FacingVector());
+
+        Physics.Raycast(start + cross * delta, FacingVector(), out output, maxDist, layerMask, q);
+
+        if (output.collider != null)
+        {
+#pragma warning disable CS0162
+            if (DRAW_DEBUG_RAYS)
+            {
+                //Debug.Log("draw ray");
+                Debug.DrawRay(start + cross * delta, output.point - start, Color.white, 0.5f, true);
+            }
+        }
+        else
+        {
+            if (DRAW_DEBUG_RAYS)
+            {
+                Debug.DrawRay(start + cross * delta, FacingVector() * maxDist, Color.red, 0.5f, true);
+            }
+        }
+        //Debug.Log((output.collider != null) + " " + start + " " + (output.point));
+        return output;
+    }
 
     public void TryTattle()
     {
         Debug.Log("Tattle");
         
         int layerMask = PLAYER_LAYER_MASK;
-        RaycastHit rcHit = FacingRaycast(0.75f, layerMask);
+        RaycastHit rcHit = FacingRaycastVOffset(0.75f, -0.35f, layerMask);
 
         //is raycasthit a legal tattle target?
         ITattleable tattleTarget = null;

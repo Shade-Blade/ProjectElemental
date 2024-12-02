@@ -149,7 +149,23 @@ public class CheatMenu : MenuHandler
         //Save file
         if (input[0].Equals("sv"))
         {
-            MainManager.Instance.Save();
+            if (MainManager.Instance.worldMode != MainManager.WorldMode.Overworld)
+            {
+                doexit = false;
+                cs.log.SetText("Overworld only cheat!", true, true);
+            }
+            else
+            {
+                if (input.Length > 1)
+                {
+                    int.TryParse(input[1], out int svIndex);
+                    MainManager.Instance.Save(svIndex);
+                }
+                else
+                {
+                    MainManager.Instance.Save();
+                }
+            }
         }
 
         //Warp player
@@ -245,7 +261,7 @@ public class CheatMenu : MenuHandler
         //Greed
         if (input[0].Equals("g"))
         {
-            if (MainManager.Instance.worldMode != MainManager.WorldMode.Battle)
+            if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
             {
                 BattleControl.Instance.AddCoins(BattleControl.Instance.GetPlayerEntities()[0], 999);
             }

@@ -7,6 +7,7 @@ public class WorldNPC_Basic : WorldNPCEntity
     public int textIndex;
     public bool loop;   //false = keep doing last text, true = loop around to first again
 
+    /*
     //Minibubble testing
     
     public MinibubbleScript minibubble;
@@ -30,6 +31,7 @@ public class WorldNPC_Basic : WorldNPCEntity
         }
         base.WorldUpdate();
     }
+    */
 
     public override IEnumerator InteractCutscene()
     {

@@ -45,7 +45,7 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
 
     public virtual void OnDrawGizmosSelected()
     {
-        if (wandering)
+        if ((wed != null && !wed.inactive && wed.wandering) || (!(wed != null && !wed.inactive) && wandering))
         {
             float thickness = 0.01f;
 
@@ -90,14 +90,22 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
         stompBoostable = wed.stompBoostable;
         tattle = wed.tattleString;
 
+        if (interacter == null)
+        {
+            interacter = GetComponentInChildren<InteractTrigger>();
+            interactSphere = interacter.gameObject.GetComponent<SphereCollider>();
+        }
+
+        //standard = radius + 0.35
         if (interactRadius != 0 && interactSphere != null)
         {
             interactSphere.radius = interactRadius;
         }
     }
 
-    public virtual void Start()
+    public override void Start()
     {
+        base.Start();
         startPosition = transform.position;
         idlePos = startPosition;
         //forceKinematic = true;
@@ -105,6 +113,12 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
         if (!wandering)
         {
             movementRotationDisabled = true;
+        }
+
+        if (interacter == null)
+        {
+            interacter = GetComponentInChildren<InteractTrigger>();
+            interactSphere = interacter.gameObject.GetComponent<SphereCollider>();
         }
     }
 

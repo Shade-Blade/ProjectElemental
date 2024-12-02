@@ -100,9 +100,9 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
     - _ScreenColor: {r: 1, g: 0, b: 0, a: 1}
-    - _ScreenColorA: {r: 15.052353, g: 24.999996, b: 23.78618, a: 1}
-    - _ScreenColorB: {r: 1.6135895, g: 2.2098255, b: 2.1236954, a: 1}
-    - _ScreenColorC: {r: 0.69589436, g: 0.69897217, b: 1.1279023, a: 1}
+    - _ScreenColorA: {r: 15.052353, g: 24.289389, b: 24.999996, a: 1}
+    - _ScreenColorB: {r: 1.6313372, g: 1.8274299, b: 2.2098255, a: 1}
+    - _ScreenColorC: {r: 0.70666707, g: 0.69681925, b: 1.1279023, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 0}
     - _ThroughColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []

@@ -280,6 +280,31 @@ public class BE_Chaintail : BattleEntity
         }
         BasicTargetChooser();
     }
+
+    public override void TryContactHazard(BattleEntity target, BattleHelper.ContactLevel contact, BattleHelper.DamageType type, int damage)
+    {
+        EnvironmentalContactHazards(target, contact, type, damage);
+
+        if (target.CanTriggerContactHazard(contact, type, damage))
+        {
+            //do
+
+            //Check for contact hazard immunity list
+            //(prevents multihits on the same target from hurting multiple times)
+            //(does not prevent multitarget moves from doing the same!)
+
+            if (target.contactImmunityList.Contains(posId))
+            {
+                return;
+            }
+
+            if (contact <= BattleHelper.ContactLevel.Contact)
+            {
+                DealDamage(target, 4, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Contact);
+                target.contactImmunityList.Add(posId);
+            }
+        }
+    }
 }
 
 public class BM_Chaintail_ShockClaw : EnemyMove
@@ -386,7 +411,7 @@ public class BM_Chaintail_TailWhip : EnemyMove
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                caller.DealDamage(caller.curTarget, 9, 0, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, 8, 0, 0, BattleHelper.ContactLevel.Contact);
             }
             else
             {
@@ -472,10 +497,12 @@ public class BE_Sawcrest : BattleEntity
 
         if (sawActive)
         {
-            s.color = new Color(0.75f, 0.35f, 0.2f);
+            s.color = new Color(1f, 1f, 1f);
+            SetEntityProperty(BattleHelper.EntityProperties.StateContactHazard, true);
         } else
         {
-            s.color = new Color(0.6f, 0.5f, 0.2f);
+            s.color = new Color(0.5f, 0.5f, 0.5f);
+            SetEntityProperty(BattleHelper.EntityProperties.StateContactHazard, false);
         }
     }
 
@@ -485,6 +512,12 @@ public class BE_Sawcrest : BattleEntity
         {
             sawActive = true;
         }
+        SetSawState(sawActive);
+    }
+
+    public override void PreBattle()
+    {
+        //hacky
         SetSawState(sawActive);
     }
 
@@ -785,6 +818,7 @@ public class BE_Coiler : BattleEntity
         if (GetEntityProperty(BattleHelper.EntityProperties.StateCharge))
         {
             SetEntityProperty(BattleHelper.EntityProperties.StateCharge, false);
+            SetEntityProperty(BattleHelper.EntityProperties.StateContactHazardHeavy, false);
             ResetDefenseTable();
             currMove = moveset[2];
         }
@@ -923,6 +957,7 @@ public class BM_Coiler_Charge : EnemyMove
     {
         yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
+        caller.SetEntityProperty(BattleHelper.EntityProperties.StateContactHazardHeavy);
         caller.SetDefense(BattleHelper.DamageType.Normal, 8);
     }
 }

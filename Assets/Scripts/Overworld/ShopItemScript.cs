@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 [System.Serializable]
 public class ShopItem
@@ -17,6 +18,13 @@ public class ShopItem
         AstralToken,
     }
     public Currency currency;
+    
+    public ShopItem(PickupUnion p_pickupUnion, int p_cost, Currency p_currency)
+    {
+        pickupUnion = p_pickupUnion;
+        cost = p_cost;
+        currency = p_currency;
+    }
 
     public static int ConvertCost(Currency target, int cost)
     {
@@ -38,6 +46,47 @@ public class ShopItem
                 return Mathf.CeilToInt(cost / 600f);
         }
         return cost;
+    }
+
+    //Todo: reference CommonText lines
+    public string ConvertCurrencyToString()
+    {
+        switch (currency)
+        {
+            case Currency.Coin:
+                return cost == 1 ? "coin" : "coins";
+            case Currency.Shard:
+                return cost == 1 ? "shard" : "shards";
+            case Currency.HP:
+                return "HP";
+            case Currency.EP:
+                return "EP";
+            case Currency.SE:
+                return "SE";
+            case Currency.AstralToken:
+                return cost == 1 ? "Astral Token" : "Astral Tokens";
+        }
+        return "somethings";
+    }
+
+    public static string CostToString(Currency currency, int cost)
+    {
+        switch (currency)
+        {
+            case Currency.Coin:
+                return cost.ToString() + " " + (cost == 1 ? "coin" : "coins");
+            case Currency.Shard:
+                return cost.ToString() + " " + (cost == 1 ? "shard" : "shards");
+            case Currency.HP:
+                return cost.ToString() + " HP";
+            case Currency.EP:
+                return cost.ToString() + " EP";
+            case Currency.SE:
+                return cost.ToString() + " SE";
+            case Currency.AstralToken:
+                return cost.ToString() + " " + (cost == 1 ? "Astral Token" : "Astral Tokens");
+        }
+        return cost.ToString() + "somethings";
     }
 
     //encounter level to difficulty level

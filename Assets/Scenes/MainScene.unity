@@ -996,6 +996,7 @@ MonoBehaviour:
   text_StateSprite: {fileID: 0}
   gameOverObject: {fileID: 0}
   defaultSpriteMaterial: {fileID: 0}
+  defaultSpriteSimpleMaterial: {fileID: 0}
   defaultSpriteFlickerMaterial: {fileID: 0}
   damageEffectStar: {fileID: 0}
   heartEffect: {fileID: 0}
@@ -1063,6 +1064,7 @@ MonoBehaviour:
   Cheat_QuadrupleStrengthEnviroEffects: 0
   Cheat_UnrestrictedTextEntry: 0
   Cheat_OverworldHazardImmunity: 0
+  Cheat_OverworldEncounterImmunity: 0
   Cheat_ControlNeverDisabled: 0
 --- !u!4 &1216657704
 Transform:

@@ -1,17 +1,56 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SignScript : MonoBehaviour, ITextSpeaker
+public class SignScript : WorldObject, ITextSpeaker
 {
-    public IEnumerator SignCutscene()
+    public string signstring;
+    public GameObject unreadIndicator;
+    public string globalFlag;
+
+    public bool hasUnread;
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        if (hasUnread && unreadIndicator != null && (globalFlag != null && globalFlag.Length > 0))
+        {
+            //attempt to parse
+            MainManager.GlobalFlag gf;
+            Enum.TryParse(globalFlag, out gf);
+            bool flag = MainManager.Instance.GetGlobalFlag(gf);
+            if (flag)
+            {
+                Destroy(unreadIndicator);
+            }
+        }
+
+        if (!hasUnread && unreadIndicator != null)
+        {
+            Destroy(unreadIndicator);
+        }
+    }
+
+    public virtual IEnumerator SignCutscene()
     {
         string[][] testTextFile = new string[4][];
         testTextFile[0] = new string[1];
-        testTextFile[1] = new string[1];
-        testTextFile[2] = new string[1];
-        testTextFile[3] = new string[1];
-        testTextFile[0][0] = "<sign><minibubble,false,l1,-1>This is a sign";
+        testTextFile[0][0] = FormattedString.ReplaceTextFileShorthand(signstring);
+
+        if ((globalFlag != null && globalFlag.Length > 0))
+        {
+            //attempt to parse
+            MainManager.GlobalFlag gf;
+            Enum.TryParse(globalFlag, out gf);
+            MainManager.Instance.SetGlobalFlag(gf, true);
+        }
+
+        if (unreadIndicator != null)
+        {
+            Destroy(unreadIndicator);
+        }
 
         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 0, this));
     }

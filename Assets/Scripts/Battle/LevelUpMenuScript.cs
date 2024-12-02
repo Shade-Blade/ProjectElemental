@@ -194,8 +194,8 @@ public class LevelUpMenuScript : MonoBehaviour
             //both numbers appear
             if (wilexAgilityIndicator.activeSelf)
             {
-                wilexAgilityIndicatorLeft.SetText(wilex.GetAgility(PlayerData.GetMaxEP(epUpgrades + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus))) + 2 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, wilex.entityID) + "", true, true);
-                wilexAgilityIndicatorRight.SetText(wilex.GetAgility(PlayerData.GetMaxEP(epUpgrades + 1 + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus))) + 2 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, wilex.entityID) + "", true, true);
+                wilexAgilityIndicatorLeft.SetText(wilex.GetAgility(PlayerData.GetMaxEP(epUpgrades + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus))) + 1 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, wilex.entityID) + "", true, true);
+                wilexAgilityIndicatorRight.SetText(wilex.GetAgility(PlayerData.GetMaxEP(epUpgrades + 1 + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus))) + 1 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, wilex.entityID) + "", true, true);
                 if (!lunaAgilityIndicator.activeSelf)
                 {
                     wilexAgilityIndicator.gameObject.transform.localPosition = Vector3.down * 45;
@@ -203,8 +203,8 @@ public class LevelUpMenuScript : MonoBehaviour
             }
             if (lunaAgilityIndicator.activeSelf)
             {
-                lunaAgilityIndicatorLeft.SetText(luna.GetAgility(PlayerData.GetMaxEP(epUpgrades + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus))) + 2 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, luna.entityID) + "", true, true);
-                lunaAgilityIndicatorRight.SetText(luna.GetAgility(PlayerData.GetMaxEP(epUpgrades + 1 + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus))) + 2 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, luna.entityID) + "", true, true);
+                lunaAgilityIndicatorLeft.SetText(luna.GetAgility(PlayerData.GetMaxEP(epUpgrades + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus))) + 1 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, luna.entityID) + "", true, true);
+                lunaAgilityIndicatorRight.SetText(luna.GetAgility(PlayerData.GetMaxEP(epUpgrades + 1 + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus))) + 1 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, luna.entityID) + "", true, true);
             }
             EPIndicatorLeft.SetText(PlayerData.GetMaxEP(epUpgrades + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus)) + "", true, true);
             EPIndicatorRight.SetText(PlayerData.GetMaxEP(epUpgrades + 1 + pd.BadgeEquippedCount(Badge.BadgeType.EPPlus)) + "", true, true);

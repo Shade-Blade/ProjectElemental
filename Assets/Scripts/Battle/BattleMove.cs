@@ -994,8 +994,8 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                     }
 
                     int rebound = pB.BadgeEquippedCount(Badge.BadgeType.StaminaRebound);
-                    int healAmount = (int)(0.001f + (pB.agility * rebound) / (1f + rebound));
-                    pB.HealStamina(pB.agility / 2);
+                    int healAmount = (int)(0.001f + (pB.agility * rebound) / (1f));
+                    pB.HealStamina(healAmount);
                     healEffects++;
                 }
 
@@ -1188,6 +1188,12 @@ public abstract class SoulMove : PlayerMove
             return pcaller.GetSoulMoveMaxLevel(GetTextIndex());
         }
         return 1;
+    }
+
+    //currently they use the same action command
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }
 
@@ -1479,7 +1485,7 @@ public abstract class Move : MonoBehaviour
     public abstract string GetDescription();
     
     //public abstract float GetBasePower();
-    public virtual string GetActionCommandDesc()
+    public virtual string GetActionCommandDesc(int level = 1)
     {
         return "";
     }

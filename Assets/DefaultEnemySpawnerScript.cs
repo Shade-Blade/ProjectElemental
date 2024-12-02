@@ -78,7 +78,7 @@ public class DefaultEnemySpawnerScript : WorldObject
 
         //Spawn the enemy using the encounter data
         BattleHelper.EntityID eid = encounter.encounterList[0].GetEntityID();
-        Debug.Log(encounter.encounterList[0]);
+        //Debug.Log(encounter.encounterList[0]);
 
         wed.spriteID = EnemyBuilder.EntityIDToSpriteID(eid).ToString();
         WorldEnemyEntity wee = SpawnWorldEntity(eid);

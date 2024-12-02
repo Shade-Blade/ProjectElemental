@@ -784,7 +784,7 @@ public class TagEntry
         //Note: You should put these right before the end or right before a <next> tag (i.e. a scenario where they are at the end of the scrolling)
         //(don't know what happens if you don't, might still work fine)
 
-        Prompt,     //Spawn a prompt menu (each argument pair is text and an argument, optional odd argument to determine where to go when B is pressed)
+        Prompt,     //Spawn a prompt menu (each argument pair is text and an argument, optional odd argument to determine where to go when B is pressed (0 indexed value into the list of options) (Special value -1: makes cancel give a value of -1) (If not present: can't cancel)
         ItemMenu,   //Spawn an item menu (1st arg = arg (set this to have a comma separated list of items to show, or a item number pair?)). 2nd arg = mode. Remove items using the passed result (which is the selected item)
         //To do later: KeyItemMenu, BadgeMenu, etc
         KeyItemMenu,    //similar logic to itemMenu (though I didn't put in as many options)

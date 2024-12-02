@@ -35,8 +35,9 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
     public ActionState state;
     public float stateTime;
 
-    public virtual void Start()
+    public override void Start()
     {
+        base.Start();
         if (!(areaFlag == null || areaFlag.Length == 0))
         {
             if (MainManager.Instance.GetAreaFlag(areaFlag))

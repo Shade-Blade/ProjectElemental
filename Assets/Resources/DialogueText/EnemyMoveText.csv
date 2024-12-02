@@ -166,7 +166,7 @@ CrystalCrab_DarkClaw,Dark Claw,(Targets All Enemies) Create a blast from your cl
 CrystalCrab_Hard_CounterClearClaw,(Hard) Counter - Clear Claw,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Hit an attacker with your claw to deal weak normal damage and remove their buffs, as well as inflicting Inverted for 3 turns. Inverted causes effects inflicted by the target to be inverted.",
 CrystalSlug_Slap,Slap,(Targets Any Enemy) Slap your body into a target to deal moderate normal damage.,(Higher Difficulties: Also inflicts Brittle for 3 turns.)
 CrystalSlug_ChillingStare,Chilling Stare,(Targets All Enemies) Stare strongly at all enemies to deal strong Light damage and inflict Freeze and Defense Down.,
-CrystalClam_HealingBreath,Healing Breath,(Targets All Allies) Heal all allies for a small amount.,(Higher Difficulties: Applies Mist Wall for 3 turns to one ally.)
+CrystalClam_HealingBreath,Healing Breath,(Targets All Allies) Heal all allies for a small amount.,(Higher Difficulties: Cures all negative effects from allies.)
 CrystalClam_CleansingBreath,Cleansing Breath,"(Targets All Enemies) Remove all positive effects from all enemies, and inflict Defocus 1 on them. Used only when all allies are at max HP.",(Higher Difficulties: Sometimes used instead of Healing Breath.)
 CrystalClam_Explode,Explode,"(Targets All Enemies) Explode to deal high Normal damage to all enemies, dying in the process. (Used when alone, or when all allies are also Crystal Clams.)",(Higher Difficulties: Used on turn 4 and later.)
 AuroraWing_RubyDust,Ruby Dust,"(Targets All Enemies, Targets All Allies) Spread Ruby mist around the battlefield to deal weak Fire damage to all targets and then apply Attack Up to all allies.",

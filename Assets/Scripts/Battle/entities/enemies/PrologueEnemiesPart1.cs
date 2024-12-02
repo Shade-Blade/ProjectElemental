@@ -256,7 +256,7 @@ public class BM_Sunflower_Hard_SolarBite : EnemyMove
                 {
                     case BattleHelper.EntityID.Sunflower:
                         bool hasStatus = caller.curTarget.HasStatus();
-                        caller.DealDamage(caller.curTarget, 7, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 6, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         if (!hasStatus)
                         {
                             caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Sunflame, 1, 3));

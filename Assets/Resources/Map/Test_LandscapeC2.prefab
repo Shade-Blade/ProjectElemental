@@ -800,6 +800,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -819,6 +821,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -1117,6 +1121,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -1136,6 +1142,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -2153,6 +2161,8 @@ MonoBehaviour:
     interactRadius: 0
     stompBoostable: 0
     stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
     tattleString: 
     talkStrings: []
   subObject: {fileID: 0}
@@ -2172,6 +2182,8 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  noShadow: 0
+  initialFacingAngle: 0
   usedFirstBounce: 0
   applyDefaultJumpLift: 0
   defaultJumpLift: 0
@@ -4356,7 +4368,7 @@ PrefabInstance:
     - target: {fileID: 1233203785286363785, guid: 49f41113baf7f4140aaf93fa680d96dc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1233203785286363785, guid: 49f41113baf7f4140aaf93fa680d96dc,
         type: 3}

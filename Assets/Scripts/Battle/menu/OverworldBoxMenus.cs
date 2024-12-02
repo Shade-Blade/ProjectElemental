@@ -157,7 +157,12 @@ public class OWItemBoxMenu : BoxMenu
 
         if (descriptorString != null)
         {
+            bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
         }
         else
         {
@@ -358,7 +363,13 @@ public class OWKeyItemBoxMenu : BoxMenu
 
         if (descriptorString != null)
         {
+            bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
+
         }
         else
         {
@@ -705,10 +716,10 @@ public class GenericBoxMenu : BoxMenu
         Color? tempColor = null;
 
         //Debug.Log(list.Count + " " + rightTextList.Count + " " + descriptionList.Count + " " + usageList.Count);
-        MainManager.ListPrint(list);
-        MainManager.ListPrint(rightTextList);
-        MainManager.ListPrint(descriptionList);
-        MainManager.ListPrint(usageList);
+        //MainManager.ListPrint(list);
+        //MainManager.ListPrint(rightTextList);
+        //MainManager.ListPrint(descriptionList);
+        //MainManager.ListPrint(usageList);
 
         for (int i = 0; i < list.Count; i++)
         {
@@ -759,6 +770,10 @@ public class GenericBoxMenu : BoxMenu
         {
             bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
         }
         else
         {
@@ -969,7 +984,13 @@ public class OWCharacterBoxMenu : BoxMenu
 
         if (descriptorString != null)
         {
+            bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
+
         }
         else
         {
@@ -1050,7 +1071,7 @@ public class PromptBoxMenu : BoxMenu
     public float width;
     
 
-    public static PromptBoxMenu BuildMenu(string[] text, string[] args, int p_cancelIndex = -1, string topText = null)
+    public static PromptBoxMenu BuildMenu(string[] text, string[] args, int p_cancelIndex = -2, string topText = null)
     {
         GameObject newObj = new GameObject("Prompt Box Menu");
         PromptBoxMenu newMenu;
@@ -1302,7 +1323,7 @@ public class PromptBoxMenu : BoxMenu
         {
             SelectOption();
         }
-        if (InputManager.GetButtonDown(InputManager.Button.B) && cancelIndex != -1 && lifetime > MIN_SELECT_TIME)
+        if (InputManager.GetButtonDown(InputManager.Button.B) && cancelIndex != -2 && lifetime > MIN_SELECT_TIME)
         {
             menuIndex = cancelIndex;
             SelectOption();
@@ -1319,6 +1340,10 @@ public class PromptBoxMenu : BoxMenu
 
     public override MenuResult GetResult()
     {
+        if (menuIndex == -1)
+        {
+            return new MenuResult(-1);
+        }
         return new MenuResult(menuEntries[menuIndex].rightText);
     }
 

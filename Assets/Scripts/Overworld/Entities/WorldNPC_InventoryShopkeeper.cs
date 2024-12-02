@@ -8,6 +8,7 @@ public class WorldNPC_InventoryShopkeeper : WorldNPCEntity
 
     public override void Start()
     {
+        base.Start();
         ShopInventoryInit();
 
         //mutate here because start will only be called once
@@ -31,7 +32,7 @@ public class WorldNPC_InventoryShopkeeper : WorldNPCEntity
 
     public override IEnumerator InteractCutscene()
     {
-        string[][] testTextFile = new string[8][];
+        string[][] testTextFile = new string[13][];
         testTextFile[0] = new string[1];
         testTextFile[1] = new string[1];
         testTextFile[2] = new string[1];
@@ -40,10 +41,16 @@ public class WorldNPC_InventoryShopkeeper : WorldNPCEntity
         testTextFile[5] = new string[1];
         testTextFile[6] = new string[1];
         testTextFile[7] = new string[1];
+        testTextFile[8] = new string[1];
+        testTextFile[9] = new string[1];
+        testTextFile[10] = new string[1];
+        testTextFile[11] = new string[1];
+        testTextFile[12] = new string[1];
 
-        testTextFile[0][0] = "Shop NPC main text<prompt,Buy stuff,1,Sell stuff,2,Cancel,3,2>";
-        testTextFile[1][0] = "Buy menu <dataget,arg,4><genericmenu,arg,4>";
-        testTextFile[2][0] = "Buy <var,0> for <var,1> coins?<prompt,Yes,1,No,2,1>";
+        /*
+        testTextFile[0][0] = "Shop NPC main text<prompt,Buy Items,1,Sell Items,2,Cancel,3,-1>";
+        testTextFile[1][0] = "Buy menu <dataget,arg,menu><genericmenu,arg,4>";
+        testTextFile[2][0] = "Buy <var,0> for <var,1> <var,2>?<prompt,Yes,1,No,2,1>";
         testTextFile[3][0] = "You are poor";
         testTextFile[4][0] = "Inventory full";
         testTextFile[5][0] = "You bought a thing";
@@ -55,6 +62,20 @@ public class WorldNPC_InventoryShopkeeper : WorldNPCEntity
         testTextFile[10][0] = "Sell <var,0> for <var,1> coins?<prompt,Yes,1,No,2,1>";
         testTextFile[11][0] = "Sell no items";
         testTextFile[12][0] = "Bye after selling";
+        */
+        testTextFile[0][0] = wed.talkStrings[0];
+        testTextFile[1][0] = wed.talkStrings[1];
+        testTextFile[2][0] = wed.talkStrings[2];
+        testTextFile[3][0] = wed.talkStrings[3];
+        testTextFile[4][0] = wed.talkStrings[4];
+        testTextFile[5][0] = wed.talkStrings[5];
+        testTextFile[6][0] = wed.talkStrings[6];
+        testTextFile[7][0] = wed.talkStrings[7];
+        testTextFile[8][0] = wed.talkStrings[8];
+        testTextFile[9][0] = wed.talkStrings[9];
+        testTextFile[10][0] = wed.talkStrings[10];
+        testTextFile[11][0] = wed.talkStrings[11];
+        testTextFile[12][0] = wed.talkStrings[12];
 
         int state = 0;
 
@@ -70,9 +91,14 @@ public class WorldNPC_InventoryShopkeeper : WorldNPCEntity
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 1, this));
                 break;
             case 2:
+                if (MainManager.Instance.playerData.itemInventory.Count == 0)
+                {
+                    yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 11, this));
+                    yield break;
+                }
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 8, this));
                 break;
-            case 3:
+            case -1:
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 7, this));
                 yield break;
         }
@@ -97,7 +123,7 @@ public class WorldNPC_InventoryShopkeeper : WorldNPCEntity
                 yield break;
             }
 
-            string[] vars = new string[] { PickupUnion.GetName(inventory[itemIndex].pickupUnion), inventory[itemIndex].cost + "" };
+            string[] vars = new string[] { PickupUnion.GetName(inventory[itemIndex].pickupUnion), inventory[itemIndex].cost + "", inventory[itemIndex].ConvertCurrencyToString() };
 
             yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 2, this, vars));
 
@@ -260,7 +286,7 @@ public class WorldNPC_InventoryShopkeeper : WorldNPCEntity
 
     public override string RequestTextData(string request)
     {
-        if (request.Equals("4"))
+        if (request.Equals("buymenu"))
         {
             //build inventory shopkeeper table
             List<PickupUnion> items = new List<PickupUnion>();

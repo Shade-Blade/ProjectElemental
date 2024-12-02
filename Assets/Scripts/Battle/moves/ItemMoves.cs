@@ -26,7 +26,7 @@ public class Item_GenericConsumable : ItemMove
 
         if (limited)
         {
-            if (BattleControl.Instance.GetUsedItemInventory(caller).Contains(GetItem()))
+            if (BattleControl.Instance.GetUsedItemInventory(caller).Find((e) => (e.type == GetItem().type)).type == GetItem().type)
             {
                 return false;
             }
@@ -400,7 +400,7 @@ public class Item_GenericConsumable : ItemMove
         {
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].CureEffects();
+                targets[i].CureEffects(false);
             }
         }
 
@@ -538,9 +538,39 @@ public class Item_GenericConsumable : ItemMove
         }
         //overheal divisor of 0 is no overheal
 
+
+        //put before applying effects
+        if (Item.GetProperty(ide, Item.ItemProperty.Miracle) != null)
+        {
+            if (delay)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            //apply miracle effect
+            for (int j = 0; j < targets.Count; j++)
+            {
+                if (targets[j].hp == 0)
+                {
+                    targets[j].HealHealth(targets[j].maxHP);
+                }
+                else
+                {
+                    BattleControl.Instance.CreateReviveParticles(targets[j], 4);    //note: the heal health call produces revive particles if it revives
+                    caller.InflictEffect(targets[j], new Effect(Effect.EffectType.Miracle, 1, Effect.INFINITE_DURATION));
+                }
+            }
+            delay = true;
+        }
+
+
         //Apply overheal effects
         if (ide.overhealDivisor > 0 && overheal > 0)
         {
+            if (delay)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
             for (int i = 0; i < targets.Count; i++)
             {
                 switch (ide.overheal)
@@ -806,7 +836,6 @@ public class Item_GenericConsumable : ItemMove
         }
 
 
-
         if (delay)
         {
             yield return new WaitForSeconds(0.5f);
@@ -877,28 +906,7 @@ public class Item_GenericConsumable : ItemMove
             {
                 yield return new WaitForSeconds(0.5f);
             }
-        }
-
-        if (Item.GetProperty(ide, Item.ItemProperty.Miracle) != null)
-        {
-            if (delay)
-            {
-                yield return new WaitForSeconds(0.5f);
-            }
-
-            //apply miracle effect
-            for (int j = 0; j < targets.Count; j++)
-            {
-                if (targets[j].hp == 0)
-                {
-                    targets[j].HealHealth(targets[j].maxHP);
-                } else
-                {
-                    BattleControl.Instance.CreateReviveParticles(targets[j], 4);    //note: the heal health call produces revive particles if it revives
-                    caller.InflictEffect(targets[j], new Effect(Effect.EffectType.Miracle, 1, Effect.INFINITE_DURATION));
-                }
-            }
-        }
+        }        
 
         //target weak stomach
         for (int i = 0; i < targets.Count; i++)

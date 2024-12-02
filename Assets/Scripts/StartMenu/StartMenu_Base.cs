@@ -22,6 +22,7 @@ public class StartMenu_Base : MenuHandler
     public RectTransform selector;
 
     public TextDisplayer controlHint;
+    public TextDisplayer versionString;
 
     float inputDir;
 
@@ -60,6 +61,8 @@ public class StartMenu_Base : MenuHandler
         }
         controlHint.gameObject.SetActive(true);
         controlHint.SetText("Select <buttonsprite,A> - Go Back <buttonsprite,B> - Up <buttonsprite,Up> - Down <buttonsprite,Down>", true, true);
+
+        versionString.SetText("Version: " + MainManager.GetVersionString(), true, true);
 
         if (firstInit)
         {

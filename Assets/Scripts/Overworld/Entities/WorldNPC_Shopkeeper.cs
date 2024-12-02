@@ -50,7 +50,7 @@ public class WorldNPC_Shopkeeper : WorldNPCEntity, IShopkeeperEntity
         {
             countstring = pd.itemInventory.FindAll((e) => (e.type == sis.shopItem.pickupUnion.item.type)).Count.ToString();
         }
-        string[] tempVars = new string[] { PickupUnion.GetName(sis.shopItem.pickupUnion), sis.shopItem.cost.ToString(), sis.shopItem.currency.ToString(), countstring };
+        string[] tempVars = new string[] { PickupUnion.GetName(sis.shopItem.pickupUnion), sis.shopItem.cost.ToString(), sis.shopItem.ConvertCurrencyToString(), countstring };
 
         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 0, this, tempVars));
 

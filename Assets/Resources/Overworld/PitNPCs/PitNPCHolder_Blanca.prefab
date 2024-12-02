@@ -51,7 +51,7 @@ MonoBehaviour:
   - {fileID: 1326637946473569118}
   - {fileID: 2334149157081566588}
   npc: {fileID: 8656804642702942408}
-  pitNPC: 4
+  pitNPC: 15
 --- !u!1 &1589136137321852789
 GameObject:
   m_ObjectHideFlags: 0

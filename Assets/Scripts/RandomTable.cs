@@ -93,6 +93,32 @@ public class RandomTable<T>
     {
         return list[RandomGenerator.GetIntRange(0, list.Count)];
     }
+
+    //Forbids duplicates, if list has less elements than count, you will just get the entire list back (though it will be in a shuffled order)
+    public static List<T> ChooseRandom(List<T> list, int count)
+    {
+        List<T> output = new List<T>();
+
+        List<T> copy = new List<T>();
+        for (int i = 0; i < list.Count; i++)
+        {
+            copy.Add(list[i]);
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            if (copy.Count == 0)
+            {
+                return output;
+            }
+
+            T newitem = ChooseRandom(copy);
+            output.Add(newitem);
+            copy.Remove(newitem);
+        }
+
+        return output;
+    }
 }
 
 //return a thing

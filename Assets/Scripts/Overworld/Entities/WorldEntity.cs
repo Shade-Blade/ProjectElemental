@@ -214,12 +214,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
         if (wed != null && !wed.inactive)
         {
             SetWorldEntityData(wed);
-        }
-
-        if (!noShadow && dropShadow == null)
-        {
-            dropShadow = Instantiate(Resources.Load<GameObject>("Overworld/Other/DropShadow"), transform);
-        }
+        }        
 
         rb = GetComponent<Rigidbody>();
         if (rb != null)
@@ -261,6 +256,15 @@ public class WorldEntity : WorldObject, ITextSpeaker
             SetColliderInformationWithAnimationController();
         }
 
+        
+    }
+
+    public virtual void Start()
+    {
+        if (!noShadow && dropShadow == null)
+        {
+            dropShadow = Instantiate(Resources.Load<GameObject>("Overworld/Other/DropShadow"), transform);
+        }
         //Fix bug with the shadows of newly spawned in entities
         DropShadowUpdate(true);
     }

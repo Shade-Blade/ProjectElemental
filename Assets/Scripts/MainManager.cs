@@ -1026,6 +1026,17 @@ public class PlayerData
             });
         }
     }
+    public void RemoveRibbon(Ribbon b)
+    {
+        ribbonInventory.Remove(b);
+        for (int i = 0; i < party.Count; i++)
+        {
+            if (party[i].ribbon.Equals(b))
+            {
+                party[i].ribbon = new Ribbon(Ribbon.RibbonType.None);
+            }
+        }
+    }
 
     public Ribbon GetVisualRibbon(BattleHelper.EntityID eid)
     {
@@ -1193,6 +1204,20 @@ public class PlayerData
             }
         }
         return false;
+    }
+    public bool RemoveBadge(Badge b)
+    {
+        bool exists = badgeInventory.Remove(b);
+        equippedBadges.Remove(b);
+        partyEquippedBadges.Remove(b);
+        for (int i = 0; i < party.Count; i++)
+        {
+            party[i].equippedBadges.Remove(b);
+        }
+
+        usedSP = CalculateUsedSP();
+
+        return exists;
     }
 
     public Badge.BadgeType[] Cheat_AlmostAllBadgesBlacklist()
@@ -2272,6 +2297,7 @@ public class MainManager : MonoBehaviour
 
     //general sprite material
     public Material defaultSpriteMaterial;
+    public Material defaultSpriteSimpleMaterial;
     public Material defaultSpriteFlickerMaterial;
 
     //Other sprites
@@ -2353,6 +2379,7 @@ public class MainManager : MonoBehaviour
         GV_BadgeRandomPermutation,
         GV_RibbonRandomPermutation,
         GV_PitFloor,
+        GV_PitAltar,
     }
     public enum GlobalFlag //so the save file will have these as text (cross version compatibility)
     {
@@ -5140,6 +5167,7 @@ public class MainManager : MonoBehaviour
         gameOverObject = gameOverObject ? gameOverObject : (GameObject)Resources.Load("GameOver/GameOverControl");
 
         defaultSpriteMaterial = Resources.Load<Material>("Sprites/Materials/ProperSpriteGeneral");
+        defaultSpriteSimpleMaterial = Resources.Load<Material>("Sprites/Materials/ProperSpriteSimple");
         defaultSpriteFlickerMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteFlicker");
 
         damageEffectStar = Resources.Load<Sprite>("Sprites/Particle Effect/5Star");
@@ -5297,6 +5325,10 @@ public class MainManager : MonoBehaviour
 
 
     public bool Save()
+    {
+        return Save(saveIndex);
+    }
+    public bool Save(int saveIndex)
     {
         //Attempts to save with the current name and index
         string data = GetSaveFileString();
@@ -5664,7 +5696,9 @@ public class MainManager : MonoBehaviour
         //Things to save: global flags and vars, player data, current map + current position (so you respawn correctly), current area flags and vars?
         //The stuff above should comprise everything you want to save (persistent data should be in those)
 
-        string output = saveName;
+        string output = saveName.Replace("\n", "");
+        output += "\n";
+        output += GetVersionString();
         output += "\n";
         output += UnparseGlobalFlagDictionary(globalFlags);
         output += "\n";
@@ -5681,6 +5715,10 @@ public class MainManager : MonoBehaviour
         output += playerData.ToString();
 
         return output;
+    }
+    public static string GetVersionString()
+    {
+        return "d_rh_v0.0";
     }
     public string GetBaseSaveFileString(string name)
     {
@@ -5699,15 +5737,17 @@ public class MainManager : MonoBehaviour
 
         string output = name;
         output += "\n";
+        output += GetVersionString();
+        output += "\n";
         output += UnparseGlobalFlagDictionary(newFlags);
         output += "\n";
         output += UnparseGlobalVarDictionary(new Dictionary<GlobalVar, string>());
         output += "\n";
-        output += WorldLocation.SolarGrove;
+        output += WorldLocation.None;
         output += ",";
-        output += MapID.Test_PitFloor;
+        output += MapID.Test_PitLobby;
         output += ",";
-        output += Vector3ToString(Vector3.up * 15);
+        output += Vector3ToString(Vector3.up * 15 + Vector3.forward * 1.5f);
         output += "\n";
         output += 0;
         output += "\n";
@@ -5727,10 +5767,16 @@ public class MainManager : MonoBehaviour
 
         saveName = split[0];
 
-        Dictionary<GlobalFlag, bool> new_globalFlags = ParseGlobalFlagString(split[1]);
-        Dictionary<GlobalVar, string> new_globalVars = ParseGlobalVarString(split[2]);
+        string versionName = split[1];
 
-        string[] splitB = split[3].Split(",");
+        //future TODO: version specific save translation (i.e. if I ever change how data is set up I have to handle that specially)
+        //  But I am likely not going to change any names of flags, vars, etc that you can ever set normally to avoid save incompabitility
+
+
+        Dictionary<GlobalFlag, bool> new_globalFlags = ParseGlobalFlagString(split[2]);
+        Dictionary<GlobalVar, string> new_globalVars = ParseGlobalVarString(split[3]);
+
+        string[] splitB = split[4].Split(",");
 
         WorldLocation wl = WorldLocation.None;
         MapID mid = MapID.None;
@@ -5743,9 +5789,9 @@ public class MainManager : MonoBehaviour
         newPos = ParseVector3(splitB[2]);
 
         float playTime = 0;
-        float.TryParse(split[4], NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out playTime);
+        float.TryParse(split[5], NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out playTime);
 
-        PlayerData newPlayerData = PlayerData.Parse(split, 5, out int _);
+        PlayerData newPlayerData = PlayerData.Parse(split, 6, out int _);
 
         //note that there are flags that influence the max stat calculation
         //so do this before checking max stats
@@ -5948,12 +5994,15 @@ public class MainManager : MonoBehaviour
 
                 string[] split = retrievedFile.Split("\n");
 
-                string saveName = split[0];
+                string saveName = split[0].Replace("\r", "");
 
-                Dictionary<GlobalFlag, bool> new_globalFlags = ParseGlobalFlagString(split[1]);
-                Dictionary<GlobalVar, string> new_globalVars = ParseGlobalVarString(split[2]);
+                string versionName = split[1];
 
-                string[] splitB = split[3].Split(",");
+
+                Dictionary<GlobalFlag, bool> new_globalFlags = ParseGlobalFlagString(split[2]);
+                Dictionary<GlobalVar, string> new_globalVars = ParseGlobalVarString(split[3]);
+
+                string[] splitB = split[4].Split(",");
 
                 WorldLocation wl = WorldLocation.None;
                 MapID mid = MapID.None;
@@ -5965,9 +6014,9 @@ public class MainManager : MonoBehaviour
                 newPos = ParseVector3(splitB[2]);
 
                 float playTime = 0;
-                float.TryParse(split[4], NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out playTime);
+                float.TryParse(split[5], NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out playTime);
 
-                PlayerData newPlayerData = PlayerData.Parse(split, 5, out int _);
+                PlayerData newPlayerData = PlayerData.Parse(split, 6, out int _);
 
                 output.name = (index + 1) + ". " + saveName;
                 output.worldLocation = GetAreaName(wl);
@@ -5990,11 +6039,19 @@ public class MainManager : MonoBehaviour
     }
     public string GetSpecialString(Dictionary<GlobalFlag, bool> globalFlags, Dictionary<GlobalVar, string> globalVars)
     {
-        return "Special<itemsprite,1><itemsprite,2>";
+        return "";
     }
     public string GetProgressString(Dictionary<GlobalFlag, bool> globalFlags, Dictionary<GlobalVar, string> globalVars)
     {
-        return "Progress<itemsprite,1><itemsprite,2>";
+        if (globalVars.ContainsKey(GlobalVar.GV_PitFloor))
+        {
+            string pitfloor = globalVars[GlobalVar.GV_PitFloor];
+
+            return "Floor " + pitfloor;
+        } else
+        {
+            return "";
+        }
     }
     public Color? GetSaveColor(Dictionary<GlobalFlag, bool> globalFlags, Dictionary<GlobalVar, string> globalVars)
     {
@@ -6279,6 +6336,11 @@ public class MainManager : MonoBehaviour
 
     public IEnumerator ChangeMap(MapID mapName, int exit, Vector3 offsetPos = default, float yawOffset = 0)
     {
+        if (mapName == MapID.None)
+        {
+            Debug.LogError("Invalid map ID");
+        }
+
         WorldLocation wl = WorldLocation.None;
         SkyboxID sid = curSkybox;
         //delete current map
@@ -6467,7 +6529,7 @@ public class MainManager : MonoBehaviour
     {
         for (int i = 0; i < interactTriggers.Count; i++)
         {
-            if (interactTriggers[i] == null)
+            if (interactTriggers[i] == null || !interactTriggers[i].isActiveAndEnabled)
             {
                 interactTriggers.RemoveAt(i);
                 i--;

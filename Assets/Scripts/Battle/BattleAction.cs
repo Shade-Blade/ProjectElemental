@@ -431,13 +431,13 @@ public class BA_Rest : BattleAction
             case Ribbon.RibbonType.ExpertRibbon:
                 if (ribbonPower)
                 {
-                    caller.CureEffects();
+                    caller.CureEffects(false);
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Seal, 1, (sbyte)(3 * ribbonMult)));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Immunity, 1, (sbyte)(longRestBoost * ribbonMult * 3)));
                 }
                 else
                 {
-                    caller.CureEffects();
+                    caller.CureEffects(false);
                     //secret
                     if (longRestBoost > 1)
                     {

@@ -6,6 +6,8 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
 {
     public float waitTime;
     public const float CONTROL_WAIT_TIME = 5;
+    public const float CONTROL_IGNORE_TIME = 0.3f; //block all other inputs after (so that you can rebind A without immediately selecting again)
+    public float controlIgnoreTime;
 
     public KeyCode lastKeyCode;
 
@@ -67,6 +69,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
             lastKeyCode = e.keyCode;
             //Debug.Log("Correctly see " + lastKeyCode);
             waitTime = 0;
+            controlIgnoreTime = CONTROL_IGNORE_TIME;
             return;
         }
     }
@@ -92,10 +95,18 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
             waitTime = 0;
         }
 
+        if (controlIgnoreTime > 0)
+        {
+            controlIgnoreTime -= Time.deltaTime;
+        } else
+        {
+            controlIgnoreTime = 0;
+        }
+
         int oc = GetObjectCount();
         if (oc > 0)
         {
-            if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) != -inputDir) || InputManager.GetAxisVertical() == 0)
+            if ((controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) != -inputDir) || InputManager.GetAxisVertical() == 0)
             {
                 holdDur = 0;
                 holdValue = 0;
@@ -138,7 +149,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
                 }
             }
 
-            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Z))
+            if (controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Z))
             {
                 if (index == oc - 1)
                 {
@@ -158,7 +169,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
                 SendUpdate();
             }
 
-            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Y))
+            if (controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Y))
             {
                 if (index == 0)
                 {
@@ -178,7 +189,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
                 SendUpdate();
             }
 
-            if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) == -inputDir) && InputManager.GetAxisVertical() != 0)
+            if ((controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) == -inputDir) && InputManager.GetAxisVertical() != 0)
             {
                 holdDur += Time.deltaTime;
 
@@ -214,12 +225,12 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
                 }
             }
 
-            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+            if (controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
             {
                 //go to submenu
                 Select();
             }
-            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+            if (controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
                 PopSelf();
             }
@@ -228,7 +239,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
         {
             //No items
 
-            if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
+            if (controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
                 PopSelf();
             }
@@ -283,6 +294,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
             }
 
             waitTime = CONTROL_WAIT_TIME;
+            lastKeyCode = 0;
             if (index <= 3)
             {
                 StartCoroutine(SetDirectionKeyCode(index));

@@ -591,7 +591,7 @@ public class BM_Shared_Hard_CounterRush : EnemyMove
                         caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         break;
                     case BattleHelper.EntityID.Sunnybud:
-                        caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         break;
                     case BattleHelper.EntityID.MiracleBloom:
                         caller.DealDamage(caller.curTarget, 8, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
@@ -695,8 +695,14 @@ public class BM_Shared_Hard_CounterRoar : EnemyMove
         yield return new WaitForSeconds(0.5f);
         foreach (BattleEntity entity in battleEntityList)
         {
-            caller.DealDamage(entity, 0, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
-            caller.InflictEffectBuffered(entity, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
+            if (caller.GetAttackHit(entity, BattleHelper.DamageType.Normal, 0))
+            {
+                caller.DealDamage(entity, 0, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffectBuffered(entity, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
+            } else
+            {
+                caller.InvokeMissEvents(entity);
+            }
         }
     }
 }

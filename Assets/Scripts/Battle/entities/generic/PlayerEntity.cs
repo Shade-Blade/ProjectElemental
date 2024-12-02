@@ -410,31 +410,65 @@ public class PlayerEntity : BattleEntity
     {
         PlayerTurnController ptc = PlayerTurnController.Instance;
 
-        SM_Revitalize r = ptc.GetOrAddComponent<SM_Revitalize>();
-        SM_Hasten sp = ptc.GetOrAddComponent<SM_Hasten>();
-        SM_LeafStorm les = ptc.GetOrAddComponent<SM_LeafStorm>();
-        SM_ElectroDischarge ed = ptc.GetOrAddComponent<SM_ElectroDischarge>();
-        SM_MistWave miw = ptc.GetOrAddComponent<SM_MistWave>();
-        SM_Overheat oh = ptc.GetOrAddComponent<SM_Overheat>();
-        SM_VoidCrush vc = ptc.GetOrAddComponent<SM_VoidCrush>();
-        SM_FlashFreeze ff = ptc.GetOrAddComponent<SM_FlashFreeze>();
-        SM_Cleanse c = ptc.GetOrAddComponent<SM_Cleanse>();
-        SM_Blight b = ptc.GetOrAddComponent<SM_Blight>();
-        SM_ElementalConflux cb = ptc.GetOrAddComponent<SM_ElementalConflux>();
-        SM_PrismaticBlast ad = ptc.GetOrAddComponent<SM_PrismaticBlast>();
+        string pitaltar = MainManager.Instance.GetGlobalVar(MainManager.GlobalVar.GV_PitAltar);
+        if (pitaltar == null)
+        {
+            MainManager.Instance.SetGlobalVar(MainManager.GlobalVar.GV_PitAltar, 0.ToString());
+            pitaltar = MainManager.Instance.GetGlobalVar(MainManager.GlobalVar.GV_PitAltar);
+        }
+        int altar = int.Parse(pitaltar);
 
-        soulMoves.Add(r);
-        soulMoves.Add(sp);
-        soulMoves.Add(les);
-        soulMoves.Add(ed);
-        soulMoves.Add(miw);
-        soulMoves.Add(oh);
-        soulMoves.Add(vc);
-        soulMoves.Add(ff);
-        soulMoves.Add(c);
-        soulMoves.Add(b);
-        soulMoves.Add(cb);
-        soulMoves.Add(ad);
+        if (altar >= 1)
+        {
+            SM_Revitalize r = ptc.GetOrAddComponent<SM_Revitalize>();
+            soulMoves.Add(r);
+            SM_Hasten sp = ptc.GetOrAddComponent<SM_Hasten>();
+            soulMoves.Add(sp);
+        }
+        if (altar >= 2)
+        {
+            SM_LeafStorm les = ptc.GetOrAddComponent<SM_LeafStorm>();
+            soulMoves.Add(les);
+        }
+        if (altar >= 3)
+        {
+            SM_ElectroDischarge ed = ptc.GetOrAddComponent<SM_ElectroDischarge>();
+            soulMoves.Add(ed);
+        }
+        if (altar >= 4)
+        {
+            SM_MistWave miw = ptc.GetOrAddComponent<SM_MistWave>();
+            soulMoves.Add(miw);
+        }
+        if (altar >= 5)
+        {
+            SM_Overheat oh = ptc.GetOrAddComponent<SM_Overheat>();
+            soulMoves.Add(oh);
+        }
+        if (altar >= 6)
+        {
+            SM_VoidCrush vc = ptc.GetOrAddComponent<SM_VoidCrush>();
+            soulMoves.Add(vc);
+        }
+        if (altar >= 7)
+        {
+            SM_FlashFreeze ff = ptc.GetOrAddComponent<SM_FlashFreeze>();
+            soulMoves.Add(ff);
+        }
+        if (altar >= 8)
+        {
+            SM_Cleanse c = ptc.GetOrAddComponent<SM_Cleanse>();
+            soulMoves.Add(c);
+            SM_Blight b = ptc.GetOrAddComponent<SM_Blight>();
+            soulMoves.Add(b);
+        }
+        if (altar >= 9)
+        {
+            SM_ElementalConflux cb = ptc.GetOrAddComponent<SM_ElementalConflux>();
+            soulMoves.Add(cb);
+            SM_PrismaticBlast ad = ptc.GetOrAddComponent<SM_PrismaticBlast>();
+            soulMoves.Add(ad);
+        }
     }
     public void AddTactics()
     {
@@ -894,36 +928,43 @@ public class PlayerEntity : BattleEntity
         switch (index)
         {
             case 0:
-                return 2;
+                return 1;
             case 1:
-                return 2;
+                return 1;
             case 2:
-                return 2;
+                return 1;
             case 3:
-                return 2;
+                return 1;
             case 4:
-                return 2;
+                return 1;
             case 5:
-                return 2;
+                return 1;
             case 6:
-                return 2;
+                return 1;
             case 7:
-                return 2;
+                return 1;
             case 8:
-                return 2;
+                return 1;
             case 9:
-                return 2;
+                return 1;
             case 10:
-                return 2;
+                return 1;
             case 11:
-                return 2;
+                return 1;
         }
-        return 2;
+        return 1;
     }
 
     public override IEnumerator FirstStrike(BattleStartArguments.FirstStrikeMove move = BattleStartArguments.FirstStrikeMove.Default)
     {
         PlayerMove bmove = null; // jumpMoves[0];
+
+        //this is usually good (weapon has higher damage than stomp usually, no contact hazards)
+        //weaker than double jump / super jump first strikes but don't really want to give you those for free?
+        if (move == BattleStartArguments.FirstStrikeMove.Default)
+        {
+            move = BattleStartArguments.FirstStrikeMove.Weapon;
+        }
 
         switch (move)   //note: will mess up if the wrong character first strikes in an invalid way (e.g. Luna with Double Jump), though the moves in those positions are similar ish
         {
@@ -1958,7 +1999,7 @@ public class PlayerEntity : BattleEntity
                 {
                     damage -= 1;
                 }
-                if (RibbonEquipped(Ribbon.RibbonType.ExpertRibbon, true))
+                if (RibbonEquipped(Ribbon.RibbonType.ExpertRibbon, false))
                 {
                     damage -= 2;
                 }
@@ -2153,8 +2194,8 @@ public class PlayerEntity : BattleEntity
                 BattleControl.Instance.CreateEffectParticles(GetEffectEntry(Effect.EffectType.Miracle), this);
                 TokenRemoveOne(Effect.EffectType.Miracle);
                 SetEntityProperty(BattleHelper.EntityProperties.NoMiracle, true);
-                damage = 0;
-                //damage = hp - 1;
+                //damage = 0;
+                damage = hp - 1;
             }
         }
 
@@ -2499,12 +2540,12 @@ public class PlayerEntity : BattleEntity
         bool widenWindow = false;
         bool narrowWindow = false;
 
-        if (RibbonEquipped(Ribbon.RibbonType.BeginnerRibbon, true))
+        if (RibbonEquipped(Ribbon.RibbonType.BeginnerRibbon, false))
         {
             widenWindow = true;
         }
 
-        if (RibbonEquipped(Ribbon.RibbonType.ExpertRibbon, true))
+        if (RibbonEquipped(Ribbon.RibbonType.ExpertRibbon, false))
         {
             narrowWindow = true;
         }
@@ -3122,7 +3163,7 @@ public class PlayerEntity : BattleEntity
 
         if (BadgeEquipped(Badge.BadgeType.RagesPower) && HasEffect(Effect.EffectType.Berserk))
         {
-            bonus += 2 * BadgeEquippedCount(Badge.BadgeType.RagesPower);
+            bonus += 1 * BadgeEquippedCount(Badge.BadgeType.RagesPower);
         }
 
         if (other != null && other.BadgeEquipped(Badge.BadgeType.RageRally) && other.HasEffect(Effect.EffectType.Berserk))
@@ -3325,7 +3366,7 @@ public class PlayerEntity : BattleEntity
     {
         int bonus = 0;
 
-        bonus += 2 * BadgeEquippedCount(Badge.BadgeType.AgilityBoost);
+        bonus += 1 * BadgeEquippedCount(Badge.BadgeType.AgilityBoost);
         /*
         if (BadgeEquipped(Badge.BadgeType.AgilityBoost))
         {
@@ -3626,7 +3667,7 @@ public class PlayerEntity : BattleEntity
 
             if (hard)
             {
-                int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(1, power, cumulativeAttackHitCount);
+                int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(2, power, cumulativeAttackHitCount);
                 if (procSeasideAir > 0)
                 {
                     InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)procSeasideAir, Effect.INFINITE_DURATION));
@@ -3634,7 +3675,7 @@ public class PlayerEntity : BattleEntity
             }
             else
             {
-                int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(2f, power, cumulativeAttackHitCount);
+                int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(4, power, cumulativeAttackHitCount);
                 if (procSeasideAir > 0)
                 {
                     InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)procSeasideAir, Effect.INFINITE_DURATION));
@@ -5084,6 +5125,9 @@ public class PlayerEntity : BattleEntity
             int heal = Mathf.CeilToInt((BadgeEquippedCount(Badge.BadgeType.LastBurst) * BattleControl.Instance.GetMaxEP(this)) / 2.0f);
             HealEnergy(heal);
         }
+
+        //logic
+        stamina = 0;
     }
     public override void Update()
     {
@@ -5137,9 +5181,15 @@ public class PlayerEntity : BattleEntity
     public override void SetIdleAnimation()
     {
         BattleControl.Instance.playerData.GetPlayerDataEntry(entityID).hp = hp;
-        if (!alive || dead)
+        if (dead)
         {
             SetAnimation("dead");
+            return;
+        }
+        if (!alive)
+        {
+            //Don't do anything?
+            //!alive and !dead is a transition state?
             return;
         }
         if (HasEffect(Effect.EffectType.Freeze) || HasEffect(Effect.EffectType.TimeStop))

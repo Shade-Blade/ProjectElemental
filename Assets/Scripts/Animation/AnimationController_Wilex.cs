@@ -75,7 +75,6 @@ public class AnimationController_Wilex : AnimationController_Player
                 targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect5_Wilex");
                 break;
         }
-        Debug.Log(targetMaterial);
         sprite.material = targetMaterial;
     }
 

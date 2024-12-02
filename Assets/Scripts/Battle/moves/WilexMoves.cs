@@ -239,6 +239,11 @@ public class WM_HighStomp : WilexMove
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
+    }
 }
 
 public class WM_Focus : WilexMove
@@ -279,10 +284,10 @@ public class WM_Focus : WilexMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -354,6 +359,11 @@ public class WM_Focus : WilexMove
     }
     public override void PostMove(BattleEntity caller, int level = 1)
     {
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }
 
@@ -510,6 +520,11 @@ public class WM_MultiStomp : WilexMove
 
         return val + "?";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
+    }
 }
 
 public class WM_ElectroStomp : WM_HighStomp
@@ -634,6 +649,11 @@ public class WM_ElectroStomp : WM_HighStomp
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
+    }
 }
 
 public class WM_Taunt : WilexMove
@@ -661,10 +681,10 @@ public class WM_Taunt : WilexMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -742,6 +762,11 @@ public class WM_Taunt : WilexMove
         {
             return "<highlightnocolor>(" + hp + ")</highlightnocolor>";
         }
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }
 
@@ -854,6 +879,11 @@ public class WM_ParalyzeStomp : WM_HighStomp
         }
 
         return outString;
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
     }
 }
 
@@ -1008,6 +1038,11 @@ public class WM_FlameStomp : WM_HighStomp
 
 
         return val + "";
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
     }
 }
 
@@ -1204,6 +1239,11 @@ public class WM_DoubleStomp : WilexMove
 
         return outstring;
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
+    }
 }
 
 public class WM_Overstomp : WilexMove
@@ -1350,6 +1390,11 @@ public class WM_Overstomp : WilexMove
         int reval = caller.DealDamageCalculation(target, sd + 3 * level - 3, 0, (ulong)BattleHelper.DamageProperties.ContactHazard);
 
         return val + "<line><highlightdangercolor>Recoil: " + reval + "</highlightdangercolor>";
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
     }
 }
 
@@ -1563,6 +1608,11 @@ public class WM_SmartStomp : WM_HighStomp
 
         return outString;
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
+    }
 }
 
 public class WM_TeamQuake : WilexMove
@@ -1658,11 +1708,11 @@ public class WM_TeamQuake : WilexMove
         {
             //Debug.Log(h);
             int sd = 2;
-            AC_PressButtonTimed actionCommand = null;
+            AC_PressATimed actionCommand = null;
             if (caller is PlayerEntity pcaller) //we have technology
             {
                 sd = pcaller.GetStompDamage();
-                actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+                actionCommand = gameObject.AddComponent<AC_PressATimed>();
                 actionCommand.Init(pcaller);
                 actionCommand.Setup(0.5f);
             }
@@ -1822,6 +1872,11 @@ public class WM_TeamQuake : WilexMove
 
         return outstring;
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
+    }
 }
 
 public class WM_EggToss : WilexMove
@@ -1913,10 +1968,10 @@ public class WM_EggToss : WilexMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -2023,6 +2078,11 @@ public class WM_EggToss : WilexMove
     }
     public override void PostMove(BattleEntity caller, int level = 1)
     {
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }
 
@@ -2179,6 +2239,11 @@ public class WM_Slash : WilexMove
         int val = caller.DealDamageCalculation(target, sd, 0, propertyBlock);
 
         return val + "";
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
     }
 }
 
@@ -2472,6 +2537,11 @@ public class WM_MultiSlash : WM_Slash
 
         return outstring;
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_MashLeft.GetACDesc();
+    }
 }
 
 public class WM_SlipSlash : WilexMove
@@ -2719,6 +2789,11 @@ public class WM_SlipSlash : WilexMove
 
         return val + "?<line>Slip: " + slipVal + "?";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class WM_PoisonSlash : WM_Slash
@@ -2823,6 +2898,11 @@ public class WM_PoisonSlash : WM_Slash
         }
 
         return outString;
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
     }
 }
 
@@ -2954,6 +3034,11 @@ public class WM_PreciseStab : WM_Slash
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class WM_SwordDischarge : WilexMove
@@ -3063,6 +3148,11 @@ public class WM_SwordDischarge : WilexMove
         int val = caller.DealDamageCalculation(target, sd - 1 + level * 4, BattleHelper.DamageType.Air, 0);
 
         return val + "";
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
     }
 }
 
@@ -3242,6 +3332,11 @@ public class WM_SwordDance : WilexMove
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class WM_BoomerangSlash : WilexMove
@@ -3381,6 +3476,11 @@ public class WM_BoomerangSlash : WilexMove
 
         return outstring;
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class WM_DarkSlash : WM_Slash
@@ -3511,6 +3611,11 @@ public class WM_DarkSlash : WM_Slash
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class WM_Aetherize : WilexMove
@@ -3561,10 +3666,10 @@ public class WM_Aetherize : WilexMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -3653,6 +3758,11 @@ public class WM_Aetherize : WilexMove
     }
     public override void PostMove(BattleEntity caller, int level = 1)
     {
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }
 
@@ -3768,6 +3878,11 @@ public class WM_FlameBat : WilexMove
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class WM_AstralWall : WilexMove
@@ -3818,10 +3933,10 @@ public class WM_AstralWall : WilexMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -3910,5 +4025,10 @@ public class WM_AstralWall : WilexMove
     }
     public override void PostMove(BattleEntity caller, int level = 1)
     {
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }

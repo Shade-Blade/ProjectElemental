@@ -1,6 +1,6 @@
 Index,Name,Description Easy,Description Hard
 ElectricWind,Electric Wind,"You lose <var,2> EP every <var,3> turn(s). Your Air/Electric attacks deal 1 more damage.","You lose <var,0> EP every <var,1> turn(s). Your Air/Electric attacks deal 1 more damage."
-SeasideAir,Seaside Air,"You receive <var,2> Sunder every <var,3> times you attack. Your Water attacks deal 2 more damage.","You receive <var,0> Sunder every <var,1> times you attack. Your Water attacks deal 2 more damage."
+SeasideAir,Seaside Air,"You receive <var,14> Sunder every <var,15> times you attack. Your Water attacks deal 2 more damage.","You receive <var,2> Sunder every <var,3> times you attack. Your Water attacks deal 2 more damage."
 ScaldingHeat,Scalding Heat,"You get Defense Down <var,2> for 2 turns every <var,3> turn(s). Your Fire attacks deal 2 more damage.","You get Defense Down <var,2> indefinitely every <var,3> turn(s). Your Fire attacks deal 2 more damage."
 DarkFog,Dark Fog,"You get Endurance Down <var,4> for 3 turns every <var,5> turn(s). Your Dark attacks deal 2 more damage.","You get Endurance Down <var,4> indefinitely every <var,5> turn(s). Your Dark attacks deal 2 more damage."
 FrigidBreeze,Frigid Breeze,"You get Attack Down <var,2> for 2 turns every <var,3> turn(s). Your Light attacks deal 2 more damage.","You get Attack Down <var,2> indefinitely every <var,3> turn(s). Your Light attacks deal 2 more damage."

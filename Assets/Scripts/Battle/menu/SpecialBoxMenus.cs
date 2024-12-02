@@ -96,7 +96,12 @@ public class MoveBoxMenu : BoxMenu
 
         if (descriptorString != null)
         {
+            bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
         }
         else
         {
@@ -372,7 +377,7 @@ public class ItemBoxMenu : BoxMenu
         //caller.itemSaver
         if (caller.BadgeEquipped(Badge.BadgeType.ItemSaver))
         {
-            descriptorString = "Freebie: " + (2 - caller.itemSaver) + " away";
+            descriptorString = "<effect,Freebie> Freebie: " + (2 - caller.itemSaver) + " away";
             if (caller.BadgeEquippedCount(Badge.BadgeType.ItemSaver) > 1)
             {
                 descriptorString = "Freebie (x" + caller.BadgeEquippedCount(Badge.BadgeType.ItemSaver) + "): " + (2 - caller.itemSaver) + " away";
@@ -380,17 +385,22 @@ public class ItemBoxMenu : BoxMenu
         }
         if (caller.HasEffect(Effect.EffectType.Freebie))
         {
-            descriptorString = "Freebie: Next item will stay in your inventory.";
+            descriptorString = "<effect,Freebie> Freebie: Next item won't be used.";
             if (caller.GetEffectEntry(Effect.EffectType.Freebie).potency > 1)
             {
                 int p = caller.GetEffectEntry(Effect.EffectType.Freebie).potency;
-                descriptorString = "Freebie (x" + p + "): Next " + p + " items will stay in your inventory.";
+                descriptorString = "<effect,Freebie> Freebie (x" + p + "): Next " + p + " items won't be used.";
             }
         }
 
         if (descriptorString != null)
         {
+            bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
         }
         else
         {
@@ -618,6 +628,12 @@ public class MetaItemBoxMenu : BoxMenu
             {
                 menuEntries[i].rightText = uses + " " + menuEntries[i].spriteString + " <size,0>.</size>";
                 menuEntries[i].spriteString = "";
+            } else
+            {
+                //hacky fix?
+                //also aligns things correctly with the other options
+                menuEntries[i].rightText = " " + menuEntries[i].spriteString + " <size,0>.</size>";
+                menuEntries[i].spriteString = "";
             }
 
             GameObject g = Instantiate(MainManager.Instance.menuEntryBase, bm.mask.transform);
@@ -633,7 +649,13 @@ public class MetaItemBoxMenu : BoxMenu
 
         if (descriptorString != null)
         {
+            bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
+
         }
         else
         {
@@ -790,7 +812,12 @@ public class TacticsBoxMenu : BoxMenu
 
         if (descriptorString != null)
         {
+            bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
         }
         else
         {
@@ -987,7 +1014,12 @@ public class BadgeSwapBoxMenu : BoxMenu
 
         if (descriptorString != null)
         {
+            bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
         }
         else
         {
@@ -1170,7 +1202,12 @@ public class RibbonSwapBoxMenu : BoxMenu
 
         if (descriptorString != null)
         {
+            bm.descriptorBox.enabled = true;
             bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
         }
         else
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ACObject_PressButtonTimed : MonoBehaviour
+public class ACObject_PressATimed : MonoBehaviour
 {
     public Image fullBar;
     public Image emptyBar;

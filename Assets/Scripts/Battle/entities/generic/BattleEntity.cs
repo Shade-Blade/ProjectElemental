@@ -4135,7 +4135,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             if (hard)
             {
-                int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(1, power, cumulativeAttackHitCount);
+                int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(2f, power, cumulativeAttackHitCount);
                 if (procSeasideAir > 0)
                 {
                     InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)procSeasideAir, Effect.INFINITE_DURATION));
@@ -4143,7 +4143,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             else
             {
-                int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(2f, power, cumulativeAttackHitCount);
+                int procSeasideAir = BattleControl.Instance.EnviroEveryXTurns(4f, power, cumulativeAttackHitCount);
                 if (procSeasideAir > 0)
                 {
                     InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)procSeasideAir, Effect.INFINITE_DURATION));
@@ -7118,7 +7118,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         float yPos = BattleHelper.GetDefaultPosition(posId).y;
         if (yPos == 0)
         {
-            yPos = BattleHelper.GetDefaultPosition(posId + 5).y;
+            yPos = BattleHelper.GetDefaultPosition(posId + 10).y;
         }
         homePos.y = yPos;
         yield return StartCoroutine(Move(homePos));

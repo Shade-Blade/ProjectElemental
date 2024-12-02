@@ -176,6 +176,9 @@ public class MapScript : MonoBehaviour
     {
 
     }
+
+    //Called by specific MapExit scripts
+    //(so if you have a rogue ChangeMap call you have to call this yourself)
     public virtual void OnExit(int exitID)
     {
 
@@ -425,7 +428,7 @@ public class MapScript : MonoBehaviour
 
     //May be text shorthand or not
     //Ideally the map's tattle should be the first thing in the map's text file (so the tattle will end up being "l0" to reference local text file line 0)
-    public string GetTattle()
+    public virtual string GetTattle()
     {
         if (textFile == null)
         {

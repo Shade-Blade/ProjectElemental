@@ -453,10 +453,10 @@ public class BM_Honeybud_SwoopHeal : EnemyMove
                         caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         break;
                     case BattleHelper.EntityID.Sunnybud:
-                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         break;
                     case BattleHelper.EntityID.Honeywing:
-                        caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         break;
                     case BattleHelper.EntityID.MiracleBloom:
                         caller.DealDamage(caller.curTarget, 8, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);

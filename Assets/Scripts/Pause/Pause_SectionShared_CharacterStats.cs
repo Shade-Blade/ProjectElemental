@@ -66,7 +66,7 @@ public class Pause_SectionShared_CharacterStats : Pause_SectionShared
         PlayerData.PlayerDataEntry pde = pd.GetPlayerDataEntry(entityID);
 
         //to do: make this use menu text (but I also need to make everything else use menu text too)
-        specificStats.SetText(pde.hp + "/" + pde.maxHP + " <hp><line>(Agility <stamina>" + (pde.GetAgility(pd.maxEP) + 2 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, entityID)) + ")", true, true);
+        specificStats.SetText(pde.hp + "/" + pde.maxHP + " <hp><line>(Agility <stamina>" + (pde.GetAgility(pd.maxEP) + 1 * pd.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, entityID)) + ")", true, true);
         partyStats.SetText(pd.ep + "/" + pd.maxEP + " <ep><line>" + pd.se + "/" + pd.maxSE + " <se>", true, true);
     }
 

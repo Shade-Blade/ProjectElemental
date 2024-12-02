@@ -222,6 +222,11 @@ public class LM_HeavyStomp : LunaMove
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
+    }
 }
 
 public class LM_Brace : LunaMove
@@ -261,10 +266,10 @@ public class LM_Brace : LunaMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -336,6 +341,11 @@ public class LM_Brace : LunaMove
     }
     public override void PostMove(BattleEntity caller, int level = 1)
     {
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }
 
@@ -512,6 +522,11 @@ public class LM_DashThrough : LunaMove
 
         return val + "?";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class LM_FlipKick : LunaMove
@@ -645,6 +660,11 @@ public class LM_FlipKick : LunaMove
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
+    }
 }
 
 public class LM_FluffHeal : LunaMove
@@ -694,10 +714,10 @@ public class LM_FluffHeal : LunaMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -772,6 +792,11 @@ public class LM_FluffHeal : LunaMove
     }
     public override void PostMove(BattleEntity caller, int level = 1)
     {
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }
 
@@ -873,6 +898,11 @@ public class LM_SleepStomp : LM_HeavyStomp
         }
 
         return outString;
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
     }
 }
 
@@ -1068,6 +1098,11 @@ public class LM_MeteorStomp : LunaMove
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
+    }
 }
 
 public class LM_UnderStrike : LunaMove
@@ -1116,11 +1151,11 @@ public class LM_UnderStrike : LunaMove
             caller.SetAnimation("dig");
             yield return StartCoroutine(caller.Move(bpos, 16, false, false));
 
-            AC_PressButtonTimed actionCommand = null;
+            AC_PressATimed actionCommand = null;
             if (caller is PlayerEntity pcaller) //we have technology
             {
                 sd = pcaller.GetStompDamage();
-                actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+                actionCommand = gameObject.AddComponent<AC_PressATimed>();
                 actionCommand.Init(pcaller);
                 actionCommand.Setup(0.5f);
             }
@@ -1352,6 +1387,17 @@ public class LM_UnderStrike : LunaMove
 
         return outstring;
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        switch (level)
+        {
+            case 1:
+                return AC_PressATimed.GetACDesc();
+            default:
+                return "Press <button,a> when the large box is the same size as the small box, and then press <button,a> again right before landing on top of the target.";
+        }
+    }
 }
 
 public class LM_IronStomp : LunaMove
@@ -1503,6 +1549,11 @@ public class LM_IronStomp : LunaMove
 
 
         return val + "";
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
     }
 }
 
@@ -1766,6 +1817,11 @@ public class LM_ElementalStomp : LunaMove
 
         return outstring;
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_Jump.GetACDesc();
+    }
 }
 public class LM_TeamThrow : LunaMove
 {
@@ -1859,11 +1915,11 @@ public class LM_TeamThrow : LunaMove
             Vector3 grabPos = caller.transform.position + Vector3.up * 0.05f + Vector3.right * (caller.width * 0.5f + other.width * 0.5f - 0.05f) + Vector3.back * 0.002f;
             yield return StartCoroutine(other.JumpHeavy(grabPos, 2, 0.5f, -0.25f));
 
-            AC_MashLeft actionCommand = null;
+            AC_MashLeftRight actionCommand = null;
             if (caller is PlayerEntity pcaller)
             {
                 sd = pcaller.GetStompDamage();
-                actionCommand = gameObject.AddComponent<AC_MashLeft>();
+                actionCommand = gameObject.AddComponent<AC_MashLeftRight>();
                 actionCommand.Init(pcaller);
                 actionCommand.Setup(1.5f, 8);
             }
@@ -1932,6 +1988,9 @@ public class LM_TeamThrow : LunaMove
             float xoffset3 = (caller.width * 0.5f + other.width);
             Vector3 wPos3 = Vector3.up * 0.5f * caller.height + Vector3.right * xoffset3;
             other.Warp(caller.transform.position + wPos3);
+
+            //without this the release timing is somewhat hard to predict
+            yield return new WaitForSeconds(0.2f);
 
             caller.SetAnimation("teamthrowrelease");
             other.SetAnimation("teamthrowfly");
@@ -2210,6 +2269,11 @@ public class LM_TeamThrow : LunaMove
 
         return outstring;
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return "Alternate pressing <button,left> and <button,right> to fill the bar, then press <button,a> right before hitting the target.";
+    }
 }
 
 public class LM_DoubleEgg : LunaMove
@@ -2324,10 +2388,10 @@ public class LM_DoubleEgg : LunaMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -2402,6 +2466,11 @@ public class LM_DoubleEgg : LunaMove
     }
     public override void PostMove(BattleEntity caller, int level = 1)
     {
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }
 
@@ -2572,6 +2641,11 @@ public class LM_Smash : LunaMove
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class LM_PowerSmash : LM_Smash
@@ -2734,6 +2808,11 @@ public class LM_PowerSmash : LM_Smash
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class LM_DazzleSmash : LM_Smash
@@ -2846,6 +2925,11 @@ public class LM_DazzleSmash : LM_Smash
         }
 
         return outString;
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
     }
 }
 
@@ -3002,6 +3086,11 @@ public class LM_HammerThrow : LunaMove
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class LM_BreakerSmash : LM_Smash
@@ -3050,7 +3139,7 @@ public class LM_BreakerSmash : LM_Smash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, sd + 4, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
                     caller.DealDamage(caller.curTarget, sd + 5, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
@@ -3065,7 +3154,7 @@ public class LM_BreakerSmash : LM_Smash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 4, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 5, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
@@ -3134,6 +3223,11 @@ public class LM_BreakerSmash : LM_Smash
         }
 
         return val + "";
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
     }
 }
 
@@ -3222,6 +3316,11 @@ public class LM_FlameSmash : LM_Smash
         val = caller.DealDamageCalculation(target, sd + 2 + 3 * level, BattleHelper.DamageType.Fire, 0);
 
         return val + "";
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
     }
 }
 
@@ -3394,6 +3493,11 @@ public class LM_MomentumSmash : LM_Smash
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 public class LM_QuakeSmash : LunaMove
 {
@@ -3538,6 +3642,11 @@ public class LM_QuakeSmash : LunaMove
 
         return val + "?";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class LM_LightSmash : LM_Smash
@@ -3586,7 +3695,7 @@ public class LM_LightSmash : LM_Smash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, sd + 5, BattleHelper.DamageType.Light, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 4, BattleHelper.DamageType.Light, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
                     caller.DealDamage(caller.curTarget, sd + 7, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
@@ -3601,7 +3710,7 @@ public class LM_LightSmash : LM_Smash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 5, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 4, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 7, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
@@ -3671,6 +3780,11 @@ public class LM_LightSmash : LM_Smash
 
         return val + "";
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class LM_Illuminate : LunaMove
@@ -3721,10 +3835,10 @@ public class LM_Illuminate : LunaMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -3813,6 +3927,11 @@ public class LM_Illuminate : LunaMove
     }
     public override void PostMove(BattleEntity caller, int level = 1)
     {
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }
 
@@ -3907,6 +4026,11 @@ public class LM_HammerBeat : LunaMove
     public override void PostMove(BattleEntity caller, int level = 1)
     {
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
 }
 
 public class LM_MistWall : LunaMove
@@ -3958,10 +4082,10 @@ public class LM_MistWall : LunaMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressButtonTimed actionCommand = null;
+        AC_PressATimed actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressButtonTimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimed>();
             actionCommand.Init(pcaller);
             actionCommand.Setup(0.5f);
         }
@@ -4058,5 +4182,10 @@ public class LM_MistWall : LunaMove
     }
     public override void PostMove(BattleEntity caller, int level = 1)
     {
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimed.GetACDesc();
     }
 }

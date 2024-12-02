@@ -2901,6 +2901,10 @@ public abstract class ItemMove : Move, IEntityHighlighter
 
         if (caller.HasEffect(Effect.EffectType.Freebie))
         {
+            //need to keep track of this still so that you can't spam the 1/battle items
+            //(Because many of them are extremely overpowered if you can use them too many times)
+            BattleControl.Instance.GetUsedItemInventory(caller).Add(GetItem());
+
             caller.TokenRemoveOne(Effect.EffectType.Freebie);
             return;
         }

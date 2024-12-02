@@ -637,6 +637,11 @@ public class BE_CrystalCrab : BattleEntity
         moveset = new List<Move> { gameObject.AddComponent<BM_CrystalCrab_TripleClaw>(), gameObject.AddComponent<BM_CrystalCrab_DarkClaw>(), gameObject.AddComponent<BM_CrystalCrab_Hard_CounterClearClaw>() };
 
         base.Initialize();
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            SetEntityProperty(BattleHelper.EntityProperties.StateCounter, true);
+        }
     }
 
     public override void ChooseMoveInternal()
@@ -1056,16 +1061,10 @@ public class BM_CrystalClam_HealingBreath : EnemyMove
 
         List<BattleEntity> healTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
 
-        bool applyMistWall = false;
-
         yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < healTargets.Count; i++)
         {
-            if (!applyMistWall && !healTargets[i].HasEffect(Effect.EffectType.MistWall))
-            {
-                applyMistWall = true;
-                caller.InflictEffect(healTargets[i], new Effect(Effect.EffectType.MistWall, 1, 3));
-            }
+            healTargets[i].CureEffects(false);
             healTargets[i].HealHealth(multiHealAmount);
         }
         yield return new WaitForSeconds(0.5f);

@@ -207,7 +207,7 @@ public class Pause_SectionStatus : Pause_SectionShared
                 characterObjectB.SetActive(false);
                 healthObjectB.SetActive(false);
 
-                healthTextA.SetText(lone.hp + "/" + lone.maxHP + " <hp> HP<line>(Agility <stamina> " + (lone.GetAgility(playerData.maxEP) + 2 * playerData.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, lone.entityID)) + ")", true, true);
+                healthTextA.SetText(lone.hp + "/" + lone.maxHP + " <hp> HP<line>(Agility <stamina> " + (lone.GetAgility(playerData.maxEP) + 1 * playerData.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, lone.entityID)) + ")", true, true);
 
                 characterObjectA.transform.localPosition = new Vector3(0, 0, 0);
                 healthObjectA.transform.localPosition = new Vector3(0, 5, 0);
@@ -229,7 +229,7 @@ public class Pause_SectionStatus : Pause_SectionShared
                 characterObjectA.SetActive(false);
                 healthObjectA.SetActive(false);
 
-                healthTextB.SetText(lone.hp + "/" + lone.maxHP + " <hp> HP<line>(Agility <stamina> " + (lone.GetAgility(playerData.maxEP) + 2 * playerData.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, lone.entityID)) + ")", true, true);
+                healthTextB.SetText(lone.hp + "/" + lone.maxHP + " <hp> HP<line>(Agility <stamina> " + (lone.GetAgility(playerData.maxEP) + 1 * playerData.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, lone.entityID)) + ")", true, true);
 
                 characterObjectB.transform.localPosition = new Vector3(0, 0, 0);
                 healthObjectB.transform.localPosition = new Vector3(0, 5, 0);
@@ -250,8 +250,8 @@ public class Pause_SectionStatus : Pause_SectionShared
         {
             characterObjectB.SetActive(true);
             healthObjectB.SetActive(true);
-            healthTextA.SetText(wilex.hp + "/" + wilex.maxHP + " <hp> HP<line>(Agility <stamina> " + (wilex.GetAgility(playerData.maxEP) + 2 * playerData.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, wilex.entityID)) + ")", true, true);
-            healthTextB.SetText(luna.hp + "/" + luna.maxHP + " <hp> HP<line>(Agility <stamina> " + (luna.GetAgility(playerData.maxEP) + 2 * playerData.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, luna.entityID)) + ")", true, true);
+            healthTextA.SetText(wilex.hp + "/" + wilex.maxHP + " <hp> HP<line>(Agility <stamina> " + (wilex.GetAgility(playerData.maxEP) + 1 * playerData.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, wilex.entityID)) + ")", true, true);
+            healthTextB.SetText(luna.hp + "/" + luna.maxHP + " <hp> HP<line>(Agility <stamina> " + (luna.GetAgility(playerData.maxEP) + 1 * playerData.BadgeEquippedCountFull(Badge.BadgeType.AgilityBoost, luna.entityID)) + ")", true, true);
             characterObjectA.transform.localPosition = new Vector3(-80, 0, 0);
             characterObjectB.transform.localPosition = new Vector3(80, 0, 0);
             healthObjectA.transform.localPosition = new Vector3(-80, 5, 0);

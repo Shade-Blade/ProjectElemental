@@ -57,8 +57,9 @@ public class WorldFollower : WorldEntity
     //public bool isGrounded = false;
 
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         for (int i = 0; i < WorldPlayer.Instance.followers.Count; i++)
         {
             if (this == WorldPlayer.Instance.followers[i])
@@ -574,7 +575,7 @@ public class WorldFollower : WorldEntity
             {
                 trueFacingRotation += 360;
             }
-            while (trueFacingRotation > 360)
+            while (trueFacingRotation >= 360)
             {
                 trueFacingRotation -= 360;
             }
@@ -661,7 +662,7 @@ public class WorldFollower : WorldEntity
                 }
 
                 //apply wraparound after to make sure the above conditions make sense
-                if (facingRotation > 360)
+                if (facingRotation >= 360)
                 {
                     facingRotation -= 360;
                 }

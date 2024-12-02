@@ -63,7 +63,7 @@ public class SettingsManager : MonoBehaviour
         switch (s)
         {
             case Setting.FPS:
-                Debug.Log("update " + index);
+                //Debug.Log("update " + index);
                 if (index == 0)
                 {
                     Application.targetFrameRate = 30;

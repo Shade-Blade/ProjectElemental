@@ -106,8 +106,8 @@ DefenseBoost,Defense Boost A,Increases your Defense by 1.,,
 DefenseBoostB,Defense Boost B,Increases your Defense by 1.,,
 EnduranceBoost,Endurance Boost A,Increases your Endurance by 1. (Endurance reduces energy costs.),,
 EnduranceBoostB,Endurance Boost B,Increases your Endurance by 1. (Endurance reduces energy costs.),,
-AgilityBoost,Agility Boost A,Increases your Agility by 2.,,
-AgilityBoostB,Agility Boost B,Increases your Agility by 2.,,
+AgilityBoost,Agility Boost A,Increases your Agility by 1.,,
+AgilityBoostB,Agility Boost B,Increases your Agility by 1.,,
 VitalEnergy,Vital Energy,"Skills cost Health instead of Energy, but the costs are reduced by 1.",,No additional effect when stacked.
 SoulfulEnergy,Soulful Energy,Skills cost Soul Energy instead of Energy.,,No additional effect when stacked.
 StaminaEnergy,Stamina Energy,"Skills cost only Stamina instead of Energy, but their costs are two times their normal costs.",,No additional effect when stacked.
@@ -155,7 +155,7 @@ SweetDreams,Sweet Dreams,"While Sleeping, you heal Energy instead of Health.",,N
 LightSleep,Light Sleep,"While Sleeping, you block all attacks automatically.",,No additional effect when stacked.
 NightmareStrike,Nightmare Strike,"When you wake a Sleeping target, you deal +50% additional damage and inflict 3 Defocus.",,No additional effect when stacked.
 QuickNap,Quick Nap,"At the start of battle, you receive 2 turns of Sleep. (If you do a First Strike, this occurs after that.)",,Sleep potency increases by 1 for each badge equipped.
-RagesPower,Rage's Power,"You are permanently Berserk, but your attack power is increased by 2.",,
+RagesPower,Rage's Power,"You are permanently Berserk, but your attack power is increased by 1.",This is on top of Berserk's normal +1 attack.,
 RageShield,Rage Shield,"While Berserk, you take 50% damage from contact hazards and do not receive a Defense penalty from being Berserk.",,"Defense increases by 1 for each badge equipped, resistance to contact hazards increases as well."
 RageRally,Rage Rally,"While Berserk, the other character gets a +1 attack boost.",,
 UndyingRage,Undying Rage,"While Berserk, you will survive 1 lethal hit per battle.",,Gives you an additional use of the badge per battle.
@@ -173,15 +173,15 @@ Glacier,Glacier,"While Frozen, getting hit no longer unfreezes you, and you get 
 Preservative,Preservative,"While Frozen, effect turn durations will not tick down from 1 to 0.",Does not apply to the Effect Stasis effect.,No additional effect when stacked.
 Icebreaker,Icebreaker,"While Frozen, getting hit out of it will give you 3 Focus. You also get a +50% damage bonus when unfreezing targets.",,
 Supercooled,Supercooled,"Every time you get hit while unfrozen, you get Frozen for 2 turns, but you have +2 Defense",Does not remove the defense penalty when being unfrozen.,
-HealthSight,Health Sight,Reveals enemy health even if you haven't tattled the enemy yet.,,No additional effect when stacked.
+HealthSight,Health Sight,Reveals enemy health even if you haven't Checked or Scanned the enemy yet.,,No additional effect when stacked.
 DefenseSight,Defense Sight,Reveals enemy defense when their health bars are displayed.,,No additional effect when stacked.
 StatusSight,Status Sight,Reveals information about enemy status weaknesses when you select the move and hover over an enemy.,,No additional effect when stacked.
-CharmSight,Charm Sight,Reveals information about your currently active charms.,,No additional effect when stacked.
+CharmSight,Charm Sight,Reveals information about your currently active charms in battle.,,No additional effect when stacked.
 PowerSight,Power Sight,Reveals information about the attack power of your moves.,,No additional effect when stacked.
 ItemSight,Item Sight,"Reveals information about what effects your items will have. In the overworld, when you stand still, you will see particles that point you towards collectibles in the current map.",,No additional effect when stacked.
 BattleSight,Battle Sight,"Reveals various statistics about your time in battle. (Turn count, damage dealt, number of hits, items used)",,No additional effect when stacked.
 SoftTouch,Soft Touch,"Your attacks no longer wake up Sleeping enemies or unfreeze Frozen enemies, and you take half damage from all contact hazards.",,No additional effect when stacked.
-PerfectVictory,Perfect Victory,"If you defeat all enemies with perfect damage, XP and money gained is multiplied by 1.5x at the end of battle.",Perfect damage is when the damage reduces an enemy to exactly 0 hp/,Multiplier increases by 0.5 for each badge equipped.
+PerfectVictory,Perfect Victory,"If you defeat all enemies with perfect damage, XP and money gained is multiplied by 1.5x at the end of battle.",Perfect damage is when the damage reduces an enemy to exactly 0 hp.,Multiplier increases by 0.5 for each badge equipped.
 DecisiveVictory,Decisive Victory,Defeating a battle in one turn doubles XP and money gain.,,Multiplier increases by 1 for each badge equipped.
 StatusResist,Status Resist A,Makes most negative effects inflicted against you last half as long.,"Stacks with the normal reduction that blocking provides, fully reducing effect duration. Also applies to self inflicted negative effects.",
 StatusResistB,Status Resist B,Makes most negative effects inflicted against you last half as long.,"Stacks with the normal reduction that blocking provides, fully reducing effect duration. Also applies to self inflicted negative effects.",
@@ -191,15 +191,15 @@ RibbonSwap,Ribbon Swap,Allows you to change ribbons in battle. Changing ribbons 
 LongRest,Long Rest,"Inn rest effects are 50% stronger, Effects for using Rest are 50% stronger if you rested last turn.",,
 HealthSteal,Health Steal,"Your attacks siphon 1 HP per hit, but you have -1 Attack power.",,
 EnergySteal,Energy Steal,"Your attacks siphon 1 EP per hit, but you have -1 Attack power.",,
-RiskyRush,Risky Rush,"When you take damage that leaves you at low HP or at exactly 1 HP, you get 3 Focus.","Low HP is 4 or below for Wilex, 6 or below for Luna. This badge does not activate if you were at low HP before taking damage, unless that damage leaves you at exactly 1 HP.",
+RiskyRush,Risky Rush,"When you take damage that leaves you at low HP or at exactly 1 HP, you get 3 Focus.","Low HP is 4 or below for Wilex, 6 or below for Luna. This badge does not activate if you were already at low HP before taking damage, unless that damage leaves you at exactly 1 HP.",
 ProtectiveRush,Protective Rush,"When your ally is attacked, you get 1 Focus.",Can only activate once per enemy turn.,Increases the focus amount received.
 PerfectFocus,Perfect Focus,"When you receive healing that puts you at Max HP, you get 3 Focus.",This badge does not activate if you receive healing while you are already at Max HP.,
 HeadStart,Head Start,At the start of battle you get an additional action and additional stamina equal to half your Agility.,,
 RiskyStart,Risky Start,You start every battle at low HP. (This badge will lower your HP.),"Low HP is 4 or below for Wilex, 6 or below for Luna.",Wearing 2 or more will cause you to start at 1 hp.
-VictoryHeal,Victory Heal,"At the end of battle, you get 3 health.",,
-VictorySurge,Victory Surge,"At the end of battle, you get 3 energy.",,
+VictoryHeal,Victory Heal,"At the end of battle, you get 3 HP.",,
+VictorySurge,Victory Surge,"At the end of battle, you get 3 EP.",,
 AgilityRush,Agility Rush,"The first time you reach Max Stamina in a battle, you get an extra action.",,Each additional badge gives you an extra use per battle.
-StaminaRebound,Stamina Rebound,"When you reach exactly 0 stamina after using a move, you get stamina equal to half your agility.",,
+StaminaRebound,Stamina Rebound,"When you reach exactly 0 stamina after using a move, you get stamina equal to your agility.",,
 MoneyBoost,Money Boost,Coins dropped at the end of battle are doubled.,,
 DarkConcentration,Dark Concentration,"You do not regenerate 1 Soul Energy every turn, but Rest gives 3 more Soul Energy than normal.",The Soul Regen Badge will still work as normal.,
 DepletionBurst,Depletion Burst,"When you reach exactly 0 Energy after using a move, you get 5 Energy.",,
@@ -213,7 +213,7 @@ StaminaRecycling,Stamina Recycling,"Whenever you use Stamina, you receive half o
 WeatherShield,Weather Shield,Reduces the strength of most environmental effects by half.,Some environmental effects are too strong to be affected by this badge.,No additional effect when stacked.
 Overkill,Overkill,First Strikes will instantly kill enemies that don't give exp.,,Level required to kill enemies is reduced by 2 per badge equipped after the first.
 SmartAmbush,Smart Ambush,First Strikes give you an additional action instead doing the attack.,,
-AutoStrike,Auto Strike,All overworld encounters count as you First Striking the enemy unless the enemy First Strikes you.,,No additional effect when stacked.
+AutoStrike,Auto Strike,All overworld encounters count as you First Striking the enemy unless the enemy First Strikes you.,Uses the weapon first strike.,No additional effect when stacked.
 InviteDanger,Invite Danger,"All normal enemy encounters start as enemy First Strikes, but you start with 2 Focus (4 if you would normally First Strike). Overrides effects that would normally prevent enemy first strikes.",,No additional effect when stacked.
 ItemFinder,Item Finder,Greatly increases the chance that enemies will drop items. (Guaranteed if the encounter won't give xp),,Item drop rate can go above 100% which will make it possible to get multiple items from one encounter.
 DodgeStep,Dodge Step,"Prevents you from getting hit by enemy first strikes. Allows you to use the action ""Easy Flee"" which guarantees escape but causes you to lose energy.",,No additional effect when stacked.

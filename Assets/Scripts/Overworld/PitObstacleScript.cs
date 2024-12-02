@@ -710,7 +710,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                     new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.Health6, 1),
                     new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.Energy6, 1),
                     new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.Soul6, 1),
-                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.XP10, 1),
+                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.XP10, pd.level >= PlayerData.GetMaxLevel() ? 0 : 1),
                     new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.AbilitySlash, 0.25f)    //stand in for all the ability rewards   (Making this very rare because I have hardcoded spawns as well)
                 };
                 RandomTable<MainManager.MiscSprite> mstable = new RandomTable<MainManager.MiscSprite>(miscTableEntries);

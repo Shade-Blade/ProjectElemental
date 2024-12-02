@@ -81,7 +81,6 @@ public class AnimationController_Luna : AnimationController_Player
                 targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect5_Luna");
                 break;
         }
-        Debug.Log(targetMaterial);
         sprite.material = targetMaterial;
     }
 

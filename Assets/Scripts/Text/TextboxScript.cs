@@ -387,6 +387,10 @@ public class TextboxScript : MonoBehaviour
                         borderBox.color = Color.white;
                         tail.color = Color.white;
                     }
+                    if (speaker != null && !speaker.SpeakingAnimActive())
+                    {
+                        speaker.EnableSpeakingAnim();
+                    }
                 }
                 //check for a vector3
                 if (t.args.Length == 3)
@@ -1434,7 +1438,7 @@ public class TextboxScript : MonoBehaviour
             yield return null;
         }
 
-        if (speaker != null && speaker.SpeakingAnimActive())
+        if (speaker != null && !speaker.SpeakingAnimActive())
         {
             speaker.EnableSpeakingAnim();
         }

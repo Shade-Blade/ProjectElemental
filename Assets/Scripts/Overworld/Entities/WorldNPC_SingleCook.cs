@@ -110,7 +110,14 @@ public class WorldNPC_SingleCook : WorldNPCEntity
 
             //Do the menu thing
             string[] tempVars = new string[] { Item.GetName(itemA), (rde.quality != Item.ItemQuality.Mistake).ToString() };
-            yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, text_cook, this, tempVars));
+            if (rde.quality != Item.ItemQuality.Mistake)
+            {
+                yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, text_cook, this, tempVars));
+            }
+            else
+            {
+                yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, text_cookmistake, this, tempVars));
+            }
 
             int ynState = 0;
             menuResult = MainManager.Instance.lastTextboxMenuResult;

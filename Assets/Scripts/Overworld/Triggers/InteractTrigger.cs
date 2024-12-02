@@ -102,6 +102,8 @@ public class InteractTrigger : MonoBehaviour
 
     public IEnumerator TestCutscene()
     {
+        Debug.LogWarning("Interact trigger with no Interactable assigned");
+
         for (int i = 0; i < 100; i++)
         {
             EncounterData ed = EncounterData.GeneratePitEncounter(i);

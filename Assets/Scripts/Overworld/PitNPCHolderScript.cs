@@ -47,6 +47,10 @@ public class PitNPCHolderScript : MonoBehaviour
         {
             props[i].transform.localPosition = Vector3.Scale(props[i].transform.localPosition, new Vector3(-1,1,1));
         }
+        if (npc == null)
+        {
+            return;
+        }
         npc.transform.localPosition = Vector3.Scale(npc.transform.localPosition, new Vector3(-1, 1, 1));
         npc.wed.initialFacingAngle += 180;
         npc.initialFacingAngle += 180;

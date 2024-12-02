@@ -126,6 +126,11 @@ public class AC_Jump : ActionCommand
             }
         }
     }
+
+    public static string GetACDesc()
+    {
+        return "Press <button,A> right before landing on the target.";
+    }
 }
 
 public class AC_MashLeft : ActionCommand
@@ -247,6 +252,140 @@ public class AC_MashLeft : ActionCommand
                 break;
         }
     }
+
+    public static string GetACDesc()
+    {
+        return "Mash <button,left> to fill the bar.";
+    }
+}
+
+public class AC_MashLeftRight : ActionCommand
+{
+    public const float DEFAULT_DURATION = 2.0f;
+    public const int DEFAULT_MASH_DIFFICULTY = 15; //default duration, how much do you have to mash
+    public float duration;
+    public AC_State state;
+
+    public int mashCount;
+    public int mashObjective;
+
+    public float displayBar;
+
+    ACObject_MashBar acobject;
+
+    public bool isHolding = false;
+    public bool rightLast = false;
+
+    public override void Init(PlayerEntity caller)
+    {
+        base.Init(caller);
+        state = AC_State.Idle;
+        mashCount = 0;
+
+        if (!autoComplete)
+        {
+            GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_MashLeft"), MainManager.Instance.Canvas.transform);
+            subObjects = new List<GameObject>
+            {
+                o
+            };
+            acobject = o.GetComponent<ACObject_MashBar>();
+        }
+    }
+
+    public override void End()
+    {
+        base.End();
+    }
+
+    public override bool IsStarted()
+    {
+        return (autoComplete) || (int)state > (int)AC_State.Idle;
+    }
+    public override bool IsComplete()
+    {
+        return lifetime >= duration || (int)state > (int)AC_State.Active;
+    }
+
+
+    public void Setup(float p_duration = DEFAULT_DURATION, int p_difficulty = DEFAULT_MASH_DIFFICULTY)
+    {
+        duration = p_duration;
+        mashObjective = p_difficulty;
+    }
+
+
+    public bool GetSuccess()
+    {
+        return autoComplete || mashCount == mashObjective;
+    }
+
+    public float GetCompletion()
+    {
+        return mashCount / (mashObjective + 0.0f);
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        float completion = mashCount / (mashObjective + 0.0f);
+        bool success = mashCount == mashObjective;
+        displayBar = MainManager.EasingExponentialTime(displayBar, completion, 0.3f);
+
+        if (!autoComplete)
+        {
+            acobject.SetValues(completion, success);
+        }
+
+        switch (state)
+        {
+            case AC_State.Idle:
+                if (InputManager.GetAxisHorizontal() < -0.5f && lifetime >= FADE_IN_TIME)
+                {
+                    state = AC_State.Active;
+                }
+                break;
+            case AC_State.Active:
+                /*
+                holdTime += Time.deltaTime; //not sure about whether to put this before or after, probably won't make much of a difference
+                if (MainManager.GetAxisHorizontal() >= 0 || holdTime >= duration + window)
+                {
+                    state = AC_State.Complete;
+                }
+                */
+                if (InputManager.GetAxisHorizontal() < -0.5f * (rightLast ? 1 : -1))
+                {
+                    rightLast = !rightLast;
+                    if (!isHolding)
+                    {
+                        mashCount++;
+                        if (mashCount > mashObjective)
+                        {
+                            mashCount = mashObjective;
+                        }
+                    }
+                    isHolding = true;
+                }
+                else
+                {
+                    isHolding = false;
+                }
+
+                if (completion == 1)
+                {
+                    state = AC_State.Complete;
+                }
+                break;
+            case AC_State.Complete:
+                break;
+        }
+    }
+
+    public static string GetACDesc()
+    {
+        return "Alternate <button,left> and <button,right> quickly to fill the bar.";
+    }
 }
 
 public class AC_HoldLeft : ActionCommand
@@ -339,15 +478,20 @@ public class AC_HoldLeft : ActionCommand
                 break;
         }
     }
+
+    public static string GetACDesc()
+    {
+        return "Hold <button,left> until the bar is full, then release <button,left>.";
+    }
 }
 
-public class AC_PressButtonTimed : ActionCommand
+public class AC_PressATimed : ActionCommand
 {
     public const float DEFAULT_DURATION = 0.5f;
     public float duration;
     public float window;
 
-    ACObject_PressButtonTimed acobject;
+    ACObject_PressATimed acobject;
     public AC_State state;
 
     public float finishTime;
@@ -366,7 +510,7 @@ public class AC_PressButtonTimed : ActionCommand
             {
                 o
             };
-            acobject = o.GetComponent<ACObject_PressButtonTimed>();
+            acobject = o.GetComponent<ACObject_PressATimed>();
         }
     }
 
@@ -429,5 +573,10 @@ public class AC_PressButtonTimed : ActionCommand
                 finishTime += Time.deltaTime;
                 break;
         }
+    }
+
+    public static string GetACDesc()
+    {
+        return "Press <button,a> when the large box and the small box are the same size.";
     }
 }

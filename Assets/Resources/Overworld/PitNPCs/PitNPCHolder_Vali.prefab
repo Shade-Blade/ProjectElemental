@@ -273,7 +273,7 @@ MonoBehaviour:
   idlePos: {x: 0, y: 0, z: 0}
   stompLaunch: 0
   stompBoostable: 0
-  costPerChange: 2
+  costPerChange: 0
 --- !u!1001 &6803971922649905105
 PrefabInstance:
   m_ObjectHideFlags: 0

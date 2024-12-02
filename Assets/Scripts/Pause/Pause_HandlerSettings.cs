@@ -212,6 +212,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                         sideDir = 0;
                     }
 
+                    int oldlevel = level;
                     if (sideDir > 0)
                     {
                         level += 1;
@@ -230,10 +231,13 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                         level = maxValues[index];
                     }
 
-                    originalValues[index] = level;
-                    SettingsManager.Instance.settingsValues[index] = level;
-                    SettingsManager.Instance.UpdateSetting((SettingsManager.Setting)index, level);
-                    SendUpdate();
+                    if (level != oldlevel)
+                    {
+                        originalValues[index] = level;
+                        SettingsManager.Instance.settingsValues[index] = level;
+                        SettingsManager.Instance.UpdateSetting((SettingsManager.Setting)index, level);
+                        SendUpdate();
+                    }
                 }
             }
 

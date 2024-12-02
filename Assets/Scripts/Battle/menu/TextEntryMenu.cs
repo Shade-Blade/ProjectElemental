@@ -38,6 +38,10 @@ public class TextEntryMenu : MenuHandler
         baseObject = Instantiate(MainManager.Instance.textEntryMenu, MainManager.Instance.Canvas.transform);
         tms = baseObject.GetComponent<TextEntryMenuScript>();
 
+        //These cause problems
+        currString = currString.Replace("\n", "");
+        currString = currString.Replace("\r", "");
+
         if (MainManager.Instance.Cheat_UnrestrictedTextEntry)
         {
             tms.text.SetText(currString, true, true);
@@ -84,7 +88,7 @@ public class TextEntryMenu : MenuHandler
         {
             if (e.isKey)
             {
-                if (e.character != '\0' && e.character != '\n' && e.character != '\t' && e.character != '\r')   //ban a few characters specifically
+                if (e.character != '\0' && e.character != '\n' && e.character != '\r' && e.character != '\t' && e.character != '\r')   //ban a few characters specifically
                 {
                     if (MainManager.Instance.Cheat_UnrestrictedTextEntry || currString.Length < maxLength)
                     {
@@ -104,10 +108,12 @@ public class TextEntryMenu : MenuHandler
             if (MainManager.Instance.Cheat_UnrestrictedTextEntry)
             {
                 tms.text.SetText(currString, true, true);
+                tms.text.textMesh.ForceMeshUpdate();
             }
             else
             {
                 tms.text.SetText(FormattedString.InsertEscapeSequences(currString), true, true);
+                tms.text.textMesh.ForceMeshUpdate();
             }
             tms.lengthIndicator.SetText(currString.Length + "/" + maxLength, true, true);
 

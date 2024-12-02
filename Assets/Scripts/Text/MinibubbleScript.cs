@@ -603,7 +603,7 @@ public class MinibubbleScript : MonoBehaviour
             yield return null;
         }
 
-        if (speaker != null && speaker.SpeakingAnimActive())
+        if (speaker != null && !speaker.SpeakingAnimActive())
         {
             speaker.EnableSpeakingAnim();
         }

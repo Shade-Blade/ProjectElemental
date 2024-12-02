@@ -126,7 +126,7 @@ public class AnimationController : MonoBehaviour
 
     public virtual void SetMaterial(int id)
     {
-        Debug.Log("material " + id);
+        //Debug.Log("material " + id);
         //TODO: Find a better way!!!
         //This seems like a bad idea
         //But keeping 6 materials permanently loaded also seems bad
