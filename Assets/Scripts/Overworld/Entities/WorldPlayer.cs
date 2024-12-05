@@ -323,7 +323,7 @@ public class WorldPlayer : WorldEntity
 
 
     //time related constants
-    const float LAND_TIME = 0.10f; //time taken to convert Land state to Idle
+    const float LAND_TIME = 0.05f; //time taken to convert Land state to Idle
     const float COYOTE_TIME = 0.05f;    //3 frames
     const float BUFFER_JUMP_WINDOW = 0.075f;    //if you press the jump button ??? before landing, you jump anyway
     const float BUFFER_DASH_JUMP_WINDOW = 0.15f;    //buffer window for dashing (a lot wider to make it very easy to chain dashes)
@@ -1924,7 +1924,10 @@ public class WorldPlayer : WorldEntity
             {
                 bool tattle = false;
                 //tattle
-                if (InputManager.GetButtonDown(InputManager.Button.Y) && InNeutralState())
+                //add some leniency because the input is being wacky in build
+                //(Note: likely a problem with me putting input code in fixed update)
+                bool bufferTattle = disabledTime == 0 && InputManager.GetButton(InputManager.Button.Y) && (!InputManager.GetButtonHeldLonger(InputManager.Button.Y, CONTROL_HOLD_TIME));
+                if ((InputManager.GetButtonDown(InputManager.Button.Y) || bufferTattle) && InNeutralState())
                 {
                     TryTattle();
                     tattle = true;
@@ -2081,7 +2084,8 @@ public class WorldPlayer : WorldEntity
 
                 bool interact = false;
                 //Attempt to interact with stuff (if so then ignore everything below)
-                if (InNeutralState() && InputManager.GetButtonDown(InputManager.Button.A) && !tattle && interactCooldown == 0)
+                //note: has bufferjump here for leniency (input is weird in build, probably another fixed update problem)
+                if (InNeutralState() && (InputManager.GetButtonDown(InputManager.Button.A) || bufferJump) && !tattle && interactCooldown == 0)
                 {
                     interactCooldown = 0.05f;
                     interact = MainManager.Instance.TryInteract();
@@ -2294,8 +2298,10 @@ public class WorldPlayer : WorldEntity
                 bool dashJoystickInput = (!InputManager.GetNeutralJoystick() && InputManager.GetTimeSinceNeutralJoystick() < DASH_DIRECTIONAL_WINDOW);
                 dashJoystickInput |= (enableDashLeniency && (groundedTime < BUFFER_DASH_JUMP_WINDOW));
 
-                //Note: buffering doesn't really make sense here
-                if (timeSinceLastJump > 2 * Time.fixedDeltaTime && InputManager.GetButtonDown(InputManager.Button.A))
+                //Note: buffering doesn't really make sense here?
+                //adding it anyway in case fixed update doesn't see button down
+                bool bufferJump = disabledTime == 0 && InputManager.GetButton(InputManager.Button.A) && (!InputManager.GetButtonHeldLonger(InputManager.Button.A, Time.fixedDeltaTime * 2.5f));
+                if (timeSinceLastJump > 2 * Time.fixedDeltaTime && (InputManager.GetButtonDown(InputManager.Button.A) || bufferJump))
                 {
                     //which jump?
                     bool didMove = false;
@@ -2469,8 +2475,9 @@ public class WorldPlayer : WorldEntity
         {
             if (!KeruAsterJump() && Unlocked_DoubleJump() && rb.velocity.y < DOUBLE_JUMP_WINDOW_HIGHER && rb.velocity.y > DOUBLE_JUMP_WINDOW_LOWER)
             {
+                bool bufferJump = disabledTime == 0 && InputManager.GetButton(InputManager.Button.A) && (!InputManager.GetButtonHeldLonger(InputManager.Button.A, Time.fixedDeltaTime * 2.5f));
                 //don't double jump right next to the floor (note that glitchy ultra jumps may still be possible on edges?)
-                if (timeSinceLastJump > 0.05f + Time.deltaTime && MainManager.Instance.GetControlsEnabled() && InputManager.GetButtonDown(InputManager.Button.A) && canDoubleJump)
+                if (timeSinceLastJump > 0.05f + Time.deltaTime && MainManager.Instance.GetControlsEnabled() && (InputManager.GetButtonDown(InputManager.Button.A) || bufferJump) && canDoubleJump)
                 {
                     StartDoubleJump();
                 }
@@ -2515,7 +2522,8 @@ public class WorldPlayer : WorldEntity
             {
                 if (MainManager.Instance.GetControlsEnabled())
                 {
-                    if (switchTime <= 0 && InputManager.SpinInput() && InputManager.GetButtonDown(InputManager.Button.A) && canHover)
+                    bool bufferJump = disabledTime == 0 && InputManager.GetButton(InputManager.Button.A) && (!InputManager.GetButtonHeldLonger(InputManager.Button.A, Time.fixedDeltaTime * 2.5f));
+                    if (switchTime <= 0 && InputManager.SpinInput() && (InputManager.GetButtonDown(InputManager.Button.A) || bufferJump) && canHover)
                     {
                         HoverSetup();
                         SetActionState(ActionState.Hover);
@@ -2798,10 +2806,10 @@ public class WorldPlayer : WorldEntity
                 break;
         }
 
-        if (!lockRotation && (usedMovement.magnitude > 0.01f) || pastTrueFacingRotation != trueFacingRotation)
+        if (!lockRotation && (MainManager.XZProject(usedMovement).magnitude > 0.01f) || pastTrueFacingRotation != trueFacingRotation)
         {
             //don't rotate in hazard state, if rotation is disabled, or if you are still
-            if (!movementRotationDisabled && !HazardState() && (usedMovement.magnitude > 0.01f))
+            if (!movementRotationDisabled && !HazardState() && (MainManager.XZProject(usedMovement).magnitude > 0.01f))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
                 //transform this with respect to worldspace yaw
@@ -4796,7 +4804,7 @@ public class WorldPlayer : WorldEntity
 
     public void TryTattle()
     {
-        Debug.Log("Tattle");
+        //Debug.Log("Tattle");
         
         int layerMask = PLAYER_LAYER_MASK;
         RaycastHit rcHit = FacingRaycastVOffset(0.75f, -0.35f, layerMask);
@@ -4921,23 +4929,23 @@ public class WorldPlayer : WorldEntity
     {
         isSpeaking = true;
         scriptedAnimation = true;
-        SetAnimation("talk");
+        SetAnimation("talk", true);
     }
     public override void DisableSpeakingAnim()
     {
         isSpeaking = false;
         scriptedAnimation = false;
-        ShowIdleAnimation();
+        ShowIdleAnimation(true);
     }
 
-    public void ShowIdleAnimation()
+    public void ShowIdleAnimation(bool force = false)
     {
         if (MainManager.Instance.playerData.ShowDangerAnim(currentCharacter) && !showBack)  //I don't have idleweak_back
         {
-            SetAnimation("idleweak");
+            SetAnimation("idleweak", force);
         } else
         {
-            SetAnimation("idle");
+            SetAnimation("idle", force);
         }
     }
 }

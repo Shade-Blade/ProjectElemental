@@ -65,7 +65,7 @@ MilkCoffee,,,,,28,Absorb:1/X|Hustle:1/1,,,NoOverworld,FALSE,Drink,Recipe,FALSE,,
 TropicalParfait,25,25,,,27,,,,,FALSE,Eat,Recipe,FALSE,,,,3,TRUE
 SleepyTea,40,,,,13,Sleep:1/2,,,,FALSE,Drink,Recipe,FALSE,,,,3,TRUE
 Meringue,15,15,,,21,,,,TargetAll|HealOverTime,FALSE,Eat,Recipe,FALSE,,,,3,TRUE
-SlimeBomb,,,,,20,,,,NoOverworld|TargetAll,FALSE,None,Recipe,TRUE,Water,,5,3,TRUE
+SlimeBomb,,,,,20,,,,NoOverworld|TargetAll,FALSE,None,Recipe,TRUE,Water,,3,3,TRUE
 SilverCarrot,30,,,,25,,,,,FALSE,Eat,Base,FALSE,,,,4,FALSE
 ScaleSteak,14,,,,21,AttackUp:3/2,,,,FALSE,Eat,Base,FALSE,,,,4,FALSE
 RockEgg,9,,,,14,AttackUp:2/3,,,,FALSE,Eat,Base,FALSE,,,,4,FALSE

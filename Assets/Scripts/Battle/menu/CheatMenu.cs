@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static MainManager;
 
 public class CheatMenu : MenuHandler
 {
@@ -218,6 +219,37 @@ public class CheatMenu : MenuHandler
             }
         }
 
+        //die
+        if (input[0].Equals("h"))
+        {
+            if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
+            {
+                List<PlayerEntity> pel = BattleControl.Instance.GetPlayerEntities();
+                for (int i = 0; i < pel.Count; i++)
+                {
+                    pel[i].hp = 0;
+                }
+            }
+            else
+            {
+                doexit = false;
+                cs.log.SetText("Battle only cheat!", true, true);
+            }
+        }
+
+        //Greed
+        if (input[0].Equals("g") || input[0].Equals("$"))
+        {
+            if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
+            {
+                BattleControl.Instance.AddCoins(BattleControl.Instance.GetPlayerEntities()[0], 999);
+            }
+            else
+            {
+                MainManager.Instance.playerData.coins = 999;
+            }
+        }
+
         //heal
         if (input[0].Equals("h"))
         {
@@ -258,18 +290,24 @@ public class CheatMenu : MenuHandler
             }
         }
 
-        //Greed
-        if (input[0].Equals("g"))
+        //stamina
+        if (input[0].Equals("s"))
         {
             if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
             {
-                BattleControl.Instance.AddCoins(BattleControl.Instance.GetPlayerEntities()[0], 999);
+                List<PlayerEntity> pel = BattleControl.Instance.GetPlayerEntities();
+                for (int i = 0; i < pel.Count; i++)
+                {
+                    pel[i].HealStamina(BattleControl.Instance.GetMaxStamina(pel[i]));
+                }
             }
             else
             {
-                MainManager.Instance.playerData.coins = 999;
+                doexit = false;
+                cs.log.SetText("Battle only cheat!", true, true);
             }
         }
+
 
         //set cheat
         if (input[0].Equals("sc"))
@@ -1173,6 +1211,12 @@ public class CheatMenu : MenuHandler
         {
             doexit = false;
             cs.log.SetText("Position = " + WorldPlayer.Instance.transform.position + ", True Yaw = " + WorldPlayer.Instance.GetTrueFacingRotation(), true, true);
+        }
+
+        if (input[0].Equals("fps"))
+        {
+            doexit = false;
+            cs.log.SetText("FPS = " + MainManager.Instance.lastCalculatedFPS + " (Instant = " + (1 / Time.deltaTime) + ")", true, true);
         }
 
         //Get global flag

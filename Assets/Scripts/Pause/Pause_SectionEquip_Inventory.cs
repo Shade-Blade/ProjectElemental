@@ -84,9 +84,14 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
         {
             if (menuIndex > menuEntries.Length - 1)
             {
-                textbox.SetText("", true, true);
+                if (textbox.isActiveAndEnabled)
+                {
+                    textbox.SetText("", true, true);
+                }
+                textbox.transform.parent.transform.parent.gameObject.SetActive(false);
             } else
             {
+                textbox.transform.parent.transform.parent.gameObject.SetActive(true);
                 textbox.SetText(menuEntries[menuIndex].description, true, true);
             }
         }

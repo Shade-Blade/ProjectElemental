@@ -274,9 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 0}
-  textIcon: {fileID: 0}
   textNumber: {fileID: 524676861795775259}
-  textIcon2: {fileID: 0}
   textNumber2: {fileID: 1588688974549727472}
   backImage: {fileID: 3062928774023687834}
   HPImage: {fileID: 7706363350827410319}
@@ -412,7 +410,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -45, y: 10}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1730373761044512260
 CanvasRenderer:

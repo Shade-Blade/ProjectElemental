@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ public class SettingsManager : MonoBehaviour
 
     public enum Setting
     {
-        None = 0,
+        None = -1,
         MasterVolume,
         MusicVolume,
         SFXVolume,
@@ -63,14 +64,22 @@ public class SettingsManager : MonoBehaviour
         switch (s)
         {
             case Setting.FPS:
-                //Debug.Log("update " + index);
-                if (index == 0)
+                //target frame rate is ignored if nonzero?
+                QualitySettings.vSyncCount = 0;
+                switch (index)
                 {
-                    Application.targetFrameRate = 30;
-                }
-                if (index == 1)
-                {
-                    Application.targetFrameRate = 60;
+                    case 0:
+                        Application.targetFrameRate = 30;
+                        break;
+                    case 1:
+                        Application.targetFrameRate = 60;
+                        break;
+                    case 2:
+                        Application.targetFrameRate = 90;
+                        break;
+                    case 3:
+                        Application.targetFrameRate = 120;
+                        break;
                 }
                 break;
         }
@@ -98,6 +107,12 @@ public class SettingsManager : MonoBehaviour
             }
             File.Move("settingst.txt", "settings.txt");
             File.Delete("settingst.txt");
+
+            for (int i = 0; i < settingsValues.Length; i++)
+            {
+                UpdateSetting((Setting)i, settingsValues[i]);
+            }
+
             return true;
         }
         catch (Exception e)
@@ -161,6 +176,7 @@ public class SettingsManager : MonoBehaviour
             {
                 settingsValues[i] = values[i];
             }
+            UpdateSetting((Setting)i, settingsValues[i]);
         }
 
         InputManager.SetControlsWithKeyCodeStrings(split[1], split[2]);        

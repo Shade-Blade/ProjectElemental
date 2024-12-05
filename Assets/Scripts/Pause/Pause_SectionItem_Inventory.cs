@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class Pause_SectionItem_Inventory : Pause_SectionShared_BoxMenu
 {
@@ -166,7 +165,7 @@ public class Pause_SectionItem_Inventory : Pause_SectionShared_BoxMenu
             selectorArrow.enabled = false;
         } else
         {
-            selectorArrow.enabled = true;
+            //selectorArrow.enabled = true;
             Vector3 targetLocal = Vector3.left * 160f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
             Vector3 current = selectorArrow.transform.localPosition;
             selectorArrow.transform.localPosition = targetLocal;
@@ -197,6 +196,10 @@ public class Pause_SectionItem_Inventory : Pause_SectionShared_BoxMenu
             return;
         }
 
+        if (menuEntries.Length > 0)
+        {
+            selectorArrow.enabled = true;
+        }
         Pause_HandlerItem_ConsumableMenu.UpdateObject uo = (Pause_HandlerItem_ConsumableMenu.UpdateObject)state;
 
         int index = uo.index;
@@ -228,10 +231,15 @@ public class Pause_SectionItem_Inventory : Pause_SectionShared_BoxMenu
         {
             if (menuIndex > menuEntries.Length - 1 || menuIndex < 0)
             {
-                textbox.SetText("", true, true);
+                if (textbox.isActiveAndEnabled)
+                {
+                    textbox.SetText("", true, true);
+                }
+                textbox.transform.parent.transform.parent.gameObject.SetActive(false);
             }
             else
             {
+                textbox.transform.parent.transform.parent.gameObject.SetActive(true);
                 textbox.SetText(menuEntries[menuIndex].description, true, true);
             }
         }

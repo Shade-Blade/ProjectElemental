@@ -4,6 +4,8 @@ Shader "Custom/BetterTransparent" {
 	Properties {
 		_Color("Main Color", Color) = (1, 1, 1, 1)
 		_MainTex("Base (RGB) Trans (A)", 2D) = "white" { }
+        _SpecColor ("Specular Color", Color) = (0,0,0,0)
+        _SpecPower ("Specular Power", float) = 48.0
 	}
 
 	SubShader {
@@ -38,7 +40,32 @@ Shader "Custom/BetterTransparent" {
 		Blend SrcAlpha OneMinusSrcAlpha
 
 		CGPROGRAM
-		#pragma surface surf Lambert alpha
+		
+		
+		float _SpecPower;
+
+        half4 LightingSimpleSpecular (SurfaceOutput s, half3 lightDir, half3 viewDir, half atten) {
+            half3 h = normalize (lightDir + viewDir);
+
+            half diff = max (0, dot (s.Normal, lightDir));
+
+            float nh = max (0, dot (s.Normal, h));
+            float spec = pow (nh, _SpecPower);
+
+            //Without this line there may be glitchy bright spots (bloom makes them very obvious and distracting)
+            //(not always necessary, bright spots don't always appear for all models)
+            spec = clamp(spec, 0, 1);
+
+            if (_LightColor0.a == 0) {
+                atten = -atten;
+            }
+
+            half4 c;
+            c.rgb = atten * _LightColor0.rgb * (s.Albedo * diff + _SpecColor * spec);
+            c.a = s.Alpha;
+            return c;
+        }
+		#pragma surface surf SimpleSpecular alpha
 
 		sampler2D _MainTex;
 		fixed4 _Color;

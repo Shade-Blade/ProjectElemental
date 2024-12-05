@@ -1152,19 +1152,19 @@ public abstract class SoulMove : PlayerMove
         return modifiedCost;
     }
 
-    public SoulMove()
+
+    public override bool ShowNamePopup()
     {
+        return false;
     }
+
+    public override string GetName() => GetNameWithIndex(GetTextIndex());
+    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
 
     public static string GetNameWithIndex(int index)
     {
         string output = BattleControl.Instance.soulText[index + 1][1];
         return output;
-    }
-
-    public override string GetDescription(int level = 1)
-    {
-        return GetDescriptionWithIndex(0, 1);
     }
 
     public static string GetDescriptionWithIndex(int index, int level = 1)
@@ -1405,6 +1405,11 @@ public abstract class EnemyMove : Move
         return GetNameWithIndex(GetMoveIndex());
     }
 
+    public override bool ShowNamePopup()
+    {
+        return true;
+    }
+
     public override string GetDescription()
     {
         //note: may change in harder difficulties
@@ -1482,6 +1487,7 @@ public abstract class Move : MonoBehaviour
 
     
     public abstract string GetName();
+    public abstract bool ShowNamePopup();
     public abstract string GetDescription();
     
     //public abstract float GetBasePower();

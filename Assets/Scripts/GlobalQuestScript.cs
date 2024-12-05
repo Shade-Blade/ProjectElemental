@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 public class GlobalQuestScript : MonoBehaviour
@@ -172,13 +170,14 @@ public class GlobalQuestScript : MonoBehaviour
         achievementStates = new bool[(int)(MainManager.Achievement.EndOfTable) - 1];
         globalAchievementStates = new bool[(int)(MainManager.Achievement.EndOfTable) - 1];
 
-        //Debug: Change to an actual checker later
         for (int i = 0; i < achievementStates.Length; i++)
         {
-            achievementStates[i] = true;
+            achievementStates[i] = MainManager.Instance.CheckAchivement((MainManager.Achievement)(i + 1));
         }
-        achievementStates[0] = false;
 
+        //debug / unused
+        //need to figure out how to acquire the global achievement state if that's ever a thing
+        //(not sure what I'll use this for)
         for (int i = 0; i < globalAchievementStates.Length; i++)
         {
             globalAchievementStates[i] = true;

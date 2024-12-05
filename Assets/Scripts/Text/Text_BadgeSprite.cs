@@ -66,7 +66,7 @@ public class Text_BadgeSprite : Text_SpecialSprite
         //Debug.Log("Display " + badge);
         Badge.BadgeType badgeType;
 
-        Enum.TryParse(badge, out badgeType);
+        Enum.TryParse(badge, true, out badgeType);
 
         //random failsafe thing I guess
         if ((int)badgeType < 1)

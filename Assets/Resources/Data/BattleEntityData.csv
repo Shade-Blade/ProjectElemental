@@ -6,7 +6,7 @@ Shrublet,3,6,0,FALSE,1,SourBerry,6,Default:1/1,Default:0|Fire:-2,StateContactHaz
 Rootling,20,6,24,TRUE,1,CarrotSalad,2,Default:0.8/1,Default:0|Fire:-2|Light:-2,,2,1.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Sunflower,12,22,0,FALSE,1,LivelyPeach,6,Default:0.4/1|Dizzy:0.8/1.5|Paralyze:0.8/1|Freeze:0/1,Default:0|Fire:4|Light:-2,Airborne,0.5,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Sunnybud,9,22,0,FALSE,1,HoneySyrup,6,Default:0.4/1|Dizzy:0.8/1.5|Paralyze:0.8/1|Freeze:0/1|Poison:0/1,Default:0|Fire:4|Light:-2,Airborne,0.5,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-MiracleBloom,12,30,0,FALSE,2,MiracleSyrup,6,Default:0.55/1|Dizzy:1/1|Poison:0/1,Default:0,Airborne,0.5,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+MiracleBloom,12,34,0,FALSE,2,MiracleSyrup,6,Default:0.55/1|Dizzy:1/1|Poison:0/1,Default:0,Airborne,0.5,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 SunSapling,60,11,49,TRUE,1,MiracleSyrup,2,Default:0.6/1|Freeze:0/1|Poison:0/1,Default:0|Fire:4|Light:-2,,2,1.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Rockling,2,8,0,FALSE,1,RockNut,6,Default:0.9/1,Default:1,,0.55,0.32,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Honeybud,3,8,0,FALSE,1,FlowerSyrup,6,Default:0.9/1|Dizzy:1/1.5,Default:0|Fire:-2|Light:-2,Airborne,0.5,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8

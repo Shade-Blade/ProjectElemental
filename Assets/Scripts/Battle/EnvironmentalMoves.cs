@@ -10,6 +10,11 @@ public class CounterFlare : Move
         return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     }
 
+    public override bool ShowNamePopup()
+    {
+        return true;
+    }
+
     public override string GetDescription()
     {
         return "Counter damage and healing from the Counter Flare buff.";
@@ -45,6 +50,11 @@ public class ArcDischarge : Move
     public override TargetArea GetBaseTarget()
     {
         return new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
+    }
+
+    public override bool ShowNamePopup()
+    {
+        return true;
     }
 
     public override string GetDescription()
@@ -84,6 +94,11 @@ public class Splotch : Move
         return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     }
 
+    public override bool ShowNamePopup()
+    {
+        return true;
+    }
+
     public override string GetDescription()
     {
         return "Damage taken due to Splotch";
@@ -110,6 +125,11 @@ public class ScaldingMagma : Move
     public override TargetArea GetBaseTarget()
     {
         return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+    }
+
+    public override bool ShowNamePopup()
+    {
+        return true;
     }
 
     public override string GetDescription()
@@ -139,6 +159,11 @@ public class IonizedSandBolt : Move
     public override TargetArea GetBaseTarget()
     {
         return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+    }
+
+    public override bool ShowNamePopup()
+    {
+        return true;
     }
 
     public override string GetDescription()
@@ -172,6 +197,11 @@ public class TrialOfHasteBolt : Move
     public override TargetArea GetBaseTarget()
     {
         return new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
+    }
+
+    public override bool ShowNamePopup()
+    {
+        return true;
     }
 
     public override string GetDescription()

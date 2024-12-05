@@ -115,13 +115,19 @@ public class Pause_SectionStatus : Pause_SectionShared
             //Debug.Log("null");
             selector.SetActive(false);
             //selectedNode = null;
-            textbox.SetText("", true, true);
+            if (textbox.isActiveAndEnabled)
+            {
+                textbox.SetText("", true, true);
+            }
+            textbox.transform.parent.transform.parent.gameObject.SetActive(false);
             return;
         }
 
         selector.SetActive(true);
         selectedNode = (Pause_SectionStatus_MenuNode)state;
         //Debug.Log(selectedNode.menuNodeType + " go to");
+
+        textbox.transform.parent.transform.parent.gameObject.SetActive(true);
         textbox.SetText(GetNodeDescription(selectedNode.menuNodeType), true, true);
     }
     public override object GetState()
@@ -301,6 +307,10 @@ public class Pause_SectionStatus : Pause_SectionShared
         playerData = MainManager.Instance.playerData;
         subobject.SetActive(true);
         Setup();
+
+        //Hacky
+        textbox.transform.parent.transform.parent.gameObject.SetActive(false);
+
         base.Init();
     }
 

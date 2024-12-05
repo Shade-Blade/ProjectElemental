@@ -60,6 +60,7 @@ public class RandomTableHolder : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(RandomTableHolder))]
 [CanEditMultipleObjects] 
 public class RandomTableHolderEditor : Editor
@@ -86,3 +87,4 @@ public class RandomTableHolderEditor : Editor
         }
     }
 }
+#endif

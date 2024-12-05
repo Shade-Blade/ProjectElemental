@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using TMPro;
-using TMPro.Examples;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class TextDisplayer : MonoBehaviour
 {
@@ -2712,13 +2709,17 @@ public class TextDisplayer : MonoBehaviour
 
             loopCount += 1;
 
+            /*
             if (Time.deltaTime > resolution)
             {
                 yield return null;
             } else
             {
-                yield return new WaitForSeconds(resolution);
+                yield return new WaitForEndOfFrame();
+                //yield return new WaitForSeconds(resolution);
             }
+            */
+            yield return null;
         }
     }
 }

@@ -15,6 +15,8 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
 
     public override void Init()
     {
+        //menuIndex = 0;
+        //menuTopIndex = 0;
         if (menuIndex == -1)
         {
             menuIndex = 0;
@@ -123,6 +125,26 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
             menuEntries = new BoxMenuEntry[0];
         }
 
+        if (menuIndex > menuEntries.Length - 1)
+        {
+            menuIndex = menuEntries.Length - 1;
+        }
+        if (menuTopIndex > menuEntries.Length - MENU_SIZE_PER_PAGE)
+        {
+            menuTopIndex = menuEntries.Length - MENU_SIZE_PER_PAGE;
+        }
+        if (menuTopIndex < 0)
+        {
+            menuTopIndex = 0;
+        }
+        visualTopIndex = menuTopIndex;
+        desiredLoadedTopIndex = Mathf.FloorToInt(visualTopIndex) - MENU_BUFFER;   //higher up
+        if (desiredLoadedTopIndex < 0)
+        {
+            desiredLoadedTopIndex = 0;
+        }
+        loadedTopIndex = desiredLoadedTopIndex;
+
         menuEntriesS = new List<BoxMenuEntryScript>();
 
         //Debug.Log(menuEntries.Length + " menu entries");
@@ -163,7 +185,7 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
         }
         else
         {
-            selectorArrow.enabled = true;
+            //selectorArrow.enabled = true;
             Vector3 targetLocal = Vector3.left * 160f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
             Vector3 current = selectorArrow.transform.localPosition;
             selectorArrow.transform.localPosition = targetLocal;
@@ -202,14 +224,22 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
         {
             Clear();
             Init();
+            selectorArrow.color = new Color(0.5f, 0.5f, 0.5f, 1);
             return;
         }
 
         selectorArrow.gameObject.SetActive(true);
+        selectorArrow.enabled = true;
         selectorArrow.color = new Color(1, 1, 1, 1);
 
         int index = (int)state;
         menuIndex = index;
+
+        if (menuEntries.Length == 0)
+        {
+            selectorArrow.gameObject.SetActive(false);
+            selectorArrow.enabled = false;
+        }
 
         if (menuIndex < 0)
         {

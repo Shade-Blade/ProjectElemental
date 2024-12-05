@@ -325,7 +325,7 @@ GameObject:
   - component: {fileID: 557467207567293082}
   - component: {fileID: 5264786013626571572}
   m_Layer: 0
-  m_Name: Test_PitLobby
+  m_Name: RabbitHole_Lobby
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: affeb7b7d322e434facad88dfb3075cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapName: 
+  mapName: RabbitHole_Lobby
   worldLocation: 
   skyboxID: 
   ambientLight: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -474,7 +474,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   forceKinematic: 0
   exitID: 1
-  nextMap: Test_PitFloor
+  nextMap: RabbitHole_NormalFloor
   nextExitID: 0
   exitPoint: {fileID: 673928810635554331}
   jumpVelocity: 9
@@ -852,6 +852,8 @@ MonoBehaviour:
       I can also tell you about enemies with my Scan ability.
     - You'll find safe floors every 10 floors, where people will appear, who can
       sell items, give you charms or do other important things for you.
+    - Aster went in there before you, I can't tell how far he's gone but he will
+      probably reach the bottom before you two.
   subObject: {fileID: 0}
   ac: {fileID: 0}
   dropShadow: {fileID: 0}
@@ -914,7 +916,7 @@ MonoBehaviour:
   stompLaunch: 3
   stompBoostable: 1
   textIndex: 0
-  loop: 0
+  loop: 1
 --- !u!1 &4520672147620612136
 GameObject:
   m_ObjectHideFlags: 0

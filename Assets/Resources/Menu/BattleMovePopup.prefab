@@ -284,6 +284,7 @@ MonoBehaviour:
   baseBox: {fileID: 7086981593174295911}
   rectTransform: {fileID: 7086981592171101347}
   ypos: 70
+  lifetime: 1
 --- !u!1 &7086981593174295904
 GameObject:
   m_ObjectHideFlags: 0

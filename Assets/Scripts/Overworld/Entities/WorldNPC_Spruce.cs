@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static ShopItem;
-using static UnityEditor.Progress;
 
 public class WorldNPC_Spruce : WorldNPC_InventoryShopkeeper
 {

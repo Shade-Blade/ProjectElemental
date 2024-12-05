@@ -8,9 +8,6 @@ using static Item;
 
 public class Item_GenericConsumable : ItemMove
 {
-    public override string GetName() => Item.GetName(GetItem());
-    public override string GetDescription() => Item.GetDescription(GetItem());
-    public override TargetArea GetBaseTarget() => Item.GetTarget(GetItem());
     public bool GetMultiTarget()
     {
         return Item.GetProperty(GetItem(), Item.ItemProperty.TargetAll) != null;
@@ -1833,9 +1830,6 @@ public class Item_GenericConsumable : ItemMove
 
 public class Item_GenericThrowable : ItemMove
 {
-    public override string GetName() => Item.GetName(GetItem());
-    public override string GetDescription() => Item.GetDescription(GetItem());
-    public override TargetArea GetBaseTarget() => Item.GetTarget(GetItem());
     //public override float GetBasePower() => 4.0f;
     //public override Item.ItemType GetItemType() => Item.ItemType.DebugBomb;
     public bool GetMultiTarget()

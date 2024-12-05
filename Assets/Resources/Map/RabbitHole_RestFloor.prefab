@@ -656,7 +656,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   forceKinematic: 0
   exitID: 1
-  nextMap: Test_PitFloor
+  nextMap: RabbitHole_NormalFloor
   nextExitID: 0
   exitPoint: {fileID: 3813200064963663553}
   jumpVelocity: 9
@@ -800,7 +800,7 @@ GameObject:
   - component: {fileID: 4183270759453983296}
   - component: {fileID: 146590210396262451}
   m_Layer: 0
-  m_Name: Test_PitRestFloor
+  m_Name: RabbitHole_RestFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -842,7 +842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eae6752cd5c992f49b7f863401953156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapName: Test_PitRestFloor
+  mapName: RabbitFloor_RestFloor
   worldLocation: 
   skyboxID: 
   ambientLight: {r: 0.5, g: 0.5, b: 0.5, a: 1}

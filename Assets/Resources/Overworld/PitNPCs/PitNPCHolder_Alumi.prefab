@@ -235,9 +235,9 @@ MonoBehaviour:
     - You got rid of all your ribbons.? Well, I'm not buying any other part of your
       ridiculous getup. Come back when you have something actually fashionable.
     - Hmmm... Now you can spend those coins on something a little more fashionable.
-    - Wow, it looks like you have one of every ribbon! But even you can see that
-      none of them can make you even half as beautful as me <heart>. Why don't you
-      let me take some of those ugly rags off your hands for you?
+    - It looks like you have a lot of ribbons on your hands now. But even you can
+      see that none of them can make you even half as beautful as me <heart>. Why
+      don't you let me take some of those ugly rags off your hands for you?
   subObject: {fileID: 0}
   ac: {fileID: 0}
   dropShadow: {fileID: 0}

@@ -597,7 +597,7 @@ GameObject:
   - component: {fileID: 6596406467575241237}
   - component: {fileID: 3648140387096418243}
   m_Layer: 0
-  m_Name: Test_PitFinalFloor
+  m_Name: RabbitHole_FinalFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -640,7 +640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a60e3536603c84296a2355e6e50243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapName: Test_PitFinalFloor
+  mapName: RabbitHole_FinalFloor
   worldLocation: 
   skyboxID: 
   ambientLight: {r: 0.5, g: 0.5, b: 0.5, a: 1}

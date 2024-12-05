@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using UnityEditor.AssetImporters;
 using UnityEngine;
 
 //special class for data setup of NPCs and enemies
@@ -537,9 +535,9 @@ public class WorldEntity : WorldObject, ITextSpeaker
         Vector3 usedMovement = useIntended ? intendedMovement : rb.velocity;
 
         //Debug.Log("a" + trueFacingRotation);
-        if (pastTrueFacingRotation != trueFacingRotation || usedMovement.x != 0 || usedMovement.z != 0)
+        if (pastTrueFacingRotation != trueFacingRotation || (MainManager.XZProject(usedMovement).magnitude > 0.01f))
         {
-            if (!movementRotationDisabled && (usedMovement.x != 0 || usedMovement.z != 0))
+            if (!movementRotationDisabled && ((MainManager.XZProject(usedMovement).magnitude > 0.01f)))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
                 //transform this with respect to worldspace yaw
@@ -1098,7 +1096,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
     public virtual void EnableSpeakingAnim()
     {
         isSpeaking = true;       
-        SetAnimation("talk");
+        SetAnimation("talk", true);
     }
     public virtual bool SpeakingAnimActive()
     {
@@ -1107,7 +1105,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
     public virtual void DisableSpeakingAnim()
     {
         isSpeaking = false;
-        SetAnimation("idle");   //note: no way to check for what the real last anim was at this point
+        SetAnimation("idle", true);   //note: no way to check for what the real last anim was at this point
     }
 
     public virtual void SetAnimation(string name, bool force = false)

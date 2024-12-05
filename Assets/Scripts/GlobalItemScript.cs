@@ -7,7 +7,6 @@ using System.Reflection;
 using UnityEngine;
 using static Item;
 using static KeyItem;
-using static UnityEditor.Progress;
 using static UnityEngine.UI.Image;
 
 //contains GlobalItemScript, Item, ItemMove classes
@@ -2875,6 +2874,14 @@ public abstract class ItemMove : Move, IEntityHighlighter
         yield return null;
     }
 
+    public override bool ShowNamePopup()
+    {
+        return false;
+    }
+
+    public override string GetName() => Item.GetName(GetItem());
+    public override string GetDescription() => Item.GetDescription(GetItem());
+    public override TargetArea GetBaseTarget() => Item.GetTarget(GetItem());
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
@@ -3069,6 +3076,11 @@ public abstract class MetaItemMove : Move
         Multi,
         Quick,
         Void
+    }
+
+    public override bool ShowNamePopup()
+    {
+        return false;
     }
 
     public static string GetName(Move move)

@@ -2,7 +2,7 @@ pit test
 d_rh_v0.0
 GF_Recipe_SourJam:True,GF_Bestiary_Fluffling:True,GF_Bestiary_Shrublet:True,GF_Bestiary_PuffJelly:True,GF_Bestiary_Honeybud:True,GF_Bestiary_Rockling:True,GF_Bestiary_Leafling:True,GF_Recipe_CarrotSalad:True,GF_Recipe_RoastedNut:True,GF_Bestiary_Renegade:True,GF_Bestiary_LumistarSoldier:True,GF_Bestiary_Heatwing:True,GF_Bestiary_Bandit:True,GF_Bestiary_Slimebloom:True,GF_Bestiary_Slimewalker:True,GF_Bestiary_Slimeworm:True,GF_Bestiary_Embercrest:True,GF_Bestiary_Flametongue:True,GF_Bestiary_Sandswimmer:True,GF_Bestiary_Mosquito:True,GF_Bestiary_Sunflower:True,GF_Bestiary_LumistarStriker:True,GF_Bestiary_Chaintail:True,GF_Bestiary_Sawcrest:True,GF_Bestiary_Lavaswimmer:True,GF_Bestiary_EyeSpore:True,GF_Bestiary_HoarderFly:True,GF_Bestiary_LumistarVanguard:True,GF_Bestiary_Sunnybud:True,GF_Bestiary_Speartongue:True,GF_Bestiary_Plateshell:True,GF_Bestiary_Coiler:True,GF_Bestiary_Shieldwing:True,GF_Recipe_CandyPumpkin:True,GF_Recipe_HoneyCaramel:True,GF_Bestiary_Shimmerwing:True,GF_Bestiary_Honeywing:True,GF_Bestiary_CursedEye:True,GF_Bestiary_Drillbeak:True,GF_Bestiary_CloudJelly:True,GF_Bestiary_AuroraWing:True,GF_Bestiary_MiracleBloom:True,GF_Bestiary_CrystalSlug:True,GF_Bestiary_DrainBud:True,GF_Bestiary_CrystalCrab:True,GF_Recipe_MiracleCandy:True,GF_Recipe_Limeade:True
 GV_PitFloor:90,GV_PitAltar:9
-CrystalHills,Test_PitRestFloor,0.5745384|0.375|-3.023037
+CrystalHills,RabbitHole_RestFloor,0.5745384|0.375|-3.023037
 10565.16
 25,0,60,60,60,60,60,56,3,851,0,0,10,32,6,6,6,112,122,348,4034,2837,53,27,97,89,8,11
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP

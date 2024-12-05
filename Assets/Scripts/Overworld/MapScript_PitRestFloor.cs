@@ -22,6 +22,11 @@ public class MapScript_PitRestFloor : MapScript
             MainManager.Instance.PitReset();
         }
 
+        if (floor == 50)
+        {
+            MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_Halfway);
+        }
+
         switch ((floor - 1) / 10)
         {
             case 0:
@@ -71,11 +76,11 @@ public class MapScript_PitRestFloor : MapScript
         {
             if (floor % 10 == 9)
             {
-                mehs.nextMap = "Test_PitRestFloor";
+                mehs.nextMap = MainManager.MapID.RabbitHole_RestFloor.ToString();
             }
             if (floor == 99)
             {
-                mehs.nextMap = "Test_PitFinalFloor";
+                mehs.nextMap = MainManager.MapID.RabbitHole_FinalFloor.ToString();
             }
         }
 

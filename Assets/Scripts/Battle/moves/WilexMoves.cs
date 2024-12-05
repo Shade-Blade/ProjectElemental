@@ -67,17 +67,21 @@ public abstract class WilexMove : PlayerMove
         return 1;
     }
 
+    public override bool ShowNamePopup()
+    {
+        return false;
+    }
+
+
     //public abstract int GetTextIndex();
+    public override string GetName() => GetNameWithIndex(GetTextIndex());
     public string GetNameWithIndex(int index)
     {
         string output = BattleControl.Instance.wilexText[index + 1][1];
         return output;
     }
 
-    public override string GetDescription(int level = 1)
-    {
-        return GetDescriptionWithIndex(0, level);
-    }
+    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
 
     public string GetDescriptionWithIndex(int index, int level = 1)
     {
@@ -109,8 +113,7 @@ public class WM_HighStomp : WilexMove
     {
         return 0;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 0;
@@ -256,8 +259,8 @@ public class WM_Focus : WilexMove
     {
         return 1;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 1;
@@ -377,8 +380,8 @@ public class WM_MultiStomp : WilexMove
     {
         return 2;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, true);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 3;
@@ -537,8 +540,8 @@ public class WM_ElectroStomp : WM_HighStomp
     {
         return 3;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 5;
@@ -666,8 +669,8 @@ public class WM_Taunt : WilexMove
     {
         return 4;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 2;
@@ -780,8 +783,8 @@ public class WM_ParalyzeStomp : WM_HighStomp
     {
         return 5;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 7;
@@ -897,8 +900,8 @@ public class WM_FlameStomp : WM_HighStomp
     {
         return 6;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 8;
@@ -1056,8 +1059,8 @@ public class WM_DoubleStomp : WilexMove
     {
         return 7;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 9;
@@ -1256,8 +1259,8 @@ public class WM_Overstomp : WilexMove
     {
         return 8;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 10;
@@ -1408,8 +1411,8 @@ public class WM_SmartStomp : WM_HighStomp
     {
         return 9;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 8;
@@ -1625,8 +1628,8 @@ public class WM_TeamQuake : WilexMove
     {
         return 10;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyGrounded, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 15;
@@ -1889,8 +1892,8 @@ public class WM_EggToss : WilexMove
     {
         return 11;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 1;
@@ -2099,8 +2102,8 @@ public class WM_Slash : WilexMove
     {
         return 12;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 0;
@@ -2257,8 +2260,8 @@ public class WM_MultiSlash : WM_Slash
     {
         return 13;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 4;
@@ -2554,8 +2557,8 @@ public class WM_SlipSlash : WilexMove
     {
         return 14;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 5;
@@ -2806,8 +2809,8 @@ public class WM_PoisonSlash : WM_Slash
     {
         return 15;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
@@ -2916,8 +2919,8 @@ public class WM_PreciseStab : WM_Slash
     {
         return 16;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 8;
@@ -3051,8 +3054,8 @@ public class WM_SwordDischarge : WilexMove
     {
         return 17;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 9;
@@ -3166,8 +3169,8 @@ public class WM_SwordDance : WilexMove
     {
         return 18;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
@@ -3349,8 +3352,8 @@ public class WM_BoomerangSlash : WilexMove
     {
         return 19;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 11;
@@ -3493,8 +3496,8 @@ public class WM_DarkSlash : WM_Slash
     {
         return 20;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 13;
@@ -3628,8 +3631,8 @@ public class WM_Aetherize : WilexMove
     {
         return 21;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 3;
@@ -3776,8 +3779,8 @@ public class WM_FlameBat : WilexMove
     {
         return 22;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
@@ -3895,8 +3898,8 @@ public class WM_AstralWall : WilexMove
     {
         return 23;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 6;

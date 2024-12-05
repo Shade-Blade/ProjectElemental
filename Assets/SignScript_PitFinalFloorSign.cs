@@ -35,7 +35,7 @@ public class SignScript_PitFinalFloorSign : SignScript, ITextSpeaker
         PlayerData.PlayerDataEntry wilexPDE = pd.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
         PlayerData.PlayerDataEntry lunaPDE = pd.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
 
-        testTextFile[0][0] = "Thanks for playing! You have made it all the way to the final floor.<next>Total Battles: " + pd.totalBattles + "<line>Battles Won: " + pd.battlesWon + "<line>Battles Fled: " + pd.battlesFled + "<line>Battles Lost: " + pd.battlesLost;
+        testTextFile[0][0] = "<sign>Thanks for playing! You have made it all the way to the final floor.<next>Total Battles: " + pd.totalBattles + "<line>Battles Won: " + pd.battlesWon + "<line>Battles Fled: " + pd.battlesFled + "<line>Battles Lost: " + pd.battlesLost;
         testTextFile[0][0] += "<next>Total Damage Dealt: " + (wilexPDE != null ? "<color,red>" + wilexPDE.cumulativeDamageDealt + "</color>/" : "") + (lunaPDE != null ? "<color,green>" + lunaPDE.cumulativeDamageDealt + "</color>/" : "") + "<color,yellow>" + pd.cumulativeDamageDealt + "</color>";
         testTextFile[0][0] += "<line>Total Damage Taken: " + (wilexPDE != null ? "<color,red>" + wilexPDE.cumulativeDamageTaken + "</color>/" : "") + (lunaPDE != null ? "<color,green>" + lunaPDE.cumulativeDamageTaken + "</color>/" : "") + "<color,yellow>" + pd.cumulativeDamageTaken + "</color>";
         testTextFile[0][0] += "<line>Maximum Damage Per Turn: " + (wilexPDE != null ? "<color,red>" + wilexPDE.maxDamagePerTurn + "</color>/" : "") + (lunaPDE != null ? "<color,green>" + lunaPDE.maxDamagePerTurn + "</color>/" : "") + "<color,yellow>" + pd.maxDamagePerTurn + "</color>";

@@ -364,6 +364,9 @@ public class MapScript : MonoBehaviour
         {
             if (MainManager.Instance.playerData.level - 2 + 2 * MainManager.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.Overkill) >= overkillLevel)
             {
+                worldBattleEntity = entity;
+                MainManager.Instance.coinDrops = 0;
+                MainManager.Instance.dropItemCount = 0;
                 HandleBattleOutcome(BattleHelper.BattleOutcome.Win);
                 return;
             } 
@@ -387,6 +390,11 @@ public class MapScript : MonoBehaviour
 
     public void HandleBattleOutcome(BattleHelper.BattleOutcome outcome)
     {
+        if (worldBattleEntity == null)
+        {
+            return;
+        }
+
         battleHalt = false;
         worldBattleEntity.HandleBattleOutcome(outcome);
     }

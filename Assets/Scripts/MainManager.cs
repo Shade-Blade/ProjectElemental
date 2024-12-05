@@ -735,7 +735,7 @@ public class PlayerData
         sp = GetMaxSP();
         usedSP = CalculateUsedSP();
 
-        if (usedSP > sp)
+        if (usedSP > sp && !MainManager.Instance.Cheat_BadgeAnarchy)
         {
             equippedBadges = new List<Badge>();
             partyEquippedBadges = new List<Badge>();
@@ -2643,6 +2643,13 @@ public class MainManager : MonoBehaviour
         GF_Bestiary_CursedEye,
         GF_Bestiary_StrangeTendril,
         GF_Bestiary_DrainBud,
+
+        GF_ACH_Halfway,
+        GF_ACH_Complete,
+        GF_ACH_DiamondRibbon,
+        GF_ACH_LevelCap,
+        GF_ACH_Risky,
+        GF_ACH_KeyHoarder,
     }
     public enum StoryProgress
     {
@@ -2654,6 +2661,14 @@ public class MainManager : MonoBehaviour
     {
         ACH_None = 0,
 
+        ACH_Halfway,
+        ACH_Complete,
+        ACH_DiamondRibbon,
+        ACH_LevelCap,
+        ACH_Risky,
+        ACH_KeyHoarder,
+
+        /*
         ACH_FullCompletion,
         ACH_AllBadges,
         ACH_AllRibbons,
@@ -2696,6 +2711,7 @@ public class MainManager : MonoBehaviour
         ACH_HardChapter8,
         ACH_HardEpilogueOrder,
         ACH_HardEpilogueChaos,
+        */
 
         EndOfTable
     }
@@ -2804,6 +2820,10 @@ public class MainManager : MonoBehaviour
     public bool Cheat_OverworldEncounterImmunity;  //Block mapscript from starting battles
     public bool Cheat_ControlNeverDisabled; //ignore the disable control thing
 
+    public int frameCounter;
+    public float frameTime;
+    public float lastCalculatedFPS;
+
     public enum GameConst
     {
         PartyCount,     //# of characters in full party
@@ -2870,10 +2890,10 @@ public class MainManager : MonoBehaviour
         Test_LandscapeC8,
         Test_LandscapeC9,
         Test_VertexWarp,
-        Test_PitLobby,
-        Test_PitFloor,
-        Test_PitRestFloor,
-        Test_PitFinalFloor
+        RabbitHole_Lobby,
+        RabbitHole_NormalFloor,
+        RabbitHole_RestFloor,
+        RabbitHole_FinalFloor
     }
     public enum BattleMapID
     {
@@ -3303,6 +3323,20 @@ public class MainManager : MonoBehaviour
 
     public IEnumerator Pickup(PickupUnion pu)
     {
+        if (pu.type == PickupUnion.PickupType.KeyItem && pu.keyItem.type == KeyItem.KeyItemType.CrystalKey)
+        {
+            if (playerData.keyInventory.FindAll((e) => (e.type == KeyItem.KeyItemType.CrystalKey)).Count >= 4)
+            {
+                AwardAchievement(Achievement.ACH_KeyHoarder);
+            }
+        }
+
+        if (pu.type == PickupUnion.PickupType.Ribbon && pu.ribbon.type == Ribbon.RibbonType.DiamondRibbon)
+        {
+            AwardAchievement(Achievement.ACH_DiamondRibbon);
+        }
+
+
         switch (pu.type)
         {
             case PickupUnion.PickupType.None:
@@ -4032,6 +4066,16 @@ public class MainManager : MonoBehaviour
         }
     }
     */
+    public void AwardAchievement(Achievement ac)
+    {
+        GlobalFlag gf = Enum.Parse<GlobalFlag>("GF_" + ac.ToString());
+        SetGlobalFlag(gf, true);
+    }
+    public bool CheckAchivement(Achievement ac)
+    {
+        GlobalFlag gf = Enum.Parse<GlobalFlag>("GF_" + ac.ToString());
+        return GetGlobalFlag(gf);
+    }
     public void SetAreaFlag(string index, bool set)
     {
         areaFlags[index] = set;
@@ -4412,7 +4456,9 @@ public class MainManager : MonoBehaviour
     //remove debug stuff later
     public void Awake()
     {
-        Application.targetFrameRate = 30;
+        //target frame rate is ignored if nonzero?
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;   //settings overwrites this?
         DontDestroyOnLoad(gameObject); //keep MainManager active at all times
         LoadBaseAssets();
 
@@ -4817,6 +4863,17 @@ public class MainManager : MonoBehaviour
         {
             Time.timeScale = targetTimeScale;
         }
+
+        frameCounter++;
+        frameTime += Time.deltaTime;
+        if (frameTime > 0.25f)
+        {
+            lastCalculatedFPS = (frameCounter / frameTime);
+            frameCounter = 0;
+            frameTime = 0;
+        }
+
+
 
         if (gameOverPlayerData != null)
         {
@@ -5745,7 +5802,7 @@ public class MainManager : MonoBehaviour
         output += "\n";
         output += WorldLocation.None;
         output += ",";
-        output += MapID.Test_PitLobby;
+        output += MapID.RabbitHole_Lobby;
         output += ",";
         output += Vector3ToString(Vector3.up * 15 + Vector3.forward * 1.5f);
         output += "\n";

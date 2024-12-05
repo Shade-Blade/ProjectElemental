@@ -107,7 +107,7 @@ DefenseBoostB,5,FALSE,DefenseBoost,TRUE,2,6
 EnduranceBoost,6,FALSE,EnduranceBoost,TRUE,2,5
 EnduranceBoostB,6,FALSE,EnduranceBoost,TRUE,2,7
 AgilityBoost,6,FALSE,AgilityBoost,TRUE,2,3
-AgilityBoostB,6,FALSE,AgilityBoostB,TRUE,2,8
+AgilityBoostB,6,FALSE,AgilityBoost,TRUE,2,8
 VitalEnergy,4,FALSE,VitalEnergy,TRUE,1,4
 SoulfulEnergy,4,FALSE,SoulfulEnergy,TRUE,1,4
 StaminaEnergy,10,FALSE,StaminaEnergy,TRUE,1,7
@@ -211,7 +211,7 @@ AbsorbRecycling,7,FALSE,AbsorbRecycling,TRUE,1,9
 BurstRecycling,8,FALSE,BurstRecycling,TRUE,1,9
 StaminaRecycling,8,FALSE,StaminaRecycling,TRUE,1,9
 WeatherShield,3,TRUE,WeatherShield,TRUE,1,6
-Overkill,3,TRUE,Overkill,TRUE,1,1
+Overkill,0,TRUE,Overkill,TRUE,1,1
 SmartAmbush,5,TRUE,SmartAmbush,TRUE,1,6
 AutoStrike,5,TRUE,AutoStrike,TRUE,1,9
 InviteDanger,0,TRUE,InviteDanger,TRUE,1,1

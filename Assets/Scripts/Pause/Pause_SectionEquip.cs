@@ -21,9 +21,37 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
     public override void ApplyUpdate(object state)
     {
         selectorArrow.color = new Color(0.5f, 0.5f, 0.5f, 1);
+        textbox.transform.parent.transform.parent.gameObject.SetActive(false);
         if (state == null)
         {
+            for (int i = 0; i < tabs.Length; i++)
+            {
+                //I could make this better but I am lazy, and it doesn't really matter anyway
+                //Less room for error if I runtime init this instead of manually setting it?
+                if (tabImages == null || tabImages.Length != tabs.Length)
+                {
+                    tabImages = new Image[tabs.Length];
+                }
+                if (tabImages[i] == null)
+                {
+                    tabImages[i] = tabs[i].GetComponent<Image>();
+                }
+                tabImages[i].color = new Color(0.75f, 0.75f, 0.75f, 1);
+            }
+
             return;
+        }
+        for (int i = 0; i < tabs.Length; i++)
+        {
+            if (tabImages == null || tabImages.Length != tabs.Length)
+            {
+                tabImages = new Image[tabs.Length];
+            }
+            if (tabImages[i] == null)
+            {
+                tabImages[i] = tabs[i].GetComponent<Image>();
+            }
+            tabImages[i].color = new Color(0.9f, 0.9f, 0.9f, 1);
         }
 
         Pause_HandlerEquip.UpdateObject uo = (Pause_HandlerEquip.UpdateObject)state;
@@ -92,8 +120,6 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
             tabIndex = 0;
         }
 
-        //Debug.Log("SectionEquip init");
-
         if (!RibbonsAvailable())
         {
             tabs[3].SetActive(false);
@@ -117,7 +143,10 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
             inventory.selectedPlayer = pd.GetSortedParty()[0].entityID;
             characterStats.ApplyUpdate(pd.GetSortedParty()[0].entityID);
         }
-        //inventory.menuIndex = 0;
+
+        //Hacky
+        textbox.transform.parent.transform.parent.gameObject.SetActive(false);
+
         inventory.Init();
         base.Init();
     }

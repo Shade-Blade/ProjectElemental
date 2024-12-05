@@ -2504,6 +2504,11 @@ public class BattleControl : MonoBehaviour
             battleXP = 100;
         }
 
+        if (battleXP == 100)
+        {
+            MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_Risky);
+        }
+
         //Drop item?
         //current logic: 1/4 base, but x2 if it dropped 0 xp, x2 if you have itemfinder
         //  <= 4 makes 1/2, <= 2 makes guaranteed
@@ -2606,6 +2611,7 @@ public class BattleControl : MonoBehaviour
 
             if ((playerData.level >= PlayerData.GetMaxLevel()))
             {
+                MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_LevelCap);
                 playerData.exp = 0;
             }
 
@@ -4516,7 +4522,10 @@ public class BattleControl : MonoBehaviour
                     }
                 } else
                 {
-                    DisplayMovePopup(reactionMoveList[0].move.GetName());
+                    if (reactionMoveList[0].move.ShowNamePopup())
+                    {
+                        DisplayMovePopup(reactionMoveList[0].move.GetName());
+                    }
                     //this replaces the wait for 0.25 seconds
                     yield return StartCoroutine(reactionMoveList[0].user.PreReact(reactionMoveList[0].move, reactionMoveList[0].target));
                     yield return StartCoroutine(reactionMoveList[0].move.ExecuteOutOfTurn(reactionMoveList[0].user, reactionMoveList[0].target));
@@ -4599,6 +4608,13 @@ public class BattleControl : MonoBehaviour
     {
         //Debug.Log("Display " + name);
         DestroyMovePopup();
+
+        //no blank popups
+        if (name == null || name.Length < 1)
+        {
+            return;
+        }
+
         GameObject go = Instantiate(movePopupBoxBase, MainManager.Instance.Canvas.transform);
         movePopup = go.GetComponent<NamePopupScript>();
 
@@ -4609,7 +4625,9 @@ public class BattleControl : MonoBehaviour
         //Debug.Log("Destroy");
         if (movePopup != null)
         {
-            Destroy(movePopup.gameObject);
+            //Idea (may cause popup overlap? but the new one should display on top)
+            movePopup.lifetime = -1;
+            //Destroy(movePopup.gameObject);
         }
     }
 
@@ -5210,7 +5228,10 @@ public class BattleControl : MonoBehaviour
                 {
                     current.moveExecuting = true;
                     current.moveActive = true;
-                    DisplayMovePopup(current.currMove.GetName());
+                    if (current.currMove.ShowNamePopup())
+                    {
+                        DisplayMovePopup(current.currMove.GetName());
+                    }
                     yield return new WaitForSeconds(0.5f); //note: not in reactions because they have their own standard particle effect
                     StartCoroutine(current.ExecuteMoveCoroutine(current.currMove));
                     yield return new WaitUntil(() => current == null || !current.moveActive);
@@ -5295,7 +5316,10 @@ public class BattleControl : MonoBehaviour
             if (current.magmaDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
             {
                 Move sp = GetOrAddComponent<ScaldingMagma>();
-                DisplayMovePopup(sp.GetName());
+                if (sp.ShowNamePopup())
+                {
+                    DisplayMovePopup(sp.GetName());
+                }
                 yield return new WaitForSeconds(0.5f);
                 yield return sp.Execute(current);
                 DestroyMovePopup();
@@ -5303,7 +5327,10 @@ public class BattleControl : MonoBehaviour
             if (current.arcDischargeDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
             {
                 Move sp = GetOrAddComponent<ArcDischarge>();
-                DisplayMovePopup(sp.GetName());
+                if (sp.ShowNamePopup())
+                {
+                    DisplayMovePopup(sp.GetName());
+                }
                 yield return new WaitForSeconds(0.5f);
                 yield return sp.Execute(current);
                 DestroyMovePopup();
@@ -5311,7 +5338,10 @@ public class BattleControl : MonoBehaviour
             if (current.splotchDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
             {
                 Move sp = GetOrAddComponent<Splotch>();
-                DisplayMovePopup(sp.GetName());
+                if (sp.ShowNamePopup())
+                {
+                    DisplayMovePopup(sp.GetName());
+                }
                 yield return new WaitForSeconds(0.5f);
                 yield return sp.Execute(current);
                 DestroyMovePopup();
@@ -5319,7 +5349,10 @@ public class BattleControl : MonoBehaviour
             if (current.counterFlareDamage > 0 && (current.hp > 0 || current.GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP)))
             {
                 Move cf = GetOrAddComponent<CounterFlare>();
-                DisplayMovePopup(cf.GetName());
+                if (cf.ShowNamePopup())
+                {
+                    DisplayMovePopup(cf.GetName());
+                }
                 yield return new WaitForSeconds(0.5f);
                 yield return cf.Execute(current);
                 DestroyMovePopup();

@@ -164,6 +164,11 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
     }
     public virtual void HandleBattleOutcome(BattleHelper.BattleOutcome outcome)
     {
+        if (gameObject == null)
+        {
+            return;
+        }
+
         frameTimer = -1;
         firstStrikeTimer = -1;
         bsa = new BattleStartArguments();

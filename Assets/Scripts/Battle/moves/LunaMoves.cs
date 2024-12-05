@@ -64,6 +64,12 @@ public abstract class LunaMove : PlayerMove
         return 1;
     }
 
+    public override bool ShowNamePopup()
+    {
+        return false;
+    }
+
+    public override string GetName() => GetNameWithIndex(GetTextIndex());
     //public abstract int GetTextIndex();
     public string GetNameWithIndex(int index)
     {
@@ -71,10 +77,7 @@ public abstract class LunaMove : PlayerMove
         return output;
     }
 
-    public override string GetDescription(int level = 1)
-    {
-        return GetDescriptionWithIndex(0, level);
-    }
+    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
 
     public string GetDescriptionWithIndex(int index, int level = 1)
     {
@@ -94,6 +97,7 @@ public abstract class LunaMove : PlayerMove
 
         return output;
     }
+
 } 
 
 public class LM_HeavyStomp : LunaMove
@@ -106,8 +110,8 @@ public class LM_HeavyStomp : LunaMove
     {
         return 0;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowStompable, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 0;
@@ -239,8 +243,8 @@ public class LM_Brace : LunaMove
     {
         return 1;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 1;
@@ -359,8 +363,8 @@ public class LM_DashThrough : LunaMove
     {
         return 2;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, true);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 3;
@@ -539,8 +543,8 @@ public class LM_FlipKick : LunaMove
     {
         return 3;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 4;
@@ -677,8 +681,8 @@ public class LM_FluffHeal : LunaMove
     {
         return 4;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 4;
@@ -810,8 +814,8 @@ public class LM_SleepStomp : LM_HeavyStomp
     {
         return 5;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowStompable, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 5;
@@ -916,8 +920,8 @@ public class LM_MeteorStomp : LunaMove
     {
         return 6;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowStompable, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 6;
@@ -1115,8 +1119,8 @@ public class LM_UnderStrike : LunaMove
     {
         return 7;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowBottommost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 7;
@@ -1146,7 +1150,7 @@ public class LM_UnderStrike : LunaMove
         {
             int sd = 2;
 
-            Vector3 bpos = caller.homePos + caller.curTarget.height * 2 * Vector3.down;
+            Vector3 bpos = caller.homePos + 2 * Vector3.down;
             DigParticles(caller);
             caller.SetAnimation("dig");
             yield return StartCoroutine(caller.Move(bpos, 16, false, false));
@@ -1164,7 +1168,8 @@ public class LM_UnderStrike : LunaMove
 
             Vector3 tpos = caller.curTarget.transform.position - caller.curTarget.transform.position.y * Vector3.up + caller.transform.position.y * Vector3.up;
             caller.transform.position = tpos;
-            Vector3 spos = caller.transform.position + caller.curTarget.height * Vector3.up * 2;
+            caller.SetAnimation("undig");
+            Vector3 spos = caller.transform.position + Vector3.up * 2;
             Vector3 tpos2 = caller.curTarget.transform.position + caller.curTarget.height * Vector3.up;
 
             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
@@ -1410,8 +1415,8 @@ public class LM_IronStomp : LunaMove
     {
         return 8;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 8;
@@ -1567,8 +1572,8 @@ public class LM_ElementalStomp : LunaMove
     {
         return 9;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 9;
@@ -1833,8 +1838,8 @@ public class LM_TeamThrow : LunaMove
     {
         return 10;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.0f;
     public override int GetBaseCost() => 12;
@@ -2286,8 +2291,8 @@ public class LM_DoubleEgg : LunaMove
     {
         return 11;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 1;
@@ -2487,8 +2492,8 @@ public class LM_Smash : LunaMove
     {
         return 12;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 0;
@@ -2658,8 +2663,8 @@ public class LM_PowerSmash : LM_Smash
     {
         return 13;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 3;
@@ -2825,8 +2830,8 @@ public class LM_DazzleSmash : LM_Smash
     {
         return 14;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 4;
@@ -2943,8 +2948,8 @@ public class LM_HammerThrow : LunaMove
     {
         return 15;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 5;
@@ -3103,8 +3108,8 @@ public class LM_BreakerSmash : LM_Smash
     {
         return 16;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 6;
@@ -3241,8 +3246,8 @@ public class LM_FlameSmash : LM_Smash
     {
         return 17;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 7;
@@ -3334,8 +3339,8 @@ public class LM_MomentumSmash : LM_Smash
     {
         return 18;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 7;
@@ -3509,8 +3514,8 @@ public class LM_QuakeSmash : LunaMove
     {
         return 19;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyGrounded, true);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 8;
@@ -3659,8 +3664,8 @@ public class LM_LightSmash : LM_Smash
     {
         return 20;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 9;
@@ -3797,8 +3802,8 @@ public class LM_Illuminate : LunaMove
     {
         return 21;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 3;
@@ -3945,8 +3950,8 @@ public class LM_HammerBeat : LunaMove
     {
         return 22;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost() => 5;
@@ -4043,8 +4048,8 @@ public class LM_MistWall : LunaMove
     {
         return 23;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 8;

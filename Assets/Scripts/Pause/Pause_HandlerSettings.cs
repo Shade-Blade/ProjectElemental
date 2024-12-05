@@ -233,6 +233,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
 
                     if (level != oldlevel)
                     {
+                        //Debug.Log("try update " + (SettingsManager.Setting)index);
                         originalValues[index] = level;
                         SettingsManager.Instance.settingsValues[index] = level;
                         SettingsManager.Instance.UpdateSetting((SettingsManager.Setting)index, level);

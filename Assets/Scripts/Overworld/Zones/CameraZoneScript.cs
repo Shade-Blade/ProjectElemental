@@ -5,7 +5,8 @@ using UnityEngine;
 public class CameraZoneScript : MonoBehaviour
 {
     public WorldCameraSettings wcs;
-
+    
+    #if UNITY_EDITOR
     public void OnDrawGizmos()
     {
         Gizmos.color = new Color(0.5f, 0.5f, 1f, 0.5f);
@@ -109,6 +110,7 @@ public class CameraZoneScript : MonoBehaviour
                 break;
         }
     }
+    #endif
 
     public void OnTriggerEnter(Collider other)
     {

@@ -1,6 +1,8 @@
 ﻿//shader that makes stuff appear in front
 //normal shader doesn't let me do that
 
+//Note: used for things existing in the world, not canvas sprites
+
 Shader "Unlit/GUISprite"
 {
     Properties

@@ -144,11 +144,11 @@ public class MapScript_PitFloor : MapScript
         {
             if (floor % 10 == 9)
             {
-                mehs.nextMap = "Test_PitRestFloor";
+                mehs.nextMap = MainManager.MapID.RabbitHole_RestFloor.ToString();
             }
             if (floor == 99)
             {
-                mehs.nextMap = "Test_PitFinalFloor";
+                mehs.nextMap = MainManager.MapID.RabbitHole_FinalFloor.ToString();
             }
         }
 

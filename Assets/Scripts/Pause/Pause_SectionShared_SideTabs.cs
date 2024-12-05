@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Pause_SectionShared_SideTabs : Pause_SectionShared
 {
     public GameObject subobject;
     public GameObject[] tabs;
+    public Image[] tabImages;
+
     //public RectTransform selectorArrow;
     public float leftPos = -210;
     public float rightPos = -165;
@@ -16,7 +19,33 @@ public class Pause_SectionShared_SideTabs : Pause_SectionShared
     {
         if (state == null)
         {
+            for (int i = 0; i < tabs.Length; i++)
+            {
+                //I could make this better but I am lazy, and it doesn't really matter anyway
+                //Less room for error if I runtime init this instead of manually setting it?
+                if (tabImages == null || tabImages.Length != tabs.Length)
+                {
+                    tabImages = new Image[tabs.Length];
+                }
+                if (tabImages[i] == null)
+                {
+                    tabImages[i] = tabs[i].GetComponent<Image>();
+                }
+                tabImages[i].color = new Color(0.75f, 0.75f, 0.75f, 1);
+            }
             return;
+        }
+        for (int i = 0; i < tabs.Length; i++)
+        {
+            if (tabImages == null || tabImages.Length != tabs.Length)
+            {
+                tabImages = new Image[tabs.Length];
+            }
+            if (tabImages[i] == null)
+            {
+                tabImages[i] = tabs[i].GetComponent<Image>();
+            }
+            tabImages[i].color = new Color(0.9f, 0.9f, 0.9f, 1);
         }
 
         //int index = (int)(state);

@@ -5178,12 +5178,12 @@ public class PlayerEntity : BattleEntity
         //}
     }
 
-    public override void SetIdleAnimation()
+    public override void SetIdleAnimation(bool force = false)
     {
         BattleControl.Instance.playerData.GetPlayerDataEntry(entityID).hp = hp;
         if (dead)
         {
-            SetAnimation("dead");
+            SetAnimation("dead", force);
             return;
         }
         if (!alive)
@@ -5194,27 +5194,27 @@ public class PlayerEntity : BattleEntity
         }
         if (HasEffect(Effect.EffectType.Freeze) || HasEffect(Effect.EffectType.TimeStop))
         {
-            SetAnimation("idlefrozen");
+            SetAnimation("idlefrozen", force);
         }
         else if (HasEffect(Effect.EffectType.Sleep))
         {
-            SetAnimation("idlesleep");
+            SetAnimation("idlesleep", force);
         }
         else if (HasEffect(Effect.EffectType.Dizzy) || HasEffect(Effect.EffectType.Dread))
         {
-            SetAnimation("idledizzy");
+            SetAnimation("idledizzy", force);
         }
         else if (HasEffect(Effect.EffectType.Berserk) || HasEffect(Effect.EffectType.Sunflame))
         {
-            SetAnimation("idleangry");
+            SetAnimation("idleangry", force);
         }
         else if (ShowDangerAnim() || HasEffect(Effect.EffectType.Poison) || HasEffect(Effect.EffectType.Paralyze) || HasEffect(Effect.EffectType.Soulbleed) || HasEffect(Effect.EffectType.Exhausted))
         {
-            SetAnimation("idleweak");
+            SetAnimation("idleweak", force);
         }
         else
         {
-            SetAnimation("idle");
+            SetAnimation("idle", force);
         }
     }
 

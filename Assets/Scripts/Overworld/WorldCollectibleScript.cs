@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
-using UnityEditorInternal;
 using UnityEngine;
 
 
@@ -194,7 +192,7 @@ public class WorldCollectibleScript : WorldObject
         {
             Debug.LogWarning("Collectible fell into the void: " + gameObject.name + " at " + transform.position);
             transform.position = startPos;
-            startPos = startPos + Vector3.up * 2;   //if it falls in again, offset the position upward until it works (Note: may keep going if it clips through the ground after some point)
+            startPos = startPos + Vector3.up * 0.1f;   //if it falls in again, offset the position upward until it works (Note: may keep going if it clips through the ground after some point)
             rb.velocity = Vector3.zero;
         }
 

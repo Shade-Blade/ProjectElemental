@@ -80,6 +80,7 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
         }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
+            SendNullUpdate();
             PopSelf();
         }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Z)) //Z
@@ -151,6 +152,13 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
         if (section != null)
         {
             section.ApplyUpdate(new UpdateObject(tabindex));
+        }
+    }
+    public virtual void SendNullUpdate()
+    {
+        if (section != null)
+        {
+            section.ApplyUpdate(null);
         }
     }
 

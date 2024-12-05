@@ -527,7 +527,7 @@ public class BM_StrangeTendril_StrangeCoil : EnemyMove
             }
             else
             {
-                boostTarget = blB[BattleControl.Instance.GetPsuedoRandom(bl.Count, caller.posId + 2)];
+                boostTarget = blB[BattleControl.Instance.GetPsuedoRandom(blB.Count, caller.posId + 2)];
             }
 
             //Don't stack defense

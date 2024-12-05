@@ -1,43 +1,7 @@
 Index,Name,Description
-ACH_FullCompletion,All Done,Get all other achievements.
-ACH_AllBadges,Badge Master,Obtain all badges.
-ACH_AllRibbons,Fashion Master,Obtain all ribbons.
-ACH_AllQuests,Questmaster,Complete all quests.
-ACH_AllRecipes,Ultimate Cooking,Discover all recipes.
-ACH_AllEnemies,Beastmaster,Fill out the Bestiary section of the Journal.
-ACH_AllInformation,Well Informed,Fill out the Information section of the Journal.
-ACH_AllLore,Loremaster,Fill out the Lore section of the Journal.
-ACH_AllShards,Shard Finder,Find all Prismatic Shards.
-ACH_AllMusic,Music Connoisseur,Buy all music.
-ACH_MaxLevel,Maximum Power,Reach the normal level cap.
-ACH_RealMaxLevel,Further Beyond,Reach the increased level cap.
-ACH_Champion,Champion,Obtain the Champion Ribbon.
-ACH_SecretBadge,Easter Egg,Discover a secret badge by having exactly 64 max hp.
-ACH_ForsakenMountain,Revisiting Memories,Reach the Hidden Village.
-ACH_BeatKeruAster,The Better Duo,Defeat a certain powerful duo.
-ACH_SupremeRecipe,Supreme Cooking,Cook a Supreme recipe.
-ACH_EdgeOfPossibility,Pushing the Boundaries,Reach the Edge of Possibility.
-ACH_SoulPillar,Dragon Trials,Reach a dangerous and difficult to reach area.
-ACH_SoulShell,Shell Finder,Discover something with similar power to the Soul Cores.
-ACH_Prologue,Prologue Completed,Complete the Prologue.
-ACH_Chapter1,Chapter 1 Completed,Complete Chapter 1.
-ACH_Chapter2,Chapter 2 Completed,Complete Chapter 2.
-ACH_Chapter3,Chapter 3 Completed,Complete Chapter 3.
-ACH_Chapter4,Chapter 4 Completed,Complete Chapter 4.
-ACH_Chapter5,Chapter 5 Completed,Complete Chapter 5.
-ACH_Chapter6,Chapter 6 Completed,Complete Chapter 6.
-ACH_Chapter7,Chapter 7 Completed,Complete Chapter 7.
-ACH_Chapter8,Chapter 8 Completed,Complete Chapter 8.
-ACH_EpilogueOrder,Order Completed,Complete Epilogue (Order)
-ACH_EpilogueChaos,Chaos Completed,Complete Epilogue (Chaos)
-ACH_HardPrologue,The Sapling,"Defeat the Prologue Boss for the first time at higher difficulty, or defeat the Prologue Superboss at a higher difficulty."
-ACH_HardChapter1,The Hermit,"Defeat the Chapter 1 Boss for the first time at higher difficulty, or defeat the Chapter 1 Superboss at a higher difficulty."
-ACH_HardChapter2,The Vengeful,"Defeat the Chapter 2 Boss for the first time at higher difficulty, or defeat the Chapter 2 Superboss at a higher difficulty."
-ACH_HardChapter3,The Amalgam,"Defeat the Chapter 3 Boss for the first time at higher difficulty, or defeat the Chapter 3 Superboss at a higher difficulty."
-ACH_HardChapter4,The Beast,"Defeat the Chapter 4 Boss for the first time at higher difficulty, or defeat the Chapter 4 Superboss at a higher difficulty."
-ACH_HardChapter5,The Puppetmaster,"Defeat the Chapter 5 Boss for the first time at higher difficulty, or defeat the Chapter 5 Superboss at a higher difficulty."
-ACH_HardChapter6,The Tyrant,"Defeat the Chapter 6 Boss for the first time at higher difficulty, or defeat the Chapter 6 Superboss at a higher difficulty."
-ACH_HardChapter7,The Loner,"Defeat the Chapter 7 Boss for the first time at higher difficulty, or defeat the Chapter 7 Superboss at a higher difficulty."
-ACH_HardChapter8,The Nightmare,"Defeat the Chapter 8 Boss for the first time at higher difficulty, or defeat the Chapter 8 Superboss at a higher difficulty."
-ACH_HardEpilogueOrder,The Vision,Defeat the Epilogue (Order) Boss at a higher difficulty.
-ACH_HardEpilogueChaos,The Fusion,Defeat the Epilogue (Chaos) Boss at a higher difficulty.
+ACH_Halfway,Halfway,Get to Floor 50.
+ACH_Complete,Complete,Get to Floor 100.
+ACH_DiamondRibbon,Overpriced,Obtain a Diamond Ribbon.
+ACH_LevelCap,Maximum,Reach the level cap.
+ACH_Risky,Risky Experience,Get 100 XP from one battle.
+ACH_KeyHoarder,Key Hoarder,Get 5 Crystal Keys in your inventory.

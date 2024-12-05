@@ -341,21 +341,21 @@ public class TextboxScript : MonoBehaviour
                         speaker = originalSpeaker;
                         MoveTail(speaker.GetTextTailPosition());
                     }
-                    if (t.args[0].Equals("w"))
+                    if (t.args[0].Equals("w") || t.args[0].Equals("wilex"))
                     {
                         hasTail = true;
                         tail.enabled = true;
                         speaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
                         MoveTail(speaker.GetTextTailPosition());
                     }
-                    if (t.args[0].Equals("l"))
+                    if (t.args[0].Equals("l") || t.args[0].Equals("luna"))
                     {
                         hasTail = true;
                         tail.enabled = true;
                         speaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
                         MoveTail(speaker.GetTextTailPosition());
                     }
-                    if (t.args[0].Equals("k"))
+                    if (t.args[0].Equals("k") || t.args[0].Equals("keru"))
                     {
                         hasTail = true;
                         tail.enabled = true;
@@ -431,15 +431,15 @@ public class TextboxScript : MonoBehaviour
                 {
                     targetSpeaker = originalSpeaker;
                 }
-                if (t.args[0].Equals("w"))
+                if (t.args[0].Equals("w") || t.args[0].Equals("wilex"))
                 {
                     targetSpeaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
                 }
-                if (t.args[0].Equals("l"))
+                if (t.args[0].Equals("l") || t.args[0].Equals("luna"))
                 {
                     targetSpeaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
                 }
-                if (t.args[0].Equals("k"))
+                if (t.args[0].Equals("k") || t.args[0].Equals("keru"))
                 {
                     targetSpeaker = MainManager.Instance.LocateKeru();
                 }
@@ -459,15 +459,15 @@ public class TextboxScript : MonoBehaviour
                 {
                     targetSpeakerD = originalSpeaker;
                 }
-                if (t.args[0].Equals("w"))
+                if (t.args[0].Equals("w") || t.args[0].Equals("wilex"))
                 {
                     targetSpeakerD = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
                 }
-                if (t.args[0].Equals("l"))
+                if (t.args[0].Equals("l") || t.args[0].Equals("luna"))
                 {
                     targetSpeakerD = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
                 }
-                if (t.args[0].Equals("k"))
+                if (t.args[0].Equals("k") || t.args[0].Equals("keru"))
                 {
                     targetSpeakerD = MainManager.Instance.LocateKeru();
                 }
@@ -487,15 +487,15 @@ public class TextboxScript : MonoBehaviour
                 {
                     targetSpeakerF = originalSpeaker;
                 }
-                if (t.args[0].Equals("w"))
+                if (t.args[0].Equals("w") || t.args[0].Equals("wilex"))
                 {
                     targetSpeakerF = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
                 }
-                if (t.args[0].Equals("l"))
+                if (t.args[0].Equals("l") || t.args[0].Equals("luna"))
                 {
                     targetSpeakerF = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
                 }
-                if (t.args[0].Equals("k"))
+                if (t.args[0].Equals("k") || t.args[0].Equals("keru"))
                 {
                     targetSpeakerF = MainManager.Instance.LocateKeru();
                 }
@@ -549,15 +549,15 @@ public class TextboxScript : MonoBehaviour
                 {
                     targetSpeakerE = originalSpeaker;
                 }
-                if (t.args[0].Equals("w"))
+                if (t.args[0].Equals("w") || t.args[0].Equals("wilex"))
                 {
                     targetSpeakerE = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
                 }
-                if (t.args[0].Equals("l"))
+                if (t.args[0].Equals("l") || t.args[0].Equals("luna"))
                 {
                     targetSpeakerE = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
                 }
-                if (t.args[0].Equals("k"))
+                if (t.args[0].Equals("k") || t.args[0].Equals("keru"))
                 {
                     targetSpeakerE = MainManager.Instance.LocateKeru();
                 }
@@ -1246,11 +1246,11 @@ public class TextboxScript : MonoBehaviour
                     {
                         dataGetSpeaker = originalSpeaker;
                     }
-                    if (t.args[0].Equals("w"))
+                    if (t.args[0].Equals("w") || t.args[0].Equals("wilex"))
                     {
                         dataGetSpeaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
                     }
-                    if (t.args[0].Equals("l"))
+                    if (t.args[0].Equals("l") || t.args[0].Equals("luna"))
                     {
                         dataGetSpeaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
                     }
@@ -1326,11 +1326,11 @@ public class TextboxScript : MonoBehaviour
                     {
                         dataSendSpeaker = originalSpeaker;
                     }
-                    if (t.args[0].Equals("w"))
+                    if (t.args[0].Equals("w") || t.args[0].Equals("wilex"))
                     {
                         dataSendSpeaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
                     }
-                    if (t.args[0].Equals("l"))
+                    if (t.args[0].Equals("l") || t.args[0].Equals("luna"))
                     {
                         dataSendSpeaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
                     }
@@ -1552,21 +1552,21 @@ public class TextboxScript : MonoBehaviour
                             speaker = originalSpeaker;
                             MoveTail(speaker.GetTextTailPosition());
                         }
-                        if (t.args[0].Equals("w"))
+                        if (t.args[0].Equals("w") || t.args[0].Equals("wilex"))
                         {
                             hasTail = true;
                             tail.enabled = true;
                             speaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
                             MoveTail(speaker.GetTextTailPosition());
                         }
-                        if (t.args[0].Equals("l"))
+                        if (t.args[0].Equals("l") || t.args[0].Equals("luna"))
                         {
                             hasTail = true;
                             tail.enabled = true;
                             speaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
                             MoveTail(speaker.GetTextTailPosition());
                         }
-                        if (t.args[0].Equals("k"))
+                        if (t.args[0].Equals("k") || t.args[0].Equals("keru"))
                         {
                             hasTail = true;
                             tail.enabled = true;
@@ -1817,21 +1817,21 @@ public class TextboxScript : MonoBehaviour
                             speaker = originalSpeaker;
                             MoveTail(speaker.GetTextTailPosition());
                         }
-                        if (t.args[0].Equals("w"))
+                        if (t.args[0].Equals("w") || t.args[0].Equals("wilex"))
                         {
                             hasTail = true;
                             tail.enabled = true;
                             speaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Wilex);
                             MoveTail(speaker.GetTextTailPosition());
                         }
-                        if (t.args[0].Equals("l"))
+                        if (t.args[0].Equals("l") || t.args[0].Equals("luna"))
                         {
                             hasTail = true;
                             tail.enabled = true;
                             speaker = MainManager.Instance.LocatePlayerSpeaker(MainManager.PlayerCharacter.Luna);
                             MoveTail(speaker.GetTextTailPosition());
                         }
-                        if (t.args[0].Equals("k"))
+                        if (t.args[0].Equals("k") || t.args[0].Equals("keru"))
                         {
                             hasTail = true;
                             tail.enabled = true;

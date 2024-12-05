@@ -19,6 +19,8 @@ public class MapScript_PitFinalFloor : MapScript
         floor = int.Parse(floorNo);
         floorNumberText.SetText(floorNo, true);
 
+        MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_Complete);
+
         switch ((floor - 1) / 10)
         {
             case 0:
@@ -68,6 +70,6 @@ public class MapScript_PitFinalFloor : MapScript
 
     public override string GetTattle()
     {
-        return "<tail,wilex>This is pretty disappointing. We went all the way down here for a sign?<next><tail,keru>I don't think the developer has a boss fight for this place right now.<next><tail,luna>At least Aster's down here with us.";
+        return "<tail,w>This is pretty disappointing. We went all the way down here for a sign?<next><tail,k>I don't think the developer has a boss fight for this place right now.<next><tail,l>At least Aster's down here with us.";
     }
 }

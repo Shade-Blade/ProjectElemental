@@ -8076,7 +8076,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual void EnableSpeakingAnim()
     {
         isSpeaking = true;
-        SetAnimation("talk");
+        SetAnimation("talk", true);
     }
     public virtual bool SpeakingAnimActive()
     {
@@ -8085,39 +8085,39 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual void DisableSpeakingAnim()
     {
         isSpeaking = false;
-        SetIdleAnimation(); //note: no way to check for what the real last anim was at this point (probably won't matter)
+        SetIdleAnimation(true); //note: no way to check for what the real last anim was at this point (probably won't matter)
     }
 
-    public virtual void SetIdleAnimation()
+    public virtual void SetIdleAnimation(bool force = false)
     {
         if (!alive)
         {
-            SetAnimation("dead");
+            SetAnimation("dead", true);
             return;
         }
         if (HasEffect(Effect.EffectType.Freeze) || HasEffect(Effect.EffectType.TimeStop))
         {
-            SetAnimation("idlefrozen");
+            SetAnimation("idlefrozen", true);
         }
         else if (HasEffect(Effect.EffectType.Sleep))
         {
-            SetAnimation("idlesleep");
+            SetAnimation("idlesleep", true);
         }
         else if (HasEffect(Effect.EffectType.Dizzy) || HasEffect(Effect.EffectType.Dread))
         {
-            SetAnimation("idledizzy");
+            SetAnimation("idledizzy", true);
         }
         else if (HasEffect(Effect.EffectType.Berserk) || HasEffect(Effect.EffectType.Sunflame))
         {
-            SetAnimation("idleangry");
+            SetAnimation("idleangry", true);
         }
         else if (HasEffect(Effect.EffectType.Poison) || HasEffect(Effect.EffectType.Paralyze) || HasEffect(Effect.EffectType.Soulbleed) || HasEffect(Effect.EffectType.Exhausted))
         {
-            SetAnimation("idleweak");
+            SetAnimation("idleweak", true);
         }
         else
         {
-            SetAnimation("idle");
+            SetAnimation("idle", true);
         }
     }
 

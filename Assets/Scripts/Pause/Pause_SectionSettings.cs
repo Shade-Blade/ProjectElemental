@@ -102,6 +102,9 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
             Vector3 current = selectorArrow.transform.localPosition;
             selectorArrow.transform.localPosition = targetLocal;
         }
+
+        //Hacky
+        textbox.transform.parent.transform.parent.gameObject.SetActive(false);
     }
 
     public override void Update()
@@ -296,10 +299,15 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
         {
             if (menuEntries.Length == 0 || menuEntries[menuIndex].description == null || menuEntries[menuIndex].description.Length < 2)
             {
-                textbox.SetText("", true, true);
+                if (textbox.isActiveAndEnabled)
+                {
+                    textbox.SetText("", true, true);
+                }
+                textbox.transform.parent.transform.parent.gameObject.SetActive(false);
             }
             else
             {
+                textbox.transform.parent.transform.parent.gameObject.SetActive(true);
                 textbox.SetText(menuEntries[menuIndex].description, true, true);
             }
         }

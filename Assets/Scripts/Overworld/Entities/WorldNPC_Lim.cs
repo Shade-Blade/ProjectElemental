@@ -111,15 +111,15 @@ public class WorldNPC_Lim : WorldNPCEntity
         MainManager.Instance.SetGlobalVar(MainManager.GlobalVar.GV_PitFloor, targetfloor.ToString());
         if (targetfloor == 100)
         {
-            MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(MainManager.MapID.Test_PitFinalFloor, 0));
+            MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(MainManager.MapID.RabbitHole_FinalFloor, 0));
             yield break;
         }
         if (targetfloor % 10 == 0)
         {
-            MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(MainManager.MapID.Test_PitRestFloor, 0));
+            MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(MainManager.MapID.RabbitHole_RestFloor, 0));
             yield break;
         }
-        MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(MainManager.MapID.Test_PitFloor, 0));
+        MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(MainManager.MapID.RabbitHole_NormalFloor, 0));
         yield break;
     }
 }

@@ -2,7 +2,7 @@ sus
 d_rh_v0.0
 GF_Recipe_SourJam:True,GF_Bestiary_Fluffling:True,GF_Bestiary_Shrublet:True,GF_Bestiary_PuffJelly:True,GF_Bestiary_Honeybud:True,GF_Bestiary_Rockling:True,GF_Bestiary_Leafling:True,GF_Recipe_CarrotSalad:True,GF_Recipe_RoastedNut:True,GF_Bestiary_Renegade:True,GF_Bestiary_LumistarSoldier:True,GF_Bestiary_Heatwing:True,GF_Bestiary_Bandit:True,GF_Bestiary_Slimebloom:True,GF_Bestiary_Slimewalker:True,GF_Bestiary_Slimeworm:True,GF_Bestiary_Embercrest:True,GF_Bestiary_Flametongue:True,GF_Bestiary_Sandswimmer:True
 GV_PitFloor:37,GV_PitAltar:3
-GemstoneIslands,Test_PitFloor,3.612926|0.375|2.234689
+GemstoneIslands,RabbitHole_NormalFloor,3.612926|0.375|2.234689
 2792.427
 11,0,30,30,30,30,30,24,88,540,0,0,10,32,6,6,6,42,34,96,733,475,22,12,44,39,5,6
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP

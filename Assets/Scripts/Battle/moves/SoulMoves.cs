@@ -12,8 +12,7 @@ public class SM_Hasten : SoulMove
     {
         return 0;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 8;
@@ -151,8 +150,8 @@ public class SM_Revitalize : SoulMove
     {
         return 1;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Ally, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 8;
@@ -316,8 +315,8 @@ public class SM_LeafStorm : SoulMove
     {
         return 2;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 15;
@@ -473,8 +472,8 @@ public class SM_ElectroDischarge : SoulMove
     {
         return 3;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 15;
@@ -609,8 +608,8 @@ public class SM_MistWave : SoulMove
     {
         return 4;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 20;
@@ -765,8 +764,8 @@ public class SM_Overheat : SoulMove
     {
         return 5;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 12;
@@ -901,8 +900,8 @@ public class SM_VoidCrush : SoulMove
     {
         return 6;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 20;
@@ -1064,8 +1063,8 @@ public class SM_FlashFreeze : SoulMove
     {
         return 7;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 15;
@@ -1236,8 +1235,8 @@ public class SM_Cleanse : SoulMove
     {
         return 8;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 6;
@@ -1368,8 +1367,8 @@ public class SM_Blight : SoulMove
     {
         return 9;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 12;
@@ -1555,8 +1554,8 @@ public class SM_ElementalConflux : SoulMove
     {
         return 10;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 20;
@@ -1791,8 +1790,8 @@ public class SM_PrismaticBlast : SoulMove
     {
         return 11;
     }
-    public override string GetName() => GetNameWithIndex(GetTextIndex());
-    public override string GetDescription(int level = 1) => GetDescriptionWithIndex(GetTextIndex(), level);
+
+
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
     public override int GetBaseCost() => 30;
