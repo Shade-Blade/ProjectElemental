@@ -1728,8 +1728,10 @@ public struct Item
         Ephemeral,      //Become a different item when you use a different item
         TimeBoostTen,       //Boost by turn count (capped at 10)
         TimeBoostTwenty,    //Boost by turn count (capped at 20)
+        TimeWeaken,         //Boost by 100% (lose 10% per turn down to 10% at turn 10+)
         DoubleOnTurn1,  //Double strength on first turn
         DoubleAtLowHP,  //Danger hp
+        DoubleAtMaxHP,  //max hp
         DoubleAtLowItems,   //5 items or less
         TargetAll,           //Applies to all possible targets (*though ep and se heals only target user)
         TargetAnyone,   //Enables anyone targetting (note: dual + anyone -> targets everyone!)
@@ -1739,7 +1741,7 @@ public struct Item
         SixHealOverTime,
         EightHealOverTime,
         Revive,         //Can be used to revive dead characters
-        Miracle,        //also sets revive, applies Miracle if character is alive
+        Miracle,        //also sets revive, applies Miracle if character is alive before
         Cure,           //Cures negative effects
         MinusHPIsDamage,    //minus hp is treated as status damage
         Passive_HPRegen,    //note: applies to all
@@ -1756,6 +1758,8 @@ public struct Item
         Passive_EnduranceDown,
         Passive_AgilityUp,
         Passive_AgilityDown,
+        Quick,  //acts like QuickItem when used (+1 action)
+        BoostEnemies,   //boost by enemy count (cap at 4x)
     }
     public enum ItemQuality //mostly related to what message the cook npcs play when you make a certain item
     {
@@ -1995,6 +1999,33 @@ public struct Item
     {
         return GetTarget(i.type);
     }
+    public static float GetItemBoost(int level)
+    {
+        float boost;
+        switch (level)
+        {
+            case 1:
+                boost = (4.00001f / 3);
+                break;
+            case 2:
+                boost = 1.5f;
+                break;
+            case 3:
+                boost = 2f;
+                break;
+            default:
+                if (level <= 0)
+                {
+                    boost = (2f) / (2f - level);
+                }
+                else
+                {
+                    boost = level - 1;
+                }
+                break;
+        }
+        return boost;
+    }
     /*
     public static float GetPower(ItemType i)
     {
@@ -2196,7 +2227,8 @@ public struct Item
 
         bool doubler = GetProperty(ide, ItemProperty.DoubleOnTurn1) != null;
         bool doubleB = GetProperty(ide, ItemProperty.DoubleAtLowHP) != null;
-        bool doubleC = GetProperty(ide, ItemProperty.DoubleAtLowItems) != null;
+        bool doubleC = GetProperty(ide, ItemProperty.DoubleAtMaxHP) != null;
+        bool doubleD = GetProperty(ide, ItemProperty.DoubleAtLowItems) != null;
 
         if (doubler)
         {
@@ -2207,9 +2239,16 @@ public struct Item
         {
             boost *= 2;
         }
+        if (doubleC && player.hp >= player.maxHP)
+        {
+            boost *= 2;
+        }
+
+        //no boost from enemies since there are no enemies out of battle
+
 
         //mainmanager's playerdata is the one to use here
-        if (doubleC && MainManager.Instance.playerData.itemInventory.Count <= 5)
+        if (doubleD && MainManager.Instance.playerData.itemInventory.Count <= 5)
         {
             boost *= 2;
         }
@@ -2767,6 +2806,10 @@ public abstract class ItemMove : Move, IEntityHighlighter
     public Item item;
 
     public int itemCount;
+
+    //special unused values
+    public bool forceSingleTarget = false;
+    public bool forceMultiTarget = false;
 
     //used to allow items to share scripts but act differently
     public void SetItem(Item item)

@@ -6001,6 +6001,22 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         return 0;
     }
+    //gets max of party potency
+    public int GetPartyMaxEffectPotency(Effect.EffectType effect)
+    {
+        int potency = 0;
+
+        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly)))
+        {
+            int currPotency = b.GetEffectPotency(effect);
+            if (potency < currPotency)
+            {
+                potency = currPotency;
+            }
+        }
+
+        return potency;
+    }
     public virtual void ValidateEffects()
     {
         /*

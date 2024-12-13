@@ -10,6 +10,16 @@ public class Item_GenericConsumable : ItemMove
 {
     public bool GetMultiTarget()
     {
+        if (forceSingleTarget)
+        {
+            return false;
+        }
+
+        if (forceMultiTarget)
+        {
+            return true;
+        }
+
         return Item.GetProperty(GetItem(), Item.ItemProperty.TargetAll) != null;
     }
     public override bool CanChoose(BattleEntity caller, int level = 1)
@@ -24,6 +34,14 @@ public class Item_GenericConsumable : ItemMove
         if (limited)
         {
             if (BattleControl.Instance.GetUsedItemInventory(caller).Find((e) => (e.type == GetItem().type)).type == GetItem().type)
+            {
+                return false;
+            }
+        }
+
+        if (Item.GetProperty(GetItem(), Item.ItemProperty.Quick) != null && caller is PlayerEntity pcaller)
+        {
+            if (pcaller.QuickSupply > 0)
             {
                 return false;
             }
@@ -60,7 +78,7 @@ public class Item_GenericConsumable : ItemMove
 
         ItemDataEntry ide = GetItemDataEntry(GetItem());
 
-        bool dual = GetProperty(ide, ItemProperty.TargetAll) != null;
+        bool dual = GetMultiTarget();
 
         TargetArea ta = GetBaseTarget();
         //Use this to build the list of targets
@@ -138,7 +156,8 @@ public class Item_GenericConsumable : ItemMove
                 break;
         }
 
-        yield return StartCoroutine(ExecuteEffect(caller, ide, level));
+        //level 1 is default, so level 1 = 1x multiplier (i.e. boost of 0)
+        yield return StartCoroutine(ExecuteEffect(caller, ide, Item.GetItemBoost(level - 1)));
 
         for (int i = 0; i < targets.Count; i++)
         {
@@ -183,21 +202,7 @@ public class Item_GenericConsumable : ItemMove
         float boost = 1;
         if (caller.HasEffect(Effect.EffectType.ItemBoost))
         {
-            switch (caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency)
-            {
-                case 1:
-                    boost = (4.00001f / 3);
-                    break;
-                case 2:
-                    boost = 1.5f;
-                    break;
-                case 3:
-                    boost = 2f;
-                    break;
-                default:
-                    boost = caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency - 1;
-                    break;
-            }
+            boost = Item.GetItemBoost(caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency);
         }
         int powerCount = 1;
         if (Item.GetProperty(ide, Item.ItemProperty.Stack) != null)
@@ -241,6 +246,17 @@ public class Item_GenericConsumable : ItemMove
                 boost *= BattleControl.Instance.turnCount;
             }
         }
+        if (Item.GetProperty(ide, Item.ItemProperty.TimeWeaken) != null)
+        {
+            if (BattleControl.Instance.turnCount >= 10)
+            {
+                boost *= 0.100001f;
+            }
+            else
+            {
+                boost *= (11 - BattleControl.Instance.turnCount) * 0.100001f;
+            }
+        }
         boost *= multiplier * powerCount;
         if (Item.GetProperty(ide, Item.ItemProperty.Disunity) != null)
         {
@@ -253,15 +269,11 @@ public class Item_GenericConsumable : ItemMove
             boost *= 2;
         }
 
-        bool boostB = false;
-        for (int i = 0; i < targets.Count; i++)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowHP) != null && caller.hp <= PlayerData.PlayerDataEntry.GetDangerHP(caller.entityID))
         {
-            if (targets[i].hp <= PlayerData.PlayerDataEntry.GetDangerHP(targets[i].entityID))
-            {
-                boostB = true;
-            }
+            boost *= 2;
         }
-        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowHP) != null && boostB)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtMaxHP) != null && caller.hp == caller.maxHP)
         {
             boost *= 2;
         }
@@ -269,6 +281,20 @@ public class Item_GenericConsumable : ItemMove
         if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowItems) != null && BattleControl.Instance.GetItemInventory(caller).Count <= 5)
         {
             boost *= 2;
+        }
+
+        if (Item.GetProperty(ide, Item.ItemProperty.BoostEnemies) != null)
+        {
+            int ecount = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveEnemy)).Count;
+            if (ecount > 4)
+            {
+                ecount = 4;
+            }
+            if (ecount <= 1)
+            {
+                ecount = 1;
+            }
+            boost *= ecount;
         }
 
 
@@ -370,10 +396,13 @@ public class Item_GenericConsumable : ItemMove
                 //if duration == Effect.INFINITE_DURATION, boost by potency
                 //blacklist some effect types to prevent some overpowered things
                 //(the permanent stat increases, item boost itself)
+                //I am being generous right now, don't make me regret it
+                /*
                 if (Effect.GetEffectClass(statusList[i].effect) == Effect.EffectClass.Static)
                 {
                     continue;
                 }
+                */
 
                 //yeah no
                 if (statusList[i].effect == Effect.EffectType.ItemBoost)
@@ -948,6 +977,16 @@ public class Item_GenericConsumable : ItemMove
                 }
             }
         }
+
+        if (Item.GetProperty(ide, Item.ItemProperty.Quick) != null && caller is PlayerEntity pcaller)
+        {
+            if (caller.CanMove() && pcaller.QuickSupply != 2)
+            {
+                caller.actionCounter--;
+                caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
+                pcaller.QuickSupply = 2;
+            }
+        }
     }
 
     public void BoostParticles(BattleEntity be)
@@ -1322,27 +1361,13 @@ public class Item_GenericConsumable : ItemMove
             shouldHighlight = true;
         }
 
-        //lol
+        //item sight displays this always
         shouldHighlight = true;
 
         float boost = 1;
         if (caller.HasEffect(Effect.EffectType.ItemBoost))
         {
-            switch (caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency)
-            {
-                case 1:
-                    boost = (4.00001f / 3);
-                    break;
-                case 2:
-                    boost = 1.5f;
-                    break;
-                case 3:
-                    boost = 2f;
-                    break;
-                default:
-                    boost = caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency - 1;
-                    break;
-            }
+            boost = Item.GetItemBoost(caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency);
         }
         int powerCount = 1;
         if (Item.GetProperty(ide, Item.ItemProperty.Stack) != null)
@@ -1356,7 +1381,7 @@ public class Item_GenericConsumable : ItemMove
                 powerCount = 1;
             }
         }
-        float multiplier = 1;
+        float multiplier = Item.GetItemBoost(level - 1);
         if (Item.GetProperty(ide, Item.ItemProperty.Unity) != null)
         {
             powerCount *= itemCount;
@@ -1387,6 +1412,17 @@ public class Item_GenericConsumable : ItemMove
                 boost *= BattleControl.Instance.turnCount;
             }
         }
+        if (Item.GetProperty(ide, Item.ItemProperty.TimeWeaken) != null)
+        {
+            if (BattleControl.Instance.turnCount >= 10)
+            {
+                boost *= 0.100001f;
+            }
+            else
+            {
+                boost *= (11 - BattleControl.Instance.turnCount) * 0.100001f;
+            }
+        }
         boost *= multiplier * powerCount;
         if (Item.GetProperty(ide, Item.ItemProperty.Disunity) != null)
         {
@@ -1399,20 +1435,34 @@ public class Item_GenericConsumable : ItemMove
             boost *= 2;
         }
 
-        bool boostB = false;
-        if (target.hp <= PlayerData.PlayerDataEntry.GetDangerHP(target.entityID))
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowHP) != null && caller.hp <= PlayerData.PlayerDataEntry.GetDangerHP(caller.entityID))
         {
-            boostB = true;
+            boost *= 2;
         }
-        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowHP) != null && boostB)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtMaxHP) != null && caller.hp == caller.maxHP)
         {
             boost *= 2;
         }
 
-        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowItems) != null && BattleControl.Instance.playerData.itemInventory.Count <= 5)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowItems) != null && BattleControl.Instance.GetItemInventory(caller).Count <= 5)
         {
             boost *= 2;
         }
+
+        if (Item.GetProperty(ide, Item.ItemProperty.BoostEnemies) != null)
+        {
+            int ecount = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveEnemy)).Count;
+            if (ecount > 4)
+            {
+                ecount = 4;
+            }
+            if (ecount <= 1)
+            {
+                ecount = 1;
+            }
+            boost *= ecount;
+        }
+
 
 
         if (boost != 1)
@@ -1542,10 +1592,12 @@ public class Item_GenericConsumable : ItemMove
                 //if duration == Effect.INFINITE_DURATION, boost by potency
                 //blacklist some effect types to prevent some overpowered things
                 //(the permanent stat increases, item boost itself)
+                /*
                 if (Effect.GetEffectClass(statusList[i].effect) == Effect.EffectClass.Static)
                 {
                     continue;
                 }
+                */
 
                 //yeah no
                 if (statusList[i].effect == Effect.EffectType.ItemBoost)
@@ -1834,6 +1886,16 @@ public class Item_GenericThrowable : ItemMove
     //public override Item.ItemType GetItemType() => Item.ItemType.DebugBomb;
     public bool GetMultiTarget()
     {
+        if (forceSingleTarget)
+        {
+            return false;
+        }
+
+        if (forceMultiTarget)
+        {
+            return true;
+        }
+
         return Item.GetProperty(GetItem(), Item.ItemProperty.TargetAll) != null;
     }
 
@@ -1865,7 +1927,7 @@ public class Item_GenericThrowable : ItemMove
         yield return new WaitForSeconds(0.3f);
         caller.SetIdleAnimation();
 
-        yield return StartCoroutine(ExecuteEffect(caller, targets, level));
+        yield return StartCoroutine(ExecuteEffect(caller, targets, Item.GetItemBoost(level - 1)));
 
         //yield return StartCoroutine(caller.SmoothScale(0.5f, new Vector3(1, 1, 1)));
         yield return StartCoroutine(ProducerAnim(caller));
@@ -1888,21 +1950,7 @@ public class Item_GenericThrowable : ItemMove
         float boost = 1;
         if (caller.HasEffect(Effect.EffectType.ItemBoost))
         {
-            switch (caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency)
-            {
-                case 1:
-                    boost = (4.00001f / 3);
-                    break;
-                case 2:
-                    boost = 1.5f;
-                    break;
-                case 3:
-                    boost = 2f;
-                    break;
-                default:
-                    boost = caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency - 1;
-                    break;
-            }
+            boost = Item.GetItemBoost(caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency);
         }
         int powerCount = 1;
         if (Item.GetProperty(ide, Item.ItemProperty.Stack) != null)
@@ -1943,6 +1991,17 @@ public class Item_GenericThrowable : ItemMove
                 boost *= BattleControl.Instance.turnCount;
             }
         }
+        if (Item.GetProperty(ide, Item.ItemProperty.TimeWeaken) != null)
+        {
+            if (BattleControl.Instance.turnCount >= 10)
+            {
+                boost *= 0.100001f;
+            }
+            else
+            {
+                boost *= (11 - BattleControl.Instance.turnCount) * 0.100001f;
+            }
+        }
         boost *= multiplier * powerCount;
         if (Item.GetProperty(ide, Item.ItemProperty.Disunity) != null)
         {
@@ -1955,23 +2014,34 @@ public class Item_GenericThrowable : ItemMove
             boost *= 2;
         }
 
-        bool boostB = false;
-        for (int i = 0; i < targets.Count; i++)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowHP) != null && caller.hp <= PlayerData.PlayerDataEntry.GetDangerHP(caller.entityID))
         {
-            if (targets[i].hp <= PlayerData.PlayerDataEntry.GetDangerHP(targets[i].entityID))
-            {
-                boostB = true;
-            }
+            boost *= 2;
         }
-        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowHP) != null && boostB)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtMaxHP) != null && caller.hp == caller.maxHP)
         {
             boost *= 2;
         }
 
-        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowItems) != null && BattleControl.Instance.playerData.itemInventory.Count <= 5)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowItems) != null && BattleControl.Instance.GetItemInventory(caller).Count <= 5)
         {
             boost *= 2;
         }
+
+        if (Item.GetProperty(ide, Item.ItemProperty.BoostEnemies) != null)
+        {
+            int ecount = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveEnemy)).Count;
+            if (ecount > 4)
+            {
+                ecount = 4;
+            }
+            if (ecount <= 1)
+            {
+                ecount = 1;
+            }
+            boost *= ecount;
+        }
+
 
 
         Effect[] statusList = (Effect[])(ide.effects.Clone());
@@ -1985,10 +2055,12 @@ public class Item_GenericThrowable : ItemMove
                 //if duration == Effect.INFINITE_DURATION, boost by potency
                 //blacklist some effect types to prevent some overpowered things
                 //(the permanent stat increases, item boost itself)
+                /*
                 if (Effect.GetEffectClass(statusList[i].effect) == Effect.EffectClass.Static)
                 {
                     continue;
                 }
+                */
 
                 //yeah no
                 if (statusList[i].effect == Effect.EffectType.ItemBoost)
@@ -2126,6 +2198,16 @@ public class Item_GenericThrowable : ItemMove
                 yield return new WaitForSeconds(0.3f);
             }
         }
+
+        if (Item.GetProperty(ide, Item.ItemProperty.Quick) != null && caller is PlayerEntity pcaller)
+        {
+            if (caller.CanMove() && pcaller.QuickSupply != 2)
+            {
+                caller.actionCounter--;
+                caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
+                pcaller.QuickSupply = 2;
+            }
+        }
     }
 
     public override string GetHighlightText(BattleEntity caller, BattleEntity target, int level = 1)
@@ -2140,25 +2222,11 @@ public class Item_GenericThrowable : ItemMove
 
         ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
 
-        float multiplier = level;
+        float multiplier = Item.GetItemBoost(level - 1);
         float boost = 1;
         if (caller.HasEffect(Effect.EffectType.ItemBoost))
         {
-            switch (caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency)
-            {
-                case 1:
-                    boost = (4.00001f / 3);
-                    break;
-                case 2:
-                    boost = 1.5f;
-                    break;
-                case 3:
-                    boost = 2f;
-                    break;
-                default:
-                    boost = caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency - 1;
-                    break;
-            }
+            boost = Item.GetItemBoost(caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency);
         }
         int powerCount = 1;
         if (Item.GetProperty(ide, Item.ItemProperty.Stack) != null)
@@ -2199,6 +2267,17 @@ public class Item_GenericThrowable : ItemMove
                 boost *= BattleControl.Instance.turnCount;
             }
         }
+        if (Item.GetProperty(ide, Item.ItemProperty.TimeWeaken) != null)
+        {
+            if (BattleControl.Instance.turnCount >= 10)
+            {
+                boost *= 0.100001f;
+            }
+            else
+            {
+                boost *= (11 - BattleControl.Instance.turnCount) * 0.100001f;
+            }
+        }
         boost *= multiplier * powerCount;
         if (Item.GetProperty(ide, Item.ItemProperty.Disunity) != null)
         {
@@ -2211,20 +2290,34 @@ public class Item_GenericThrowable : ItemMove
             boost *= 2;
         }
 
-        bool boostB = false;
-        if (target.hp <= PlayerData.PlayerDataEntry.GetDangerHP(target.entityID))
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowHP) != null && caller.hp <= PlayerData.PlayerDataEntry.GetDangerHP(caller.entityID))
         {
-            boostB = true;
+            boost *= 2;
         }
-        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowHP) != null && boostB)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtMaxHP) != null && caller.hp == caller.maxHP)
         {
             boost *= 2;
         }
 
-        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowItems) != null && BattleControl.Instance.playerData.itemInventory.Count <= 5)
+        if (Item.GetProperty(ide, Item.ItemProperty.DoubleAtLowItems) != null && BattleControl.Instance.GetItemInventory(caller).Count <= 5)
         {
             boost *= 2;
         }
+
+        if (Item.GetProperty(ide, Item.ItemProperty.BoostEnemies) != null)
+        {
+            int ecount = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveEnemy)).Count;
+            if (ecount > 4)
+            {
+                ecount = 4;
+            }
+            if (ecount <= 1)
+            {
+                ecount = 1;
+            }
+            boost *= ecount;
+        }
+
 
 
         Effect[] statusList = (Effect[])(ide.effects.Clone());
@@ -2238,10 +2331,12 @@ public class Item_GenericThrowable : ItemMove
                 //if duration == Effect.INFINITE_DURATION, boost by potency
                 //blacklist some effect types to prevent some overpowered things
                 //(the permanent stat increases, item boost itself)
+                /*
                 if (Effect.GetEffectClass(statusList[i].effect) == Effect.EffectClass.Static)
                 {
                     continue;
                 }
+                */
 
                 //yeah no
                 if (statusList[i].effect == Effect.EffectType.ItemBoost)
@@ -2406,7 +2501,7 @@ public class Item_AutoConsumable : Item_GenericConsumable
         yield return StartCoroutine(DefaultStartAnim(caller));
 
         ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
-        yield return StartCoroutine(ExecuteEffect(caller, ide, level));
+        yield return StartCoroutine(ExecuteEffect(caller, ide, Item.GetItemBoost(level - 1)));
         yield return StartCoroutine(ProducerAnim(caller));
 
         if (caller is PlayerEntity pcaller)
@@ -2478,7 +2573,7 @@ public class Item_AutoThrowable : Item_GenericThrowable
 
         if (targets.Count > 0 && targets[0] != null)
         {
-            yield return StartCoroutine(ExecuteEffect(caller, targets, level));
+            yield return StartCoroutine(ExecuteEffect(caller, targets, Item.GetItemBoost(level - 1)));
         }
 
         yield return StartCoroutine(ProducerAnim(caller));
@@ -2562,13 +2657,12 @@ public class MetaItem_Quick : MetaItemMove
 
         yield return StartCoroutine(itemMove.Execute(caller, level));
 
-        if (caller.CanMove())
+        if (caller is PlayerEntity pcaller)
         {
-            caller.actionCounter--;
-            caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
-
-            if (caller is PlayerEntity pcaller)
+            if (caller.CanMove() && pcaller.QuickSupply != 2)
             {
+                caller.actionCounter--;
+                caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
                 pcaller.QuickSupply = 2;
             }
         }

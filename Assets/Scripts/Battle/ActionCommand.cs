@@ -35,6 +35,16 @@ public abstract class ActionCommand : MonoBehaviour
     public const float TIMING_WINDOW = 0.15f;  //"9 frames"
     public const float PERFECT_TIMING_WINDOW = 0.05f;  //"3 frames"
 
+    public float GetTimingWindow()
+    {
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Pride))
+        {
+            return TIMING_WINDOW / 2;
+        }
+
+        return TIMING_WINDOW;
+    }
+
     //How long should certain action commands stay on screen to give you feedback? (Not all action commands use this)
     public const float FEEDBACK_TIME = 0.30f;
 
@@ -111,14 +121,14 @@ public class AC_Jump : ActionCommand
 
     public bool GetSuccess()
     {
-        return autoComplete || InputManager.GetButtonPressInWindow(InputManager.Button.A, TIMING_WINDOW);
+        return autoComplete || InputManager.GetButtonPressInWindow(InputManager.Button.A, GetTimingWindow());
     }
 
     public override void Update()
     {
         base.Update();
 
-        if (lifetime > delay - TIMING_WINDOW)
+        if (lifetime > delay - GetTimingWindow())
         {
             if (!showPress)
             {
@@ -185,6 +195,11 @@ public class AC_MashLeft : ActionCommand
     {
         duration = p_duration;
         mashObjective = p_difficulty;
+
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Pride))
+        {
+            mashObjective = Mathf.CeilToInt(mashObjective * 1.5f);
+        }
     }
 
 
@@ -312,6 +327,11 @@ public class AC_MashLeftRight : ActionCommand
     {
         duration = p_duration;
         mashObjective = p_difficulty;
+
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Pride))
+        {
+            mashObjective = Mathf.CeilToInt(mashObjective * 1.5f);
+        }
     }
 
 
@@ -431,10 +451,10 @@ public class AC_HoldLeft : ActionCommand
     }
 
 
-    public void Setup(float p_duration = DEFAULT_DURATION, float p_window = TIMING_WINDOW)
+    public void Setup(float p_duration = DEFAULT_DURATION)
     {
         duration = p_duration;
-        window = p_window;
+        window = GetTimingWindow();
     }
 
 
@@ -529,16 +549,16 @@ public class AC_PressATimed : ActionCommand
     }
 
 
-    public void Setup(float p_duration = DEFAULT_DURATION, float p_window = TIMING_WINDOW)
+    public void Setup(float p_duration = DEFAULT_DURATION)
     {
         duration = p_duration;
-        window = p_window;
+        window = GetTimingWindow();
     }
 
 
     public bool GetSuccess()
     {
-        return autoComplete || pressTime >= duration && pressTime < duration + TIMING_WINDOW;
+        return autoComplete || pressTime >= duration && pressTime < duration + GetTimingWindow();
     }
 
     public override void Update()

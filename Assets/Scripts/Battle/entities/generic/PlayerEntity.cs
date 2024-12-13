@@ -1815,8 +1815,8 @@ public class PlayerEntity : BattleEntity
 
         //recalculate maxhp, maxep, maxse
         maxHP = BattleControl.Instance.playerData.GetMaxHP(entityID) + GetEffectPotency(Effect.EffectType.MaxHPBoost) - GetEffectPotency(Effect.EffectType.MaxHPReduction);
-        BattleControl.Instance.maxEP = BattleControl.Instance.playerData.GetMaxEP() + GetEffectPotency(Effect.EffectType.MaxEPBoost) - GetEffectPotency(Effect.EffectType.MaxEPReduction);
-        BattleControl.Instance.maxSE = BattleControl.Instance.playerData.GetMaxSE() + GetEffectPotency(Effect.EffectType.MaxSEBoost) - GetEffectPotency(Effect.EffectType.MaxSEReduction);
+        BattleControl.Instance.maxEP = BattleControl.Instance.playerData.GetMaxEP() + GetPartyMaxEffectPotency(Effect.EffectType.MaxEPBoost) - GetPartyMaxEffectPotency(Effect.EffectType.MaxEPReduction);
+        BattleControl.Instance.maxSE = BattleControl.Instance.playerData.GetMaxSE() + GetPartyMaxEffectPotency(Effect.EffectType.MaxSEBoost) - GetPartyMaxEffectPotency(Effect.EffectType.MaxSEReduction);
 
         if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Greed))
         {
