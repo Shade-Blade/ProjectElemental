@@ -222,7 +222,7 @@ Shader "Custom/ProperSpriteBuffDebuffWilex" {
 
 		void surf(Input IN, inout SurfaceOutput o) {
 
-			half4 c = tex2D(_MainTex, IN.uv_MainTex) * IN.color;
+			half4 c = tex2D(_MainTex, IN.uv_MainTex);
 
 			//calculate weapon mask stuff early so that blue ribbons don't trigger this
 			half bl = c.b;
@@ -265,6 +265,8 @@ Shader "Custom/ProperSpriteBuffDebuffWilex" {
 					c = _WWeaponColorD;
 				}
 			}
+
+			c *= IN.color;
 			
 			fixed4 b = fixed4(0,0,0,0);
 			if (c.a != 0) {

@@ -233,7 +233,7 @@ Shader "Custom/ProperSpriteBiGradientMapLuna" {
 
 		void surf(Input IN, inout SurfaceOutput o) {
 
-			half4 c = tex2D(_MainTex, IN.uv_MainTex) * IN.color;
+			half4 c = tex2D(_MainTex, IN.uv_MainTex);
 			
 			//calculate weapon mask stuff early so that blue ribbons don't trigger this
 			half bl = c.b;
@@ -276,6 +276,8 @@ Shader "Custom/ProperSpriteBiGradientMapLuna" {
 					c = _LWeaponColorD;
 				}
 			}
+
+			c *= IN.color;
 
 			//get scale (only X but sprites should be uniformly scaled in x and y so this should be fine)
 			//float k = length(mul(unity_ObjectToWorld, float4(1,0,0,0)));

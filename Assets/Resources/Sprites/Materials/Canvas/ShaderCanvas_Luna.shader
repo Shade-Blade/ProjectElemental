@@ -138,7 +138,7 @@ Shader "UI/Default_Luna"
 
             fixed4 frag(v2f IN) : SV_Target
             {
-                half4 c = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
+                half4 c = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
 
                 //calculate weapon mask stuff early so that blue ribbons don't trigger this
 			    half b = c.b;
@@ -181,6 +181,8 @@ Shader "UI/Default_Luna"
 					    c = _LWeaponColorD;
 				    }
 			    }
+
+                c *= IN.color;
 
                 #ifdef UNITY_UI_CLIP_RECT
                 c.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);

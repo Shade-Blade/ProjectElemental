@@ -200,7 +200,7 @@ Shader "Custom/ProperSpriteGeneralLuna" {
 
 		void surf(Input IN, inout SurfaceOutput o) {
 
-			half4 c = tex2D(_MainTex, IN.uv_MainTex) * IN.color;
+			half4 c = tex2D(_MainTex, IN.uv_MainTex);
 
 			//calculate weapon mask stuff early so that blue ribbons don't trigger this
 			half b = c.b;
@@ -243,6 +243,8 @@ Shader "Custom/ProperSpriteGeneralLuna" {
 					c = _LWeaponColorD;
 				}
 			}
+
+			c *= IN.color;
 
 
 			//get scale (only X but sprites should be uniformly scaled in x and y so this should be fine)

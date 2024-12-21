@@ -251,7 +251,7 @@ Shader "Custom/ProperSpriteBiGradientMapBuffDebuffLuna" {
 
 		void surf(Input IN, inout SurfaceOutput o) {
 
-			half4 c = tex2D(_MainTex, IN.uv_MainTex) * IN.color;
+			half4 c = tex2D(_MainTex, IN.uv_MainTex);
 			
 			//calculate weapon mask stuff early so that blue ribbons don't trigger this
 			half bl = c.b;
@@ -295,6 +295,8 @@ Shader "Custom/ProperSpriteBiGradientMapBuffDebuffLuna" {
 				}
 			}
 			
+			c *= IN.color;
+
 			fixed4 b = fixed4(0,0,0,0);
 			if (c.a != 0) {
 				float timeFactor = _Time.x * _TimeScale;
