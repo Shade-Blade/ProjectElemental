@@ -5303,14 +5303,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             ReceiveEffectForceBuffered(se, casterID, mode);
         }
     }
-    public void ReceiveEffectForce(Effect se, int casterID = Effect.NULL_CASTERID, Effect.EffectStackMode mode = Effect.EffectStackMode.Default) // BattleHelper.EffectPopupPriority priority = BattleHelper.EffectPopupPriority.Never)
+    public void ReceiveEffectForce(Effect se, int casterID = Effect.NULL_CASTERID, Effect.EffectStackMode mode = Effect.EffectStackMode.Default, bool makePopup = true) // BattleHelper.EffectPopupPriority priority = BattleHelper.EffectPopupPriority.Never)
     {
         if (hp <= 0 && !GetEntityProperty(BattleHelper.EntityProperties.GetEffectsAtNoHP))
         {
             return;
         }
 
-        bool makePopup = true;
+        //bool makePopup = true;
 
         //these are more internal effects
         if (se.effect == Effect.EffectType.BonusTurns)
@@ -5933,12 +5933,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         ValidateEffects();
     }
-    public void CureEffects(bool curePermanents = true)
+    public int CureEffects(bool curePermanents = true)
     {
         //(note: 1 + count because I want the effect to be noticeable even if you have nothing)
         int power = 1 + effects.FindAll((e) => Effect.IsCurable(e.effect, curePermanents)).Count;
         effects.RemoveAll((e) => Effect.IsCurable(e.effect, curePermanents));
 
+        int powerB = power - 1;
         if (power > 4)
         {
             power = 4;
@@ -5950,6 +5951,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             QueueEvent(BattleHelper.Event.CureStatus);
         }
         ValidateEffects();
+
+        return powerB;
     }
     public void CureDeathCurableEffects()
     {

@@ -842,7 +842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eae6752cd5c992f49b7f863401953156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapName: RabbitFloor_RestFloor
+  mapName: RabbitHole_RestFloor
   worldLocation: 
   skyboxID: 
   ambientLight: {r: 0.5, g: 0.5, b: 0.5, a: 1}

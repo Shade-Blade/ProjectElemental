@@ -221,7 +221,7 @@ MonoBehaviour:
     - Did you come here to admire my beauty? Right now I'm selling some Ribbons that
       might make you more beautiful too. I'll also give you money for all your ugly
       old rags you think are fashionable.<prompt,Buy Ribbon,1,Sell Ribbon,2,Cancel,3,-1>
-    - Any of them dazzle you?<dataget,arg,buymenu><genericmenu,arg,4>
+    - Any of them dazzle you?<dataget,arg,buymenu><genericmenu,arg,4,false,false,false,false,true>
     - You can't put a price on beauty, but I'll let you have that <var,0> for <var,1>
       <var,2>.<prompt,Yes,1,No,2,1>
     - Fashion doesn't come cheap, you know.
@@ -229,8 +229,8 @@ MonoBehaviour:
     - Hmmm... That's a start, but it'll take more than that one ribbon to be fashionable.
     - Now a little sliver of my beauty is in your hands. Make sure not to waste it!
     - So you only wanted to talk to me? Maybe I should start charging for that.
-    - Yes... I'd hate to see anything good go to waste on you.<dataget,arg,sellmenu><genericmenu,arg,4>
-    - Yes... I'd hate to see anything good go to waste on you.<dataget,arg,sellmenu><genericmenu,arg,4>
+    - Yes... I'd hate to see anything good go to waste on you.<dataget,arg,sellmenu><genericmenu,arg,4,false,false,false,false,true>
+    - Yes... I'd hate to see anything good go to waste on you.<dataget,arg,sellmenu><genericmenu,arg,4,false,false,false,false,true>
     - That ugly <var,0> is only worth <var,1>. Ready to give it up?<prompt,Yes,1,No,2,1>
     - You got rid of all your ribbons.? Well, I'm not buying any other part of your
       ridiculous getup. Come back when you have something actually fashionable.

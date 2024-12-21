@@ -1,8 +1,8 @@
-pit test B
-d_rh_v0.0
+pit test 3
+d_rh_v0.1
 
 
-SolarGrove,RabbitHole_Lobby,0|15|1.5
+None,RabbitHole_Lobby,0|15|1.5
 0
 1,0,12,12,12,12,12,0,0,0,0,0,10,32,6,6,6,0,0,0,0,0,0,0,0,0,0,0
 

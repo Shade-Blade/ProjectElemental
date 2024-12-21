@@ -664,6 +664,7 @@ public class TextboxScript : MonoBehaviour
                 List<Color?> backgroundList = null;
                 List<bool> canUseList = null;
                 bool zTarget = false;
+                string itemDescriptor = null;
                 if (t.args.Length > 0 && t.args[0].Contains("arg"))
                 {
                     OWItemBoxMenu.CreationPreset p = OWItemBoxMenu.CreationPreset.Default; //how to create the thing with the data
@@ -742,6 +743,7 @@ public class TextboxScript : MonoBehaviour
                             {
                                 stringList.Add(Item.GetItemDataEntry(itemList[i].type).sellPrice + " <coin>");
                             }
+                            itemDescriptor = "<coin>: <const,coins>";
                             break;
                     }
                 } else
@@ -774,10 +776,11 @@ public class TextboxScript : MonoBehaviour
                             {
                                 stringList.Add(Item.GetItemDataEntry(itemList[i].type).sellPrice + " <coin>");
                             }
+                            itemDescriptor = "<coin>: <const,coins>";
                             break;
                     }
                 }
-                menuHandler = OWItemBoxMenu.BuildMenu(itemList, stringList, backgroundList, canUseList, null, false, false, false, zTarget, false, false);
+                menuHandler = OWItemBoxMenu.BuildMenu(itemList, stringList, backgroundList, canUseList, itemDescriptor, false, false, false, zTarget, false, false);
                 inMenu = true;
                 menuHandler.menuExit += MenuExit;
                 break;

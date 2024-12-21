@@ -255,8 +255,8 @@ public class WorldNPC_Cook : WorldNPCEntity
 
             if (ynState == 1)
             {
-                MainManager.Instance.playerData.itemInventory.RemoveAt(itemIndexA);
-                MainManager.Instance.playerData.itemInventory.RemoveAt(itemIndexB);
+                MainManager.Instance.playerData.itemInventory.Remove(itemA);
+                MainManager.Instance.playerData.itemInventory.Remove(itemB);
 
                 //Do the cooking thing
                 //RDE is computed in an earlier step so I can check for valid recipes early
@@ -264,7 +264,18 @@ public class WorldNPC_Cook : WorldNPCEntity
                 Item.ItemType outputType = rde.result;
                 Item.ItemQuality quality = rde.quality;
 
-                Item resItem = new Item(outputType, itemA.modifier, Item.ItemOrigin.CookStella, 0, 0);
+                Item resItem = new Item(outputType, GlobalItemScript.GetModifierFromRecipe(itemA.modifier, itemB.modifier), Item.ItemOrigin.CookStella, 0, 0);
+
+                //forcibly change the modifier to the correct one
+                if (GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Spread)
+                {
+                    resItem.modifier = Item.ItemModifier.Focus;
+                }
+                if (!GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Focus)
+                {
+                    resItem.modifier = Item.ItemModifier.Spread;
+                }
+
                 MainManager.Instance.SetRecipeFlag(resItem.type);
                 string[] tempResVars = new string[] { Item.GetName(resItem), quality.ToString() };
                 switch (quality)

@@ -294,7 +294,7 @@ public class GlobalItemScript : MonoBehaviour
     {
         //Special cases: mistake tier items need special text
 
-        //To do: Make this read from a text file
+        //To do later: Make this read from a text file
 
         if (rde.result == ItemType.Mistake)
         {
@@ -327,7 +327,7 @@ public class GlobalItemScript : MonoBehaviour
 
         if (rde.quality == ItemQuality.SpecialtyRecipe)
         {
-            output += "\n<descriptionnoticecolor>(Specialty Recipe: Only specific cook can make this.)</descriptionnoticecolor>";
+            output += "\n<descriptionnoticecolor>(Specialty Recipe: Only a specific cook can make this.)</descriptionnoticecolor>";
         }
         if (rde.quality == ItemQuality.SupremeRecipe)
         {
@@ -335,6 +335,96 @@ public class GlobalItemScript : MonoBehaviour
         }
 
         return output;
+    }
+    public string GetItemModifierPrefix(ItemModifier im)
+    {
+        switch (im)
+        {
+            case ItemModifier.None:
+                return "";
+            case ItemModifier.Echo:
+                return "<color,#00f000>(E)</color>";
+            case ItemModifier.Echoed:
+                return "<color,#90f090>(e)</color>";
+            case ItemModifier.Glistening:
+                return "<color,#f0c000>(G)</color>";
+            case ItemModifier.Void:
+                return "<color,#7000f0>(V)</color>";
+            case ItemModifier.Spread:
+                return "<color,#0090f0>(S)</color>";
+            case ItemModifier.Focus:
+                return "<color,#f00000>(F)</color>";
+            case ItemModifier.Quick:
+                return "<color,#909090>(Q)</color>";
+        }
+
+        return "";
+    }
+    public string GetItemModifierDescription(ItemModifier im)
+    {
+        switch (im)
+        {
+            case ItemModifier.None:
+                return "";
+            case ItemModifier.Echo:
+                return "Echo: Item is 0.8x as powerful, but becomes an Echoed copy.";
+            case ItemModifier.Echoed:
+                return "Echoed: Item is 0.4x as powerful. (Produced by an Echo item)";
+            case ItemModifier.Glistening:
+                return "Glistening: Item is 1.5x as powerful";
+            case ItemModifier.Void:
+                return "Void: Does not take up space in your inventory";
+            case ItemModifier.Spread:   //note: don't apply to already multi target because nothing happens
+                return "Spread: Item becomes multi target.";
+            case ItemModifier.Focus:    //note: don't apply to single target because it is a benefit with no drawback
+                return "Focus: Item becomes single target and 2x power.";
+            case ItemModifier.Quick:
+                return "Quick: Does not consume your action when used (Can't use Items next action)";
+        }
+
+        return "";
+    }
+    public static float GetItemModifierSellMultiplier(ItemModifier im)
+    {
+        switch (im)
+        {
+            case ItemModifier.None:
+                return 1;
+            case ItemModifier.Echo:
+            case ItemModifier.Glistening:
+            case ItemModifier.Spread:
+            case ItemModifier.Focus:
+            case ItemModifier.Quick:
+                return 1.5f;
+            case ItemModifier.Echoed:
+                return 0.5f;
+            case ItemModifier.Void:
+                return 2f;
+        }
+
+        return 1;
+    }
+    public static ItemModifier GetModifierFromRecipe(ItemModifier a, ItemModifier b)
+    {
+        //no modifier and Echoed have lower priority
+        if (a == ItemModifier.None)
+        {
+            return b;
+        }
+        if (b == ItemModifier.None)
+        {
+            return a;
+        }
+        if (a == ItemModifier.Echoed)
+        {
+            return b;
+        }
+        if (b == ItemModifier.Echoed)
+        {
+            return a;
+        }
+
+        return (a > b) ? a : b;
     }
 
     public static Sprite GetItemSpriteFromText(string item)
@@ -361,6 +451,109 @@ public class GlobalItemScript : MonoBehaviour
         return MainManager.Instance.itemSprites[(int)(itemType) - 1];
     }
 
+    //These two are separate as the materials are incompatible
+    public static Material GetItemModifierMaterial(ItemModifier im)
+    {
+        switch (im)
+        {
+            case ItemModifier.Focus:
+                return Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteItemModifier_Focus");
+            case ItemModifier.Spread:
+                return Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteItemModifier_Spread");
+            case ItemModifier.Echo:
+                return Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteItemModifier_Echo");
+            case ItemModifier.Echoed:
+                return Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteItemModifier_Echoed");
+            case ItemModifier.Glistening:
+                return Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteItemModifier_Glistening");
+            case ItemModifier.Void:
+                return Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteItemModifier_Void");
+            case ItemModifier.Quick:
+                return Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteItemModifier_Quick");
+        }
+
+        return MainManager.Instance.defaultSpriteMaterial;
+    }
+    public static Material GetItemModifierGUIMaterial(ItemModifier im)
+    {
+        switch (im)
+        {
+            case ItemModifier.Focus:
+                return Resources.Load<Material>("Sprites/Materials/Canvas/Canvas_ItemModifier_Focus");
+            case ItemModifier.Spread:
+                return Resources.Load<Material>("Sprites/Materials/Canvas/Canvas_ItemModifier_Spread");
+            case ItemModifier.Echo:
+                return Resources.Load<Material>("Sprites/Materials/Canvas/Canvas_ItemModifier_Echo");
+            case ItemModifier.Echoed:
+                return Resources.Load<Material>("Sprites/Materials/Canvas/Canvas_ItemModifier_Echoed");
+            case ItemModifier.Glistening:
+                return Resources.Load<Material>("Sprites/Materials/Canvas/Canvas_ItemModifier_Glistening");
+            case ItemModifier.Void:
+                return Resources.Load<Material>("Sprites/Materials/Canvas/Canvas_ItemModifier_Void");
+            case ItemModifier.Quick:
+                return Resources.Load<Material>("Sprites/Materials/Canvas/Canvas_ItemModifier_Quick");
+        }
+
+        return MainManager.Instance.defaultGUISpriteMaterial;
+    }
+    public static Material GetItemModifierMaterial(string im)
+    {
+        ItemModifier itemModifier;
+
+        Enum.TryParse(im, true, out itemModifier);
+        Debug.Log(im + " " + itemModifier);
+
+        return GetItemModifierMaterial(itemModifier);
+    }
+    public static Material GetItemModifierGUIMaterial(string im)
+    {
+        ItemModifier itemModifier;
+
+        Enum.TryParse(im, true, out itemModifier);
+
+        return GetItemModifierGUIMaterial(itemModifier);
+    }
+
+    public static ItemModifier GetRandomModifier(Item.ItemType i)
+    {
+        ItemDataEntry ide = GetItemDataEntry(i);
+
+        bool dual = false;
+        if (Item.GetProperty(ide, Item.ItemProperty.TargetAll) != null)
+        {
+            dual = true;
+        }
+
+        List<Item.ItemModifier> modifierPool = new List<Item.ItemModifier>
+        {
+            ItemModifier.Echo,
+            ItemModifier.Glistening,
+            ItemModifier.Void,
+            ItemModifier.Quick
+        };
+
+        if (dual)
+        {
+            modifierPool.Add(ItemModifier.Focus);
+        } else
+        {
+            modifierPool.Add(ItemModifier.Spread);
+        }
+
+        return RandomTable<Item.ItemModifier>.ChooseRandom(modifierPool);
+    }
+    public static bool ItemMultiTarget(Item.ItemType i)
+    {
+        ItemDataEntry ide = GetItemDataEntry(i);
+
+        bool dual = false;
+        if (Item.GetProperty(ide, Item.ItemProperty.TargetAll) != null)
+        {
+            dual = true;
+        }
+
+        return dual;
+    }
 
     public string GetKeyItemName(KeyItemType i)
     {
@@ -1669,6 +1862,13 @@ public struct Item
     public enum ItemModifier
     {
         None,
+        Focus,      //Force single target   (red) (F)
+        Spread,     //Force multi target    (blue)  (S)
+        Echo,       //0.8x power, but becomes Echoed    (green) (E)
+        Echoed,     //0.4x power                        (green) (e)
+        Glistening,  //1.5x power                        (yellow) (G)
+        Void,       //Increases item consumable capacity, ignores item consumable limit (black) (V)
+        Quick,      //Quick item!   (white) (Q)
     }
 
     public enum ItemOrigin
@@ -1743,6 +1943,7 @@ public struct Item
         Revive,         //Can be used to revive dead characters
         Miracle,        //also sets revive, applies Miracle if character is alive before
         Cure,           //Cures negative effects
+        CureBonus,      //Cure and get bonus for cured effects
         MinusHPIsDamage,    //minus hp is treated as status damage
         Passive_HPRegen,    //note: applies to all
         Passive_HPLoss,    //note: applies to all
@@ -1858,13 +2059,20 @@ public struct Item
     }
     public static string GetName(Item i)
     {
+        string modifierPrefix = GlobalItemScript.Instance.GetItemModifierPrefix(i.modifier);
+
+        if (modifierPrefix.Length > 0)
+        {
+            modifierPrefix = modifierPrefix + " ";
+        }
+
         if (MainManager.Instance.Cheat_SeePickupCounts)
         {
-            return GetName(i.type) + " " + i.itemCount;
+            return modifierPrefix + GetName(i.type) + " " + i.itemCount;
         }
         else
         {
-            return GetName(i.type);
+            return modifierPrefix + GetName(i.type);
         }
     }
     public static string GetDescription(ItemType i)
@@ -1887,6 +2095,11 @@ public struct Item
     }
     public static string GetDescription(Item i)
     {
+        if (i.modifier != ItemModifier.None)
+        {
+            return GetDescription(i.type) + "<line>(" + GlobalItemScript.Instance.GetItemModifierPrefix(i.modifier) + " " + GlobalItemScript.Instance.GetItemModifierDescription(i.modifier) + ")";
+        }
+
         return GetDescription(i.type);
     }
     public static string GetArticle(ItemType i)
@@ -1905,13 +2118,12 @@ public struct Item
     {
         return GetItemText(i.type, value);
     }
-    public static TargetArea GetTarget(ItemType i)
+    public static TargetArea GetTarget(ItemType i, bool dual)
     {
         //ItemDataEntry ide = Item.GetItemDataEntry(item);
 
         ItemDataEntry ide = GetItemDataEntry(i);
         bool isAttackItem = ide.isAttackItem;
-        bool dual = GetProperty(ide, ItemProperty.TargetAll) != null;
         bool revive = GetProperty(ide, ItemProperty.Revive) != null;
         bool miracle = GetProperty(ide, ItemProperty.Miracle) != null;
         bool anyone = GetProperty(ide, ItemProperty.TargetAnyone) != null;
@@ -1925,7 +2137,8 @@ public struct Item
                 if (notself)
                 {
                     return new TargetArea(TargetArea.TargetAreaType.AnyoneNotSelf, dual);
-                } else
+                }
+                else
                 {
                     return new TargetArea(TargetArea.TargetAreaType.Anyone, dual);
                 }
@@ -1941,7 +2154,8 @@ public struct Item
                     return new TargetArea(TargetArea.TargetAreaType.LiveAnyone, dual);
                 }
             }
-        } else
+        }
+        else
         {
             if (isAttackItem)
             {
@@ -1995,8 +2209,24 @@ public struct Item
         //return GetItemMoveScript(i).GetBaseTarget();
         //return new TargetArea(TargetArea.TargetRange.None);
     }
+    public static TargetArea GetTarget(ItemType i)
+    {
+        ItemDataEntry ide = GetItemDataEntry(i);
+        bool dual = GetProperty(ide, ItemProperty.TargetAll) != null;
+        return GetTarget(i, dual);
+    }
     public static TargetArea GetTarget(Item i)
     {
+        if (i.modifier == ItemModifier.Spread)
+        {
+            return GetTarget(i.type, true);
+        }
+
+        if (i.modifier == ItemModifier.Focus)
+        {
+            return GetTarget(i.type, false);
+        }
+
         return GetTarget(i.type);
     }
     public static float GetItemBoost(int level)
@@ -2050,7 +2280,7 @@ public struct Item
     }
     public static string GetSpriteString(Item i)
     {
-        return GetSpriteString(i.type);
+        return "<itemsprite," + i.type.ToString() + "," + i.modifier + ">";
     }
 
     //This will eventually read from an item data table
@@ -2152,10 +2382,36 @@ public struct Item
 
         bool dual = GetProperty(ide, ItemProperty.TargetAll) != null;
 
+        if (i.modifier == ItemModifier.Spread)
+        {
+            dual = true;
+        }
+        if (i.modifier == ItemModifier.Focus)
+        {
+            dual = false;
+        }
+
         bool stack = GetProperty(ide, ItemProperty.Stack) != null;
         float boost = 1;
 
         int count = inv.FindAll((e) => (e.type == i.type)).Count;
+
+        if (i.modifier == ItemModifier.Glistening)
+        {
+            boost *= 1.5f;
+        }
+        if (i.modifier == ItemModifier.Focus)
+        {
+            boost *= 2f;
+        }
+        if (i.modifier == ItemModifier.Echo)
+        {
+            boost *= 0.80001f;
+        }
+        if (i.modifier == ItemModifier.Echoed)
+        {
+            boost *= 0.40001f;
+        }
 
         if (GetProperty(ide, ItemProperty.Unity) != null)
         {
@@ -2170,7 +2426,15 @@ public struct Item
         if (stack)
         {
             boost *= count;
-            inv.RemoveAll((e) => (e.type == i.type));
+            inv.RemoveAll((e) => (e.type == i.type && e.modifier != ItemModifier.Echo));
+
+            for (int j = 0; j < inv.Count; j++)
+            {
+                if (inv[j].type == i.type && inv[j].modifier == ItemModifier.Echo)
+                {
+                    inv[j] = new Item(inv[j].type, ItemModifier.Echoed, ItemOrigin.Producer, inv[j].bonusData, inv[j].itemCount);
+                }
+            }
 
             player.itemsUsed += count;
             MainManager.Instance.playerData.itemsUsed += count;
@@ -2201,23 +2465,40 @@ public struct Item
 
         ItemPropertyBlock block;
 
-        block = GetProperty(ide, ItemProperty.Producer);
-        if (block != null)
+        if (i.modifier == ItemModifier.Echo)
         {
-            for (int j = 0; j < block.items.Length; j++)
+            if (inv.Count < MainManager.Instance.playerData.GetMaxInventorySize())
             {
-                //BattleControl.Instance.playerData.AddItem(new Item(block.items[j]));
-                if (inv.Count < MainManager.Instance.playerData.GetMaxInventorySize())
+                if (index >= inv.Count - 1 || index < 0)
                 {
-                    if (index >= inv.Count - 1 || index < 0)
+                    //inv.Add(new Item(block.items[j]));
+                    MainManager.Instance.playerData.AddItem(new Item(i.type, ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
+                }
+                else
+                {
+                    MainManager.Instance.playerData.InsertItem(index + 1, new Item(i.type, ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
+                }
+            }
+        } else
+        {
+            block = GetProperty(ide, ItemProperty.Producer);
+            if (block != null)
+            {
+                for (int j = 0; j < block.items.Length; j++)
+                {
+                    //BattleControl.Instance.playerData.AddItem(new Item(block.items[j]));
+                    if (i.modifier == ItemModifier.Void || inv.Count < MainManager.Instance.playerData.GetMaxInventorySize())
                     {
-                        //inv.Add(new Item(block.items[j]));
-                        MainManager.Instance.playerData.AddItem(new Item(block.items[j], i.modifier, ItemOrigin.Producer, 0, 0));
-                    }
-                    else
-                    {
-                        //inv.Insert(index + 1, new Item(block.items[j]));
-                        MainManager.Instance.playerData.InsertItem(index + 1, new Item(block.items[j], i.modifier, ItemOrigin.Producer, 0, 0));
+                        if (index >= inv.Count - 1 || index < 0)
+                        {
+                            //inv.Add(new Item(block.items[j]));
+                            MainManager.Instance.playerData.AddItem(new Item(block.items[j], i.modifier, ItemOrigin.Producer, 0, 0));
+                        }
+                        else
+                        {
+                            //inv.Insert(index + 1, new Item(block.items[j]));
+                            MainManager.Instance.playerData.InsertItem(index + 1, new Item(block.items[j], i.modifier, ItemOrigin.Producer, 0, 0));
+                        }
                     }
                 }
             }
@@ -2483,7 +2764,7 @@ public struct Item
                 for (int j = 1; j < blockB.items.Length; j++)
                 {
                     Item newItem2 = new Item(blockB.items[j], inv[i].modifier, ItemOrigin.Producer, 0, 0);
-                    if (inv.Count < MainManager.Instance.playerData.GetMaxInventorySize())
+                    if (inv[i].modifier != ItemModifier.Void && inv.Count < MainManager.Instance.playerData.GetMaxInventorySize())
                     {
                         if (i >= inv.Count - 1 || i < 0)
                         {
@@ -2533,7 +2814,7 @@ public struct Item
                 for (int j = 1; j < blockB.items.Length; j++)
                 {
                     Item newItem2 = new Item(blockB.items[j], inv[i].modifier, ItemOrigin.Producer, 0, 0);
-                    if (inv.Count < MainManager.Instance.playerData.GetMaxInventorySize())
+                    if (inv[i].modifier != ItemModifier.Void && inv.Count < MainManager.Instance.playerData.GetMaxInventorySize())
                     {
                         if (i >= inv.Count - 1 || i < 0)
                         {
@@ -2803,6 +3084,11 @@ public abstract class ItemMove : Move, IEntityHighlighter
         return item;
     }
 
+    public ItemModifier GetModifier()
+    {
+        return item.modifier;
+    }
+
     public Item item;
 
     public int itemCount;
@@ -2833,6 +3119,7 @@ public abstract class ItemMove : Move, IEntityHighlighter
         so.transform.parent = BattleControl.Instance.transform;
         SpriteRenderer s = so.AddComponent<SpriteRenderer>();
         s.sprite = isp;
+        s.material = GlobalItemScript.GetItemModifierMaterial(GetModifier());
         so.transform.position = position;
 
         GameObject eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_Item_UseFireworks"), gameObject.transform);
@@ -2857,18 +3144,32 @@ public abstract class ItemMove : Move, IEntityHighlighter
         ItemType it = GetItemType();
         Debug.Log("Item producer anim: " + it);
 
+        //No producer anim because the item is not being used
+        if (caller.HasEffect(Effect.EffectType.Freebie))
+        {
+            yield break;
+        }
 
         ItemPropertyBlock block;
         List<Item> itemList = new List<Item>();
 
-        block = GetProperty(GetItemDataEntry(it), ItemProperty.Producer);
-        if (block != null)
+        if (GetModifier() == ItemModifier.Echo)
         {
-            for (int j = 0; j < block.items.Length; j++)
+            if (BattleControl.Instance.playerData.itemInventory.Count <= BattleControl.Instance.playerData.GetMaxInventorySize())
             {
-                if (BattleControl.Instance.playerData.itemInventory.Count + j < BattleControl.Instance.playerData.GetMaxInventorySize())
+                itemList.Add(new Item(GetItemType(), ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
+            }
+        } else
+        {
+            block = GetProperty(GetItemDataEntry(it), ItemProperty.Producer);
+            if (block != null)
+            {
+                for (int j = 0; j < block.items.Length; j++)
                 {
-                    itemList.Add(new Item(block.items[j], item.modifier, ItemOrigin.Producer, 0, 0));
+                    if (GetModifier() == ItemModifier.Void || BattleControl.Instance.playerData.itemInventory.Count + j <= BattleControl.Instance.playerData.GetMaxInventorySize())
+                    {
+                        itemList.Add(new Item(block.items[j], item.modifier, ItemOrigin.Producer, 0, 0));
+                    }
                 }
             }
         }
@@ -2892,6 +3193,14 @@ public abstract class ItemMove : Move, IEntityHighlighter
             so.transform.parent = BattleControl.Instance.transform;
             SpriteRenderer s = so.AddComponent<SpriteRenderer>();
             s.sprite = isp;
+            if (GetModifier() == ItemModifier.Echo)
+            {
+                s.material = GlobalItemScript.GetItemModifierMaterial(ItemModifier.Echoed);
+            }
+            else
+            {
+                s.material = GlobalItemScript.GetItemModifierMaterial(GetModifier());
+            }
             so.transform.position = startPosition;
 
             IEnumerator  PosLerp(GameObject o, float duration, Vector3 posA, Vector3 posB)
@@ -3044,23 +3353,40 @@ public abstract class ItemMove : Move, IEntityHighlighter
         //Apply properties
         Item.ItemPropertyBlock block;
 
-        block = Item.GetProperty(GetItem(), Item.ItemProperty.Producer);
-        if (block != null)
+        if (GetModifier() == ItemModifier.Echo)
         {
-            for (int i = 0; i < block.items.Length; i++)
+            if (inv.Count < BattleControl.Instance.playerData.GetMaxInventorySize())
             {
-                //BattleControl.Instance.playerData.AddItem(new Item(block.items[i]));
-                if (inv.Count < BattleControl.Instance.GetMaxItemInventory(caller))
+                if (b.menuIndex >= inv.Count - 1 || b.menuIndex < 0)
                 {
-                    if (b.menuIndex >= inv.Count - 1 || b.menuIndex < 0)
+                    //inv.Add(new Item(block.items[j]));
+                    BattleControl.Instance.AddItemInventory(caller, new Item(GetItemType(), ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
+                }
+                else
+                {
+                    BattleControl.Instance.InsertItemInventory(caller, b.menuIndex + 1, new Item(GetItemType(), ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
+                }
+            }
+        } else
+        {
+            block = Item.GetProperty(GetItem(), Item.ItemProperty.Producer);
+            if (block != null)
+            {
+                for (int i = 0; i < block.items.Length; i++)
+                {
+                    //BattleControl.Instance.playerData.AddItem(new Item(block.items[i]));
+                    if (inv.Count < BattleControl.Instance.GetMaxItemInventory(caller) || GetModifier() == ItemModifier.Void)
                     {
-                        BattleControl.Instance.AddItemInventory(caller, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
-                        //inv.Add(new Item(block.items[i]));
-                    }
-                    else
-                    {
-                        BattleControl.Instance.InsertItemInventory(caller, b.menuIndex + 1, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
-                        //inv.Insert(b.menuIndex + 1, new Item(block.items[i]));
+                        if (b.menuIndex >= inv.Count - 1 || b.menuIndex < 0)
+                        {
+                            BattleControl.Instance.AddItemInventory(caller, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
+                            //inv.Add(new Item(block.items[i]));
+                        }
+                        else
+                        {
+                            BattleControl.Instance.InsertItemInventory(caller, b.menuIndex + 1, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
+                            //inv.Insert(b.menuIndex + 1, new Item(block.items[i]));
+                        }
                     }
                 }
             }
@@ -3077,7 +3403,15 @@ public abstract class ItemMove : Move, IEntityHighlighter
         block = GetProperty(GetItem(), ItemProperty.Stack);
         if (block != null)
         {
-            inv.RemoveAll((e) => (e.type == GetItemType()));
+            inv.RemoveAll((e) => (e.type == GetItemType() && e.modifier != ItemModifier.Echo));
+
+            for (int i = 0; i < inv.Count; i++)
+            {
+                if (inv[i].type == GetItemType() && inv[i].modifier == ItemModifier.Echo)
+                {
+                    inv[i] = new Item(inv[i].type, ItemModifier.Echoed, ItemOrigin.Producer, inv[i].bonusData, inv[i].itemCount);
+                }
+            }
         }
 
         //note: this means stacking items only get added once

@@ -507,6 +507,11 @@ public class PickupUnion
     }
     public static Material GetSpriteMaterial(PickupUnion pu)
     {
+        if (pu.type == PickupType.Item)
+        {
+            return GlobalItemScript.GetItemModifierMaterial(pu.item.modifier);
+        }
+
         return MainManager.Instance.defaultSpriteMaterial;
     }
 
@@ -526,7 +531,7 @@ public class PickupUnion
             case PickupType.Shard:
                 return 75;
             case PickupType.Item:
-                return Item.GetItemDataEntry(pu.item).sellPrice;
+                return (int)(Item.GetItemDataEntry(pu.item).sellPrice * GlobalItemScript.GetItemModifierSellMultiplier(pu.item.modifier));
             case PickupType.KeyItem:
                 return KeyItem.GetCost(pu.keyItem);
             case PickupType.Badge:

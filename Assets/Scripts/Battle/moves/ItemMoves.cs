@@ -10,12 +10,12 @@ public class Item_GenericConsumable : ItemMove
 {
     public bool GetMultiTarget()
     {
-        if (forceSingleTarget)
+        if (forceSingleTarget || GetModifier() == ItemModifier.Focus)
         {
             return false;
         }
 
-        if (forceMultiTarget)
+        if (forceMultiTarget || GetModifier() == ItemModifier.Spread)
         {
             return true;
         }
@@ -39,7 +39,7 @@ public class Item_GenericConsumable : ItemMove
             }
         }
 
-        if (Item.GetProperty(GetItem(), Item.ItemProperty.Quick) != null && caller is PlayerEntity pcaller)
+        if ((Item.GetProperty(GetItem(), Item.ItemProperty.Quick) != null || GetModifier() == ItemModifier.Quick) && caller is PlayerEntity pcaller)
         {
             if (pcaller.QuickSupply > 0)
             {
@@ -203,6 +203,18 @@ public class Item_GenericConsumable : ItemMove
         if (caller.HasEffect(Effect.EffectType.ItemBoost))
         {
             boost = Item.GetItemBoost(caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency);
+        }
+        if (GetModifier() == ItemModifier.Glistening)
+        {
+            boost *= 1.5f;
+        }
+        if (GetModifier() == ItemModifier.Echo)
+        {
+            boost *= 0.80001f;
+        }
+        if (GetModifier() == ItemModifier.Echoed)
+        {
+            boost *= 0.40001f;
         }
         int powerCount = 1;
         if (Item.GetProperty(ide, Item.ItemProperty.Stack) != null)
@@ -421,12 +433,28 @@ public class Item_GenericConsumable : ItemMove
 
         //Apply curing effects here
         bool cure = Item.GetProperty(ide, Item.ItemProperty.Cure) != null;
+        bool cureBonus = Item.GetProperty(ide, Item.ItemProperty.CureBonus) != null;
 
-        if (cure)
+        if (cure || cureBonus)
         {
+            int curePower = 0;
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].CureEffects(false);
+                curePower += targets[i].CureEffects(false);
+            }
+
+            if (cureBonus)
+            {
+                for (int i = 0; i < statusList.Length; i++)
+                {
+                    //yeah no
+                    if (statusList[i].effect == Effect.EffectType.ItemBoost)
+                    {
+                        continue;
+                    }
+
+                    statusList[i] = statusList[i].BoostCopy(curePower);
+                }
             }
         }
 
@@ -868,6 +896,11 @@ public class Item_GenericConsumable : ItemMove
         }
         for (int i = 0; i < statusList.Length; i++)
         {
+            if (statusList[i].potency == 0 || statusList[i].duration == 0)
+            {
+                continue;
+            }
+
             //Debug.Log(statusList[i]);
             delay = true;
             for (int j = 0; j < targets.Count; j++)
@@ -902,6 +935,11 @@ public class Item_GenericConsumable : ItemMove
         }
         for (int i = 0; i < healOverTimeEffects.Length; i++)
         {
+            if (healOverTimeEffects[i].potency == 0 || healOverTimeEffects[i].duration == 0)
+            {
+                continue;
+            }
+
             delay = true;
             for (int j = 0; j < targets.Count; j++)
             {
@@ -971,14 +1009,14 @@ public class Item_GenericConsumable : ItemMove
                             {
                                 heal = 1;
                             }
-                            caller.InflictEffect(targets[i], new Effect(Effect.EffectType.EnergyRegen, heal, (sbyte)(2 * ptarget.BadgeEquippedCount(Badge.BadgeType.WeakStomach))));
+                            caller.InflictEffect(targets[i], new Effect(Effect.EffectType.SoulRegen, heal, (sbyte)(2 * ptarget.BadgeEquippedCount(Badge.BadgeType.WeakStomach))));
                         }
                     }
                 }
             }
         }
 
-        if (Item.GetProperty(ide, Item.ItemProperty.Quick) != null && caller is PlayerEntity pcaller)
+        if ((Item.GetProperty(ide, Item.ItemProperty.Quick) != null || GetModifier() == ItemModifier.Quick) && caller is PlayerEntity pcaller)
         {
             if (caller.CanMove() && pcaller.QuickSupply != 2)
             {
@@ -1361,6 +1399,11 @@ public class Item_GenericConsumable : ItemMove
             shouldHighlight = true;
         }
 
+        if (GetModifier() != ItemModifier.None)
+        {
+            shouldHighlight = true;
+        }
+
         //item sight displays this always
         shouldHighlight = true;
 
@@ -1368,6 +1411,22 @@ public class Item_GenericConsumable : ItemMove
         if (caller.HasEffect(Effect.EffectType.ItemBoost))
         {
             boost = Item.GetItemBoost(caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency);
+        }
+        if (GetModifier() == ItemModifier.Glistening)
+        {
+            boost *= 1.5f;
+        }
+        if (GetModifier() == ItemModifier.Focus)
+        {
+            boost *= 2f;
+        }
+        if (GetModifier() == ItemModifier.Echo)
+        {
+            boost *= 0.80001f;
+        }
+        if (GetModifier() == ItemModifier.Echoed)
+        {
+            boost *= 0.40001f;
         }
         int powerCount = 1;
         if (Item.GetProperty(ide, Item.ItemProperty.Stack) != null)
@@ -1886,12 +1945,12 @@ public class Item_GenericThrowable : ItemMove
     //public override Item.ItemType GetItemType() => Item.ItemType.DebugBomb;
     public bool GetMultiTarget()
     {
-        if (forceSingleTarget)
+        if (forceSingleTarget || GetModifier() == ItemModifier.Focus)
         {
             return false;
         }
 
-        if (forceMultiTarget)
+        if (forceMultiTarget || GetModifier() == ItemModifier.Spread)
         {
             return true;
         }
@@ -1951,6 +2010,22 @@ public class Item_GenericThrowable : ItemMove
         if (caller.HasEffect(Effect.EffectType.ItemBoost))
         {
             boost = Item.GetItemBoost(caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency);
+        }
+        if (GetModifier() == ItemModifier.Glistening)
+        {
+            boost *= 1.5f;
+        }
+        if (GetModifier() == ItemModifier.Focus)
+        {
+            boost *= 2f;
+        }
+        if (GetModifier() == ItemModifier.Echo)
+        {
+            boost *= 0.80001f;
+        }
+        if (GetModifier() == ItemModifier.Echoed)
+        {
+            boost *= 0.40001f;
         }
         int powerCount = 1;
         if (Item.GetProperty(ide, Item.ItemProperty.Stack) != null)
@@ -2199,7 +2274,7 @@ public class Item_GenericThrowable : ItemMove
             }
         }
 
-        if (Item.GetProperty(ide, Item.ItemProperty.Quick) != null && caller is PlayerEntity pcaller)
+        if ((Item.GetProperty(ide, Item.ItemProperty.Quick) != null || GetModifier() == ItemModifier.Quick) && caller is PlayerEntity pcaller)
         {
             if (caller.CanMove() && pcaller.QuickSupply != 2)
             {
@@ -2227,6 +2302,22 @@ public class Item_GenericThrowable : ItemMove
         if (caller.HasEffect(Effect.EffectType.ItemBoost))
         {
             boost = Item.GetItemBoost(caller.GetEffectEntry(Effect.EffectType.ItemBoost).potency);
+        }
+        if (GetModifier() == ItemModifier.Glistening)
+        {
+            boost *= 1.5f;
+        }
+        if (GetModifier() == ItemModifier.Focus)
+        {
+            boost *= 2f;
+        }
+        if (GetModifier() == ItemModifier.Echo)
+        {
+            boost *= 0.80001f;
+        }
+        if (GetModifier() == ItemModifier.Echoed)
+        {
+            boost *= 0.40001f;
         }
         int powerCount = 1;
         if (Item.GetProperty(ide, Item.ItemProperty.Stack) != null)
@@ -2531,9 +2622,15 @@ public class Item_AutoThrowable : Item_GenericThrowable
         //note: have to set up targetting
         switch (GetItemType())
         {
+            //For consistency (and to make the Focus modifier work, these two need to correctly set their targets)
             case Item.ItemType.SlimeBomb:
-                //the code below will take care of this (attacks all enemies)
+                caller.curTarget = target;
                 break;
+            case Item.ItemType.GoldBomb:
+                //backfire
+                caller.curTarget = caller;
+                break;
+
             case Item.ItemType.PepperNeedle:
                 //attacks who hurt you
                 caller.curTarget = caller.lastAttacker;
@@ -2704,7 +2801,10 @@ public class MetaItem_Void : MetaItemMove
         BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.UseItem);
         itemMove.itemCount = BattleControl.Instance.CountAllItemsOfType(caller, itemMove.GetItemType());
 
+        //extremely hacky fix
+        caller.ReceiveEffectForce(new Effect(Effect.EffectType.Freebie, 1, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.AdditivePot, false);
         yield return StartCoroutine(itemMove.Execute(caller, level));
+        caller.TokenRemoveOne(Effect.EffectType.Freebie);
 
         BattleControl.Instance.playerData.GetPlayerDataEntry(caller.entityID).itemsUsed++;
         BattleControl.Instance.playerData.itemsUsed++;

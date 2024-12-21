@@ -36,6 +36,10 @@ public class Text_ItemSprite : Text_SpecialSprite
         {
             its.itemSprite = GetItemSprite(args[0]);
             its.baseBox.sprite = its.itemSprite;
+            if (args.Length > 1)
+            {
+                its.baseBox.material = GlobalItemScript.GetItemModifierGUIMaterial(args[1]);
+            }
         }
         else
         {

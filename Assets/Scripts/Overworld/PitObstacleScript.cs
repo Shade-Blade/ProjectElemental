@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static MainManager;
+using UnityEngine.ProBuilder.MeshOperations;
+using UnityEngine.UIElements;
 
 public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
 {
@@ -620,6 +623,10 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                     }
                 }
                 pu.item.type = RandomTable<Item.ItemType>.ChooseRandom(itemPool);
+                if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_RandomItemModifiers))
+                {
+                    pu.item.modifier = GlobalItemScript.GetRandomModifier(pu.item.type);
+                }
                 break;
             case PickupUnion.PickupType.KeyItem:
                 List<IRandomTableEntry<KeyItem.KeyItemType>> kitentries = new List<IRandomTableEntry<KeyItem.KeyItemType>>

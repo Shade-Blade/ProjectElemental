@@ -3804,6 +3804,43 @@ public class BattleControl : MonoBehaviour
             EffectScript_GenericColorRateOverTime es_b = eo.GetComponent<EffectScript_GenericColorRateOverTime>();
             es_b.Setup(effectColor, newScale, power);
         }
+
+
+        //the effect icon spawn
+        Sprite isp = Text_EffectSprite.GetEffectSprite(e.effect.ToString());
+
+        Vector2 startPosition = be.transform.position + be.height * Vector3.up;
+        Vector3 endPosition = be.transform.position + be.height * Vector3.up + Vector3.up * 0.4f;
+
+        GameObject so = new GameObject("Effect Spawn Sprite");
+        so.transform.parent = gameObject.transform;
+        SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+        s.sprite = isp;
+        so.transform.position = startPosition;
+        s.material = MainManager.Instance.defaultGUISpriteMaterial;
+
+        IEnumerator PosLerp(SpriteRenderer s, float duration, Vector3 posA, Vector3 posB)
+        {
+            float time = 0;
+
+            s.color = new Color(1, 1, 1, 0f);
+
+            while (time < 1)
+            {
+                time += Time.deltaTime / duration;
+                s.gameObject.transform.position = posA + (posB - posA) * (1 - (1 - time) * (1 - time));
+
+                s.gameObject.transform.localScale = Vector3.one * 1.5f * (Mathf.Clamp01(time * 2));
+                s.color = new Color(1, 1, 1, time);
+                yield return null;
+            }
+
+            s.gameObject.transform.position = posB;
+
+            Destroy(s.gameObject);
+        }
+
+        StartCoroutine(PosLerp(s, 0.4f, startPosition, endPosition));
     }
     public void CreateStatusNotYetParticles(Effect e, BattleEntity be) //status would work if the entity was lower hp
     {
@@ -4901,8 +4938,12 @@ public class BattleControl : MonoBehaviour
             {
                 if (lastEventID == BattleHelper.Event.Rest && IsPlayerControlled(battleEntity, false))
                 {
+                    //for technical reasons this is treated as something the enemy caused
+                    //(This is to make focused Slime Bomb actually work)
+                    BattleEntity slimeTarget = GetEntitiesSorted(battleEntity, new TargetArea(TargetArea.TargetAreaType.Enemy))[0];
+
                     slimeBomb = true;
-                    AddReactionMoveEvent(battleEntity, battleEntity, Item.GetItemMoveScript(playerData.itemInventory[i]), true, true);
+                    AddReactionMoveEvent(battleEntity, slimeTarget, Item.GetItemMoveScript(playerData.itemInventory[i]), true, true);
                 }
             }
 

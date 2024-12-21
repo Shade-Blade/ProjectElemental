@@ -20,7 +20,7 @@ Apple,3,2,,,9,EnduranceUp:1/2,,,,FALSE,Eat,Base,FALSE,,,,1,FALSE
 BitterBean,,,,,15,Dizzy:1/2|Hustle:1/1,,,NoOverworld,FALSE,Eat,Base,FALSE,,,,1,FALSE
 RockNut,,,,,7,Dizzy:1/3,,,NoOverworld,FALSE,Eat,Base,TRUE,Earth,,4,1,FALSE
 LivelyLeaf,,5,,3,3,Absorb:3/X,,,,FALSE,Eat,Base,FALSE,,,,1,FALSE
-ClearStrawberry,,,,,6,,,,Cure|NoOverworld,TRUE,Eat,Base,FALSE,,,,1,FALSE
+ClearStrawberry,,,,,6,Burst:3/X,,,CureBonus|NoOverworld,TRUE,Eat,Base,FALSE,,,,1,FALSE
 BronzeSalad,18,,,,11,,,,,FALSE,Eat,GridFillRecipe,FALSE,,,,1,TRUE
 FlowerCandy,,18,,,17,,Stamina,2,,FALSE,Eat,GridFillRecipe,FALSE,,,,1,TRUE
 BerryBronze,12,6,,,17,,,,,FALSE,Eat,GridFillRecipe,FALSE,,,,1,TRUE
@@ -32,7 +32,7 @@ HealthySalad,9,,,5,9,Absorb:3/X,,,,FALSE,Eat,Recipe,FALSE,,,,1,TRUE
 Lemon,2,7,,,10,Focus:2/X,,,,FALSE,EatBad,Base,FALSE,,,,2,FALSE
 Flour,3,3,,,7,,,,TargetAll,FALSE,Eat,Base,FALSE,,,,2,FALSE
 Dragonfruit,5,5,,,10,Focus:2/X|Absorb:2/X,,,,FALSE,Eat,Base,FALSE,,,,2,FALSE
-MistWater,,,,,6,,,,"Cure,TargetAll",FALSE,Drink,Base,FALSE,,,,2,FALSE
+MistWater,,,,,6,,,,Cure|TargetAll,FALSE,Drink,Base,FALSE,,,,2,FALSE
 StaticThorn,,,,,6,Paralyze:1/3,,,NoOverworld,FALSE,None,Base,TRUE,Air,,4,2,FALSE
 WarpedLeaf,,,,,9,,,,,TRUE,Eat,Base,FALSE,,,,2,FALSE
 CarrotCake,4,4,,,13,,,,TargetAll,FALSE,Eat,GridFillRecipe,FALSE,,,,2,TRUE

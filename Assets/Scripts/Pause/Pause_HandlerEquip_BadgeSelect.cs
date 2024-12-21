@@ -316,33 +316,37 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
 
         equipOrUnequip = playerData.equippedBadges.Contains(b);
 
+        BadgeDataEntry bde = Badge.GetBadgeDataEntry(b);
+        int cost = bde.cost;
+
         if (equipOrUnequip)
         {
             //unequip
-            //note: this is one of the places you would need to modify if you wanted to have negative cost badges
 
-            playerData.equippedBadges.Remove(b);
-
-            BadgeDataEntry bde = Badge.GetBadgeDataEntry(b);
-            if (bde.singleOrParty)
+            //Unequipping might not be allowed >:)
+            if (!MainManager.Instance.Cheat_BadgeAnarchy && (playerData.CalculateUsedSP() - cost > playerData.sp))
             {
-                playerData.partyEquippedBadges.Remove(b);
+                //No
             }
             else
             {
-                for (int i = 0; i < sortedParty.Count; i++)
+                playerData.equippedBadges.Remove(b);
+
+                if (bde.singleOrParty)
                 {
-                    sortedParty[i].equippedBadges.Remove(b);
+                    playerData.partyEquippedBadges.Remove(b);
+                }
+                else
+                {
+                    for (int i = 0; i < sortedParty.Count; i++)
+                    {
+                        sortedParty[i].equippedBadges.Remove(b);
+                    }
                 }
             }
         } else
         {
             //equip
-            //?
-            BadgeDataEntry bde = Badge.GetBadgeDataEntry(b);
-
-            int cost = bde.cost;
-
             if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
             {
                 if (cost > 1)

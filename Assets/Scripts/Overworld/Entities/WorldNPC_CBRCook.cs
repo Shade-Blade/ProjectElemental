@@ -328,8 +328,8 @@ public class WorldNPC_CBRCook : WorldNPCEntity
 
             if (rde.quality != Item.ItemQuality.Mistake && ynState == 1)
             {
-                MainManager.Instance.playerData.itemInventory.RemoveAt(itemIndexA);
-                MainManager.Instance.playerData.itemInventory.RemoveAt(itemIndexB);
+                MainManager.Instance.playerData.itemInventory.Remove(itemA);
+                MainManager.Instance.playerData.itemInventory.Remove(itemB);
 
                 //Do the cooking thing
                 //RDE is computed in an earlier step so I can check for valid recipes early
@@ -337,7 +337,18 @@ public class WorldNPC_CBRCook : WorldNPCEntity
                 Item.ItemType outputType = rde.result;
                 Item.ItemQuality quality = rde.quality;
 
-                Item resItem = new Item(outputType, itemA.modifier, Item.ItemOrigin.CookTorstrum, 0, 0);
+                Item resItem = new Item(outputType, GlobalItemScript.GetModifierFromRecipe(itemA.modifier, itemB.modifier), Item.ItemOrigin.CookTorstrum, 0, 0);
+
+                //forcibly change the modifier to the correct one
+                if (GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Spread)
+                {
+                    resItem.modifier = Item.ItemModifier.Focus;
+                }
+                if (!GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Focus)
+                {
+                    resItem.modifier = Item.ItemModifier.Spread;
+                }
+
                 MainManager.Instance.SetRecipeFlag(resItem.type);
                 string[] tempResVars = new string[] { Item.GetName(resItem), quality.ToString() };
                 switch (quality)
@@ -412,7 +423,18 @@ public class WorldNPC_CBRCook : WorldNPCEntity
                     Item.ItemType outputType = cbrEntry.rde.result;
                     Item.ItemQuality quality = cbrEntry.rde.quality;
 
-                    Item resItem = new Item(outputType, cbrEntry.ingredientA.modifier, Item.ItemOrigin.CookTorstrum, 0, 0);
+                    Item resItem = new Item(outputType, cbrEntry.result.modifier, Item.ItemOrigin.CookTorstrum, 0, 0);
+
+                    //forcibly change the modifier to the correct one
+                    if (GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Spread)
+                    {
+                        resItem.modifier = Item.ItemModifier.Focus;
+                    }
+                    if (!GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Focus)
+                    {
+                        resItem.modifier = Item.ItemModifier.Spread;
+                    }
+
                     MainManager.Instance.SetRecipeFlag(resItem.type);
                     string[] tempResVars = new string[] { Item.GetName(resItem), quality.ToString() };
 
@@ -521,7 +543,20 @@ public class WorldNPC_CBRCook : WorldNPCEntity
                 if (rdeTestB.quality != Item.ItemQuality.Mistake)
                 {
                     doubleIngredientRecipeCount++;
-                    cookByResultList.Add(new CBREntry(rdeTestB, new Item(rdeTestB.result, inv[i].modifier, Item.ItemOrigin.CookTorstrum, 0, 0), inv[i], inv[j]));
+                    Item resItem = new Item(rdeTestB.result, GlobalItemScript.GetModifierFromRecipe(inv[i].modifier, inv[j].modifier), Item.ItemOrigin.CookTorstrum, 0, 0);
+
+                    //forcibly change the modifier to the correct one
+                    if (GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Spread)
+                    {
+                        resItem.modifier = Item.ItemModifier.Focus;
+                    }
+                    if (!GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Focus)
+                    {
+                        resItem.modifier = Item.ItemModifier.Spread;
+                    }
+
+                    cookByResultList.Add(new CBREntry(rdeTestB, resItem, inv[i], inv[j]));
+
                 }
 
             }

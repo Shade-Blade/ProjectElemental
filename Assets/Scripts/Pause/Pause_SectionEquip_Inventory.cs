@@ -488,7 +488,15 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                         et = BadgeMenuEntry.EquipType.Luna;
                     }
 
-                    bool canUse = (et != BadgeMenuEntry.EquipType.None) || pd.CalculateUsedSP() + Badge.GetSPCost(inv[i]) <= pd.sp;
+                    bool canUse = (et != BadgeMenuEntry.EquipType.None);
+                    if (canUse)
+                    {
+                        canUse = (pd.CalculateUsedSP() - Badge.GetSPCost(inv[i]) <= pd.sp);
+                    } else
+                    {
+                        canUse = (pd.CalculateUsedSP() + Badge.GetSPCost(inv[i]) <= pd.sp);
+                    }
+                        
                     menuEntries[i] = new BadgeMenuEntry(inv[i], et, canUse);
                 }
                 emptyString = "No Badges";
@@ -533,7 +541,15 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                         et = BadgeMenuEntry.EquipType.Luna;
                     }
 
-                    bool canUse = (et != BadgeMenuEntry.EquipType.None) || pd.CalculateUsedSP() + Badge.GetSPCost(einv[i]) <= pd.sp;
+                    bool canUse = (et != BadgeMenuEntry.EquipType.None);
+                    if (canUse)
+                    {
+                        canUse = (pd.CalculateUsedSP() - Badge.GetSPCost(einv[i]) <= pd.sp);
+                    }
+                    else
+                    {
+                        canUse = (pd.CalculateUsedSP() + Badge.GetSPCost(einv[i]) <= pd.sp);
+                    }
                     menuEntries[i] = new BadgeMenuEntry(einv[i], et, canUse);
                 }
                 emptyString = "No Equipped Badges";
@@ -559,7 +575,15 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                         etB = BadgeMenuEntry.EquipType.Luna;
                     }
 
-                    bool canUse = (etB != BadgeMenuEntry.EquipType.None) || pd.CalculateUsedSP() + Badge.GetSPCost(sinv[i]) <= pd.sp;
+                    bool canUse = (etB != BadgeMenuEntry.EquipType.None);
+                    if (canUse)
+                    {
+                        canUse = pd.CalculateUsedSP() - Badge.GetSPCost(sinv[i]) <= pd.sp;
+                    }
+                    else
+                    {
+                        canUse = pd.CalculateUsedSP() + Badge.GetSPCost(sinv[i]) <= pd.sp;
+                    }
                     menuEntries[i] = new BadgeMenuEntry(sinv[i], etB, canUse);
                 }
                 emptyString = "No Equipped Badges";

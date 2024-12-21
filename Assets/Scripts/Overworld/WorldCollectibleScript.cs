@@ -81,6 +81,11 @@ public class WorldCollectibleScript : WorldObject
                 break;
         }
 
+        if (pu.type == PickupUnion.PickupType.Item)
+        {
+            sprite.material = GlobalItemScript.GetItemModifierMaterial(pu.item.modifier);
+        }
+
         if (rb == null)
         {
             rb = GetComponent<Rigidbody>();
@@ -194,6 +199,13 @@ public class WorldCollectibleScript : WorldObject
             transform.position = startPos;
             startPos = startPos + Vector3.up * 0.1f;   //if it falls in again, offset the position upward until it works (Note: may keep going if it clips through the ground after some point)
             rb.velocity = Vector3.zero;
+
+            //Idea
+            RaycastHit rc;
+            if (Physics.Raycast(startPos, Vector3.down, out rc, 100, 311))
+            {
+                transform.position = rc.point + Vector3.up * 0.25f;
+            }
         }
 
         rb.velocity = (rb.velocity.x * Vector3.right + rb.velocity.z * Vector3.forward) * Mathf.Pow(0.1f, Time.fixedDeltaTime) + rb.velocity.y * Vector3.up;

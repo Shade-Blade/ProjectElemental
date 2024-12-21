@@ -140,7 +140,7 @@ public class OWItemBoxMenu : BoxMenu
 
             if (checkCanUse)
             {
-                menuEntries[i].canUse = Item.CanUseOutOfBattle(itemList[i].type);
+                menuEntries[i].canUse &= Item.CanUseOutOfBattle(itemList[i].type);
             }
 
             GameObject g = Instantiate(MainManager.Instance.menuEntryBase, bm.mask.transform);
@@ -154,6 +154,15 @@ public class OWItemBoxMenu : BoxMenu
         visualTopIndex = menuTopIndex;
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
 
         if (descriptorString != null)
         {
@@ -174,6 +183,17 @@ public class OWItemBoxMenu : BoxMenu
     }
     public override void SelectOption()
     {
+        if (canUseList != null)
+        {
+            if (menuIndex < canUseList.Count)
+            {
+                if (!canUseList[menuIndex])
+                {
+                    return;
+                }
+            }
+        }
+
         if (requiresTarget && Item.CanUseOutOfBattle(itemList[menuIndex].type))
         {
             //Selecting a move takes you to a selection menu
@@ -191,6 +211,17 @@ public class OWItemBoxMenu : BoxMenu
     }
     public override void ZOption()
     {
+        if (canUseList != null)
+        {
+            if (menuIndex < canUseList.Count)
+            {
+                if (!canUseList[menuIndex])
+                {
+                    return;
+                }
+            }
+        }
+
         if (zSelect && Item.CanUseOutOfBattle(itemList[menuIndex].type))
         {
             //Selecting a move takes you to a selection menu
@@ -360,6 +391,15 @@ public class OWKeyItemBoxMenu : BoxMenu
         visualTopIndex = menuTopIndex;
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
 
         if (descriptorString != null)
         {
@@ -598,12 +638,12 @@ public class GenericBoxMenu : BoxMenu
         {
             output += "|";
             output += levelDescriptor;
+        }
 
-            if (descriptor != null)
-            {
-                output += "|";
-                output += descriptor;
-            }
+        if (descriptor != null)
+        {
+            output += "|";
+            output += descriptor;
         }
 
         return output;
@@ -764,6 +804,15 @@ public class GenericBoxMenu : BoxMenu
         visualTopIndex = menuTopIndex;
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
 
         //Debug.Log(descriptorString);
         if (descriptorString != null)
@@ -981,6 +1030,15 @@ public class OWCharacterBoxMenu : BoxMenu
         visualTopIndex = menuTopIndex;
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
 
         if (descriptorString != null)
         {

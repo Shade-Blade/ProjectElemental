@@ -170,7 +170,7 @@ public class WorldNPC_InventoryShopkeeper : WorldNPCEntity
                     yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 3, this, vars));
                 } else
                 {
-                    if (inventory[itemIndex].pickupUnion.type == PickupUnion.PickupType.Item && MainManager.Instance.playerData.itemInventory.Count >= MainManager.Instance.playerData.GetMaxInventorySize())
+                    if (inventory[itemIndex].pickupUnion.type == PickupUnion.PickupType.Item && MainManager.Instance.playerData.itemInventory.Count >= MainManager.Instance.playerData.GetMaxInventorySize() && !(inventory[itemIndex].pickupUnion.item.modifier == Item.ItemModifier.Void))
                     {
                         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 4, this, vars));
                     } else
@@ -298,7 +298,7 @@ public class WorldNPC_InventoryShopkeeper : WorldNPCEntity
                 rightTextList.Add(inventory[i].cost + " <" + inventory[i].currency + ">");
             }
 
-            return GenericBoxMenu.PackMenuString(items, null, null, rightTextList);
+            return GenericBoxMenu.PackMenuString(items, null, "<coin>: <const,coins>", rightTextList);
         }
 
         return "nop";

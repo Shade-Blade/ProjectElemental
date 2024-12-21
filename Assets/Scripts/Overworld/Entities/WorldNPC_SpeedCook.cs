@@ -331,7 +331,18 @@ public class WorldNPC_SpeedCook : WorldNPCEntity
                         noMistakes = false;
                     }
 
-                    Item resItem = new Item(outputType, targetItem.modifier, Item.ItemOrigin.CookSizzle, 0, 0);
+                    Item resItem = new Item(outputType, GlobalItemScript.GetModifierFromRecipe(targetItem.modifier, targetItemB.modifier), Item.ItemOrigin.CookSizzle, 0, 0);
+
+                    //forcibly change the modifier to the correct one
+                    if (GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Spread)
+                    {
+                        resItem.modifier = Item.ItemModifier.Focus;
+                    }
+                    if (!GlobalItemScript.ItemMultiTarget(resItem.type) && resItem.modifier == Item.ItemModifier.Focus)
+                    {
+                        resItem.modifier = Item.ItemModifier.Spread;
+                    }
+
                     MainManager.Instance.SetRecipeFlag(resItem.type);
                     string[] tempResVars = new string[] { Item.GetName(resItem), quality.ToString() };
 

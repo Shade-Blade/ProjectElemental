@@ -104,7 +104,7 @@ public class WorldNPC_Shopkeeper : WorldNPCEntity, IShopkeeperEntity
         }
 
         //inventory check
-        if (sis.shopItem.pickupUnion.type == PickupUnion.PickupType.Item && MainManager.Instance.playerData.itemInventory.Count >= MainManager.Instance.playerData.GetMaxInventorySize())
+        if (sis.shopItem.pickupUnion.type == PickupUnion.PickupType.Item && MainManager.Instance.playerData.itemInventory.Count >= MainManager.Instance.playerData.GetMaxInventorySize() && !(sis.shopItem.pickupUnion.item.modifier == Item.ItemModifier.Void))
         {
             //inventory full
             yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 4, this, tempVars));

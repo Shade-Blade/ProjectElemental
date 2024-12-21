@@ -223,7 +223,7 @@ MonoBehaviour:
     - I've got some shiny badges in my collection for the best prices around! I'm
       also in the market for buying your badges too, if you're interested. So what
       will it be?<prompt,Buy Badges,1,Sell Badges,2,Cancel,3,-1>
-    - Any of them catch your eye?<dataget,arg,buymenu><genericmenu,arg,4>
+    - Any of them catch your eye?<dataget,arg,buymenu><genericmenu,arg,4,false,false,false,false,true>
     - That shiny <var,0> is worth <var,1> <var,2>. Does that sound good to you?<prompt,Yes,1,No,2,1>
     - Sorry, but you don't have enough coins for that one.
     - (should not be possible)
@@ -231,8 +231,8 @@ MonoBehaviour:
     - That's a few more badges for your collection. Maybe one day yours will be bigger
       than mine?
     - Well, I'll still be around if you want to talk about badges.
-    - Every badge is good for something, so I'll take whatever you can give me.<dataget,arg,sellmenu><genericmenu,arg,4>
-    - Every badge is good for something, so I'll take whatever you can give me.<dataget,arg,sellmenu><genericmenu,arg,4>
+    - Every badge is good for something, so I'll take whatever you can give me.<dataget,arg,sellmenu><genericmenu,arg,4,false,false,false,false,true>
+    - Every badge is good for something, so I'll take whatever you can give me.<dataget,arg,sellmenu><genericmenu,arg,4,false,false,false,false,true>
     - I'll pay you <var,1> coins for that <var,0>. Do we have a deal?<prompt,Yes,1,No,2,1>
     - Oh, sorry, but it looks like you have no Badges for me. But don't worry, I'll
       be here if you find any.

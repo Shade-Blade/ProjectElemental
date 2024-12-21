@@ -86,9 +86,15 @@ public class TooManyItemsPopupMenuScript : MenuHandler
                 inv.Add(referenceInv[i]);
             }
 
+            List<bool> canUseList = new List<bool>();
 
+            for (int i = 0; i < inv.Count; i++)
+            {
+                //Tossing a Void item will not get you below the item capacity number
+                canUseList.Add(inv[i].modifier != Item.ItemModifier.Void);
+            }
 
-            OWItemBoxMenu s2 = OWItemBoxMenu.BuildMenu(inv, null, new List<Color?> { new Color(1, 0.5f, 0.5f, 1f) }, null, "Use <buttonsprite,z> to use the item.", true, true, false, false, true, true);
+            OWItemBoxMenu s2 = OWItemBoxMenu.BuildMenu(inv, null, new List<Color?> { new Color(1, 0.5f, 0.5f, 1f) }, canUseList, "Use <buttonsprite,z> to use the item.", true, true, false, false, true, true);
             s2.transform.SetParent(transform);
             PushState(s2);
             s2.menuExit += InvokeExit;

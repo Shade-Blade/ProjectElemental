@@ -134,7 +134,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: d_rh_v0.0
+  bundleVersion: d_rh_v0.1
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -155,7 +155,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Standalone: com.DefaultCompany.PaperyRpgRecycled
+    Standalone: com.shadeblade.Project-Elemental--Rabbit-Hole-Demo-
   buildNumber:
     Standalone: 0
     iPhone: 0

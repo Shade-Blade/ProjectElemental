@@ -94,6 +94,15 @@ public class MoveBoxMenu : BoxMenu
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
 
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
+
         if (descriptorString != null)
         {
             bm.descriptorBox.enabled = true;
@@ -372,6 +381,15 @@ public class ItemBoxMenu : BoxMenu
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
 
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
+
         //Debug.Log((descriptorString == null) + " " + descriptorString);
 
         //caller.itemSaver
@@ -647,6 +665,15 @@ public class MetaItemBoxMenu : BoxMenu
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
 
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
+
         if (descriptorString != null)
         {
             bm.descriptorBox.enabled = true;
@@ -810,6 +837,15 @@ public class TacticsBoxMenu : BoxMenu
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
 
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
+
         if (descriptorString != null)
         {
             bm.descriptorBox.enabled = true;
@@ -949,7 +985,15 @@ public class BadgeSwapBoxMenu : BoxMenu
                 et = BadgeMenuEntry.EquipType.Luna;
             }
 
-            bool canUse = (et != BadgeMenuEntry.EquipType.None) || BattleControl.Instance.playerData.CalculateUsedSP() + Badge.GetSPCost(badges[i]) <= BattleControl.Instance.playerData.sp;
+            bool canUse = (et != BadgeMenuEntry.EquipType.None);
+            if (canUse)
+            {
+                canUse = (BattleControl.Instance.playerData.CalculateUsedSP() - Badge.GetSPCost(badges[i]) <= BattleControl.Instance.playerData.sp);
+            } else
+            {
+                canUse = (BattleControl.Instance.playerData.CalculateUsedSP() + Badge.GetSPCost(badges[i]) <= BattleControl.Instance.playerData.sp);
+            }
+
 
             if (MainManager.Instance.Cheat_BadgeAnarchy)
             {
@@ -1007,6 +1051,15 @@ public class BadgeSwapBoxMenu : BoxMenu
 
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
 
         //note: selecting a badge kicks you out of the menu so I don't need to put this there
         BattleControl.Instance.playerData.usedSP = BattleControl.Instance.playerData.CalculateUsedSP();
@@ -1199,6 +1252,15 @@ public class RibbonSwapBoxMenu : BoxMenu
 
         bm.upArrow.enabled = false; //menuTopIndex > 0;
         bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
 
         if (descriptorString != null)
         {

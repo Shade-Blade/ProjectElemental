@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using static Item;
 using static MainManager;
 
 
@@ -1096,15 +1097,24 @@ public class PlayerData
     {
         if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Gluttony))
         {
-            return maxInventorySize * 2;
+            return maxInventorySize * 2 + itemInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count;
         }
-        return maxInventorySize;
+        return maxInventorySize + itemInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count;
+    }
+    
+    public int GetMaxStorageInventorySize()
+    {
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Gluttony))
+        {
+            return maxStorageSize * 2 + storageInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count;
+        }
+        return maxStorageSize + storageInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count;
     }
 
     //try to add an item (return false if you have too many to add one)
     public bool AddItem(Item item)
     {
-        if (itemInventory.Count >= GetMaxInventorySize())
+        if (itemInventory.Count >= GetMaxInventorySize() && item.modifier != ItemModifier.Void)
         {
             return false;
         }
@@ -1122,7 +1132,7 @@ public class PlayerData
     }
     public bool InsertItem(int index, Item item)
     {
-        if (itemInventory.Count >= GetMaxInventorySize())
+        if (itemInventory.Count >= GetMaxInventorySize() && item.modifier != ItemModifier.Void)
         {
             return false;
         }
@@ -2300,6 +2310,8 @@ public class MainManager : MonoBehaviour
     public Material defaultSpriteSimpleMaterial;
     public Material defaultSpriteFlickerMaterial;
 
+    public Material defaultGUISpriteMaterial;
+
     //Other sprites
     public Sprite damageEffectStar;
     public Sprite heartEffect;
@@ -2393,6 +2405,8 @@ public class MainManager : MonoBehaviour
         GF_Burden_Lust,
 
         GF_FileCode_Randomizer,
+
+        GF_RandomItemModifiers,
 
 
         GF_QuestStart_Prologue_Test,
@@ -2833,7 +2847,7 @@ public class MainManager : MonoBehaviour
         EPProportion,   //Average ep proportion for party (ep / maxep)
         Level,          //Current level
         CurrentXP,      //Not cumulative XP
-        Money,          //How much money you have
+        Coins,          //How much money you have
         Shard, //How many prismatic shards you have
         Chapter,
     }
@@ -3916,7 +3930,15 @@ public class MainManager : MonoBehaviour
             dropAngle = (dropIndex / (dropCount + 0f)) * 2 * Mathf.PI + firstAngle;
 
             newVel = baseVel + spread * Vector3.right * Mathf.Sin(dropAngle) + spread * Vector3.forward * Mathf.Cos(dropAngle);
-            WorldCollectibleScript.MakeCollectible(new PickupUnion(new Item(it, Item.ItemModifier.None, Item.ItemOrigin.EnemyDrop)), position, newVel);
+
+            if (GetGlobalFlag(GlobalFlag.GF_RandomItemModifiers))
+            {
+                WorldCollectibleScript.MakeCollectible(new PickupUnion(new Item(it, GlobalItemScript.GetRandomModifier(it), Item.ItemOrigin.EnemyDrop)), position, newVel);
+            }
+            else
+            {
+                WorldCollectibleScript.MakeCollectible(new PickupUnion(new Item(it, Item.ItemModifier.None, Item.ItemOrigin.EnemyDrop)), position, newVel);
+            }
 
             dropIndex++;
         }
@@ -4301,7 +4323,7 @@ public class MainManager : MonoBehaviour
                 return playerData.level + "";
             case GameConst.CurrentXP:
                 return playerData.exp + "";
-            case GameConst.Money:
+            case GameConst.Coins:
                 return playerData.coins + "";
             case GameConst.Shard:
                 return playerData.shards + "";
@@ -5227,6 +5249,8 @@ public class MainManager : MonoBehaviour
         defaultSpriteSimpleMaterial = Resources.Load<Material>("Sprites/Materials/ProperSpriteSimple");
         defaultSpriteFlickerMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteFlicker");
 
+        defaultGUISpriteMaterial = Resources.Load<Material>("Sprites/Materials/Canvas/Canvas_Sprite");
+
         damageEffectStar = Resources.Load<Sprite>("Sprites/Particle Effect/5Star");
         energyEffect = Resources.Load<Sprite>("Sprites/Particle Effect/4Star");
         heartEffect = Resources.Load<Sprite>("Sprites/Particle Effect/Heart");
@@ -5775,7 +5799,7 @@ public class MainManager : MonoBehaviour
     }
     public static string GetVersionString()
     {
-        return "d_rh_v0.0";
+        return "d_rh_v0.1";
     }
     public string GetBaseSaveFileString(string name)
     {

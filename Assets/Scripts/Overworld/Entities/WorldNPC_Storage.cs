@@ -9,7 +9,7 @@ public class WorldNPC_Storage : WorldNPCEntity
     public override IEnumerator InteractCutscene()
     {
         itemSwapIndex = -1;
-        string[][] testTextFile = new string[15][];
+        string[][] testTextFile = new string[17][];
         testTextFile[0] = new string[1];
         testTextFile[1] = new string[1];
         testTextFile[2] = new string[1];
@@ -25,6 +25,8 @@ public class WorldNPC_Storage : WorldNPCEntity
         testTextFile[12] = new string[1];
         testTextFile[13] = new string[1];
         testTextFile[14] = new string[1];
+        testTextFile[15] = new string[1];
+        testTextFile[16] = new string[1];
         testTextFile[0][0] = "Hi! I'm Palla. Me and my friends can store your items for you. I can also help you organize your inventory too if that's what you want.<next>If you have any items with us, you'll probably see me more often too, so don't worry about giving me items and then never seeing me again.<prompt,Store Items,1,Take Out Items,2,Swap Item Order,3,Swap Storage Order,4,Cancel,5,4>";
         testTextFile[1][0] = "Which one do you want to give me? You have <var,0>/<var,1> items in your inventory and you have <var,2>/<var,3> items in storage.<itemMenu,overworld>";
         testTextFile[2][0] = "Which one do you want back? You have <var,0>/<var,1> items in your inventory and you have <var,2>/<var,3> items in storage.<itemMenu,storage>";
@@ -40,6 +42,10 @@ public class WorldNPC_Storage : WorldNPCEntity
         testTextFile[12][0] = "Oh, you don't have anything in your storage right now.";
         testTextFile[13][0] = "Thanks for stopping by!";
         testTextFile[14][0] = "Thanks for stopping by!";
+
+        testTextFile[15][0] = "That one doesn't fit, but I think you have something that does. You have <var,0>/<var,1> items in your inventory and you have <var,2>/<var,3> items in storage.<itemMenu,overworld>";
+        testTextFile[16][0] = "You don't have enough space for that one, but I think you have something here that you can carry. You have <var,0>/<var,1> items in your inventory and you have <var,2>/<var,3> items in storage.<itemMenu,storage>";
+
 
         int state = 0;
 
@@ -62,13 +68,13 @@ public class WorldNPC_Storage : WorldNPCEntity
                 {
                     yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 7, this));
                     yield break;
-                }
-                if (pd.storageInventory.Count >= pd.maxStorageSize)
+                }                
+                if (pd.storageInventory.Count >= pd.GetMaxStorageInventorySize() && pd.itemInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count == 0)
                 {
                     yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 8, this));
                     yield break;
                 }
-                string[] tempVarsA = new string[] { (pd.itemInventory.Count).ToString(),  pd.GetMaxInventorySize().ToString(), (pd.storageInventory.Count).ToString(), pd.maxStorageSize.ToString() };
+                string[] tempVarsA = new string[] { (pd.itemInventory.Count).ToString(),  pd.GetMaxInventorySize().ToString(), (pd.storageInventory.Count).ToString(), pd.GetMaxStorageInventorySize().ToString() };
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 1, this, tempVarsA));
                 break;
             case 2:
@@ -77,13 +83,13 @@ public class WorldNPC_Storage : WorldNPCEntity
                     yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 9, this));
                     yield break;
                 }
-                if (pd.itemInventory.Count >= pd.GetMaxInventorySize())
+                if (pd.itemInventory.Count >= pd.GetMaxInventorySize() && pd.storageInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count == 0)
                 {
                     yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 10, this));
                     yield break;
                 }
 
-                string[] tempVarsB = new string[] { (pd.itemInventory.Count).ToString(), pd.GetMaxInventorySize().ToString(), (pd.storageInventory.Count).ToString(), pd.maxStorageSize.ToString() };
+                string[] tempVarsB = new string[] { (pd.itemInventory.Count).ToString(), pd.GetMaxInventorySize().ToString(), (pd.storageInventory.Count).ToString(), pd.GetMaxStorageInventorySize().ToString() };
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 2, this, tempVarsB));
                 break;
             case 3:
@@ -117,13 +123,21 @@ public class WorldNPC_Storage : WorldNPCEntity
             menuResult = MainManager.Instance.lastTextboxMenuResult;
             int.TryParse(FormattedString.ParseArg(menuResult, "arg1"), out itemIndexA);
 
+            bool voidFail = false;
+
             Item item = default;
             if (itemIndexA != -1)
             {
                 item = pd.itemInventory[itemIndexA];
 
-                pd.itemInventory.Remove(item);
-                pd.storageInventory.Insert(0, item);
+                if (pd.storageInventory.Count == pd.GetMaxStorageInventorySize() && item.modifier != Item.ItemModifier.Void)
+                {
+                    voidFail = true;
+                } else
+                {
+                    pd.itemInventory.Remove(item);
+                    pd.storageInventory.Insert(0, item);
+                }
             }
             else
             {
@@ -139,13 +153,20 @@ public class WorldNPC_Storage : WorldNPCEntity
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 14, this));
                 yield break;
             }
-            if (pd.storageInventory.Count >= pd.maxStorageSize)
+            if (pd.storageInventory.Count >= pd.GetMaxStorageInventorySize() && pd.itemInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count == 0)
             {
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 14, this));
                 yield break;
             }
-            string[] tempVarsA = new string[] { (pd.itemInventory.Count).ToString(), pd.GetMaxInventorySize().ToString(), (pd.storageInventory.Count).ToString(), pd.maxStorageSize.ToString() };
-            yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 1, this, tempVarsA));
+            string[] tempVarsA = new string[] { (pd.itemInventory.Count).ToString(), pd.GetMaxInventorySize().ToString(), (pd.storageInventory.Count).ToString(), pd.GetMaxStorageInventorySize().ToString() };
+            if (voidFail)
+            {
+                yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 15, this, tempVarsA));
+            }
+            else
+            {
+                yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 1, this, tempVarsA));
+            }
         }
 
 
@@ -156,13 +177,22 @@ public class WorldNPC_Storage : WorldNPCEntity
             menuResult = MainManager.Instance.lastTextboxMenuResult;
             int.TryParse(FormattedString.ParseArg(menuResult, "arg1"), out itemIndexA);
 
+            bool voidFail = false;
+
             Item item = default;
             if (itemIndexA != -1)
             {
                 item = pd.storageInventory[itemIndexA];
 
-                pd.storageInventory.Remove(item);
-                pd.itemInventory.Insert(0, item);
+                if (pd.itemInventory.Count == pd.GetMaxInventorySize() && item.modifier != Item.ItemModifier.Void)
+                {
+                    voidFail = true;
+                }
+                else
+                {
+                    pd.storageInventory.Remove(item);
+                    pd.itemInventory.Insert(0, item);
+                }
             }
             else
             {
@@ -178,14 +208,21 @@ public class WorldNPC_Storage : WorldNPCEntity
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 14, this));
                 yield break;
             }
-            if (pd.itemInventory.Count >= pd.GetMaxInventorySize())
+            if (pd.itemInventory.Count >= pd.GetMaxInventorySize() && pd.storageInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count == 0)
             {
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 14, this));
                 yield break;
             }
 
-            string[] tempVarsB = new string[] { (pd.itemInventory.Count).ToString(), pd.GetMaxInventorySize().ToString(), (pd.storageInventory.Count).ToString(), pd.maxStorageSize.ToString() };
-            yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 2, this, tempVarsB));
+            string[] tempVarsB = new string[] { (pd.itemInventory.Count).ToString(), pd.GetMaxInventorySize().ToString(), (pd.storageInventory.Count).ToString(), pd.GetMaxStorageInventorySize().ToString() };
+            if (voidFail)
+            {
+                yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 16, this, tempVarsB));
+            }
+            else
+            {
+                yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 2, this, tempVarsB));
+            }
         }
 
 

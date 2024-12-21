@@ -1778,7 +1778,7 @@ public class FormattedString
                     break;
                 case TagEntry.TextTag.Const:
                     MainManager.GameConst g;
-                    if (arg == 0 && Enum.TryParse(tags[i].args[0], out g))
+                    if (arg == -1 && Enum.TryParse(tags[i].args[0], true, out g))
                     {
                         insert = MainManager.Instance.GetConst(g);
                     } else
@@ -1805,7 +1805,7 @@ public class FormattedString
         if (t == TagEntry.TextTag.Const)
         {
             MainManager.GameConst g;
-            if (Enum.TryParse(index, out g))
+            if (Enum.TryParse(index, true, out g))
             {
                 arg = (int)g;
             } else
@@ -1852,6 +1852,7 @@ public class FormattedString
                 insert = MainManager.Instance.GetMapFlag(index).ToString();
                 break;
             case TagEntry.TextTag.Const:
+                Debug.Log(arg);
                 insert = MainManager.Instance.GetConst(arg);
                 break;
         }

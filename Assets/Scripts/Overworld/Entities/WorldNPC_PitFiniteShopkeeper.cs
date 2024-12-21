@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static MainManager;
 
 public class WorldNPC_PitFiniteShopkeeper : WorldNPC_FiniteShopkeeper
 {
@@ -60,7 +61,13 @@ public class WorldNPC_PitFiniteShopkeeper : WorldNPC_FiniteShopkeeper
 
         for (int i = 0; i < itList.Count; i++)
         {
-            PickupUnion pu = new PickupUnion(new Item(itList[i]));
+            Item.ItemModifier modifier = Item.ItemModifier.None;
+            if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_RandomItemModifiers))
+            {
+                modifier = GlobalItemScript.GetRandomModifier(itList[i]);
+            }
+
+            PickupUnion pu = new PickupUnion(new Item(itList[i], modifier));
             items.Add(new ShopItem(pu, ShopItem.ConvertCost(currency, PickupUnion.GetBaseCost(pu)), currency));
         }
     }

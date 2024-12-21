@@ -601,6 +601,11 @@ public class Effect
                 {
                     output = new Effect(output.effect, (sbyte)(output.potency * boost), output.duration);
                 }                
+
+                if (boost == 0)
+                {
+                    output = new Effect(output.effect, 0, output.duration);
+                }
             }
         }
         else
@@ -620,6 +625,11 @@ public class Effect
                 {
                     output = new Effect(output.effect, output.potency, (sbyte)(output.duration * boost));
                 }                
+
+                if (boost == 0)
+                {
+                    output = new Effect(output.effect, output.potency, 0);
+                }
             }
         }
 
