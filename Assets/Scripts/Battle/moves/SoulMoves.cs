@@ -744,10 +744,10 @@ public class SM_MistWave : SoulMove
         
         if (level > 1)
         {
-            val = caller.DealDamageCalculation(target, 12, BattleHelper.DamageType.Water, propertyBlock);
+            val = caller.DealDamageCalculation(target, 10, BattleHelper.DamageType.Water, propertyBlock);
         } else
         {
-            val = caller.DealDamageCalculation(target, 6, BattleHelper.DamageType.Water, propertyBlock);
+            val = caller.DealDamageCalculation(target, 5, BattleHelper.DamageType.Water, propertyBlock);
         }
 
         return val + "";

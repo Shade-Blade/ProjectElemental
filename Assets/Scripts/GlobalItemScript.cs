@@ -528,8 +528,8 @@ public class GlobalItemScript : MonoBehaviour
         {
             ItemModifier.Echo,
             ItemModifier.Glistening,
-            ItemModifier.Void,
-            ItemModifier.Quick
+            ItemModifier.Quick,
+            ItemModifier.Void
         };
 
         if (dual)
@@ -2336,7 +2336,7 @@ public struct Item
     }
     public static int GetSellPrice(Item item)
     {
-        return GetSellPrice(item.type);
+        return (int)(GetSellPrice(item.type) * GlobalItemScript.GetItemModifierSellMultiplier(item.modifier));
     }
 
     public static ItemDataEntry GetItemDataEntry(ItemType item)
@@ -2592,9 +2592,9 @@ public struct Item
                 foreach (PlayerData.PlayerDataEntry pde in players.party)
                 {
                     pde.hp += hpheal;
-                    if (pde.hp < 0)
+                    if (pde.hp < 1) //Can't go below 1 hp in the overworld (doesn't really make sense)
                     {
-                        pde.hp = 0;
+                        pde.hp = 1;
                     }
 
                     if (pde.hp > pde.maxHP)
@@ -2605,9 +2605,9 @@ public struct Item
             } else
             {
                 player.hp += hpheal;
-                if (player.hp < 0)
+                if (player.hp < 1)
                 {
-                    player.hp = 0;
+                    player.hp = 1;
                 }
 
                 if (player.hp > player.maxHP)
@@ -3353,45 +3353,6 @@ public abstract class ItemMove : Move, IEntityHighlighter
         //Apply properties
         Item.ItemPropertyBlock block;
 
-        if (GetModifier() == ItemModifier.Echo)
-        {
-            if (inv.Count < BattleControl.Instance.playerData.GetMaxInventorySize())
-            {
-                if (b.menuIndex >= inv.Count - 1 || b.menuIndex < 0)
-                {
-                    //inv.Add(new Item(block.items[j]));
-                    BattleControl.Instance.AddItemInventory(caller, new Item(GetItemType(), ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
-                }
-                else
-                {
-                    BattleControl.Instance.InsertItemInventory(caller, b.menuIndex + 1, new Item(GetItemType(), ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
-                }
-            }
-        } else
-        {
-            block = Item.GetProperty(GetItem(), Item.ItemProperty.Producer);
-            if (block != null)
-            {
-                for (int i = 0; i < block.items.Length; i++)
-                {
-                    //BattleControl.Instance.playerData.AddItem(new Item(block.items[i]));
-                    if (inv.Count < BattleControl.Instance.GetMaxItemInventory(caller) || GetModifier() == ItemModifier.Void)
-                    {
-                        if (b.menuIndex >= inv.Count - 1 || b.menuIndex < 0)
-                        {
-                            BattleControl.Instance.AddItemInventory(caller, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
-                            //inv.Add(new Item(block.items[i]));
-                        }
-                        else
-                        {
-                            BattleControl.Instance.InsertItemInventory(caller, b.menuIndex + 1, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
-                            //inv.Insert(b.menuIndex + 1, new Item(block.items[i]));
-                        }
-                    }
-                }
-            }
-        }
-
         /*
         block = Item.GetProperty(GetItemType(), Item.ItemProperty.Limited);
         if (block != null)
@@ -3410,6 +3371,46 @@ public abstract class ItemMove : Move, IEntityHighlighter
                 if (inv[i].type == GetItemType() && inv[i].modifier == ItemModifier.Echo)
                 {
                     inv[i] = new Item(inv[i].type, ItemModifier.Echoed, ItemOrigin.Producer, inv[i].bonusData, inv[i].itemCount);
+                }
+            }
+        }
+
+        if (GetModifier() == ItemModifier.Echo)
+        {
+            if (inv.Count < BattleControl.Instance.playerData.GetMaxInventorySize())
+            {
+                if (b == null || b.menuIndex >= inv.Count - 1 || b.menuIndex < 0)
+                {
+                    //inv.Add(new Item(block.items[j]));
+                    BattleControl.Instance.AddItemInventory(caller, new Item(GetItemType(), ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
+                }
+                else
+                {
+                    BattleControl.Instance.InsertItemInventory(caller, b.menuIndex + 1, new Item(GetItemType(), ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
+                }
+            }
+        }
+        else
+        {
+            block = Item.GetProperty(GetItem(), Item.ItemProperty.Producer);
+            if (block != null)
+            {
+                for (int i = 0; i < block.items.Length; i++)
+                {
+                    //BattleControl.Instance.playerData.AddItem(new Item(block.items[i]));
+                    if (inv.Count < BattleControl.Instance.GetMaxItemInventory(caller) || GetModifier() == ItemModifier.Void)
+                    {
+                        if (b == null || b.menuIndex >= inv.Count - 1 || b.menuIndex < 0)
+                        {
+                            BattleControl.Instance.AddItemInventory(caller, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
+                            //inv.Add(new Item(block.items[i]));
+                        }
+                        else
+                        {
+                            BattleControl.Instance.InsertItemInventory(caller, b.menuIndex + 1, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
+                            //inv.Insert(b.menuIndex + 1, new Item(block.items[i]));
+                        }
+                    }
                 }
             }
         }

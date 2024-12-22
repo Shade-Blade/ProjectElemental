@@ -222,7 +222,8 @@ MonoBehaviour:
     talkStrings:
     - Hey, I've got some cool stuff for you, if you have the coins for it.<prompt,Buy
       Items,1,Sell Items,2,Cancel,3,-1>
-    - Here's what I have for you.<dataget,arg,buymenu><genericmenu,arg,4,false,false,false,false,true>
+    - Here's what I have for you. You're carrying <const,itemcount>/<const,itemmax>
+      items right now.<dataget,arg,buymenu><genericmenu,arg,4,false,false,false,false,true>
     - Looks like that <var,0> is worth <var,1> <var,2>. Are you ok with that?<prompt,Yes,1,No,2,1>
     - Sorry, I can't let you have stuff for free. It took me a while to get all of
       it together for you, so I don't really want to give it all away.
@@ -231,8 +232,10 @@ MonoBehaviour:
     - Alright, let me get that one for you.
     - Have a good day, you two!
     - Have a good day, you two!
-    - You have something for me?<itemmenu,selling>
-    - You have something else for me?<itemmenu,selling>
+    - You have something for me? You're carrying <const,itemcount>/<const,itemmax>
+      items right now.<itemmenu,selling>
+    - You have something else for me? You're carrying <const,itemcount>/<const,itemmax>
+      items right now.<itemmenu,selling>
     - I'll buy that <var,0> for <var,1> coins. Are you ok with that?<prompt,Yes,1,No,2,1>
     - It doesn't like like you have any items I can buy off you. There's some other
       people who'll buy your other stuff though.

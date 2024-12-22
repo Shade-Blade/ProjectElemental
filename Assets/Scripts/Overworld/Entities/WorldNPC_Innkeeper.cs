@@ -135,7 +135,7 @@ public class WorldNPC_Innkeeper : WorldNPCEntity
                 pd.coins -= cost * 2;
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, text_candleBuy, this));
 
-                MainManager.Instance.Pickup(new PickupUnion(new KeyItem(candle)));
+                yield return StartCoroutine(MainManager.Instance.Pickup(new PickupUnion(new KeyItem(candle))));
 
                 yield break;
             case 3:

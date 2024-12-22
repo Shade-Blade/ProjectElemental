@@ -2843,6 +2843,7 @@ public class MainManager : MonoBehaviour
         PartyCount,     //# of characters in full party
         ItemProportion, //Item count / max item count
         ItemCount,      //Item count
+        ItemMax,        //Max Item Count
         HPProportion,   //Average hp proportion for party (hp / maxhp)
         EPProportion,   //Average ep proportion for party (ep / maxep)
         Level,          //Current level
@@ -3350,6 +3351,8 @@ public class MainManager : MonoBehaviour
             AwardAchievement(Achievement.ACH_DiamondRibbon);
         }
 
+        Debug.Log("pickup 2");
+        Debug.Log(pu);
 
         switch (pu.type)
         {
@@ -4315,6 +4318,8 @@ public class MainManager : MonoBehaviour
                 return b + "";
             case GameConst.ItemCount:
                 return playerData.itemInventory.Count + "";
+            case GameConst.ItemMax:
+                return playerData.GetMaxInventorySize() + "";
             case GameConst.ItemProportion:
                 int countA = playerData.itemInventory.Count;
                 int max = playerData.GetMaxInventorySize();

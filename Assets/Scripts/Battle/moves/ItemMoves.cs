@@ -2592,7 +2592,22 @@ public class Item_AutoConsumable : Item_GenericConsumable
         yield return StartCoroutine(DefaultStartAnim(caller));
 
         ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
+
+        //hacky fix
+        bool removeQuick = false;
+        if (GetModifier() == ItemModifier.Quick)
+        {
+            removeQuick = true;
+            item.modifier = ItemModifier.None;
+        }
+
         yield return StartCoroutine(ExecuteEffect(caller, ide, Item.GetItemBoost(level - 1)));
+
+        if (removeQuick)
+        {
+            item.modifier = ItemModifier.Quick;
+        }
+
         yield return StartCoroutine(ProducerAnim(caller));
 
         if (caller is PlayerEntity pcaller)
@@ -2668,9 +2683,22 @@ public class Item_AutoThrowable : Item_GenericThrowable
         yield return StartCoroutine(DefaultStartAnim(caller));
         //yield return StartCoroutine(caller.SmoothScale(0.5f, new Vector3(2, 2, 2)));
 
+        //hacky fix
+        bool removeQuick = false;
+        if (GetModifier() == ItemModifier.Quick)
+        {
+            removeQuick = true;
+            item.modifier = ItemModifier.None;
+        }
+
         if (targets.Count > 0 && targets[0] != null)
         {
             yield return StartCoroutine(ExecuteEffect(caller, targets, Item.GetItemBoost(level - 1)));
+        }
+
+        if (removeQuick)
+        {
+            item.modifier = ItemModifier.Quick;
         }
 
         yield return StartCoroutine(ProducerAnim(caller));

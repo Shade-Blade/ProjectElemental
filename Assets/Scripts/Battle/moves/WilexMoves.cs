@@ -1196,11 +1196,11 @@ public class WM_DoubleStomp : WilexMove
         {
             propertyBlock |= (ulong)BattleHelper.DamageProperties.Combo;
         }
-        caller.DealDamageMultihit(caller.curTarget, sd + 2, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, h, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
+        caller.DealDamageMultihit(caller.curTarget, sd + 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, h, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
     }
     public virtual void DealDamageFailure(BattleEntity caller, int sd, int h)
     {
-        caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact, h, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
+        caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact, h, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
     }
 
     public override string GetHighlightText(BattleEntity caller, BattleEntity target, int level = 1)
@@ -2666,6 +2666,40 @@ public class WM_SlipSlash : WilexMove
                     }
                 }
                 yield return null;
+            }
+
+            //failsafe
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i] == null || targets[i].homePos.x >= caller.curTarget.homePos.x)
+                {
+                    break;
+                }
+
+                //Debug.Log(targets[i]);
+                if (caller.GetAttackHit(targets[i], 0))
+                {
+                    //Note: this is before the action command is done, so these are independent of action command
+                    ulong propertyBlockS = (ulong)BattleHelper.DamageProperties.AC_Premature;
+                    switch (level)
+                    {
+                        case 1:
+                            caller.DealDamage(targets[i], sd - 2, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
+                            break;
+                        case 2:
+                            caller.DealDamage(targets[i], sd - 1, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
+                            break;
+                        default:
+                            caller.DealDamage(targets[i], sd + level - 3, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
+                            break;
+                    }
+                }
+                else
+                {
+                    caller.InvokeMissEvents(targets[i]);
+                }
+                targets.RemoveAt(i);
+                i--;
             }
 
             caller.SetAnimation("slash_prepare");

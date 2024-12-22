@@ -88,7 +88,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _PerPixelScale: 128
+    - _PerPixelScale: 64
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -97,12 +97,12 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _TimeScale: -32
+    - _TimeScale: 32
     - _UVSec: 0
     - _UseUIAlphaClip: 0
     - _XOffset: 0
     - _XOffsetB: 0
-    - _YOffset: 0.25
+    - _YOffset: 0
     - _ZWrite: 1
     m_Colors:
     - _BlackColor: {r: 0, g: 0, b: 1, a: 1}

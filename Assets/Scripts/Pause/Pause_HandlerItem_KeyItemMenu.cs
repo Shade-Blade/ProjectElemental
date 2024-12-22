@@ -343,6 +343,7 @@ public class Pause_HandlerItem_KeyItemMenu : Pause_HandlerShared_BoxMenu
         //Reset stuff (but this is a bit wacky)
         section.ApplyUpdate(new Pause_HandlerItem_ConsumableMenu.UpdateObject(index, selectedPlayer));
         section.ApplyUpdate(null);
+        SendUpdate();
 
         //to make you go back
         //PopSelf();

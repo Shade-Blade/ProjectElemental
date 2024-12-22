@@ -195,31 +195,31 @@ public class WorldNPC_Charmer : WorldNPCEntity
                 case 1:
                     if (charm == CharmType.Fortune)
                     {
-                        MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.FortuneTotemA)));
+                        yield return StartCoroutine(MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.FortuneTotemA))));
                     }
                     else
                     {
-                        MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.PowerTotemA)));
+                        yield return StartCoroutine(MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.PowerTotemA))));
                     }
                     break;
                 case 2:
                     if (charm == CharmType.Fortune)
                     {
-                        MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.FortuneTotemB)));
+                        yield return StartCoroutine(MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.FortuneTotemB))));
                     }
                     else
                     {
-                        MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.PowerTotemB)));
+                        yield return StartCoroutine(MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.PowerTotemB))));
                     }
                     break;
                 case 3:
                     if (charm == CharmType.Fortune)
                     {
-                        MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.FortuneTotemC)));
+                        yield return StartCoroutine(MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.FortuneTotemC))));
                     }
                     else
                     {
-                        MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.PowerTotemC)));
+                        yield return StartCoroutine(MainManager.Instance.Pickup(new PickupUnion(new KeyItem(KeyItem.KeyItemType.PowerTotemC))));
                     }
                     break;
             }
