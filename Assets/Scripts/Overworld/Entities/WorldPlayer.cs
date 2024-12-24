@@ -473,6 +473,12 @@ public class WorldPlayer : WorldEntity
                         doEffect = (idleTime % 1f > 0.4f);
                     }
 
+                    //no dots to draw if you can't get anything in this map
+                    if (items.Length == 0)
+                    {
+                        doEffect = false;
+                    }
+
                     if (doEffect)
                     {
                         GameObject itemSightDot = Instantiate(Resources.Load<GameObject>("Overworld/Other/ItemSightDot"), MainManager.Instance.mapScript.transform);
@@ -2806,41 +2812,48 @@ public class WorldPlayer : WorldEntity
                 break;
         }
 
-        if (!lockRotation && (MainManager.XZProject(usedMovement).magnitude > 0.01f) || pastTrueFacingRotation != trueFacingRotation)
+        midFacingRotation = trueFacingRotation - MainManager.Instance.GetWorldspaceYaw();
+        while (midFacingRotation < 0)
+        {
+            midFacingRotation += 360;
+        }
+        while (midFacingRotation > 360)
+        {
+            midFacingRotation -= 360;
+        }
+
+        if (!lockRotation && (MainManager.XZProject(usedMovement).magnitude > 0.01f) || pastMidFacingRotation != midFacingRotation)
         {
             //don't rotate in hazard state, if rotation is disabled, or if you are still
             if (!movementRotationDisabled && !HazardState() && (MainManager.XZProject(usedMovement).magnitude > 0.01f))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
-                //transform this with respect to worldspace yaw
-                trueFacingRotation -= MainManager.Instance.GetWorldspaceYaw();
-                //Debug.Log("reset P " + trueFacingRotation);
             }
             //Debug.Log(movementRotationDisabled + " " + trueFacingRotation);
 
             //Worldspace yaw needs to be added back
-            realOrientationObject.transform.eulerAngles = (trueFacingRotation + MainManager.Instance.GetWorldspaceYaw()) * Vector3.up;
+            realOrientationObject.transform.eulerAngles = (trueFacingRotation) * Vector3.up;
 
             //Debug.Log(trueFacingRotation);
 
-            while (trueFacingRotation < 0)
+            while (midFacingRotation < 0)
             {
-                trueFacingRotation += 360;
+                midFacingRotation += 360;
             }
-            while (trueFacingRotation >= 360)
+            while (midFacingRotation >= 360)
             {
-                trueFacingRotation -= 360;
+                midFacingRotation -= 360;
             }
 
             //Debug.Log(hiddenFacingRotation);
 
             //going straight back or forward is a little weird, so don't rotate in a 10 degree range
             bool norotate = false;
-            if (trueFacingRotation > 85f && trueFacingRotation < 95f)
+            if (midFacingRotation > 85f && midFacingRotation < 95f)
             {
                 norotate = true;
             }
-            if (trueFacingRotation > 265f && trueFacingRotation < 275f)
+            if (midFacingRotation > 265f && midFacingRotation < 275f)
             {
                 norotate = true;
             }
@@ -2848,7 +2861,7 @@ public class WorldPlayer : WorldEntity
             if (!norotate)
             {
                 targetFacingRotation = 0;
-                if (trueFacingRotation > 90 && trueFacingRotation < 270)
+                if (midFacingRotation > 90 && midFacingRotation < 270)
                 {
                     targetFacingRotation = 180;
                 }
@@ -2941,18 +2954,8 @@ public class WorldPlayer : WorldEntity
             showBack = correctedRotation < 360 && correctedRotation > 180;
         } else
         {
-            showBack = trueFacingRotation < 360 && trueFacingRotation > 180;
+            showBack = midFacingRotation < 360 && midFacingRotation > 180;
         }
-
-        /*
-        if ((pastShowBack ^ showBack))
-        {
-            //hardcode for now
-            facingRotation = targetFacingRotation;
-        }
-
-        pastShowBack = showBack;
-        */
 
         while (correctedRotation > 360)
         {

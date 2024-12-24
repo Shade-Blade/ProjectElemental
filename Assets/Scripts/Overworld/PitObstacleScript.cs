@@ -1226,7 +1226,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
         int crystalKeyCount = 0;
         PlayerData pd = MainManager.Instance.playerData;
 
-        crystalKeyCount = pd.keyInventory.FindAll((e) => e.type == KeyItem.KeyItemType.CrystalKey).Count;
+        crystalKeyCount = pd.CountKeyItemStacking(KeyItem.KeyItemType.CrystalKey);
 
         string[][] testTextFile = new string[18][];
         testTextFile[0] = new string[1];
@@ -1371,7 +1371,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                     }
                 case 2:
                     //Pay with crystal keys
-                    pd.RemoveKeyItem(KeyItem.KeyItemType.CrystalKey);
+                    pd.RemoveKeyItemStacking(KeyItem.KeyItemType.CrystalKey, 1);
                     Open();
                     yield break;
             }

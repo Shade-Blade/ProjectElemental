@@ -42,7 +42,7 @@ TournamentKing,120,25,55,TRUE,2,EmeraldLime,2,Default:0/1|Dizzy:0.34/1,Default:4
 TournamentChampion,150,31,69,TRUE,2,EmeraldLime,2,Default:0/1|Dizzy:0.34/1,Default:4,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Slime,5,11,0,FALSE,1,MelonSlice,5,Default:0.7/1|Berserk:0/1|Paralyze:1/1.5|Poison:1/1,Default:0|Air:-2|Light:-2,,0.7,0.6,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Slimewalker,7,13,0,FALSE,1,SleepDart,5,Default:0.7/1|Berserk:0.5/0.5|Sleep:0/1|Poison:1/1,Default:0|Air:-2|Light:-2,,0.7,0.9,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Slimeworm,4,14,0,TRUE,1,Coconut,5,Default:0.7/1|Berserk:0/1|Sleep:0/1|Paralyze:0.3/1|Poison:1/1,Default:2|Earth:0|Light:2,,0.5,2.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Slimeworm,4,14,0,TRUE,1,Coconut,5,Default:0.7/1|Berserk:0/1|Sleep:0/1|Paralyze:0.3/1|Poison:1/1,Default:2|Earth:0|Light:2,,0.5,2.75,0|0|0,0|-0.6|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Slimebloom,6,13,0,TRUE,1,Watermelon,5,Default:0.7/1|Berserk:0/1|Sleep:0/1|Paralyze:1/1.5|Poison:1/1.5,Default:0|Air:N|Light:-1|Water:N,StateContactHazard,0.9,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 SirenFish,5,13,0,FALSE,1,SleepDart,5,Default:0.7/1|Berserk:0/1|Sleep:0/1|Dizzy:0.9/1.5,Default:0,Airborne,0.85,0.95,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 FalseDragonArm,12,0,0,TRUE,1,SleepyTea,2,Default:0/1,Default:0|Light:-1|Fire:-1|Earth:-3,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
@@ -93,5 +93,5 @@ FinalSuperboss,210,36,84,TRUE,1,CrystalCarrot,1,Default:0/1,Default:4,,0.25,0.8,
 Plaguebud,22,36,4,TRUE,1.5,StellarSyrup,2,Default:0.1/0.5,Default:1|Fire:-1|Light:-1|Water:A,,0.6,0.95,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Starfish,2,28,4,FALSE,1,PlagueRoot,2,Default:0.1/0.5|Paralyze:0.5/1,Default:0|Air:-2|Earth:A,Resistant,0.4,0.65,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 CursedEye,16,32,4,FALSE,1,StellarSyrup,2,Default:0/0,Default:0|Earth:-2|Light:-4|Dark:A,StateCounter|DebuffImmune|Airborne,0.6,0.6,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-StrangeTendril,11,34,4,TRUE,1,PlagueRoot,6,Default:1/1.5,Default:7|Air:7,,0.5,3,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+StrangeTendril,11,34,4,TRUE,1,PlagueRoot,6,Default:1/1.5,Default:7|Air:7,,0.5,3,0|0|0,0|-0.6|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 DrainBud,12,33,4,FALSE,1.5,DrainSeed,6,Default:1/1.5,Default:A|Light:0|Fire:0|Air:0,,0.75,0.8,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8

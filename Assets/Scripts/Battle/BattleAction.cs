@@ -1359,6 +1359,132 @@ public class BA_Cheat_Kill : BattleAction
     }
 }
 
+public class BA_Cheat_Flee : BattleAction
+{
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.None, false);
+    public override string GetName() => "(Cheat) Flee";
+    public override string GetDescription() => "Run from the current battle. Unlike normal version, this one is free and can always be used.";
+    public override bool ForfeitTurn() => false;
+
+
+    public override int GetBaseCost() => 0;
+
+    public override BattleHelper.MoveCurrency GetCurrency(BattleEntity caller)
+    {
+        return BattleHelper.MoveCurrency.Stamina;
+    }
+
+    public bool success = true;
+
+    public override bool CanChoose(BattleEntity caller)
+    {
+        return base.CanChoose(caller);
+    }
+    public override CantMoveReason GetCantMoveReason(BattleEntity caller)
+    {
+        return base.GetCantMoveReason(caller);
+    }
+
+    public override IEnumerator Execute(BattleEntity caller)
+    {
+        //everyone runs, battle ends
+        List<BattleEntity> playerParty = BattleControl.Instance.GetEntities((e) => e.posId < 0 && e.CanMove());
+        for (int i = 0; i < playerParty.Count; i++)
+        {
+            StartCoroutine(playerParty[i].Jump(playerParty[i].transform.position, 0.5f, 0.25f));
+            if (i == playerParty.Count - 1)
+            {
+                yield return StartCoroutine(playerParty[i].Jump(playerParty[i].transform.position, 0.5f, 0.25f));
+            }
+        }
+        if (success)
+        {
+            for (int i = 0; i < playerParty.Count; i++)
+            {
+                if (i == playerParty.Count - 1)
+                {
+                    yield return StartCoroutine(playerParty[i].Move(Vector3.left * 10, 5.0f));
+                }
+                else
+                {
+                    StartCoroutine(playerParty[i].Move(Vector3.left * 10, 5.0f));
+                }
+            }
+
+            yield return StartCoroutine(BattleControl.Instance.EndBattle(BattleHelper.BattleOutcome.Flee));
+        }
+        else
+        {
+
+        }
+        yield return null;
+    }
+}
+
+public class BA_Cheat_Win : BattleAction
+{
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.None, false);
+    public override string GetName() => "(Cheat) Win";
+    public override string GetDescription() => "Win the current battle. Does not kill all enemies, so will not give you XP from them.";
+    public override bool ForfeitTurn() => false;
+
+
+    public override int GetBaseCost() => 0;
+
+    public override BattleHelper.MoveCurrency GetCurrency(BattleEntity caller)
+    {
+        return BattleHelper.MoveCurrency.Stamina;
+    }
+
+    public bool success = true;
+
+    public override bool CanChoose(BattleEntity caller)
+    {
+        return base.CanChoose(caller);
+    }
+    public override CantMoveReason GetCantMoveReason(BattleEntity caller)
+    {
+        return base.GetCantMoveReason(caller);
+    }
+
+    public override IEnumerator Execute(BattleEntity caller)
+    {
+        yield return StartCoroutine(BattleControl.Instance.EndBattle(BattleHelper.BattleOutcome.Win));
+    }
+}
+
+public class BA_Cheat_Lose : BattleAction
+{
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.None, false);
+    public override string GetName() => "(Cheat) Lose";
+    public override string GetDescription() => "Lose the current battle.";
+    public override bool ForfeitTurn() => false;
+
+
+    public override int GetBaseCost() => 0;
+
+    public override BattleHelper.MoveCurrency GetCurrency(BattleEntity caller)
+    {
+        return BattleHelper.MoveCurrency.Stamina;
+    }
+
+    public bool success = true;
+
+    public override bool CanChoose(BattleEntity caller)
+    {
+        return base.CanChoose(caller);
+    }
+    public override CantMoveReason GetCantMoveReason(BattleEntity caller)
+    {
+        return base.GetCantMoveReason(caller);
+    }
+
+    public override IEnumerator Execute(BattleEntity caller)
+    {
+        yield return StartCoroutine(BattleControl.Instance.EndBattle(BattleHelper.BattleOutcome.Death));
+    }
+}
+
 public class BA_Cheat_SeeDefenseTable : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Enemy, false);

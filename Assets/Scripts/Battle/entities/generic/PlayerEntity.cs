@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static BattleHelper;
+using static Item;
 using static MainManager;
 
 public class PlayerEntity : BattleEntity
@@ -500,6 +501,9 @@ public class PlayerEntity : BattleEntity
         {
             tactics.Add(ptc.GetOrAddComponent<BA_Cheat_BonusTurn>());
             tactics.Add(ptc.GetOrAddComponent<BA_Cheat_Kill>());
+            tactics.Add(ptc.GetOrAddComponent<BA_Cheat_Flee>());
+            tactics.Add(ptc.GetOrAddComponent<BA_Cheat_Win>());
+            tactics.Add(ptc.GetOrAddComponent<BA_Cheat_Lose>());
         }
         if (MainManager.Instance.Cheat_BattleInfoActions)
         {
@@ -2264,6 +2268,11 @@ public class PlayerEntity : BattleEntity
         }
         else
         {
+            if (damage >= 14)
+            {
+                MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_Ouch);
+            }
+
             hp -= damage;
         }
 

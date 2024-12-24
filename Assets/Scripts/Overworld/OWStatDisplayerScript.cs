@@ -24,15 +24,15 @@ public class OWStatDisplayerScript : MonoBehaviour
         switch (pde.entityID)
         {
             case BattleHelper.EntityID.Wilex:
-                backImage.color = new Color(1, 0.8f, 0.8f);
+                backImage.color = new Color(1, 0.8f, 0.8f, 0.8f);
                 characterImage.sprite = wilexSprite;
                 break;
             case BattleHelper.EntityID.Luna:
-                backImage.color = new Color(0.8f, 1f, 0.8f);
+                backImage.color = new Color(0.8f, 1f, 0.8f, 0.8f);
                 characterImage.sprite = lunaSprite;
                 break;
             default:
-                backImage.color = new Color(0.8f, 1, 1f);
+                backImage.color = new Color(0.8f, 1, 1f, 0.8f);
                 break;
         }
 

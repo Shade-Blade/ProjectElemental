@@ -3217,7 +3217,7 @@ public class LM_BreakerSmash : LM_Smash
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Earth, 0);
+                val = caller.DealDamageCalculation(target, sd + 3, BattleHelper.DamageType.Earth, 0);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 5, BattleHelper.DamageType.Earth, propertyBlock);
@@ -3773,7 +3773,7 @@ public class LM_LightSmash : LM_Smash
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 5, BattleHelper.DamageType.Light, 0);
+                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Light, 0);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 7, BattleHelper.DamageType.Light, propertyBlock);

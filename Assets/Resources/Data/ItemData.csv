@@ -55,7 +55,7 @@ SleepDart,,,,,7,Sleep:1/3,,,NoOverworld,FALSE,None,Base,TRUE,Water,,4,3,FALSE
 BerryCarrotBunch,8,8,,,23,,,,Producer:BerryCarrot,FALSE,Eat,Recipe,FALSE,,,,3,TRUE
 CarrotPudding,9,9,,,19,,,,HealOverTime,FALSE,Eat,GridFillRecipe,FALSE,,,,3,TRUE
 BronzePudding,18,18,,,24,,,,HealOverTime,FALSE,Eat,GridFillRecipe,FALSE,,,,3,TRUE
-CoconutMilk,8,,,,14,DefenseUp:2/3,,,,FALSE,Eat,Base,FALSE,,,,3,FALSE
+CoconutMilk,8,,,,14,DefenseUp:2/3,,,,FALSE,Drink,Base,FALSE,,,,3,FALSE
 CoconutCream,9,9,,,14,,,,HealOverTime,FALSE,Eat,Recipe,FALSE,,,,3,TRUE
 MelonJug,,26,,,14,Burst:6/X,,,TargetAll,FALSE,Drink,Recipe,FALSE,,,,3,TRUE
 MelonJuice,,13,,,11,Burst:4/X,,,,FALSE,Drink,Recipe,FALSE,,,,3,TRUE

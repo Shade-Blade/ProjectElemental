@@ -556,39 +556,31 @@ public class WorldFollower : WorldEntity
 
         Vector3 usedMovement = useIntended ? intendedMovement : rb.velocity;
 
-        if ((MainManager.XZProject(usedMovement).magnitude > 0.01f) || pastTrueFacingRotation != trueFacingRotation)
+        midFacingRotation = trueFacingRotation - MainManager.Instance.GetWorldspaceYaw();
+        while (midFacingRotation < 0)
+        {
+            midFacingRotation += 360;
+        }
+        while (midFacingRotation > 360)
+        {
+            midFacingRotation -= 360;
+        }
+
+        if ((MainManager.XZProject(usedMovement).magnitude > 0.01f) || pastMidFacingRotation != midFacingRotation)
         {
             if (!movementRotationDisabled && (MainManager.XZProject(usedMovement).magnitude > 0.01f))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
                 //transform this with respect to worldspace yaw
-                trueFacingRotation -= MainManager.Instance.GetWorldspaceYaw();
-                //Debug.Log("reset F " + trueFacingRotation);
             }
-
-            if (trueFacingRotation < 0)
-            {
-                trueFacingRotation += 360;
-            }
-
-            while (trueFacingRotation < 0)
-            {
-                trueFacingRotation += 360;
-            }
-            while (trueFacingRotation >= 360)
-            {
-                trueFacingRotation -= 360;
-            }
-
-            //Debug.Log(hiddenFacingRotation);
 
             //going straight back or forward is a little weird, so don't rotate in a 10 degree range
             bool norotate = false;
-            if (trueFacingRotation > 85f && trueFacingRotation < 95f)
+            if (midFacingRotation > 85f && midFacingRotation < 95f)
             {
                 norotate = true;
             }
-            if (trueFacingRotation > 265f && trueFacingRotation < 275f)
+            if (midFacingRotation > 265f && midFacingRotation < 275f)
             {
                 norotate = true;
             }
@@ -596,26 +588,11 @@ public class WorldFollower : WorldEntity
             if (!norotate)
             {
                 targetFacingRotation = 0;
-                if (trueFacingRotation > 90 && trueFacingRotation < 270)
+                if (midFacingRotation > 90 && midFacingRotation < 270)
                 {
                     targetFacingRotation = 180;
                 }
             }
-
-            /*
-            //by convention, 0 and 180 (straight right and left) are front facing
-            //may want to add some leeway?            
-
-            showBack = trueFacingRotation < 360 && trueFacingRotation > 180;
-
-            if ((pastShowBack ^ showBack))
-            {
-                //hardcode for now
-                facingRotation = targetFacingRotation;
-            }
-
-            pastShowBack = showBack;
-            */
         }
 
         bool lrdir = targetFacingRotation == 0; //true = left to right
@@ -691,7 +668,7 @@ public class WorldFollower : WorldEntity
         }
         else
         {
-            showBack = trueFacingRotation < 360 && trueFacingRotation > 180;
+            showBack = midFacingRotation < 360 && midFacingRotation > 180;
         }
 
 

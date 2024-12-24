@@ -2374,6 +2374,11 @@ public struct Item
     //this is pure item effect stuff
     public static void UseOutOfBattle(PlayerData.PlayerDataEntry player, Item i, int index)
     {
+        if (i.type == ItemType.CursedStew)
+        {
+            MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_CursedStew);
+        }
+
         PlayerData players = MainManager.Instance.playerData;
 
         List<Item> inv = MainManager.Instance.playerData.itemInventory;

@@ -86,6 +86,8 @@ public class Pause_SectionBase : Pause_SectionShared
     public float offset;
     public float targetOffset;
 
+    public float pastPerPageOffset;
+
     public MenuHandler menu; //holds the pause menu handler itself
     public MenuResult result;
 
@@ -114,7 +116,7 @@ public class Pause_SectionBase : Pause_SectionShared
         int index = (int)(state);
         baseIndex = index;
         //Debug.Log((PauseMenuPage)index);
-        targetOffset = baseIndex * PER_PAGE_OFFSET;
+        targetOffset = baseIndex * GetPerPageOffset();
     }
     public override object GetState()
     {
@@ -136,18 +138,28 @@ public class Pause_SectionBase : Pause_SectionShared
 
     void Update()
     {
+        //if you resize window while paused
+        if (pastPerPageOffset != GetPerPageOffset() && pastPerPageOffset != 0)
+        {
+            targetOffset = baseIndex * GetPerPageOffset();
+            offset *= (GetPerPageOffset() / pastPerPageOffset);
+        }
+
+        pastPerPageOffset = GetPerPageOffset();
+
         if (Mathf.Abs(targetOffset - offset) < 0.1f)
         {
             offset = targetOffset;
         } else
         {
             //30000f = 0.2s per page (go from one page to another)
-            offset = MainManager.EasingQuadraticTime(offset, targetOffset, 30000f); 
+            //offset = MainManager.EasingQuadraticTime(offset, targetOffset, 30000f); 
+            offset = MainManager.EasingQuadraticTime(offset, targetOffset, 25 * GetPerPageOffset());
         }
 
         for (int i = 0; i < subsections.Count; i++)
         {
-            subsections[i].GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-offset + (i * PER_PAGE_OFFSET));
+            subsections[i].GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-offset + (i * GetPerPageOffset()));
 
             /*
             if (subsections[i].isInit && Mathf.Abs(-offset/PER_PAGE_OFFSET + i) > 1.5f)
@@ -165,16 +177,21 @@ public class Pause_SectionBase : Pause_SectionShared
             //bad for performance though (To do: find a better way to fix this problem)
             //(Although conceptually the above isn't actually better since it does a similar number of init and clear calls except on the ends)
             //Other thing is to make the other pages not disappear while still on screen (but if your screen is too wide it happens anyway)
-            if (subsections[i].isInit && Mathf.Abs(-offset / PER_PAGE_OFFSET + i) > 0.95f)
+            if (subsections[i].isInit && Mathf.Abs(-offset / GetPerPageOffset() + i) > 0.95f)
             {
                 subsections[i].Clear();
             }
 
-            if (!subsections[i].isInit && Mathf.Abs(-offset / PER_PAGE_OFFSET + i) < 0.95f)
+            if (!subsections[i].isInit && Mathf.Abs(-offset / GetPerPageOffset() + i) < 0.95f)
             {
                 subsections[i].Init();
             }
         }
+    }
+
+    public float GetPerPageOffset()
+    {
+        return 1.5f * MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width;//PER_PAGE_OFFSET;
     }
 
     public override void Init()
@@ -319,18 +336,20 @@ public class Pause_SectionBase : Pause_SectionShared
 
         for (int i = 0; i < subsections.Count; i++)
         {
-            subsections[i].GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-offset + (i * PER_PAGE_OFFSET));
+            subsections[i].GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-offset + (i * GetPerPageOffset()));
 
-            if (subsections[i].isInit && Mathf.Abs(-offset / PER_PAGE_OFFSET + i) > 1.5f)
+            if (subsections[i].isInit && Mathf.Abs(-offset / GetPerPageOffset() + i) > 1.5f)
             {
                 subsections[i].Clear();
             }
 
-            if (!subsections[i].isInit && Mathf.Abs(-offset / PER_PAGE_OFFSET + i) < 1.5f)
+            if (!subsections[i].isInit && Mathf.Abs(-offset / GetPerPageOffset() + i) < 1.5f)
             {
                 subsections[i].Init();
             }
         }
+
+        pastPerPageOffset = GetPerPageOffset();
 
         menu.Init();
     }

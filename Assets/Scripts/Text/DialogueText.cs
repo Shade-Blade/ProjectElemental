@@ -191,6 +191,26 @@ public class TMPString
                     output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold Underlay\"><color=" + tag.args[0] + ">";
                 }
                 break;
+            case TagEntry.TextTag.ChaoticUnderlay:
+                if (!tag.open)
+                {
+                    output = "</color></font>";
+                }
+                else
+                {
+                    if (tag.args == null || tag.args.Length == 0)
+                    {
+                        break;
+                    }
+                    ColorNames color;
+                    if (Enum.TryParse(tag.args[0], out color))
+                    {
+                        tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
+                    }
+
+                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold Chaotic\"><color=" + tag.args[0] + ">";
+                }
+                break;
             case TagEntry.TextTag.Metallic:
                 if (!tag.open)
                 {
@@ -843,6 +863,7 @@ public class TagEntry
         //things that use materials
         Outline,    //outline text
         Underlay,   //underlay text
+        ChaoticUnderlay,    //chaotic underlay
         Metallic,   //metallic
         Iridescent, //Normal color should be about = 0.4, 0.4, 0.4 (Too high = becomes pure white)
 

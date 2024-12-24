@@ -2950,6 +2950,16 @@ PrefabInstance:
       propertyPath: wed.initialFacingAngle
       value: 80
       objectReference: {fileID: 0}
+    - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[0].entid
+      value: MiracleBloom
+      objectReference: {fileID: 0}
     - target: {fileID: 4188132789149607737, guid: 10fd124b792c9be419865c07f8a24688,
         type: 3}
       propertyPath: m_RootOrder

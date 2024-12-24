@@ -73,11 +73,12 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
     public const int PLAYER_LAYER_MASK = 311;
 
-    protected float targetFacingRotation;   //sprite
+    public float targetFacingRotation;   //sprite
     public float facingRotation;   //sprite
     protected bool showBack;
     public float trueFacingRotation; //determined by movement
-    protected float pastTrueFacingRotation;
+    public float midFacingRotation; //trueFacingRotation + yaw
+    protected float pastMidFacingRotation;
 
     [HideInInspector]
     public Vector3 lastFrameVel;
@@ -534,39 +535,30 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
         Vector3 usedMovement = useIntended ? intendedMovement : rb.velocity;
 
-        //Debug.Log("a" + trueFacingRotation);
-        if (pastTrueFacingRotation != trueFacingRotation || (MainManager.XZProject(usedMovement).magnitude > 0.01f))
+        midFacingRotation = trueFacingRotation - MainManager.Instance.GetWorldspaceYaw();
+        while (midFacingRotation < 0)
+        {
+            midFacingRotation += 360;
+        }
+        while (midFacingRotation > 360)
+        {
+            midFacingRotation -= 360;
+        }
+
+        if (pastMidFacingRotation != trueFacingRotation || (MainManager.XZProject(usedMovement).magnitude > 0.01f))
         {
             if (!movementRotationDisabled && ((MainManager.XZProject(usedMovement).magnitude > 0.01f)))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
-                //transform this with respect to worldspace yaw
-                trueFacingRotation -= MainManager.Instance.GetWorldspaceYaw();
-            }
-
-            if (trueFacingRotation < 0)
-            {
-                trueFacingRotation += 360;
-            }
-
-            //Debug.Log(hiddenFacingRotation);
-
-            while (trueFacingRotation < 0)
-            {
-                trueFacingRotation += 360;
-            }
-            while (trueFacingRotation > 360)
-            {
-                trueFacingRotation -= 360;
             }
 
             //going straight back or forward is a little weird, so don't rotate in a 10 degree range
             bool norotate = false;
-            if (trueFacingRotation > 85f && trueFacingRotation < 95f)
+            if (midFacingRotation > 85f && midFacingRotation < 95f)
             {
                 norotate = true;
             }
-            if (trueFacingRotation > 265f && trueFacingRotation < 275f)
+            if (midFacingRotation > 265f && midFacingRotation < 275f)
             {
                 norotate = true;
             }
@@ -574,7 +566,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
             if (!norotate)
             {
                 targetFacingRotation = 0;
-                if (trueFacingRotation > 90 && trueFacingRotation < 270)
+                if (midFacingRotation > 90 && midFacingRotation < 270)
                 {
                     targetFacingRotation = 180;
                 }
@@ -662,7 +654,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
         }
         else
         {
-            showBack = trueFacingRotation < 360 && trueFacingRotation > 180;
+            showBack = midFacingRotation < 360 && midFacingRotation > 180;
         }
 
         while (correctedRotation > 360)
@@ -684,7 +676,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
         subObject.transform.eulerAngles = Vector3.up * (correctedRotation);
 
-        pastTrueFacingRotation = trueFacingRotation;
+        pastMidFacingRotation = midFacingRotation;
 
         if (ac != null)
         {
@@ -1227,7 +1219,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
     }
     public Vector3 FacingVector()
     {
-        return FacingVector(trueFacingRotation + MainManager.Instance.GetWorldspaceYaw());
+        return FacingVector(trueFacingRotation);
     }
     public Vector3 FeetPosition()
     {

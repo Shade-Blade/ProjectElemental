@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using static MainManager;
 
@@ -1036,9 +1037,26 @@ public class CheatMenu : MenuHandler
         if (input[0].Equals("sgf"))
         {
             Enum.TryParse(input[1], out MainManager.GlobalFlag globalFlag);
-            bool.TryParse(input[2], out bool setFlag);
 
-            MainManager.Instance.SetGlobalFlag(globalFlag, setFlag);
+
+            if (globalFlag == GlobalFlag.GF_None)
+            {
+                doexit = false;
+                cs.log.SetText(input[1] + " does not correspond to a valid Global Flag", true, true);
+            }
+            else
+            {
+                bool setFlag;
+                if (input.Length > 1)
+                {
+                    bool.TryParse(input[2], out setFlag);
+                }
+                else
+                {
+                    setFlag = true;
+                }
+                MainManager.Instance.SetGlobalFlag(globalFlag, setFlag);
+            }
         }
 
         //Set global var
@@ -1046,7 +1064,14 @@ public class CheatMenu : MenuHandler
         {
             Enum.TryParse(input[1], out MainManager.GlobalVar globalVar);
 
-            MainManager.Instance.SetGlobalVar(globalVar, input[2]);
+            if (globalVar == GlobalVar.GV_None)
+            {
+                doexit = false;
+                cs.log.SetText(input[1] + " does not correspond to a valid Global Var", true, true);
+            } else
+            {
+                MainManager.Instance.SetGlobalVar(globalVar, input.Length > 1 ? input[2] : null);
+            }
         }
 
         //Apply effect

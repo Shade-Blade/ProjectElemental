@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static BattleHelper;
@@ -1051,11 +1052,30 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public virtual void PostPositionInitialize()
     {
+        flipDefault = (posId >= 0);
+        if (!flipDefault)
+        {
+            SendAnimationData("xunflip");
+        }
+        else
+        {
+            SendAnimationData("xflip");
+        }
+
         //Default: 0 is ground level so it auto sets the grounded flag (you can unset it later)
         if (homePos.y == 0)
         {
             SetEntityProperty(BattleHelper.EntityProperties.Grounded, true);
         }
+    }
+
+    public int FlipDefaultMult()
+    {
+        return flipDefault ? -1 : 1;
+    }
+    public int FlipDefaultMultReverse()
+    {
+        return flipDefault ? 1 : -1;
     }
 
     //Encounter data level variables
@@ -2443,7 +2463,26 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             GameObject g = Instantiate(BattleControl.Instance.statusIcon);
             g.transform.SetParent(transform);
-            g.transform.localPosition = statusOffset + new Vector3(width * 0.5f + 0.1f, height, 0) + Vector3.up * StatusIconScript.VOFFSET * (i + numStateIcons);
+
+            int stack = StatusIconScript.MAX_STACK;
+
+            float ymax = MainManager.Instance.WorldPosCameraTopEdge(transform.position).y;
+
+            stack = (int)(((ymax - (homePos.y + height + statusOffset.y)) / StatusIconScript.VOFFSET) + 0.5f);
+
+            if (stack < 3)
+            {
+                stack = 3;
+            }
+            if (stack > StatusIconScript.MAX_STACK)
+            {
+                stack = StatusIconScript.MAX_STACK;
+            }
+
+            int horizontal = (i + numStateIcons) / stack;
+            int offset = (i + numStateIcons) % stack;
+
+            g.transform.localPosition = statusOffset + new Vector3(width * 0.5f + 0.1f + (StatusIconScript.VOFFSET * horizontal), height, 0) + Vector3.up * StatusIconScript.VOFFSET * (offset + horizontal * 0.3333f);
 
             statusIcons.Add(g);
 
@@ -2576,7 +2615,24 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         GameObject g = Instantiate(BattleControl.Instance.stateIcon);
         g.transform.SetParent(transform);
-        g.transform.localPosition = statusOffset + new Vector3(width * 0.5f + 0.1f, height, 0) + Vector3.up * StateIconScript.VOFFSET * (offset);
+
+        float ymax = MainManager.Instance.WorldPosCameraTopEdge(transform.position).y;
+
+        int stack = (int)(((ymax - (homePos.y + height + statusOffset.y)) / StatusIconScript.VOFFSET) + 0.5f);
+
+        if (stack < 3)
+        {
+            stack = 3;
+        }
+        if (stack > StatusIconScript.MAX_STACK)
+        {
+            stack = StatusIconScript.MAX_STACK;
+        }
+
+        int horizontal = (offset) / stack;
+        int offsetB = (offset) % stack;
+
+        g.transform.localPosition = statusOffset + new Vector3(width * 0.5f + 0.1f + StateIconScript.VOFFSET * horizontal, height, 0) + Vector3.up * StateIconScript.VOFFSET * (offsetB + horizontal * 0.3333f);
         statusIcons.Add(g);
         StateIconScript s = g.GetComponent<StateIconScript>();
         s.Setup(state, potency, duration);
@@ -2701,6 +2757,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
         {
             int d = target.TakeDamage(damage, type, properties);
+            OnHitEffects(target, d, type, properties, damage);
             if (canCounterProperties)
             {
                 //Apply contact hazards
@@ -2708,6 +2765,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             target.lastAttacker = this;
             InvokeHurtEvents(target, type, properties);
+            PostDealDamage(target, type, properties, contact, d);
             return d;
         }
 
@@ -2794,6 +2852,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
         {
             int d = target.TakeDamage(damage, type, properties);
+            OnHitEffects(target, d, type, properties, damage);
             if (canCounterProperties)
             {
                 //Apply contact hazards
@@ -2802,6 +2861,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             target.lastAttacker = this;
             InvokeHurtEvents(target, type, properties);
+            PostDealDamage(target, type, properties, contact, d);
             return d;
         }
 
@@ -2912,6 +2972,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
         {
             int d = target.TakeDamage(damage + damageO, type, properties);
+            OnHitEffects(target, d, type, properties, damage);
             if (canCounterProperties)
             {
                 //Apply contact hazards
@@ -2920,6 +2981,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             target.lastAttacker = this;
             InvokeHurtEvents(target, type, properties);
+            PostDealDamage(target, type, properties, contact, d);
             return d;
         }
 
@@ -3006,14 +3068,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
         {
             int d = target.TakeDamage(damage, type, properties);
-            target.lastAttacker = this;
-            InvokeHurtEvents(target, type, properties);
+            OnHitEffects(target, d, type, properties, damage);
             if (canCounterProperties)
             {
                 //Apply contact hazards
                 //the attacker gets hit by the target's contact hazard
                 target.TryContactHazard(this, contact, type, d);
             }
+            target.lastAttacker = this;
+            InvokeHurtEvents(target, type, properties);
+            PostDealDamage(target, type, properties, contact, d);
             return d;
         }
 
@@ -5068,7 +5132,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             DealDamage(target, target.hp, BattleHelper.DamageType.Dark, (ulong)BattleHelper.DamageProperties.Hardcode);
         } else
         {
-            target.TakeDamage(0, BattleHelper.DamageType.Dark, (ulong)BattleHelper.DamageProperties.Hardcode);
+            DealDamage(target, 0, BattleHelper.DamageType.Dark, (ulong)BattleHelper.DamageProperties.Hardcode);
         }
 
         return doesWork;
@@ -5467,7 +5531,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                             break;
                         case Effect.EffectClass.Token:
                             //Special case!
-                            if (se.effect == Effect.EffectType.ItemBoost)
+                            if (se.effect == Effect.EffectType.ItemBoost || se.effect == Effect.EffectType.Miracle)
                             {
                                 //OverwriteLow
                                 if (entry.potency < se.potency)
@@ -6092,6 +6156,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
 
         effects.Sort((a, b) => ((int)a.effect - (int)b.effect));
+
+        //recalculate maxHP using max HP Boost
+        maxHP = BattleEntityData.GetBattleEntityData(entityID).maxHP + GetEffectPotency(Effect.EffectType.MaxHPBoost) - GetEffectPotency(Effect.EffectType.MaxHPReduction);
+
+        if (maxHP < 0)
+        {
+            maxHP = 0;
+        }
+        //then cap normal numbers
+        if (hp > maxHP)
+        {
+            hp = maxHP;
+        }
 
         EffectSpriteUpdate();
     }

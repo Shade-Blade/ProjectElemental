@@ -384,13 +384,13 @@ public class Effect
         }
         else
         {
-            //make ItemBoost and Freebie not cleanseable (would be really punishing)
+            //make ItemBoost, Miracle, Freebie not cleanseable (would be really punishing)
             //also make BonusTurns not either
             if (se == EffectType.BonusTurns)
             {
                 return false;
             }
-            return ((int)se <= (int)EffectType.Miracle && (int)se >= (int)EffectType.Focus);
+            return ((int)se < (int)EffectType.Miracle && (int)se >= (int)EffectType.Focus);
         }
     }
     public static bool IsCurable(EffectType se, bool curePermanents = true)
@@ -1461,6 +1461,13 @@ public static class BattleHelper
 
         //newer: make things 80% x ish
 
+        //Special allies: spawn behind you and closer together
+        if (id <= -10)
+        {
+            return Vector3.left * 1.05f + Vector3.right * (0.6f * (id + 10) - 2.5f) + Vector3.forward * (((id + 10) + 1) * 0.15f + 0.6f);
+        }
+
+
         if (id < 0)
         {
             //remnant of further out camera
@@ -1817,8 +1824,18 @@ public class EncounterData
 
     public int GetOverkillLevel()
     {
-        BattleEntityData bed = BattleEntityData.GetBattleEntityData(Enum.Parse<BattleHelper.EntityID>(encounterList[0].entid, true));
-        return bed.level;
+        int level = 0;
+
+        foreach (var e in encounterList)
+        {
+            BattleEntityData bed = BattleEntityData.GetBattleEntityData(Enum.Parse<BattleHelper.EntityID>(encounterList[0].entid, true));
+            if (bed.level > level)
+            {
+                level = bed.level;
+            }
+        }
+
+        return level;
     }
 
     public float GetEncounterDifficultyLevel()

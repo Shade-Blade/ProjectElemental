@@ -4133,7 +4133,7 @@ public class BattleControl : MonoBehaviour
 
         //stat thing
         BattleEntity be = GetFrontmostAlly(-1);
-        if (be != null)
+        if (be != null && IsPlayerControlled(be, true))
         {
             playerData.GetPlayerDataEntry(GetFrontmostAlly(-1).entityID).timeInFront += Time.deltaTime;
         }
@@ -4183,7 +4183,7 @@ public class BattleControl : MonoBehaviour
     {
         //Special case so I can make player characters get devoured so they aren't targettable
         //though in that specific case both of these will be set active
-        if (checkNoCount && (b.GetEntityProperty(BattleHelper.EntityProperties.NoCount) || b.GetEntityProperty(BattleHelper.EntityProperties.NoTarget)))
+        if ((checkNoCount && (b.GetEntityProperty(BattleHelper.EntityProperties.NoCount)) || b.GetEntityProperty(BattleHelper.EntityProperties.NoTarget)))
         {
             return false;
         }
@@ -4424,10 +4424,8 @@ public class BattleControl : MonoBehaviour
         {
             if (firstStrikePosId != BattleStartArguments.FIRSTSTRIKE_NULL_ENTITY && firstStrikePosId < 0)
             {
-                for (int i = 0; i < party.Count; i++)
-                {
-                    party[i].InflictEffect(party[i], new Effect(Effect.EffectType.BonusTurns, (sbyte)(playerData.BadgeEquippedCount(Badge.BadgeType.SmartAmbush)), Effect.INFINITE_DURATION));
-                }
+                BattleEntity firstStriker = GetEntitiesSorted((e) => (e.posId < 0))[0];
+                firstStriker.InflictEffect(firstStriker, new Effect(Effect.EffectType.BonusTurns, (sbyte)(playerData.BadgeEquippedCount(Badge.BadgeType.SmartAmbush)), Effect.INFINITE_DURATION));
             }
         }
 
@@ -4445,30 +4443,36 @@ public class BattleControl : MonoBehaviour
             //special codes:
             //max = frontmost enemy
             //min + 1 = frontmost ally (*normally -1)
-            if (firstStrikePosId == BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ENEMY || firstStrikePosId == BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY)
-            {
-                List<BattleEntity> elist = null;
-                if (firstStrikePosId == BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ENEMY)
-                {
-                    elist = GetEntities((e) => (e.posId >= 0));
-                } else
-                {
-                    elist = GetEntities((e) => (e.posId < 0));
-                }
 
-                elist.Sort((a, b) => StandardEntitySort(a, b));
-
-                BattleEntity firstStriker = elist[0]; //GetEntityByID(firstStrikePosId);
-                if (firstStriker != null)
-                {
-                    yield return StartCoroutine(firstStriker.FirstStrike(firstStrikeMove));
-                }
-            } else
+            if (!(firstStrikePosId == BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY && smartAmbush))
             {
-                BattleEntity firstStriker = GetEntityByID(firstStrikePosId);
-                if (firstStriker != null)
+                if (firstStrikePosId == BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ENEMY || firstStrikePosId == BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY)
                 {
-                    yield return StartCoroutine(firstStriker.FirstStrike(firstStrikeMove));
+                    List<BattleEntity> elist = null;
+                    if (firstStrikePosId == BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ENEMY)
+                    {
+                        elist = GetEntities((e) => (e.posId >= 0));
+                    }
+                    else
+                    {
+                        elist = GetEntities((e) => (e.posId < 0));
+                    }
+
+                    elist.Sort((a, b) => StandardEntitySort(a, b));
+
+                    BattleEntity firstStriker = elist[0]; //GetEntityByID(firstStrikePosId);
+                    if (firstStriker != null)
+                    {
+                        yield return StartCoroutine(firstStriker.FirstStrike(firstStrikeMove));
+                    }
+                }
+                else
+                {
+                    BattleEntity firstStriker = GetEntityByID(firstStrikePosId);
+                    if (firstStriker != null)
+                    {
+                        yield return StartCoroutine(firstStriker.FirstStrike(firstStrikeMove));
+                    }
                 }
             }
         }
@@ -4552,10 +4556,11 @@ public class BattleControl : MonoBehaviour
                         yield return StartCoroutine(reactionMoveList[0].user.PreReact(reactionMoveList[0].move, reactionMoveList[0].target));
                         yield return StartCoroutine(reactionMoveList[0].move.ExecuteOutOfTurn(reactionMoveList[0].user, reactionMoveList[0].target));
                         //yield return StartCoroutine(CheckEndBattle());
-                        if (reactionMoveList.Count > 1)
-                        {
-                            yield return new WaitForSeconds(0.5f);
-                        }
+                        //if (reactionMoveList.Count > 1)
+                        //{
+                        //    yield return new WaitForSeconds(0.5f);
+                        //}
+                        yield return new WaitForSeconds(0.5f);
                     }
                 } else
                 {
@@ -4568,10 +4573,11 @@ public class BattleControl : MonoBehaviour
                     yield return StartCoroutine(reactionMoveList[0].move.ExecuteOutOfTurn(reactionMoveList[0].user, reactionMoveList[0].target));
                     //yield return StartCoroutine(CheckEndBattle());
                     DestroyMovePopup();
-                    if (reactionMoveList.Count > 1)
-                    {
-                        yield return new WaitForSeconds(0.5f);
-                    }
+                    //if (reactionMoveList.Count > 1)
+                    //{
+                    //    yield return new WaitForSeconds(0.5f);
+                    //}
+                    yield return new WaitForSeconds(0.5f);
                 }
             }
 

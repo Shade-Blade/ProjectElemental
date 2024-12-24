@@ -261,7 +261,9 @@ public class InputManager : MonoBehaviour
         float pastValue = value;
         if (Instance.inputCircleBuffer != null && Instance.inputCircleBuffer[-1] != null)
         {
-            pastValue = Instance.inputCircleBuffer[-1].horizontalValue;
+            //Very subtle problem: -1 = 2 frames ago
+            //0 = last frame (Because the current frame will be pasted onto the buffer in lateupdate)
+            pastValue = Instance.inputCircleBuffer[0].horizontalValue;
             if (pastValue * value < 0)
             {
                 pastValue = 0;
@@ -313,7 +315,9 @@ public class InputManager : MonoBehaviour
         float pastValue = value; 
         if (Instance.inputCircleBuffer != null && Instance.inputCircleBuffer[-1] != null)
         {
-            pastValue = Instance.inputCircleBuffer[-1].verticalValue;
+            //Very subtle problem: -1 = 2 frames ago
+            //0 = last frame (Because the current frame will be pasted onto the buffer in lateupdate)
+            pastValue = Instance.inputCircleBuffer[0].verticalValue;
             if (pastValue * value < 0)
             {
                 pastValue = 0;
@@ -323,6 +327,7 @@ public class InputManager : MonoBehaviour
                 pastValue = 0;
             }
         }
+
         float offset = 20 * Time.deltaTime;  //Use this frame's delta time
         value = Mathf.Clamp(value, pastValue - offset, pastValue + offset);
         return value;

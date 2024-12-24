@@ -230,9 +230,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7086981592171101347}
-  - component: {fileID: 5273842154033357751}
+  - component: {fileID: 369267934968559455}
   m_Layer: 5
-  m_Name: AreaNamePopup
+  m_Name: AchievementPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -256,10 +256,10 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -250, y: 120}
+  m_AnchoredPosition: {x: -250, y: 70}
   m_SizeDelta: {x: 800, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5273842154033357751
+--- !u!114 &369267934968559455
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -268,7 +268,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7086981592171101346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b28f4335979e7a4ca17e66d8dda41de, type: 3}
+  m_Script: {fileID: 11500000, guid: f1da6b761cccbae4ca5cb83c11fb83fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textMesh: {fileID: 5734128628998330598}
@@ -283,7 +283,7 @@ MonoBehaviour:
   width: 0
   baseBox: {fileID: 7086981593174295911}
   rectTransform: {fileID: 7086981592171101347}
-  ypos: -200
+  ypos: -150
   lifetime: 2
 --- !u!1 &7086981593174295904
 GameObject:
@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8980392, g: 0.8980392, b: 0.8980392, a: 0.8}
+  m_Color: {r: 1, g: 0.95236725, b: 0.61698115, a: 0.8}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

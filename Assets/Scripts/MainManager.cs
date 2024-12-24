@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Security.Cryptography;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using static Item;
@@ -1153,6 +1151,63 @@ public class PlayerData
         keyInventory.Add(keyItem);
     }
 
+    public void AddKeyItemStacking(KeyItem keyItem)
+    {
+        for (int i = 0; i < keyInventory.Count; i++)
+        {
+            if (keyInventory[i].type == keyItem.type)
+            {
+                keyInventory[i] = new KeyItem(keyItem.type, keyInventory[i].bonusData + keyItem.bonusData);
+                return;
+            }
+        }
+
+        AddKeyItem(keyItem);
+    }
+    public int CountKeyItemStacking(KeyItem.KeyItemType kit)
+    {
+        int count = 0;
+
+        for (int i = 0; i < keyInventory.Count; i++)
+        {
+            if (keyInventory[i].type == kit)
+            {
+                count += keyInventory[i].bonusData;
+            }
+        }
+
+        return count;
+    }
+    public bool RemoveKeyItemStacking(KeyItem.KeyItemType kit, int count = 1)
+    {
+        if (CountKeyItemStacking(kit) < count)
+        {
+            return false;
+        }
+
+        int c = count;
+
+        for (int i = 0; i < keyInventory.Count; i++)
+        {
+            if (keyInventory[i].type == kit)
+            {
+                if (keyInventory[i].bonusData <= c)
+                {
+                    c -= keyInventory[i].bonusData;
+                    keyInventory.RemoveAt(i);
+                    i--;
+                    continue;
+                }
+                else
+                {
+                    keyInventory[i] = new KeyItem(kit, keyInventory[i].bonusData - c);
+                    c -= keyInventory[i].bonusData;
+                }
+            }
+        }
+
+        return true;
+    }
     public int CountAllOfType(Item.ItemType i)
     {
         int output = itemInventory.FindAll((e) => (e.type == i)).Count;
@@ -2278,6 +2333,7 @@ public class MainManager : MonoBehaviour
     //public Sprite[] damageSprites;
     public GameObject overworldHUD;
     public NamePopupScript areaNamePopup;
+    public AchievementPopupScript achievementPopup;
 
     public Sprite defaultSprite;
     public GameObject defaultTextbox;
@@ -2664,6 +2720,8 @@ public class MainManager : MonoBehaviour
         GF_ACH_LevelCap,
         GF_ACH_Risky,
         GF_ACH_KeyHoarder,
+        GF_ACH_CursedStew,
+        GF_ACH_Ouch,
     }
     public enum StoryProgress
     {
@@ -2681,6 +2739,8 @@ public class MainManager : MonoBehaviour
         ACH_LevelCap,
         ACH_Risky,
         ACH_KeyHoarder,
+        ACH_CursedStew,
+        ACH_Ouch,
 
         /*
         ACH_FullCompletion,
@@ -3340,7 +3400,7 @@ public class MainManager : MonoBehaviour
     {
         if (pu.type == PickupUnion.PickupType.KeyItem && pu.keyItem.type == KeyItem.KeyItemType.CrystalKey)
         {
-            if (playerData.keyInventory.FindAll((e) => (e.type == KeyItem.KeyItemType.CrystalKey)).Count >= 4)
+            if (playerData.CountKeyItemStacking(KeyItem.KeyItemType.CrystalKey) >= 4)
             {
                 AwardAchievement(Achievement.ACH_KeyHoarder);
             }
@@ -3409,7 +3469,14 @@ public class MainManager : MonoBehaviour
                 }
                 if (pu.keyItem.type != KeyItem.KeyItemType.None)
                 {
-                    playerData.keyInventory.Add(pu.keyItem);
+                    if (KeyItem.IsStackable(pu.keyItem))
+                    {
+                        playerData.AddKeyItemStacking(pu.keyItem);
+                    }
+                    else
+                    {
+                        playerData.AddKeyItem(pu.keyItem);
+                    }
                 }
                 yield return StartCoroutine(GetItemPopupBlocking(pu));
                 yield break;
@@ -4094,6 +4161,13 @@ public class MainManager : MonoBehaviour
     public void AwardAchievement(Achievement ac)
     {
         GlobalFlag gf = Enum.Parse<GlobalFlag>("GF_" + ac.ToString());
+
+        if (!GetGlobalFlag(gf))
+        {
+            //achievement popup
+            DisplayAchievementPopup(ac);
+        }
+
         SetGlobalFlag(gf, true);
     }
     public bool CheckAchivement(Achievement ac)
@@ -4268,6 +4342,24 @@ public class MainManager : MonoBehaviour
     {
         Vector3 offset = wpos - Camera.transform.position;
         return Vector3.Dot(offset, Camera.transform.forward) < 0;
+    }
+    //Find position of top of screen relative to some starting point
+    public Vector3 WorldPosCameraTopEdge(Vector3 wpos)
+    {
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.camera, wpos);
+        screenPos.y = Screen.height;
+        Ray r = RectTransformUtility.ScreenPointToRay(Camera.camera, screenPos);
+
+        //Plane containing target point perpendicular to camrea
+        Plane p = new Plane(Camera.transform.forward, wpos);
+
+        //ray intersection of ray and plane
+        if (p.Raycast(r, out float enter))
+        {
+            return r.GetPoint(enter);
+        }
+
+        return Vector3.positiveInfinity;
     }
     public Vector2 WorldPosToCanvasPosB(Vector3 wpos)   //not sure how this is different from above. Possibly occurs due to anchor positioning acting weird for some reason
     {
@@ -5043,7 +5135,7 @@ public class MainManager : MonoBehaviour
         }
         else
         {
-            if (!inCutscene && !mapHalted && worldMode == WorldMode.Overworld && (worldPlayer == null || worldPlayer.IsGrounded()))
+            if (!inCutscene && !mapHalted && worldMode == WorldMode.Overworld && (worldPlayer == null || worldPlayer.IsGrounded() || worldPlayer.GetActionState() == WorldPlayer.ActionState.NoClip))
             {
                 if (InputManager.GetButtonDown(InputManager.Button.Start))
                 {
@@ -5074,6 +5166,23 @@ public class MainManager : MonoBehaviour
         if (areaNamePopup != null)
         {
             Destroy(areaNamePopup.gameObject);
+        }
+    }
+    public void DisplayAchievementPopup(Achievement ac)
+    {
+        //Debug.Log("Display " + name);
+        DestroyAchievementPopup();
+        GameObject go = Instantiate((GameObject)Resources.Load("Menu/AchievementPopup"), Canvas.transform);
+        achievementPopup = go.GetComponent<AchievementPopupScript>();
+
+        achievementPopup.Setup(ac);
+    }
+    public void DestroyAchievementPopup()
+    {
+        //Debug.Log("Destroy");
+        if (achievementPopup != null)
+        {
+            Destroy(achievementPopup.gameObject);
         }
     }
 
@@ -8097,7 +8206,7 @@ public class MainManager : MonoBehaviour
 
     //Unlike the exponential easings, this one has a set time it will reach the end
     //Time to target = sqrt(abs(input - target) / force)
-    //Inverse (force) = (abs(intput - target) / time^2)
+    //Inverse (force) = (abs(input - target) / time^2)
     //Note: calculating a force from a time value would need to use the starting point
     //(and my easing functions are specifically designed so that the starting point is unnecessary)
     public static float EasingQuadraticTime(float input, float target, float force)

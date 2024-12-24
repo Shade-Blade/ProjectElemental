@@ -205,7 +205,7 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
                 indicatorActive = true;
             }
 
-            trueFacingRotation = ConvertVectorToRotation(WorldPlayer.Instance.transform.position - transform.position) - MainManager.Instance.GetWorldspaceYaw();
+            trueFacingRotation = ConvertVectorToRotation(WorldPlayer.Instance.transform.position - transform.position);// - MainManager.Instance.GetWorldspaceYaw();
             timeSinceInteractActive += Time.deltaTime;
 
             if (wandering)

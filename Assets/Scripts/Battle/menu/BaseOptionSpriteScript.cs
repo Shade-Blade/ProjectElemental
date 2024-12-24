@@ -13,18 +13,18 @@ public class BaseOptionSpriteScript : MonoBehaviour
 
     private Color[] colors = new Color[]
     {
-        new Color(1,0.666f,0.666f), //jump
-        new Color(1,1,0.666f),      //weapon
-        new Color(0.666f,1,0.666f), //items
-        new Color(1,0.666f,1),      //soul
-        new Color(0.666f,0.666f,1), //tactics
+        new Color(1,0.666f,0.666f, 0.8f), //jump
+        new Color(1,1,0.666f, 0.8f),      //weapon
+        new Color(0.666f,1,0.666f, 0.8f), //items
+        new Color(1,0.666f,1, 0.8f),      //soul
+        new Color(0.666f,0.666f,1, 0.8f), //tactics
 
-        new Color(1,0.8f,0.6f),     //badge swap
-        new Color(1,0.7f,0.888f),      //ribbon swap
+        new Color(1,0.8f,0.6f, 0.8f),     //badge swap
+        new Color(1,0.7f,0.888f, 0.8f),      //ribbon swap
 
 
         //disabled is the last one
-        new Color(0.4f,0.4f,0.4f)
+        new Color(0.4f,0.4f,0.4f, 0.8f)
     };
     public List<Sprite> sprites;
 

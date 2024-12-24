@@ -9,6 +9,7 @@ public class StatusIconScript : MonoBehaviour
     public TMPro.TMP_Text potencyText;
     public TMPro.TMP_Text durationText;
     public const float VOFFSET = 0.45f;
+    public const int MAX_STACK = 7;
 
     public void Setup(Effect s)
     {

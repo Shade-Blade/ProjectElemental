@@ -70,6 +70,11 @@ public class Item_GenericConsumable : ItemMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
+        if (GetItemType() == ItemType.CursedStew)
+        {
+            MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_CursedStew);
+        }
+
         //BattleEntity target = caller.curTarget;
 
         caller.SetAnimation("itemuse");
@@ -417,7 +422,7 @@ public class Item_GenericConsumable : ItemMove
                 */
 
                 //yeah no
-                if (statusList[i].effect == Effect.EffectType.ItemBoost)
+                if (statusList[i].effect == Effect.EffectType.ItemBoost || statusList[i].effect == Effect.EffectType.Miracle)
                 {
                     continue;
                 }
@@ -448,7 +453,7 @@ public class Item_GenericConsumable : ItemMove
                 for (int i = 0; i < statusList.Length; i++)
                 {
                     //yeah no
-                    if (statusList[i].effect == Effect.EffectType.ItemBoost)
+                    if (statusList[i].effect == Effect.EffectType.ItemBoost || statusList[i].effect == Effect.EffectType.Miracle)
                     {
                         continue;
                     }
@@ -1659,7 +1664,7 @@ public class Item_GenericConsumable : ItemMove
                 */
 
                 //yeah no
-                if (statusList[i].effect == Effect.EffectType.ItemBoost)
+                if (statusList[i].effect == Effect.EffectType.ItemBoost || statusList[i].effect == Effect.EffectType.Miracle)
                 {
                     continue;
                 }
@@ -2138,7 +2143,7 @@ public class Item_GenericThrowable : ItemMove
                 */
 
                 //yeah no
-                if (statusList[i].effect == Effect.EffectType.ItemBoost)
+                if (statusList[i].effect == Effect.EffectType.ItemBoost || statusList[i].effect == Effect.EffectType.Miracle)
                 {
                     continue;
                 }
@@ -2430,7 +2435,7 @@ public class Item_GenericThrowable : ItemMove
                 */
 
                 //yeah no
-                if (statusList[i].effect == Effect.EffectType.ItemBoost)
+                if (statusList[i].effect == Effect.EffectType.ItemBoost || statusList[i].effect == Effect.EffectType.Miracle)
                 {
                     continue;
                 }

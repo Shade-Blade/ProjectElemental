@@ -29,7 +29,7 @@ public class CounterFlare : Move
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntities(caller, GetBaseTarget());
 
-        caller.HealHealth(caller.counterFlareDamage);
+        caller.HealHealth(Mathf.CeilToInt(caller.counterFlareDamage * 0.5f));
 
         //Impact effect
         GameObject eoShockwave;

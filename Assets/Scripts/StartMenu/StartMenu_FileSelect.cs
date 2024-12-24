@@ -261,18 +261,18 @@ public class StartMenu_FileSelect : MenuHandler
 
         for (int i = 0; i < bottomImages.Length; i++)
         {
-            bottomImages[i].color = new Color(0.9f, 0.9f, 0.9f);
+            bottomImages[i].color = new Color(0.9f, 0.9f, 0.9f, 0.8f);
         }
         switch (selectMode)
         {
             case FileSelectMode.Delete:
-                bottomImages[0].color = new Color(1, 0.8f, 0.8f);
+                bottomImages[0].color = new Color(1, 0.6f, 0.6f, 0.8f);
                 break;
             case FileSelectMode.Copy:
-                bottomImages[1].color = new Color(0.8f, 1, 1);
+                bottomImages[1].color = new Color(0.6f, 1, 1, 0.8f);
                 break;
             case FileSelectMode.Rename:
-                bottomImages[2].color = new Color(0.8f, 1, 0.8f);
+                bottomImages[2].color = new Color(0.6f, 1, 0.6f, 0.8f);
                 break;
             default:
                 break;

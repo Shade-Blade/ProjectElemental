@@ -13,7 +13,7 @@ public class BE_Plaguebud : BattleEntity
 
     public override void ChooseMoveInternal()
     {
-        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+        currMove = moveset[(Mathf.Abs(posId + BattleControl.Instance.turnCount - 1)) % 3];
         BasicTargetChooser();
     }
 }

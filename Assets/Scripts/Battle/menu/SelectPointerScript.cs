@@ -28,4 +28,19 @@ public class SelectPointerScript : MonoBehaviour
 
         text.SetText(p_text, true, true);
     }
+
+    public void RepositionTextBelow(bool set)
+    {
+        if (textbox != null)
+        {
+            if (set)
+            {
+                textbox.transform.localPosition = Vector3.down * 0.25f;
+            }
+            else
+            {
+                textbox.transform.localPosition = Vector3.up * 0.3f;
+            }
+        }
+    }
 }

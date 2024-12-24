@@ -111,7 +111,6 @@ public class StartMenu_Base : MenuHandler
             //Debug.Log(InputManager.GetAxisHorizontal());
             //now go
 
-
             if (inputDir != 0)
             {
                 //inputDir positive = up and - index, negative = down and + index

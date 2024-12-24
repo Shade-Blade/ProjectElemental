@@ -29,7 +29,14 @@ public class GetXPEffectScript : MonoBehaviour
 
         this.xpGet = xpGet;
 
-        getXPText.SetText("You got " + xpGet + " XP!", true, true);
+        if (xpGet == 0 && !perfect && !decisive && !(fortunePower > 0))
+        {
+            getXPText.SetText("", true, true);
+        }
+        else
+        {
+            getXPText.SetText("You got " + xpGet + " XP!", true, true);
+        }
         getXPText.gameObject.transform.localPosition = Vector3.up * 500;
 
         int count = 0;
