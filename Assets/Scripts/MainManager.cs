@@ -5913,7 +5913,7 @@ public class MainManager : MonoBehaviour
     }
     public static string GetVersionString()
     {
-        return "d_rh_v0.1";
+        return "d_rh_v0.2";
     }
     public string GetBaseSaveFileString(string name)
     {
