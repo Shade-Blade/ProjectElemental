@@ -1091,7 +1091,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //first thing in battle (then pre battle coroutines in order)
     public virtual void PreBattle()
     {
-
+        if (HasEffect(Effect.EffectType.Hustle))
+        {
+            InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Hustle).potency, Effect.INFINITE_DURATION));
+        }
+        if (HasEffect(Effect.EffectType.Swift))
+        {
+            InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Swift).potency, Effect.INFINITE_DURATION));
+        }
     }
 
     public virtual bool HasPreBattleCoroutine()
@@ -1547,8 +1554,22 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Hustle).potency, Effect.INFINITE_DURATION));
         }
+        if (HasEffect(Effect.EffectType.Swift))
+        {
+            InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Swift).potency, Effect.INFINITE_DURATION));
+        }
 
-        if (HasEffect(Effect.EffectType.Slow) && (BattleControl.Instance.turnCount % (GetEffectEntry(Effect.EffectType.Slow).potency + 1) != 0))
+        int slowPower = 1;
+
+        if (HasEffect(Effect.EffectType.Sluggish))
+        {
+            slowPower += GetEffectEntry(Effect.EffectType.Sluggish).potency;
+        }
+        if (HasEffect(Effect.EffectType.Slow))
+        {
+            slowPower += GetEffectEntry(Effect.EffectType.Slow).potency;
+        }
+        if (slowPower > 1 && BattleControl.Instance.turnCount % (slowPower) != 0)
         {
             InflictEffectForce(this, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
@@ -3213,7 +3234,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
 
             //Burden of Pride
-            if (BattleControl.IsPlayerControlled(this, false) && MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Pride))
+            if (BattleControl.IsPlayerControlled(this, false) && MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
             {
                 //sift for properties
                 DamageProperties dp = DamageProperties.AC_Premature | DamageProperties.AC_Success | DamageProperties.AC_SuccessStall | DamageProperties.Item;
@@ -6158,7 +6179,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         effects.Sort((a, b) => ((int)a.effect - (int)b.effect));
 
         //recalculate maxHP using max HP Boost
-        maxHP = BattleEntityData.GetBattleEntityData(entityID).maxHP + GetEffectPotency(Effect.EffectType.MaxHPBoost) - GetEffectPotency(Effect.EffectType.MaxHPReduction);
+        maxHP = BattleControl.Instance.CurseMultiply(BattleEntityData.GetBattleEntityData(entityID).maxHP) + GetEffectPotency(Effect.EffectType.MaxHPBoost) - GetEffectPotency(Effect.EffectType.MaxHPReduction);
 
         if (maxHP < 0)
         {
@@ -6754,7 +6775,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             debuffString += MainManager.ColorToString(new Color(0.5f, 0, 1f, 1));
         }
-        if (HasEffect(Effect.EffectType.Slow))
+        if (HasEffect(Effect.EffectType.Sluggish))
         {
             if (debuffString.Length > 1)
             {

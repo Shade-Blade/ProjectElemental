@@ -175,9 +175,9 @@ public class Item_GenericConsumable : ItemMove
         if (caller is PlayerEntity pcaller)
         {
             yield return new WaitForSeconds(0.5f);
-            if (pcaller.BadgeEquipped(Badge.BadgeType.Refund))
+            if (pcaller.BadgeEquipped(Badge.BadgeType.ItemRebate))
             {
-                pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.Refund)));
+                pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.ItemRebate)));
             }
         }
     }
@@ -2000,9 +2000,9 @@ public class Item_GenericThrowable : ItemMove
         {
             yield return new WaitForSeconds(0.5f);
             ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
-            if (pcaller.BadgeEquipped(Badge.BadgeType.Refund))
+            if (pcaller.BadgeEquipped(Badge.BadgeType.ItemRebate))
             {
-                pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.Refund)));
+                pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.ItemRebate)));
             }
         }
     }
@@ -2618,9 +2618,9 @@ public class Item_AutoConsumable : Item_GenericConsumable
         if (caller is PlayerEntity pcaller)
         {
             yield return new WaitForSeconds(0.5f);
-            if (pcaller.BadgeEquipped(Badge.BadgeType.Refund))
+            if (pcaller.BadgeEquipped(Badge.BadgeType.ItemRebate))
             {
-                pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.Refund)));
+                pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.ItemRebate)));
             }
         }
 
@@ -2714,9 +2714,9 @@ public class Item_AutoThrowable : Item_GenericThrowable
         {
             yield return new WaitForSeconds(0.5f);
             ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
-            if (pcaller.BadgeEquipped(Badge.BadgeType.Refund))
+            if (pcaller.BadgeEquipped(Badge.BadgeType.ItemRebate))
             {
-                pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.Refund)));
+                pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.ItemRebate)));
             }
         }
 

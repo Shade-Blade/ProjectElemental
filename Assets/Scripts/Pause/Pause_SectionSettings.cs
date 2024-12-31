@@ -10,9 +10,15 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
 
     public override void Init()
     {
+        if (MainManager.Instance.worldMode == MainManager.WorldMode.GameOver)
+        {
+            startMenu = true;
+        }
+
         isInit = true;
         rebindMenu.gameObject.SetActive(false);    //keep off by default
         rebindArrow.gameObject.SetActive(false);    //keep off by default
+        selectorArrow.gameObject.SetActive(true);
 
         if (menuIndex == -1)
         {
@@ -40,7 +46,7 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
         int[] maxValues = SettingsManager.Instance.settingsMaxValues;
         if (startMenu)
         {
-            menuEntries = new BoxMenuEntry[at.Length - 4];  //shave off the bottom 2 options
+            menuEntries = new BoxMenuEntry[at.Length - 5];  //shave off the bottom 3 options
         }
         else
         {
@@ -48,6 +54,11 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
         }
         for (int i = 1; i < menuEntries.Length + 1; i++)
         {
+            if (int.TryParse(((SettingsManager.Setting)(i - 1)).ToString(), out int _)) {
+                menuEntries[i - 1] = new PlaceholderMenuEntry();
+                continue;
+            }
+
             string[] tempSettingsText = new string[maxValues[i - 1] + 1];
             for (int j = 0; j <= maxValues[i - 1]; j++)
             {
@@ -230,6 +241,7 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
     {
         rebindMenu.gameObject.SetActive(true);
         rebindArrow.gameObject.SetActive(true);
+        selectorArrow.gameObject.SetActive(false);
         rebindMenu.Init();
     }
 
@@ -238,6 +250,7 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
         rebindMenu.Clear();
         rebindMenu.gameObject.SetActive(false);
         rebindArrow.gameObject.SetActive(false);
+        selectorArrow.gameObject.SetActive(true);
     }
 
     public override void ApplyUpdate(object state)
@@ -256,6 +269,7 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
         }
         rebindMenu.gameObject.SetActive(false);
         rebindArrow.gameObject.SetActive(false);
+        selectorArrow.gameObject.SetActive(true);
 
         int[] intState = (int[])state;
         int index = intState[0];
@@ -282,6 +296,13 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
 
         //BoxMenuScript bm = menuBaseO.GetComponent<BoxMenuScript>();
         menuEntries[index].level = level;
+
+        if (menuEntries[index] is PlaceholderMenuEntry)
+        {
+            textbox.transform.parent.transform.parent.gameObject.SetActive(false);
+            return;
+        }
+
         SettingsMenuEntry sme = ((SettingsMenuEntry)menuEntries[index]);
         string newRightText = "";
         if (sme.rightTextSet != null && sme.rightTextSet.Length > 0 && sme.level >= 0 && sme.level <= sme.rightTextSet.Length - 1)

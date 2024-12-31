@@ -654,8 +654,8 @@ public class BM_Shared_Hard_CounterReinforce : EnemyMove
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 1, Effect.INFINITE_DURATION));
-        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Absorb, 1, Effect.INFINITE_DURATION));
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
+        caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
         yield return new WaitForSeconds(0.5f);
     }
 }

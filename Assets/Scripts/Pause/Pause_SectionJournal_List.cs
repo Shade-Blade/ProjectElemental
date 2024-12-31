@@ -180,7 +180,7 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
         else
         {
             //selectorArrow.enabled = true;
-            Vector3 targetLocal = Vector3.left * 160f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
+            Vector3 targetLocal = Vector3.left * 170f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
             Vector3 current = selectorArrow.transform.localPosition;
             selectorArrow.transform.localPosition = targetLocal;
         }

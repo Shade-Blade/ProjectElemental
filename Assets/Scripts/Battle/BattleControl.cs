@@ -782,6 +782,7 @@ public class BattleControl : MonoBehaviour
     {
         Debug.Log("Battle Start");
 
+
         BattleControl b = FindObjectOfType<BattleControl>();
         if (b == null)
         {
@@ -2178,6 +2179,11 @@ public class BattleControl : MonoBehaviour
     //Battle control
     public void StartBattle(BattleStartArguments bsa = null)
     {
+        if (SettingsManager.Instance.GetSetting(SettingsManager.Setting.AlwaysRetry) != 0)
+        {
+            SetProperty(BattleProperties.CanRetry, true);
+        }
+
         //Specifically start at this point in the cycle so that you get 2 front targets and 1 back target in the first part of the sequence
         //In short battles you may only see the very first part of the sequence so ensuring that it is fine is important
         ABTargetPool = new DoublePool(4, 12, 9, 12);
@@ -3739,7 +3745,7 @@ public class BattleControl : MonoBehaviour
                 debuff = true;
                 effectColor = new Color(0.6f, 0.6f, 0.6f, 0.8f);
                 break;
-            case Effect.EffectType.Slow:
+            case Effect.EffectType.Sluggish:
                 debuff = true;
                 effectColor = new Color(0.8f, 0.5f, 1f, 1.0f);
                 break;
@@ -3920,6 +3926,19 @@ public class BattleControl : MonoBehaviour
         EffectScript_Generic es_g = null;
 
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_DeathSmoke"), gameObject.transform);
+        eo.transform.position = position;
+        es_g = eo.GetComponent<EffectScript_Generic>();
+        es_g.Setup(newScale, 1);
+    }
+    public static void CreateDeathSmokeOverworld(float width, float height, Vector3 position)
+    {
+        //note: might look weird if giant enemies use this
+        float newScale = Mathf.Max(height, width);  //looks fine as long as I don't make a super elongated or tall enemy
+
+        GameObject eo = null;
+        EffectScript_Generic es_g = null;
+
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_DeathSmoke"), MainManager.Instance.mapScript.transform);
         eo.transform.position = position;
         es_g = eo.GetComponent<EffectScript_Generic>();
         es_g.Setup(newScale, 1);
@@ -4376,6 +4395,15 @@ public class BattleControl : MonoBehaviour
 
             if (pd.charmEffects[i].duration <= 0 || pd.charmEffects[i].charges <= 0)
             {
+                if (pd.charmEffects[i].charmType == CharmEffect.CharmType.Fortune)
+                {
+                    AddBattlePopup(new BattlePopup(null, "Your Fortune Charm has been depleted."));
+                }
+                else
+                {
+                    AddBattlePopup(new BattlePopup(null, "Your Power Charm has been depleted."));
+                }
+
                 pd.charmEffects.RemoveAt(i);
                 i--;
                 continue;
@@ -5046,9 +5074,9 @@ public class BattleControl : MonoBehaviour
         List<PlayerEntity> p = GetPlayerEntities();
         if (se < maxSE && p.Count > 0 && !playerData.BadgeEquipped(Badge.BadgeType.DarkConcentration))
         {
-            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Sloth))
+            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Sloth))
             {
-                p[0].HealSoulEnergy(3);
+                p[0].HealSoulEnergy(6);
             }
             else
             {
@@ -5093,7 +5121,7 @@ public class BattleControl : MonoBehaviour
         }
         */
 
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Sloth))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Sloth))
         {
             foreach (PlayerEntity pe in p)
             {
@@ -5104,7 +5132,7 @@ public class BattleControl : MonoBehaviour
             }
         }
 
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Wrath))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Wrath))
         {
             List<BattleEntity> bl = GetEntitiesSorted((e) => (e.posId < 0));
 

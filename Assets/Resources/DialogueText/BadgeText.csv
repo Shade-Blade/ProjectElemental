@@ -50,7 +50,7 @@ LightSmash,Light Smash,Gives Luna access to the move Light Smash or an upgraded 
 HammerBeat,Hammer Beat,"Gives Luna access to the move Hammer Beat. Hammer Beat gives all allies 3 HP and 1 Absorb, and also gives you back your turn if the action command is successful.",,"Higher levels: +3 cost, +3 hp healed and +1 Focus applied."
 MistWall,Mist Wall,Gives Luna access to the move Mist Wall. Mist Wall gives you 33% resistance to damage.,You get access to both Level 1 and Level 2 at the same time.,"Higher levels: +4 cost, +1 potency for Mist Wall."
 StrangeEgg,Strange Egg,Unlocks strange egg based moves for both characters.,Eggs produced by these moves will disappear from your inventory at the end of battle. Eggs produced by these moves do not count for Item Saver.,"Higher levels: Double Egg costs 3 more and produces 1 more egg, Egg Toss costs 2 more and produces 1 more egg that is used immediately."
-StatusRelay,Status Relay,"Allows you to take the action ""Status Relay"", which will transfer most effects to the other character.",,
+EffectRelay,Effect Relay,"Allows you to take the action ""Effect Relay"", which will transfer most effects to the other character. Effects immune to effect removal won't be passed over.",,
 VoraciousEater,Voracious Eater,"The user can't use items, but items are 33% more effective when used on them.",,
 MultiSupply,Multi Supply,"Allows you to use the item move Multi Supply 2 times per battle, which lets you use three items in the same turn.",,`+2 uses
 QuickSupply,Quick Supply,"Allows you to use the item move Quick Supply 2 times per battle, which lets you use an item then do another action.",,`+2 uses
@@ -73,9 +73,9 @@ LastBurst,Last Burst,"When you die, you recover energy equal to half of your max
 RiskyPower,Risky Power,"When you are at low HP, your Attack is increased by 2.","Low HP is 4 or below for Wilex, 6 or below for Luna.",
 RiskyShield,Risky Shield,"When you are at low HP, you gain 50% resistance to damage.","Low HP is 4 or below for Wilex, 6 or below for Luna.",Resistance does not stack linearly.
 RiskyEndurance,Risky Endurance,"When you are at low HP, your Endurance is increased by 1. (Endurance reduces energy costs.)","Low HP is 4 or below for Wilex, 6 or below for Luna.",
-ProtectivePower,Protective Power,"When the other character is at low hp, your Attack is increased by 1.",,
-ProtectiveShield,Protective Shield,"When the other character is at low hp, you gain 33% resistance to damage.",,Resistance does not stack linearly.
-ProtectiveEndurance,Protective Endurance,"When the other character is at low hp, your Endurance is increased by 1. (Endurance reduces energy costs.)",,
+ProtectivePower,Protective Power,"When the other character is at low hp, your Attack is increased by 1.","Low HP is 4 or below for Wilex, 6 or below for Luna.",
+ProtectiveShield,Protective Shield,"When the other character is at low hp, you gain 33% resistance to damage.","Low HP is 4 or below for Wilex, 6 or below for Luna.",Resistance does not stack linearly.
+ProtectiveEndurance,Protective Endurance,"When the other character is at low hp, your Endurance is increased by 1. (Endurance reduces energy costs.)","Low HP is 4 or below for Wilex, 6 or below for Luna.",
 PerfectPower,Perfect Power,"When you are at Max HP, your Attack is increased by 2.",,
 PerfectShield,Perfect Shield,"When you are at Max HP, you gain 50% resistance to damage.",,Resistance does not stack linearly.
 PerfectEndurance,Perfect Endurance,"When you are at Max HP, your Endurance is increased by 1.",,
@@ -93,7 +93,7 @@ SpiritShield,Spirit Shield,"You gain 50% resistance to damage at the cost of SE.
 SpiritFlow,Spirit Flow,The cost of soul moves are decreased by 3 for this character.,,
 GoldenPower,Golden Power,"Your Attack is increased by 1 at the cost of 10 coins per hit. If you don't have enough coins, your Attack is decreased instead.",,
 GoldenShield,Golden Shield,"You gain 50% resistance to damage at the cost of coins. (10 coins per 1 damage taken). If you don't have enough coins, this badge becomes inactive.",,Resistance does not stack linearly.
-Refund,Refund,Using items in battle will give you coins equal to 75% of the item's selling price.,,
+ItemRebate,Item Rebate,Using items in battle will give you coins equal to 75% of the item's selling price.,,
 DarkPower,Dark Power,"When your SE is at or below 1/3 of your Max SE, your Attack is increased by 1.",,
 DarkShield,Dark Shield,"When your SE is at or below 1/3 of your Max SE, you gain 33% resistance to damage.",,Resistance does not stack linearly.
 DarkEndurance,Dark Endurance,Your Endurance is increased by 1 but Soul Moves cost twice as much as they do normally. (Endurance reduces energy costs.),,
@@ -132,22 +132,22 @@ EnergyRegen,Energy Regen A,You regenerate 1 EP every turn.,,
 EnergyRegenB,Energy Regen B,You regenerate 1 EP every turn.,,
 SoulRegen,Soul Regen,Increases SE regen rate by 2 per turn.,,
 HealthBalance,Health Balance,"Every turn, the character with a higher health percentage loses some HP, while the character with a lower health percentage gains some HP. (Up to 5hp per turn, until health percentages are equalized.)",,Increases the HP that is healed or removed.
-EffectBoost,Effect Boost,"Increases the turn count of effects you inflict on enemies by 50%. This includes statuses, but this does not circumvent the status turn limit.",,
-StatusBoost,Status Boost,Increases the status susceptibility threshold by 50%. (i.e. you can inflict statuses on enemies at higher HP.),,
-StatusConversion,Status Conversion,Increases the status susceptibility threshold by 50% if the enemy already has a status. (i.e. you can inflict statuses on enemies at higher HP.),,
-StatusCatalyst,Status Catalyst,"Certain damage types and status combinations will cause the status durations to increase by 1 turn (1/battle for each enemy) (Light <rarrow> Freeze, Water <rarrow> Sleep, Air <rarrow> Paralyze, Dark <rarrow> Poison, Fire <rarrow> Berserk, Earth <rarrow> Dizzy)",,No additional effect when stacked.
-StatusExploit,Status Exploit,"Certain damage types do 50% more damage against certain statused targets. (Light <rarrow> Dizzy, Water <rarrow> Paralyze, Air <rarrow> Poison, Dark <rarrow> Sleep, Fire <rarrow> Berserk, Earth <rarrow> Freeze)",,No additional effect when stacked.
+EffectBoost,Effect Boost,"Increases the turn count of effects you inflict on enemies by 50%. This includes ailments, but this does not circumvent the status turn limit.",,
+AilmentBoost,Ailment Boost,Increases the ailment susceptibility threshold by 50%. (i.e. you can inflict ailments on enemies at higher HP.),,
+AilmentConversion,Ailment Conversion,Increases the ailment susceptibility threshold by 50% if the enemy already has a ailment. (i.e. you can inflict ailments on enemies at higher HP.),,
+AilmentCatalyst,Ailment Catalyst,"Certain damage types and ailment combinations will cause the ailment durations to increase by 1 turn (1/battle for each enemy)<line>(Light <rarrow> Freeze, Water <rarrow> Sleep, Air <rarrow> Paralyze, Dark <rarrow> Poison, Fire <rarrow> Berserk, Earth <rarrow> Dizzy)",,No additional effect when stacked.
+AilmentExploit,Ailment Exploit,"Certain damage types do 50% more damage against certain ailed targets. (Light <rarrow> Dizzy, Water <rarrow> Paralyze, Air <rarrow> Poison, Dark <rarrow> Sleep, Fire <rarrow> Berserk, Earth <rarrow> Freeze)",,No additional effect when stacked.
 Instinct,Instinct,"While Dizzy, attacks will still hit but at 50% attack power.",,No additional effect when stacked.
 DizzyMomentum,Dizzy Momentum,"While Dizzy, Energy costs are halved.",,
 Trance,Trance,"While Dizzy, you regenerate 5% of your Max SE every turn (rounds up)",,
 DizzyAgility,Dizzy Agility,"While Dizzy, your Agility is 50% higher.",,
-HypnoStrike,Hypno Strike,Attacking a Dizzy target inflicts 1 Defocus per hit.,,No additional effect when stacked.
+HypnoStrike,Hypno Strike,"When you attack a Dizzy target, you inflict 1 Defocus per hit.",,No additional effect when stacked.
 UnsteadyStance,Unsteady Stance,"You get Dizzy for 2 turns whenever you use turn relay, but it gives the target 1 turn worth of stamina.",,
 Capacitor,Capacitor,"While Paralyzed, you get 2 Focus per turn.",,
 Resistor,Resistor,"While Paralyzed, you get 33% resistance to damage.",,Resistance does not stack linearly.
 Generator,Generator,"While Paralyzed, you regenerate 5% of your Max EP every turn (rounds up).",,
 Inductor,Inductor,"While Paralyzed, enemies take 3 Electric contact hazard damage from you if they use a contact attack.",,
-Conductor,Conductor,"While Paralyzed target, you get 1 Focus at the end of your turn.",,
+Conductor,Conductor,"When you attack a Paralyzed target, you get 1 Focus at the end of your turn.",,
 Overexert,Overexert,"You get Paralyzed for 2 turns every time you attack, but you have +2 Attack. If you don't receive the Paralyze effect, you receive 3 Defocus instead.",,
 Sleepwalk,Sleepwalk,"While Sleeping, you will attack automatically every turn with 50% attack power.",,No additional effect when stacked.
 DeepSleep,Deep Sleep,"While Sleeping, you can't get hit out of sleep but you heal twice as much (20% max hp (min 4)) every turn.",,
@@ -155,11 +155,11 @@ SweetDreams,Sweet Dreams,"While Sleeping, you heal Energy instead of Health.",,N
 LightSleep,Light Sleep,"While Sleeping, you block all attacks automatically.",,No additional effect when stacked.
 NightmareStrike,Nightmare Strike,"When you wake a Sleeping target, you deal +50% additional damage and inflict 3 Defocus.",,No additional effect when stacked.
 QuickNap,Quick Nap,"At the start of battle, you receive 2 turns of Sleep. (If you do a First Strike, this occurs after that.)",,Sleep potency increases by 1 for each badge equipped.
-RagesPower,Rage's Power,"You are permanently Berserk, but your attack power is increased by 1.",This is on top of Berserk's normal +1 attack.,
+RagesPower,Rage's Power,"You are permanently Berserk, but your attack power is increased by 1 while berserk.",This is on top of Berserk's normal +1 attack.,
 RageShield,Rage Shield,"While Berserk, you take 50% damage from contact hazards and do not receive a Defense penalty from being Berserk.",,"Defense increases by 1 for each badge equipped, resistance to contact hazards increases as well."
 RageRally,Rage Rally,"While Berserk, the other character gets a +1 attack boost.",,
 UndyingRage,Undying Rage,"While Berserk, you will survive 1 lethal hit per battle.",,Gives you an additional use of the badge per battle.
-Aggravate,Aggravate,Attacking a Berserk enemy will do +50% additional damage but also apply 3 Focus to the enemy per hit.,,No additional effect when stacked.
+Aggravate,Aggravate,"When you attack a Berserk enemy, you do +50% additional damage but also apply 3 Focus to the enemy per hit.",,No additional effect when stacked.
 VengefulRage,Vengeful Rage,"When the other character dies, you get 2 turns of Berserk and 3 Focus.",,Focus is increased with each additional badge equipped.
 ToxicStrength,Toxic Strength,"While Poisoned, you get +2 Attack, but you also receive 2 Sunder per turn.",,
 ToxicShield,Toxic Shield,"While Poisoned, you get +2 Defense, but receive 1 Defocus whenever you are hit.",,

@@ -3051,7 +3051,7 @@ public class WorldPlayer : WorldEntity
             if (animationStopDelay < 0)
             {
                 animationStopDelay = 0;
-                ac.animator.speed = 0;
+                ac.StopAnimation();
             }
         } else
         {
@@ -3060,7 +3060,7 @@ public class WorldPlayer : WorldEntity
 
         if (actionState != ActionState.Smash && actionState != ActionState.Slash)
         {
-            ac.animator.speed = 1;
+            ac.ResetAnimationSpeed();
             animationStopDelay = 0;
         }
 
@@ -3395,7 +3395,7 @@ public class WorldPlayer : WorldEntity
     }
     public void StartSlash()
     {
-        ac.animator.speed = 1;
+        ac.ResetAnimationSpeed();
         animationStopDelay = 0;
         ac.SetAnimation(GetSlashAnim(), true);
 
@@ -3451,7 +3451,7 @@ public class WorldPlayer : WorldEntity
     }
     public void StartSmash()
     {
-        ac.animator.speed = 1;
+        ac.ResetAnimationSpeed();
         animationStopDelay = 0;
         ac.SetAnimation(GetSmashAnim(), true);
 

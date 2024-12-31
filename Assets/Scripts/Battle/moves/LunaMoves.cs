@@ -4007,7 +4007,7 @@ public class LM_HammerBeat : LunaMove
                 foreach (BattleEntity b in targets)
                 {
                     b.HealHealth(2 + level * 3);
-                    b.InflictEffectForce(caller, new Effect(Effect.EffectType.Absorb, (sbyte)level, Effect.INFINITE_DURATION));
+                    caller.InflictEffectForce(b, new Effect(Effect.EffectType.Absorb, (sbyte)level, Effect.INFINITE_DURATION));
                 }
                 caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
             }
@@ -4017,7 +4017,7 @@ public class LM_HammerBeat : LunaMove
                 foreach (BattleEntity b in targets)
                 {
                     b.HealHealth(2 + level);
-                    b.InflictEffectForce(caller, new Effect(Effect.EffectType.Absorb, (sbyte)(1 + (level/2)), Effect.INFINITE_DURATION));
+                    caller.InflictEffectForce(b, new Effect(Effect.EffectType.Absorb, (sbyte)(1 + (level/2)), Effect.INFINITE_DURATION));
                 }
             }
         }

@@ -102,12 +102,12 @@ public class LevelUpMenuScript : MonoBehaviour
             usages[0] = true;
         }
         int hpOffset = 0;
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Greed))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
         {
             hpOffset = 1;
             usages[0] = hpUpgrades < 0;    //max is considered 0 upgrades
         }
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Envy))
         {
             usages[0] = false;
         }
@@ -174,7 +174,7 @@ public class LevelUpMenuScript : MonoBehaviour
         {
             usages[1] = true;
         }
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Envy))
         {
             usages[1] = false;
         }
@@ -215,7 +215,7 @@ public class LevelUpMenuScript : MonoBehaviour
         {
             usages[2] = true;
         }
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Envy))
         {
             usages[2] = true;   //forced upgrade
         }

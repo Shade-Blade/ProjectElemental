@@ -635,7 +635,7 @@ public class PlayerData
         hpPlus += BadgeEquippedCount(Badge.BadgeType.HPPlus, eid);
 
 
-        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Greed))
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Greed))
         {
             if ((hpUpgrades + hpPlus) > 0)
             {
@@ -711,7 +711,7 @@ public class PlayerData
             }
         }
 
-        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Envy))
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Envy))
         {
             return 6 + (int)(spUpgrades * 0.5f);
         }
@@ -890,7 +890,7 @@ public class PlayerData
     }
     public static int GetMaxSP(int upgradeCount)
     {
-        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Envy))
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Envy))
         {
             return 6 + (int)(upgradeCount * 0.5f);
         }
@@ -903,7 +903,7 @@ public class PlayerData
     }
     public static int GetMaxUpgrades()
     {
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Greed))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
         {
             return (int)(MAX_UPGRADES * 1.5f);  //note that health is not upgradeable
         }
@@ -1093,7 +1093,7 @@ public class PlayerData
 
     public int GetMaxInventorySize()
     {
-        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Gluttony))
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Gluttony))
         {
             return maxInventorySize * 2 + itemInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count;
         }
@@ -1102,7 +1102,7 @@ public class PlayerData
     
     public int GetMaxStorageInventorySize()
     {
-        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Gluttony))
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Gluttony))
         {
             return maxStorageSize * 2 + storageInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count;
         }
@@ -2452,21 +2452,31 @@ public class MainManager : MonoBehaviour
     public enum GlobalFlag //so the save file will have these as text (cross version compatibility)
     {
         GF_None = 0,
-        GF_Burden_Greed,
-        GF_Burden_Envy,
-        GF_Burden_Gluttony,
-        GF_Burden_Wrath,
-        GF_Burden_Sloth,
-        GF_Burden_Pride,
-        GF_Burden_Lust,
+        GF_FileCode_Greed,
+        GF_FileCode_Envy,
+        GF_FileCode_Gluttony,
+        GF_FileCode_Wrath,
+        GF_FileCode_Sloth,
+        GF_FileCode_Pride,
+        GF_FileCode_Lust,
 
         GF_FileCode_Randomizer,
 
+        GF_FileCodeExplain_Greed,
+        GF_FileCodeExplain_Envy,
+        GF_FileCodeExplain_Gluttony,
+        GF_FileCodeExplain_Wrath,
+        GF_FileCodeExplain_Sloth,
+        GF_FileCodeExplain_Pride,
+        GF_FileCodeExplain_Lust,
+
+        GF_FileCodeExplain_Randomizer,
+
+
+
         GF_RandomItemModifiers,
 
-
         GF_QuestStart_Prologue_Test,
-
         GF_QuestComplete_Prologue_Test,
 
         //All of them are here
@@ -2897,6 +2907,8 @@ public class MainManager : MonoBehaviour
     public int frameCounter;
     public float frameTime;
     public float lastCalculatedFPS;
+
+    public float greedPartialCoins;
 
     public enum GameConst
     {
@@ -3410,9 +3422,6 @@ public class MainManager : MonoBehaviour
         {
             AwardAchievement(Achievement.ACH_DiamondRibbon);
         }
-
-        Debug.Log("pickup 2");
-        Debug.Log(pu);
 
         switch (pu.type)
         {
@@ -4136,7 +4145,7 @@ public class MainManager : MonoBehaviour
             return mapScript.vars[index];
         }
     }
-    public void SetGlobalFlag(GlobalFlag gf, bool set)
+    public void SetGlobalFlag(GlobalFlag gf, bool set = true)
     {
         if (gf == GlobalFlag.GF_None)
         {
@@ -4541,10 +4550,29 @@ public class MainManager : MonoBehaviour
         playerData.AddRibbon(new Ribbon(Ribbon.RibbonType.SharpRibbon));
         playerData.AddRibbon(new Ribbon(Ribbon.RibbonType.SafetyRibbon));
 
-        //???
-        //Debug.Log(playerData.ribbonInventory[0] + " " + playerData.ribbonInventory[1]);
-        playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex).ribbon = playerData.ribbonInventory[1];
-        playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna).ribbon = playerData.ribbonInventory[0];
+        playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex).ribbon = playerData.ribbonInventory[0];
+        playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna).ribbon = playerData.ribbonInventory[1];
+
+        //Give you all the shields
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Greed))
+        {
+            playerData.AddBadge(new Badge(Badge.BadgeType.RiskyShield));
+            playerData.AddBadge(new Badge(Badge.BadgeType.ProtectiveShield));
+            playerData.AddBadge(new Badge(Badge.BadgeType.PerfectShield));
+            playerData.AddBadge(new Badge(Badge.BadgeType.FirstShield));
+            playerData.AddBadge(new Badge(Badge.BadgeType.EnergyShield));
+            playerData.AddBadge(new Badge(Badge.BadgeType.AgileShield));
+            playerData.AddBadge(new Badge(Badge.BadgeType.SpiritShield));
+            playerData.AddBadge(new Badge(Badge.BadgeType.DarkShield));
+            playerData.AddBadge(new Badge(Badge.BadgeType.NullShield));
+        }
+
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Wrath))
+        {
+            playerData.AddBadge(new Badge(Badge.BadgeType.RagesPower));
+        }
+
+        playerData.UpdateMaxStats();
     }
 
     public void OnGUI()
@@ -4815,8 +4843,6 @@ public class MainManager : MonoBehaviour
         interactTriggers = new List<InteractTrigger>();
 
         //cutsceneQueue = new List<CutsceneScript>();
-
-        SetGlobalFlag(GlobalFlag.GF_Burden_Pride, true);
     }
     public void Start()
     {
@@ -4992,8 +5018,6 @@ public class MainManager : MonoBehaviour
             frameTime = 0;
         }
 
-
-
         if (gameOverPlayerData != null)
         {
             if (worldMode == WorldMode.Overworld)
@@ -5007,13 +5031,16 @@ public class MainManager : MonoBehaviour
             playerData.party[0].timeInFront += Time.deltaTime;
         }
 
-        if (GetGlobalFlag(GlobalFlag.GF_Burden_Greed))
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Greed))
         {
+            greedPartialCoins += 180 * Time.deltaTime;
+
             if (worldMode == WorldMode.Battle)
             {
                 if (BattleControl.Instance != null)
                 {
-                    BattleControl.Instance.playerData.coins += (int)(60 * Time.deltaTime);
+                    BattleControl.Instance.playerData.coins += (int)(greedPartialCoins);
+                    greedPartialCoins -= (int)greedPartialCoins;
                     if (BattleControl.Instance.playerData.coins > PlayerData.MAX_MONEY)
                     {
                         BattleControl.Instance.playerData.coins = PlayerData.MAX_MONEY;
@@ -5021,7 +5048,8 @@ public class MainManager : MonoBehaviour
                 }
             } else
             {
-                playerData.coins += (int)(60 * Time.deltaTime);
+                playerData.coins += (int)(greedPartialCoins);
+                greedPartialCoins -= (int)greedPartialCoins;
                 if (playerData.coins > PlayerData.MAX_MONEY)
                 {
                     playerData.coins = PlayerData.MAX_MONEY;
@@ -5137,19 +5165,93 @@ public class MainManager : MonoBehaviour
         {
             if (!inCutscene && !mapHalted && worldMode == WorldMode.Overworld && (worldPlayer == null || worldPlayer.IsGrounded() || worldPlayer.GetActionState() == WorldPlayer.ActionState.NoClip))
             {
-                if (InputManager.GetButtonDown(InputManager.Button.Start))
+                //global cutscenes can happen anywhere
+                if (!StartGlobalCutscenes())
                 {
-                    if (curOverworldHUD != null)
+                    if (InputManager.GetButtonDown(InputManager.Button.Start))
                     {
-                        curOverworldHUD.SetFadeDirectly(0);
+                        if (curOverworldHUD != null)
+                        {
+                            curOverworldHUD.SetFadeDirectly(0);
+                        }
+                        isPaused = true;
+                        pauseMenuScript = Pause_SectionBase.buildMenu();
                     }
-                    isPaused = true;
-                    pauseMenuScript = Pause_SectionBase.buildMenu();
                 }
             }
         }
     }
 
+    public bool StartGlobalCutscenes()
+    {
+        //todo: make it a real file
+        string[][] fileCodeText = new string[7][];
+        fileCodeText[0] = new string[1];
+        fileCodeText[0][0] = "<system>File Code Greed: Your Max HP is capped at a low value, but you have infinite money and start with many Shield badges. Many badges relating to health or coins will be replaced with other badges.";
+        fileCodeText[1] = new string[1];
+        fileCodeText[1][0] = "<system>File Code Envy: You start with 6 SP and level ups can only increase your SP by 1. However, all badges cost 1 SP at most and all Soul Moves cost half as much.";
+        fileCodeText[2] = new string[1];
+        fileCodeText[2][0] = "<system>File Code Gluttony: You can hold twice as many items, but items are only half as strong.";
+        fileCodeText[3] = new string[1];
+        fileCodeText[3][0] = "<system>File Code Wrath: The character in front is permanently Berserk. However, you can still switch places with them with <button,z> to change who is Berserk in front.";
+        fileCodeText[4] = new string[1];
+        fileCodeText[4][0] = "<system>File Code Sloth: You can only move once every 2 turns, but you regenerate SE at 6 times the normal rate and Resting will give you 3 times as much Soul Energy, as well as any resources from Rest Effects.";
+        fileCodeText[5] = new string[1];
+        fileCodeText[5][0] = "<system>File Code Pride: Failed action commands for attacking moves deal half damage, and failing to block causes you to take 50% more damage. Action commands and blocking are more difficult.";
+        fileCodeText[6] = new string[1];
+        fileCodeText[6][0] = "<system>File Code Randomizer: Randomizes the locations of badges and ribbons.";
+
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Greed) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Greed))
+        {
+            StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 0));
+            SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Greed);
+            return true;
+        }
+
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Envy) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Envy))
+        {
+            StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 1));
+            SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Envy);
+            return true;
+        }
+
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Gluttony) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Gluttony))
+        {
+            StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 2));
+            SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Gluttony);
+            return true;
+        }
+
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Wrath) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Wrath))
+        {
+            StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 3));
+            SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Wrath);
+            return true;
+        }
+
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Sloth) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Sloth))
+        {
+            StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 4));
+            SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Sloth);
+            return true;
+        }
+
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Pride) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Pride))
+        {
+            StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 5));
+            SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Pride);
+            return true;
+        }
+
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Randomizer) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Randomizer))
+        {
+            StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 6));
+            SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Randomizer);
+            return true;
+        }
+
+        return false;
+    }
 
     public void DisplayAreaPopup(string name)
     {
@@ -5380,7 +5482,7 @@ public class MainManager : MonoBehaviour
         commonSprites = Resources.LoadAll<Sprite>("Sprites/CommonSpritesV2");
         miscSprites = Resources.LoadAll<Sprite>("Sprites/Misc/MiscSpritesV1");
 
-        effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV10");
+        effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV11");
         stateSprites = Resources.LoadAll<Sprite>("Sprites/Battle/StateIconsV4");
 
         noFrictionMaterial = Resources.Load<PhysicMaterial>("Physics Materials/NoFriction");
@@ -5558,10 +5660,12 @@ public class MainManager : MonoBehaviour
 
         string saveName = split[0];
 
-        Dictionary<GlobalFlag, bool> new_globalFlags = ParseGlobalFlagString(split[1]);
-        Dictionary<GlobalVar, string> new_globalVars = ParseGlobalVarString(split[2]);
+        string versionString = split[1];
 
-        string[] splitB = split[3].Split(",");
+        Dictionary<GlobalFlag, bool> new_globalFlags = ParseGlobalFlagString(split[2]);
+        Dictionary<GlobalVar, string> new_globalVars = ParseGlobalVarString(split[3]);
+
+        string[] splitB = split[4].Split(",");
 
         WorldLocation wl = WorldLocation.None;
         MapID mid = MapID.None;
@@ -5573,9 +5677,9 @@ public class MainManager : MonoBehaviour
         newPos = ParseVector3(splitB[2]);
 
         float playTime = 0;
-        float.TryParse(split[4], NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out playTime);
+        float.TryParse(split[5], NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out playTime);
 
-        PlayerData newPlayerData = PlayerData.Parse(split, 5, out int _);
+        PlayerData newPlayerData = PlayerData.Parse(split, 6, out int _);
 
 
         //The only change :P
@@ -5584,6 +5688,8 @@ public class MainManager : MonoBehaviour
 
 
         string output = saveName;
+        output += "\n";
+        output += GetVersionString();
         output += "\n";
         output += UnparseGlobalFlagDictionary(new_globalFlags);
         output += "\n";
@@ -5684,7 +5790,7 @@ public class MainManager : MonoBehaviour
             } else
             {
                 //hacky setup
-                if (i == 1)
+                if (i == 2)
                 {
                     if (ConvertNameToFileCodeFlag(newName) != GlobalFlag.GF_None && applyFileCodes)
                     {
@@ -5764,32 +5870,32 @@ public class MainManager : MonoBehaviour
     {
         if (name.Equals("Greed"))
         {
-            return GlobalFlag.GF_Burden_Greed;
+            return GlobalFlag.GF_FileCode_Greed;
         }
 
         if (name.Equals("Envy"))
         {
-            return GlobalFlag.GF_Burden_Envy;
+            return GlobalFlag.GF_FileCode_Envy;
         }
 
         if (name.Equals("Pride"))
         {
-            return GlobalFlag.GF_Burden_Pride;
+            return GlobalFlag.GF_FileCode_Pride;
         }
 
         if (name.Equals("Wrath"))
         {
-            return GlobalFlag.GF_Burden_Wrath;
+            return GlobalFlag.GF_FileCode_Wrath;
         }
 
         if (name.Equals("Gluttony"))
         {
-            return GlobalFlag.GF_Burden_Gluttony;
+            return GlobalFlag.GF_FileCode_Gluttony;
         }
 
         if (name.Equals("Sloth"))
         {
-            return GlobalFlag.GF_Burden_Sloth;
+            return GlobalFlag.GF_FileCode_Sloth;
         }
 
         if (name.Equals("Randomizer"))
@@ -5886,8 +5992,6 @@ public class MainManager : MonoBehaviour
         Enum.TryParse(mapScript.worldLocation, out WorldLocation wl);
         lastSaveLocation = wl;
 
-
-        //To add: save functionality
         //Things to save: global flags and vars, player data, current map + current position (so you respawn correctly), current area flags and vars?
         //The stuff above should comprise everything you want to save (persistent data should be in those)
 
@@ -5913,7 +6017,7 @@ public class MainManager : MonoBehaviour
     }
     public static string GetVersionString()
     {
-        return "d_rh_v0.2";
+        return Application.version;
     }
     public string GetBaseSaveFileString(string name)
     {
@@ -6105,13 +6209,13 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        if (GetGlobalFlag(GlobalFlag.GF_Burden_Greed))
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Greed))
         {
             //Greed badge changes
             List<Badge.BadgeType> greedBadgeInput = new List<Badge.BadgeType>
             {
                 Badge.BadgeType.VitalEnergy,
-                Badge.BadgeType.Refund,
+                Badge.BadgeType.ItemRebate,
                 Badge.BadgeType.GoldenPower,
                 Badge.BadgeType.GoldenEnergy,
                 Badge.BadgeType.GoldenShield,
@@ -7330,6 +7434,32 @@ public class MainManager : MonoBehaviour
 
         return output;
     }
+    public static Dictionary<T,int> ParseEnumIntList<T>(string list) where T : struct {
+        Dictionary<T, int> output = new Dictionary<T, int>();
+
+        string[] split = list.Split("|");
+
+        for (int m = 0; m < split.Length; m++)
+        {
+            string[] splitB = split[m].Split(':');
+
+            if (splitB.Length != 2)
+            {
+                return null;
+            }
+
+            Enum.TryParse<T>(splitB[0], true, out T a);
+            int.TryParse(splitB[1], out int b);
+
+            //hacky way to block "invalid" enum values being parsed
+            if (!int.TryParse(splitB[0].ToString(), out int _))
+            {
+                output.Add(a, b);
+            }
+        }
+
+        return output;
+    }
     public static string ListToString(List<int> list)
     {
         string output = "";
@@ -7356,6 +7486,29 @@ public class MainManager : MonoBehaviour
                 output += "|";
             }
             output += list[i];
+        }
+
+        return output;
+    }
+    public static string EnumIndexedListToString<T>(int[] list) where T : struct
+    {
+        string output = "";
+
+        for (int i = 0; i < list.Length; i++)
+        {
+            //currently: ignore any "invalid" values
+            if (int.TryParse((Enum.Parse<T>(i.ToString())).ToString(), out int _))
+            {
+                continue;
+            }
+
+            if (i > 0)
+            {
+                output += "|";
+            }
+
+            //This is stupid but oh well
+            output += (Enum.Parse<T>(i.ToString())) + ":" + list[i];
         }
 
         return output;

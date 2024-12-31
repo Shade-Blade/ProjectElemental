@@ -519,6 +519,8 @@ public class BE_Sawcrest : BattleEntity
     {
         //hacky
         SetSawState(sawActive);
+
+        base.PreBattle();
     }
 
     public override void ChooseMoveInternal()

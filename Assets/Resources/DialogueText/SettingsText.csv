@@ -4,7 +4,13 @@ MusicVolume,Music Volume,Music volume.,20,10,0%,5%,10%,15%,20%,25%,30%,35%,40%,4
 SFXVolume,SFX Volume,SFX volume. Volume of most sound effects.,20,10,0%,5%,10%,15%,20%,25%,30%,35%,40%,45%,50%,55%,60%,65%,70%,75%,80%,85%,90%,95%,100%
 TextVolume,Text Volume,Text volume. Volume of the text bleep sounds.,20,10,0%,5%,10%,15%,20%,25%,30%,35%,40%,45%,50%,55%,60%,65%,70%,75%,80%,85%,90%,95%,100%
 SystemVolume,System Volume,System volume. Volume of system sound effects (e.g. sounds that menus make),20,10,0%,5%,10%,15%,20%,25%,30%,35%,40%,45%,50%,55%,60%,65%,70%,75%,80%,85%,90%,95%,100%
+5,n/a,n/a,0,0,,,,,,,,,,,,,,,,,,,,,
 FPS,Max FPS,Frames per second,3,1,30 FPS,60 FPS,90 FPS,120 FPS,,,,,,,,,,,,,,,,,
+7,n/a,n/a,0,0,,,,,,,,,,,,,,,,,,,,,
+AlwaysRetry,Retry After Death,Allows you to retry any battle when you die no matter what.,1,0,OFF,ON,,,,,,,,,,,,,,,,,,,
+EasyActionCommands,More Lenient Action Commands,Reduces the difficulty of action commands and blocking (usually by increasing the window by 50%),1,0,OFF,ON,,,,,,,,,,,,,,,,,,,
+10,n/a,n/a,0,0,,,,,,,,,,,,,,,,,,,,,
 RebindControls,Rebind Controls,Change the keys used for different controls,0,0,,,,,,,,,,,,,,,,,,,,,
+12,n/a,n/a,0,0,,,,,,,,,,,,,,,,,,,,,
 ReloadSave,Reload Last Save,Reload to your last save on this file,0,0,,,,,,,,,,,,,,,,,,,,,
 MainMenu,Return to the Main Menu,Go back to the main menu,0,0,,,,,,,,,,,,,,,,,,,,,

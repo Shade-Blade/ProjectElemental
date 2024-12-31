@@ -687,12 +687,38 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                 List<Badge.BadgeType> badgePool = new List<Badge.BadgeType>();
                 for (int i = 1; i < (int)Badge.BadgeType.EndOfTable; i++)
                 {
-                    if (Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter == badgeChapter)
+                    //note: the find thing looks weird but that is because the null value for badges doesn't exist because badges are structs
+                    if (Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter == badgeChapter && pd.badgeInventory.Find((e) => (e.type == (Badge.BadgeType)i)).type != (Badge.BadgeType)i)
                     {
                         badgePool.Add((Badge.BadgeType)i);
                     }
                 }
-                pu.badge.type = RandomTable<Badge.BadgeType>.ChooseRandom(badgePool);
+                if (badgePool.Count == 0)
+                {
+                    //failsafe 1: broaden the range
+                    for (int i = 1; i < (int)Badge.BadgeType.EndOfTable; i++)
+                    {
+                        //note: the find thing looks weird but that is because the null value for badges doesn't exist because badges are structs
+                        if ((Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter >= badgeChapter - 1 && Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter <= badgeChapter + 1) && pd.badgeInventory.Find((e) => (e.type == (Badge.BadgeType)i)).type != (Badge.BadgeType)i)
+                        {
+                            badgePool.Add((Badge.BadgeType)i);
+                        }
+                    }
+
+                    if (badgePool.Count == 0)
+                    {
+                        //failsafe 2: give you Random Badge
+                        pu.type = PickupUnion.PickupType.Misc;
+                        pu.misc = MainManager.MiscSprite.MysteryBadge;
+                    }
+                    else
+                    {
+                        pu.badge.type = RandomTable<Badge.BadgeType>.ChooseRandom(badgePool);
+                    }
+                } else
+                {
+                    pu.badge.type = RandomTable<Badge.BadgeType>.ChooseRandom(badgePool);
+                }
                 break;
             case PickupUnion.PickupType.Ribbon:
                 //Each ribbon is equally likely, but ribbons you already have are half chance
@@ -709,7 +735,16 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                         ribbonPool.Add((Ribbon.RibbonType)i);
                     }
                 }
-                pu.ribbon.type = RandomTable<Ribbon.RibbonType>.ChooseRandom(ribbonPool);
+                if (ribbonPool.Count == 0)
+                {
+                    //failsafe: give you Random Ribbon
+                    pu.type = PickupUnion.PickupType.Misc;
+                    pu.misc = MainManager.MiscSprite.MysteryRibbon;
+                }
+                else
+                {
+                    pu.ribbon.type = RandomTable<Ribbon.RibbonType>.ChooseRandom(ribbonPool);
+                }
                 break;
             case PickupUnion.PickupType.Misc:
                 List<IRandomTableEntry<MainManager.MiscSprite>> miscTableEntries = new List<IRandomTableEntry<MainManager.MiscSprite>>
@@ -1000,6 +1035,8 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                 //Debug.Log(msresult + " as misc result");
                 break;
         }
+
+        pu.Mutate();
 
         cost = Mathf.CeilToInt((RandomGenerator.Get() * 0.66f + 0.66f) * PickupUnion.GetBaseCost(pu));
         //Debug.Log(pu + " " + cost);

@@ -712,7 +712,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 //menuIndex = 0;
             }
             selectorArrow.enabled = true;
-            Vector3 targetLocal = Vector3.left * 160f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
+            Vector3 targetLocal = Vector3.left * 170f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
             Vector3 current = selectorArrow.transform.localPosition;
             selectorArrow.transform.localPosition = targetLocal;
         }

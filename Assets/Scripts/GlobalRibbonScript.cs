@@ -243,8 +243,8 @@ public struct Ribbon
     {
         //Ribbon power triples the power but also gives you 3t of the specified effect (*though tokens are infinite duration)
         None = 0,
-        SafetyRibbon,       //[Lime green] Hold A -> Safety Block: Block but lose 2 energy, Rest: No effect
         SharpRibbon,        //[Red] Hold B -> Sharp Block: Take 1 more damage instead of -1 damage, but enemy takes 1 damage from contact hazard
+        SafetyRibbon,       //[Lime green] Hold A -> Safety Block: Block but lose 2 energy, Rest: No effect
         BeginnerRibbon,     //[Bronze] Increased guard window, Rest: (1/2 agility) stamina (Defocus 1, sunder 1, enervate 1)
         ExpertRibbon,       //[Silver] Decreased guard window, but block is -3 instead of -1, Rest: Clear negative effects (Seal, Immunity)
         ChampionRibbon,     //[Gold] Double A -> Perfect Block: Block with -4, Rest: 5 hp, 5 ep if alone (last alive), nothing otherwise (Attack down 1, defense down 1, endurance down 1)

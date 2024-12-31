@@ -8,8 +8,22 @@ public class SettingsMenuEntryScript : BoxMenuEntryScript
     public Image leftArrow;
     public Image rightArrow;
 
-    public void Setup(BoxMenuEntry p_entry, string colorStringA, string colorStringB)
+    public Image line;
+
+    public override void Setup(BoxMenuEntry p_entry, bool showAtOne, string customLevel, string colorStringA, string colorStringB)
     {
+        if (p_entry is PlaceholderMenuEntry)
+        {
+            line.gameObject.SetActive(true);
+            maintext.SetText("", true, true);
+            righttext.SetText("", true, true);
+            background.gameObject.SetActive(false);
+            leftArrow.gameObject.SetActive(false);
+            rightArrow.gameObject.SetActive(false);
+            return;
+        }
+        line.gameObject.SetActive(false);
+
         entry = p_entry;
         //maintext.text = entry.name;
         //righttext.text = entry.rightText + entry.spriteString;
@@ -74,6 +88,18 @@ public class SettingsMenuEntryScript : BoxMenuEntryScript
 
     public override void Setup(BoxMenuEntry p_entry, bool showAtOne = true, string customLevel = null)
     {
+        if (p_entry is PlaceholderMenuEntry)
+        {
+            line.gameObject.SetActive(true);
+            maintext.SetText("", true, true);
+            righttext.SetText("", true, true);
+            background.gameObject.SetActive(false);
+            leftArrow.gameObject.SetActive(false);
+            rightArrow.gameObject.SetActive(false);
+            return;
+        }
+        line.gameObject.SetActive(false);
+
         entry = p_entry;
 
         if (entry == null)

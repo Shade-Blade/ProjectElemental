@@ -347,7 +347,7 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
         } else
         {
             //equip
-            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
+            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Envy))
             {
                 if (cost > 1)
                 {

@@ -2481,7 +2481,7 @@ public struct Item
                 }
                 else
                 {
-                    MainManager.Instance.playerData.InsertItem(index + 1, new Item(i.type, ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
+                    MainManager.Instance.playerData.InsertItem(index, new Item(i.type, ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
                 }
             }
         } else
@@ -2502,7 +2502,7 @@ public struct Item
                         else
                         {
                             //inv.Insert(index + 1, new Item(block.items[j]));
-                            MainManager.Instance.playerData.InsertItem(index + 1, new Item(block.items[j], i.modifier, ItemOrigin.Producer, 0, 0));
+                            MainManager.Instance.playerData.InsertItem(index, new Item(block.items[j], i.modifier, ItemOrigin.Producer, 0, 0));
                         }
                     }
                 }
@@ -3391,7 +3391,7 @@ public abstract class ItemMove : Move, IEntityHighlighter
                 }
                 else
                 {
-                    BattleControl.Instance.InsertItemInventory(caller, b.menuIndex + 1, new Item(GetItemType(), ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
+                    BattleControl.Instance.InsertItemInventory(caller, b.menuIndex, new Item(GetItemType(), ItemModifier.Echoed, ItemOrigin.Producer, 0, 0));
                 }
             }
         }
@@ -3412,7 +3412,7 @@ public abstract class ItemMove : Move, IEntityHighlighter
                         }
                         else
                         {
-                            BattleControl.Instance.InsertItemInventory(caller, b.menuIndex + 1, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
+                            BattleControl.Instance.InsertItemInventory(caller, b.menuIndex, new Item(block.items[i], item.modifier, ItemOrigin.Producer, 0, 0));
                             //inv.Insert(b.menuIndex + 1, new Item(block.items[i]));
                         }
                     }

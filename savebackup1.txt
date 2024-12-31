@@ -4,7 +4,7 @@ d_rh_v0.3
 
 ForsakenMountains,Test_LandscapeC9,8.47198|0.8749998|-10.47876
 802.7207
-25,0,60,60,60,60,60,60,0,0,0,0,10,32,6,6,6,0,0,2,0,0,0,0,2,0,2,3
+25,0,60,60,60,60,60,60,0,0,0,0,10,32,6,6,6,0,0,2,0,0,0,0,2,0,2,2
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP
 
 RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,SupremeDinner|None|Overworld,GoldenSalad|None|Overworld,GoldenSalad|None|Overworld,MiracleNeedle|None|Overworld,MiracleShroom|None|Overworld

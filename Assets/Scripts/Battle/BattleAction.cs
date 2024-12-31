@@ -383,15 +383,16 @@ public class BA_Rest : BattleAction
         bool ribbonPower = false;
         int ribbonMult = 1;
 
-        float longRestBoost = 1;
+        float restBoost = 1;
 
         //BattleControl.Instance.AddSE(caller, 3);
         int value = 3;
         if (caller is PlayerEntity pcaller)
         {
-            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Sloth))
+            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Sloth))
             {
                 value = 9 + 9 * pcaller.BadgeEquippedCount(Badge.BadgeType.DarkConcentration);
+                restBoost = 3;
             }
             else
             {
@@ -404,7 +405,7 @@ public class BA_Rest : BattleAction
             ribbonMult = pcaller.BadgeEquippedCount(Badge.BadgeType.RibbonPower);
             if (pcaller.BadgeEquipped(Badge.BadgeType.LongRest) && pcaller.lastRestTurn >= BattleControl.Instance.turnCount - 1)
             {
-                longRestBoost = 1 + 0.5f * pcaller.BadgeEquippedCount(Badge.BadgeType.LongRest);
+                restBoost *= 1 + 0.5f * pcaller.BadgeEquippedCount(Badge.BadgeType.LongRest);
             }
             pcaller.lastRestTurn = BattleControl.Instance.turnCount;
         }
@@ -417,14 +418,14 @@ public class BA_Rest : BattleAction
             case Ribbon.RibbonType.BeginnerRibbon:
                 if (ribbonPower)
                 {
-                    caller.HealStamina((int)(longRestBoost * (3 * ribbonMult) * (caller.GetRealAgility() / 2)));
+                    caller.HealStamina((int)(restBoost * (3 * ribbonMult) * (caller.GetRealAgility() / 2)));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Defocus, (sbyte)(1 * ribbonMult), Effect.INFINITE_DURATION));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Sunder, (sbyte)(1 * ribbonMult), Effect.INFINITE_DURATION));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Enervate, (sbyte)(1 * ribbonMult), Effect.INFINITE_DURATION));
                 }
                 else
                 {
-                    caller.HealStamina((int)(longRestBoost  * (caller.GetRealAgility() / 2)));
+                    caller.HealStamina((int)(restBoost  * (caller.GetRealAgility() / 2)));
                 }
                 RibbonEffect(caller, new Color(0.7f, 0.3f, 0), ribbonPower);
                 break;
@@ -433,15 +434,15 @@ public class BA_Rest : BattleAction
                 {
                     caller.CureEffects(false);
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Seal, 1, (sbyte)(3 * ribbonMult)));
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Immunity, 1, (sbyte)(longRestBoost * ribbonMult * 3)));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Immunity, 1, (sbyte)(restBoost * ribbonMult * 3)));
                 }
                 else
                 {
                     caller.CureEffects(false);
                     //secret
-                    if (longRestBoost > 1)
+                    if (restBoost > 1)
                     {
-                        caller.InflictEffect(caller, new Effect(Effect.EffectType.Immunity, 1, (sbyte)(longRestBoost - 0.5f)));
+                        caller.InflictEffect(caller, new Effect(Effect.EffectType.Immunity, 1, (sbyte)(restBoost - 0.5f)));
                     }
                 }
                 RibbonEffect(caller, new Color(0.7f, 0.8f, 1f), ribbonPower);
@@ -454,8 +455,8 @@ public class BA_Rest : BattleAction
                 {
                     if (alone)
                     {
-                        caller.HealHealth((int)(longRestBoost * ribbonMult * 15));
-                        caller.HealEnergy((int)(longRestBoost * ribbonMult * 15));
+                        caller.HealHealth((int)(restBoost * ribbonMult * 15));
+                        caller.HealEnergy((int)(restBoost * ribbonMult * 15));
                     }
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackDown, (sbyte)(1 * ribbonMult), 3));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.DefenseDown, (sbyte)(1 * ribbonMult), 3));
@@ -464,8 +465,8 @@ public class BA_Rest : BattleAction
                 {
                     if (alone)
                     {
-                        caller.HealHealth((int)(longRestBoost * 5));
-                        caller.HealEnergy((int)(longRestBoost * 5));
+                        caller.HealHealth((int)(restBoost * 5));
+                        caller.HealEnergy((int)(restBoost * 5));
                     }
                 }
                 RibbonEffect(caller, new Color(1f, 0.7f, 0), ribbonPower);
@@ -474,10 +475,10 @@ public class BA_Rest : BattleAction
                 if (ribbonPower) 
                 {
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Paralyze, 1, (sbyte)(3 * ribbonMult)));
-                    caller.HealEnergy((int)(longRestBoost * ribbonMult * 6));
+                    caller.HealEnergy((int)(restBoost * ribbonMult * 6));
                 } else
                 {
-                    caller.HealEnergy((int)(longRestBoost * 2));
+                    caller.HealEnergy((int)(restBoost * 2));
                 }
                 RibbonEffect(caller, new Color(1f, 1f, 0.2f), ribbonPower);
                 break;
@@ -485,11 +486,11 @@ public class BA_Rest : BattleAction
                 if (ribbonPower)
                 {
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Poison, 1, (sbyte)(3 * ribbonMult)));
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, (sbyte)(3 * ribbonMult), (sbyte)(longRestBoost * 3)));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, (sbyte)(3 * ribbonMult), (sbyte)(restBoost * 3)));
                 }
                 else
                 {
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 1, (sbyte)(longRestBoost * 3)));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 1, (sbyte)(restBoost * 3)));
                 }
                 RibbonEffectDark(caller, new Color(1f, 0.3f, 1f), ribbonPower);
                 break;
@@ -497,11 +498,11 @@ public class BA_Rest : BattleAction
                 if (ribbonPower)
                 {
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Dizzy, 1, (sbyte)(3 * ribbonMult)));
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.DefenseUp, (sbyte)(3 * ribbonMult), (sbyte)(longRestBoost * 3)));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.DefenseUp, (sbyte)(3 * ribbonMult), (sbyte)(restBoost * 3)));
                 }
                 else
                 {
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.DefenseUp, 1, (sbyte)(longRestBoost * 3)));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.DefenseUp, 1, (sbyte)(restBoost * 3)));
                 }
                 RibbonEffect(caller, new Color(0.5f, 1f, 0.5f), ribbonPower);
                 break;
@@ -509,11 +510,11 @@ public class BA_Rest : BattleAction
                 if (ribbonPower)
                 {
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Sleep, 1, (sbyte)(3 * ribbonMult)));
-                    caller.HealHealth((int)(longRestBoost * ribbonMult * 6));
+                    caller.HealHealth((int)(restBoost * ribbonMult * 6));
                 }
                 else
                 {
-                    caller.HealHealth((int)(longRestBoost * 2));
+                    caller.HealHealth((int)(restBoost * 2));
                 }
                 RibbonEffect(caller, new Color(0.2f, 0.2f, 1f), ribbonPower);
                 break;
@@ -521,7 +522,7 @@ public class BA_Rest : BattleAction
                 if (ribbonPower)
                 {
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Berserk, 1, (sbyte)(3 * ribbonMult)));
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(longRestBoost * ribbonMult * 2), Effect.INFINITE_DURATION));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(restBoost * ribbonMult * 2), Effect.INFINITE_DURATION));
                     caller.TakeDamageStatus(3 * ribbonMult);
                 } else
                 {
@@ -533,10 +534,10 @@ public class BA_Rest : BattleAction
                 if (ribbonPower)
                 {
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Freeze, 1, (sbyte)(3 * ribbonMult)));
-                    caller.HealCoins((int)(longRestBoost * ribbonMult * 45));
+                    caller.HealCoins((int)(restBoost * ribbonMult * 45));
                 } else
                 {
-                    caller.HealCoins((int)(longRestBoost * 15));
+                    caller.HealCoins((int)(restBoost * 15));
                 }
                 RibbonEffectDiamond(caller, new Color(0.6f, 1f, 1f), ribbonPower);
                 break;
@@ -777,7 +778,7 @@ public class BA_SuperSwapEntities : BattleAction //switches everyone around 1 po
 
 
         //wrath special case
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Wrath))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Wrath))
         {            
             foreach (PlayerEntity pe in playerParty)
             {
@@ -955,11 +956,10 @@ public class BA_SwapEntities : BattleAction
 
 public class BA_Flee : BattleAction
 {
-    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.None, false);
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
     public override string GetName() => "Flee";
     public override string GetDescription() => "Run from the current battle. Stamina cost is based on the level of the strongest enemy that can move, but is capped at your max Stamina. Some battles may forbid you from fleeing, while others may allow you to flee for free.";
     public override bool ForfeitTurn() => false;
-
 
     public override int GetBaseCost()
     {
@@ -1180,11 +1180,11 @@ public class BA_TurnRelay : BattleAction
     }
 }
 
-public class BA_StatusRelay : BattleAction
+public class BA_EffectRelay : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.AllyNotSelf, false);
-    public override string GetName() => "Status Relay";
-    public override string GetDescription() => "(0 turns) Pass most effects to the other character";
+    public override string GetName() => "Effect Relay";
+    public override string GetDescription() => "(0 turns) Pass most effects to the other character. Effects immune to effect removal won't be passed over.";
     public override bool ForfeitTurn() => false;
 
     public override int GetBaseCost() => 4;

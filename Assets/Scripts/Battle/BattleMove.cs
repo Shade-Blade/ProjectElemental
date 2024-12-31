@@ -1133,7 +1133,7 @@ public abstract class SoulMove : PlayerMove
 
             if (pcaller.BadgeEquipped(Badge.BadgeType.EnergeticSoul))
             {
-                if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
+                if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Envy))
                 {
                     return (int)Mathf.Clamp(modifiedCost / 4, 1, float.PositiveInfinity);                
                 }
@@ -1144,7 +1144,7 @@ public abstract class SoulMove : PlayerMove
             }
         }
 
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Envy))
         {
             modifiedCost /= 2;
         }

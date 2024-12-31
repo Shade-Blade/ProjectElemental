@@ -16,6 +16,8 @@ public class AnimationController : MonoBehaviour
     //Use for left facing sprites (inverts all the flips so things are consistent)
     public bool leftFacing;
 
+    float targetAnimationSpeed = 1;
+
     public MaterialPropertyBlock propertyBlock;
 
     public GameObject subobject;    //used for rotation
@@ -385,8 +387,31 @@ public class AnimationController : MonoBehaviour
         return currentAnim;
     }
 
+    public void StopAnimation()
+    {
+        targetAnimationSpeed = 0;
+    }
+
+    public void ResetAnimationSpeed()
+    {
+        targetAnimationSpeed = 1;
+    }
+
+    public void SetAnimationSpeed(float set)
+    {
+        targetAnimationSpeed = set;
+    }
+
     public virtual void Update()
     {
+        if (MainManager.Instance.isPaused)
+        {
+            animator.speed = 0;
+        } else
+        {
+            animator.speed = targetAnimationSpeed;
+        }
+
         lifetime += Time.deltaTime;
         timeSinceLastAnimChange += Time.deltaTime;
 

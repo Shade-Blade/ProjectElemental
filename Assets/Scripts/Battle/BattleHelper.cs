@@ -58,6 +58,7 @@ public class Effect
         MaxHPBoost,
         MaxEPBoost,
         MaxSEBoost,
+        Swift,
 
         AttackReduction,
         DefenseReduction,
@@ -66,6 +67,7 @@ public class Effect
         MaxHPReduction,
         MaxEPReduction,
         MaxSEReduction,
+        Slow,
 
         Berserk,
         Sleep,
@@ -115,7 +117,7 @@ public class Effect
         HealthLoss,
         EnergyLoss,
         SoulLoss,
-        Slow,
+        Sluggish,
         DrainSprout,
         BoltSprout,
         Seal,

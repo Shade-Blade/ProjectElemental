@@ -210,7 +210,7 @@ public class PlayerTurnController : MonoBehaviour
 
             //Debug.Log(p.attackLastTurn);
 
-            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Sloth))
+            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Sloth))
             {
                 if (!p.HasEffect(Effect.EffectType.Slow))
                 {

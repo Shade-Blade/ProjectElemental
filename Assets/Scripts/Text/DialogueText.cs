@@ -999,6 +999,7 @@ public class TagEntry
         Default,
         Outline,
         DarkOutline,
+        LightOutline,
         FancyOutline,
         Shaded,
         Paper,

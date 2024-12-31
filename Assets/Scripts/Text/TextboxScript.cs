@@ -134,6 +134,10 @@ public class TextboxScript : MonoBehaviour
                 borderBox.sprite = Resources.Load<Sprite>("Sprites/GUIBoxes/UIRoundedDarkOutlineBorder");
                 innerBox.sprite = Resources.Load<Sprite>("Sprites/GUIBoxes/UIRoundedDarkOutlineInside");
                 break;
+            case TagEntry.BoxStyle.LightOutline:
+                borderBox.sprite = Resources.Load<Sprite>("Sprites/GUIBoxes/UIRoundedLightOutlineBorder");
+                innerBox.sprite = Resources.Load<Sprite>("Sprites/GUIBoxes/UIRoundedDarkOutlineInside");
+                break;
             case TagEntry.BoxStyle.FancyOutline:
                 borderBox.sprite = Resources.Load<Sprite>("Sprites/GUIBoxes/UIRoundedFancyOutlineBorder");
                 innerBox.sprite = Resources.Load<Sprite>("Sprites/GUIBoxes/UIRoundedFancyOutlineInside");
@@ -1761,7 +1765,7 @@ public class TextboxScript : MonoBehaviour
     }
     public IEnumerator CreateText(string dialogue, Vector3 tailPos, string[] vars = null)
     {
-        Debug.Log("Create with tail");
+        //Debug.Log("Create with tail");
         tail.enabled = true;
         tailPointPos = tailPos;
         ConvertTailPos();
@@ -2027,7 +2031,7 @@ public class TextboxScript : MonoBehaviour
     }
     public IEnumerator CreateText(string dialogue, ITextSpeaker speaker, string[] vars = null)
     {
-        Debug.Log("Create with speaker");
+        //Debug.Log("Create with speaker");
         this.originalSpeaker = speaker;
         this.speaker = speaker;
         Vector3 position = Vector3.zero;

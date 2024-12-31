@@ -823,6 +823,7 @@ Transform:
   m_Children:
   - {fileID: 7537229698722150037}
   - {fileID: 537246054952430541}
+  - {fileID: 4981977245887383648}
   m_Father: {fileID: 557467207567293082}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -974,8 +975,10 @@ MonoBehaviour:
   dropShadow: {fileID: 0}
   noShadowUpdate: 0
   speed: 0
+  targetFacingRotation: 0
   facingRotation: 0
   trueFacingRotation: 0
+  midFacingRotation: 0
   lastFrameVel: {x: 0, y: 0, z: 0}
   isGrounded: 0
   groundedTime: 0
@@ -1641,6 +1644,94 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
     type: 3}
   m_PrefabInstance: {fileID: 2089580052961659389}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3550448864881047304
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 5199611605384512111}
+    m_Modifications:
+    - target: {fileID: 2056198661928779808, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: signstring
+      value: '<sign>File Codes are special modifiers you can add to your save file
+        by naming your file certain things. Multiple of them can be applied by renaming
+        your file to the ones you want to set, but combinations of file codes may
+        make the game impossible.<next>Not all of these have been thoroughly tested,
+        but it is believed that they are all possible to beat individually.<next>List
+        of File Codes: <color,red>Greed</color>, <color,red>Envy</color>, <color,red>Gluttony</color>,
+        <color,red>Wrath</color>, <color,red>Sloth</color>, <color,red>Pride</color>,
+        <color,red>Randomizer</color>.<next>You can learn more about what these file
+        codes entail by creating a new file with them.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8327891156967957707, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_Name
+      value: Sign (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 140f7dd2082b53d48a81d3bac0338f3f, type: 3}
+--- !u!4 &4981977245887383648 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8387448009534619496, guid: 140f7dd2082b53d48a81d3bac0338f3f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3550448864881047304}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3601718679976790321
 PrefabInstance:

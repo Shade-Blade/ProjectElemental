@@ -161,7 +161,7 @@ public class SM_Revitalize : SoulMove
         switch (level)
         {
             case 1:
-                return new TargetArea(TargetArea.TargetAreaType.LiveAlly, true);
+                return new TargetArea(TargetArea.TargetAreaType.Ally, true);
             default:
                 return new TargetArea(TargetArea.TargetAreaType.Ally, true);
         }
@@ -957,7 +957,7 @@ public class SM_VoidCrush : SoulMove
                     if (level > 1)
                     {
                         caller.TryVoidCrush(b, 10);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 4, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 6, Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -980,7 +980,7 @@ public class SM_VoidCrush : SoulMove
                     if (level > 1)
                     {
                         caller.TryVoidCrush(b, 1);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 3, Effect.INFINITE_DURATION));
                     }
                     else
                     {

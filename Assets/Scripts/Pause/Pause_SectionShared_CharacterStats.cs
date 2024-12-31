@@ -32,7 +32,7 @@ public class Pause_SectionShared_CharacterStats : Pause_SectionShared
         }
         if (backImage != null)
         {
-            backImage.color = new Color(1, 0.9f, 0.8f, 1);
+            backImage.color = new Color(1f, 0.8f, 0.6f, 1);
         }
 
         PlayerData pd = MainManager.Instance.playerData;

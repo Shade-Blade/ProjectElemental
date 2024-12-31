@@ -188,6 +188,7 @@ public class WorldEnemyEntity : WorldEntity, IWorldBattleEntity, IStompTrigger, 
     public void DeathDrops()
     {
         //Debug.Log(MainManager.Instance.coinDrops + " " + MainManager.Instance.dropItemType);
+        BattleControl.CreateDeathSmokeOverworld(width, height, transform.position);
         MainManager.Instance.DropCoins(MainManager.Instance.coinDrops, transform.position, Vector3.up * 6, 3);
         MainManager.Instance.DropItems(MainManager.Instance.dropItemType, MainManager.Instance.dropItemCount, transform.position, Vector3.up * 6 - 1.5f * FacingVector(), Vector3.up * 6, 3);
     }

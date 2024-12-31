@@ -118,6 +118,11 @@ public class SettingsMenuEntry : BoxMenuEntry
     }
 }
 
+public class PlaceholderMenuEntry : BoxMenuEntry
+{
+    //placeholder, invalid spot
+}
+
 public class FileMenuEntry
 {
     //If they are all null, this is an empty file    

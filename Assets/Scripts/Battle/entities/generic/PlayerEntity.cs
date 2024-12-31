@@ -487,9 +487,9 @@ public class PlayerEntity : BattleEntity
 
         tactics.Add(ptc.GetOrAddComponent<BA_TurnRelay>());
 
-        if (BadgeEquipped(Badge.BadgeType.StatusRelay))
+        if (BadgeEquipped(Badge.BadgeType.EffectRelay))
         {
-            tactics.Add(ptc.GetOrAddComponent<BA_StatusRelay>());
+            tactics.Add(ptc.GetOrAddComponent<BA_EffectRelay>());
         }
 
         if (MainManager.Instance.Cheat_BattleRandomActions)
@@ -1108,7 +1108,7 @@ public class PlayerEntity : BattleEntity
         //...but turn count is halved if blocking, rounded down
         //Negated if super blocking
 
-        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Lust);
+        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Lust);
 
         int statusTurnReduction = 0;
 
@@ -1196,7 +1196,7 @@ public class PlayerEntity : BattleEntity
         //...but turn count is halved if blocking, rounded down
         //Negated if super blocking
 
-        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Lust);
+        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Lust);
 
         int statusTurnReduction = 0;
 
@@ -1418,7 +1418,7 @@ public class PlayerEntity : BattleEntity
                 outProperties |= (ulong)BattleHelper.DamageProperties.TrueMinOne;
             }
 
-            if (BadgeEquipped(Badge.BadgeType.StatusExploit))
+            if (BadgeEquipped(Badge.BadgeType.AilmentExploit))
             {
                 outProperties |= (ulong)BattleHelper.DamageProperties.StatusExploit;
             }
@@ -1822,7 +1822,7 @@ public class PlayerEntity : BattleEntity
         BattleControl.Instance.maxEP = BattleControl.Instance.playerData.GetMaxEP() + GetPartyMaxEffectPotency(Effect.EffectType.MaxEPBoost) - GetPartyMaxEffectPotency(Effect.EffectType.MaxEPReduction);
         BattleControl.Instance.maxSE = BattleControl.Instance.playerData.GetMaxSE() + GetPartyMaxEffectPotency(Effect.EffectType.MaxSEBoost) - GetPartyMaxEffectPotency(Effect.EffectType.MaxSEReduction);
 
-        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_Burden_Greed))
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Greed))
         {
             if (maxHP > DangerHP())
             {
@@ -2078,7 +2078,7 @@ public class PlayerEntity : BattleEntity
 
             if (!sb && !b)
             {
-                if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Pride))
+                if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
                 {
                     bonusResistance -= 1;
                 }
@@ -2573,9 +2573,14 @@ public class PlayerEntity : BattleEntity
             w -= BASE_GUARD_WINDOW / 2;
         }
 
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Pride))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
         {
             w /= 2;
+        }
+
+        if (SettingsManager.Instance.GetSetting(SettingsManager.Setting.EasyActionCommands) != 0)
+        {
+            w = Mathf.CeilToInt(w * 1.5f);
         }
 
         if (w < 1)
@@ -3035,7 +3040,7 @@ public class PlayerEntity : BattleEntity
         {
             if (other != null && other.InDanger())
             {
-                bonus += 2 * BadgeEquippedCount(Badge.BadgeType.ProtectivePower);
+                bonus += 1 * BadgeEquippedCount(Badge.BadgeType.ProtectivePower);
             }
         }
 
@@ -3476,7 +3481,7 @@ public class PlayerEntity : BattleEntity
         {
             bonus += 0.0001f + (BadgeEquippedCount(Badge.BadgeType.ItemBoost) / 3f);
         }
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Gluttony))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Gluttony))
         {
             bonus /= 2;
         }
@@ -3552,7 +3557,7 @@ public class PlayerEntity : BattleEntity
             //Status Catalyst
             if (!target.statusCatalyst)
             {
-                if (target.HasStatus() && target.statusMaxTurns > 0 && BadgeEquipped(Badge.BadgeType.StatusCatalyst))
+                if (target.HasStatus() && target.statusMaxTurns > 0 && BadgeEquipped(Badge.BadgeType.AilmentCatalyst))
                 {
                     //Enforce type check
                     bool check = false;
@@ -3596,7 +3601,7 @@ public class PlayerEntity : BattleEntity
                         if (status != null)
                         {
                             target.statusCatalyst = true;
-                            sbyte boost = (sbyte)(BadgeEquippedCount(Badge.BadgeType.StatusCatalyst));
+                            sbyte boost = (sbyte)(BadgeEquippedCount(Badge.BadgeType.AilmentCatalyst));
                             status.duration += boost;
                             target.statusMaxTurns -= boost;
                         }
@@ -3784,13 +3789,13 @@ public class PlayerEntity : BattleEntity
     public float CalculateStatusBoost(BattleEntity target)
     {
         float statusBoost = 1;
-        if (BadgeEquipped(Badge.BadgeType.StatusBoost))
+        if (BadgeEquipped(Badge.BadgeType.AilmentBoost))
         {
-            statusBoost += 0.5f * BadgeEquippedCount(Badge.BadgeType.StatusBoost);
+            statusBoost += 0.5f * BadgeEquippedCount(Badge.BadgeType.AilmentBoost);
         }
-        if (target.HasStatus() && BadgeEquipped(Badge.BadgeType.StatusConversion))
+        if (target.HasStatus() && BadgeEquipped(Badge.BadgeType.AilmentConversion))
         {
-            statusBoost += 0.5f * BadgeEquippedCount(Badge.BadgeType.StatusConversion);
+            statusBoost += 0.5f * BadgeEquippedCount(Badge.BadgeType.AilmentConversion);
         }
         return statusBoost;
     }
@@ -3805,7 +3810,7 @@ public class PlayerEntity : BattleEntity
         }
 
         //added stuff
-        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Lust);
+        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Lust);
 
         float multiplier = 1;
 
@@ -3934,7 +3939,7 @@ public class PlayerEntity : BattleEntity
             se = e;
         }
 
-        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Lust);
+        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Lust);
 
         float multiplier = 1;
 
@@ -4149,6 +4154,8 @@ public class PlayerEntity : BattleEntity
         {
             InflictEffect(this, new Effect(Effect.EffectType.Burst, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.FirstEndurance)), Effect.INFINITE_DURATION));
         }
+
+        base.PreBattle();
     }
 
     public override IEnumerator PreMove()
@@ -4171,7 +4178,7 @@ public class PlayerEntity : BattleEntity
         absorbDamageEvents = 0;
         //Debug.Log(name + " reset");
 
-        if (BadgeEquipped(Badge.BadgeType.RagesPower))
+        if (BadgeEquipped(Badge.BadgeType.RagesPower) || (BattleControl.Instance.GetEntitiesSorted((e) => (e.posId < 0))[0] == this && MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Wrath)))
         {
             InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)(BadgeEquippedCount(Badge.BadgeType.RagesPower)), Effect.INFINITE_DURATION));
         }
@@ -4449,8 +4456,22 @@ public class PlayerEntity : BattleEntity
             {
                 InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Hustle).potency, Effect.INFINITE_DURATION));
             }
+            if (HasEffect(Effect.EffectType.Swift))
+            {
+                InflictEffectForce(this, new Effect(Effect.EffectType.BonusTurns, GetEffectEntry(Effect.EffectType.Swift).potency, Effect.INFINITE_DURATION));
+            }
 
-            if (HasEffect(Effect.EffectType.Slow) && (BattleControl.Instance.turnCount % (GetEffectEntry(Effect.EffectType.Slow).potency + 1) != 0))
+            int slowPower = 1;
+
+            if (HasEffect(Effect.EffectType.Sluggish))
+            {
+                slowPower += GetEffectEntry(Effect.EffectType.Sluggish).potency;
+            }
+            if (HasEffect(Effect.EffectType.Slow))
+            {
+                slowPower += GetEffectEntry(Effect.EffectType.Slow).potency;
+            }
+            if (slowPower > 1 && BattleControl.Instance.turnCount % (slowPower) != 0)
             {
                 InflictEffectForce(this, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
@@ -5084,14 +5105,14 @@ public class PlayerEntity : BattleEntity
                 SetRotation(Vector3.zero);
                 yield return StartCoroutine(Jump(homePos, 0.5f, 0.25f));
                 //force rage's power to give you the effect
-                if (BadgeEquipped(Badge.BadgeType.RagesPower))
+                if (BadgeEquipped(Badge.BadgeType.RagesPower) || (BattleControl.Instance.GetEntitiesSorted((e) => (e.posId < 0))[0] == this && MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Wrath)))
                 {
                     InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)(BadgeEquippedCount(Badge.BadgeType.RagesPower)), Effect.INFINITE_DURATION));
                 }
                 break;
             case BattleHelper.Event.CureStatus:
                 //No
-                if (BadgeEquipped(Badge.BadgeType.RagesPower))
+                if (BadgeEquipped(Badge.BadgeType.RagesPower) || (BattleControl.Instance.GetEntitiesSorted((e) => (e.posId < 0))[0] == this && MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Wrath)))
                 {
                     InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)(BadgeEquippedCount(Badge.BadgeType.RagesPower)), Effect.INFINITE_DURATION));
                 }

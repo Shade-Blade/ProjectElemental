@@ -465,7 +465,7 @@ public class WorldNPC_StatChanger : WorldNPCEntity
                 current += "<rarrow>";
 
                 int offset = 0;
-                if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Greed))
+                if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
                 {
                     offset = 1;
                 }
@@ -608,7 +608,7 @@ public class WorldNPC_StatChanger : WorldNPCEntity
                 current += "<rarrow>";
 
                 int offset = 0;
-                if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Greed))
+                if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
                 {
                     offset = 1;
                 }
@@ -703,7 +703,7 @@ public class WorldNPC_StatChanger : WorldNPCEntity
             current += "<rarrow>";
 
             int offset = 0;
-            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Greed))
+            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
             {
                 offset = 1;
             }
@@ -790,7 +790,7 @@ public class WorldNPC_StatChanger : WorldNPCEntity
             current += "<rarrow>";
 
             int offset = 0;
-            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Greed))
+            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
             {
                 offset = 1;
             }
@@ -852,7 +852,7 @@ public class WorldNPC_StatChanger : WorldNPCEntity
     {
         PlayerData pd = MainManager.Instance.playerData;
         int offset = 0;
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Greed))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
         {
             offset = 1;
         }
@@ -952,7 +952,7 @@ public class WorldNPC_StatChanger : WorldNPCEntity
         currentLevels[2] = spDelta;
 
         raiseMaxLevels[0] = upgradeMax - hpDelta;
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Greed))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
         {
             raiseMaxLevels[0] = 0 - hpDelta;
         }
@@ -960,7 +960,7 @@ public class WorldNPC_StatChanger : WorldNPCEntity
         raiseMaxLevels[1] = upgradeMax - epDelta;
         raiseMaxLevels[2] = upgradeMax - spDelta;
 
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Envy))
         {
             //No
             raiseMaxLevels[2] = 0;
@@ -993,7 +993,7 @@ public class WorldNPC_StatChanger : WorldNPCEntity
 
 
         lowerMaxLevels[0] = hpDelta - (-2);
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Greed))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
         {
             lowerMaxLevels[0] = hpDelta - (-1);
         }
@@ -1001,7 +1001,7 @@ public class WorldNPC_StatChanger : WorldNPCEntity
         lowerMaxLevels[1] = epDelta - (-2);
         lowerMaxLevels[2] = spDelta - (-2);
 
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Envy))
         {
             //No
             lowerMaxLevels[2] = 0;

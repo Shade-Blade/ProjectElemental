@@ -17,7 +17,7 @@ public class BoxMenuEntryScript : MonoBehaviour
     //public static Color enabledColor = new Color(0, 0, 0);
     //public static Color disabledColor = new Color(1f, 0, 0);
 
-    public void Setup(BoxMenuEntry p_entry, bool showAtOne, string customLevel, string colorStringA, string colorStringB)
+    public virtual void Setup(BoxMenuEntry p_entry, bool showAtOne, string customLevel, string colorStringA, string colorStringB)
     {
         entry = p_entry;
         //maintext.text = entry.name;

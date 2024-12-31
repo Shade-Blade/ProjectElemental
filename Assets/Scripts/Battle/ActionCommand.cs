@@ -37,12 +37,19 @@ public abstract class ActionCommand : MonoBehaviour
 
     public float GetTimingWindow()
     {
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Pride))
+        float window = TIMING_WINDOW;
+
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
         {
-            return TIMING_WINDOW / 2;
+            window /= 2;
         }
 
-        return TIMING_WINDOW;
+        if (SettingsManager.Instance.GetSetting(SettingsManager.Setting.EasyActionCommands) != 0)
+        {
+            window *= 1.5f;
+        }
+
+        return window;
     }
 
     //How long should certain action commands stay on screen to give you feedback? (Not all action commands use this)
@@ -196,9 +203,14 @@ public class AC_MashLeft : ActionCommand
         duration = p_duration;
         mashObjective = p_difficulty;
 
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Pride))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
         {
             mashObjective = Mathf.CeilToInt(mashObjective * 1.5f);
+        }
+
+        if (SettingsManager.Instance.GetSetting(SettingsManager.Setting.EasyActionCommands) != 0)
+        {
+            mashObjective = Mathf.CeilToInt(mashObjective * 0.666f);
         }
     }
 
@@ -328,9 +340,14 @@ public class AC_MashLeftRight : ActionCommand
         duration = p_duration;
         mashObjective = p_difficulty;
 
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Pride))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
         {
             mashObjective = Mathf.CeilToInt(mashObjective * 1.5f);
+        }
+
+        if (SettingsManager.Instance.GetSetting(SettingsManager.Setting.EasyActionCommands) != 0)
+        {
+            mashObjective = Mathf.CeilToInt(mashObjective * 0.666f);
         }
     }
 

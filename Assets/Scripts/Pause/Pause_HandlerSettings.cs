@@ -32,7 +32,12 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
 
     public override int GetObjectCount()
     {
-        return SettingsManager.Instance.settingsText.Length - 2 - (startMenu ? 2 : 0);
+        return SettingsManager.Instance.settingsText.Length - 2 - (startMenu ? 3 : 0);
+    }
+
+    public bool NudgeNecessary()
+    {
+        return (int.TryParse(((SettingsManager.Setting)(index)).ToString(), out int _));
     }
 
 
@@ -95,10 +100,18 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                     if (inputDir > 0)
                     {
                         index++;
+                        if (NudgeNecessary())
+                        {
+                            index++;
+                        }
                     }
                     else
                     {
                         index--;
+                        if (NudgeNecessary())
+                        {
+                            index--;
+                        }
                     }
                 }
 
@@ -133,6 +146,10 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                 else
                 {
                     index += PAGE_SIZE;
+                    if (NudgeNecessary())
+                    {
+                        index++;
+                    }
 
                     if (index > oc - 1)
                     {
@@ -154,6 +171,10 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                 else
                 {
                     index -= PAGE_SIZE;
+                    if (NudgeNecessary())
+                    {
+                        index--;
+                    }
 
                     if (index < 0)
                     {
@@ -182,10 +203,18 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                     if (inputDir > 0)
                     {
                         index += (holdValue - pastHoldValue);
+                        if (NudgeNecessary())
+                        {
+                            index++;
+                        }
                     }
                     else
                     {
                         index -= (holdValue - pastHoldValue);
+                        if (NudgeNecessary())
+                        {
+                            index--;
+                        }
                     }
 
                     //No loop around
@@ -331,6 +360,11 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
 
     public override void Init()
     {
+        if (MainManager.Instance.worldMode == MainManager.WorldMode.GameOver)
+        {
+            startMenu = true;
+        }
+
         base.Init();
 
         if (section != null)

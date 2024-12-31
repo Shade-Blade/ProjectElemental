@@ -271,7 +271,7 @@ public struct Badge
         HammerBeat,
         MistWall,
         StrangeEgg,
-        StatusRelay,
+        EffectRelay,
         VoraciousEater,
         MultiSupply,
         QuickSupply,
@@ -314,7 +314,7 @@ public struct Badge
         SpiritFlow,
         GoldenPower,
         GoldenShield,
-        Refund,
+        ItemRebate,
         DarkPower,
         DarkShield,
         DarkEndurance,
@@ -354,10 +354,10 @@ public struct Badge
         SoulRegen,
         HealthBalance,
         EffectBoost,
-        StatusBoost,
-        StatusConversion,
-        StatusCatalyst,
-        StatusExploit,
+        AilmentBoost,
+        AilmentConversion,
+        AilmentCatalyst,
+        AilmentExploit,
         Instinct,
         DizzyMomentum,
         Trance,
@@ -503,7 +503,7 @@ public struct Badge
     {
         BadgeDataEntry bde = GetBadgeDataEntry(b);
 
-        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Envy))
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Envy))
         {
             if (bde.cost > 0)
             {
@@ -529,6 +529,32 @@ public struct Badge
         {
             //this looks a bit sus
             Enum.TryParse(split[0], true, out output.type);
+
+            //hardcoded for backwards compatibility
+            if (split[0].Equals("Refund"))
+            {
+                output.type = BadgeType.ItemRebate;
+            }
+            if (split[0].Equals("StatusRelay"))
+            {
+                output.type = BadgeType.EffectRelay;
+            }
+            if (split[0].Equals("StatusBoost"))
+            {
+                output.type = BadgeType.AilmentBoost;
+            }
+            if (split[0].Equals("StatusCatalyst"))
+            {
+                output.type = BadgeType.AilmentCatalyst;
+            }
+            if (split[0].Equals("StatusExploit"))
+            {
+                output.type = BadgeType.AilmentExploit;
+            }
+            if (split[0].Equals("StatusConversion"))
+            {
+                output.type = BadgeType.AilmentConversion;
+            }
         }
 
         if (output.type == BadgeType.None)

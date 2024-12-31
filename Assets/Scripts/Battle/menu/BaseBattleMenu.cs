@@ -273,7 +273,7 @@ public class BaseBattleMenu : MenuHandler
     }
     public static bool ZUsable()
     {
-        return (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_Burden_Wrath) || PlayerTurnController.Instance.MaxMovable()) && (PlayerTurnController.Instance.movableParty.Count + PlayerTurnController.Instance.immovableParty.Count > 1);
+        return (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Wrath) || PlayerTurnController.Instance.MaxMovable()) && (PlayerTurnController.Instance.movableParty.Count + PlayerTurnController.Instance.immovableParty.Count > 1);
     }
 
     public void Sort()

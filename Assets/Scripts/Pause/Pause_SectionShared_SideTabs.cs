@@ -11,7 +11,7 @@ public class Pause_SectionShared_SideTabs : Pause_SectionShared
 
     //public RectTransform selectorArrow;
     public float leftPos = -210;
-    public float rightPos = -165;
+    public float rightPos = -175;
 
     public int tabIndex = -1;
 

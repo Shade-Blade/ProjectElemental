@@ -267,6 +267,7 @@ public class WorldNPC_Wolfram : WorldNPCEntity
                     if (inventory[itemIndex].pickupUnion.type == PickupUnion.PickupType.Item && MainManager.Instance.playerData.itemInventory.Count >= MainManager.Instance.playerData.GetMaxInventorySize() && !(inventory[itemIndex].pickupUnion.item.modifier == Item.ItemModifier.Void))
                     {
                         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 4, this, vars));
+                        yield break;
                     }
                     else
                     {
@@ -306,6 +307,12 @@ public class WorldNPC_Wolfram : WorldNPCEntity
                         yield return StartCoroutine(MainManager.Instance.Pickup(inventory[itemIndex].pickupUnion.Copy()));
                         BuyItem(inventory[itemIndex]);
                         itemsBought++;
+
+                        if (inventory.Count == 0)
+                        {
+                            yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 13, this));
+                            yield break;
+                        }
                     }
                 }
             }

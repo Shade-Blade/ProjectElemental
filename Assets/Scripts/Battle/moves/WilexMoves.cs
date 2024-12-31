@@ -2423,9 +2423,8 @@ public class WM_MultiSlash : WM_Slash
                 eoS.transform.localScale = new Vector3(0.65f, 0.8f, -0.65f);
             }
 
-            //change speed to account for flipping
             //maybe I'll make the animations faster later too (but right now the slash fx doesn't speed up so it might not look right)
-            caller.ac.animator.speed = 1;
+            //caller.ac.animator.speed = 1;
 
             if (flip)
             {
@@ -2461,7 +2460,7 @@ public class WM_MultiSlash : WM_Slash
 
             yield return new WaitForSeconds(delay);
         }
-        caller.ac.animator.speed = 1;
+        caller.ac.ResetAnimationSpeed();
 
         //slightly before the end (So that damage is dealt before the effect completes)
         //yield return new WaitForSeconds(0.1f);

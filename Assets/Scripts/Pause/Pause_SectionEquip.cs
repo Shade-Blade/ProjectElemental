@@ -9,6 +9,7 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
     //public GameObject subobject;
 
     public TextDisplayer sortText;
+    public TextDisplayer sortTip;
 
     public Pause_SectionEquip_Inventory inventory;
     public Pause_SectionShared_CharacterStats characterStats;
@@ -129,6 +130,11 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
         }
 
         selectorArrow.gameObject.SetActive(false);
+
+        if (sortTip.isActiveAndEnabled)
+        {
+            sortTip.SetText("(<button,z> to change)", true, true);
+        }
 
         PlayerData pd = MainManager.Instance.playerData;
         subobject.SetActive(true);
