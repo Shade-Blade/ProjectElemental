@@ -9,6 +9,8 @@ There are sprites for all enemies and all the npcs that appear in this prototype
 
 Itch.io link (a build of this project): [https://shadeblade.itch.io/project-elemental-rabbit-hole-demo](https://shadeblade.itch.io/project-elemental-rabbit-hole-demo)
 
+Alternatively, you can unzip the ProjectElementalBuild.zip file which contains an executable
+
 ## Functional Systems
 Note: You can look in the Input Manager for what keyboard inputs are used for certain buttons.
 
@@ -34,6 +36,7 @@ Note: You can look in the Input Manager for what keyboard inputs are used for ce
 	- (Luna) Hold B to Illuminate (makes some materials tangible and others intangible)
 - Items, Badges
 	- Items have mostly written descriptions telling you what they do
+	- Items can have modifiers if the Item Modifiers option is enabled
 	- Badges have descriptions (some have very rough descriptions that will need to be rewritten later)
 - Writing in general
 	- Most writing is either placeholder or rough draft level
@@ -42,9 +45,12 @@ Note: You can look in the Input Manager for what keyboard inputs are used for ce
 - Battle System
 	- Most stuff works similar to Paper Mario but there are differences
 	- Moves cost stamina and energy, you get stamina every turn, but if you use a move with a cost higher than your Agility you won't get more stamina next turn.
+	- Elemental damage has different bonuses under different conditions (for example, Light damage is stronger against high HP targets)
 	- Blocking only reduces effect durations by half
 - Maps
-	- This demo contains 3 maps for the dungeon (but there are 100 floors to go through)
+	- This demo contains 4 maps for the dungeon (but there are 100 floors to go through)
+	- There are 10 battle maps currently, though they are somewhat basic
+	- There are also test maps that are not accesible normally (requires cheats or using the save file that is saved in one of them)
 - Text System
   	- The textbox system is quite robust, with many different tags with different effects (See DialogueText.cs for the enum, use Analyze to find the code for the tags for more information on how they work than the comments provide)
 
