@@ -241,7 +241,7 @@ public class AC_MashLeft : ActionCommand
         switch (state)
         {
             case AC_State.Idle:
-                if (InputManager.GetAxisHorizontal() < -0.5f && lifetime >= FADE_IN_TIME)
+                if (autoComplete || (InputManager.GetAxisHorizontal() < -0.5f && lifetime >= FADE_IN_TIME))
                 {
                     state = AC_State.Active;
                 }
@@ -378,19 +378,12 @@ public class AC_MashLeftRight : ActionCommand
         switch (state)
         {
             case AC_State.Idle:
-                if (InputManager.GetAxisHorizontal() < -0.5f && lifetime >= FADE_IN_TIME)
+                if (autoComplete || (InputManager.GetAxisHorizontal() < -0.5f && lifetime >= FADE_IN_TIME))
                 {
                     state = AC_State.Active;
                 }
                 break;
             case AC_State.Active:
-                /*
-                holdTime += Time.deltaTime; //not sure about whether to put this before or after, probably won't make much of a difference
-                if (MainManager.GetAxisHorizontal() >= 0 || holdTime >= duration + window)
-                {
-                    state = AC_State.Complete;
-                }
-                */
                 if (InputManager.GetAxisHorizontal() < -0.5f * (rightLast ? 1 : -1))
                 {
                     rightLast = !rightLast;
@@ -495,14 +488,14 @@ public class AC_HoldLeft : ActionCommand
         switch (state)
         {
             case AC_State.Idle:
-                if (InputManager.GetAxisHorizontal() < 0 && lifetime >= FADE_IN_TIME)
+                if (autoComplete || (InputManager.GetAxisHorizontal() < 0 && lifetime >= FADE_IN_TIME))
                 {
                     state = AC_State.Active;
                 }
                 break;
             case AC_State.Active:
                 holdTime += Time.deltaTime; //not sure about whether to put this before or after, probably won't make much of a difference
-                if (InputManager.GetAxisHorizontal() >= 0 || holdTime >= duration + window)
+                if (!autoComplete && (InputManager.GetAxisHorizontal() >= 0 || holdTime >= duration + window))
                 {
                     state = AC_State.Complete;
                 }
@@ -599,7 +592,13 @@ public class AC_PressATimed : ActionCommand
                 }
                 break;
             case AC_State.Active:
-                if (InputManager.GetButtonDown(InputManager.Button.A) || (lifetime >= duration + window))
+                if (!autoComplete && (InputManager.GetButtonDown(InputManager.Button.A) || (lifetime >= duration + window)))
+                {
+                    state = AC_State.Complete;
+                    pressTime = lifetime;
+                    finishTime = 0;
+                }
+                if (autoComplete && lifetime >= duration)
                 {
                     state = AC_State.Complete;
                     pressTime = lifetime;

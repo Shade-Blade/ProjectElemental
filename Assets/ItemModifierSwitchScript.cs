@@ -2,34 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemModifierSwitchScript : MonoBehaviour, ISmashTrigger, ISlashTrigger
+public class ItemModifierSwitchScript : MonoBehaviour, ISignalReceiver
 {
     public TextDisplayer textbox;
 
-    public float cooldown;
+    public LeverScript lever;
 
-    public bool Slash(Vector3 slashvector, Vector3 playerpos)
+    public void Start()
     {
-        if (cooldown > 0)
-        {
-            return false;
-        }
-        MainManager.Instance.SetGlobalFlag(MainManager.GlobalFlag.GF_RandomItemModifiers, !MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_RandomItemModifiers));
+        lever.target = this;
         SetText();
-        cooldown = 0.25f;
-        return true;
     }
 
-    public bool Smash(Vector3 smashvector, Vector3 playerpos)
+    public void ReceiveSignal(int signal)
     {
-        if (cooldown > 0)
+        if (signal == 1)
         {
-            return false;
+            Set(true);
+        } else
+        {
+            Set(false);
         }
-        MainManager.Instance.SetGlobalFlag(MainManager.GlobalFlag.GF_RandomItemModifiers, !MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_RandomItemModifiers));
+    }
+
+    public void Set(bool set)
+    {
+        MainManager.Instance.SetGlobalFlag(MainManager.GlobalFlag.GF_RandomItemModifiers, set);
         SetText();
-        cooldown = 0.35f;
-        return true;
     }
 
     public void SetText()
@@ -38,21 +37,5 @@ public class ItemModifierSwitchScript : MonoBehaviour, ISmashTrigger, ISlashTrig
         //It ends up in the correct place but it just displays as invisible
         //Future todo: make a second version of all the special sprites that works in the overworld?
         textbox.SetText("Item Modifiers: " + (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_RandomItemModifiers) ? "ON" : "OFF") + "<line>(Smash this to toggle)", true);
-    }
-
-    public void Start()
-    {
-        SetText();
-    }
-
-    public void Update()
-    {
-        if (cooldown > 0)
-        {
-            cooldown -= Time.deltaTime;
-        } else
-        {
-            cooldown = 0;
-        }
     }
 }

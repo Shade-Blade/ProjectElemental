@@ -837,6 +837,18 @@ public class CheatMenu : MenuHandler
                     MainManager.Instance.Cheat_ControlNeverDisabled = setValue;
                 }
             }
+
+            if (input[1].Equals("SplitParty") || input[1].Equals("sp"))
+            {
+                if (toggle)
+                {
+                    MainManager.Instance.Cheat_SplitParty = !MainManager.Instance.Cheat_SplitParty;
+                }
+                else
+                {
+                    MainManager.Instance.Cheat_SplitParty = setValue;
+                }
+            }
         }
 
         //get cheat

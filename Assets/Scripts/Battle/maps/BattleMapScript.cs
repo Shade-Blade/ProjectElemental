@@ -134,6 +134,13 @@ public class BattleMapScript : MonoBehaviour
         
     }
 
+    //Note: No skybox = uses the previously loaded skybox
+    //if you want a black skybox you have to explicitly load it
+    public bool HasSkybox()
+    {
+        return skyboxID != null && skyboxID.Length > 0;
+    }
+
     public MainManager.SkyboxID GetSkyboxID()
     {
         Enum.TryParse(skyboxID, out MainManager.SkyboxID si);

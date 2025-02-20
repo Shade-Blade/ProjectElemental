@@ -1479,6 +1479,7 @@ public static class BattleHelper
         else
         {
             //was 5 per line but 10 is easier to tell at a glance
+            //Note: current setup can only really fit 4 per line (5 per line battles should be avoided anyway?)
             return new Vector3(-0.05f, 0.0f, 0.12f) +
                 1.1f * Vector3.right * (id % 10) + 1.1f * Vector3.up * (id / 10) - 0.15f * Vector3.forward * (id % 10);
         }
@@ -1625,7 +1626,8 @@ public class EncounterData
 
     public List<EncounterDataEntry> encounterList;
     //To add later: encounter music and encounter maps
-    public MainManager.BattleMapID battleMapName = MainManager.BattleMapID.Test_BattleMap;
+    //public MainManager.BattleMapID battleMapName = MainManager.BattleMapID.Test_BattleMap;
+    public string battleMapName;
 
     public EncounterData(List<EncounterDataEntry> data)
     {
@@ -1819,6 +1821,41 @@ public class EncounterData
             }
 
             ed.encounterList.Add(ede);
+        }
+
+        //Choose the map
+        switch ((floor - 1) / 10)
+        {
+            case 0:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_SolarGrove.ToString();
+                break;
+            case 1:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_VerdantForest.ToString();
+                break;
+            case 2:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_TempestDesert.ToString();
+                break;
+            case 3:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_GemstoneIslands.ToString();
+                break;
+            case 4:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_InfernalCaldera.ToString();
+                break;
+            case 5:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_ShroudedValley.ToString();
+                break;
+            case 6:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_RadiantPlateau.ToString();
+                break;
+            case 7:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_AetherTrench.ToString();
+                break;
+            case 8:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_CrystalHills.ToString();
+                break;
+            case 9:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_ForsakenMountains.ToString();
+                break;
         }
 
         return ed;

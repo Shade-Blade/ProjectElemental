@@ -717,6 +717,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int splotchDamage;                                                //Damage to deal by Splotch
     public int magmaDamage;
     public int damageTakenThisTurn;                                        //Non-status damage taken since last PostMove call (Used to calculate Astral Wall stuff)
+    public int astralWallTrackedDamage;
 
     //
     public int counterFlareTrackedDamage;
@@ -1015,6 +1016,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         damageEventsThisTurn = 0;
 
         damageTakenThisTurn = 0;
+        astralWallTrackedDamage = 0;
         counterFlareDamage = 0;
         counterFlareTrackedDamage = 0;
         arcDischargeDamage = 0;
@@ -1574,7 +1576,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             InflictEffectForce(this, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
 
-        if (HasEffect(Effect.EffectType.AstralWall) && damageTakenThisTurn >= GetEffectEntry(Effect.EffectType.AstralWall).potency)
+        if (HasEffect(Effect.EffectType.AstralWall) && astralWallTrackedDamage >= GetEffectEntry(Effect.EffectType.AstralWall).potency)
         {
             RemoveEffect(Effect.EffectType.AstralWall);
         }
@@ -1586,6 +1588,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         splotchDamage = 0;
         splotchTrackedDamage = 0;
         damageTakenThisTurn = 0;
+        astralWallTrackedDamage = 0;
 
 
         //decrement turncount
@@ -1801,20 +1804,22 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             if (HasEffect(Effect.EffectType.ArcDischarge))
             {
-                arcDischargeDamage += damage;
+                arcDischargeTrackedDamage += damage;
             }
             if (HasEffect(Effect.EffectType.Splotch))
             {
-                splotchDamage += damage;
+                splotchTrackedDamage += damage;
             }
 
-            if (HasEffect(Effect.EffectType.AstralWall))
+            if (!BattleHelper.GetDamageProperty(properties, DamageProperties.Hardcode) && HasEffect(Effect.EffectType.AstralWall))
             {
-                if (damageTakenThisTurn > GetEffectEntry(Effect.EffectType.AstralWall).potency)
+                astralWallTrackedDamage += damage;
+                if (astralWallTrackedDamage > GetEffectEntry(Effect.EffectType.AstralWall).potency)
                 {
-                    int diff = damageTakenThisTurn - GetEffectEntry(Effect.EffectType.AstralWall).potency;
+                    int diff = astralWallTrackedDamage - GetEffectEntry(Effect.EffectType.AstralWall).potency;
 
                     damageTakenThisTurn -= diff;
+                    astralWallTrackedDamage -= diff;
                     damage -= diff;
 
                     if (damage < 0)
@@ -1864,10 +1869,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (HasEffect(Effect.EffectType.Soften))
         {
-            sbyte softDamage = (sbyte)(damage / 3);
+            sbyte softDamage = (sbyte)(damage / (sbyte)(GetEffectEntry(Effect.EffectType.Soften).potency + 1));
             if (softDamage > 0)
             {
-                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
+                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, (sbyte)(GetEffectEntry(Effect.EffectType.Soften).potency + 1)), posId, Effect.EffectStackMode.KeepDurAddPot);
             }
         } else
         {
@@ -6252,21 +6257,79 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public string GetEffectParticleName()
     {
-        if (HasEffect(Effect.EffectType.Paralyze))
-        {
-            return "Paralyze";
-        }
         if (HasEffect(Effect.EffectType.Dizzy))
         {
             return "Dizzy";
         }
-        if (HasEffect(Effect.EffectType.Poison))
+        else if (HasEffect(Effect.EffectType.Berserk))
+        {
+            return "Berserk";
+        }
+        else if (HasEffect(Effect.EffectType.Freeze))
+        {
+            return "Freeze";
+        }
+        else if (HasEffect(Effect.EffectType.Poison))
         {
             return "Poison";
         }
-        if (HasEffect(Effect.EffectType.Freeze))
+        else if (HasEffect(Effect.EffectType.Paralyze))
         {
-            return "Freeze";
+            return "Paralyze";
+        }
+
+        else if (HasEffect(Effect.EffectType.Ethereal))
+        {
+            return "Aetherize"; //note: nonstandard (uses the overworld effect)
+        }
+        else if (HasEffect(Effect.EffectType.Illuminate))
+        {
+            return "Illuminate";
+        }
+        else if (HasEffect(Effect.EffectType.MistWall))
+        {
+            return "MistWall";
+        }
+        else if (HasEffect(Effect.EffectType.AstralWall))
+        {
+            return "AstralWall";
+        }
+        else if (HasEffect(Effect.EffectType.CounterFlare))
+        {
+            return "CounterFlare";
+        }
+        else if (HasEffect(Effect.EffectType.Supercharge))
+        {
+            return "Supercharge";
+        }
+        else if (HasEffect(Effect.EffectType.QuantumShield))
+        {
+            return "QuantumShield";
+        }
+        else if (HasEffect(Effect.EffectType.Soften))
+        {
+            return "Soften";
+        }
+
+        else if (HasEffect(Effect.EffectType.Splotch))
+        {
+            return "Splotch";
+        }
+        else if (HasEffect(Effect.EffectType.Sticky))
+        {
+            return "Sticky";
+        }
+        else if (HasEffect(Effect.EffectType.Soulbleed))
+        {
+            return "Soulbleed";
+        }
+        else if (HasEffect(Effect.EffectType.Sunflame))
+        {
+            return "Sunflame";
+        }
+        else if (HasEffect(Effect.EffectType.ArcDischarge))
+        {
+            return "ArcDischarge";
         }
         return "?";
     }
@@ -6275,21 +6338,73 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         float newScale = Mathf.Max(this.height, this.width);
         GameObject eo = null;
 
-        if (eo == null && HasEffect(Effect.EffectType.Paralyze))
+
+        //Order is the same as the sprite color order for consistency
+        //Dizzy is on top because it doesn't do sprite stuff
+        if (HasEffect(Effect.EffectType.Dizzy))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Dizzy"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.Berserk))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Berserk"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.Freeze))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Freeze"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.Poison))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Poison"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.Paralyze))
         {
             eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Paralyze"), subObject.transform);
         }
-        if (eo == null && HasEffect(Effect.EffectType.Dizzy))
+
+        //did you know you can put space in between the last else if statement and the next one?
+
+        else if (HasEffect(Effect.EffectType.Ethereal))
         {
-            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Dizzy"), subObject.transform);
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Perpetual_Aetherize"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.Illuminate))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Perpetual_Illuminate"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.MistWall))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Mistwall"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.AstralWall))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_AstralWall"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.CounterFlare))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_CounterFlare"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.Supercharge))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Supercharge"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.QuantumShield))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_QuantumShield"), subObject.transform);
+        } else if (HasEffect(Effect.EffectType.Soften))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Soften"), subObject.transform);
         }
-        if (eo == null && HasEffect(Effect.EffectType.Poison))
+
+        else if (HasEffect(Effect.EffectType.Splotch))
         {
-            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Poison"), subObject.transform);
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Splotch"), subObject.transform);
         }
-        if (eo == null && HasEffect(Effect.EffectType.Freeze))
+        else if (HasEffect(Effect.EffectType.Sticky))
         {
-            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Freeze"), subObject.transform);
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Sticky"), subObject.transform);
+        }
+        else if (HasEffect(Effect.EffectType.Soulbleed))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Soulbleed"), subObject.transform);
+        }
+        else if (HasEffect(Effect.EffectType.Sunflame))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Sunflame"), subObject.transform);
+        }
+        else if (HasEffect(Effect.EffectType.ArcDischarge))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_ArcDischarge"), subObject.transform);
         }
 
         if (eo != null)
@@ -8240,7 +8355,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public virtual void SetAnimation(string name, bool force = false)
     {
-        //Debug.Log(this.name + " animation " + name);
         if (ac != null)
         {
             ac.SetAnimation(name, force);

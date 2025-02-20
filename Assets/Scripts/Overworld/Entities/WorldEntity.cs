@@ -545,11 +545,19 @@ public class WorldEntity : WorldObject, ITextSpeaker
             midFacingRotation -= 360;
         }
 
-        if (pastMidFacingRotation != trueFacingRotation || (MainManager.XZProject(usedMovement).magnitude > 0.01f))
+        if (pastMidFacingRotation != midFacingRotation || (MainManager.XZProject(usedMovement).magnitude > 0.01f))
         {
             if (!movementRotationDisabled && ((MainManager.XZProject(usedMovement).magnitude > 0.01f)))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
+                while (trueFacingRotation < 0)
+                {
+                    trueFacingRotation += 360;
+                }
+                while (trueFacingRotation >= 360)
+                {
+                    trueFacingRotation -= 360;
+                }
             }
 
             //going straight back or forward is a little weird, so don't rotate in a 10 degree range
@@ -828,6 +836,9 @@ public class WorldEntity : WorldObject, ITextSpeaker
         int accumulatedNonGround = 0;
         Vector3 accumulatedNonGroundNormal = Vector3.zero;
 
+        Vector3 accumulatedNPC = Vector3.zero;
+        float accumulatedNPCCount = 0;
+
         foreach (ContactPoint contact in collision.contacts)
         {
             if (contact.normal.normalized[1] > MIN_GROUND_NORMAL && LegalGround(collision)) //basically, any incline less than about 40 degrees can be jumped from
@@ -843,6 +854,38 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
                 touchingNonGround = true;
             }
+
+            if (contact.normal.normalized[1] > 0.5f && collision.transform.CompareTag("NPC"))
+            {
+                accumulatedNPCCount++;
+                //need to use this number instead so that the xz component is never 0 (but the collision normal might end up being 0)
+                accumulatedNPC += (contact.otherCollider.transform.position - contact.thisCollider.transform.position); //contact.normal.normalized;
+            }
+        }
+
+        if (accumulatedNPCCount > 0)
+        {
+            Vector3 push = accumulatedNPC / accumulatedNPCCount;
+            push.y = 0;
+            push = -push.normalized;
+
+            //Debug.Log(push);
+
+            Vector3 xz = rb.velocity;
+            xz.y = 0;
+
+            float magnitude = xz.magnitude;
+            float dot = Vector3.Dot(xz, push);
+
+            float k = 1 - dot;
+
+            float pushPower = magnitude * k;
+
+            if (pushPower < WorldPlayer.NPC_STRONG_ANTI_STACK_VELOCITY)
+            {
+                rb.velocity += WorldPlayer.NPC_STRONG_ANTI_STACK_VELOCITY * Time.fixedDeltaTime * push * 10;
+            }
+            //Debug.Log(rb.velocity + " pushed by " + accumulatedNPC + " force " + (NPC_ANTI_STACK_VELOCITY * Time.fixedDeltaTime * push * 10));
         }
 
         if (!AntiGravity() && accumulatedGround > 0)
@@ -1184,11 +1227,11 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
     public void SetTrueFacingRotation(float rot)
     {
-        if (rot > 360)
+        while (rot >= 360)
         {
             rot -= 360;
         }
-        if (rot < 0)
+        while (rot < 0)
         {
             rot += 360;
         }

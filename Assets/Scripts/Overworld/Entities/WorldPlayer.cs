@@ -73,7 +73,11 @@ public class WorldPlayer : WorldEntity
     public GameObject interactIndicator;    //Cyan colored
     public bool indicatorActive;
 
-    public DigCheckScript digCheck;
+    public CollisionCheckScript digCheck;
+    public CollisionCheckScript aetherCheck;
+    public CollisionCheckScript antiAetherCheck;
+    public CollisionCheckScript lightCheck;
+    public CollisionCheckScript antiLightCheck;
     public bool lastFloorNoDig; //is the floor you're on a no-dig floor? (Reset in the floor collision script, shouldn't ever become stale? (may be stale for 1 frame or something)
 
     public bool lastFloorDigThrough;
@@ -295,8 +299,8 @@ public class WorldPlayer : WorldEntity
     const float ANTI_STUCK_IMPULSE = 3f;    //should be as small as possible
     const float ANTI_STUCK_DISTANCE = 0.01f; //note: should be lower than what the anti stuck force applies
 
-    const float NPC_ANTI_STACK_VELOCITY = 1f; //stop you from standing on top of npcs (note: npcs can have a stomp trigger to launch you up)
-    const float NPC_STRONG_ANTI_STACK_VELOCITY = 2f; //stop you from standing on top of npcs (note: npcs can have a stomp trigger to launch you up)
+    public const float NPC_ANTI_STACK_VELOCITY = 1f; //stop you from standing on top of npcs (note: npcs can have a stomp trigger to launch you up)
+    public const float NPC_STRONG_ANTI_STACK_VELOCITY = 2f; //stop you from standing on top of npcs (note: npcs can have a stomp trigger to launch you up)
 
     //physics based constants
     const float WILEX_JUMP_LIFT = 0.05f; //2.5 per s
@@ -370,7 +374,7 @@ public class WorldPlayer : WorldEntity
     public const float STEP_DOWN_MAX_HEIGHT = 0.31f;
     public const float STEP_UP_DOWN_DELAY = 0.05f; //normally the code for step up and step down fight each other
 
-    public const float WARP_BARRIER_Y_COORD = -10f;    //Do not make maps with accessible points below here
+    public const float WARP_BARRIER_Y_COORD = -10f;    //Do not make maps with accessible points below here (note: bottomless pits covered with a Hazard Zone are fine)
 
 
     //Light stuff
@@ -452,7 +456,9 @@ public class WorldPlayer : WorldEntity
             {
                 if (idleTime > 1f && (idleTime - Time.deltaTime) % 0.5f > (idleTime) % 0.5f)  //check if idletime is next to an increment of 0.25 seconds
                 {
-                    WorldCollectibleScript[] items = FindObjectsOfType<WorldCollectibleScript>();
+                    //this will track inactive collectibles
+                    //so I am forced to always put them in logical places for where you can find them
+                    WorldCollectibleScript[] items = FindObjectsOfType<WorldCollectibleScript>(true);
                     Vector3 nearestPos = items.Length > 0 ? items[0].transform.position : Vector3.positiveInfinity;
                     foreach (WorldCollectibleScript wcs in items)
                     {
@@ -572,6 +578,12 @@ public class WorldPlayer : WorldEntity
         {
             switchTime = 0;
             switchRotation = 0;
+        }
+
+        for (int i = 0; i < lights.Count; i++)
+        {
+            float time = Mathf.Floor(Time.time * 6f);
+            lights[i].transform.localPosition = new Vector3(Mathf.Sin(time + i * Mathf.PI / 2) * 0.1f, 0.15f, Mathf.Cos(time + i * Mathf.PI / 2) * 0.1f);
         }
 
         if (encounterCooldown > 0)
@@ -867,14 +879,14 @@ public class WorldPlayer : WorldEntity
                 newVelocity = Vector3.zero;
                 break;
             case ActionState.NoClip:
-                newVelocity = inputXY.x * GetDashSpeed() * Vector3.right + inputXY.y * GetDashSpeed() * Vector3.forward;
+                newVelocity = inputXY.x * GetDashSpeed() * 2.5f * Vector3.right + inputXY.y * GetDashSpeed() * 2.5f * Vector3.forward;
                 if (InputManager.GetButton(InputManager.Button.A))
                 {
-                    newVelocity += GetDashSpeed() * Vector3.up;
+                    newVelocity += GetDashSpeed() * 2.5f * Vector3.up;
                 }
                 if (InputManager.GetButton(InputManager.Button.Z))
                 {
-                    newVelocity -= GetDashSpeed() * Vector3.up;
+                    newVelocity -= GetDashSpeed() * 2.5f * Vector3.up;
                 }
                 break;
             case ActionState.Hover:
@@ -1365,7 +1377,10 @@ public class WorldPlayer : WorldEntity
             transform.position = lastFloorPos;
             rb.velocity = Vector3.zero;
             SetActionState(ActionState.Neutral);
-            FollowerWarpSetState();
+            if (!MainManager.Instance.Cheat_SplitParty)
+            {
+                FollowerWarpSetState();
+            }
             yield return StartCoroutine(MainManager.Instance.UnfadeToBlack());
         }
 
@@ -1558,7 +1573,7 @@ public class WorldPlayer : WorldEntity
 
         if (accumulatedNPCCount > 0)
         {
-            Vector3 push = accumulatedNPC;
+            Vector3 push = accumulatedNPC / accumulatedNPCCount;
             push.y = 0;
             push = -push.normalized;
 
@@ -1887,6 +1902,20 @@ public class WorldPlayer : WorldEntity
             SetIdentity(MainManager.Instance.playerData.party[0].entityID);
             followers[0].SetIdentity(MainManager.Instance.playerData.party[1].GetSpriteID());
             switchBuffered = false;
+
+            if (MainManager.Instance.Cheat_SplitParty)
+            {
+                Vector3 followerPos = followers[0].transform.position;
+                //not guaranteed to be stationary, so copy velocity too
+                Vector3 followerVel = followers[0].rb.velocity;
+                float trueRotation = followers[0].trueFacingRotation;
+                followers[0].transform.position = gameObject.transform.position;
+                followers[0].rb.velocity = rb.velocity;
+                followers[0].SetTrueFacingRotation(trueFacingRotation);
+                rb.velocity = followerVel;
+                gameObject.transform.position = followerPos;
+                SetTrueFacingRotation(trueRotation);
+            }
         }
 
         switch (actionState)
@@ -1984,7 +2013,7 @@ public class WorldPlayer : WorldEntity
                         break;
                     case ActionState.Aetherize:
                     //case ActionState.AetherFall:
-                        if (!noAetherZone && InputManager.GetButton(InputManager.Button.B))
+                        if (!noAetherZone && (InputManager.GetButton(InputManager.Button.B) || !aetherCheck.CollisionCheck()))
                         {
                             AetherUpdate();
                         }
@@ -1996,7 +2025,7 @@ public class WorldPlayer : WorldEntity
                         break;
                     case ActionState.Illuminate:
                     //case ActionState.LightHoldFall:
-                        if (InputManager.GetButton(InputManager.Button.B))
+                        if (InputManager.GetButton(InputManager.Button.B) || !lightCheck.CollisionCheck())
                         {
                             LightUpdate();
                         }
@@ -2181,13 +2210,13 @@ public class WorldPlayer : WorldEntity
                     } else if (switchTime <= 0 && aetherLightCooldown > Time.deltaTime + 0.1f + Time.fixedDeltaTime && InputManager.GetButtonHeldLonger(InputManager.Button.B, CONTROL_HOLD_TIME))
                     {
                         //don't question my math
-                        if (Unlocked_Aetherize() && !noAetherZone && currentCharacter == MainManager.PlayerCharacter.Wilex)
+                        if (Unlocked_Aetherize() && !noAetherZone && currentCharacter == MainManager.PlayerCharacter.Wilex && antiAetherCheck.CollisionCheck())
                         {
                             SetActionState(ActionState.Aetherize);
                             AetherStart();
                         }
 
-                        if (Unlocked_Illuminate() && currentCharacter == MainManager.PlayerCharacter.Luna)
+                        if (Unlocked_Illuminate() && currentCharacter == MainManager.PlayerCharacter.Luna && antiLightCheck.CollisionCheck())
                         {
                             SetActionState(ActionState.Illuminate);
                             LightStart();
@@ -2626,13 +2655,14 @@ public class WorldPlayer : WorldEntity
 
         movingPlatformFix = false;
 
+        //Antistuck applies if you are stuck at a certain Y position but aren't grounded
         antiStuck = transform.position.y - pastHeight;
         pastHeight = transform.position.y;
 
         //Debug.Log(antiStuck + " " + antiStuckTime);
 
         //should anti stuck apply
-        if (actionState != ActionState.Hover && airTime > 0 && Mathf.Abs(antiStuck) / Time.fixedDeltaTime < ANTI_STUCK_DISTANCE)
+        if (actionState != ActionState.Hover && actionState != ActionState.NoClip && airTime > 0 && Mathf.Abs(antiStuck) / Time.fixedDeltaTime < ANTI_STUCK_DISTANCE)
         {
             antiStuckTime += Time.fixedDeltaTime;
         } else
@@ -2642,7 +2672,7 @@ public class WorldPlayer : WorldEntity
         if (antiStuckTime > ANTI_STUCK_TIME)
         {
             rb.velocity = rb.velocity.x * Vector3.right + rb.velocity.z * Vector3.forward + ANTI_STUCK_IMPULSE * Vector3.up;
-            //Debug.Log("Antistuck");
+            Debug.Log("Antistuck");
         }
 
         if (transform.position.y < WARP_BARRIER_Y_COORD && !HazardState())
@@ -2828,6 +2858,14 @@ public class WorldPlayer : WorldEntity
             if (!movementRotationDisabled && !HazardState() && (MainManager.XZProject(usedMovement).magnitude > 0.01f))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
+                while (trueFacingRotation < 0)
+                {
+                    trueFacingRotation += 360;
+                }
+                while (trueFacingRotation >= 360)
+                {
+                    trueFacingRotation -= 360;
+                }
             }
             //Debug.Log(movementRotationDisabled + " " + trueFacingRotation);
 
@@ -2846,27 +2884,29 @@ public class WorldPlayer : WorldEntity
             }
 
             //Debug.Log(hiddenFacingRotation);
+        }
 
-            //going straight back or forward is a little weird, so don't rotate in a 10 degree range
-            bool norotate = false;
-            if (midFacingRotation > 85f && midFacingRotation < 95f)
-            {
-                norotate = true;
-            }
-            if (midFacingRotation > 265f && midFacingRotation < 275f)
-            {
-                norotate = true;
-            }
+        //going straight back or forward is a little weird, so don't rotate in a 10 degree range
+        bool norotate = false;
+        if (midFacingRotation > 85f && midFacingRotation < 95f)
+        {
+            norotate = true;
+        }
+        if (midFacingRotation > 265f && midFacingRotation < 275f)
+        {
+            norotate = true;
+        }
 
-            if (!norotate)
+        if (!norotate)
+        {
+            targetFacingRotation = 0;
+            if (midFacingRotation > 90 && midFacingRotation < 270)
             {
-                targetFacingRotation = 0;
-                if (midFacingRotation > 90 && midFacingRotation < 270)
-                {
-                    targetFacingRotation = 180;
-                }
+                targetFacingRotation = 180;
             }
         }
+
+
 
         bool lrdir = targetFacingRotation == 0; //true = left to right
         bool ccRotation = showBack ^ lrdir;
@@ -3134,6 +3174,7 @@ public class WorldPlayer : WorldEntity
                 animName = "weaponholdidle";
                 break;
             case ActionState.Fall:
+            case ActionState.LaunchFall:
                 if (rb != null && rb.velocity.y > 0)
                 {
                     animName = "jump";
@@ -3268,9 +3309,12 @@ public class WorldPlayer : WorldEntity
             cc.height = 0.125f;
         }
 
-        for (int i = 0; i < followers.Count; i++)
+        if (!MainManager.Instance.Cheat_SplitParty)
         {
-            followers[i].gameObject.SetActive(false);
+            for (int i = 0; i < followers.Count; i++)
+            {
+                followers[i].gameObject.SetActive(false);
+            }
         }
 
         digTimer = DIG_TIME;
@@ -3327,12 +3371,15 @@ public class WorldPlayer : WorldEntity
             cc.height = 0.75f;
         }
 
-        for (int i = 0; i < followers.Count; i++)
-        {
-            followers[i].gameObject.SetActive(true);
-        }
 
-        FollowerWarpSetState();
+        if (!MainManager.Instance.Cheat_SplitParty)
+        {
+            for (int i = 0; i < followers.Count; i++)
+            {
+                followers[i].gameObject.SetActive(true);
+            }
+            FollowerWarpSetState();
+        }
     }
 
     public void TryDashHopKick(Collision collision, Vector3 kickpos, Vector3 kicknormal)
@@ -3359,35 +3406,35 @@ public class WorldPlayer : WorldEntity
         string animName = "";
         //calculate stuff
         //note that this has the same angles as smash but 8 possible animations instead of 5
-        if ((trueFacingRotation < 22.5f || trueFacingRotation > 337.5f))
+        if ((midFacingRotation < 22.5f || midFacingRotation > 337.5f))
         {
             animName = "slash_e";
         }
-        if ((trueFacingRotation > 157.5f && trueFacingRotation < 202.5f))
+        if ((midFacingRotation > 157.5f && midFacingRotation < 202.5f))
         {
             animName = "slash_w";
         }
-        if ((trueFacingRotation < 337.5f && trueFacingRotation > 292.5f))
+        if ((midFacingRotation < 337.5f && midFacingRotation > 292.5f))
         {
             animName = "slash_ne";
         }
-        if ((trueFacingRotation > 202.5f && trueFacingRotation < 247.5f))
+        if ((midFacingRotation > 202.5f && midFacingRotation < 247.5f))
         {
             animName = "slash_nw";
         }
-        if ((trueFacingRotation < 67.5f && trueFacingRotation > 22.5f))
+        if ((midFacingRotation < 67.5f && midFacingRotation > 22.5f))
         {
             animName = "slash_se";
         }
-        if ((trueFacingRotation > 112.5f && trueFacingRotation < 157.5f))
+        if ((midFacingRotation > 112.5f && midFacingRotation < 157.5f))
         {
             animName = "slash_sw";
         }
-        if ((trueFacingRotation > 247.5f && trueFacingRotation < 292.5f))
+        if ((midFacingRotation > 247.5f && midFacingRotation < 292.5f))
         {
             animName = "slash_n";
         }
-        if ((trueFacingRotation > 67.5f && trueFacingRotation < 112.5f))
+        if ((midFacingRotation > 67.5f && midFacingRotation < 112.5f))
         {
             animName = "slash_s";
         }
@@ -3427,23 +3474,23 @@ public class WorldPlayer : WorldEntity
     public string GetSmashAnim()
     {
         string animName = "";
-        if ((trueFacingRotation < 22.5f || trueFacingRotation > 337.5f) || (trueFacingRotation > 157.5f && trueFacingRotation < 202.5f))
+        if ((midFacingRotation < 22.5f || midFacingRotation > 337.5f) || (midFacingRotation > 157.5f && midFacingRotation < 202.5f))
         {
             animName = "smash_e";
         }
-        if ((trueFacingRotation < 337.5f && trueFacingRotation > 292.5f) || (trueFacingRotation > 202.5f && trueFacingRotation < 247.5f))
+        if ((midFacingRotation < 337.5f && trueFacingRotation > 292.5f) || (midFacingRotation > 202.5f && midFacingRotation < 247.5f))
         {
             animName = "smash_ne";
         }
-        if ((trueFacingRotation < 67.5f && trueFacingRotation > 22.5f) || (trueFacingRotation > 112.5f && trueFacingRotation < 157.5f))
+        if ((midFacingRotation < 67.5f && trueFacingRotation > 22.5f) || (midFacingRotation > 112.5f && midFacingRotation < 157.5f))
         {
             animName = "smash_se";
         }
-        if ((trueFacingRotation > 247.5f && trueFacingRotation < 292.5f))
+        if ((midFacingRotation > 247.5f && midFacingRotation < 292.5f))
         {
             animName = "smash_n";
         }
-        if ((trueFacingRotation > 67.5f && trueFacingRotation < 112.5f))
+        if ((midFacingRotation > 67.5f && midFacingRotation < 112.5f))
         {
             animName = "smash_s";
         }
@@ -3639,7 +3686,10 @@ public class WorldPlayer : WorldEntity
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("IgnorePlayer"), LayerMask.NameToLayer("Aether"), true);
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("AntiAether"), false);
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("IgnorePlayer"), LayerMask.NameToLayer("AntiAether"), false);
-        FollowerWarpSetState();
+        if (!MainManager.Instance.Cheat_SplitParty)
+        {
+            FollowerWarpSetState();
+        }
         foreach (Light l in lights)
         {
             l.enabled = true;
@@ -3672,7 +3722,10 @@ public class WorldPlayer : WorldEntity
     public void LightStart()
     {
         //Debug.Log("light start");
-        FollowerWarpSetState();
+        if (!MainManager.Instance.Cheat_SplitParty)
+        {
+            FollowerWarpSetState();
+        }
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Light"), true);
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("IgnorePlayer"), LayerMask.NameToLayer("Light"), true);
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("AntiLight"), false);
@@ -4277,7 +4330,7 @@ public class WorldPlayer : WorldEntity
     {
         for (int i = 0; i < followers.Count; i++)
         {
-            followers[i].WarpSetState(IsGrounded(), floorNormal);
+            followers[i].WarpSetGroundState(IsGrounded(), floorNormal);
         }
     }
 
@@ -4388,11 +4441,14 @@ public class WorldPlayer : WorldEntity
         doubleJumpStomp = true;
 
         //followers[i].isGrounded = false;
-        FollowerWarpSetState();
-        FollowerSetZDF();
-        for (int i = 0; i < followers.Count; i++)
+        if (!MainManager.Instance.Cheat_SplitParty)
         {
-            followers[i].Jump(doubleJumpImpulse, doubleJumpLift);
+            FollowerWarpSetState();
+            FollowerSetZDF();
+            for (int i = 0; i < followers.Count; i++)
+            {
+                followers[i].Jump(doubleJumpImpulse, doubleJumpLift);
+            }
         }
     }
 
@@ -4506,13 +4562,16 @@ public class WorldPlayer : WorldEntity
 
         superJumpStomp = true;
 
-        FollowerWarpSetState();
-        FollowerSetZDF();
-        //TransmitJump();
-        for (int i = 0; i < followers.Count; i++)
+        if (!MainManager.Instance.Cheat_SplitParty)
         {
-            //followers[i].floorNormal = floorNormal;
-            followers[i].Jump(superJumpImpulse, superJumpLift);
+            FollowerWarpSetState();
+            FollowerSetZDF();
+            //TransmitJump();
+            for (int i = 0; i < followers.Count; i++)
+            {
+                //followers[i].floorNormal = floorNormal;
+                followers[i].Jump(superJumpImpulse, superJumpLift);
+            }
         }
 
         enableDashLeniency = false;
@@ -4554,11 +4613,14 @@ public class WorldPlayer : WorldEntity
         PlatformJumpMomentum();
 
         //followers[i].isGrounded = false;
-        FollowerWarpSetState();
-        FollowerSetZDF();
-        for (int i = 0; i < followers.Count; i++)
+        if (!MainManager.Instance.Cheat_SplitParty)
         {
-            followers[i].Jump(jumpImpulse, jumpLift);
+            FollowerWarpSetState();
+            FollowerSetZDF();
+            for (int i = 0; i < followers.Count; i++)
+            {
+                followers[i].Jump(jumpImpulse, jumpLift);
+            }
         }
 
         applyJumpLift = true;
@@ -4608,14 +4670,17 @@ public class WorldPlayer : WorldEntity
 
         doubleJumpStomp = true;
 
-        FollowerWarpSetState();
-        FollowerSetZDF();
-        //TransmitJump();
-        for (int i = 0; i < followers.Count; i++)
+        if (!MainManager.Instance.Cheat_SplitParty)
         {
-            //followers[i].floorNormal = floorNormal;
-            followers[i].Jump(superKickImpulse, superKickLift);
-        }
+            FollowerWarpSetState();
+            FollowerSetZDF();
+            //TransmitJump();
+            for (int i = 0; i < followers.Count; i++)
+            {
+                //followers[i].floorNormal = floorNormal;
+                followers[i].Jump(superKickImpulse, superKickLift);
+            }
+        }        
     }
 
     public void PlatformJumpMomentum()

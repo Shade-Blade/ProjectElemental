@@ -26,7 +26,7 @@ public class UndigTriggerObject : MonoBehaviour, IUndigTrigger
         if (!undig)
         {
             undig = true;
-            MainManager.Instance.DropCoins(coinCount, transform.position, Vector3.up * 6, 3);
+            MainManager.Instance.DropCoins(coinCount, transform.position, Vector3.up * 3, 1.5f);
             Destroy(gameObject);
         }
     }

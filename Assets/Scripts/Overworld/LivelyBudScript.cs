@@ -5,7 +5,9 @@ using UnityEngine;
 public class LivelyBudScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlashTrigger, ISmashTrigger, IStompTrigger, IHeadHitTrigger
 {
     public MeshRenderer model;
+    public MeshRenderer leaves;
 
+    public float hitAnimDuration = 0.1f;
     public float hitAnimTime = 0;
     public float healCooldown = 0;
     public bool healActive = false;
@@ -38,7 +40,7 @@ public class LivelyBudScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
             eo = Instantiate(Resources.Load<GameObject>("VFX/Effect_Sparkle"), gameObject.transform);
             eo.transform.position = healedEntities[i].transform.position;
             es_s = eo.GetComponent<EffectScript_Sparkle>();
-            es_s.Setup(new Color(1.0f, 0.2f, 1.0f, 1.0f), 0.5f, 6, 0.25f, 0.5f);
+            es_s.Setup(new Color(1.0f, 0.8f, 0.5f, 1.0f), 0.5f, 6, 0.25f, 0.5f);
         }
     }
 
@@ -59,10 +61,13 @@ public class LivelyBudScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
                 hitAnimTime = 0;
             }
 
-            float upScale = Mathf.Max(1.25f * hitAnimTime + 0.75f, 1 + Mathf.Sin(lifetime) * 0.125f);
-            float sideScale = Mathf.Min(-1f * hitAnimTime + 0.75f, 0.625f - Mathf.Sin(lifetime) * 0.125f);
+            float upScale = Mathf.Max(0.5f * (hitAnimTime / hitAnimDuration) + 1f, 1 + Mathf.Sin(lifetime * 2) * 0.0625f);
+            float sideScale = Mathf.Min(-0.5f * (hitAnimTime / hitAnimDuration) + 1f, 1.35f - Mathf.Sin(lifetime * 2) * 0.0625f);
 
             model.transform.localScale = (Vector3.forward + Vector3.right) * sideScale + Vector3.up * upScale;
+            //interpolate between 1 and model scale
+            //so that they move separately somewhat
+            leaves.transform.localScale = Vector3.Lerp(Vector3.one, model.transform.localScale, (hitAnimTime / hitAnimDuration) * 0.75f + 0.25f);
         }
 
         if (healCooldown > 0)
@@ -86,7 +91,7 @@ public class LivelyBudScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
         MainManager.Instance.playerData.FullHeal();
         MainManager.Instance.SetHUDTime();
         healCooldown = 0.5f;
-        hitAnimTime = 0.5f;
+        hitAnimTime = hitAnimDuration;
         StartCoroutine(SaveCutscene());
     }
 

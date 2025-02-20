@@ -119,6 +119,10 @@ public class WorldCamera : MonoBehaviour
 
     public Vector3 offset;
 
+    //hacky fix for player being warped by a trigger (player still collides with stuff the same frame which resets the floor position for 1 frame)
+    //ignore LastGroundedHeight in focus calculation for X frames (basically locks the Y pos)
+    public int focusIgnoreHeightFrames;
+
     public float freeCamHoldTime = 0;
     public bool pastFreeCamMode = false;
 
@@ -261,16 +265,26 @@ public class WorldCamera : MonoBehaviour
         WorldPlayer player = WorldPlayer.Instance;
         if (player != null)
         {
+            float pasty = focus.y;
+
+            //Hazard fall = falling into a pit or a pool of dangerous stuff
+            //So don't follow you all the way into the pit
             if (player.GetActionState() == WorldPlayer.ActionState.HazardFall)
             {
-                float pasty = focus.y;
                 focus = player.transform.position;
                 focus.y = pasty;
             }
             else
             {
                 focus = player.transform.position;
-                focus.y = player.lastGroundedHeight;
+                if (focusIgnoreHeightFrames > 0)
+                {
+                    focus.y = pasty;
+                }
+                else
+                {
+                    focus.y = player.lastGroundedHeight;
+                }
 
                 if (player.transform.position.y - focus.y > MAX_UPOFFSET)
                 {
@@ -603,6 +617,11 @@ public class WorldCamera : MonoBehaviour
     //Note: player moves in fixed update and so the camera becomes a bit unstable with normal update (*though only if the camera movement is not instant)
     void FixedUpdate()
     {
+        if (focusIgnoreHeightFrames > 0)
+        {
+            focusIgnoreHeightFrames--;
+        }
+
         if (MainManager.Instance.Cheat_RevolvingCam && !MainManager.Instance.Cheat_FreeCam)
         {
             //Revolving cam mode

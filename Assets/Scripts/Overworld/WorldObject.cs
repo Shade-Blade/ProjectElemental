@@ -10,6 +10,8 @@ public class WorldObject : MonoBehaviour
     public MapScript mapScript;
     public Rigidbody rb;
     [HideInInspector]
+    public Vector3 bufferVelocity;
+    [HideInInspector]
     public bool forceKinematic;
 
     public virtual void Awake()
@@ -28,7 +30,16 @@ public class WorldObject : MonoBehaviour
     {
         if (rb != null)
         {
-            rb.isKinematic = mapScript.GetHalted() || forceKinematic;
+            bool nextKinematic = mapScript.GetHalted() || forceKinematic;
+            if (!rb.isKinematic && nextKinematic)
+            {
+                bufferVelocity = rb.velocity;
+            }
+            if (rb.isKinematic && !nextKinematic)
+            {
+                rb.velocity = bufferVelocity;
+            }
+            rb.isKinematic = nextKinematic;
         }
         if (!mapScript.GetHalted())
         {

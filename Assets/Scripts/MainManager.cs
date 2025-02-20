@@ -2903,6 +2903,7 @@ public class MainManager : MonoBehaviour
     public bool Cheat_OverworldHazardImmunity;  //hazard states don't happen
     public bool Cheat_OverworldEncounterImmunity;  //Block mapscript from starting battles
     public bool Cheat_ControlNeverDisabled; //ignore the disable control thing
+    public bool Cheat_SplitParty;   //split party mode (note: does not work correctly with map transitions, also need to change properties of the worldfollower to act similar to worldplayer) (note 2: if follower ends up on unstable ground, may cause problems)
 
     public int frameCounter;
     public float frameTime;
@@ -2985,7 +2986,16 @@ public class MainManager : MonoBehaviour
     public enum BattleMapID
     {
         Test_BattleMap,
-
+        TestBattle_SolarGrove,
+        TestBattle_VerdantForest,
+        TestBattle_TempestDesert,
+        TestBattle_GemstoneIslands,
+        TestBattle_InfernalCaldera,
+        TestBattle_ShroudedValley,
+        TestBattle_RadiantPlateau,
+        TestBattle_AetherTrench,
+        TestBattle_CrystalHills,
+        TestBattle_ForsakenMountains,
     }
     public enum SkyboxID
     {
@@ -3887,7 +3897,7 @@ public class MainManager : MonoBehaviour
             {
                 //In this case, the new item is not in your inventory yet
                 Vector3 position = WorldPlayer.Instance.transform.position + Vector3.up * 0.8f;
-                Vector3 velocity = Vector3.up * 4 + WorldPlayer.Instance.FacingVector() * 4;
+                Vector3 velocity = Vector3.up * 3 + WorldPlayer.Instance.FacingVector() * 3;
                 WorldCollectibleScript.MakeCollectible(pu, position, velocity);
             }
             else
@@ -3901,7 +3911,7 @@ public class MainManager : MonoBehaviour
 
                 //toss
                 Vector3 position = WorldPlayer.Instance.transform.position + Vector3.up * 0.8f;
-                Vector3 velocity = Vector3.up * 4 + WorldPlayer.Instance.FacingVector() * 4;
+                Vector3 velocity = Vector3.up * 3 + WorldPlayer.Instance.FacingVector() * 3;
                 WorldCollectibleScript.MakeCollectible(new PickupUnion(removedItem), position, velocity);
             }
         }
@@ -3992,6 +4002,16 @@ public class MainManager : MonoBehaviour
         }
         WorldCollectibleScript.MakeCollectible(new PickupUnion(new Item(it, Item.ItemModifier.None, Item.ItemOrigin.EnemyDrop)), position, velocity);
     }
+    public void ThrowExistingCollectible(WorldCollectibleScript wcs, Vector3 position, Vector3 velocity = default)
+    {
+        wcs.transform.position = position;
+        wcs.rb.velocity = velocity;
+        wcs.startPos = position;
+        wcs.intangible = false;
+        wcs.antigravity = false;
+
+        //WorldCollectibleScript.MakeCollectible(new PickupUnion(new Item(it, Item.ItemModifier.None, Item.ItemOrigin.EnemyDrop)), position, velocity);
+    }
     public void DropItems(Item.ItemType it, int count, Vector3 position, Vector3 firstDir, Vector3 baseVel, float spread)
     {
         //Debug.Log("Drop coins");
@@ -4042,6 +4062,22 @@ public class MainManager : MonoBehaviour
         }
     }
     */
+    public bool GetGlobalFlag(string gfs)
+    {
+        GlobalFlag gf = GlobalFlag.GF_None;
+        Enum.TryParse(gfs, out gf);
+
+        if (gf == GlobalFlag.GF_None)
+        {
+            Debug.LogWarning("GF_None is being accessed");
+            return true;
+        }
+        if (!globalFlags.ContainsKey(gf))
+        {
+            return false;
+        }
+        return globalFlags[gf];
+    }
     public bool GetGlobalFlag(GlobalFlag gf)
     {
         if (gf == GlobalFlag.GF_None)
@@ -4144,6 +4180,18 @@ public class MainManager : MonoBehaviour
         {
             return mapScript.vars[index];
         }
+    }
+    public void SetGlobalFlag(string gfs, bool set = true)
+    {
+        GlobalFlag gf = GlobalFlag.GF_None;
+        Enum.TryParse(gfs, out gf);
+
+        if (gf == GlobalFlag.GF_None)
+        {
+            Debug.LogWarning("Attempt to set GF_None");
+            return;
+        }
+        globalFlags[gf] = set;
     }
     public void SetGlobalFlag(GlobalFlag gf, bool set = true)
     {
@@ -5189,7 +5237,7 @@ public class MainManager : MonoBehaviour
         fileCodeText[0] = new string[1];
         fileCodeText[0][0] = "<system>File Code Greed: Your Max HP is capped at a low value, but you have infinite money and start with many Shield badges. Many badges relating to health or coins will be replaced with other badges.";
         fileCodeText[1] = new string[1];
-        fileCodeText[1][0] = "<system>File Code Envy: You start with 6 SP and level ups can only increase your SP by 1. However, all badges cost 1 SP at most and all Soul Moves cost half as much.";
+        fileCodeText[1][0] = "<system>File Code Envy: You start with 6 SP and level ups can only increase your SP by 0.5. However, all badges cost 1 SP at most and all Soul Moves cost half as much.";
         fileCodeText[2] = new string[1];
         fileCodeText[2][0] = "<system>File Code Gluttony: You can hold twice as many items, but items are only half as strong.";
         fileCodeText[3] = new string[1];
@@ -6544,6 +6592,7 @@ public class MainManager : MonoBehaviour
         mapHalted = false;
         mapScript.Enable();
         mapScript.HandleBattleOutcome(outcome);
+        SetSkybox(mapScript.GetSkyboxID());
         if (outcome == BattleHelper.BattleOutcome.Flee || outcome == BattleHelper.BattleOutcome.Exit)
         {
             WorldPlayer wp = WorldPlayer.Instance;
@@ -6958,7 +7007,8 @@ public class MainManager : MonoBehaviour
 
     //??? may act weird with object destruction (So don't destroy objects that are actively executing a cutscene, unless you also are calling ResetCutsceneSystem right before)
     //Correct way to use this: 
-    //  StartCoroutine(ExecuteCutscene( [input] ))
+    //  StartCoroutine(ExecuteCutscene( input() ))
+    //      where input = an IEnumerator Method
     //Don't pass in StartCoroutine(input)   (because there is StartCoroutine(input) inside)
     public IEnumerator ExecuteCutscene(IEnumerator input) {
         int cutsceneID = LastStartedCutscene() + 1;

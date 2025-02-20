@@ -53,6 +53,10 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
 
     public PickupUnion pu;
 
+    public MeshRenderer mr;
+    public List<Material> materials;
+
+
     public void Start()
     {
         string floorNo = MainManager.Instance.GetGlobalVar(MainManager.GlobalVar.GV_PitFloor);
@@ -62,6 +66,40 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
             floorNo = MainManager.Instance.GetGlobalVar(MainManager.GlobalVar.GV_PitFloor);
         }
         floor = int.Parse(floorNo);
+
+        switch ((floor - 1) / 10)
+        {
+            case 0:
+                mr.material = materials[0];
+                break;
+            case 1:
+                mr.material = materials[1];
+                break;
+            case 2:
+                mr.material = materials[2];
+                break;
+            case 3:
+                mr.material = materials[3];
+                break;
+            case 4:
+                mr.material = materials[4];
+                break;
+            case 5:
+                mr.material = materials[5];
+                break;
+            case 6:
+                mr.material = materials[6];
+                break;
+            case 7:
+                mr.material = materials[7];
+                break;
+            case 8:
+                mr.material = materials[8];
+                break;
+            case 9:
+                mr.material = materials[9];
+                break;
+        }
 
         if (!setup)
         {

@@ -2514,6 +2514,7 @@ public class LM_Smash : LunaMove
 
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
         target += Vector3.left * 0.5f * caller.width + 0.4f * Vector3.left;
+        target.y = caller.homePos.y;
         yield return StartCoroutine(caller.Move(target));
 
         if (caller.curTarget != null)

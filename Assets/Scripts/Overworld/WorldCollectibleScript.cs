@@ -15,6 +15,8 @@ public class WorldCollectibleScript : WorldObject
     public bool intangible; //blocks you from collecting or attracting
     private bool doAttract;
 
+    public bool touchingObject = false;
+
     public WorldPlayer worldPlayer;
 
     public PickupUnion pickupUnion;
@@ -25,10 +27,10 @@ public class WorldCollectibleScript : WorldObject
 
     public bool setup = false;
 
-    public MainManager.GlobalFlag globalFlag;
+    public string globalFlag;
     public string areaFlag = "";
 
-    private Vector3 startPos;
+    public Vector3 startPos;
 
     //Why
     public bool isCollected;
@@ -49,7 +51,7 @@ public class WorldCollectibleScript : WorldObject
         wcs.startPos = position;
         wcs.rb.velocity = velocity;
         wcs.lifetime = 0;
-        wcs.globalFlag = MainManager.GlobalFlag.GF_None;
+        wcs.globalFlag = "";
         wcs.areaFlag = "";
         wcs.maxLifetime = maxLifetime;
         return wcs;
@@ -102,6 +104,11 @@ public class WorldCollectibleScript : WorldObject
         pickupUnion.Unmutate();
     }
 
+    public override void ProcessCollision(Collision collision)
+    {
+        touchingObject = true;
+    }
+
     public void Start()
     {
         worldPlayer = WorldPlayer.Instance;
@@ -122,11 +129,11 @@ public class WorldCollectibleScript : WorldObject
         }
 
         bool delete = false;
-        if (globalFlag != MainManager.GlobalFlag.GF_None)
+        if (globalFlag.Length > 1)
         {
             delete = MainManager.Instance.GetGlobalFlag(globalFlag);
         }
-        else if (areaFlag.Length > 0)
+        else if (areaFlag.Length > 1)
         {
             delete = MainManager.Instance.GetAreaFlag(areaFlag);
         }
@@ -173,9 +180,19 @@ public class WorldCollectibleScript : WorldObject
         }
         if (worldPlayer != null && MainManager.Instance.inCutscene)
         {
+            if (!rb.isKinematic)
+            {
+                bufferVelocity = rb.velocity;
+            }
+
             rb.isKinematic = true;
         } else
         {
+            if (rb.isKinematic)
+            {
+                rb.velocity = bufferVelocity;
+            }
+
             rb.isKinematic = false;
         }
         if (lifetime > NO_INTERACT_TIME && !intangible && attract && worldPlayer != null)
@@ -208,7 +225,12 @@ public class WorldCollectibleScript : WorldObject
             }
         }
 
-        rb.velocity = (rb.velocity.x * Vector3.right + rb.velocity.z * Vector3.forward) * Mathf.Pow(0.1f, Time.fixedDeltaTime) + rb.velocity.y * Vector3.up;
+        if (touchingObject)
+        {
+            rb.velocity = (rb.velocity.x * Vector3.right + rb.velocity.z * Vector3.forward) * Mathf.Pow(0.75f, Time.fixedDeltaTime) + rb.velocity.y * Vector3.up;
+        }
+
+        touchingObject = false;
     }
 
     public void OnTriggerEnter(Collider other)
@@ -227,54 +249,113 @@ public class WorldCollectibleScript : WorldObject
 
         if (lifetime > NO_INTERACT_TIME && !intangible && w != null && !MainManager.Instance.inCutscene)
         {
-            if (!isCollected)
-            {
-                isCollected = true;
-                switch (pickupUnion.type)
-                {
-                    case PickupUnion.PickupType.None:
-                        break;
-                    case PickupUnion.PickupType.Coin:
-                        Particles(new Color(1f, 0.75f, 0.5f, 1f), 1);
-                        break;
-                    case PickupUnion.PickupType.SilverCoin:
-                        Particles(new Color(1f, 0.75f, 0.5f, 1f), 1);
-                        break;
-                    case PickupUnion.PickupType.GoldCoin:
-                        Particles(new Color(1f, 0.75f, 0.5f, 1f), 2);
-                        break;
-                    case PickupUnion.PickupType.Shard:
-                        Particles(new Color(0.25f, 0.75f, 0.75f, 1f), 1);
-                        break;
-                    case PickupUnion.PickupType.Item:
-                        Particles(new Color(0.25f, 0.75f, 0.25f, 1f), 1);
-                        break;
-                    case PickupUnion.PickupType.KeyItem:
-                        Particles(new Color(0.25f, 0.75f, 0.25f, 1f), 1);
-                        break;
-                    case PickupUnion.PickupType.Badge:
-                        Particles(new Color(0.75f, 0.25f, 0.25f, 1f), 1);
-                        break;
-                    case PickupUnion.PickupType.Ribbon:
-                        Particles(new Color(0.75f, 0.25f, 0.75f, 1f), 1);
-                        break;
-                }
-
-                if (globalFlag != MainManager.GlobalFlag.GF_None)
-                {
-                    MainManager.Instance.SetGlobalFlag(globalFlag, true);
-                }
-                else if (areaFlag.Length > 0)
-                {
-                    MainManager.Instance.SetAreaFlag(areaFlag, true);
-                }
-
-                MainManager.Instance.StartCoroutine(MainManager.Instance.Pickup(pickupUnion));
-
-                //Debug.Log("Interact destroy");
-                Destroy(gameObject);
-            }
+            Pickup();
         }
+    }
+
+    public void Pickup()
+    {
+        if (!isCollected)
+        {
+            isCollected = true;
+            switch (pickupUnion.type)
+            {
+                case PickupUnion.PickupType.None:
+                    break;
+                case PickupUnion.PickupType.Coin:
+                    Particles(new Color(1f, 0.75f, 0.5f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.SilverCoin:
+                    Particles(new Color(1f, 0.75f, 0.5f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.GoldCoin:
+                    Particles(new Color(1f, 0.75f, 0.5f, 1f), 2);
+                    break;
+                case PickupUnion.PickupType.Shard:
+                    Particles(new Color(0.25f, 0.75f, 0.75f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.Item:
+                    Particles(new Color(0.25f, 0.75f, 0.25f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.KeyItem:
+                    Particles(new Color(0.25f, 0.75f, 0.25f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.Badge:
+                    Particles(new Color(0.75f, 0.25f, 0.25f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.Ribbon:
+                    Particles(new Color(0.75f, 0.25f, 0.75f, 1f), 1);
+                    break;
+            }
+
+            if (globalFlag.Length > 1)
+            {
+                MainManager.Instance.SetGlobalFlag(globalFlag, true);
+            }
+            else if (areaFlag.Length > 1)
+            {
+                MainManager.Instance.SetAreaFlag(areaFlag, true);
+            }
+
+            MainManager.Instance.StartCoroutine(MainManager.Instance.Pickup(pickupUnion));
+
+            //Debug.Log("Interact destroy");
+            Destroy(gameObject);
+        }
+    }
+
+    public IEnumerator PickupCoroutine()
+    {
+        if (!isCollected)
+        {
+            isCollected = true;
+            switch (pickupUnion.type)
+            {
+                case PickupUnion.PickupType.None:
+                    break;
+                case PickupUnion.PickupType.Coin:
+                    Particles(new Color(1f, 0.75f, 0.5f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.SilverCoin:
+                    Particles(new Color(1f, 0.75f, 0.5f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.GoldCoin:
+                    Particles(new Color(1f, 0.75f, 0.5f, 1f), 2);
+                    break;
+                case PickupUnion.PickupType.Shard:
+                    Particles(new Color(0.25f, 0.75f, 0.75f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.Item:
+                    Particles(new Color(0.25f, 0.75f, 0.25f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.KeyItem:
+                    Particles(new Color(0.25f, 0.75f, 0.25f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.Badge:
+                    Particles(new Color(0.75f, 0.25f, 0.25f, 1f), 1);
+                    break;
+                case PickupUnion.PickupType.Ribbon:
+                    Particles(new Color(0.75f, 0.25f, 0.75f, 1f), 1);
+                    break;
+            }
+
+            if (globalFlag.Length > 1)
+            {
+                MainManager.Instance.SetGlobalFlag(globalFlag, true);
+            }
+            else if (areaFlag.Length > 1)
+            {
+                MainManager.Instance.SetAreaFlag(areaFlag, true);
+            }
+
+            //Dangerous? the rest of this script executes without this game object existing
+            //Should be fine though since this immediately gets passed to pickup
+            Destroy(gameObject);
+
+            yield return MainManager.Instance.StartCoroutine(MainManager.Instance.Pickup(pickupUnion));
+        }
+
+        yield return null;
     }
 
     public void Particles(Color color, int power)
@@ -282,6 +363,10 @@ public class WorldCollectibleScript : WorldObject
         //int power = 2;
 
         float newScale = 0.75f; 
+        if (worldPlayer == null)
+        {
+            worldPlayer = WorldPlayer.Instance;
+        }
         Vector3 position = worldPlayer.transform.position + Vector3.up * (0.375f);
 
         GameObject eo = null;

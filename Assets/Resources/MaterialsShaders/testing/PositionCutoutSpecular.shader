@@ -1,15 +1,20 @@
-Shader "Custom/PositionCutoutSpecular"
+Shader "Custom/PositionCutoutToon"
 {
     Properties
     {
         _Color ("Color A", Color) = (1,1,1,1)
         _ColorB ("Color B", Color) = (1,1,1,1)
-        _SpecColor ("Specular Color", Color) = (0,0,0,0)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _FadeLength ("Fade Length", float) = 0.0
         _Distance ("Distance", float) = 1
         _WorldOffset ("Behind Offset", float) = 1
         _NearOffset ("Near Camera Length", float) = 1
+
+        _BrightnessLow("Brightness Low", float) = 0.22
+        _BrightnessMid("Brightness Mid", float) = 0.53
+        _BrightnessHigh("Brightness High", float) = 1
+        _BrightnessCutoffA("Brightness Cutoff A", float) = 0.05
+        _BrightnessCutoffB("Brightness Cutoff B", float) = 0.55
     }
     SubShader
     {
@@ -22,24 +27,43 @@ Shader "Custom/PositionCutoutSpecular"
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf SimpleSpecular fullforwardshadows alpha:fade
+        #pragma surface surf ToonRamp fullforwardshadows alpha:fade
 
         //half4 _SpecColor;
 
-        half4 LightingSimpleSpecular (SurfaceOutput s, half3 lightDir, half3 viewDir, half atten) {
-            half3 h = normalize (lightDir + viewDir);
+        float _BrightnessLow;
+        float _BrightnessMid;
+        float _BrightnessHigh;
+        float _BrightnessCutoffA;
+        float _BrightnessCutoffB;
 
-            half diff = max (0, dot (s.Normal, lightDir));
+        // custom lighting function based
+        // on angle between light direction and normal
+        #pragma lighting ToonRamp exclude_path:prepass
+        inline half4 LightingToonRamp(SurfaceOutput s, half3 lightDir, half atten)
+        {
+            #ifndef USING_DIRECTIONAL_LIGHT
+                lightDir = normalize(lightDir);
+            #endif
+            float d = dot(s.Normal, lightDir) ;
+            float lightIntensity = d; //? factor
 
-            float nh = max (0, dot (s.Normal, h));
-            float spec = pow (nh, 48.0);
 
+            if (lightIntensity < _BrightnessCutoffA) {
+                lightIntensity = 0;
+            } else if (lightIntensity < _BrightnessCutoffB) {
+                lightIntensity = _BrightnessMid;
+            } else {
+                lightIntensity = _BrightnessHigh;
+            }
+          
+            //sus
             if (_LightColor0.a == 0) {
                 atten = -atten;
             }
-
+            
             half4 c;
-            c.rgb = (s.Albedo * _LightColor0.rgb * diff + _SpecColor * _LightColor0.rgb * spec) * atten;
+            c.rgb = s.Albedo * _LightColor0.rgb * lightIntensity * atten;
             c.a = s.Alpha;
             return c;
         }

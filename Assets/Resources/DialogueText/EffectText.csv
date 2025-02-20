@@ -44,12 +44,12 @@ Immunity,Immunity,Cannot receive most negative effects.
 Ethereal,Ethereal,Non-light attacks against this entity will miss.
 Illuminate,Illuminate,"Attack is increased by <var,1> (Potency increases by 1 if you attack on your turn, up to <var,6>)"
 MistWall,Mist Wall,"Take <var,5>% less damage."
-AstralWall,Astral Wall,"Damage per turn taken is capped at <var,1> per turn. (Effect is removed on your turn if damage is capped)"
+AstralWall,Astral Wall,"Damage per turn taken is capped at <var,1> per turn. (Effect is removed at the start of next turn if damage is capped)"
 ParryAura,Parry Aura,"Gain <var,1> Focus when hit."
 BolsterAura,Bolster Aura,"Gain <var,1> Absorb at the end of turn when hit."
 AstralRecovery,Astral Recovery,"Gain <var,1> HP when hit except when the hit reduces the entity to 0 hp."
 Elusive,Elusive,"Get <var,1> turn(s) of Ethereal when hit."
-CounterFlare,Counter Flare,Damage taken will be healed back at 50% strength and then returned to all enemies at the end of turn. (Effect potency is reduced by 1 if the counter activates)
+CounterFlare,Counter Flare,Damage taken will be returned to all enemies at the end of turn and healed back at 50% strength. (Effect potency is reduced by 1 if the counter activates)
 Supercharge,Supercharge,"Deal <var,5>% more damage. Guaranteed to increase damage by at least <var, 1>."
 QuantumShield,Quantum Shield,"Block the next <var,1> hits completely"
 Soften,Soften,Damage you take is softened so that the damage happens over the course of 3 turns.

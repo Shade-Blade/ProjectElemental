@@ -2119,6 +2119,7 @@ public class WM_Slash : WilexMove
 
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
         target += Vector3.left * 0.5f * caller.width + 0.5f * Vector3.left;
+        target.y = caller.homePos.y;
         yield return StartCoroutine(caller.Move(target));
 
         if (caller.curTarget != null)
@@ -3729,14 +3730,14 @@ public class WM_Aetherize : WilexMove
             {
                 case 1:
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Ethereal, 1, 1));
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+                    caller.InflictEffectForce(caller.curTarget, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, 1));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+                        caller.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                     }
                     break;
                 case 3:
@@ -3761,14 +3762,14 @@ public class WM_Aetherize : WilexMove
             {
                 case 1:
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Ethereal, 1, 1));
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+                    caller.InflictEffectForce(caller.curTarget, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
                         caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, 1));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+                        caller.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                     }
                     break;
                 case 3:
@@ -3782,7 +3783,7 @@ public class WM_Aetherize : WilexMove
                     List<BattleEntity> targetsC = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsC)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, (sbyte)(level - 4)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Ethereal, 1, (sbyte)(level - 2)));
                     }
                     break;
             }

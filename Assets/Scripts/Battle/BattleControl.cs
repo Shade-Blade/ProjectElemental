@@ -1016,10 +1016,13 @@ public class BattleControl : MonoBehaviour
     {
         List<BattleEntity> output = new List<BattleEntity>();
         int posid = -1;
-        if (pdata.party.Count == 1)
+        //Note: I could make split party reduce party size to 1 (and put the other character in hidden party)
+        //  But then the pause menu would only ever show one character which is inconvenient
+        if (pdata.party.Count == 1 || MainManager.Instance.Cheat_SplitParty)
         {
             //Special logic
-            Vector3 midPos = Vector3.left * 1.25f + Vector3.right * -1.8f + Vector3.forward * -0.075f;
+            //too lazy to math this out properly
+            Vector3 midPos = (BattleHelper.GetDefaultPosition(-1) + BattleHelper.GetDefaultPosition(-2)) / 2;
             BattleEntity b = SummonEntity(pdata.party[0], posid, midPos);
             b.level = pdata.level;
             output.Add(b);
@@ -2204,8 +2207,23 @@ public class BattleControl : MonoBehaviour
         MainManager.Instance.gameOverPlayerData = null;
         encounterData = MainManager.Instance.nextBattle;
 
-        MainManager.BattleMapID bmapName = encounterData.battleMapName;
+
+
+        MainManager.BattleMapID bmapName = MainManager.BattleMapID.Test_BattleMap;
+        //encounterData.battleMapName;
+        Enum.TryParse(encounterData.battleMapName, out bmapName);
+
+        if (encounterData.battleMapName != null && encounterData.battleMapName.Length > 0 && !encounterData.battleMapName.Equals(bmapName.ToString()))
+        {
+            Debug.LogWarning("Battle map name was not parsed correctly " + bmapName + " vs text " + encounterData.battleMapName);
+        }
+
+
         battleMapScript = MainManager.Instance.CreateMap(bmapName);
+        if (battleMapScript.HasSkybox())
+        {
+            MainManager.Instance.SetSkybox(battleMapScript.GetSkyboxID());
+        }
 
         playerData.totalBattles++;
 

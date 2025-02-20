@@ -73,14 +73,34 @@ public class LauncherScript : WorldObject
 
                 if (scripted)
                 {
-                    if (multiDirection)
+                    if (w is WorldPlayer wp)
                     {
-                        float vel = (launchVel - launchVel.y * Vector3.up).magnitude;
-                        Vector3 oldDir = w.rb.velocity - w.rb.velocity.y * Vector3.up;
-                        Vector3 newDir = oldDir.normalized * vel + launchVel.y * Vector3.up;
-                        launchVel = newDir;
+                        if (multiDirection)
+                        {
+                            float vel = (launchVel - launchVel.y * Vector3.up).magnitude;
+                            Vector3 oldDir = w.rb.velocity - w.rb.velocity.y * Vector3.up;
+                            Vector3 newDir = oldDir.normalized * vel + launchVel.y * Vector3.up;
+                            launchVel = newDir;
+                        }
+
+                        foreach (WorldFollower wf in wp.followers)
+                        {
+                            wp.FollowerWarp(wp.FacingVector() * 0.075f);
+                            wf.ScriptedLaunch(launchVel, momentumStrength);
+                        }
+                        w.ScriptedLaunch(launchVel, momentumStrength);
                     }
-                    w.ScriptedLaunch(launchVel, momentumStrength);
+                    else
+                    {
+                        if (multiDirection)
+                        {
+                            float vel = (launchVel - launchVel.y * Vector3.up).magnitude;
+                            Vector3 oldDir = w.rb.velocity - w.rb.velocity.y * Vector3.up;
+                            Vector3 newDir = oldDir.normalized * vel + launchVel.y * Vector3.up;
+                            launchVel = newDir;
+                        }
+                        w.ScriptedLaunch(launchVel, momentumStrength);
+                    }
                 }
                 else
                 {

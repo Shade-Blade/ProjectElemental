@@ -611,6 +611,7 @@ public class PlayerTurnController : MonoBehaviour
                     }
 
                     yield return StartCoroutine(BattleControl.Instance.RunOutOfTurnEvents());
+                    SetPlayerSprites();
                     //Debug.Log("g");
 
 
@@ -926,7 +927,7 @@ public class PlayerTurnController : MonoBehaviour
                 caller.actionCounter++;
                 StartCoroutine(caller.ExecuteMoveCoroutine(moveLevel));
                 //BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.Skill);
-                yield return new WaitUntil(() => caller == null || !caller.moveExecuting);
+                yield return new WaitUntil(() => caller == null || !caller.moveActive);
                 //yield return caller.currMove.Execute(caller);
             }
         }
@@ -1091,8 +1092,9 @@ public class PlayerTurnController : MonoBehaviour
         {
             caller.actionCounter++;
             caller.moveExecuting = true;
+            caller.moveActive = true;
             StartCoroutine(caller.ExecuteMoveCoroutine());
-            yield return new WaitUntil(() => caller == null || !caller.moveExecuting);
+            yield return new WaitUntil(() => caller == null || !caller.moveActive);
             //BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.Skill);
             //yield return caller.currMove.Execute(caller);
         }

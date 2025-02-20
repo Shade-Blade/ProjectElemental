@@ -1468,7 +1468,7 @@ public class PlayerEntity : BattleEntity
         BattleControl.Instance.playerData.GetPlayerDataEntry(entityID).UpdateMaxDamageDealtSingle(damageTaken);
         BattleControl.Instance.playerData.UpdateMaxDamageDealtSingle(damageTaken);
 
-        if (damageDealt > 0)
+        if (damageTaken > 0)
         {
             perTurnDamageDealt += damageTaken;
             BattleControl.Instance.playerData.GetPlayerDataEntry(entityID).cumulativeDamageDealt += damageTaken;
@@ -2160,7 +2160,6 @@ public class PlayerEntity : BattleEntity
         }        
 
         //Apply Astral Wall
-        damageTakenThisTurn += damage;
         if (HasEffect(Effect.EffectType.CounterFlare))
         {
             counterFlareTrackedDamage += damage;
@@ -2176,11 +2175,13 @@ public class PlayerEntity : BattleEntity
 
         if (!BattleHelper.GetDamageProperty(properties, DamageProperties.Hardcode) && HasEffect(Effect.EffectType.AstralWall))
         {
-            if (damageTakenThisTurn > GetEffectEntry(Effect.EffectType.AstralWall).potency)
+            astralWallTrackedDamage += damage;
+            if (astralWallTrackedDamage > GetEffectEntry(Effect.EffectType.AstralWall).potency)
             {
                 int diff = damageTakenThisTurn - GetEffectEntry(Effect.EffectType.AstralWall).potency;
 
                 damageTakenThisTurn -= diff;
+                astralWallTrackedDamage -= diff;
                 damage -= diff;
 
                 if (damage < 0)
@@ -2260,10 +2261,10 @@ public class PlayerEntity : BattleEntity
 
         if (HasEffect(Effect.EffectType.Soften))
         {
-            sbyte softDamage = (sbyte)(damage / 3);
+            sbyte softDamage = (sbyte)(damage / (sbyte)(GetEffectEntry(Effect.EffectType.Soften).potency + 1));
             if (softDamage > 0)
             {
-                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
+                ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, (sbyte)(GetEffectEntry(Effect.EffectType.Soften).potency + 1)), posId, Effect.EffectStackMode.KeepDurAddPot);
             }
         }
         else
@@ -4495,7 +4496,7 @@ public class PlayerEntity : BattleEntity
                 }
             }
 
-            if (HasEffect(Effect.EffectType.AstralWall) && damageTakenThisTurn >= GetEffectEntry(Effect.EffectType.AstralWall).potency)
+            if (HasEffect(Effect.EffectType.AstralWall) && astralWallTrackedDamage >= GetEffectEntry(Effect.EffectType.AstralWall).potency)
             {
                 RemoveEffect(Effect.EffectType.AstralWall);
             }
@@ -4514,6 +4515,7 @@ public class PlayerEntity : BattleEntity
         splotchDamage = 0;
         splotchTrackedDamage = 0;
         damageTakenThisTurn = 0;
+        astralWallTrackedDamage = 0;
 
 
         //badge stuff
@@ -4738,20 +4740,23 @@ public class PlayerEntity : BattleEntity
         switch (BattleControl.Instance.enviroEffect)
         {
             case EnvironmentalEffect.ElectricWind:
-                if (enviroStrong)
+                if (BattleControl.Instance.GetFrontmostAlly(posId) == this)
                 {
-                    //One every 2 turns
-                    if (every2turn > 0)
+                    if (enviroStrong)
                     {
-                        HealEnergy(-every2turn);
+                        //One every 2 turns
+                        if (every2turn > 0)
+                        {
+                            HealEnergy(-every2turn);
+                        }
                     }
-                }
-                else
-                {
-                    //One every 1 turn
-                    if (every1turn > 0)
+                    else
                     {
-                        HealEnergy(-every1turn);
+                        //One every 1 turn
+                        if (every1turn > 0)
+                        {
+                            HealEnergy(-every1turn);
+                        }
                     }
                 }
                 break;
@@ -4806,13 +4811,31 @@ public class PlayerEntity : BattleEntity
                 }
                 break;
             case EnvironmentalEffect.AetherHunger:
+                if (BattleControl.Instance.GetFrontmostAlly(posId) == this)
+                {
+                    if (enviroStrong)
+                    {
+                        //One every 2 turns
+                        if (every2turn > 0)
+                        {
+                            HealSoulEnergy(-every2turn * 3);
+                        }
+                    }
+                    else
+                    {
+                        //One every 1 turn
+                        if (every1turn > 0)
+                        {
+                            HealSoulEnergy(-every1turn * 3);
+                        }
+                    }
+                }
                 if (enviroStrong)
                 {
                     //One every 2 turns
                     if (every2turn > 0)
                     {
                         HealHealth(-every2turn);
-                        HealSoulEnergy(-every2turn * 3);
                     }
                 }
                 else
@@ -4821,18 +4844,35 @@ public class PlayerEntity : BattleEntity
                     if (every1turn > 0)
                     {
                         HealHealth(-every1turn);
-                        HealSoulEnergy(-every1turn * 3);
                     }
                 }
                 break;
             case EnvironmentalEffect.DigestiveAcid:
+                if (BattleControl.Instance.GetFrontmostAlly(posId) == this)
+                {
+                    if (enviroStrong)
+                    {
+                        //One every 2 turns
+                        if (every2turn > 0)
+                        {
+                            HealSoulEnergy(-every2turn * 6);
+                        }
+                    }
+                    else
+                    {
+                        //One every 1 turn
+                        if (every1turn > 0)
+                        {
+                            HealSoulEnergy(-every1turn * 6);
+                        }
+                    }
+                }
                 if (enviroStrong)
                 {
                     //One every 2 turns
                     if (every2turn > 0)
                     {
                         HealHealth(-every2turn * 3);
-                        HealSoulEnergy(-every2turn * 6);
                     }
                 }
                 else
@@ -4841,11 +4881,29 @@ public class PlayerEntity : BattleEntity
                     if (every1turn > 0)
                     {
                         HealHealth(-every1turn * 3);
-                        HealSoulEnergy(-every1turn * 6);
                     }
                 }
                 break;
             case EnvironmentalEffect.AcidFlow:
+                if (BattleControl.Instance.GetFrontmostAlly(posId) == this)
+                {
+                    if (enviroStrong)
+                    {
+                        //One every 1 turn
+                        if (every1turn > 0)
+                        {
+                            HealSoulEnergy(-every1turn * 6);
+                        }
+                    }
+                    else
+                    {
+                        //One every 1 turn
+                        if (every1turn > 0)
+                        {
+                            HealSoulEnergy(-every1turn * 12);
+                        }
+                    }
+                }
                 if (enviroStrong)
                 {
                     //One every 1 turn
@@ -5059,7 +5117,7 @@ public class PlayerEntity : BattleEntity
                     IEnumerator animReset()
                     {
                         yield return new WaitForSeconds(0.6f);
-                        if (!moveActive && alive && !dead && ac.timeSinceLastAnimChange >= 0.56f)// && (ac.GetCurrentAnim().Equals("hurt") || ac.GetCurrentAnim().Equals("block")))
+                        if (!moveActive && alive && !dead && ac.timeSinceLastAnimChange >= 0.6f - Time.deltaTime)// && (ac.GetCurrentAnim().Equals("hurt") || ac.GetCurrentAnim().Equals("block")))
                         {
                             SetIdleAnimation();
                         }

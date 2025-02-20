@@ -242,6 +242,25 @@ public class WorldFollower : WorldEntity
 
     public void FollowerMoveUpdate()
     {
+        //Party is split, so don't follow
+        //also need to change the layer to the player layer
+        if (MainManager.Instance.Cheat_SplitParty)
+        {
+            int playerLayer = LayerMask.NameToLayer("Player");
+            if (gameObject.layer != playerLayer)
+            {
+                gameObject.layer = playerLayer;
+            }
+            return;
+        } else
+        {
+            int ignorePlayerLayer = LayerMask.NameToLayer("IgnorePlayer");
+            if (gameObject.layer != ignorePlayerLayer)
+            {
+                gameObject.layer = ignorePlayerLayer;
+            }
+        }
+
         //try to move for now
         Vector3 newVelocity = rb.velocity;
         Vector2 dir = Vector2.zero;
@@ -571,7 +590,14 @@ public class WorldFollower : WorldEntity
             if (!movementRotationDisabled && (MainManager.XZProject(usedMovement).magnitude > 0.01f))
             {
                 trueFacingRotation = -Vector2.SignedAngle(Vector2.right, usedMovement.x * Vector2.right + usedMovement.z * Vector2.up);
-                //transform this with respect to worldspace yaw
+                while (trueFacingRotation < 0)
+                {
+                    trueFacingRotation += 360;
+                }
+                while (trueFacingRotation >= 360)
+                {
+                    trueFacingRotation -= 360;
+                }
             }
 
             //going straight back or forward is a little weird, so don't rotate in a 10 degree range
@@ -968,7 +994,7 @@ public class WorldFollower : WorldEntity
         WorldPlayer.Instance.WarpFollowing(followerIndex);
     }
 
-    public void WarpSetState(bool p_grounded, Vector3 p_floorNormal)
+    public void WarpSetGroundState(bool p_grounded, Vector3 p_floorNormal)
     {
         isGrounded = p_grounded;
         floorNormal = p_floorNormal;

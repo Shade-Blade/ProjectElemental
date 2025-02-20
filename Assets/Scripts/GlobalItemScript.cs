@@ -1873,19 +1873,17 @@ public struct Item
 
     public enum ItemOrigin
     {
-        Overworld = 0,
+        Overworld = 0,  //default, most collectibles will have this and the others are hardcoded
         EnemyDrop,
-        NPCGift,
-        Shop,
+        NPCGift,    //Quest reward items
+        Shop,       //note: will also encompass items gotten from inns and the special one off shops
         CookStella,
         CookTorstrum,
         CookSizzle,
         CookGourmand,
-        CookMagic,
-        Aurelia,
         Producer,   //produced by a different item
-        Egg,
-        Cheating,
+        Egg,        //produced by an egg move
+        Cheating,   //cheat will default to this, doesn't really do anything special
     }
 
 

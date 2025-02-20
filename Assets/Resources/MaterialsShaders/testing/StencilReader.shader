@@ -12,7 +12,8 @@ Shader "Tutorial/022_stencil_buffer/read" {
 		Tags{ "RenderType"="Opaque" "Queue"="Geometry"}
 
 		//use ztest off to see how the writer having a ztest will stop it from writing to the stencil buffer when it is occluded
-		ZTest On
+		ZTest Greater
+		Cull Front
 
         //stencil operation
 		Stencil{

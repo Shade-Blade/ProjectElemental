@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static MainManager;
 
 public class PitAltarScript : WorldObject, IInteractable, ITextSpeaker
 {
@@ -9,6 +10,9 @@ public class PitAltarScript : WorldObject, IInteractable, ITextSpeaker
     public InteractTrigger it;
 
     public GameObject block;
+
+    public MeshRenderer mr;
+    public List<Material> materials;
 
 
     public override void Awake()
@@ -31,6 +35,42 @@ public class PitAltarScript : WorldObject, IInteractable, ITextSpeaker
             pitaltar = MainManager.Instance.GetGlobalVar(MainManager.GlobalVar.GV_PitAltar);
         }
         int altar = int.Parse(pitaltar);
+
+
+        switch ((floor - 1) / 10)
+        {
+            case 0:
+                mr.material = materials[0];
+                break;
+            case 1:
+                mr.material = materials[1];
+                break;
+            case 2:
+                mr.material = materials[2];
+                break;
+            case 3:
+                mr.material = materials[3];
+                break;
+            case 4:
+                mr.material = materials[4];
+                break;
+            case 5:
+                mr.material = materials[5];
+                break;
+            case 6:
+                mr.material = materials[6];
+                break;
+            case 7:
+                mr.material = materials[7];
+                break;
+            case 8:
+                mr.material = materials[8];
+                break;
+            case 9:
+                mr.material = materials[9];
+                break;
+        }
+
 
         //You already got the altar for this floor
         if (altar >= (floor / 10))
