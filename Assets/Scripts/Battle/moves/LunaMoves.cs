@@ -3873,23 +3873,23 @@ public class LM_Illuminate : LunaMove
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targets)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, 3), caller.posId, Effect.EffectStackMode.OverwriteLow);
                     }
                     break;
                 case 3:
                     List<BattleEntity> targetsB = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsB)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.ParryAura, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, 3), caller.posId, Effect.EffectStackMode.OverwriteLow);
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.ParryAura, 1, 3), caller.posId, Effect.EffectStackMode.OverwriteLow);
                     }
                     break;
                 default:
                     List<BattleEntity> targetsC = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsC)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, (sbyte)(level * 2 - 3)));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.ParryAura, 1, (sbyte)(level * 2 - 3)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Illuminate, 1, (sbyte)(level * 2 - 3)), caller.posId, Effect.EffectStackMode.OverwriteLow);
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.ParryAura, 1, (sbyte)(level * 2 - 3)), caller.posId, Effect.EffectStackMode.OverwriteLow);
                     }
                     break;
             }

@@ -850,7 +850,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
             {
                 visualSelectIndex = visualTopIndex + MENU_SIZE_PER_PAGE - 1;
             }
-            Vector3 next = Vector3.left * 160f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
+            Vector3 next = Vector3.left * 170f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
             selectorArrow.transform.localPosition = next;
 
             //bm.selectorArrow.transform.localPosition = Vector3.left * 170f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 7.5f;

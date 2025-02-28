@@ -48,6 +48,10 @@ public class EffectScript_Damage : MonoBehaviour
     public TMPro.TMP_Text text;
     public int number;
 
+
+    public TMPro.TMP_Text textReduction;
+    public TMPro.TMP_Text textBonus;
+
     public int dir = 0; //-1 = left, 0 = center, 1 = right
 
     public SpriteRenderer backSpriteA;
@@ -84,8 +88,39 @@ public class EffectScript_Damage : MonoBehaviour
         new Color(1f,0.2f,0.3f),      //negative coins
     };
 
-    public void Setup(BattleHelper.DamageEffect b, int number, BattleHelper.DamageType type = BattleHelper.DamageType.Default, ulong properties = 0)
+    public void Setup(BattleHelper.DamageEffect b, int number, string bonus = null, string reduction = null, BattleHelper.DamageType type = BattleHelper.DamageType.Default, ulong properties = 0)
     {
+        if (bonus != null)
+        {
+            textBonus.text = bonus;
+        } else
+        {
+            //move it down to be on top of the damage type
+            textReduction.transform.localPosition = Vector3.down * 0.09f;
+            textBonus.text = "";
+        }
+        if (reduction != null)
+        {
+            textReduction.text = reduction;
+        } else
+        {
+            textReduction.text = "";
+        }
+
+        textBonus.color = BattleControl.Instance.GetHPBarColors()[4];
+        if (textBonus.color == Color.black)
+        {
+            //Very hacky fix
+            textBonus.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">" + textBonus.text + "</font>";
+        }
+        textReduction.color = BattleControl.Instance.GetHPBarColors()[4];
+        if (textReduction.color == Color.black)
+        {
+            //Very hacky fix
+            textReduction.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">" + textReduction.text + "</font>";
+        }
+
+
         be = b;
 
         if (text == null)

@@ -5524,14 +5524,14 @@ public class MainManager : MonoBehaviour
         coinEffect = Resources.Load<Sprite>("Sprites/Particle Effect/CoinRingFull");
 
         itemSprites = Resources.LoadAll<Sprite>("Sprites/Items/ItemSpritesV10");
-        keyItemSprites = Resources.LoadAll<Sprite>("Sprites/Items/KeyItemSpritesV1");
+        keyItemSprites = Resources.LoadAll<Sprite>("Sprites/Items/KeyItemSpritesV2");
         badgeSprites = Resources.LoadAll<Sprite>("Sprites/Badges/BadgeSpritesV6");
         ribbonSprites = Resources.LoadAll<Sprite>("Sprites/Ribbons/RibbonSpritesV2");
         commonSprites = Resources.LoadAll<Sprite>("Sprites/CommonSpritesV2");
         miscSprites = Resources.LoadAll<Sprite>("Sprites/Misc/MiscSpritesV1");
 
         effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV11");
-        stateSprites = Resources.LoadAll<Sprite>("Sprites/Battle/StateIconsV4");
+        stateSprites = Resources.LoadAll<Sprite>("Sprites/Battle/StateIconsV5");
 
         noFrictionMaterial = Resources.Load<PhysicMaterial>("Physics Materials/NoFriction");
         allFrictionMaterial = Resources.Load<PhysicMaterial>("Physics Materials/AllFriction");
@@ -7982,6 +7982,20 @@ public class MainManager : MonoBehaviour
         }
 
         return value;
+    }
+
+    public static string GetResistancePercent(float reduction)
+    {
+        if (reduction < 0)
+        {
+            //note: will be written as +X%
+            //so subtract 1 from the above formula
+            return Percent(((-reduction / 2.0f))) + "%";
+        }
+
+        //1 - (2 / 2+red) = (red / red+2)
+        //Reduce by (red / red + 2)
+        return Percent((reduction) / (2 + reduction)) + "%";
     }
 
     public static Vector3 ParseVector3(string entry)

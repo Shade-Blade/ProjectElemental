@@ -290,6 +290,10 @@ public class Pause_HandlerItem_KeyItemMenu : Pause_HandlerShared_BoxMenu
                 pd.AddInnEffect(InnEffect.InnType.ItemBoost);
                 pd.FullHeal();
                 break;
+            case KeyItemType.FlowerCandle:
+                pd.AddInnEffect(InnEffect.InnType.Illuminate);
+                pd.FullHeal();
+                break;
             case KeyItemType.StellarCandle:
                 pd.AddInnEffect(InnEffect.InnType.Soul);
                 pd.FullHeal();

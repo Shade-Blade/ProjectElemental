@@ -717,7 +717,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int splotchDamage;                                                //Damage to deal by Splotch
     public int magmaDamage;
     public int damageTakenThisTurn;                                        //Non-status damage taken since last PostMove call (Used to calculate Astral Wall stuff)
-    public int astralWallTrackedDamage;
+    public int astralWallTrackedDamage;                                     //damage tracked by Astral Wall to determine if it should activate (note: may get Astral Wall mid turn so not synced with damageTakenThisTurn)
+
+    public string bonusDamageString;                                        //Bonus damage string set by deal damage stuff and reset by takedamage  (Hacky setup to avoid adding more parameters to TakeDamage)
+
 
     //
     public int counterFlareTrackedDamage;
@@ -1717,7 +1720,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         hp -= (damage);
         if (!hide)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, damage, GetDamageEffectPosition(), this, BattleHelper.DamageType.Normal);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, damage, null, null, GetDamageEffectPosition(), this, BattleHelper.DamageType.Normal);
         }
 
         if (ShouldShowHPBar())
@@ -1748,6 +1751,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual int TakeDamage(int damage, BattleHelper.DamageType type, ulong properties) //default type damage
     {
         lastDamageTakenInput = damage;
+        string localBonusDamageString = bonusDamageString;
+        bonusDamageString = null;
 
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.ContactHazard) && ShouldShowHPBar())
         {
@@ -1762,6 +1767,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             damage = 0;
         }
 
+        int damageReduction = 0;
+        string damageReductionString = null;
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
         {
             if (Invulnerable())
@@ -1773,7 +1780,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 //Debug.Log(name + " " + damageEventsCount);
                 hitThisTurn = true;
                 //How about I just make it dink
-                BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, 0, GetDamageEffectPosition(), this, type, properties);
+                BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, 0, localBonusDamageString, "(-" + damage + ") (100%)", GetDamageEffectPosition(), this, type, properties);
                 return 0;
             }
 
@@ -1784,8 +1791,20 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 bonusResistance += 2;
             }
 
-            int damageReduction = damage - MainManager.DamageReductionFormula(damage, GetResistance() + bonusResistance);
+            damageReduction = damage - MainManager.DamageReductionFormula(damage, GetResistance() + bonusResistance);
             damage -= damageReduction;
+
+            if (damageReduction != 0)
+            {
+                if (damageReduction > 0)
+                {
+                    damageReductionString = "(-" + damageReduction + ")" + "(-" + MainManager.GetResistancePercent(GetResistance() + bonusResistance) + ")";
+                }
+                else
+                {
+                    damageReductionString = "(+" + (-damageReduction) + ") " + "(+" + MainManager.GetResistancePercent(GetResistance() + bonusResistance) + ")";
+                }
+            }
 
             //Apply special properties
             damage = ApplyDefensiveProperties(damage, properties);
@@ -1908,22 +1927,22 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.RemoveMaxHP))
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.MaxHPDamage, damage, GetDamageEffectPosition(), this, type, properties);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.MaxHPDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
         }
         else
         {
             if (HasEffect(Effect.EffectType.Soften))
             {
-                BattleControl.Instance.CreateDamageEffect(DamageEffect.SoftDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                BattleControl.Instance.CreateDamageEffect(DamageEffect.SoftDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
             } else
             {
                 if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Unblockable))
                 {
-                    BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.UnblockableDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                    BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.UnblockableDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
                 }
                 else
                 {
-                    BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, damage, GetDamageEffectPosition(), this, type, properties);
+                    BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
                 }
             }
         }
@@ -2094,7 +2113,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         BattleControl.Instance.ep -= amount;
         if (!hide)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainEnergy, amount, GetDamageEffectPosition() + offset.GetValueOrDefault(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainEnergy, amount, null, null, GetDamageEffectPosition() + offset.GetValueOrDefault(), this);
         }
 
         if (BattleControl.Instance.ep < 0)
@@ -2192,12 +2211,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (health < 0)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.NegativeHeal, health, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.NegativeHeal, health, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeHealParticles(this, (int)(1 + 9 * Mathf.Log(health, 60)));
         }
         else
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Heal, health, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Heal, health, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateHealParticles(this, (int)(1 + 9 * Mathf.Log(health, 60)));
         }
 
@@ -2256,12 +2275,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (health < 0)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.NegativeHeal, health, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.NegativeHeal, health, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeHealParticles(this, (int)(1 + 9 * Mathf.Log(health, 60)));
         }
         else
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Heal, health, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Heal, health, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateHealParticles(this, (int)(1 + 9 * Mathf.Log(health, 60)));
         }
 
@@ -2293,12 +2312,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (energy > 0)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Energize, energy, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Energize, energy, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
         }
         else
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainEnergy, energy, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainEnergy, energy, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
         }
     }
@@ -2317,12 +2336,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (energy > 0)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Energize, energy, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Energize, energy, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
         }
         else
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainEnergy, energy, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainEnergy, energy, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
         }
 
@@ -2340,12 +2359,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (se > 0)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.SoulEnergize, se, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.SoulEnergize, se, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
         }
         else
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainSoulEnergy, se, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainSoulEnergy, se, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
         }
     }
@@ -2355,12 +2374,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (se > 0)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.SoulEnergize, se, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.SoulEnergize, se, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
         }
         else
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainSoulEnergy, se, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainSoulEnergy, se, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
         }
 
@@ -2385,12 +2404,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         stamina += st;
         if (st > 0)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Stamina, st, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Stamina, st, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
         }
         else
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainStamina, st, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainStamina, st, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
         }
 
@@ -2409,12 +2428,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         stamina += st;
         if (st > 0)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Stamina, st, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Stamina, st, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
         }
         else
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainStamina, st, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainStamina, st, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
         }
 
@@ -2456,12 +2475,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (coins > 0)
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Coins, coins, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Coins, coins, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateCoinParticles(this, (int)(1 + 9 * Mathf.Log(coins, 60)));
         }
         else
         {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.NegativeCoins, coins, GetDamageEffectPosition(), this);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.NegativeCoins, coins, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeCoinParticles(this, (int)(1 + 9 * Mathf.Log(coins, 60)));
         }
     }

@@ -187,7 +187,7 @@ public class Pause_SectionShared_BoxMenu : Pause_SectionShared
             {
                 visualSelectIndex = visualTopIndex + MENU_SIZE_PER_PAGE - 1;
             }
-            Vector3 next = Vector3.left * 165f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
+            Vector3 next = Vector3.left * 170f + Vector3.up * 20 + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * ARROW_OFFSET;
             selectorArrow.transform.localPosition = next;
 
             //bm.selectorArrow.transform.localPosition = Vector3.left * 170f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 7.5f;

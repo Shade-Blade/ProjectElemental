@@ -1889,7 +1889,7 @@ public class PlayerEntity : BattleEntity
         hp -= (damage);
         if (!hide)
         {
-            BattleControl.Instance.CreateDamageEffect(DamageEffect.Damage, damage, GetDamageEffectPosition(), this, DamageType.Normal);
+            BattleControl.Instance.CreateDamageEffect(DamageEffect.Damage, damage, null, null, GetDamageEffectPosition(), this, DamageType.Normal);
         }
 
         //ShowHPBar();
@@ -1905,6 +1905,10 @@ public class PlayerEntity : BattleEntity
     //To do: change how damage calculation works?
     public override int TakeDamage(int damage, DamageType type, ulong properties) //default type damage
     {
+        lastDamageTakenInput = damage;
+        string localBonusDamageString = bonusDamageString;
+        bonusDamageString = null;
+
         if (Invulnerable())
         {
             //note that this function is not actually the one that queues the hurt events
@@ -1914,9 +1918,10 @@ public class PlayerEntity : BattleEntity
             //Debug.Log(name + " " + damageEventsCount);
             hitThisTurn = true;
             //How about I just make it dink
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, 0, GetDamageEffectPosition(), this, type, properties);
+            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, 0, localBonusDamageString, "(-" + damage + ") (100%)", GetDamageEffectPosition(), this, type, properties);
             return 0;
         }
+
 
         damageEventsThisTurn++;
         absorbDamageEvents++;
@@ -1934,6 +1939,9 @@ public class PlayerEntity : BattleEntity
             }
         }
 
+
+        int damageReduction = 0;
+        string damageReductionString = null;
 
         //if you are dead then you can't block
         bool sb = IsSuperBlocking() && !AutoMove();
@@ -2084,8 +2092,20 @@ public class PlayerEntity : BattleEntity
                 }
             }
 
-            int damageReduction = damage - MainManager.DamageReductionFormula(damage, GetResistance() + bonusResistance);
+            damageReduction = damage - MainManager.DamageReductionFormula(damage, GetResistance() + bonusResistance);
             damage -= damageReduction;
+
+            if (damageReduction != 0)
+            {
+                if (damageReduction > 0)
+                {
+                    damageReductionString = "(-" + damageReduction + ")" + "(-" + MainManager.GetResistancePercent(GetResistance() + bonusResistance) + ")";
+                }
+                else
+                {
+                    damageReductionString = "(+" + (-damageReduction) + ") " + "(+" + MainManager.GetResistancePercent(GetResistance() + bonusResistance) + ")";
+                }
+            }
 
             int shieldCount = 0;
 
@@ -2326,34 +2346,34 @@ public class PlayerEntity : BattleEntity
 
         if (GetDamageProperty(properties, DamageProperties.RemoveMaxHP))
         {
-            BattleControl.Instance.CreateDamageEffect(DamageEffect.MaxHPDamage, damage, GetDamageEffectPosition(), this, type, properties);
+            BattleControl.Instance.CreateDamageEffect(DamageEffect.MaxHPDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
         } else
         {
             if (HasEffect(Effect.EffectType.Soften))
             {
-                BattleControl.Instance.CreateDamageEffect(DamageEffect.SoftDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                BattleControl.Instance.CreateDamageEffect(DamageEffect.SoftDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
             } else
             {
                 if (GetDamageProperty(properties, DamageProperties.Unblockable))
                 {
-                    BattleControl.Instance.CreateDamageEffect(DamageEffect.UnblockableDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                    BattleControl.Instance.CreateDamageEffect(DamageEffect.UnblockableDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
                 }
                 else
                 {
                     if (sb)
                     {
                         lastHitWasBlocked = true;
-                        BattleControl.Instance.CreateDamageEffect(DamageEffect.SuperBlockedDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                        BattleControl.Instance.CreateDamageEffect(DamageEffect.SuperBlockedDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
                     }
                     else if (b || safetyBlock)
                     {
                         lastHitWasBlocked = true;
-                        BattleControl.Instance.CreateDamageEffect(DamageEffect.BlockedDamage, damage, GetDamageEffectPosition(), this, type, properties);
+                        BattleControl.Instance.CreateDamageEffect(DamageEffect.BlockedDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
                     }
                     else
                     {
                         lastHitWasBlocked = false;
-                        BattleControl.Instance.CreateDamageEffect(DamageEffect.Damage, damage, GetDamageEffectPosition(), this, type, properties);
+                        BattleControl.Instance.CreateDamageEffect(DamageEffect.Damage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
                     }
                 }
             }
@@ -4086,6 +4106,9 @@ public class PlayerEntity : BattleEntity
                     break;
                 case InnEffect.InnType.ItemBoost:
                     InflictEffect(this, new Effect(Effect.EffectType.ItemBoost, (sbyte)(longRestBoost * 2), Effect.INFINITE_DURATION));
+                    break;
+                case InnEffect.InnType.Illuminate:
+                    InflictEffect(this, new Effect(Effect.EffectType.Illuminate, 1, (sbyte)(longRestBoost * 3)));
                     break;
                 case InnEffect.InnType.Soul:
                     int hs = Mathf.CeilToInt(longRestBoost * BattleControl.Instance.GetMaxSE(this) / 5.0f);

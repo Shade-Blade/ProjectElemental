@@ -3005,7 +3005,7 @@ public class BattleControl : MonoBehaviour
         }
         return null;
     }
-    public GameObject CreateDamageEffect(BattleHelper.DamageEffect b, int s, Vector3 position, BattleEntity be)
+    public GameObject CreateDamageEffect(BattleHelper.DamageEffect b, int s, string bonus, string reduction, Vector3 position, BattleEntity be)
     {
         GameObject o = Instantiate(damageEffect);
         o.transform.SetParent(transform);
@@ -3032,7 +3032,7 @@ public class BattleControl : MonoBehaviour
         }
 
         o.transform.position = position;
-        o.GetComponent<EffectScript_Damage>().Setup(b, s);
+        o.GetComponent<EffectScript_Damage>().Setup(b, s, bonus, reduction);
         return o;
     }
     /*
@@ -3201,13 +3201,13 @@ public class BattleControl : MonoBehaviour
         es_s.Setup(newScale, power);
     }
 
-    public GameObject CreateDamageEffect(BattleHelper.DamageEffect b, int s, Vector3 position, BattleEntity be, BattleHelper.DamageType type = BattleHelper.DamageType.Default, ulong properties = 0)
+    public GameObject CreateDamageEffect(BattleHelper.DamageEffect b, int s, string bonus, string reduction, Vector3 position, BattleEntity be, BattleHelper.DamageType type = BattleHelper.DamageType.Default, ulong properties = 0)
     {
         GameObject o = Instantiate(damageEffect);
         o.transform.SetParent(transform);
         o.transform.position = position;
 
-        o.GetComponent<EffectScript_Damage>().Setup(b, s, type, properties);
+        o.GetComponent<EffectScript_Damage>().Setup(b, s, bonus, reduction, type, properties);
 
         bool player = IsPlayerControlled(be, false);
         o.GetComponent<EffectScript_Damage>().SetDir(player);

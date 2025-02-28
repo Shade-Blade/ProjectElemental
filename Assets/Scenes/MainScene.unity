@@ -1113,6 +1113,7 @@ MonoBehaviour:
   Cheat_OverworldHazardImmunity: 0
   Cheat_OverworldEncounterImmunity: 0
   Cheat_ControlNeverDisabled: 0
+  Cheat_SplitParty: 0
   frameCounter: 0
   frameTime: 0
   lastCalculatedFPS: 0

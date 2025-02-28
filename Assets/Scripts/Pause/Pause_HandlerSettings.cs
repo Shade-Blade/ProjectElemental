@@ -65,6 +65,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                 MainManager.Instance.pauseMenuScript.Unpause();
                 MainManager.Instance.LoadSave(MainManager.Instance.saveIndex);
             }
+            awaitReload = false;
             return;
         }
         if (prompt != null && prompt.menuDone && awaitMain)
@@ -78,6 +79,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                 MainManager.Instance.pauseMenuScript.Unpause();
                 MainManager.Instance.ReturnToStartMenu();
             }
+            awaitMain = false;
             return;
         }
 

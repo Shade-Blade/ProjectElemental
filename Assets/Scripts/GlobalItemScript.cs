@@ -1407,6 +1407,7 @@ public struct KeyItem
         PumpkinCandle,  //immunity
         PineappleCandle,    //bonus turns
         HoneyCandle,    //item boost
+        FlowerCandle,   //illuminate
         StellarCandle,  //soul
         RainbowCandle,  //freebie
         PowerTotemA,
@@ -3487,7 +3488,7 @@ public abstract class MetaItemMove : Move
             case Move.Normal:
                 return "Use an item normally.";
             case Move.Multi:
-                return "Use up to 3 items with one action. (In the menu, use B to cancel, or Z to end your selection early.)";
+                return "Use up to 3 items with one action. (In the menu, use <button,B> to cancel, or <button,Z> to end your selection early.)";
             case Move.Quick:
                 return "Use an item and get another action. (Can't do this more than once per turn.)";
             case Move.Void:

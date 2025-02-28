@@ -833,6 +833,7 @@ public class InnEffect
         Immunity,   //clear
         BonusTurn,  //swift
         ItemBoost,  //luxury
+        Illuminate,      //sunny
         Soul,       //calming
         Freebie,    //supreme
     }
@@ -865,6 +866,9 @@ public class InnEffect
             case InnType.BonusTurn:
             case InnType.ItemBoost:
                 charges = 2;
+                break;
+            case InnType.Illuminate:
+                charges = 3;
                 break;
             case InnType.Soul:
                 charges = 4;        //+1 because you effectively can't use the first one (since you start that battle at full stats probably)
@@ -1102,6 +1106,7 @@ public static class BattleHelper
         ImmunityRest,
         BonusTurnRest,
         ItemBoostRest,
+        IlluminateRest,
         SoulRest,
         FreebieRest,
 
