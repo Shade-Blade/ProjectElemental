@@ -205,7 +205,8 @@ public class AC_MashLeft : ActionCommand
 
         if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
         {
-            mashObjective = Mathf.CeilToInt(mashObjective * 1.5f);
+            //1.5 is really hard
+            mashObjective = Mathf.CeilToInt(mashObjective * 1.25f);
         }
 
         if (SettingsManager.Instance.GetSetting(SettingsManager.Setting.EasyActionCommands) != 0)

@@ -745,7 +745,7 @@ public class TextboxScript : MonoBehaviour
                             stringList = new List<string>();
                             for (int i = 0; i < itemList.Count; i++)
                             {
-                                stringList.Add(Item.GetItemDataEntry(itemList[i].type).sellPrice + " <coin>");
+                                stringList.Add((int)(Item.GetItemDataEntry(itemList[i].type).sellPrice * GlobalItemScript.GetItemModifierSellMultiplier(itemList[i].modifier)) + " <coin>");
                             }
                             itemDescriptor = "<coin>: <const,coins>";
                             break;
@@ -778,7 +778,7 @@ public class TextboxScript : MonoBehaviour
                             stringList = new List<string>();
                             for (int i = 0; i < itemList.Count; i++)
                             {
-                                stringList.Add(Item.GetItemDataEntry(itemList[i].type).sellPrice + " <coin>");
+                                stringList.Add((int)(Item.GetItemDataEntry(itemList[i].type).sellPrice * GlobalItemScript.GetItemModifierSellMultiplier(itemList[i].modifier)) + " <coin>");
                             }
                             itemDescriptor = "<coin>: <const,coins>";
                             break;

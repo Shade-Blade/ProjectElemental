@@ -222,7 +222,7 @@ public class LM_HeavyStomp : LunaMove
             sd = pcaller.GetStompDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd, BattleHelper.DamageType.Normal, 0);
+        int val = caller.DealDamageCalculation(target, sd, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         return val + "";
     }
@@ -513,13 +513,13 @@ public class LM_DashThrough : LunaMove
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd - 2, 0, 0);
+                val = caller.DealDamageCalculation(target, sd - 2, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd - 1, 0, 0);
+                val = caller.DealDamageCalculation(target, sd - 1, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd + level * 2 - 5, 0, 0);
+                val = caller.DealDamageCalculation(target, sd + level * 2 - 5, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
         }
 
@@ -660,7 +660,7 @@ public class LM_FlipKick : LunaMove
             sd = pcaller.GetStompDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd - 5 + 4 * level, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd - 5 + 4 * level, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         return val + "";
     }
@@ -870,7 +870,7 @@ public class LM_SleepStomp : LM_HeavyStomp
             statusBoost = pcaller.CalculateStatusBoost(target);
         }
 
-        int val = caller.DealDamageCalculation(target, sd, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Sleep) / statusBoost);
 
@@ -1085,11 +1085,11 @@ public class LM_MeteorStomp : LunaMove
 
         int val = 0;
 
-        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc);
+        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc) + (ulong)BattleHelper.DamageProperties.AC_Success;
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Fire, 0);
+                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Fire, propertyBlock);
@@ -1380,13 +1380,13 @@ public class LM_UnderStrike : LunaMove
 
         if (level > 1)
         {
-            val = caller.DealDamageCalculation(target, sd - 2 + 2 * level, BattleHelper.DamageType.Dark, 0);
+            val = caller.DealDamageCalculation(target, sd - 2 + 2 * level, BattleHelper.DamageType.Dark, (ulong)BattleHelper.DamageProperties.AC_Success);
             outstring = val + ", ";
-            val = caller.DealDamageCalculation(target, Mathf.CeilToInt(sd / 2f) - 4 + 2 * level, 0, 0);
+            val = caller.DealDamageCalculation(target, Mathf.CeilToInt(sd / 2f) - 4 + 2 * level, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
             outstring += val + "?";
         } else
         {
-            val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Dark, 0);
+            val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Dark, (ulong)BattleHelper.DamageProperties.AC_Success);
             outstring = val + "";
         }
 
@@ -1550,7 +1550,7 @@ public class LM_IronStomp : LunaMove
         int val = 0;
         int defBonus = caller.GetEffectDefenseBonus() + caller.GetBadgeDefenseBonus();
         defBonus *= level;
-        val = caller.DealDamageCalculation(target, sd + 3 + level + defBonus, 0, 0);
+        val = caller.DealDamageCalculation(target, sd + 3 + level + defBonus, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
 
         return val + "";
@@ -1703,7 +1703,7 @@ public class LM_ElementalStomp : LunaMove
                 continue;
             }
 
-            int temp = caller.DealDamageCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, 0);
+            int temp = caller.DealDamageCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success);
 
             //one evaluated later wins
             //(note that this is roughly in order of which types are most likely to be highest)
@@ -1754,7 +1754,7 @@ public class LM_ElementalStomp : LunaMove
                 continue;
             }
 
-            int temp = caller.DealDamageCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, 0);
+            int temp = caller.DealDamageCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success);
 
             //one evaluated later wins
             //(note that this is roughly in order of which types are most likely to be highest)
@@ -1805,7 +1805,7 @@ public class LM_ElementalStomp : LunaMove
                 continue;
             }
 
-            int temp = caller.DealDamageCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, 0);
+            int temp = caller.DealDamageCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success);
 
             //one evaluated later wins
             //(note that this is roughly in order of which types are most likely to be highest)
@@ -1816,7 +1816,7 @@ public class LM_ElementalStomp : LunaMove
             }
         }
 
-        int val = caller.DealDamageCalculation(target, sd + 2, best, 0);
+        int val = caller.DealDamageCalculation(target, sd + 2, best, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         string outstring = best == BattleHelper.DamageType.Normal ? "0" : best + ": " + val;
 
@@ -2641,7 +2641,7 @@ public class LM_Smash : LunaMove
             sd = pcaller.GetWeaponDamage();
         }
 
-        ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff;
+        ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff + (ulong)BattleHelper.DamageProperties.AC_Success;
 
         int val = caller.DealDamageCalculation(target, sd, 0, propertyBlock);
 
@@ -2794,21 +2794,21 @@ public class LM_PowerSmash : LM_Smash
 
         //ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff;
 
-        int val = 0; // caller.DealDamageCalculation(target, sd, 0, propertyBlock);
+        int val = 0;
 
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Normal, 0);
+                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Normal, 0);
+                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 3:
-                val = caller.DealDamageCalculation(target, sd + 10, BattleHelper.DamageType.Normal, 0);
+                val = caller.DealDamageCalculation(target, sd + 10, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd - 2 + level * 4, BattleHelper.DamageType.Normal, 0);
+                val = caller.DealDamageCalculation(target, sd - 2 + level * 4, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
         }
 
@@ -2902,7 +2902,7 @@ public class LM_DazzleSmash : LM_Smash
             statusBoost = pcaller.CalculateStatusBoost(target);
         }
 
-        int val = caller.DealDamageCalculation(target, sd, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Dizzy) / statusBoost);
 
@@ -3075,18 +3075,18 @@ public class LM_HammerThrow : LunaMove
 
         //ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff;
 
-        int val = 0; // caller.DealDamageCalculation(target, sd, 0, propertyBlock);
+        int val = 0;
 
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Normal, 0);
+                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Normal, 0);
+                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd - 2 + 4 * level, BattleHelper.DamageType.Normal, 0);
+                val = caller.DealDamageCalculation(target, sd - 2 + 4 * level, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
         }
 
@@ -3212,13 +3212,13 @@ public class LM_BreakerSmash : LM_Smash
 
         //ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff;
 
-        int val = 0; // caller.DealDamageCalculation(target, sd, 0, propertyBlock);
+        int val = 0;
 
-        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc);
+        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc) + (ulong)BattleHelper.DamageProperties.AC_Success;
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 3, BattleHelper.DamageType.Earth, 0);
+                val = caller.DealDamageCalculation(target, sd + 3, BattleHelper.DamageType.Earth, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 5, BattleHelper.DamageType.Earth, propertyBlock);
@@ -3317,9 +3317,9 @@ public class LM_FlameSmash : LM_Smash
 
         //ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff;
 
-        int val = 0; // caller.DealDamageCalculation(target, sd, 0, propertyBlock);
+        int val = 0;
 
-        val = caller.DealDamageCalculation(target, sd + 2 + 3 * level, BattleHelper.DamageType.Fire, 0);
+        val = caller.DealDamageCalculation(target, sd + 2 + 3 * level, BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         return val + "";
     }
@@ -3492,7 +3492,7 @@ public class LM_MomentumSmash : LM_Smash
         }
 
 
-        ulong properties = (ulong)BattleHelper.DamageProperties.MetaKnockback;
+        ulong properties = (ulong)BattleHelper.DamageProperties.MetaKnockback + (ulong)BattleHelper.DamageProperties.AC_Success;
 
         int val = caller.DealDamageCalculation(target, sd + 2 * level, 0, properties);
 
@@ -3642,9 +3642,9 @@ public class LM_QuakeSmash : LunaMove
 
         //ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff;
 
-        int val = 0; // caller.DealDamageCalculation(target, sd, 0, propertyBlock);
+        int val = 0;
 
-        val = caller.DealDamageCalculation(target, sd - 2 + level, BattleHelper.DamageType.Earth, 0);
+        val = caller.DealDamageCalculation(target, sd - 2 + level, BattleHelper.DamageType.Earth, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         return val + "?";
     }
@@ -3768,13 +3768,13 @@ public class LM_LightSmash : LM_Smash
 
         //ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff;
 
-        int val = 0; // caller.DealDamageCalculation(target, sd, 0, propertyBlock);
+        int val = 0;
 
-        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc);
+        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc) + (ulong)BattleHelper.DamageProperties.AC_Success;
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Light, 0);
+                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Light, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 7, BattleHelper.DamageType.Light, propertyBlock);

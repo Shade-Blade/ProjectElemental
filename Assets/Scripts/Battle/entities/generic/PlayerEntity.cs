@@ -2086,7 +2086,7 @@ public class PlayerEntity : BattleEntity
 
             if (!sb && !b)
             {
-                if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
+                if (!BattleHelper.GetDamageProperty(properties, DamageProperties.ContactHazard) && MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
                 {
                     bonusResistance -= 1;
                 }

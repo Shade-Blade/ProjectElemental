@@ -238,7 +238,7 @@ public class WM_HighStomp : WilexMove
             sd = pcaller.GetStompDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd, BattleHelper.DamageType.Normal, 0);
+        int val = caller.DealDamageCalculation(target, sd, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         return val + "";
     }
@@ -519,7 +519,7 @@ public class WM_MultiStomp : WilexMove
             sd = pcaller.GetStompDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd - 2 + level * 2, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd - 2 + level * 2, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         return val + "?";
     }
@@ -636,11 +636,11 @@ public class WM_ElectroStomp : WM_HighStomp
 
         int val = 0;
 
-        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc);
+        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc) + (ulong)BattleHelper.DamageProperties.AC_Success;
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd, BattleHelper.DamageType.Air, 0);
+                val = caller.DealDamageCalculation(target, sd, BattleHelper.DamageType.Air, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd, BattleHelper.DamageType.Air, propertyBlock);
@@ -850,7 +850,7 @@ public class WM_ParalyzeStomp : WM_HighStomp
             statusBoost = pcaller.CalculateStatusBoost(target);
         }
 
-        int val = caller.DealDamageCalculation(target, sd, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Paralyze) / statusBoost);
 
@@ -1029,13 +1029,13 @@ public class WM_FlameStomp : WM_HighStomp
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 3, BattleHelper.DamageType.Fire, 0);
+                val = caller.DealDamageCalculation(target, sd + 3, BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Fire, 0);
+                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd + level * 2, BattleHelper.DamageType.Fire, 0);
+                val = caller.DealDamageCalculation(target, sd + level * 2, BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
         }
 
@@ -1388,9 +1388,9 @@ public class WM_Overstomp : WilexMove
             sd = pcaller.GetStompDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd + 12 + 5 * level - 5, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd + 12 + 5 * level - 5, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
-        int reval = caller.DealDamageCalculation(target, sd + 3 * level - 3, 0, (ulong)BattleHelper.DamageProperties.ContactHazard);
+        int reval = caller.DealDamageCalculation(target, sd + 3 * level - 3, 0, (ulong)BattleHelper.DamageProperties.ContactHazard + (ulong)BattleHelper.DamageProperties.AC_Success);
 
         return val + "<line><highlightdangercolor>Recoil: " + reval + "</highlightdangercolor>";
     }
@@ -1538,7 +1538,7 @@ public class WM_SmartStomp : WM_HighStomp
             statusBoost = pcaller.CalculateStatusBoost(target);
         }
 
-        int val = caller.DealDamageCalculation(target, sd, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         Effect.EffectType[] statuses = { Effect.EffectType.Berserk, Effect.EffectType.Poison, Effect.EffectType.Paralyze, Effect.EffectType.Sleep, Effect.EffectType.Dizzy, Effect.EffectType.Freeze };
         //bool[] statusBools = { false, false, false, false, false, false };
@@ -2239,7 +2239,7 @@ public class WM_Slash : WilexMove
             sd = pcaller.GetWeaponDamage();
         }
 
-        ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PierceOne;
+        ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PierceOne + (ulong)BattleHelper.DamageProperties.AC_Success;
         int val = caller.DealDamageCalculation(target, sd, 0, propertyBlock);
 
         return val + "";
@@ -2810,16 +2810,16 @@ public class WM_SlipSlash : WilexMove
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 1, 0, 0);
-                slipVal = caller.DealDamageCalculation(target, sd - 2, 0, 0);
+                val = caller.DealDamageCalculation(target, sd + 1, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
+                slipVal = caller.DealDamageCalculation(target, sd - 2, 0, (ulong)BattleHelper.DamageProperties.AC_Premature);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 3, 0, 0);
-                slipVal = caller.DealDamageCalculation(target, sd - 1, 0, 0);
+                val = caller.DealDamageCalculation(target, sd + 3, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
+                slipVal = caller.DealDamageCalculation(target, sd - 1, 0, (ulong)BattleHelper.DamageProperties.AC_Premature);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd + level - 1, 0, 0);
-                slipVal = caller.DealDamageCalculation(target, sd + level - 3, 0, 0);
+                val = caller.DealDamageCalculation(target, sd + level - 1, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
+                slipVal = caller.DealDamageCalculation(target, sd + level - 3, 0, (ulong)BattleHelper.DamageProperties.AC_Premature);
                 break;
         }
 
@@ -2907,7 +2907,7 @@ public class WM_PoisonSlash : WM_Slash
             statusBoost = pcaller.CalculateStatusBoost(target);
         }
 
-        int val = caller.DealDamageCalculation(target, sd, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         int statusHP = (int)(target.StatusWorkingHP(Effect.EffectType.Poison) / statusBoost);
 
@@ -3055,11 +3055,11 @@ public class WM_PreciseStab : WM_Slash
 
         int val = 0;
 
-        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc);
+        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc) + (ulong)BattleHelper.DamageProperties.AC_Success;
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Water, 0);
+                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Water, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 7, BattleHelper.DamageType.Water, propertyBlock);
@@ -3182,7 +3182,7 @@ public class WM_SwordDischarge : WilexMove
             sd = pcaller.GetWeaponDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd - 1 + level * 4, BattleHelper.DamageType.Air, 0);
+        int val = caller.DealDamageCalculation(target, sd - 1 + level * 4, BattleHelper.DamageType.Air, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         return val + "";
     }
@@ -3364,7 +3364,7 @@ public class WM_SwordDance : WilexMove
 
         int val = 0;
 
-        ulong properties = (ulong)BattleHelper.DamageProperties.PreserveFocus;
+        ulong properties = (ulong)BattleHelper.DamageProperties.PreserveFocus + (ulong)BattleHelper.DamageProperties.AC_Success;
         val = caller.DealDamageCalculation(target, sd + 3 - 3 * level, 0, properties);
 
         return val + "";
@@ -3491,7 +3491,7 @@ public class WM_BoomerangSlash : WilexMove
             sd = pcaller.GetWeaponDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, sd - 2 + 2 * level, 0, 0);
+        int val = caller.DealDamageCalculation(target, sd - 2 + 2 * level, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         int hits = 2;
 
@@ -3507,7 +3507,7 @@ public class WM_BoomerangSlash : WilexMove
             if (i < hits - 1)
             {
                 outstring += ", ";
-                val = caller.DealDamageCalculation(target, sd - 1 + 2 * level, 0, 0);
+                val = caller.DealDamageCalculation(target, sd - 1 + 2 * level, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
             }
         }
 
@@ -3632,11 +3632,11 @@ public class WM_DarkSlash : WM_Slash
 
         int val = 0;
 
-        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc);
+        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc) + (ulong)BattleHelper.DamageProperties.AC_Success;
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Dark, 0);
+                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Dark, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
                 val = caller.DealDamageCalculation(target, sd + 9, BattleHelper.DamageType.Dark, propertyBlock);
@@ -3911,7 +3911,7 @@ public class WM_FlameBat : WilexMove
             sd = pcaller.GetWeaponDamage();
         }
 
-        int val = caller.DealDamageCalculation(target, Mathf.CeilToInt((sd / 2f) - 2 + level * 2), BattleHelper.DamageType.Fire, 0);
+        int val = caller.DealDamageCalculation(target, Mathf.CeilToInt((sd / 2f) - 2 + level * 2), BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.AC_Success);
 
         return val + "";
     }

@@ -3261,7 +3261,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (BattleControl.IsPlayerControlled(this, false) && MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Pride))
             {
                 //sift for properties
-                DamageProperties dp = DamageProperties.AC_Premature | DamageProperties.AC_Success | DamageProperties.AC_SuccessStall | DamageProperties.Item;
+                DamageProperties dp = DamageProperties.AC_Premature | DamageProperties.AC_Success | DamageProperties.AC_SuccessStall | DamageProperties.Static | DamageProperties.Item;
                 //static is already checked early
                 //Debug.Log(!GetDamageProperty(properties, dp));
                 if (!GetDamageProperty(properties, dp))

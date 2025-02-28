@@ -680,10 +680,10 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                 {
                     case KeyItem.KeyItemType.PlainCandle:
                         int choice = (floor / 10) + RandomGenerator.GetIntRange(0, 4);
-                        if (choice == 13)
-                        {
-                            choice = 12;
-                        }
+                        //if (choice == 14)
+                        //{
+                        //    choice = 13;
+                        //}
                         kitResult = KeyItem.KeyItemType.PlainCandle + choice;
                         break;
                     case KeyItem.KeyItemType.PowerTotemA:
