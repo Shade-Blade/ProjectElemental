@@ -1324,14 +1324,14 @@ public class LM_UnderStrike : LunaMove
         switch (level)
         {
             case 2:
-                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), 0, propertyBlock, BattleHelper.ContactLevel.Contact);
+                caller.DealDamageMultihit(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 6, Effect.INFINITE_DURATION), caller.posId);
                 break;
             case 1:
-                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), 0, propertyBlock, BattleHelper.ContactLevel.Contact);
+                caller.DealDamageMultihit(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 break;
             default:
-                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 4 + 2 * level, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
+                caller.DealDamageMultihit(caller.curTarget, sd - 4 + 2 * level, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, (sbyte)(level * 3), Effect.INFINITE_DURATION), caller.posId);
                 break;
         }
@@ -1341,14 +1341,14 @@ public class LM_UnderStrike : LunaMove
         switch (level)
         {
             case 2:
-                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 4f), 0, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 4, Effect.INFINITE_DURATION), caller.posId);
                 break;
             case 1:
-                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 4f), 0, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 break;
             default:
-                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 4f) - 2 * level, 0, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 * level, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, (sbyte)(level * 2), Effect.INFINITE_DURATION), caller.posId);
                 break;
         }
@@ -1382,7 +1382,7 @@ public class LM_UnderStrike : LunaMove
         {
             val = caller.DealDamageCalculation(target, sd - 2 + 2 * level, BattleHelper.DamageType.Dark, (ulong)BattleHelper.DamageProperties.AC_Success);
             outstring = val + ", ";
-            val = caller.DealDamageCalculation(target, Mathf.CeilToInt(sd / 2f) - 4 + 2 * level, 0, (ulong)BattleHelper.DamageProperties.AC_Success);
+            val = caller.DealDamageMultihitCalculation(target, sd - 4 + 2 * level, 0, 0, 1, BattleHelper.MultihitReductionFormula.ReduceHalf); 
             outstring += val + "?";
         } else
         {
@@ -1703,7 +1703,7 @@ public class LM_ElementalStomp : LunaMove
                 continue;
             }
 
-            int temp = caller.DealDamageCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success);
+            int temp = caller.DealDamageMultihitCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
 
             //one evaluated later wins
             //(note that this is roughly in order of which types are most likely to be highest)
@@ -1730,7 +1730,7 @@ public class LM_ElementalStomp : LunaMove
         */
 
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
-        caller.DealDamage(caller.curTarget, sd + 2, best, propertyBlock, BattleHelper.ContactLevel.Contact);
+        caller.DealDamageMultihit(caller.curTarget, sd + 2, best, propertyBlock, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
     }
     public void DealDamageFailure(BattleEntity caller, int sd)
     {
@@ -1754,7 +1754,7 @@ public class LM_ElementalStomp : LunaMove
                 continue;
             }
 
-            int temp = caller.DealDamageCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success);
+            int temp = caller.DealDamageMultihitCalculation(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
 
             //one evaluated later wins
             //(note that this is roughly in order of which types are most likely to be highest)
@@ -1765,7 +1765,7 @@ public class LM_ElementalStomp : LunaMove
             }
         }
 
-        caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, best, 0, BattleHelper.ContactLevel.Contact);
+        caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, best, 0, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
     }
 
     public override string GetHighlightText(BattleEntity caller, BattleEntity target, int level = 1)
@@ -1789,7 +1789,7 @@ public class LM_ElementalStomp : LunaMove
         int bestDamage = 0;
 
         int count = Mathf.Clamp(level, 1, 6);
-        for (int i = 1; i < 63; i++)
+        for (int i = 1; i < 64; i++)
         {
             int bitCount = 0;
             for (int j = 0; j < 6; j++)
@@ -1805,7 +1805,7 @@ public class LM_ElementalStomp : LunaMove
                 continue;
             }
 
-            int temp = caller.DealDamageCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success);
+            int temp = caller.DealDamageMultihitCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
 
             //one evaluated later wins
             //(note that this is roughly in order of which types are most likely to be highest)
@@ -1816,7 +1816,7 @@ public class LM_ElementalStomp : LunaMove
             }
         }
 
-        int val = caller.DealDamageCalculation(target, sd + 2, best, (ulong)BattleHelper.DamageProperties.AC_Success);
+        int val = caller.DealDamageMultihitCalculation(target, sd + 2, best, (ulong)BattleHelper.DamageProperties.AC_Success, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
 
         string outstring = best == BattleHelper.DamageType.Normal ? "0" : best + ": " + val;
 
