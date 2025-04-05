@@ -61,117 +61,6 @@ public class Pause_HandlerItem_ConsumableMenu : Pause_HandlerShared_BoxMenu
         return itemList.Count;
     }
 
-    /*
-    void MenuUpdate()
-    {
-        if (itemList.Count > 0)
-        {
-            if (Mathf.Sign(MainManager.GetAxisVertical()) != -inputDir || MainManager.GetAxisVertical() == 0)
-            {
-                holdDur = 0;
-                holdValue = 0;
-                inputDir = -Mathf.Sign(MainManager.GetAxisVertical());
-                if (MainManager.GetAxisVertical() == 0)
-                {
-                    inputDir = 0;
-                }
-                //Debug.Log(InputManager.GetAxisHorizontal());
-                //now go
-                if (inputDir != 0)
-                {
-                    if (inputDir > 0)
-                    {
-                        index++;
-                    }
-                    else
-                    {
-                        index--;
-                    }
-                }
-
-                if (index > itemList.Count - 1)
-                {
-                    //index = itemList.Count - 1;
-                    index = 0;
-                }
-                if (index < 0)
-                {
-                    //index = 0;
-                    index = itemList.Count - 1;
-                }
-
-                if (inputDir != 0)
-                {
-                    //Debug.Log("Apply update? " + (section != null));
-                    if (section != null)
-                    {
-                        section.ApplyUpdate(index);
-                    }
-                    //MainManager.ListPrint(itemList, index);
-                    //Debug.Log(itemList[index]);
-                }
-            }
-
-            if (Mathf.Sign(MainManager.GetAxisVertical()) == -inputDir && MainManager.GetAxisVertical() != 0)
-            {
-                holdDur += Time.deltaTime;
-
-                if (holdDur >= HYPER_SCROLL_TIME)
-                {
-                    int pastHoldValue = holdValue;
-
-                    if (MainManager.Instance.GetHyperScrollRate() * (holdDur - HYPER_SCROLL_TIME) > holdValue)
-                    {
-                        holdValue = (int)(MainManager.Instance.GetHyperScrollRate() * (holdDur - HYPER_SCROLL_TIME));
-                    }
-
-                    if (inputDir > 0)
-                    {
-                        index += (holdValue - pastHoldValue);
-                    }
-                    else
-                    {
-                        index -= (holdValue - pastHoldValue);
-                    }
-
-                    //No loop around
-                    if (index > itemList.Count - 1)
-                    {
-                        index = itemList.Count - 1;
-                    }
-                    if (index < 0)
-                    {
-                        index = 0;
-                    }
-
-                    if (section != null)
-                    {
-                        section.ApplyUpdate(index);
-                    }
-                }
-            }
-
-            if (MainManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
-            {
-                //go to submenu
-                Select();
-            }
-            if (MainManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
-            {
-                PopSelf();
-            }
-        }
-        else
-        {
-            //No items
-
-            if (MainManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
-            {
-                PopSelf();
-            }
-        }
-    }
-    */
     public override void MenuUpdate()
     {
         base.MenuUpdate();
@@ -192,10 +81,20 @@ public class Pause_HandlerItem_ConsumableMenu : Pause_HandlerShared_BoxMenu
                 if (lrDir > 0)
                 {
                     indexB++;
+
+                    if (sortedParty.Count - 1 > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BSwap);
+                    }
                 }
                 else
                 {
                     indexB--;
+
+                    if (sortedParty.Count - 1 > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BSwap);
+                    }
                 }
 
                 if (indexB < 0)
@@ -227,17 +126,19 @@ public class Pause_HandlerItem_ConsumableMenu : Pause_HandlerShared_BoxMenu
     }
 
     public override void Select()
-    {
+    {       
         //even more submenus (but we are getting close to the end)
         bool canSelect = Item.CanUseOutOfBattle(itemList[index].type);
 
         if (canSelect)
         {
             Debug.Log(itemList[index] + " select");
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         }
         else
         {
             Debug.Log(itemList[index] + " can't select");
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
             return;
         }
 

@@ -75,6 +75,13 @@ public class SettingsManager : MonoBehaviour
 
         switch (s)
         {
+            case Setting.MasterVolume:
+            case Setting.SFXVolume:
+            case Setting.MusicVolume:
+            case Setting.TextVolume:
+            case Setting.SystemVolume:
+                MainManager.Instance.SoundUpdate(s);
+                break;
             case Setting.FPS:
                 //target frame rate is ignored if nonzero?
                 QualitySettings.vSyncCount = 0;

@@ -1233,7 +1233,7 @@ public static class BattleHelper
         SuppressMovesetWarning = NoTattle | ScanHideMoves | ScanMovesetMismatch
     }
 
-    public const float AIRBORNE_CUTOFFHEIGHT = 0.8f;
+    public const float AIRBORNE_CUTOFFHEIGHT = 0.4f;
     public const float LOWSTOMPABLE_CUTOFFHEIGHT = 1.35f;   //was 1.6 before, but now is 1.35 so that Cactupoles are not low stompable, (But you can still low stomp Burrow Traps and Sundews as they are 1.25 height)
 
     [Flags]
@@ -1282,7 +1282,7 @@ public static class BattleHelper
         Soul,
         Stamina,
         Health,
-        Coins
+        Coins,
     }
     public enum BattleOutcome
     {
@@ -1468,10 +1468,12 @@ public static class BattleHelper
 
         //newer: make things 80% x ish
 
+        //newer 2: make things 80% again
+
         //Special allies: spawn behind you and closer together
         if (id <= -10)
         {
-            return Vector3.left * 1.05f + Vector3.right * (0.6f * (id + 10) - 2.5f) + Vector3.forward * (((id + 10) + 1) * 0.15f + 0.6f);
+            return Vector3.left * 0.8f + Vector3.right * (0.5f * (id + 10) - 2.5f) + Vector3.forward * (((id + 10) + 1) * 0.15f + 0.6f);
         }
 
 
@@ -1479,14 +1481,14 @@ public static class BattleHelper
         {
             //remnant of further out camera
             //return Vector3.left * 2.0f + Vector3.right * 1.5f * id + Vector3.forward * (id + 1) * 0.15f;
-            return Vector3.left * 1.05f + Vector3.right * 1f * id + Vector3.forward * (id + 1) * 0.15f;
+            return Vector3.left * 0.8f + Vector3.right * 0.8f * id + Vector3.forward * (id + 1) * 0.15f;
         }
         else
         {
             //was 5 per line but 10 is easier to tell at a glance
             //Note: current setup can only really fit 4 per line (5 per line battles should be avoided anyway?)
             return new Vector3(-0.05f, 0.0f, 0.12f) +
-                1.1f * Vector3.right * (id % 10) + 1.1f * Vector3.up * (id / 10) - 0.15f * Vector3.forward * (id % 10);
+                0.8f * Vector3.right * (id % 10) + 0.8f * Vector3.up * (id / 10) - 0.12f * Vector3.forward * (id % 10);
         }
     }
 
@@ -1799,7 +1801,15 @@ public class EncounterData
 
             airborne = (BattleEntityData.GetBattleEntityData(newEnemyList[i]).entityProperties & (ulong)BattleHelper.EntityProperties.Airborne) != 0;
 
-            EncounterDataEntry ede = new EncounterDataEntry(newEnemyList[i], airborne ? 10 + i + offset : i + offset);
+            EncounterDataEntry ede = null;
+            if (newEnemyList[i] == BattleHelper.EntityID.Cactupole)
+            {
+                //hardcoded exception
+                ede = new EncounterDataEntry(newEnemyList[i], airborne ? 20 + i + offset : i + offset);
+            } else
+            {
+                ede = new EncounterDataEntry(newEnemyList[i], airborne ? 10 + i + offset : i + offset);
+            }
 
             if (newEnemyList[i] == BattleHelper.EntityID.CloudJelly)
             {

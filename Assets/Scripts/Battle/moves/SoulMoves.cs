@@ -15,7 +15,7 @@ public class SM_Hasten : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 8;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(8, level, 12);
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {
@@ -78,7 +78,7 @@ public class SM_Hasten : SoulMove
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 1));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, (sbyte)(level - 1), 1));
                 }
             }
         }
@@ -93,7 +93,7 @@ public class SM_Hasten : SoulMove
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, 1, 1));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Hustle, (sbyte)(level - 1), 1));
                 }
             }
         }
@@ -154,7 +154,7 @@ public class SM_Revitalize : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Ally, false);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 8;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(8, level, 8);
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {
@@ -169,7 +169,7 @@ public class SM_Revitalize : SoulMove
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
-        return StandardCostCalculation(caller, level, 12);
+        return StandardCostCalculation(caller, level, 8);
     }
 
     /*
@@ -214,10 +214,10 @@ public class SM_Revitalize : SoulMove
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    b.HealHealth(12);
+                    b.HealHealth(level * 6);
                 }
                 yield return new WaitForSeconds(0.5f);
-                caller.HealEnergy(12);
+                caller.HealEnergy(level * 6);
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
@@ -248,10 +248,10 @@ public class SM_Revitalize : SoulMove
                 List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                 foreach (BattleEntity b in targets)
                 {
-                    b.HealHealth(6);
+                    b.HealHealth(level * 3);
                 }
                 yield return new WaitForSeconds(0.5f);
-                caller.HealEnergy(6);
+                caller.HealEnergy(level * 3);
                 yield return new WaitForSeconds(0.5f);
                 foreach (BattleEntity b in targets)
                 {
@@ -319,11 +319,11 @@ public class SM_LeafStorm : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 15;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(16, level, 8);
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
-        return StandardCostCalculation(caller, level, 15);
+        return StandardCostCalculation(caller, level, 8);
     }
 
     /*
@@ -372,7 +372,7 @@ public class SM_LeafStorm : SoulMove
                 {
                     if (level > 1)
                     {
-                        caller.DealDamage(b, 8, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(b, level * 4, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Infinite);
                     }
                     else
                     {
@@ -394,7 +394,7 @@ public class SM_LeafStorm : SoulMove
                 {
                     if (level > 1)
                     {
-                        caller.DealDamage(b, 4, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(b, level * 2, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Infinite);
                     }
                     else
                     {
@@ -476,11 +476,11 @@ public class SM_ElectroDischarge : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 15;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(12, level, 6);
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
-        return StandardCostCalculation(caller, level, 15);
+        return StandardCostCalculation(caller, level, 6);
     }
 
     /*
@@ -529,8 +529,8 @@ public class SM_ElectroDischarge : SoulMove
                     if (level > 1)
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Air, 0);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 2, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 2, (sbyte)(level + 1)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, (sbyte)(level + 1)));
                     }
                     else
                     {
@@ -554,8 +554,8 @@ public class SM_ElectroDischarge : SoulMove
                     if (level > 1)
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Air, 0);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 1, (sbyte)(level + 1)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, (sbyte)(level + 1)));
                     }
                     else
                     {
@@ -612,11 +612,11 @@ public class SM_MistWave : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 20;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(20, level, 10);
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
-        return StandardCostCalculation(caller, level, 20);
+        return StandardCostCalculation(caller, level, 10);
     }
 
     /*
@@ -665,7 +665,7 @@ public class SM_MistWave : SoulMove
                 {
                     if (level > 1)
                     {
-                        caller.DealDamage(b, 10, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(b, 5 * level, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Infinite);
                     }
                     else
                     {
@@ -687,7 +687,7 @@ public class SM_MistWave : SoulMove
                 {
                     if (level > 1)
                     {
-                        caller.DealDamage(b, 6, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.DealDamage(b, 3 * level, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Infinite);
                     }
                     else
                     {
@@ -768,7 +768,7 @@ public class SM_Overheat : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 12;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(12, level, 12);
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -821,8 +821,8 @@ public class SM_Overheat : SoulMove
                     if (level > 1)
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 4, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, (sbyte)(level), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, (sbyte)(level * 2), Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -846,8 +846,8 @@ public class SM_Overheat : SoulMove
                     if (level > 1)
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Fire, 0);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, (sbyte)(level - 1), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, (sbyte)(level), Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -904,7 +904,7 @@ public class SM_VoidCrush : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 20;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(20, level, 10);
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -957,7 +957,7 @@ public class SM_VoidCrush : SoulMove
                     if (level > 1)
                     {
                         caller.TryVoidCrush(b, 10);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 6, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, (sbyte)(level * 6), Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -980,7 +980,7 @@ public class SM_VoidCrush : SoulMove
                     if (level > 1)
                     {
                         caller.TryVoidCrush(b, 1);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 3, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, (sbyte)(level * 3), Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -1067,11 +1067,11 @@ public class SM_FlashFreeze : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 15;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(15, level, 10);
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
-        return StandardCostCalculation(caller, level, 15);
+        return StandardCostCalculation(caller, level, 10);
     }
 
     /*
@@ -1120,9 +1120,9 @@ public class SM_FlashFreeze : SoulMove
                     if (level > 1)
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Light, 0);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, (sbyte)(level * 2 + 1)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, (sbyte)(level), Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, (sbyte)(level), Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -1146,9 +1146,9 @@ public class SM_FlashFreeze : SoulMove
                     if (level > 1)
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Light, 0);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, 2));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Freeze, 1, (sbyte)(level)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, (sbyte)(level - 1), Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, (sbyte)(level - 1), Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -1239,7 +1239,7 @@ public class SM_Cleanse : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 6;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(6, level, 6);
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {
@@ -1303,7 +1303,7 @@ public class SM_Cleanse : SoulMove
                     b.CleanseEffects(false);
                     if (level > 1)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Seal, 1, 2));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Seal, 1, (sbyte)(level)));
                     }
                 }
                 else
@@ -1323,7 +1323,7 @@ public class SM_Cleanse : SoulMove
                     b.CleanseEffects(false);
                     if (level > 1)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Seal, 1, 1));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Seal, 1, (sbyte)(level - 1)));
                     }
                 }
                 else
@@ -1371,7 +1371,7 @@ public class SM_Blight : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 12;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(12, level, 12);
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {
@@ -1440,8 +1440,8 @@ public class SM_Blight : SoulMove
                     if (caller.GetAttackHit(b, BattleHelper.DamageType.Astral))
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Astral, 0);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.DrainSprout, 1, 4));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.BoltSprout, 1, 4));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DrainSprout, 1, (sbyte)(level * 2)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.BoltSprout, 1, (sbyte)(level * 2)));
                     }
                     else
                     {
@@ -1475,8 +1475,8 @@ public class SM_Blight : SoulMove
                     if (caller.GetAttackHit(b, BattleHelper.DamageType.Astral))
                     {
                         BattleEntity.SpecialInvokeHurtEvents(caller, b, BattleHelper.DamageType.Astral, 0);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.DrainSprout, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.BoltSprout, 1, 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DrainSprout, 1, (sbyte)(level + 1)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.BoltSprout, 1, (sbyte)(level + 1)));
                     }
                     else
                     {
@@ -1558,7 +1558,7 @@ public class SM_ElementalConflux : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly, false);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 20;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(20, level, 20);
 
     public override TargetArea GetTargetArea(BattleEntity caller, int level = 1)
     {
@@ -1640,37 +1640,37 @@ public class SM_ElementalConflux : SoulMove
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, 3, 3));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, (sbyte)(level + 1), 3));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, 3, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, (sbyte)(level + 1), Effect.INFINITE_DURATION));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.EnduranceUp, 3, 3));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.EnduranceUp, (sbyte)(level + 1), 3));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.AgilityUp, 3, 3));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.AgilityUp, (sbyte)(level + 1), 3));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, (sbyte)(level + 1), Effect.INFINITE_DURATION));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseUp, 3, 3));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseUp, (sbyte)(level + 1), 3));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, (sbyte)(level + 1), Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -1704,37 +1704,37 @@ public class SM_ElementalConflux : SoulMove
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, 2, 3));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.AttackUp, (sbyte)(level), 3));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, 2, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Burst, (sbyte)(level), Effect.INFINITE_DURATION));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.EnduranceUp, 2, 3));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.EnduranceUp, (sbyte)(level), 3));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.AgilityUp, 2, 3));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.AgilityUp, (sbyte)(level), 3));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, 2, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Absorb, (sbyte)(level), Effect.INFINITE_DURATION));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseUp, 2, 3));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseUp, (sbyte)(level), 3));
                 }
                 yield return new WaitForSeconds(0.1f);
                 foreach (BattleEntity b in targets)
                 {
-                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
+                    caller.InflictEffect(b, new Effect(Effect.EffectType.Focus, (sbyte)(level), Effect.INFINITE_DURATION));
                 }
             }
         }
@@ -1794,7 +1794,7 @@ public class SM_PrismaticBlast : SoulMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost() => 30;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(30, level, 30);
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
@@ -1853,11 +1853,11 @@ public class SM_PrismaticBlast : SoulMove
                 {
                     if (caller.GetAttackHit(b, BattleHelper.DamageType.Prismatic))
                     {
-                        caller.DealDamage(b, 30, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 2, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 2, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 2, Effect.INFINITE_DURATION));
+                        caller.DealDamage(b, 15 * level, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, (sbyte)(level), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, (sbyte)(level), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, (sbyte)(level), Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, (sbyte)(level), Effect.INFINITE_DURATION));
                     }
                     else
                     {
@@ -1888,11 +1888,11 @@ public class SM_PrismaticBlast : SoulMove
                 {
                     if (caller.GetAttackHit(b, BattleHelper.DamageType.Prismatic))
                     {
-                        caller.DealDamage(b, 20, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, 1, 3));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION));
+                        caller.DealDamage(b, 10 * level, BattleHelper.DamageType.Prismatic, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AttackDown, (sbyte)(level - 1), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.DefenseDown, (sbyte)(level - 1), 3));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Defocus, (sbyte)(level - 1), Effect.INFINITE_DURATION));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.Sunder, (sbyte)(level - 1), Effect.INFINITE_DURATION));
                     }
                     else
                     {

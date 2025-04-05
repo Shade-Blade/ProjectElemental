@@ -183,10 +183,20 @@ public class Pause_HandlerItem_KeyItemMenu : Pause_HandlerShared_BoxMenu
                 if (lrDir > 0)
                 {
                     indexB++;
+
+                    if (sortedParty.Count - 1 > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BSwap);
+                    }
                 }
                 else
                 {
                     indexB--;
+
+                    if (sortedParty.Count - 1 > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BSwap);
+                    }
                 }
 
                 if (indexB < 0)
@@ -224,10 +234,12 @@ public class Pause_HandlerItem_KeyItemMenu : Pause_HandlerShared_BoxMenu
         if (canSelect)
         {
             Debug.Log(keyItemList[index] + " select");
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         }
         else
         {
             Debug.Log(keyItemList[index] + " can't select");
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
             return;
         }
 

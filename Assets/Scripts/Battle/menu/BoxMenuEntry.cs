@@ -335,7 +335,7 @@ public class BadgeMenuEntry : BoxMenuEntry
     {
         b = p_b;
         et = p_et;
-        rightText = "" + Badge.GetSPCost(b);
+        rightText = "" + Badge.GetSPCost(b) + "<sp>";
         name = Badge.GetSpriteString(b) + " " + Badge.GetName(b);
         description = Badge.GetDescription(b);
         canUse = p_canUse;
@@ -418,7 +418,15 @@ public class MoveMenuEntry : BoxMenuEntry
         //redundant?
         this.move = move;
 
-        rightText = cost > 0 ? cost.ToString() : null;
+        if (cost != move.GetBaseCost())
+        {
+            rightText = cost > 0 ? cost.ToString() + " <strikethrough><size,50%><color,red>" + move.GetBaseCost() + "</color></size></strikethrough>" : null;
+        }
+        else
+        {
+            rightText = cost > 0 ? cost.ToString() : null;
+        }
+
         spriteString = GetSpriteString(currency);
     }
 
@@ -437,7 +445,14 @@ public class MoveMenuEntry : BoxMenuEntry
         canUse = move.CanChoose(caller, level);
         cost = move.GetCost(caller, level);
         target = move.GetTargetArea(caller, level);
-        rightText = cost > 0 ? cost.ToString() : null;
+        if (cost != move.GetBaseCost(level))
+        {
+            rightText = cost > 0 ? cost.ToString() + " <strikethrough><size,50%><color,red>" + move.GetBaseCost(level) + "</color></size></strikethrough>" : null;
+        }
+        else
+        {
+            rightText = cost > 0 ? cost.ToString() : null;
+        }
         currency = move.GetCurrency(caller);
         spriteString = GetSpriteString(currency);
     }

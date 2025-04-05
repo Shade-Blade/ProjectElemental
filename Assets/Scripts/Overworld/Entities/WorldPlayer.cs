@@ -1980,6 +1980,7 @@ public class WorldPlayer : WorldEntity
                     {
                         case ActionState.Land:
                         case ActionState.Neutral:
+                            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.Menu_CharacterSwap);
                             switchTime = SWITCH_DURATION;
                             switchBuffered = true;
                             enableDashLeniency = false;

@@ -22,7 +22,7 @@ public class ACObject_PressATimed : MonoBehaviour
 
     public void SetValues(float completion, bool success, ActionCommand.AC_State state)
     {
-        float width = (Mathf.Clamp01(1 - completion)) * 100 + 50;
+        float width = (Mathf.Clamp01(1 - completion)) * 200 + 100;
         emptyBar.rectTransform.sizeDelta = Vector2.right * width + Vector2.up * width;
 
         if (completion >= 1 && state == ActionCommand.AC_State.Complete)

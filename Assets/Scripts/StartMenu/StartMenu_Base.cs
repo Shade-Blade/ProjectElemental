@@ -116,10 +116,12 @@ public class StartMenu_Base : MenuHandler
                 //inputDir positive = up and - index, negative = down and + index
                 if (inputDir > 0)
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                     menuIndex--;
                 }
                 else
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                     menuIndex++;
                 }
             }
@@ -145,6 +147,7 @@ public class StartMenu_Base : MenuHandler
 
     public void SelectOption()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //hardcoded
         switch (menuIndex)
         {

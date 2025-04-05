@@ -928,6 +928,11 @@ public class PlayerEntity : BattleEntity
 
     public int GetSoulMoveMaxLevel(int index)
     {
+        if (MainManager.Instance.Cheat_LevelAnarchy)
+        {
+            return 20;
+        }
+
         //To do later: flag check
         switch (index)
         {
@@ -1919,6 +1924,7 @@ public class PlayerEntity : BattleEntity
             hitThisTurn = true;
             //How about I just make it dink
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, 0, localBonusDamageString, "(-" + damage + ") (100%)", GetDamageEffectPosition(), this, type, properties);
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Immune);
             return 0;
         }
 
@@ -2003,6 +2009,8 @@ public class PlayerEntity : BattleEntity
                 damage -= 4; //BASE_GUARD_AMOUNT;
                 blockSuccesses++;
                 BattleControl.Instance.CreateActionCommandEffect(BattleHelper.ActionCommandText.Perfect, GetDamageEffectPosition(), this);
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Block);
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockPerfect);
             }
             else if (b || safetyBlock || sharpBlock)
             {
@@ -2025,6 +2033,11 @@ public class PlayerEntity : BattleEntity
                 }
                 blockSuccesses++;
                 BattleControl.Instance.CreateActionCommandEffect(blockSuccesses, GetDamageEffectPosition(), this);
+
+                if (!noReduction)
+                {
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Block);
+                }
             }
 
             if (safetyBlock)
@@ -2036,34 +2049,42 @@ public class PlayerEntity : BattleEntity
             if (safetyBlock)    //note: does not have a rest effect so there is no corresponding effect call for SafetyRibbon in the rest script
             {
                 RibbonEffect(new Color(0f, 0.7f, 0f));
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (sharpBlock)     //likewise
             {
                 RibbonEffect(new Color(0.7f, 0.0f, 0f));
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (sb)
             {
                 RibbonEffect(new Color(1f, 0.7f, 0));
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetAbsorbBlock())
             {
                 RibbonEffect(new Color(1f, 1f, 0.3f));
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetSlimyBlock())
             {
                 RibbonEffectDark(new Color(1f, 0.3f, 1f));
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetClearBlock())
             {
                 RibbonEffect(new Color(0.5f, 1f, 0.5f));
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetSoftBlock())
             {
                 RibbonEffect(new Color(0.3f, 0.3f, 1f));
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetDiamondBlock())
             {
                 RibbonEffectDiamond(new Color(0.6f, 1f, 1f));
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
 
 
@@ -2296,6 +2317,69 @@ public class PlayerEntity : BattleEntity
 
             hp -= damage;
         }
+
+
+
+        //Sound effects
+        bool normalDamage = true;
+
+        //block sound has precedence
+        if (b || sb)
+        {
+            normalDamage = false;
+        }
+
+        if (damage == 0 || Invulnerable())
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Immune);
+        }
+        if ((type & DamageType.Light) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Light);
+        }
+        if ((type & DamageType.Dark) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Dark);
+        }
+        if ((type & DamageType.Fire) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Fire);
+        }
+        if ((type & DamageType.Water) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Water);
+        }
+        if ((type & DamageType.Air) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Air);
+        }
+        if ((type & DamageType.Earth) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Earth);
+        }
+        if ((type & DamageType.Prismatic) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Prismatic);
+        }
+        if ((type & DamageType.Void) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Void);
+        }
+        if (normalDamage)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Normal);
+        }
+
+
 
 
         //Risky rush

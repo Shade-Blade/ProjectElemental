@@ -11,6 +11,10 @@ public class EPDisplayerScript : MonoBehaviour
     public Image backImage;
     public Image epImage;
 
+    public float displayEP;
+    public float displayEPCooldown;
+    public bool highlightEP;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +27,7 @@ public class EPDisplayerScript : MonoBehaviour
         //backImage = GetComponentInChildren<Image>();
         epImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.EP];
         textNumber.text = pd.ep + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pd.maxEP + "</size>";
+        displayEP = pd.ep;
     }
     
     public void SetPosition()
@@ -33,6 +38,27 @@ public class EPDisplayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        textNumber.text = pd.ep + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pd.maxEP + "</size>";
+        if (displayEP != pd.ep)
+        {
+            displayEPCooldown = HPStaminaDisplayerScript.STAT_HIGHLIGHT_MINIMUM;
+        }
+        displayEP = MainManager.EasingQuadraticTime(displayEP, pd.ep, HPStaminaDisplayerScript.STAT_SCROLL_SPEED);
+        if (displayEPCooldown > 0)
+        {
+            displayEPCooldown -= Time.deltaTime;
+        }
+        else
+        {
+            displayEPCooldown = 0;
+        }
+
+        if (displayEPCooldown > 0 || (HPStaminaDisplayerScript.HighlightActive() && highlightEP))
+        {
+            textNumber.text = "<color=#c0c000>" + Mathf.Round(displayEP) + "</color>/<size=" + MainManager.Instance.fontSize / 2 + ">" + pd.maxEP + "</size>";
+        }
+        else
+        {
+            textNumber.text = Mathf.Round(displayEP) + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pd.maxEP + "</size>";
+        }
     }
 }

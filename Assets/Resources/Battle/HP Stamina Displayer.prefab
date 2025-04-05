@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 524676861795775260}
   - component: {fileID: 524676861795775258}
   - component: {fileID: 524676861795775259}
+  - component: {fileID: 2303090511739412651}
   m_Layer: 5
   m_Name: TextNumber
   m_TagString: Untagged
@@ -90,7 +91,7 @@ MonoBehaviour:
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 1
+  m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
@@ -136,6 +137,27 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2303090511739412651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524676861795775261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc6d571cb7203ab4fa8722db637b2129, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textMesh: {fileID: 524676861795775259}
+  inputString: 
+  cleanString: 
+  charsVisible: 0
+  scrollDone: 0
+  lockButtons: 0
+  aPressTime: 0
+  bPress: 0
+  hasTextChanged: 0
 --- !u!1 &3062928772756833748
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,7 +256,7 @@ GameObject:
   - component: {fileID: 3062928772781365086}
   - component: {fileID: 4060257946934512070}
   m_Layer: 5
-  m_Name: Stat Displayer
+  m_Name: HP Stamina Displayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -274,14 +296,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 0}
-  textNumber: {fileID: 524676861795775259}
-  textNumber2: {fileID: 1588688974549727472}
+  textNumber: {fileID: 2303090511739412651}
+  textNumber2: {fileID: 2553181508061068120}
   backImage: {fileID: 3062928774023687834}
   HPImage: {fileID: 7706363350827410319}
   STImage: {fileID: 6449439342719577244}
   characterImage: {fileID: 2073053359084632021}
   wilexSprite: {fileID: 21300000, guid: 813f7444ce0daaf45ae9207bb9e21148, type: 3}
   lunaSprite: {fileID: 21300000, guid: d717552f536f0694d9419369ed2d586b, type: 3}
+  displayHP: 0
+  displayStamina: 0
+  displayHPCooldown: 0
+  displayStaminaCooldown: 0
+  highlightHP: 0
+  highlightStamina: 0
 --- !u!1 &3062928774023687837
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,6 +641,7 @@ GameObject:
   - component: {fileID: 5075946786099103634}
   - component: {fileID: 8875751054187535679}
   - component: {fileID: 1588688974549727472}
+  - component: {fileID: 2553181508061068120}
   m_Layer: 5
   m_Name: TextNumber2
   m_TagString: Untagged
@@ -692,7 +721,7 @@ MonoBehaviour:
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 1
+  m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
@@ -738,3 +767,24 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2553181508061068120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8307627443338861310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc6d571cb7203ab4fa8722db637b2129, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textMesh: {fileID: 1588688974549727472}
+  inputString: 
+  cleanString: 
+  charsVisible: 0
+  scrollDone: 0
+  lockButtons: 0
+  aPressTime: 0
+  bPress: 0
+  hasTextChanged: 0

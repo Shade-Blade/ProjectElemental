@@ -59,6 +59,7 @@ public class Pause_HandlerQuest : Pause_HandlerShared_SideTabs
 
     public override void Select()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //even more submenus (but we are getting close to the end)
         Debug.Log((QuestSubpage)tabindex + " select");
         if (availableMode)

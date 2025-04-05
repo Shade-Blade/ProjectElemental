@@ -13,6 +13,13 @@ public class OverworldHUDScript : MonoBehaviour
     public GameObject expDisplayer;
     public GameObject itemDisplayer;
 
+    public List<OWHPDisplayerScript> l_owStatDisplayers;
+    public EPDisplayerScript l_epDisplayer;
+    public SEDisplayerScript l_seDisplayer;
+    public CoinDisplayerScript l_coinDisplayer;
+    public EXPDisplayerScript l_expDisplayer;
+    public ItemDisplayerScript l_itemDisplayer;
+
     public RectTransform topLeft;
     public RectTransform topRight;
     public RectTransform bottomRight;
@@ -29,10 +36,12 @@ public class OverworldHUDScript : MonoBehaviour
         statDisplayers = new List<GameObject>();
 
         PlayerData pd = MainManager.Instance.playerData;
+        l_owStatDisplayers = new List<OWHPDisplayerScript>();
         for (int i = pd.party.Count - 1; i >= 0; i--)
         {
             GameObject g = Instantiate(owStatDisplayer, topLeft);
-            OWStatDisplayerScript s = g.GetComponent<OWStatDisplayerScript>();
+            OWHPDisplayerScript s = g.GetComponent<OWHPDisplayerScript>();
+            l_owStatDisplayers.Add(s);
             s.SetEntity(pd.party[i]);
             s.SetPosition(pd.party.Count - i - 1);
             statDisplayers.Add(g);
@@ -40,12 +49,14 @@ public class OverworldHUDScript : MonoBehaviour
 
         GameObject h = Instantiate(epDisplayer, topRight);
         EPDisplayerScript d = h.GetComponent<EPDisplayerScript>();
+        l_epDisplayer = d;
         d.Setup(pd);
         d.SetPosition();
         statDisplayers.Add(h);
 
         GameObject k = Instantiate(seDisplayer, topRight);
         SEDisplayerScript se = k.GetComponent<SEDisplayerScript>();
+        l_seDisplayer = se;
         se.Setup(pd);
         se.SetPosition();
         statDisplayers.Add(k);
@@ -53,18 +64,21 @@ public class OverworldHUDScript : MonoBehaviour
         //Bad naming
         GameObject ex = Instantiate(expDisplayer, bottomRight);
         EXPDisplayerScript exp = ex.GetComponent<EXPDisplayerScript>();
+        l_expDisplayer = exp;
         exp.Setup(pd);
         //se.SetPosition();
         statDisplayers.Add(ex);
 
         GameObject cn = Instantiate(coinDisplayer, bottomRight);
         CoinDisplayerScript cns = cn.GetComponent<CoinDisplayerScript>();
+        l_coinDisplayer = cns;
         cns.Setup(pd);
         //se.SetPosition();
         statDisplayers.Add(cn);
 
         GameObject it = Instantiate(itemDisplayer, bottomRight);
         ItemDisplayerScript its = it.GetComponent<ItemDisplayerScript>();
+        l_itemDisplayer = its;
         its.Setup(pd);
         //se.SetPosition();
         statDisplayers.Add(it);
@@ -94,5 +108,44 @@ public class OverworldHUDScript : MonoBehaviour
             topRight.anchoredPosition = Vector2.up * distance;
             bottomRight.anchoredPosition = Vector2.down * distance;
         }
+    }
+
+    public bool HasDisplayedState()
+    {
+        foreach (OWHPDisplayerScript ohds in l_owStatDisplayers)
+        {
+            if (ohds.displayHPCooldown > 0)
+            {
+                return true;
+            }
+        }
+
+        if (l_epDisplayer.displayEPCooldown > 0)
+        {
+            return true;
+        }
+
+
+        if (l_seDisplayer.displaySECooldown > 0)
+        {
+            return true;
+        }
+
+        if (l_coinDisplayer.displayCoinsCooldown > 0)
+        {
+            return true;
+        }
+
+        if (l_itemDisplayer.displayItemsCooldown > 0)
+        {
+            return true;
+        }
+
+        if (l_expDisplayer.displayXPCooldown > 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

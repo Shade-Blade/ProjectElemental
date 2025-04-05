@@ -17,10 +17,10 @@ NoItems,You have no items you can use!
 FullItems,Your inventory is full!
 ItemOverworldOnly,This item is only usable in the overworld!
 ItemExpended,You can only use this item once per battle!
-ItemMultiBiteBlock,"You must select unique items for Multi Bite!<line>(Use <button,B> to cancel Multi Bite or <button,Z> to end selection early)"
+ItemMultiSupplyBlock,"You must select unique items for Multi Supply!<line>(Use <button,B> to cancel Multi Supply or <button,Z> to end selection early)"
 MoveExpended,You can't use this move any more in this battle!
 TeamMoveNoTeammate,This move requires a teammate!
-TeamMoveUnavailableTeammate,Your teammate must be available!<line>(Alive and not statused)
+TeamMoveUnavailableTeammate,Your teammate must be available!<line>(Alive and can move)
 RibbonUnavailable,Only the one wearing the ribbon can remove it!
 BadgeSwapDisabled,You cannot equip or unequip this badge with Badge Swap!
 BadgeTooExpensive,Not enough Soul Points!

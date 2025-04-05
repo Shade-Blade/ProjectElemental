@@ -26,7 +26,7 @@ public class ACObject_HoldBar : MonoBehaviour
         float width = completion * 150;
 
         fullBar.rectTransform.anchoredPosition = (width/2) * Vector2.right;
-        fullBar.rectTransform.sizeDelta = Vector2.right * width + Vector2.up * 30;
+        fullBar.rectTransform.sizeDelta = Vector2.right * width + Vector2.up * 18;
 
         fullBall.color = ball ? Color.blue : Color.red;
     }

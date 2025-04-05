@@ -42,6 +42,8 @@ public class BaseBattleMenu : MenuHandler
 
     float xCoord;
 
+    public float appearScale;
+
     PlayerEntity caller;
 
     public override event EventHandler<MenuExitEventArgs> menuExit;
@@ -104,6 +106,9 @@ public class BaseBattleMenu : MenuHandler
 
     void MenuUpdate()
     {
+        float lastAppearScale = appearScale;
+        appearScale = MainManager.EasingQuadraticTime(appearScale, 1, 100);
+
         //BattleControl.Instance.ShowHPBars();
         lifetime += Time.deltaTime;
         if ((lifetime > BoxMenu.MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisHorizontal()) != inputDir) || InputManager.GetAxisHorizontal() == 0)
@@ -119,10 +124,12 @@ public class BaseBattleMenu : MenuHandler
             {
                 if (inputDir > 0)
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollRight);
                     baseMenuIndex++;
                 }
                 else
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollLeft);
                     baseMenuIndex--;
                 }
             }
@@ -168,7 +175,7 @@ public class BaseBattleMenu : MenuHandler
             }
         }
 
-        if (Mathf.Abs(anglediffer) > 0)
+        if (Mathf.Abs(anglediffer) > 0 || lastAppearScale != appearScale)
         {
             if (Mathf.Abs(anglediffer) < 5)
             {
@@ -188,8 +195,8 @@ public class BaseBattleMenu : MenuHandler
                     tempangle += 360f;
                 }
 
-                baseMenuRectTransforms[i].anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.up * 60 + offsetFromAngle(tempangle);
-                baseMenuOptionsO[i].transform.localScale = scaleFromAngle(tempangle);
+                baseMenuRectTransforms[i].anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + appearScale * (Vector3.up * 60 + offsetFromAngle(tempangle));
+                baseMenuOptionsO[i].transform.localScale = appearScale * scaleFromAngle(tempangle);
                 //Debug.Log(weaponLevel);
                 baseMenuOptionsS[i].Setup(menuOptions[i], baseMenuOptions[i].canSelect, caller.entityID == BattleHelper.EntityID.Wilex, weaponLevel);
             }
@@ -202,6 +209,7 @@ public class BaseBattleMenu : MenuHandler
         {
             if (baseMenuOptions[baseMenuIndex].canSelect)
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                 /*
                 if (baseMenuOptions[baseMenuIndex].oname == BaseMenuName.Jump)
                 {
@@ -238,6 +246,7 @@ public class BaseBattleMenu : MenuHandler
             }
             else
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
                 //Debug.Log("Can't select " + baseMenuOptions[baseMenuIndex].oname);
                 BattlePopup popup = null;
 
@@ -251,6 +260,7 @@ public class BaseBattleMenu : MenuHandler
         }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to switch active characters
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BSwap);
             if (BUsable())
             {
                 menuExit?.Invoke(this, new MenuExitEventArgs(GetFullResult()));
@@ -259,6 +269,7 @@ public class BaseBattleMenu : MenuHandler
         }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Z)) //Press Z to switch character positions
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_CharacterSwap);
             if (ZUsable())
             {
                 menuExit?.Invoke(this, new MenuExitEventArgs(GetFullResult()));
@@ -329,6 +340,8 @@ public class BaseBattleMenu : MenuHandler
 
     public override void Init()
     {
+        appearScale = 0;
+
         //BattleControl.Instance.ShowEffectIcons();
         //BattleControl.Instance.ShowHPBars();
 
@@ -523,8 +536,8 @@ public class BaseBattleMenu : MenuHandler
                 tempangle += 360f;
             }
 
-            baseMenuRectTransforms[i].anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.up * 60 + offsetFromAngle(tempangle);
-            baseMenuOptionsO[i].transform.localScale = scaleFromAngle(tempangle);
+            baseMenuRectTransforms[i].anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + appearScale * (Vector3.up * 60 + offsetFromAngle(tempangle));
+            baseMenuOptionsO[i].transform.localScale = appearScale * scaleFromAngle(tempangle);
             //Debug.Log(weaponLevel);
             baseMenuOptionsS[i].Setup(menuOptions[i], baseMenuOptions[i].canSelect, caller.entityID == BattleHelper.EntityID.Wilex, weaponLevel);
         }

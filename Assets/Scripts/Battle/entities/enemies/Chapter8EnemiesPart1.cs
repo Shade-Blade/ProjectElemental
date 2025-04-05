@@ -280,6 +280,7 @@ public class BE_CloudJelly : BattleEntity
         }
         ac.transform.localPosition = offset + Vector3.up * (height / 2);
         this.ac = ac.GetComponent<AnimationController>();
+        EffectSpriteUpdate();
         if (flipDefault && this.ac != null)
         {
             this.ac.SendAnimationData("xflip");

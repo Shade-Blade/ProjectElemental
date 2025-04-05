@@ -7,6 +7,8 @@ public class SelectPointerScript : MonoBehaviour
     public TextDisplayer text;
     public GameObject textbox;
 
+    public Vector3 targetPos;
+
     public TextDisplayer GetText()
     {
         if (text == null)
@@ -42,5 +44,10 @@ public class SelectPointerScript : MonoBehaviour
                 textbox.transform.localPosition = Vector3.up * 0.3f;
             }
         }
+    }
+
+    public void Update()
+    {
+        transform.localPosition = MainManager.EasingQuadraticTime(transform.localPosition, targetPos, 600);
     }
 }

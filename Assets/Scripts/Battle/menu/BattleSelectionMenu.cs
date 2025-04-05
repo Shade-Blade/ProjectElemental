@@ -12,7 +12,7 @@ public class BattleSelectionMenu : MenuHandler
     GameObject nameBox;
     NameBoxScript nameBoxScript;
 
-    List<GameObject> pointers;
+    List<SelectPointerScript> pointers;
     List<BattleEntity> possibleEntities;
     TargetArea targetArea;
     BattleEntity caller;
@@ -94,11 +94,13 @@ public class BattleSelectionMenu : MenuHandler
                 {
                     if (inputDir > 0)
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollRight);
                         selectionIndex++;
                         diff = true;
                     }
                     else
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollLeft);
                         selectionIndex--;
                         diff = true;
                     }
@@ -115,7 +117,7 @@ public class BattleSelectionMenu : MenuHandler
 
                 if (possibleEntities.Count > 0)
                 {
-                    pointers[0].transform.position = possibleEntities[selectionIndex].transform.position + possibleEntities[selectionIndex].selectionOffset + Vector3.up * (possibleEntities[selectionIndex].height + 0.5f);
+                    pointers[0].targetPos = possibleEntities[selectionIndex].transform.position + possibleEntities[selectionIndex].selectionOffset + Vector3.up * (possibleEntities[selectionIndex].height + 0.5f);
                 }
 
                 if (diff)
@@ -171,6 +173,7 @@ public class BattleSelectionMenu : MenuHandler
         //this also happens before the B button is checked so you can't somehow back out in that 1 frame window
         if (lifetime > MIN_SELECT_TIME && ((InputManager.GetButtonDown(InputManager.Button.A) && possibleEntities.Count != 0) || targetArea.range == TargetArea.TargetAreaType.None)) //Time to move!
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             menuExit?.Invoke(this, new MenuExitEventArgs(GetFullResult()));
             switch (parentMenuName)
             {
@@ -193,6 +196,7 @@ public class BattleSelectionMenu : MenuHandler
         }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
             Debug.Log("Going back");
             PopSelf();
         }
@@ -231,7 +235,7 @@ public class BattleSelectionMenu : MenuHandler
         }
         if (pointers == null)
         {
-            pointers = new List<GameObject>();
+            pointers = new List<SelectPointerScript>();
             if (possibleEntities.Count != 0)
             {
                 if (targetArea.allPossible)
@@ -240,22 +244,26 @@ public class BattleSelectionMenu : MenuHandler
                     for (int i = 0; i < possibleEntities.Count; i++)
                     {
                         GameObject p = Instantiate(BattleControl.Instance.pointerBase, transform);
-                        p.transform.position = possibleEntities[i].transform.position + possibleEntities[i].selectionOffset + Vector3.up * (possibleEntities[i].height + 0.5f);
+                        Vector3 startPos = possibleEntities[i].transform.position + possibleEntities[i].selectionOffset + Vector3.up * (possibleEntities[i].height + 0.5f);
+                        p.transform.position = startPos + Vector3.up * 3.75f;
                         SelectPointerScript sps = p.GetComponent<SelectPointerScript>();
                         sps.SetText(eh.GetHighlightText(caller, possibleEntities[i], level));
                         sps.RepositionTextBelow(MainManager.Instance.WorldPosToCanvasPosProportion(sps.transform.position).y >= 0.8f);
-                        pointers.Add(p);
+                        sps.targetPos = startPos;
+                        pointers.Add(sps);
                     }
                 }
                 else
                 {
                     nameBoxScript.SetText(possibleEntities[selectionIndex].GetName());
                     GameObject p = Instantiate(BattleControl.Instance.pointerBase, transform);
-                    p.transform.position = possibleEntities[selectionIndex].transform.position + possibleEntities[selectionIndex].selectionOffset + Vector3.up * (possibleEntities[selectionIndex].height + 0.5f);
+                    Vector3 startPos = possibleEntities[selectionIndex].transform.position + possibleEntities[selectionIndex].selectionOffset + Vector3.up * (possibleEntities[selectionIndex].height + 0.5f);
+                    p.transform.position = startPos + Vector3.up * 3.75f;
                     SelectPointerScript sps = p.GetComponent<SelectPointerScript>();
                     sps.SetText(eh.GetHighlightText(caller, possibleEntities[selectionIndex], level));
                     sps.RepositionTextBelow(MainManager.Instance.WorldPosToCanvasPosProportion(sps.transform.position).y >= 0.8f);
-                    pointers.Add(p);
+                    sps.targetPos = startPos;
+                    pointers.Add(sps);
                 }
             }
             else if (targetArea.range != TargetArea.TargetAreaType.None)

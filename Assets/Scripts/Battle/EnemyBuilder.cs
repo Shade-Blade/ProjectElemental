@@ -4,7 +4,7 @@ using UnityEngine;
 
 //builds enemies
 //player characters use separate script
-public class EnemyBuilder : MonoBehaviour
+public class EnemyBuilder// : MonoBehaviour
 {
     public static GameObject AnimationControllerSetup(BattleEntity be, GameObject sub, MainManager.SpriteID sid)
     {
@@ -574,7 +574,7 @@ public class EnemyBuilder : MonoBehaviour
 
         if (!debugSprite)
         {
-            Destroy(so);
+            GameObject.Destroy(so);
             so = AnimationControllerSetup(b, h, EntityIDToSpriteID(id));
         }
 

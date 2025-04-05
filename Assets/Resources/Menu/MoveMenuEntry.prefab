@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 275, y: 27}
+  m_SizeDelta: {x: 225, y: 27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1159186224229704943
 CanvasRenderer:
@@ -151,7 +151,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textMesh: {fileID: 1159186224229704942}
   inputString: 
+  cleanString: 
+  charsVisible: 0
   scrollDone: 0
+  lockButtons: 0
   aPressTime: 0
   bPress: 0
   hasTextChanged: 0
@@ -242,7 +245,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 275, y: 27}
+  m_SizeDelta: {x: 225, y: 27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1159186224447365626
 CanvasRenderer:
@@ -356,7 +359,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textMesh: {fileID: 1159186224447365621}
   inputString: 
+  cleanString: 
+  charsVisible: 0
   scrollDone: 0
+  lockButtons: 0
   aPressTime: 0
   bPress: 0
   hasTextChanged: 0
@@ -397,7 +403,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 5}
-  m_SizeDelta: {x: 290, y: 28}
+  m_SizeDelta: {x: 240, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2369650589170624130
 CanvasRenderer:

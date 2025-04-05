@@ -47,6 +47,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
             if (e.character == '~')
             {
                 //No
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
                 return;
             }
 
@@ -55,6 +56,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
             {
                 if (e.keyCode == InputManager.Instance.keyCodes[i])
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
                     return;
                 }
             }
@@ -62,10 +64,12 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
             {
                 if (e.keyCode == InputManager.Instance.directionalKeyCodes[i])
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
                     return;
                 }
             }
 
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             lastKeyCode = e.keyCode;
             //Debug.Log("Correctly see " + lastKeyCode);
             waitTime = 0;
@@ -121,10 +125,12 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
                 {
                     if (inputDir > 0)
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                         index++;
                     }
                     else
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                         index--;
                     }
                 }
@@ -204,10 +210,12 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
 
                     if (inputDir > 0)
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                         index += (holdValue - pastHoldValue);
                     }
                     else
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                         index -= (holdValue - pastHoldValue);
                     }
 
@@ -228,10 +236,12 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
             if (controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
             {
                 //go to submenu
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                 Select();
             }
             if (controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
                 PopSelf();
             }
         }
@@ -241,6 +251,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
 
             if (controlIgnoreTime <= 0 && lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
                 PopSelf();
             }
         }
@@ -250,6 +261,7 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
     {
         //Can always select
         //What to do then?
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
 
         if (index == GetObjectCount() - 1)
         {

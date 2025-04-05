@@ -50,10 +50,12 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
                 if (inputDir > 0)
                 {
                     tabindex--;
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                 }
                 else
                 {
                     tabindex++;
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                 }
             }
 
@@ -80,6 +82,7 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
         }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
             SendNullUpdate();
             PopSelf();
         }
@@ -104,10 +107,14 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
                 if (lrDir > 0)
                 {
                     indexB++;
+
+                    ScrollRightSound();
                 }
                 else
                 {
                     indexB--;
+
+                    ScrollLeftSound();
                 }
 
                 if (indexB < 0)
@@ -137,6 +144,20 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
     public virtual int GetMaxLR()
     {
         return 0;
+    }
+    public virtual void ScrollRightSound()
+    {
+        if (GetMaxLR() > 0)
+        {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollRight);
+        }
+    }
+    public virtual void ScrollLeftSound()
+    {
+        if (GetMaxLR() > 0)
+        {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollLeft);
+        }
     }
     public virtual void IndexChange(int lastIndex, int tabIndex)
     {

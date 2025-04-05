@@ -81,10 +81,11 @@ public class Pause_SectionBase : Pause_SectionShared
 
     public int baseIndex;
 
-    public const float PER_PAGE_OFFSET = 1200;
+    //public const float PER_PAGE_OFFSET = 1200;
 
     public float offset;
     public float targetOffset;
+    public float verticalOffset;
 
     public float pastPerPageOffset;
 
@@ -101,6 +102,7 @@ public class Pause_SectionBase : Pause_SectionShared
         //newObj.transform.parent = MainManager.Instance.Canvas.transform;
         //PauseMenuScript newMenu = newObj.AddComponent<PauseMenuScript>();
         Pause_SectionBase newMenu = newObj.GetComponent<Pause_SectionBase>();
+        newMenu.verticalOffset = newMenu.GetStartVerticalOffset();
         newMenu.Init();
 
         return newMenu;
@@ -157,9 +159,17 @@ public class Pause_SectionBase : Pause_SectionShared
             offset = MainManager.EasingQuadraticTime(offset, targetOffset, 25 * GetPerPageOffset());
         }
 
+        if (verticalOffset < 0.1f)
+        {
+            verticalOffset = 0;
+        } else
+        {
+            verticalOffset = MainManager.EasingQuadraticTime(verticalOffset, 0, 25 * GetStartVerticalOffset());
+        }
+
         for (int i = 0; i < subsections.Count; i++)
         {
-            subsections[i].GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-offset + (i * GetPerPageOffset()));
+            subsections[i].GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-offset + (i * GetPerPageOffset())) + Vector3.up * verticalOffset;
 
             /*
             if (subsections[i].isInit && Mathf.Abs(-offset/PER_PAGE_OFFSET + i) > 1.5f)
@@ -191,7 +201,11 @@ public class Pause_SectionBase : Pause_SectionShared
 
     public float GetPerPageOffset()
     {
-        return 1.5f * MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width;//PER_PAGE_OFFSET;
+        return 1.5f * MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width;
+    }
+    public float GetStartVerticalOffset()
+    {
+        return 1.5f * MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.height;
     }
 
     public override void Init()
@@ -336,7 +350,7 @@ public class Pause_SectionBase : Pause_SectionShared
 
         for (int i = 0; i < subsections.Count; i++)
         {
-            subsections[i].GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-offset + (i * GetPerPageOffset()));
+            subsections[i].GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-offset + (i * GetPerPageOffset())) + Vector3.up * GetStartVerticalOffset();
 
             if (subsections[i].isInit && Mathf.Abs(-offset / GetPerPageOffset() + i) > 1.5f)
             {
@@ -356,6 +370,8 @@ public class Pause_SectionBase : Pause_SectionShared
 
     public void Unpause()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Unpause);
+
         result = menu.GetFullResult();
         menu.ActiveClear();
         MainManager.Instance.isPaused = false;

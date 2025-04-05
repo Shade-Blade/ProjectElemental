@@ -11,23 +11,7 @@ public class MoveBoxMenu : BoxMenu
 
     public override void Init()
     {
-        //displayMode = MoveMenuEntry.StatDisplay.Cost;
-        active = true;
-        if (menuIndex == -1)
-        {
-            menuIndex = 0;
-            menuTopIndex = 0;
-        }
-        visualTopIndex = menuTopIndex;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
+        base.Init();
 
         switch (menuName)
         {
@@ -42,6 +26,17 @@ public class MoveBoxMenu : BoxMenu
                     BoxMenuEntryScript b = menuEntriesO[i].GetComponent<BoxMenuEntryScript>();
                     b.Setup(menuEntries[i]);
                 }
+                //Cost reduction
+                if (caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus() != 0)
+                {
+                    if (caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus() > 0)
+                    {
+                        descriptorString = "Skill costs reduced by " + (caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus());
+                    } else
+                    {
+                        descriptorString = "Skill costs increased by " + -(caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus());
+                    }
+                }
                 break;
             case BaseBattleMenu.BaseMenuName.Weapon:
                 menuEntries = new BoxMenuEntry[caller.weaponMoves.Count];
@@ -53,6 +48,18 @@ public class MoveBoxMenu : BoxMenu
                     menuEntriesO.Add(g);
                     BoxMenuEntryScript b = menuEntriesO[i].GetComponent<BoxMenuEntryScript>();
                     b.Setup(menuEntries[i]);
+                }
+                //Cost reduction
+                if (caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus() != 0)
+                {
+                    if (caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus() > 0)
+                    {
+                        descriptorString = "Skill costs reduced by " + (caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus());
+                    }
+                    else
+                    {
+                        descriptorString = "Skill costs increased by " + -(caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus());
+                    }
                 }
                 break;
             case BaseBattleMenu.BaseMenuName.Soul:
@@ -66,83 +73,27 @@ public class MoveBoxMenu : BoxMenu
                     BoxMenuEntryScript b = menuEntriesO[i].GetComponent<BoxMenuEntryScript>();
                     b.Setup(menuEntries[i]);
                 }
+                //Cost reduction
+                if (caller.GetBadgeFlowBonus() + caller.GetEffectFlowBonus() != 0)
+                {
+                    if (caller.GetBadgeFlowBonus() + caller.GetEffectFlowBonus() > 0)
+                    {
+                        descriptorString = "Soul costs reduced by " + (caller.GetBadgeFlowBonus() + caller.GetEffectFlowBonus());
+                    } else
+                    {
+                        descriptorString = "Soul costs increased by " + -(caller.GetBadgeFlowBonus() + caller.GetEffectFlowBonus());
+                    }
+                }
                 break;
             default:
                 throw new NotImplementedException();
         }
 
-        /*
-        if (menuEntries.Length > 1)
-        {
-            menuIndex = 1;
-        }
-        */
-
-        /*
-        menuEntries = new BoxMenuEntry[caller.moveset.Count-1];
-        for (int i = 1; i < caller.moveset.Count; i++)
-        {
-            menuEntries[i-1] = new MoveMenuEntry(caller, (PlayerMove)caller.moveset[i]);
-            GameObject g = Instantiate(MainManager.Instance.menuEntryBase, bm.mask.transform);
-            g.transform.localPosition = BoxMenuScript.GetRelativePosition(i-1);
-            menuEntriesO.Add(g);
-            BoxMenuEntryScript b = menuEntriesO[i-1].GetComponent<BoxMenuEntryScript>();
-            b.Setup(menuEntries[i-1]);
-        }
-        */        
-
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
-        for (int i = 0; i < menuEntriesO.Count; i++)
-        {
-            //Debug.Log(i - menuTopIndex);
-            //menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - menuTopIndex);
-            menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - visualTopIndex);
-        }
-
-        Vector3 targetLocal = Vector3.left * 170f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 7.5f;
-        Vector3 current = bm.selectorArrow.transform.localPosition;
-        bm.selectorArrow.transform.localPosition = targetLocal;
-        //bm.selectorArrow.transform.localPosition = MainManager.EasingQuadraticTime(current, targetLocal, 450);
-        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //Selecting a move takes you to a selection menu
         BattleSelectionMenu s;
 
@@ -169,6 +120,7 @@ public class MoveBoxMenu : BoxMenu
     }
     public override void SelectDisabled()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
         BattlePopup popup = null;
 
         switch (menuName)
@@ -248,6 +200,42 @@ public class MoveBoxMenu : BoxMenu
         descriptionBoxScript.SetText(menuEntries[menuIndex].description);
     }
 
+    public override void OnHover(BoxMenuEntry boxMenuEntry)
+    {
+        BattleControl.Instance.ResetStatHighlight();
+        switch (menuName)
+        {
+            case BaseBattleMenu.BaseMenuName.Jump:
+                if (caller.jumpMoves[menuIndex].GetCost(caller, menuEntries[menuIndex].level) > 0)
+                {
+                    BattleControl.Instance.StatHighlight(caller.jumpMoves[menuIndex].GetCurrency(), caller);
+                    BattleControl.Instance.StatHighlight(BattleHelper.MoveCurrency.Stamina, caller);
+                }
+                break;
+            case BaseBattleMenu.BaseMenuName.Weapon:
+                if (caller.weaponMoves[menuIndex].GetCost(caller, menuEntries[menuIndex].level) > 0)
+                {
+                    BattleControl.Instance.StatHighlight(caller.weaponMoves[menuIndex].GetCurrency(), caller);
+                    BattleControl.Instance.StatHighlight(BattleHelper.MoveCurrency.Stamina, caller);
+                }
+                break;
+            case BaseBattleMenu.BaseMenuName.Soul:
+                if (caller.soulMoves[menuIndex].GetCost(caller, menuEntries[menuIndex].level) > 0)
+                {
+                    BattleControl.Instance.StatHighlight(caller.soulMoves[menuIndex].GetCurrency(), caller);
+                }
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+    public override void Clear()
+    {
+        BattleControl.Instance.ResetStatHighlight();
+
+        base.Clear();
+    }
+
     /*
     public override Move GetCurrent()
     {
@@ -310,31 +298,7 @@ public class ItemBoxMenu : BoxMenu
 
     public override void Init()
     {
-        lifetime = 0;
-        /*
-        displayModes = new List<ItemMenuEntry.StatDisplay>
-        {
-            ItemMenuEntry.StatDisplay.Sprite
-        };
-        */
-        //displayIndex = 0;
-        active = true;
-
-        if (menuIndex == -1)
-        {
-            menuIndex = 0;
-            menuTopIndex = 0;
-        }
-        visualTopIndex = menuTopIndex;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
+        base.Init();
 
         //get items from item inventory
         List<Item> inv = BattleControl.Instance.playerData.itemInventory;
@@ -378,20 +342,6 @@ public class ItemBoxMenu : BoxMenu
             b.Setup(menuEntries[i]);
         }
 
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        //Debug.Log((descriptorString == null) + " " + descriptorString);
-
         //caller.itemSaver
         if (caller.BadgeEquipped(Badge.BadgeType.ItemSaver))
         {
@@ -411,43 +361,11 @@ public class ItemBoxMenu : BoxMenu
             }
         }
 
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        for (int i = 0; i < menuEntriesO.Count; i++)
-        {
-            //Debug.Log(i - menuTopIndex);
-            visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
-            //menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - menuTopIndex);
-            menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - visualTopIndex);
-        }
-
-        bm.selectorArrow.transform.localPosition = Vector3.left * 170f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 7.5f;
-        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //Debug.Log("Select " + menuIndex);
         if (menuIndex != -1 && menuIndex != -2)
         {
@@ -469,6 +387,7 @@ public class ItemBoxMenu : BoxMenu
     }
     public override void SelectDisabled()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
         BattlePopup popup = null;
 
         List<Item> inv = BattleControl.Instance.playerData.itemInventory;
@@ -502,6 +421,7 @@ public class ItemBoxMenu : BoxMenu
 
     public override void Cancel()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
         PopSelf();
         if (parent == null) //special case for double bite
         {
@@ -516,10 +436,12 @@ public class ItemBoxMenu : BoxMenu
         {
             if (specialList.Count == 0)
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
                 //act like cancel
                 Cancel();
             } else
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                 menuIndex = -2;
                 SelectOption();
             }
@@ -549,6 +471,19 @@ public class ItemBoxMenu : BoxMenu
             b.Setup(menuEntries[i]);
         }
         */
+    }
+
+    public override void OnHover(BoxMenuEntry boxMenuEntry)
+    {
+        BattleControl.Instance.ResetStatHighlight();
+        BattleControl.Instance.ItemHighlight();
+    }
+
+    public override void Clear()
+    {
+        BattleControl.Instance.ResetStatHighlight();
+
+        base.Clear();
     }
 
     /*
@@ -607,31 +542,7 @@ public class MetaItemBoxMenu : BoxMenu
 
     public override void Init()
     {
-        lifetime = 0;
-        /*
-        displayModes = new List<ItemMenuEntry.StatDisplay>
-        {
-            ItemMenuEntry.StatDisplay.Sprite
-        };
-        */
-        //displayIndex = 0;
-        active = true;
-
-        if (menuIndex == -1)
-        {
-            menuIndex = 0;
-            menuTopIndex = 0;
-        }
-        visualTopIndex = menuTopIndex;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
+        base.Init();
 
         //construct the menu
         moves = GetAvailableMoves(BattleControl.Instance.playerData);
@@ -661,57 +572,11 @@ public class MetaItemBoxMenu : BoxMenu
             b.Setup(menuEntries[i]);
         }
 
-
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        for (int i = 0; i < menuEntriesO.Count; i++)
-        {
-            //Debug.Log(i - menuTopIndex);
-            visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
-            //menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - menuTopIndex);
-            menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - visualTopIndex);
-        }
-
-        bm.selectorArrow.transform.localPosition = Vector3.left * 170f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 7.5f;
-        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         switch (moves[menuIndex])
         {
             case MetaItemMove.Move.Normal:
@@ -743,6 +608,7 @@ public class MetaItemBoxMenu : BoxMenu
     }
     public override void SelectDisabled()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
         BattlePopup popup = null;
 
         popup = new BattlePopup(BattleControl.Instance.GetCantUseReasonMetaItemMove(moves[menuIndex]));
@@ -790,6 +656,20 @@ public class MetaItemBoxMenu : BoxMenu
     }
     */
 
+    public override void OnHover(BoxMenuEntry boxMenuEntry)
+    {
+        BattleControl.Instance.ResetStatHighlight();
+        BattleControl.Instance.ItemHighlight();
+    }
+
+    public override void Clear()
+    {
+        BattleControl.Instance.ResetStatHighlight();
+
+        base.Clear();
+    }
+
+
     public override MenuResult GetResult()
     {
         return new MenuResult(Item.GetMetaItemMoveScript(moves[menuIndex]));
@@ -801,23 +681,7 @@ public class TacticsBoxMenu : BoxMenu
 {
     public override void Init()
     {
-        lifetime = 0;
-        active = true;
-        if (menuIndex == -1)
-        {
-            menuIndex = 0;
-            menuTopIndex = 0;
-        }
-        visualTopIndex = menuTopIndex;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
+        base.Init();
 
         //build these actions manually
         //these are pretty hardcoded
@@ -834,55 +698,11 @@ public class TacticsBoxMenu : BoxMenu
             b.Setup(menuEntries[i]);
         }
 
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        for (int i = 0; i < menuEntriesO.Count; i++)
-        {
-            //Debug.Log(i - menuTopIndex);
-            visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
-            //menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - menuTopIndex);
-            menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - visualTopIndex);
-        }
-
-        bm.selectorArrow.transform.localPosition = Vector3.left * 170f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 7.5f;
-        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //Selecting a move takes you to a selection menu
         List<BattleAction> tactics = BattleControl.Instance.GetTactics(caller);
         BattleSelectionMenu s3 = BattleSelectionMenu.buildMenu(caller, tactics[menuIndex].GetBaseTarget(), GetMenuName(), tactics[menuIndex], tactics[menuIndex].GetActionCommandDesc());
@@ -892,6 +712,7 @@ public class TacticsBoxMenu : BoxMenu
     }
     public override void SelectDisabled()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
         BattlePopup popup = null;
 
         List<BattleAction> tactics = BattleControl.Instance.GetTactics(caller);
@@ -902,6 +723,25 @@ public class TacticsBoxMenu : BoxMenu
         PushState(s);
         s.menuExit += InvokeExit;
     }
+
+    public override void OnHover(BoxMenuEntry boxMenuEntry)
+    {
+        BattleControl.Instance.ResetStatHighlight();
+
+        List<BattleAction> tactics = BattleControl.Instance.GetTactics(caller);
+        if (tactics[menuIndex].GetCost(caller) > 0)
+        {
+            BattleControl.Instance.StatHighlight(caller.jumpMoves[menuIndex].GetCurrency(), caller);
+        }
+    }
+
+    public override void Clear()
+    {
+        BattleControl.Instance.ResetStatHighlight();
+
+        base.Clear();
+    }
+
 
     /*
     public override Move GetCurrent()
@@ -929,23 +769,7 @@ public class BadgeSwapBoxMenu : BoxMenu
 
     public override void Init()
     {
-        lifetime = 0;
-        active = true;
-        if (menuIndex == -1)
-        {
-            menuIndex = 0;
-            menuTopIndex = 0;
-        }
-        visualTopIndex = menuTopIndex;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
+        base.Init();        
 
         //build these actions manually
         //these are pretty hardcoded
@@ -1049,59 +873,15 @@ public class BadgeSwapBoxMenu : BoxMenu
             b.Setup(menuEntries[i]);
         }
 
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
         //note: selecting a badge kicks you out of the menu so I don't need to put this there
         BattleControl.Instance.playerData.usedSP = BattleControl.Instance.playerData.CalculateUsedSP();
-        descriptorString = "Uses Left: " + (BattleControl.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.BadgeSwap) * 4 - BattleControl.Instance.badgeSwapUses) + ", SP Left: " + (BattleControl.Instance.playerData.sp - BattleControl.Instance.playerData.usedSP);
+        descriptorString = "Uses Left: " + (BattleControl.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.BadgeSwap) * 4 - BattleControl.Instance.badgeSwapUses) + ", <sp> SP Left: " + (BattleControl.Instance.playerData.sp - BattleControl.Instance.playerData.usedSP);
 
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        for (int i = 0; i < menuEntriesO.Count; i++)
-        {
-            //Debug.Log(i - menuTopIndex);
-            visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
-            //menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - menuTopIndex);
-            menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - visualTopIndex);
-        }
-
-        bm.selectorArrow.transform.localPosition = Vector3.left * 170f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 7.5f;
-        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //Selecting a move takes you to a selection menu
         BattleAction action = BattleControl.Instance.badgeSwap;
         BadgeMenuEntry bme = (BadgeMenuEntry)menuEntries[menuIndex];
@@ -1114,6 +894,7 @@ public class BadgeSwapBoxMenu : BoxMenu
     }
     public override void SelectDisabled()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
         BattlePopup popup = null;
 
         BadgeDataEntry bde = Badge.GetBadgeDataEntry(badges[menuIndex]);
@@ -1165,27 +946,7 @@ public class RibbonSwapBoxMenu : BoxMenu
 
     public override void Init()
     {
-        lifetime = 0;
-        active = true;
-        if (menuIndex == -1)
-        {
-            menuIndex = 0;
-            menuTopIndex = 0;
-        }
-        visualTopIndex = menuTopIndex;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
-
-        //build these actions manually
-        //these are pretty hardcoded
-        //List<BattleAction> tactics = BattleControl.Instance.GetTactics(caller);
+        base.Init();
 
         ribbons = BattleControl.Instance.playerData.ribbonInventory;
 
@@ -1250,55 +1011,11 @@ public class RibbonSwapBoxMenu : BoxMenu
             b.Setup(menuEntries[i]);
         }
 
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        for (int i = 0; i < menuEntriesO.Count; i++)
-        {
-            //Debug.Log(i - menuTopIndex);
-            visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
-            //menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - menuTopIndex);
-            menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - visualTopIndex);
-        }
-
-        bm.selectorArrow.transform.localPosition = Vector3.left * 170f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 7.5f;
-        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //Selecting a move takes you to a selection menu
         BattleAction action = BattleControl.Instance.ribbonSwap;
         RibbonMenuEntry bme = (RibbonMenuEntry)menuEntries[menuIndex];
@@ -1311,6 +1028,7 @@ public class RibbonSwapBoxMenu : BoxMenu
     }
     public override void SelectDisabled()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
         BattlePopup popup = new BattlePopup(PlayerMove.CantMoveReason.RibbonUnavailable);
         BattlePopupMenuScript s = BattlePopupMenuScript.BuildMenu(popup.text);
         s.transform.SetParent(transform);

@@ -38,6 +38,7 @@ public class Pause_HandlerJournal : Pause_HandlerShared_SideTabs
 
     public override void Select()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //even more submenus (but we are getting close to the end)
         Debug.Log((JournalSubpage)tabindex + " select");
         journalSubpage = (JournalSubpage)tabindex;

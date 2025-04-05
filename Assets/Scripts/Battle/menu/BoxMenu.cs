@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BoxMenu : MenuHandler
 {
@@ -36,7 +37,7 @@ public class BoxMenu : MenuHandler
 
     public override event EventHandler<MenuExitEventArgs> menuExit;
 
-    public event EventHandler<int> indexEvent;
+    public RectTransform rectTransform;
 
     //public float lifetime;
     //public const float MIN_SELECT_TIME = 0.0667f;
@@ -105,6 +106,78 @@ public class BoxMenu : MenuHandler
         return newMenu;
     }
 
+    public override void Init()
+    {
+        lifetime = 0;
+        active = true;
+        if (menuIndex == -1)
+        {
+            menuIndex = 0;
+            menuTopIndex = 0;
+        }
+        visualTopIndex = menuTopIndex;
+        visualSelectIndex = menuIndex;
+
+        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
+        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
+        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
+        //menuBaseO.transform.position = new Vector3(250, -70, 0);
+        menuEntriesO = new List<GameObject>();
+        bm = menuBaseO.GetComponent<BoxMenuScript>();
+
+        rectTransform = menuBaseO.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = GetMenuAnchoredPosition() + Vector2.right * 300;
+    }
+    public void PostEntriesInit()
+    {
+        bm.upArrow.enabled = false; //menuTopIndex > 0;
+        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
+
+        if (descriptorString != null)
+        {
+            bm.descriptorBox.enabled = true;
+            bm.descriptorTextBox.SetText(descriptorString, true);
+
+            //Resize it to fit the text
+            float height = 36;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
+        }
+        else
+        {
+            bm.descriptorBox.enabled = false;
+            bm.descriptorTextBox.gameObject.SetActive(false);
+        }
+
+        if (menuEntries[menuIndex].maxLevel <= 1)
+        {
+            bm.SetLevelChangeIndicator(false);
+        }
+        else
+        {
+            bm.SetLevelChangeIndicator(true);
+        }
+
+        for (int i = 0; i < menuEntriesO.Count; i++)
+        {
+            //Debug.Log(i - menuTopIndex);
+            visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
+            //menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - menuTopIndex);
+            menuEntriesO[i].transform.localPosition = BoxMenuScript.GetRelativePosition(i - visualTopIndex);
+        }
+
+        bm.selectorArrow.transform.localPosition = GetSelectorPosition(menuEntriesO[menuIndex].transform.localPosition);
+        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+    }
+
     void Update()
     {
         if (active)
@@ -115,6 +188,8 @@ public class BoxMenu : MenuHandler
 
     protected virtual void MenuUpdate()
     {
+        rectTransform.anchoredPosition = MainManager.EasingQuadraticTime(rectTransform.anchoredPosition, GetMenuAnchoredPosition(), 30000);
+
         lifetime += Time.deltaTime;
         bool indexChange = false;
         if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisVertical()) != inputDir) || InputManager.GetAxisVertical() == 0)
@@ -135,11 +210,13 @@ public class BoxMenu : MenuHandler
                 //inputDir positive = up and - index, negative = down and + index
                 if (inputDir > 0)
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                     indexChange = true;
                     menuIndex--;
                 }
                 else
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                     indexChange = true;
                     menuIndex++;
                 }
@@ -162,6 +239,7 @@ public class BoxMenu : MenuHandler
                 bm.SetLevelChangeIndicator(true);
             }
 
+            OnHover(menuEntries[menuIndex]);
 
             if (menuTopIndex > menuIndex)
             {
@@ -171,8 +249,6 @@ public class BoxMenu : MenuHandler
             {
                 menuTopIndex = menuIndex - MENU_SIZE_PER_PAGE + 1;
             }
-
-            indexEvent?.Invoke(this, menuIndex);
 
             //BoxMenuScript bm = menuBaseO.GetComponent<BoxMenuScript>();
             bm.upArrow.enabled = menuTopIndex > 0;
@@ -194,10 +270,12 @@ public class BoxMenu : MenuHandler
 
                 if (inputDir > 0)
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                     menuIndex -= (holdValue - pastHoldValue);
                 }
                 else
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                     menuIndex += (holdValue - pastHoldValue);
                 }
 
@@ -222,6 +300,8 @@ public class BoxMenu : MenuHandler
                     bm.SetLevelChangeIndicator(true);
                 }
 
+                OnHover(menuEntries[menuIndex]);
+
                 if (menuTopIndex > menuIndex)
                 {
                     menuTopIndex = menuIndex;
@@ -230,8 +310,6 @@ public class BoxMenu : MenuHandler
                 {
                     menuTopIndex = menuIndex - MENU_SIZE_PER_PAGE + 1;
                 }
-
-                indexEvent?.Invoke(this, menuIndex);
 
                 //BoxMenuScript bm = menuBaseO.GetComponent<BoxMenuScript>();
                 bm.upArrow.enabled = menuTopIndex > 0;
@@ -262,7 +340,8 @@ public class BoxMenu : MenuHandler
             {
                 visualSelectIndex = visualTopIndex + MENU_SIZE_PER_PAGE - 1;
             }
-            Vector3 next = Vector3.left * 170f + BoxMenuScript.GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * 7.5f;
+
+            Vector3 next = GetSelectorPosition(BoxMenuScript.GetRelativePosition(visualSelectIndex - visualTopIndex));
             bm.selectorArrow.transform.localPosition = next;
 
             //bm.selectorArrow.transform.localPosition = Vector3.left * 170f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 7.5f;
@@ -286,10 +365,18 @@ public class BoxMenu : MenuHandler
             {
                 if (lrinputDir > 0)
                 {
+                    if (menuEntries[menuIndex].maxLevel > 1)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollRight);
+                    }
                     //try to increment level
                     IncrementLevel(1);
                 } else
                 {
+                    if (menuEntries[menuIndex].maxLevel > 1)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollLeft);
+                    }
                     //try to decrement level
                     IncrementLevel(-1);
                 }
@@ -316,15 +403,6 @@ public class BoxMenu : MenuHandler
     public override void Clear()
     {
         active = false;
-        //Destroy(gameObject);
-
-        if (indexEvent != null)
-        {
-            foreach (Delegate d in indexEvent.GetInvocationList())
-            {
-                indexEvent -= (EventHandler<int>)d;
-            }
-        }
 
         Destroy(menuBaseO);
         Destroy(descriptionBoxO);
@@ -374,6 +452,7 @@ public class BoxMenu : MenuHandler
     }
     public virtual void Cancel()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
         PopSelf();
     }
     public virtual void SelectOption()
@@ -384,6 +463,21 @@ public class BoxMenu : MenuHandler
     {
 
     }
+    public virtual void OnHover(BoxMenuEntry boxMenuEntry)
+    {
+
+    }
+
+
+    public virtual Vector3 GetSelectorPosition(Vector3 position)
+    {
+        return Vector3.left * 145f + position + Vector3.up * 7.5f;
+    }
+    public static Vector2 GetMenuAnchoredPosition()
+    {
+        return Vector2.left * 190f + Vector2.up * 128f;
+    }
+
     /*
     {
         //Selecting a move takes you to a selection menu

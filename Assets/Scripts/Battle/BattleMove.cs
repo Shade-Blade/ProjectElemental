@@ -397,7 +397,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
     }
     //public abstract float GetBasePower();
 
-    public abstract int GetBaseCost();
+    public abstract int GetBaseCost(int level = 1);
 
     public abstract BaseBattleMenu.BaseMenuName GetMoveType();
 
@@ -1087,6 +1087,10 @@ public abstract class SoulMove : PlayerMove
         return true;
     }
 
+    public int BaseCostCalculation(int baseCost = 1, int level = 1, int scale = 2, int offset = 0)
+    {
+        return baseCost + ((level - 1) * scale) + offset;
+    }
     public override int StandardCostCalculation(BattleEntity caller, int level = 1, int scale = 2)
     {
         if (GetBaseCost() == 0)
@@ -1173,7 +1177,15 @@ public abstract class SoulMove : PlayerMove
 
         if (level != 1)
         {
-            output += " <color,#0000ff>(Lv. " + level + ": " + BattleControl.Instance.soulText[index + 1][1 + level] + ")</color>";
+            if (level >= 3 || BattleControl.Instance.soulText[index + 1][1 + level].Length < 2) //if I didn't write a description, use the infinite stacking one
+            {
+                string[] vars = new string[] { "0", (level).ToString(), (level * 2).ToString(), (level * 3).ToString(), (level * 4).ToString(), (level * 5).ToString(), (level * 6).ToString(), (level * 7).ToString(), (level * 8).ToString(), (level * 9).ToString(), (level * 10).ToString(), (level * 11).ToString(), (level * 12).ToString(), (level * 13).ToString(), (level * 14).ToString(), (level * 15).ToString() };
+                output += " <color,#5000ff>(Lv. " + level + ": " + FormattedString.ParseVars(BattleControl.Instance.soulText[index + 1][4], vars) + ")</color>";
+            }
+            else
+            {
+                output += " <color,#0000ff>(Lv. " + level + ": " + BattleControl.Instance.soulText[index + 1][1 + level] + ")</color>";
+            }
         }
 
         return output;

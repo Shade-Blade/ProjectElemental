@@ -122,6 +122,7 @@ public class Pause_HandlerStatus : Pause_HandlerShared
         }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
             section.ApplyUpdate(null);
             PopSelf();
         }

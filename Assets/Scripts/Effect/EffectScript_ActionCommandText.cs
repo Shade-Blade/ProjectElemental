@@ -36,7 +36,7 @@ public class EffectScript_ActionCommandText : MonoBehaviour
     //against enemy: goes right
     public void SetDir(bool isPlayer)
     {
-        dir = isPlayer ? -1 : 1;
+        dir = isPlayer ? 1 : -1;
     }
 
     // Start is called before the first frame update

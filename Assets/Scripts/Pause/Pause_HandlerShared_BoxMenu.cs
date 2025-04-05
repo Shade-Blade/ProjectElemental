@@ -76,10 +76,12 @@ public class Pause_HandlerShared_BoxMenu : Pause_HandlerShared
                     if (inputDir > 0)
                     {
                         index++;
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                     }
                     else
                     {
                         index--;
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                     }
                 }
 
@@ -111,7 +113,8 @@ public class Pause_HandlerShared_BoxMenu : Pause_HandlerShared
                 }
                 else
                 {
-                    index += PAGE_SIZE;                    
+                    index += PAGE_SIZE;
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BigScrollDown);
 
                     if (index > oc - 1)
                     {
@@ -131,6 +134,7 @@ public class Pause_HandlerShared_BoxMenu : Pause_HandlerShared
                 } else
                 {
                     index -= PAGE_SIZE;
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BigScrollUp);
 
                     if (index < 0)
                     {
@@ -158,10 +162,12 @@ public class Pause_HandlerShared_BoxMenu : Pause_HandlerShared
                     if (inputDir > 0)
                     {
                         index += (holdValue - pastHoldValue);
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                     }
                     else
                     {
                         index -= (holdValue - pastHoldValue);
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                     }
 
                     //No loop around
@@ -185,6 +191,7 @@ public class Pause_HandlerShared_BoxMenu : Pause_HandlerShared
             }
             if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
                 PopSelf();
             }
         }
@@ -194,6 +201,7 @@ public class Pause_HandlerShared_BoxMenu : Pause_HandlerShared
 
             if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
                 PopSelf();
             }
         }

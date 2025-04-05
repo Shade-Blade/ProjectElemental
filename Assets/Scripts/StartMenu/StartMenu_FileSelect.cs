@@ -200,10 +200,12 @@ public class StartMenu_FileSelect : MenuHandler
                 //inputDir positive = up and - index, negative = down and + index
                 if (inputDir > 0)
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                     menuIndex--;
                 }
                 else
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                     menuIndex++;
                 }
             }
@@ -239,10 +241,18 @@ public class StartMenu_FileSelect : MenuHandler
                     //inputDir positive = up and - index, negative = down and + index
                     if (horizontalInputDir > 0)
                     {
+                        if (bottomIndex < 2)
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollRight);
+                        }
                         bottomIndex++;
                     }
                     else
                     {
+                        if (bottomIndex > 0)
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollLeft);
+                        }
                         bottomIndex--;
                     }
                 }
@@ -300,17 +310,19 @@ public class StartMenu_FileSelect : MenuHandler
         {
             if (selectMode != FileSelectMode.None)
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
                 selectMode = FileSelectMode.None;
                 copyIndex = -1;
             } else
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
                 PopSelf();
             }
         }
     }
 
     public void SelectOption()
-    {
+    {        
         if (menuIndex != menuEntries.Length)
         {
             //Debug.Log(menuEntries[menuIndex].entry.name != null ? menuEntries[menuIndex].entry.name.Length : "X");
@@ -321,8 +333,12 @@ public class StartMenu_FileSelect : MenuHandler
                 case FileSelectMode.Delete:
                     if (menuEntries[menuIndex].entry.name != null && menuEntries[menuIndex].entry.name.Length > 0)
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                         prompt = PromptBoxMenu.BuildMenu(new string[] { "Yes", "No" }, new string[] { "0", "1" }, 1, "Are you sure you want to delete?");
                         awaitSpecial = true;
+                    } else
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
                     }
                     break;
                 case FileSelectMode.Copy:
@@ -330,28 +346,40 @@ public class StartMenu_FileSelect : MenuHandler
                     {
                         if (menuEntries[menuIndex].entry.name != null && menuEntries[menuIndex].entry.name.Length > 0)
                         {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                             copyIndex = menuIndex;
                             copyselector.gameObject.SetActive(true);
                             copyselector.anchoredPosition = Vector2.left * (400) + Vector2.up * menuEntries[menuIndex].gameObject.transform.localPosition.y;
+                        } else
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
                         }
                     }
                     else
                     {
                         if (copyIndex != menuIndex)
                         {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                             prompt = PromptBoxMenu.BuildMenu(new string[] { "Yes", "No" }, new string[] { "0", "1" }, 1, "Are you sure you want to copy?");
                             awaitSpecial = true;
+                        } else
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
                         }
                     }
                     break;
                 case FileSelectMode.Rename:
                     if (menuEntries[menuIndex].entry.name != null && menuEntries[menuIndex].entry.name.Length > 0)
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                         //File name entry
                         string oldName = menuEntries[menuIndex].entry.name.Substring(3);
                         textEntry = TextEntryMenu.BuildMenu(16, oldName, "Choose a new name for your file.<line><size,60%>(Use Escape to cancel.)</size>");
                         textEntry.menuExit += TextDone;
                         awaitTextEntry = true;
+                    } else
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
                     }
                     break;
                 default:
@@ -359,11 +387,13 @@ public class StartMenu_FileSelect : MenuHandler
                     {
                         if (menuEntries[menuIndex].entry.name != null && menuEntries[menuIndex].entry.name.Length > 0)
                         {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                             prompt = PromptBoxMenu.BuildMenu(new string[] { "Yes", "No" }, new string[] { "0", "1" }, 1, "Start game in File " + (menuIndex + 1) + "?");
                             awaitSpecial = true;
                         }
                         else
                         {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                             textEntry = TextEntryMenu.BuildMenu(16, "", "Choose a name for your new file.<line><size,60%>(Use Escape to cancel.)</size>");
                             textEntry.menuExit += TextDone;
                             awaitTextEntry = true;
@@ -373,6 +403,7 @@ public class StartMenu_FileSelect : MenuHandler
             }
         } else
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             if (bottomIndex == (int)selectMode - 1)
             {
                 selectMode = FileSelectMode.None;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static BattleHelper;
+using static UnityEngine.GraphicsBuffer;
 
 //list where you can add and remove elements while still being able to iterate over all of them exactly once
 //Can result in endless loops if you keep adding to it
@@ -591,7 +592,7 @@ public class BattleControl : MonoBehaviour
     //at least some of these should be loaded on the fly
 
     public GameObject damageEffect;
-    public GameObject statDisplayer;
+    public GameObject hpStaminaDisplayer;
     public GameObject epDisplayer;
     public GameObject seDisplayer;
     public GameObject xpDisplayer;
@@ -922,7 +923,7 @@ public class BattleControl : MonoBehaviour
 
     public static void SetCameraDefault(float halfLife = 0.05f)
     {
-        MainManager.Instance.Camera.SetManual(new Vector3(0, 1.4f, -4.25f), new Vector3(0, 0, 0), halfLife);
+        MainManager.Instance.Camera.SetManual(new Vector3(0, 1.1f, -3.5f), new Vector3(0, 0, 0), halfLife);
 
         //MainManager.Instance.Camera.SetManual(new Vector3(0, 1.5f, -4.8f), new Vector3(0, 0, 0), halfLife);
 
@@ -930,10 +931,12 @@ public class BattleControl : MonoBehaviour
         //Was 0, 2, 6.5
         //Camera vertical edges at z = 0 are y = 5.75 and y = -1.75
         //The equidistant point is at y = 2 (which is the y pos of default)
+
+        //was 0, 1.4, -4.25
     }
     public static void SetCameraDefaultDelayed(float halfLife = 0.05f)
     {
-        MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.4f, -4.25f), new Vector3(0, 0, 0), halfLife);
+        MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.1f, -3.5f), new Vector3(0, 0, 0), halfLife);
 
         //MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.5f, -4.8f), new Vector3(0, 0, 0), halfLife);
 
@@ -941,12 +944,14 @@ public class BattleControl : MonoBehaviour
         //Was 0, 2, 6.5
         //Camera vertical edges at z = 0 are y = 5.75 and y = -1.75
         //The equidistant point is at y = 2 (which is the y pos of default)
+
+        //was 0, 1.4, -4.25
     }
-    public static void SetCameraSettings(Vector3 focus, float distance = 4.25f, float halfLife = 0.05f)
+    public static void SetCameraSettings(Vector3 focus, float distance = 3.5f, float halfLife = 0.05f)
     {
         MainManager.Instance.Camera.SetManual(focus + distance * Vector3.back, new Vector3(0, 0, 0), halfLife);
     }
-    public static void SetCameraSettingsDelayed(Vector3 focus, float distance = 4.25f, float halfLife = 0.05f)
+    public static void SetCameraSettingsDelayed(Vector3 focus, float distance = 3.5f, float halfLife = 0.05f)
     {
         MainManager.Instance.Camera.SetManualDelayed(focus + distance * Vector3.back, new Vector3(0, 0, 0), halfLife);
     }
@@ -2057,7 +2062,7 @@ public class BattleControl : MonoBehaviour
     {
         assetsLoaded = true;
         damageEffect = Resources.Load<GameObject>("VFX/Battle/Effect_Damage");
-        statDisplayer = Resources.Load<GameObject>("Battle/Stat Displayer");
+        hpStaminaDisplayer = Resources.Load<GameObject>("Battle/HP Stamina Displayer");
         xpDisplayer = Resources.Load<GameObject>("Battle/XP Displayer");
         epDisplayer = Resources.Load<GameObject>("Battle/EP Displayer");
         seDisplayer = Resources.Load<GameObject>("Battle/SE Displayer");
@@ -2984,12 +2989,15 @@ public class BattleControl : MonoBehaviour
         switch (successes)
         {
             case 1:
+                MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_AC_Nice);
                 CreateActionCommandEffect(BattleHelper.ActionCommandText.Nice, position, target);
                 break;
             case 2:
+                MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_AC_Good);
                 CreateActionCommandEffect(BattleHelper.ActionCommandText.Good, position, target);
                 break;
             case 3:
+                MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_AC_Great);
                 CreateActionCommandEffect(BattleHelper.ActionCommandText.Great, position, target);
                 break;
             default:
@@ -3011,7 +3019,7 @@ public class BattleControl : MonoBehaviour
         o.transform.SetParent(transform);
 
         bool player = IsPlayerControlled(be, false);
-        float playermult = player ? 1 : -1;
+        float playermult = player ? -1 : 1;
         be.sameFrameHealEffects++;
 
         if (be.sameFrameHealEffects == 2)
@@ -4003,7 +4011,6 @@ public class BattleControl : MonoBehaviour
 
     public void RebuildStatDisplayers()
     {
-        //Debug.Log("statDisplayer update");
         if (statDisplayers.Count > 0)
         {
             for (int i = 0; i < statDisplayers.Count; i++)
@@ -4012,13 +4019,12 @@ public class BattleControl : MonoBehaviour
             }
         }
 
-        //List<BattleEntity> blist = GetEntitiesSorted((e) => (e.posId < 0 && e.posId > -10));
         List<PlayerEntity> blist = GetPlayerEntities(false);
 
         for (int i = 0; i < blist.Count; i++)
         {
-            GameObject g = Instantiate(statDisplayer, MainManager.Instance.Canvas.transform);
-            StatDisplayerScript s = g.GetComponent<StatDisplayerScript>();
+            GameObject g = Instantiate(hpStaminaDisplayer, MainManager.Instance.Canvas.transform);
+            HPStaminaDisplayerScript s = g.GetComponent<HPStaminaDisplayerScript>();
             s.SetEntity(blist[i]);
             s.SetPosition(blist.Count - i - 1);
             statDisplayers.Add(g);
@@ -4085,6 +4091,70 @@ public class BattleControl : MonoBehaviour
             bss.Setup(playerData, wilex, luna);
             statDisplayers.Add(bs);
         }
+    }
+
+    public void StatHighlight(BattleHelper.MoveCurrency currency, BattleEntity target)
+    {
+        switch (currency)
+        {
+            case MoveCurrency.Energy:
+                EPDisplayerScript eds = MainManager.Instance.Canvas.GetComponentInChildren<EPDisplayerScript>();
+                eds.highlightEP = true;
+                break;
+            case MoveCurrency.Soul:
+                SEDisplayerScript sds = MainManager.Instance.Canvas.GetComponentInChildren<SEDisplayerScript>();
+                sds.highlightSE = true;
+                break;
+            case MoveCurrency.Stamina:
+                HPStaminaDisplayerScript[] hsdsList = MainManager.Instance.Canvas.GetComponentsInChildren<HPStaminaDisplayerScript>();
+                for (int i = 0; i < hsdsList.Length; i++)
+                {
+                    if (hsdsList[i].entity == target)
+                    {
+                        hsdsList[i].highlightStamina = true;
+                    }
+                }
+                break;
+            case MoveCurrency.Health:
+                HPStaminaDisplayerScript[] hsdsListB = MainManager.Instance.Canvas.GetComponentsInChildren<HPStaminaDisplayerScript>();
+                for (int i = 0; i < hsdsListB.Length; i++)
+                {
+                    if (hsdsListB[i].entity == target)
+                    {
+                        hsdsListB[i].highlightHP= true;
+                    }
+                }
+                break;
+            case MoveCurrency.Coins:
+                CoinDisplayerScript cds = MainManager.Instance.Canvas.GetComponentInChildren<CoinDisplayerScript>();
+                cds.highlightCoins = true;
+                break;
+        }
+    }
+    public void ItemHighlight()
+    {
+        ItemDisplayerScript ids = MainManager.Instance.Canvas.GetComponentInChildren<ItemDisplayerScript>();
+        ids.highlightItems = true;
+    }
+    public void ResetStatHighlight()
+    {
+        //Bad code
+        //may be fine? (may want to refactor later)
+        HPStaminaDisplayerScript[] hsdsList = MainManager.Instance.Canvas.GetComponentsInChildren<HPStaminaDisplayerScript>();
+        EPDisplayerScript eds = MainManager.Instance.Canvas.GetComponentInChildren<EPDisplayerScript>();
+        SEDisplayerScript sds = MainManager.Instance.Canvas.GetComponentInChildren<SEDisplayerScript>();
+        CoinDisplayerScript cds = MainManager.Instance.Canvas.GetComponentInChildren<CoinDisplayerScript>();
+        ItemDisplayerScript ids = MainManager.Instance.Canvas.GetComponentInChildren<ItemDisplayerScript>();
+
+        for (int i = 0; i < hsdsList.Length; i++)
+        {
+            hsdsList[i].highlightHP = false;
+            hsdsList[i].highlightStamina = false;
+        }
+        eds.highlightEP = false;
+        sds.highlightSE = false;
+        cds.highlightCoins = false;
+        ids.highlightItems = false;
     }
 
     public void Start()

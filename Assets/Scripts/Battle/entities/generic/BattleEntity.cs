@@ -1767,6 +1767,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             damage = 0;
         }
 
+
         int damageReduction = 0;
         string damageReductionString = null;
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -1781,6 +1782,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 hitThisTurn = true;
                 //How about I just make it dink
                 BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, 0, localBonusDamageString, "(-" + damage + ") (100%)", GetDamageEffectPosition(), this, type, properties);
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Immune);
                 return 0;
             }
 
@@ -1898,6 +1900,61 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             hp -= damage;
         }
 
+
+        //Sound effects
+        bool normalDamage = true;
+        if (damage == 0 || Invulnerable())
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Immune);
+        }
+        if ((type & DamageType.Light) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Light);
+        }
+        if ((type & DamageType.Dark) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Dark);
+        }
+        if ((type & DamageType.Fire) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Fire);
+        }
+        if ((type & DamageType.Water) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Water);
+        }
+        if ((type & DamageType.Air) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Air);
+        }
+        if ((type & DamageType.Earth) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Earth);
+        }
+        if ((type & DamageType.Prismatic) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Prismatic);
+        }
+        if ((type & DamageType.Void) != 0)
+        {
+            normalDamage = false;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Void);
+        }
+        if (normalDamage)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Normal);
+        }
+
+
+
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
         {
             //if (HasEffect(Effect.EffectType.ExactDamageKill))
@@ -1910,6 +1967,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     int heal = -hp;
                     hp = 0;
                     HealHealth(heal);
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Absorb);
                 }
             }
         }           
@@ -2152,6 +2210,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             health = 0;
         }
 
+        if (health > 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Heal);
+        }
+
         if (!BattleControl.IsPlayerControlled(this, false) && ShouldShowHPBar())
         {
             ShowHPBar();
@@ -2242,6 +2305,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             health = 0;
         }
 
+        if (health > 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Heal);
+        }
+
         //Subtle difference: Negative healing will not reduce you to 0 and bypasses all the damage stuff
         /*
         if (health < 0)
@@ -2306,6 +2374,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         */
 
+        if (energy > 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Energize);
+        }
+
         BattleControl.Instance.AddEP(this, energy);
 
         //Vector3 hoffset = offset;
@@ -2329,6 +2402,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return;
         }
         */
+
+        if (energy > 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Energize);
+        }
 
         int overheal = BattleControl.Instance.AddEP(this, energy);
 
@@ -2355,6 +2433,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return;
         }
 
+        if (se > 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Soul);
+        }
+
         BattleControl.Instance.AddSE(this, se);
 
         if (se > 0)
@@ -2370,6 +2453,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public int HealSoulEnergyTrackOverhealPay(int se)
     {
+        if (se > 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Soul);
+        }
+
         int overheal = BattleControl.Instance.AddSE(this, se);
 
         if (se > 0)
@@ -2401,6 +2489,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public virtual void HealStamina(int st)
     {
+        if (st > 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Stamina);
+        }
+
         stamina += st;
         if (st > 0)
         {
@@ -2425,6 +2518,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public virtual int HealStaminaTrackOverhealPay(int st)
     {
+        if (st > 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Stamina);
+        }
+
         stamina += st;
         if (st > 0)
         {
@@ -2469,6 +2567,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (entityID >= 0)
         {
             return;
+        }
+
+        if (coins > 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Coins);
         }
 
         BattleControl.Instance.AddCoins(this, coins);
@@ -2821,6 +2924,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (target.GetDefense(type) > DefenseTableEntry.IMMUNITY_CONSTANT)
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_Hit_Absorb);
             takenDamage = -inputDamage; //deals "negative damage"
             target.HealHealth(inputDamage);
             OnHitEffects(target, takenDamage, type, properties, inputDamage);
@@ -2934,6 +3038,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (target.GetDefense(type) > DefenseTableEntry.IMMUNITY_CONSTANT)
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_Hit_Absorb);
             takenDamage = -inputDamage;
             target.HealHealth(inputDamage);
             OnHitEffects(target, takenDamage, type, properties, reductionFormula(inputDamage, hitIndex));
@@ -3039,6 +3144,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (target.GetDefense(type) > DefenseTableEntry.IMMUNITY_CONSTANT)
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_Hit_Absorb);
             takenDamage = -inputDamage;
             target.HealHealth(inputDamage);
             OnHitEffects(target, takenDamage, type, properties, inputDamage);
@@ -3136,6 +3242,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (target.GetDefense(type) > DefenseTableEntry.IMMUNITY_CONSTANT)
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_Hit_Absorb);
             takenDamage = -inputDamage;
             target.HealHealth(inputDamage);
             OnHitEffects(target, takenDamage, type, properties, reductionFormula(inputDamage, hitIndex));
@@ -4388,6 +4495,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (target.GetDefense(type) > DefenseTableEntry.IMMUNITY_CONSTANT)
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_Hit_Absorb);
             target.HealHealth(inputDamage);
             output = inputDamage;
         }
@@ -7480,6 +7588,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public virtual IEnumerator DefaultCureEffect()
     {
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectWearOff, 1);
         yield return StartCoroutine(Jump(homePos, 0.5f, 0.25f));
     }
 

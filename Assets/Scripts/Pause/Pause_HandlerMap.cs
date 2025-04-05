@@ -69,6 +69,7 @@ public class Pause_HandlerMap : Pause_HandlerShared
         lifetime += Time.deltaTime;
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
             PopSelf();
         }
 

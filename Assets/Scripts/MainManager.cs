@@ -2841,6 +2841,72 @@ public class MainManager : MonoBehaviour
         XP99
     }
 
+    public enum Sound
+    {
+        Menu_Select,
+        Menu_Cancel,
+        Menu_Error, //pressing an invalid option
+        Menu_Pause,
+        Menu_Unpause,
+        Menu_Open,
+        Menu_Close,
+        Menu_Equip,
+        Menu_Unequip,
+        Menu_ScrollUp,  
+        Menu_ScrollDown,
+        Menu_BigScrollUp,
+        Menu_BigScrollDown,
+        Menu_ScrollRight,   //for pressing X or scrolling through levels for moves
+        Menu_ScrollLeft,
+        Menu_BSwap,
+        Menu_CharacterSwap,
+        Menu_Save,
+
+        SFX_Item_Throw,
+        SFX_Item_Bite,
+        SFX_Item_Gulp,
+
+        SFX_Heal,
+        SFX_Energize,
+        SFX_Soul,
+        SFX_Stamina,
+        SFX_Coins,
+        SFX_Buff,
+        SFX_Debuff,
+        SFX_EffectWearOff,
+        SFX_Immunity,
+        SFX_Seal,
+        SFX_Cure,
+        SFX_Cleanse,
+
+        SFX_AC_Nice,
+        SFX_AC_Good,
+        SFX_AC_Great,
+        SFX_AC_Perfect,
+
+        SFX_Hit_Immune,
+        SFX_Hit_Absorb,
+        SFX_Hit_Block,
+        SFX_Hit_BlockSpecial,
+        SFX_Hit_BlockPerfect,
+        SFX_Hit_Normal,
+        SFX_Hit_Light,
+        SFX_Hit_Water,
+        SFX_Hit_Air,
+        SFX_Hit_Dark,
+        SFX_Hit_Fire,
+        SFX_Hit_Earth,
+        SFX_Hit_Prismatic,
+        SFX_Hit_Void,
+    }
+    public enum SoundType
+    {
+        Music,      //music
+        SFX,        //sfx
+        Text,       //text bleeps
+        System,     //menus
+    }
+
     //area flags are stored per area, but are cleared when leaving area (used for things like enemy spawning)
     //public bool[] areaFlags;
     //public string[] areaVars;
@@ -5118,10 +5184,7 @@ public class MainManager : MonoBehaviour
                 hudShowTime = 0;
             }
 
-            bool coinChange = lastCoinCount != playerData.coins;
-            lastCoinCount = playerData.coins;
-
-            if (coinChange)
+            if (curOverworldHUD.HasDisplayedState())
             {
                 hudShowTime = HUD_MIN_SHOW_TIME;
             }
@@ -5222,6 +5285,7 @@ public class MainManager : MonoBehaviour
                         {
                             curOverworldHUD.SetFadeDirectly(0);
                         }
+                        PlayGlobalSound(Sound.Menu_Pause);
                         isPaused = true;
                         pauseMenuScript = Pause_SectionBase.buildMenu();
                     }
@@ -7218,6 +7282,155 @@ public class MainManager : MonoBehaviour
     }
 
 
+    public float GetSoundMultiplier(SoundType st)
+    {
+        //get master volume
+        float masterSound = SettingsManager.Instance.GetSetting(SettingsManager.Setting.MasterVolume) / 20f;
+
+        SettingsManager.Setting setting = SettingsManager.Setting.MasterVolume;
+        if (st == SoundType.SFX)
+        {
+            setting = SettingsManager.Setting.SFXVolume;
+        }
+        if (st == SoundType.Music)
+        {
+            setting = SettingsManager.Setting.MusicVolume;
+        }
+        if (st == SoundType.Text)
+        {
+            setting = SettingsManager.Setting.TextVolume;
+        }
+        if (st == SoundType.System)
+        {
+            setting = SettingsManager.Setting.SystemVolume;
+        }
+
+        float otherSound = SettingsManager.Instance.GetSetting(setting) / 20f;
+
+        return masterSound * otherSound;
+    }
+
+
+    public SoundType GetSoundType(string soundName)
+    {
+        if (soundName.Contains("Music") || soundName.Contains("Song") || soundName.Contains("Ambient"))
+        {
+            return SoundType.Music;
+        }
+        if (soundName.Contains("System") || soundName.Contains("Menu"))
+        {
+            return SoundType.System;
+        }
+        if (soundName.Contains("Text"))
+        {
+            return SoundType.Text;
+        }
+
+        return SoundType.SFX;
+    }
+
+    public void PlaySound(GameObject parent, Sound s, float pitch = 1)
+    {
+        StartCoroutine(PlaySoundCoroutine(parent, s, pitch));
+    }
+    public IEnumerator PlaySoundCoroutine(GameObject parent, Sound s, float pitch = 1)
+    {
+        if (parent == null)
+        {
+            yield return StartCoroutine(PlayGlobalSoundCoroutine(s, pitch));
+            yield break;
+        }
+
+        AudioSource aso = parent.AddComponent<AudioSource>();
+
+        //Load clip from resources?
+        //Will become inefficient later: implement some kind of cache?
+        string pathString = "Audio/" + s.ToString().Replace("_", "/");
+        aso.clip = Resources.Load<AudioClip>(pathString);
+
+        //Wait until done
+        aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
+        aso.pitch = pitch;
+        aso.Play();
+
+        while (aso.isPlaying)
+        {
+            yield return null;
+
+            //object or source ceased to exist for some reason = stop
+            if (parent == null || aso == null)
+            {
+                yield break;
+            }
+        }
+
+        Destroy(aso);
+    }
+    public void StopSound(GameObject parent, Sound s)
+    {
+        foreach (AudioSource aso in parent.GetComponents<AudioSource>())
+        {
+            if (aso.clip.name.Equals(s.ToString()))
+            {
+                aso.Stop();
+            }
+        }
+    }
+
+
+    public void PlayGlobalSound(Sound s, float pitch = 1)
+    {
+        StartCoroutine(PlayGlobalSoundCoroutine(s, pitch));
+    }
+    //Sound stuff
+    public IEnumerator PlayGlobalSoundCoroutine(Sound s, float pitch = 1)
+    {
+        AudioSource aso = gameObject.AddComponent<AudioSource>();
+
+        //Load clip from resources?
+        string pathString = "Audio/" + s.ToString().Replace("_", "/");
+        aso.clip = Resources.Load<AudioClip>(pathString);
+
+        //Wait until done
+        aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
+        aso.pitch = pitch;
+        aso.Play();
+
+        while (aso.isPlaying)
+        {
+            yield return null;
+            if (aso == null)
+            {
+                yield break;
+            }
+        }
+
+        Destroy(aso);
+    }
+    public void StopGlobalSound(Sound s)
+    {
+        foreach (AudioSource aso in GetComponents<AudioSource>())
+        {
+            if (aso.clip.name.Equals(s.ToString()))
+            {
+                aso.Stop();
+            }
+        }
+    }
+
+    public void SoundUpdate(SettingsManager.Setting s)
+    {
+        //may be slow, may want to refactor later
+        //refactor by keeping some global list of audio sources?
+        foreach (AudioSource aso in FindObjectsOfType<AudioSource>())
+        {
+            SoundType st = GetSoundType(aso.clip.name);
+            aso.volume = GetSoundMultiplier(st);
+        }
+    }
+
+
+
 
     //old vestige of previous system idea
     /*
@@ -8451,7 +8664,13 @@ public class MainManager : MonoBehaviour
     public static Vector3 EasingQuadraticTime(Vector3 input, Vector3 target, float force)
     {
         //sus code
-        return new Vector3(EasingQuadraticTime(input.x, target.x, force), EasingQuadraticTime(input.y, target.y, force), EasingQuadraticTime(input.z, target.z, force));
+        //return new Vector3(EasingQuadraticTime(input.x, target.x, force), EasingQuadraticTime(input.y, target.y, force), EasingQuadraticTime(input.z, target.z, force));
+        //^ Not straight: want something that does straight line stuff
+
+        float distance = (input - target).magnitude;
+        float newDistance = EasingQuadraticTime(distance, 0, force);
+
+        return (target) - (target - input).normalized * newDistance;
     }
     public static Quaternion EasingQuadraticTime(Quaternion input, Quaternion target, float force)
     {

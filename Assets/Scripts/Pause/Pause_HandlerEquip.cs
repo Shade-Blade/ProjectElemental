@@ -372,6 +372,20 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
     {
         return sortedParty.Count - 1;
     }
+    public override void ScrollRightSound()
+    {
+        if (GetMaxLR() > 0)
+        {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BSwap);
+        }
+    }
+    public override void ScrollLeftSound()
+    {
+        if (GetMaxLR() > 0)
+        {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BSwap);
+        }
+    }
     public override void IndexChange(int lastIndex, int tabIndex)
     {
         RebuildList(lastIndex);
@@ -394,6 +408,7 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
 
     public override void Select()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //go to badge select handler
         //Debug.Log(index);
 
@@ -434,6 +449,8 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
                 sortIndex = 0;
             }
         }
+
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollRight);
 
         RebuildList(tabindex);
         if (section != null)

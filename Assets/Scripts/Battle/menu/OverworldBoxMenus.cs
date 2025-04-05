@@ -84,29 +84,7 @@ public class OWItemBoxMenu : BoxMenu
 
     public override void Init()
     {
-        lifetime = 0;
-        /*
-        if (displayModes == null)
-        {
-            displayModes = new List<ItemMenuEntry.StatDisplay>
-            {
-                ItemMenuEntry.StatDisplay.Sprite
-            };
-            //displayModes.Add(ItemMenuEntry.StatDisplay.Time);
-        }
-        */
-        //displayIndex = 0;
-        active = true;
-        menuIndex = 0;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
+        base.Init();
 
         //get items from item inventory
         List<Item> inv = itemList; //MainManager.Instance.playerData.itemInventory;
@@ -150,36 +128,7 @@ public class OWItemBoxMenu : BoxMenu
             b.Setup(menuEntries[i]);
         }
 
-        menuTopIndex = 0;
-        visualTopIndex = menuTopIndex;
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
@@ -189,10 +138,13 @@ public class OWItemBoxMenu : BoxMenu
             {
                 if (!canUseList[menuIndex])
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
                     return;
                 }
             }
         }
+
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
 
         if (requiresTarget && Item.CanUseOutOfBattle(itemList[menuIndex].type))
         {
@@ -217,6 +169,10 @@ public class OWItemBoxMenu : BoxMenu
             {
                 if (!canUseList[menuIndex])
                 {
+                    if (zTarget || zSelect)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
+                    }
                     return;
                 }
             }
@@ -224,6 +180,7 @@ public class OWItemBoxMenu : BoxMenu
 
         if (zSelect && Item.CanUseOutOfBattle(itemList[menuIndex].type))
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             //Selecting a move takes you to a selection menu
             List<Item> inv = itemList; //MainManager.Instance.playerData.itemInventory;
             OWCharacterBoxMenu s2 = OWCharacterBoxMenu.BuildMenu();
@@ -233,12 +190,14 @@ public class OWItemBoxMenu : BoxMenu
         }
         if (zTarget && !zSelect)
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             menuIndex = -2;
             InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
         }
     }
     public override void Cancel()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
         if (!noCancelGoBack)
         {
             PopSelf();
@@ -321,29 +280,7 @@ public class OWKeyItemBoxMenu : BoxMenu
 
     public override void Init()
     {
-        lifetime = 0;
-        /*
-        if (displayModes == null)
-        {
-            displayModes = new List<ItemMenuEntry.StatDisplay>
-            {
-                ItemMenuEntry.StatDisplay.Sprite
-            };
-            //displayModes.Add(ItemMenuEntry.StatDisplay.Time);
-        }
-        */
-        //displayIndex = 0;
-        active = true;
-        menuIndex = 0;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
+        base.Init();
 
         //get items from item inventory
         List<KeyItem> inv = itemList; //MainManager.Instance.playerData.itemInventory;
@@ -387,52 +324,25 @@ public class OWKeyItemBoxMenu : BoxMenu
             b.Setup(menuEntries[i]);
         }
 
-        menuTopIndex = 0;
-        visualTopIndex = menuTopIndex;
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
     }
     public override void ZOption()
     {
         if (zTarget)
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             menuIndex = -2;
             InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
         }
     }
     public override void Cancel()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
         if (!noCancelGoBack)
         {
             PopSelf();
@@ -716,33 +626,7 @@ public class GenericBoxMenu : BoxMenu
 
     public override void Init()
     {
-        lifetime = 0;
-        /*
-        if (displayModes == null)
-        {
-            displayModes = new List<ItemMenuEntry.StatDisplay>
-            {
-                ItemMenuEntry.StatDisplay.Sprite
-            };
-            //displayModes.Add(ItemMenuEntry.StatDisplay.Time);
-        }
-        */
-        //displayIndex = 0;
-        active = true;
-        menuIndex = 0;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-
-        if (descriptionList != null)
-        {
-            descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-            descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        }
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
+        base.Init();
 
         //get items from item inventory
         List<string> list = dataList; //MainManager.Instance.playerData.itemInventory;
@@ -800,49 +684,18 @@ public class GenericBoxMenu : BoxMenu
             b.Setup(menuEntries[i], showAtOne, levelDescriptor);
         }
 
-        menuTopIndex = 0;
-        visualTopIndex = menuTopIndex;
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        //Debug.Log(descriptorString);
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        if (descriptionList != null)
-        {
-            descriptionBoxScript.SetText(menuEntries[menuIndex].description);
-        }
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
     }
     public override void ZOption()
     {
         if (canZSelect)
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             PopSelf();
             if (parent == null)
             {
@@ -854,6 +707,7 @@ public class GenericBoxMenu : BoxMenu
     }
     public override void Cancel()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
         PopSelf();
         if (parent == null)
         {
@@ -997,20 +851,7 @@ public class OWCharacterBoxMenu : BoxMenu
 
     public override void Init()
     {
-        lifetime = 0;
-        //displayMode = CharacterMenuEntry.StatDisplay.Health;
-
-        active = true;
-        menuIndex = 0;
-        visualSelectIndex = menuIndex;
-
-        menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
-        descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
-        //menuBaseO.transform.position = new Vector3(250, -70, 0);
-        menuEntriesO = new List<GameObject>();
-
-        bm = menuBaseO.GetComponent<BoxMenuScript>();
+        base.Init();
 
         List<PlayerData.PlayerDataEntry> playerDataEntries = MainManager.Instance.playerData.party;
         descriptorString = MainManager.Instance.playerData.ep + "/" + MainManager.Instance.playerData.maxEP + "<ep>, " + MainManager.Instance.playerData.se + "/" + MainManager.Instance.playerData.maxSE + "<se>";
@@ -1026,43 +867,14 @@ public class OWCharacterBoxMenu : BoxMenu
             b.Setup(menuEntries[i]);
         }
 
-        menuTopIndex = 0;
-        visualTopIndex = menuTopIndex;
-        bm.upArrow.enabled = false; //menuTopIndex > 0;
-        bm.downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
-
-        if (menuEntries[menuIndex].maxLevel <= 1)
-        {
-            bm.SetLevelChangeIndicator(false);
-        }
-        else
-        {
-            bm.SetLevelChangeIndicator(true);
-        }
-
-        if (descriptorString != null)
-        {
-            bm.descriptorBox.enabled = true;
-            bm.descriptorTextBox.SetText(descriptorString, true);
-
-            //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
-
-        }
-        else
-        {
-            bm.descriptorBox.enabled = false;
-            bm.descriptorTextBox.gameObject.SetActive(false);
-        }
-
-        descriptionBoxScript.SetText(menuEntries[menuIndex].description);
+        PostEntriesInit();
     }
     public override void SelectOption()
     {
         //This is a bad idea
         //MainManager.Instance.lastTextboxMenuResultObject = GetFullResult();
         //Clear();
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
     }
     public override void ZOption()
@@ -1090,22 +902,6 @@ public class OWCharacterBoxMenu : BoxMenu
         }
         */
     }
-
-    /*
-    public override Move GetCurrent()
-    {
-        return null;
-    }
-    public override BattleAction GetAction()
-    {
-        return null;
-    }
-    public PlayerData.PlayerDataEntry GetPDataEntry()
-    {
-        List<PlayerData.PlayerDataEntry> playerDataEntries = BattleControl.Instance.playerData.fullParty;
-        return playerDataEntries[menuIndex];
-    }
-    */
 
     public override MenuResult GetResult()
     {
@@ -1212,7 +1008,7 @@ public class PromptBoxMenu : BoxMenu
         }
         baseBox = bm.menuBox;
 
-        bm.selectorArrow.transform.localPosition = Vector3.left * (25f + width/2) + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 2.5f;
+        bm.selectorArrow.transform.localPosition = GetSelectorPosition(menuEntriesO[menuIndex].transform.localPosition);
     }
     public override void Clear()
     {
@@ -1254,10 +1050,12 @@ public class PromptBoxMenu : BoxMenu
                 //inputDir positive = up and - index, negative = down and + index
                 if (inputDir > 0)
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                     menuIndex--;
                 }
                 else
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                     menuIndex++;
                 }
             }
@@ -1271,7 +1069,6 @@ public class PromptBoxMenu : BoxMenu
                 menuIndex = menuEntries.Length - 1;
             }
 
-
             if (menuTopIndex > menuIndex)
             {
                 menuTopIndex = menuIndex;
@@ -1280,6 +1077,8 @@ public class PromptBoxMenu : BoxMenu
             {
                 menuTopIndex = menuIndex - MENU_SIZE_PER_PAGE + 1;
             }
+
+            OnHover(menuEntries[menuIndex]);
 
             PromptMenuEntryScript p = menuEntriesO[menuIndex].GetComponent<PromptMenuEntryScript>();
             if (!p.wavy)
@@ -1314,10 +1113,12 @@ public class PromptBoxMenu : BoxMenu
 
                 if (inputDir > 0)
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                     menuIndex -= (holdValue - pastHoldValue);
                 }
                 else
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                     menuIndex += (holdValue - pastHoldValue);
                 }
 
@@ -1370,7 +1171,7 @@ public class PromptBoxMenu : BoxMenu
             {
                 visualSelectIndex = visualTopIndex + MENU_SIZE_PER_PAGE - 1;
             }
-            Vector3 next = Vector3.left * (25f + width / 2) + GetRelativePosition(visualSelectIndex - visualTopIndex) + Vector3.up * 2.5f;
+            Vector3 next = GetSelectorPosition(GetRelativePosition(visualSelectIndex - visualTopIndex));
             bm.selectorArrow.transform.localPosition = next;
 
             //bm.selectorArrow.transform.localPosition = targetLocal;
@@ -1379,19 +1180,25 @@ public class PromptBoxMenu : BoxMenu
 
         if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries[menuIndex].canUse && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME) //Press A to select stuff
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             SelectOption();
         }
         if (InputManager.GetButtonDown(InputManager.Button.B) && cancelIndex != -2 && lifetime > MIN_SELECT_TIME)
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
             menuIndex = cancelIndex;
             SelectOption();
         }
         //B press = use cancel option if possible
     }
 
+    public override Vector3 GetSelectorPosition(Vector3 position)
+    {
+        return Vector3.left * (25f + width / 2) + position + Vector3.up * 2.5f;
+    }
+
     public override void SelectOption()
     {
-        //Debug.Log(table[menuIndex][0]);
         InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
         menuDone = true;
     }

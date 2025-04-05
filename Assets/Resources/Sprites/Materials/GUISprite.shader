@@ -20,7 +20,7 @@ Shader "Unlit/GUISprite"
         {
             CGPROGRAM
             #pragma vertex vert
-            #pragma fragment frag
+            #pragma fragment frag alpha:fade
 
             #include "UnityCG.cginc"
 
@@ -53,12 +53,13 @@ Shader "Unlit/GUISprite"
 				col.r *= i.color.r;
 				col.g *= i.color.g;
 				col.b *= i.color.b;
+                col.a *= i.color.a;
                 return col;
             }
             ENDCG
-				Blend SrcAlpha OneMinusSrcAlpha
-				ZWrite Off
-				ZTest Always
+			Blend SrcAlpha OneMinusSrcAlpha
+			ZWrite Off
+			ZTest Always
         }
     }
 }

@@ -81,6 +81,8 @@ public class Pause_HandlerItem : Pause_HandlerShared_SideTabs
 
     public override void Select()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+
         //even more submenus (but we are getting close to the end)
         Debug.Log((PauseItemPage)tabindex + " select");
         Pause_SectionShared newSection = null;

@@ -31,7 +31,7 @@ public class WorldCameraSettings    //contains all the info something that messe
         wcs.effect = WorldCamera.CameraEffect.None;
         wcs.cameraEulerAngles = Vector3.zero;
         wcs.directionVector = new Vector3(0, 1.2f, -3f);
-        wcs.distance = 4.75f;
+        wcs.distance = 4f;
         wcs.worldspaceYaw = 0;
         wcs.movementHalflife = 0.05f;
 

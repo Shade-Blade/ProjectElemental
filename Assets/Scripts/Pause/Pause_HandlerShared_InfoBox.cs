@@ -72,10 +72,18 @@ public class Pause_HandlerShared_InfoBox : Pause_HandlerShared
             {
                 if (inputDir < 0)
                 {
+                    if (index > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollLeft);
+                    }
                     index--;
                 }
                 else
                 {
+                    if (index < infoText.Length - 1)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollRight);
+                    }
                     index++;
                 }
             }
@@ -101,6 +109,7 @@ public class Pause_HandlerShared_InfoBox : Pause_HandlerShared
 
         if (InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
             section.gameObject.SetActive(false);
             PopSelf();
         }

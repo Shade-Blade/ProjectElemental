@@ -247,10 +247,20 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                     if (sideDir > 0)
                     {
                         level += 1;
+
+                        if (maxValues[index] > 0)
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollRight);
+                        }
                     }
                     if (sideDir < 0)
                     {
                         level -= 1;
+
+                        if (maxValues[index] > 0)
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollLeft);
+                        }
                     }
 
                     if (level < 0)
@@ -280,6 +290,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
             }
             if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
                 PopSelf();
             }
         }
@@ -289,17 +300,19 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
 
             if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
                 PopSelf();
             }
         }
     }
 
     public override void Select()
-    {
+    {       
         if (startMenu)
         {
             if (index == GetObjectCount() - 1)  //rebind
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                 Pause_SectionShared newSection = null;
                 if (section != null)
                 {
@@ -317,8 +330,9 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
         } else
         {
             //(only the bottom three are selectible)
-            if (index == GetObjectCount() - 3)  //rebind
+            if (index == GetObjectCount() - 4)  //rebind
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                 Pause_SectionShared newSection = null;
                 if (section != null)
                 {
@@ -337,6 +351,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
             //reload last save
             if (index == GetObjectCount() - 2)
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                 Debug.Log("Reload");
                 prompt = PromptBoxMenu.BuildMenu(new string[] { "Yes", "No" }, new string[] { "0", "1" }, 1, "Do you want to reload to your last save?");
                 awaitReload = true;
@@ -345,6 +360,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
             //main menu
             if (index == GetObjectCount() - 1)
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
                 Debug.Log("Main");
                 prompt = PromptBoxMenu.BuildMenu(new string[] { "Yes", "No" }, new string[] { "0", "1" }, 1, "Do you want to go to the main menu?");
                 awaitMain = true;

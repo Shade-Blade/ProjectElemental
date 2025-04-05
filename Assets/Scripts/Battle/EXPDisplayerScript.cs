@@ -12,6 +12,9 @@ public class EXPDisplayerScript : MonoBehaviour
     public Image backImage;
     public Image epImage;
 
+    public float displayXPCooldown = 0;
+    public float lastXP;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +24,7 @@ public class EXPDisplayerScript : MonoBehaviour
     public void Setup(PlayerData p_pd)
     {
         pd = p_pd;
+        lastXP = pd.exp;
         //backImage = GetComponentInChildren<Image>();
         epImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.XP];
         textNumber.text = pd.exp + "/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
@@ -34,6 +38,25 @@ public class EXPDisplayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        textNumber.text = pd.exp + "/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
+        if (lastXP != pd.exp)
+        {
+            displayXPCooldown = HPStaminaDisplayerScript.STAT_HIGHLIGHT_MINIMUM;
+        }
+        if (displayXPCooldown > 0)
+        {
+            displayXPCooldown -= Time.deltaTime;
+        } else
+        {
+            displayXPCooldown = 0;
+        }
+        lastXP = pd.exp;
+
+        if (displayXPCooldown > 0)
+        {
+            textNumber.text = "<color=#00c0c0>" + pd.exp + "</color>/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
+        } else
+        {
+            textNumber.text = pd.exp + "/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
+        }
     }
 }

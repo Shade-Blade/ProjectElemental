@@ -110,6 +110,8 @@ public class Pause_HandlerBase : Pause_HandlerShared
                 break;
         }
 
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Open);
+
         b.transform.parent = transform;
         PushState(b);
         b.menuExit += InvokeExit;

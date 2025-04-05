@@ -217,7 +217,7 @@ public class MapScript : MonoBehaviour
         wcs.directionVector = new Vector3(0, 1f, -2.5f);
         wcs.movementHalflife = 0.05f;
         wcs.mode = WorldCamera.CameraMode.FollowPlayer;
-        wcs.distance = 4.75f;
+        wcs.distance = 4f;
 
         MainManager.Instance.Camera.SetCameraSettings(wcs);
 

@@ -621,7 +621,7 @@ MonoBehaviour:
   effect: 0
   targetYaw: 0
   targetEulerAngles: {x: 0, y: 0, z: 0}
-  distance: 4.75
+  distance: 4
   focus: {x: 0, y: 0, z: 0}
   directionVector: {x: 0, y: 1.2, z: -3}
   cameraEulerAngles: {x: 10, y: 0, z: 0}

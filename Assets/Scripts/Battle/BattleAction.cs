@@ -25,7 +25,17 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
             return 0;
         }
 
-        int modifiedCost = (int)GetBaseCost() - caller.GetEffectEnduranceBonus();
+        int modifiedCost = (int)GetBaseCost();
+        
+        if (UseBurst())
+        {
+            modifiedCost += -caller.GetEffectEnduranceBonus() - caller.GetBadgeEnduranceBonus();
+        }
+        if (UseFlow())
+        {
+            modifiedCost += -caller.GetEffectFlowBonus() - caller.GetBadgeFlowBonus();
+        }
+
         if (modifiedCost < 1)
         {
             modifiedCost = 1;
@@ -997,6 +1007,10 @@ public class BA_Flee : BattleAction
     {
         return BattleHelper.MoveCurrency.Stamina;
     }
+    public override bool UseBurst()
+    {
+        return false;
+    }
 
     public bool success = true;
 
@@ -1153,10 +1167,23 @@ public class BA_TurnRelay : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAllyNotSelfMovable, false);
     public override string GetName() => "Turn Relay";
-    public override string GetDescription() => "Pass a bonus turn to the other character. Only usable when the other character can move.";
+    public override string GetDescription() => "Pass a bonus turn to the other character. Only usable when the other character can move. <descriptionnoticecolor>(Base cost is equal to half your agility, ignoring the bonus for being in front)</descriptionnoticecolor>";
     public override bool ForfeitTurn() => true;
 
     public override int GetBaseCost() => 2;
+
+    public override BattleHelper.MoveCurrency GetCurrency(BattleEntity caller = null)
+    {
+        return BattleHelper.MoveCurrency.Stamina;
+    }
+    public override int GetCost(BattleEntity caller)
+    {
+        return Mathf.CeilToInt(caller.GetBoostedAgility() / 2f);
+    }
+    public override bool UseBurst()
+    {
+        return false;
+    }
 
     //use caller's target
     public override IEnumerator Execute(BattleEntity caller)

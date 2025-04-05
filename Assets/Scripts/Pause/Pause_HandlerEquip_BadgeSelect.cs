@@ -273,10 +273,20 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
                 if (lrDir > 0)
                 {
                     indexB++;
+
+                    if (sortedParty.Count - 1 > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BSwap);
+                    }
                 }
                 else
                 {
                     indexB--;
+
+                    if (sortedParty.Count - 1 > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BSwap);
+                    }
                 }
 
                 if (indexB < 0)
@@ -305,7 +315,7 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
     }
 
     public override void Select()
-    {
+    {        
         //even more submenus (but we are getting close to the end)
         //Debug.Log(badgeList[index] + " select");
 
@@ -327,9 +337,11 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
             if (!MainManager.Instance.Cheat_BadgeAnarchy && (playerData.CalculateUsedSP() - cost > playerData.sp))
             {
                 //No
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
             }
             else
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Unequip);
                 playerData.equippedBadges.Remove(b);
 
                 if (bde.singleOrParty)
@@ -358,8 +370,10 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
             if (!MainManager.Instance.Cheat_BadgeAnarchy && (playerData.CalculateUsedSP() + cost > playerData.sp))
             {
                 //No
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
             } else
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Equip);
                 if (bde.singleOrParty)
                 {
                     playerData.equippedBadges.Add(b);

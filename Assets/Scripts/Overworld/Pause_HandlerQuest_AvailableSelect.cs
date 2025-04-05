@@ -26,6 +26,7 @@ public class Pause_HandlerQuest_AvailableSelect : Pause_HandlerShared_BoxMenu
 
     public override void Select()
     {
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         done = true;        
     }
 

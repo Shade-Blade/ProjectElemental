@@ -3117,7 +3117,7 @@ public abstract class ItemMove : Move, IEntityHighlighter
         //spawn a sprite
         Sprite isp = GlobalItemScript.GetItemSprite(it);
 
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
 
         GameObject so = new GameObject("Item Use Sprite");
         so.transform.parent = BattleControl.Instance.transform;
