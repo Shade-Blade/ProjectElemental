@@ -30,15 +30,15 @@ public class OWHPDisplayerScript : MonoBehaviour
         switch (pde.entityID)
         {
             case BattleHelper.EntityID.Wilex:
-                backImage.color = new Color(1, 0.6f, 0.6f, 0.8f);
+                backImage.color = new Color(1, 0.8f, 0.8f, 0.9f);
                 characterImage.sprite = wilexSprite;
                 break;
             case BattleHelper.EntityID.Luna:
-                backImage.color = new Color(0.6f, 1f, 0.6f, 0.8f);
+                backImage.color = new Color(0.8f, 1f, 0.8f, 0.9f);
                 characterImage.sprite = lunaSprite;
                 break;
             default:
-                backImage.color = new Color(0.6f, 1, 1f, 0.8f);
+                backImage.color = new Color(0.6f, 1, 1f, 0.9f);
                 break;
         }
 
@@ -49,8 +49,8 @@ public class OWHPDisplayerScript : MonoBehaviour
     }
     public void SetPosition(int index)
     {
-        float pos = 67.5f + index * 135;
-        backImage.rectTransform.anchoredPosition = new Vector3(pos, -25, 0);
+        float pos = 100f + index * 158;
+        backImage.rectTransform.anchoredPosition = new Vector3(pos, -30, 0);
     }
 
     // Update is called once per frame
@@ -77,7 +77,7 @@ public class OWHPDisplayerScript : MonoBehaviour
 
         if (displayHPCooldown > 0 || (HPStaminaDisplayerScript.HighlightActive() && highlightHP))
         {
-            textNumber.text = "<color,#c00000>" + pde.hp + "</color>/<size=" + MainManager.Instance.fontSize / 2 + ">" + pde.maxHP + "</size>";
+            textNumber.text = "<color=#c00000>" + pde.hp + "</color>/<size=" + MainManager.Instance.fontSize / 2 + ">" + pde.maxHP + "</size>";
         } else
         {
             textNumber.text = pde.hp + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pde.maxHP + "</size>";

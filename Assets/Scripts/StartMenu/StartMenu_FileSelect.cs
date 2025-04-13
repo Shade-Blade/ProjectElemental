@@ -123,6 +123,15 @@ public class StartMenu_FileSelect : MenuHandler
 
     public void Update()
     {
+        if (menuIndex == menuEntries.Length)
+        {
+            selector.anchoredPosition = MainManager.EasingQuadraticTime(selector.anchoredPosition, Vector2.left * (125 + ((bottomIndex - 1) * -250)) + Vector2.up * (-260), 2000);
+        }
+        else
+        {
+            selector.anchoredPosition = MainManager.EasingQuadraticTime(selector.anchoredPosition, Vector2.left * (400) + Vector2.up * menuEntries[menuIndex].gameObject.transform.localPosition.y, 2000);
+        }
+
         if (active)
         {
             MenuUpdate();
@@ -291,15 +300,6 @@ public class StartMenu_FileSelect : MenuHandler
         if (copyIndex < 0)
         {
             copyselector.gameObject.SetActive(false);
-        }
-
-        if (menuIndex == menuEntries.Length)
-        {
-            selector.anchoredPosition = MainManager.EasingQuadraticTime(selector.anchoredPosition, Vector2.left * (125 + ((bottomIndex - 1) * -250)) + Vector2.up * (-265), 2000);
-        }
-        else
-        {
-            selector.anchoredPosition = MainManager.EasingQuadraticTime(selector.anchoredPosition, Vector2.left * (400) + Vector2.up * menuEntries[menuIndex].gameObject.transform.localPosition.y, 2000);
         }
 
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff

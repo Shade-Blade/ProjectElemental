@@ -80,8 +80,8 @@ public class EffectScript_Damage : MonoBehaviour
         new Color(1.0f,0.6f,0.6f),      //unused (unblockable) (damage uses the hp bar colors)
         new Color(1.0f,0.6f,0.6f),      //unused (max hp) (damage uses the hp bar colors)
         new Color(0.6f,1f,0.6f),      //unused (soft) (damage uses the hp bar colors)
-        new Color(1.0f,0.0f,1.0f),      //soul energy heal
-        new Color(0.5f,0.0f,0.5f),      //negative soul energy
+        new Color(0.7f,0.7f,1.0f),      //soul energy heal
+        new Color(0.1f,0.1f,0.6f),      //negative soul energy
         new Color(0.2f,0.5f,0.2f),      //stamina
         new Color(0.5f,0.5f,0.8f),      //negative stamina
         new Color(1f,1f,1f),      //coins
@@ -276,8 +276,8 @@ public class EffectScript_Damage : MonoBehaviour
                 backSpriteB.sprite = BattleControl.Instance.energyEffect;
                 backSpriteA.transform.localPosition = Vector3.zero;
                 backSpriteB.transform.localPosition = Vector3.zero;
-                backSpriteA.color = new Color(1f, 1f, 0f);
-                backSpriteB.color = new Color(1f, 1f, 0f);
+                backSpriteA.color = new Color(1f, 1f, 0.3f);
+                backSpriteB.color = new Color(1f, 1f, 0.3f);
                 break;
             case BattleHelper.DamageEffect.DrainEnergy:
                 backSpriteA.sprite = BattleControl.Instance.energyEffect;
@@ -292,16 +292,16 @@ public class EffectScript_Damage : MonoBehaviour
                 backSpriteB.sprite = BattleControl.Instance.soulEffect;
                 backSpriteA.transform.localPosition = Vector3.zero;
                 backSpriteB.transform.localPosition = Vector3.zero;
-                backSpriteA.color = new Color(0.7f, 0f, 0.7f);
-                backSpriteB.color = new Color(0.7f, 0f, 0.7f);
+                backSpriteA.color = new Color(0.2f, 0.2f, 1.0f);
+                backSpriteB.color = new Color(0.2f, 0.2f, 1.0f);
                 break;
             case BattleHelper.DamageEffect.DrainSoulEnergy:
                 backSpriteA.sprite = BattleControl.Instance.soulEffect;
                 backSpriteB.sprite = BattleControl.Instance.soulEffect;
                 backSpriteA.transform.localPosition = Vector3.zero;
                 backSpriteB.transform.localPosition = Vector3.zero;
-                backSpriteA.color = new Color(0.3f, 0.0f, 0.3f);
-                backSpriteB.color = new Color(0.3f, 0.0f, 0.3f);
+                backSpriteA.color = new Color(0.0f, 0.0f, 0.4f);
+                backSpriteB.color = new Color(0.0f, 0.0f, 0.4f);
                 break;
             case BattleHelper.DamageEffect.Stamina:
                 backSpriteA.sprite = BattleControl.Instance.staminaEffect;

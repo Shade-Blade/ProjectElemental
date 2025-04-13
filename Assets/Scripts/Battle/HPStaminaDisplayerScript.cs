@@ -37,15 +37,15 @@ public class HPStaminaDisplayerScript : MonoBehaviour
         switch (b.entityID)
         {
             case BattleHelper.EntityID.Wilex:
-                backImage.color = new Color(1, 0.6f, 0.6f, 0.8f);
+                backImage.color = new Color(1, 0.8f, 0.8f, 0.9f);
                 characterImage.sprite = wilexSprite;
                 break;
             case BattleHelper.EntityID.Luna:
-                backImage.color = new Color(0.6f, 1f, 0.6f, 0.8f);
+                backImage.color = new Color(0.8f, 1f, 0.8f, 0.9f);
                 characterImage.sprite = lunaSprite;
                 break;
             default:
-                backImage.color = new Color(0.6f, 1, 1f, 0.6f);
+                backImage.color = new Color(0.6f, 1, 1f, 0.9f);
                 break;
         }
 
@@ -67,8 +67,8 @@ public class HPStaminaDisplayerScript : MonoBehaviour
     }
     public void SetPosition(int index)
     {
-        float pos = 67.5f + index * 135;
-        backImage.rectTransform.anchoredPosition = new Vector3(pos,-35,0);
+        float pos = 100f + index * 158;
+        backImage.rectTransform.anchoredPosition = new Vector3(pos,-40,0);
     }
 
     public static bool HighlightActive()

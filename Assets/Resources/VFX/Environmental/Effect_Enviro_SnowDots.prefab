@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4219143791422324169}
   - component: {fileID: -6936054389925810792}
   m_Layer: 0
-  m_Name: Effect_Enviro_DotsSnow
+  m_Name: Effect_Enviro_SnowDots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

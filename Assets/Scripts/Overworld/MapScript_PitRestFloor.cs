@@ -33,69 +33,54 @@ public class MapScript_PitRestFloor : MapScript
             MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_Halfway);
         }
 
-        switch ((floor - 1) / 10)
+        int i = ((floor - 1) / 10);
+        mr.material = materials[i];
+        mr_block.material = materials[i];
+        MainManager.WorldLocation wl = MainManager.WorldLocation.None;
+
+        switch (i)
         {
             case 0:
-                worldLocation = MainManager.WorldLocation.SolarGrove.ToString();
-                skyboxID = MainManager.SkyboxID.SolarGrove.ToString();
-                mr.material = materials[0];
-                mr_block.material = materials[0];
+                wl = MainManager.WorldLocation.SolarGrove;
                 break;
             case 1:
-                worldLocation = MainManager.WorldLocation.VerdantForest.ToString();
-                skyboxID = MainManager.SkyboxID.VerdantForest.ToString();
-                mr.material = materials[1];
-                mr_block.material = materials[1];
+                wl = MainManager.WorldLocation.VerdantForest;
                 break;
             case 2:
-                worldLocation = MainManager.WorldLocation.TempestDesert.ToString();
-                skyboxID = MainManager.SkyboxID.TempestDesert.ToString();
-                mr.material = materials[2];
-                mr_block.material = materials[2];
+                wl = MainManager.WorldLocation.TempestDesert;
                 break;
             case 3:
-                worldLocation = MainManager.WorldLocation.GemstoneIslands.ToString();
-                skyboxID = MainManager.SkyboxID.GemstoneIslands.ToString();
-                mr.material = materials[3];
-                mr_block.material = materials[3];
+                wl = MainManager.WorldLocation.GemstoneIslands;
                 break;
             case 4:
-                worldLocation = MainManager.WorldLocation.InfernalCaldera.ToString();
-                skyboxID = MainManager.SkyboxID.InfernalCaldera.ToString();
-                mr.material = materials[4];
-                mr_block.material = materials[4];
+                wl = MainManager.WorldLocation.InfernalCaldera;
                 break;
             case 5:
-                worldLocation = MainManager.WorldLocation.ShroudedValley.ToString();
-                skyboxID = MainManager.SkyboxID.ShroudedValley.ToString();
-                mr.material = materials[5];
-                mr_block.material = materials[5];
+                wl = MainManager.WorldLocation.ShroudedValley;
                 break;
             case 6:
-                worldLocation = MainManager.WorldLocation.RadiantPlateau.ToString();
-                skyboxID = MainManager.SkyboxID.RadiantPlateau.ToString();
-                mr.material = materials[6];
-                mr_block.material = materials[6];
+                wl = MainManager.WorldLocation.RadiantPlateau;
                 break;
             case 7:
-                worldLocation = MainManager.WorldLocation.AetherTrench.ToString();
-                skyboxID = MainManager.SkyboxID.AetherTrench.ToString();
-                mr.material = materials[7];
-                mr_block.material = materials[7];
+                wl = MainManager.WorldLocation.AetherTrench;
                 break;
             case 8:
-                worldLocation = MainManager.WorldLocation.CrystalHills.ToString();
-                skyboxID = MainManager.SkyboxID.CrystalHills.ToString();
-                mr.material = materials[8];
-                mr_block.material = materials[8];
+                wl = MainManager.WorldLocation.CrystalHills;
                 break;
             case 9:
-                worldLocation = MainManager.WorldLocation.ForsakenMountains.ToString();
-                skyboxID = MainManager.SkyboxID.ForsakenMountains.ToString();
-                mr.material = materials[9];
-                mr_block.material = materials[9];
+                wl = MainManager.WorldLocation.ForsakenMountains;
                 break;
         }
+        worldLocation = wl.ToString();
+        skyboxID = wl.ToString();
+        this.ambientLight = MainManager.GetDefaultAmbientColor(wl);
+
+        Light l = GetComponentInChildren<Light>();
+        if (l != null)
+        {
+            l.color = MainManager.GetDefaultLightColor(wl);
+        }
+        MainManager.CreateDefaultParticles(wl, transform, false);
 
         MapExitHoleScript mehs = FindObjectOfType<MapExitHoleScript>();
         if (mehs != null)

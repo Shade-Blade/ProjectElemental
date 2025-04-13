@@ -468,7 +468,7 @@ public class Text_ButtonSprite : Text_SpecialSprite
         //return 0.6f * b.Length;
         InputManager.Button bu;
         Enum.TryParse(b, true, out bu);
-        return 0.6f * MainManager.Instance.GetButtonString(bu).Length; //args[0];
+        return 0.6f * MainManager.GetButtonString(bu).Length; //args[0];
     }
 
     //public string[] args;
@@ -494,7 +494,7 @@ public class Text_ButtonSprite : Text_SpecialSprite
         {
             InputManager.Button b;
             Enum.TryParse(args[0], true, out b);
-            bs.text.text = MainManager.Instance.GetButtonString(b); //args[0];
+            bs.text.text = MainManager.GetButtonString(b); //args[0];
         } else
         {
             bs.text.text = "";

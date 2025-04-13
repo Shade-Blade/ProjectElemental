@@ -81,7 +81,7 @@ public class PlayerEntity : BattleEntity
         //offset = Vector3.up * (height / 2);
         //statusOffset = Vector3.up * (height) + Vector3.right * ((width / 2) + 0.4f);
         //selectionOffset = Vector3.up * (height + 0.5f);    
-        statusOffset = Vector3.right * (0.3f);
+        statusOffset = Vector3.right * (0.1f);
 
         //Dropshadow is parallel to subobject (because it should not inherit subobject's rotation)
         if (!noShadow && dropShadow == null)
@@ -485,7 +485,7 @@ public class PlayerEntity : BattleEntity
             tactics.Add(ptc.GetOrAddComponent<BA_EasyFlee>());
         }
 
-        tactics.Add(ptc.GetOrAddComponent<BA_TurnRelay>());
+        //tactics.Add(ptc.GetOrAddComponent<BA_TurnRelay>());
 
         if (BadgeEquipped(Badge.BadgeType.EffectRelay))
         {

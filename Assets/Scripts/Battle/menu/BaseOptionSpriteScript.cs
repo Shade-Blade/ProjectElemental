@@ -13,18 +13,18 @@ public class BaseOptionSpriteScript : MonoBehaviour
 
     private Color[] colors = new Color[]
     {
-        new Color(1,0.666f,0.666f, 0.8f), //jump
-        new Color(1,1,0.666f, 0.8f),      //weapon
-        new Color(0.666f,1,0.666f, 0.8f), //items
-        new Color(1,0.666f,1, 0.8f),      //soul
-        new Color(0.666f,0.666f,1, 0.8f), //tactics
-
-        new Color(1,0.8f,0.6f, 0.8f),     //badge swap
-        new Color(1,0.7f,0.888f, 0.8f),      //ribbon swap
-
+        new Color(1f,1f,1f, 0.9f), //jump
+        new Color(1,0.75f,0.6f, 0.9f),      //weapon
+        new Color(0.75f,1,0.666f, 0.9f), //items
+        new Color(0.666f,0.666f,1, 0.9f),      //soul
+        new Color(0.666f,0.9f,1, 0.9f), //tactics
+        
+        new Color(1,0.9f,0.7f, 0.9f),     //badge swap
+        new Color(1,0.7f,0.888f, 0.9f),      //ribbon swap
+        new Color(0.666f,1,0.9f, 0.9f), //turn relay
 
         //disabled is the last one
-        new Color(0.4f,0.4f,0.4f, 0.8f)
+        new Color(0.4f,0.4f,0.4f, 0.9f)
     };
     public List<Sprite> sprites;
 
@@ -75,6 +75,10 @@ public class BaseOptionSpriteScript : MonoBehaviour
                 index = 11;
                 index2 = 6;
                 break;
+            case BaseBattleMenu.BaseMenuName.TurnRelay:
+                index = 12;
+                index2 = 7;
+                break;
         }
 
         if (!canUse)
@@ -83,6 +87,7 @@ public class BaseOptionSpriteScript : MonoBehaviour
         }
 
         backImage.color = colors[index2];
+        //backImage.color = new Color(0.85f, 1f, 1f, 0.8f);
         iconImage.sprite = sprites[index];
     }
 }

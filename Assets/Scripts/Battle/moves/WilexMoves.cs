@@ -2995,7 +2995,7 @@ public class WM_PreciseStab : WM_Slash
 
     public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
     {
-        caller.SetAnimation("stab_e");
+        caller.SetAnimation("stab");
         //Particles
         GameObject particle = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_PreciseStab"), BattleControl.Instance.transform);
         particle.transform.position = caller.ApplyScaledOffset(Vector3.up * 0.5f) + Vector3.right * 0.3f;

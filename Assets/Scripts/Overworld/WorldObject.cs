@@ -35,11 +35,11 @@ public class WorldObject : MonoBehaviour
             {
                 bufferVelocity = rb.velocity;
             }
+            rb.isKinematic = nextKinematic;
             if (rb.isKinematic && !nextKinematic)
             {
                 rb.velocity = bufferVelocity;
             }
-            rb.isKinematic = nextKinematic;
         }
         if (!mapScript.GetHalted())
         {

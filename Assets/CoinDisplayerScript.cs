@@ -35,7 +35,7 @@ public class CoinDisplayerScript : MonoBehaviour
 
     public void SetPosition()
     {
-        backImage.rectTransform.anchoredPosition = new Vector3(-170, 25, 0);
+        backImage.rectTransform.anchoredPosition = new Vector3(-220, 30, 0);
     }
 
     // Update is called once per frame

@@ -21,49 +21,52 @@ public class MapScript_PitFinalFloor : MapScript
 
         MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_Complete);
 
-        switch ((floor - 1) / 10)
+        MainManager.WorldLocation wl = MainManager.WorldLocation.None;
+
+        int i = ((floor - 1) / 10);
+        switch (i)
         {
             case 0:
-                worldLocation = MainManager.WorldLocation.SolarGrove.ToString();
-                skyboxID = MainManager.SkyboxID.SolarGrove.ToString();
+                wl = MainManager.WorldLocation.SolarGrove;
                 break;
             case 1:
-                worldLocation = MainManager.WorldLocation.VerdantForest.ToString();
-                skyboxID = MainManager.SkyboxID.VerdantForest.ToString();
+                wl = MainManager.WorldLocation.VerdantForest;
                 break;
             case 2:
-                worldLocation = MainManager.WorldLocation.TempestDesert.ToString();
-                skyboxID = MainManager.SkyboxID.TempestDesert.ToString();
+                wl = MainManager.WorldLocation.TempestDesert;
                 break;
             case 3:
-                worldLocation = MainManager.WorldLocation.GemstoneIslands.ToString();
-                skyboxID = MainManager.SkyboxID.GemstoneIslands.ToString();
+                wl = MainManager.WorldLocation.GemstoneIslands;
                 break;
             case 4:
-                worldLocation = MainManager.WorldLocation.InfernalCaldera.ToString();
-                skyboxID = MainManager.SkyboxID.InfernalCaldera.ToString();
+                wl = MainManager.WorldLocation.InfernalCaldera;
                 break;
             case 5:
-                worldLocation = MainManager.WorldLocation.ShroudedValley.ToString();
-                skyboxID = MainManager.SkyboxID.ShroudedValley.ToString();
+                wl = MainManager.WorldLocation.ShroudedValley;
                 break;
             case 6:
-                worldLocation = MainManager.WorldLocation.RadiantPlateau.ToString();
-                skyboxID = MainManager.SkyboxID.RadiantPlateau.ToString();
+                wl = MainManager.WorldLocation.RadiantPlateau;
                 break;
             case 7:
-                worldLocation = MainManager.WorldLocation.AetherTrench.ToString();
-                skyboxID = MainManager.SkyboxID.AetherTrench.ToString();
+                wl = MainManager.WorldLocation.AetherTrench;
                 break;
             case 8:
-                worldLocation = MainManager.WorldLocation.CrystalHills.ToString();
-                skyboxID = MainManager.SkyboxID.CrystalHills.ToString();
+                wl = MainManager.WorldLocation.CrystalHills;
                 break;
             case 9:
-                worldLocation = MainManager.WorldLocation.ForsakenMountains.ToString();
-                skyboxID = MainManager.SkyboxID.ForsakenMountains.ToString();
+                wl = MainManager.WorldLocation.ForsakenMountains;
                 break;
         }
+        worldLocation = wl.ToString();
+        skyboxID = wl.ToString();
+        this.ambientLight = MainManager.GetDefaultAmbientColor(wl);
+
+        Light l = GetComponentInChildren<Light>();
+        if (l != null)
+        {
+            l.color = MainManager.GetDefaultLightColor(wl);
+        }
+        MainManager.CreateDefaultParticles(wl, transform, false);
 
         base.MapInit();
     }

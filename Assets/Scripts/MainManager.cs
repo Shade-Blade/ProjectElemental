@@ -3027,7 +3027,7 @@ public class MainManager : MonoBehaviour
         GoldenPort,
         ForsakenMountains,
         ForsakenPass,
-        DelugeTitan
+        ForsakenPeak
     }
     public enum MapID
     {
@@ -4649,10 +4649,153 @@ public class MainManager : MonoBehaviour
         return mapName.ToString();
     }
 
-    public string GetButtonString(InputManager.Button b)
+    public static string GetButtonString(InputManager.Button b)
     {
         return InputManager.GetButtonString(b);
     }
+
+    public static Color GetDefaultLightColor(WorldLocation wl)
+    {
+        Color lightColor = new Color();
+        switch (wl)
+        {
+            case WorldLocation.SolarGrove:
+                lightColor = new Color(0.8f, 0.75f, 0.7f, 1f);
+                break;
+            case WorldLocation.VerdantForest:
+                lightColor = new Color(0.75f, 0.75f, 0.75f, 1f);
+                break;
+            case WorldLocation.TempestDesert:
+                lightColor = new Color(0.8f, 0.8f, 0.75f, 1f);
+                break;
+            case WorldLocation.GemstoneIslands:
+                lightColor = new Color(0.75f, 0.75f, 0.8f, 1f);
+                break;
+            case WorldLocation.InfernalCaldera:
+                lightColor = new Color(0.7f, 0.65f, 0.6f, 1f);
+                break;
+            case WorldLocation.ShroudedValley:
+                lightColor = new Color(0.575f, 0.55f, 0.6f, 1f);
+                break;
+            case WorldLocation.RadiantPlateau:
+                lightColor = new Color(0.8f, 0.825f, 0.85f, 1f);
+                break;
+            case WorldLocation.AetherTrench:
+                lightColor = new Color(0.65f, 0.54f, 0.54f, 1f);
+                break;
+            case WorldLocation.CrystalHills:
+                lightColor = new Color(0.7f, 0.8f, 0.8f, 1f);
+                break;
+            case WorldLocation.ForsakenMountains:
+                lightColor = new Color(0.725f, 0.675f, 0.8f, 1f);
+                break;
+        }
+        return lightColor;
+    }
+    public static Color GetDefaultAmbientColor(WorldLocation wl)
+    {
+        Color ambientColor = new Color();
+        switch (wl)
+        {
+            case WorldLocation.SolarGrove:
+                ambientColor = new Color(0.57f, 0.53f, 0.55f, 1f);
+                break;
+            case WorldLocation.VerdantForest:
+                ambientColor = new Color(0.53f, 0.56f, 0.53f, 1f);
+                break;
+            case WorldLocation.TempestDesert:
+                ambientColor = new Color(0.55f, 0.55f, 0.5f, 1f);
+                break;
+            case WorldLocation.GemstoneIslands:
+                ambientColor = new Color(0.5f, 0.5f, 0.6f, 1f);
+                break;
+            case WorldLocation.InfernalCaldera:
+                ambientColor = new Color(0.5f, 0.425f, 0.4f, 1f);
+                break;
+            case WorldLocation.ShroudedValley:
+                ambientColor = new Color(0.3f, 0.25f, 0.4f, 1f);
+                break;
+            case WorldLocation.RadiantPlateau:
+                ambientColor = new Color(0.5f, 0.6f, 0.7f, 1f);
+                break;
+            case WorldLocation.AetherTrench:
+                ambientColor = new Color(0.45f, 0.3f, 0.3f, 1f);
+                break;
+            case WorldLocation.CrystalHills:
+                ambientColor = new Color(0.5f, 0.57f, 0.57f, 1f);
+                break;
+            case WorldLocation.ForsakenMountains:
+                ambientColor = new Color(0.53f, 0.45f, 0.57f, 1f);
+                break;
+        }
+        return ambientColor;
+    }
+    public static void CreateDefaultParticles(WorldLocation wl, Transform parent, bool disableMovement = false)
+    {
+        GameObject go = null;
+        EffectEnviroFollower eef = null;
+
+        switch (wl)
+        {
+            case WorldLocation.SolarGrove:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_SunDots"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                break;
+            case WorldLocation.VerdantForest:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_Leaves"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                break;
+            case WorldLocation.TempestDesert:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_DesertSand"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_SmokeSandWeak"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                break;
+            case WorldLocation.GemstoneIslands:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_RainWeak"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                break;
+            case WorldLocation.InfernalCaldera:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_EmbersWeak"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                break;
+            case WorldLocation.ShroudedValley:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_SporeDots"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                break;
+            case WorldLocation.RadiantPlateau:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_SnowDots"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_SmokeSnowWeak"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                break;
+            case WorldLocation.AetherTrench:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_AetherWind"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_SmokeAether"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                break;
+            case WorldLocation.CrystalHills:
+                break;
+            case WorldLocation.ForsakenMountains:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_AstralDots"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
+                break;
+        }
+    }
+
 
 
     public void PitReset()

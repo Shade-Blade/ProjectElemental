@@ -679,6 +679,7 @@ public class BattleControl : MonoBehaviour
     //stuff for later
     public List<BattleAction> tactics = new List<BattleAction>();
     public BattleAction superSwap = null;
+    public BattleAction turnRelay = null;
     //public BattleAction switchCharacter = null;
     public BattleAction badgeSwap = null;
     public BattleAction ribbonSwap = null;
@@ -2830,6 +2831,7 @@ public class BattleControl : MonoBehaviour
         */
 
         superSwap = PlayerTurnController.Instance.GetOrAddComponent<BA_SuperSwapEntities>();
+        turnRelay = PlayerTurnController.Instance.GetOrAddComponent<BA_TurnRelay>();
         badgeSwap = PlayerTurnController.Instance.GetOrAddComponent<BA_BadgeSwap>();
         ribbonSwap = PlayerTurnController.Instance.GetOrAddComponent<BA_RibbonSwap>();
         //switchCharacter = Instance.gameObject.AddComponent<SwitchCharacter>();

@@ -60,6 +60,7 @@ public class PlayerTurnController : MonoBehaviour
         ActionExecute,
         Switch,
         SuperSwap,
+        TurnRelay,
         Null,       //error condition (can't do anything)
         Interrupt
     }
@@ -681,6 +682,25 @@ public class PlayerTurnController : MonoBehaviour
                     BattleControl.Instance.ShowHPBars();
                     BattleControl.Instance.ShowEffectIcons();
                     break;
+                case MenuExitType.TurnRelay:
+                    BattleAction tr = BattleControl.Instance.turnRelay;
+                    tr.ChooseAction(caller);
+                    caller.QueueEvent(BattleHelper.Event.Tactic);
+                    caller.curTarget = (BattleEntity)mresult.subresult.output;
+
+                    menu.ActiveClear(); //make sure everything related to the current menu is gone
+                    Destroy(menu.gameObject);
+
+                    //enforce this
+                    BattleControl.Instance.HideHPBars();
+                    BattleControl.Instance.HideEffectIcons();
+
+                    caller.SetIdleAnimation();
+                    yield return tr.Execute(caller);
+
+                    caller.actionCounter++; //note: the forfeit turn actions will increment the counter (but not the 0 turn ones)
+                    exit = true;
+                    break;
                 case MenuExitType.Interrupt:
                     exit = true;    //act like switch but don't actually do anything
                     //rebuild menu
@@ -1120,6 +1140,7 @@ public class PlayerTurnController : MonoBehaviour
         {
             case MenuExitType.MoveExecute:
             case MenuExitType.ActionExecute:
+            case MenuExitType.TurnRelay:
             case MenuExitType.Null:
                 mresult = menu.GetFullResult();
                 menu.ActiveClear();

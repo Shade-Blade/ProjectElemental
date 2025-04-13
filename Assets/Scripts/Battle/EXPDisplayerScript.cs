@@ -24,7 +24,7 @@ public class EXPDisplayerScript : MonoBehaviour
     public void Setup(PlayerData p_pd)
     {
         pd = p_pd;
-        lastXP = pd.exp;
+        lastXP = pd.exp % 100;
         //backImage = GetComponentInChildren<Image>();
         epImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.XP];
         textNumber.text = pd.exp + "/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
@@ -32,7 +32,7 @@ public class EXPDisplayerScript : MonoBehaviour
 
     public void SetPosition()
     {
-        backImage.rectTransform.anchoredPosition = new Vector3(-60, 25, 0);
+        backImage.rectTransform.anchoredPosition = new Vector3(-80, 30, 0);
     }
 
     // Update is called once per frame
@@ -49,14 +49,14 @@ public class EXPDisplayerScript : MonoBehaviour
         {
             displayXPCooldown = 0;
         }
-        lastXP = pd.exp;
+        lastXP = pd.exp % 100;
 
         if (displayXPCooldown > 0)
         {
-            textNumber.text = "<color=#00c0c0>" + pd.exp + "</color>/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
+            textNumber.text = "<color=#00c0c0>" + (pd.exp % 100) + "</color>/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
         } else
         {
-            textNumber.text = pd.exp + "/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
+            textNumber.text = (pd.exp % 100) + "/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
         }
     }
 }

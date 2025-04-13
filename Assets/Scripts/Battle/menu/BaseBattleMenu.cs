@@ -17,6 +17,8 @@ public class BaseBattleMenu : MenuHandler
         BadgeSwap,
         RibbonSwap,
 
+        TurnRelay,
+
         CharacterMenu,  //overworld only
         MetaItems,      //special handling thing
     }
@@ -91,6 +93,9 @@ public class BaseBattleMenu : MenuHandler
                 return "Change Badges (" + (BattleControl.Instance.playerData.BadgeEquippedCount(Badge.BadgeType.BadgeSwap) * 4 - BattleControl.Instance.badgeSwapUses) + ")";
             case BaseMenuName.RibbonSwap:
                 return "Change Ribbons";
+            case BaseMenuName.TurnRelay:
+                int staminaCost = Mathf.CeilToInt(caller.GetBoostedAgility() / 2f);
+                return "Turn Relay (" + staminaCost + "<stamina>)";
         }
         return "???";
     }
@@ -220,7 +225,15 @@ public class BaseBattleMenu : MenuHandler
                 } 
                 */
 
-                if (baseMenuOptions[baseMenuIndex].oname == BaseMenuName.Items)
+                if (baseMenuOptions[baseMenuIndex].oname == BaseMenuName.TurnRelay)
+                {
+                    //selection menu
+                    BattleSelectionMenu s;
+                    s = BattleSelectionMenu.buildMenu(caller, BattleControl.Instance.turnRelay.GetBaseTarget(), BaseMenuName.TurnRelay, BattleControl.Instance.turnRelay, BattleControl.Instance.turnRelay.GetActionCommandDesc(), 1);
+                    s.transform.SetParent(transform);
+                    PushState(s);
+                    s.menuExit += InvokeExit;
+                } else if (baseMenuOptions[baseMenuIndex].oname == BaseMenuName.Items)
                 {
                     if (MetaItemBoxMenu.GetAvailableMoves(BattleControl.Instance.playerData).Count > 1)
                     {
@@ -363,6 +376,10 @@ public class BaseBattleMenu : MenuHandler
         if (caller.soulMoves.Count > 0)
         {
             menuOptions.Add(BaseMenuName.Soul);
+        }
+        if (BattleControl.Instance.GetPlayerEntities().Count > 1)
+        {
+            menuOptions.Add(BaseMenuName.TurnRelay);
         }
         menuOptions.Add(BaseMenuName.Tactics);
 
@@ -514,6 +531,11 @@ public class BaseBattleMenu : MenuHandler
                     temp = new BaseMenuOption(BaseMenuName.RibbonSwap);
                     temp.canSelect = BattleControl.Instance.playerData.ribbonInventory.Count > 0;
                     break;
+                case BaseMenuName.TurnRelay:
+                    temp = new BaseMenuOption(BaseMenuName.TurnRelay);
+                    temp.canSelect = BattleControl.Instance.turnRelay.CanChoose(caller);
+                    temp.cantMoveReason = BattleControl.Instance.turnRelay.GetCantMoveReason(caller);
+                    break;
             }
             baseMenuOptions.Add(temp);
         }
@@ -545,8 +567,8 @@ public class BaseBattleMenu : MenuHandler
         //descriptor
         o = Instantiate(BattleControl.Instance.baseMenuDescriptor, MainManager.Instance.Canvas.transform);
         baseMenuDescriptor = o.GetComponent<TextDisplayer>();
-        baseMenuDescriptor.SetText(MenuNameToString(baseMenuOptions[baseMenuIndex].oname), true, true);
-        baseMenuDescriptor.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.up * -40;
+        baseMenuDescriptor.SetText(MenuNameToString(baseMenuOptions[baseMenuIndex].oname, caller), true, true);
+        baseMenuDescriptor.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.up * -50;
 
         o = Instantiate(BattleControl.Instance.baseMenuBSwap, MainManager.Instance.Canvas.transform);
         baseMenuBSwap = o.GetComponent<TextDisplayer>();

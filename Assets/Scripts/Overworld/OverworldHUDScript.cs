@@ -26,7 +26,7 @@ public class OverworldHUDScript : MonoBehaviour
 
     public List<GameObject> statDisplayers;
 
-    public const float FADE_IN_DISTANCE = 60;
+    public const float FADE_IN_DISTANCE = 100;
 
     public float settableFadeIn;
     public float fadein;

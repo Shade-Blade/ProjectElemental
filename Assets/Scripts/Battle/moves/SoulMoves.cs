@@ -414,7 +414,7 @@ public class SM_LeafStorm : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_EarthFlowIn"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -423,7 +423,7 @@ public class SM_LeafStorm : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_EarthFlowOut"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -576,7 +576,7 @@ public class SM_ElectroDischarge : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_SparkFlowIn"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -585,7 +585,7 @@ public class SM_ElectroDischarge : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_SparkFlowOut"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -707,7 +707,7 @@ public class SM_MistWave : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_WaterFlowIn"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -716,7 +716,7 @@ public class SM_MistWave : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_WaterFlowOut"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -868,7 +868,7 @@ public class SM_Overheat : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_FireFlowIn"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -877,7 +877,7 @@ public class SM_Overheat : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_FireFlowOut"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -1000,7 +1000,7 @@ public class SM_VoidCrush : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_DarkFlowIn"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -1009,7 +1009,7 @@ public class SM_VoidCrush : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_DarkFlowOut"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -1169,7 +1169,7 @@ public class SM_FlashFreeze : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_LightFlowIn"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -1178,7 +1178,7 @@ public class SM_FlashFreeze : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_LightFlowOut"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
     }
@@ -1746,7 +1746,7 @@ public class SM_ElementalConflux : SoulMove
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_FireFlowIn"), BattleControl.Instance.transform);
         //position is the same as the one used by items
-        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1.5f;
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 1f;
         eo.transform.position = position;
         eo.transform.localRotation = Quaternion.identity;
         yield return new WaitForSeconds(0.1f);

@@ -9,7 +9,8 @@ public class BattleMapScript : MonoBehaviour
     //public MainManager.BattleMapID mapName;       //not necessary
     //public MainManager.SkyboxID skyboxID;
     public string skyboxID;
-    
+    public Color ambientLight = new Color(0.5f, 0.5f, 0.5f);    //Should be roughly (5/7) the light's color? (with light intensity = 1)
+
     // Start is called before the first frame update
     public virtual void Start()
     {
@@ -28,6 +29,8 @@ public class BattleMapScript : MonoBehaviour
 
     public virtual void OnBattleStart()
     {
+        RenderSettings.ambientLight = ambientLight;
+
         //Default enviro effect thing
 
         BattleHelper.EnvironmentalEffect effect = BattleHelper.EnvironmentalEffect.None;

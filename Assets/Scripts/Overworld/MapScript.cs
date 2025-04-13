@@ -14,6 +14,8 @@ public class MapScript : MonoBehaviour
     //public MainManager.SkyboxID skyboxID;
     public Color ambientLight = new Color(0.5f, 0.5f, 0.5f);    //Should be roughly (5/7) the light's color? (with light intensity = 1)
     public GameObject playerHolder;    //player becomes child of this
+    public bool useDefaultLight;    //light + ambient default
+    public bool useDefaultParticles;
 
     //runtime variables
 
@@ -70,14 +72,20 @@ public class MapScript : MonoBehaviour
 
         ResetVars();
 
-        RenderSettings.ambientLight = ambientLight;
-
         /*
         if (playerHolder != null)
         {
             CreatePlayerEntities(playerHolder);
         }
         */
+
+        EffectEnviroFollower[] eefList = FindObjectsOfType<EffectEnviroFollower>();
+
+        foreach (EffectEnviroFollower eef in eefList)
+        {
+            eef.Warp();
+        }
+
 
         if (textFile == null)
         {
@@ -105,6 +113,26 @@ public class MapScript : MonoBehaviour
         {
             Debug.LogWarning("Map with \"None\" location.");
         }
+
+        if (useDefaultLight && wl != MainManager.WorldLocation.None)
+        {
+            this.ambientLight = MainManager.GetDefaultAmbientColor(wl);
+
+            Light l = GetComponentInChildren<Light>();
+            if (l != null)
+            {
+                l.color = MainManager.GetDefaultLightColor(wl);
+            }
+        }
+        if (useDefaultParticles)
+        {
+            MainManager.CreateDefaultParticles(wl, transform, false);
+        }
+
+        SetAmbientLight();
+
+
+
         MainManager.SkyboxID si;
         Enum.TryParse(skyboxID, out si);
         if (si == MainManager.SkyboxID.Invalid)
@@ -239,6 +267,10 @@ public class MapScript : MonoBehaviour
             MainManager.Instance.Camera.transform.eulerAngles = (angle) * Vector3.up;
             MainManager.Instance.Camera.targetYaw = angle;
         }
+    }
+    public virtual void SetAmbientLight()
+    {
+        RenderSettings.ambientLight = ambientLight;
     }
 
     public void AddObject(WorldObject wo)
@@ -395,6 +427,7 @@ public class MapScript : MonoBehaviour
             return;
         }
 
+        SetAmbientLight();
         battleHalt = false;
         worldBattleEntity.HandleBattleOutcome(outcome);
     }

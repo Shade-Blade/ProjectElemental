@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: CrystalHills
   m_Shader: {fileID: 4800000, guid: f939e65906c3b3743a098296e009ca05, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -86,8 +89,8 @@ Material:
     - _SkyColor1: {r: 0.5127803, g: 0.97629315, b: 0.9811321, a: 0}
     - _SkyColor2: {r: 0.27843142, g: 0.6927444, b: 0.94509804, a: 0}
     - _SkyColor3: {r: 0.2784314, g: 0.69411767, b: 0.9450981, a: 0}
-    - _SkyColor4: {r: 0.30588233, g: 0.78699094, b: 0.8666667, a: 0}
-    - _SkyColor5: {r: 0, g: 0.654902, b: 0.59607846, a: 0}
+    - _SkyColor4: {r: 0.23759998, g: 0.79382414, b: 0.88, a: 0}
+    - _SkyColor5: {r: 0, g: 0.654902, b: 0.654902, a: 0}
     - _SkyColor6: {r: 0, g: 0.34509805, b: 0.37254903, a: 0}
     - _SunColor: {r: 3.2235272, g: 2.9432204, b: 1.4142748, a: 0}
   m_BuildTextureStacks: []

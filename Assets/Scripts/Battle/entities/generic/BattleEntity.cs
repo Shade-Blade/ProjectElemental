@@ -5191,7 +5191,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         int agility = GetBoostedAgility();
         int realAgility = agility;
 
-        int half = Mathf.CeilToInt(agility / 2f);
+        int half = Mathf.CeilToInt(agility / 3f);
 
         if (posId < 0 && BattleControl.Instance.playerData.BadgeEquipped(Badge.BadgeType.HeadStart) && BattleControl.Instance.turnCount < 1)
         {

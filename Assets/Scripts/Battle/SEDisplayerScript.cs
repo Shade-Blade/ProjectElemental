@@ -35,7 +35,7 @@ public class SEDisplayerScript : MonoBehaviour
 
     public void SetPosition()
     {
-        backImage.rectTransform.anchoredPosition = new Vector3(-60f, -25f, 0);
+        backImage.rectTransform.anchoredPosition = new Vector3(-80f, -30f, 0);
     }
 
     // Update is called once per frame
@@ -57,7 +57,7 @@ public class SEDisplayerScript : MonoBehaviour
 
         if (displaySECooldown > 0 || (HPStaminaDisplayerScript.HighlightActive() && highlightSE))
         {
-            textNumber.text = "<color=#c000c0>" + Mathf.Round(displaySE) + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pd.maxSE + "</size></color>";
+            textNumber.text = "<color=#0000c0>" + Mathf.Round(displaySE) + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pd.maxSE + "</size></color>";
         }
         else
         {

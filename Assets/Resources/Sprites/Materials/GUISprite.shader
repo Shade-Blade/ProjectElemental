@@ -13,8 +13,14 @@ Shader "Unlit/GUISprite"
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue" = "Overlay+1"}
+        Tags { "RenderType"="Transparent" 
+                "IgnoreProjector"="True" 
+                "Queue" = "Overlay"}
         LOD 100
+
+		Blend SrcAlpha OneMinusSrcAlpha
+		ZWrite Off
+		ZTest Off
 
         Pass
         {
@@ -57,9 +63,6 @@ Shader "Unlit/GUISprite"
                 return col;
             }
             ENDCG
-			Blend SrcAlpha OneMinusSrcAlpha
-			ZWrite Off
-			ZTest Always
         }
     }
 }

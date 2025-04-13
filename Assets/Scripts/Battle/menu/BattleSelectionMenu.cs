@@ -189,6 +189,9 @@ public class BattleSelectionMenu : MenuHandler
                     //Debug.Log("e");
                     PlayerTurnController.Instance.ExitMenu(PlayerTurnController.MenuExitType.ActionExecute);
                     break;
+                case BaseBattleMenu.BaseMenuName.TurnRelay:
+                    PlayerTurnController.Instance.ExitMenu(PlayerTurnController.MenuExitType.TurnRelay);
+                    break;
                 //case BaseBattleMenu.BaseMenuName.SwitchCharacters:
                 //    PlayerTurnController.Instance.ExitMenu(PlayerTurnController.MenuExitType.SwitchCharacter);
                 //    break;

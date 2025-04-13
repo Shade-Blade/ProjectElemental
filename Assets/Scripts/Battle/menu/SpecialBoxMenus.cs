@@ -731,7 +731,7 @@ public class TacticsBoxMenu : BoxMenu
         List<BattleAction> tactics = BattleControl.Instance.GetTactics(caller);
         if (tactics[menuIndex].GetCost(caller) > 0)
         {
-            BattleControl.Instance.StatHighlight(caller.jumpMoves[menuIndex].GetCurrency(), caller);
+            BattleControl.Instance.StatHighlight(tactics[menuIndex].GetCurrency(), caller);
         }
     }
 

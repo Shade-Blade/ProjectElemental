@@ -32,7 +32,7 @@ public class ItemDisplayerScript : MonoBehaviour
 
     public void SetPosition()
     {
-        backImage.rectTransform.anchoredPosition = new Vector3(-270, 25, 0);
+        backImage.rectTransform.anchoredPosition = new Vector3(-360, 30, 0);
     }
 
     // Update is called once per frame
