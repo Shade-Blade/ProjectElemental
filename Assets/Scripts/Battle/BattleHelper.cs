@@ -998,7 +998,7 @@ public static class BattleHelper
         ContactHazard =         1L << 6,  //Does not apply any buffs, can't be countered, invokes hiddenHurt event
         NoCharge =              1L << 7,  //does not use charge (sets the buffered charge remover thing though)
         Static =                1L << 8,  //Ignores all attack modification, does not trigger buffered charge remover
-        LightDarkAbsolute =     1L << 9, //uses 60 instead of maxhp in the damage formula
+        HPAbsolute =     1L << 9, //uses 60 instead of maxhp in the damage formula
         IgnoreElementCalculation =      1L << 10, //ignores the special damage calculation from fire, earth, water, light, dark
         Unblockable =           1L << 11, //Can't be blocked
         NonLethal =             1L << 12, //can't reduce you to 0 hp

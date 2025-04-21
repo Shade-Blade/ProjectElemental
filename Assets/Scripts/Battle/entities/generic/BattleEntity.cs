@@ -3422,12 +3422,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         float lightmultiplier = 0;
         float darkmultiplier = 0;
+        float firemultiplier = 0;
 
         float hppro = ((1.0f * target.hp) / target.maxHP);
-        if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.LightDarkAbsolute))
+        if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.HPAbsolute))
         {
             hppro = ((1.0f * target.hp) / 60);
         }
+
+        float shppro = 0.5f;
+        float phppro = 0.5f;
 
         int lightbonus = 0;
         int darkbonus = 0;
@@ -3437,14 +3441,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         int airbonus = 0;
 
         bool lightdark = false;
+        bool waterfire = false;
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AdvancedElementCalc))
         {
-            //Advanced damage types often use attributes of the caller, which can't be accessed here
-            //So make assumptions
-            float shppro = 0.5f;
-            bool attackLastTurn = false;
-
             float delta = hppro - shppro;
             if (delta < 0)
             {
@@ -3474,7 +3474,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 else
                 {
-                    lightmultiplier = 1 - delta;
+                    lightmultiplier = (1 - delta);
                 }
             }
 
@@ -3484,34 +3484,38 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
 
             lightbonus = (int)(lightmultiplier * inputDamage);
+            if (lightmultiplier > 0 && lightbonus < 1)
+            {
+                lightbonus = 1;
+            }
             darkbonus = (int)(darkmultiplier * inputDamage);
+            if (darkmultiplier > 0 && darkbonus < 1)
+            {
+                darkbonus = 1;
+            }
 
             if (((uint)type & (uint)BattleHelper.DamageType.Fire) != 0)
             {
-                firebonus = target.damageTakenLastTurn + target.damageTakenThisTurn;
-                if (effectDamage < 0)
+                if (((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
                 {
-                    firebonus = -2 * effectDamage + target.damageTakenLastTurn + target.damageTakenThisTurn;
-                }
-
-                int absEffectDamage = effectDamage < 0 ? -effectDamage : effectDamage;
-                int cap = (inputDamage + absEffectDamage);
-                if (firebonus > cap)
-                {
-                    firebonus = cap;
-                }
-            }
-
-            if (!target.hitLastTurn && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
-            {
-                if (!attackLastTurn)
-                {
-                    waterbonus = (int)(1f * (inputDamage));
+                    //Special formula (more extreme at low and high hp)
+                    firemultiplier = Mathf.Max((4 * phppro) - 2, 2 - (4 * phppro));
+                    waterfire = true;
                 }
                 else
                 {
-                    waterbonus = (int)((2.00001f / 3f) * (inputDamage));
+                    firemultiplier = 1 - phppro;
                 }
+            }
+            firebonus = (int)(firemultiplier * inputDamage);
+            if (firemultiplier > 0 && firebonus < 1)
+            {
+                firebonus = 1;
+            }
+
+            if (!waterfire && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
+            {
+                waterbonus = (int)((2.00001f / 3f) * (phppro) * (inputDamage));
 
                 if (waterbonus < 1)
                 {
@@ -3519,19 +3523,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
             }
 
-            //hitThisTurn is set later so this is not always active (intended)
-            if (target.hitThisTurn && ((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
+            if (((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
             {
-                earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (target.damageEventsThisTurn + 1)));
-                if (target.damageEventsThisTurn + 1 > 4)
+                float earthcap = (int)((inputDamage));
+
+                if (earthcap < 1 && inputDamage > 0)
                 {
-                    earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (4)));
+                    earthcap = 1;
                 }
 
-                if (earthbonus < 1)
-                {
-                    earthbonus = 1;
-                }
+                earthbonus = (int)Mathf.Min(earthcap, target.damageTakenLastTurn + target.damageTakenThisTurn);
             }
 
             airbonus = target.GetDefense();
@@ -3540,7 +3541,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 //don't deal 10000000 damage to things
                 airbonus = 0;
             }
-            //another failsafe cap
+
             if (airbonus > inputDamage + effectDamage)
             {
                 airbonus = inputDamage + effectDamage;
@@ -3560,7 +3561,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 else
                 {
-                    lightmultiplier = hppro;
+                    lightmultiplier = (2.00001f / 3f) * hppro;
                 }
             }
 
@@ -3570,37 +3571,56 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
 
             lightbonus = (int)(lightmultiplier * inputDamage);
+            if (lightmultiplier > 0 && lightbonus < 1)
+            {
+                lightbonus = 1;
+            }
             darkbonus = (int)(darkmultiplier * inputDamage);
+            if (darkmultiplier > 0 && darkbonus < 1)
+            {
+                darkbonus = 1;
+            }
 
             if (((uint)type & (uint)BattleHelper.DamageType.Fire) != 0)
             {
-                firebonus = target.damageTakenLastTurn + target.damageTakenThisTurn;
-
-                int cap = (int)((2.00001f / 3f) * (inputDamage + effectDamage));
-                if (cap < 1)
+                if (((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
                 {
-                    cap = 1;
+                    //Special formula (more extreme at low and high hp)
+                    firemultiplier = Mathf.Max((4 * shppro) - 2, 2 - (4 * shppro));
+                    waterfire = true;
                 }
-                if (firebonus > cap)
+                else
                 {
-                    firebonus = cap;
+                    firemultiplier = 1 - shppro;
                 }
             }
-
-            if (!target.hitLastTurn && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
+            firebonus = (int)(firemultiplier * inputDamage);
+            if (firemultiplier > 0 && firebonus < 1)
             {
-                waterbonus = (int)((2.00001f / 3f) * (inputDamage));
+                firebonus = 1;
+            }
+
+            if (!waterfire && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
+            {
+                waterbonus = (int)((2.00001f / 3f) * (shppro) * (inputDamage));
+
                 if (waterbonus < 1)
                 {
                     waterbonus = 1;
                 }
             }
 
-            //hitThisTurn is set later so this is not always active (intended)
-            if (target.hitThisTurn && ((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
+            if (((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
             {
-                earthbonus = (int)((2.00001f / 3f) * (inputDamage));
-                if (earthbonus < 1)
+                float earthcap = (int)((2.00001f / 3f) * (inputDamage));
+
+                if (earthcap < 1 && inputDamage > 0)
+                {
+                    earthcap = 1;
+                }
+
+                earthbonus = (int)(earthcap * 0.5f);
+                if (earthbonus < 1 && earthcap > 0)
                 {
                     earthbonus = 1;
                 }
@@ -3788,12 +3808,31 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         float lightmultiplier = 0;
         float darkmultiplier = 0;
+        float firemultiplier = 0;
 
         float hppro = ((1.0f * target.hp) / target.maxHP);
-        if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.LightDarkAbsolute))
+        if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.HPAbsolute))
         {
             hppro = ((1.0f * target.hp) / 60);
         }
+
+        float shppro = ((1.0f * caller.hp) / caller.maxHP);
+        if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.HPAbsolute))
+        {
+            shppro = ((1.0f * caller.hp) / 60);
+        }
+
+        float phppro = 0;
+        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.Ally))) {
+            if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.HPAbsolute))
+            {
+                phppro += ((1.0f * b.hp) / 60);
+            } else
+            {
+                phppro += ((1.0f * b.hp) / b.maxHP);
+            }
+        }
+        phppro /= BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.Ally)).Count;
 
         int lightbonus = 0;
         int darkbonus = 0;
@@ -3803,16 +3842,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         int airbonus = 0;
 
         bool lightdark = false;
+        bool waterfire = false;
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AdvancedElementCalc))
         {
-            //Advanced damage types often use attributes of the caller, which can't be accessed here
-            //So make assumptions
-            float shppro = ((1.0f * caller.hp) / caller.maxHP);
-            if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.LightDarkAbsolute))
-            {
-                shppro = ((1.0f * caller.hp) / 60);
-            }
             bool attackLastTurn = caller.attackLastTurn;
 
             float delta = hppro - shppro;
@@ -3844,7 +3877,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 else
                 {
-                    lightmultiplier = 1 - delta;
+                    lightmultiplier = (1 - delta);
                 }
             }
 
@@ -3854,43 +3887,38 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
 
             lightbonus = (int)(lightmultiplier * inputDamage);
+            if (lightmultiplier > 0 && lightbonus < 1)
+            {
+                lightbonus = 1;
+            }
             darkbonus = (int)(darkmultiplier * inputDamage);
+            if (darkmultiplier > 0 && darkbonus < 1)
+            {
+                darkbonus = 1;
+            }
 
             if (((uint)type & (uint)BattleHelper.DamageType.Fire) != 0)
             {
-                //Also: bonus based on damage since last move
-
-                int angrybonus = caller.damageTakenLastTurn + caller.damageTakenThisTurn;
-                //no cap because it will get capped later
-                //if (angrybonus > inputDamage + effectDamage)
-                //{
-                //   angrybonus = inputDamage + effectDamage;
-                //}
-
-                firebonus = target.damageTakenLastTurn + target.damageTakenThisTurn + angrybonus;
-                if (effectDamage < 0)
+                if (((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
                 {
-                    firebonus = -2 * effectDamage + target.damageTakenLastTurn + target.damageTakenThisTurn + angrybonus;
-                }
-
-                int absEffectDamage = effectDamage < 0 ? -effectDamage : effectDamage;
-                int cap = inputDamage + absEffectDamage;
-                if (firebonus > cap)
-                {
-                    firebonus = cap;
-                }
-            }
-
-            if (!target.hitLastTurn && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
-            {
-                if (!attackLastTurn)
-                {
-                    waterbonus = (int)(1f * (inputDamage));
+                    //Special formula (more extreme at low and high hp)
+                    firemultiplier = Mathf.Max((4 * phppro) - 2, 2 - (4 * phppro));
+                    waterfire = true;
                 }
                 else
                 {
-                    waterbonus = (int)((2.00001f / 3f) * (inputDamage));
+                    firemultiplier = 1 - phppro;
                 }
+            }
+            firebonus = (int)(firemultiplier * inputDamage);
+            if (firemultiplier > 0 && firebonus < 1)
+            {
+                firebonus = 1;
+            }
+
+            if (!waterfire && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
+            {
+                waterbonus = (int)((2.00001f / 3f) * (phppro) * (inputDamage));
 
                 if (waterbonus < 1)
                 {
@@ -3898,19 +3926,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
             }
 
-            //hitThisTurn is set later so this is not always active (intended)
-            if (target.hitThisTurn && ((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
+            if (((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
             {
-                earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (target.damageEventsThisTurn + 1)));
-                if (target.damageEventsThisTurn + 1 > 4)
+                float earthcap = (int)((inputDamage));
+
+                if (earthcap < 1 && inputDamage > 0)
                 {
-                    earthbonus = (int)(inputDamage * ((1.00001f / 3f) * (4)));
+                    earthcap = 1;
                 }
 
-                if (earthbonus < 1)
-                {
-                    earthbonus = 1;
-                }
+                earthbonus = (int)Mathf.Min(earthcap, caller.damageTakenThisTurn + caller.damageTakenLastTurn + target.damageTakenLastTurn + target.damageTakenThisTurn);
             }
 
             airbonus = target.GetDefense();
@@ -3939,7 +3964,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 else
                 {
-                    lightmultiplier = hppro;
+                    lightmultiplier = (2.00001f / 3f) * hppro;
                 }
             }
 
@@ -3949,27 +3974,38 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
 
             lightbonus = (int)(lightmultiplier * inputDamage);
+            if (lightmultiplier > 0 && lightbonus < 1)
+            {
+                lightbonus = 1;
+            }
             darkbonus = (int)(darkmultiplier * inputDamage);
+            if (darkmultiplier > 0 && darkbonus < 1)
+            {
+                darkbonus = 1;
+            }
 
             if (((uint)type & (uint)BattleHelper.DamageType.Fire) != 0)
             {
-                //firebonus = (int)(0.5f * (inputDamage + effectDamage));
-                firebonus = target.damageTakenLastTurn + target.damageTakenThisTurn;
-                int cap = (int)((2.00001f / 3f) * (inputDamage + effectDamage));
-                if (cap < 1)
+                if (((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
                 {
-                    cap = 1;
+                    //Special formula (more extreme at low and high hp)
+                    firemultiplier = Mathf.Max((4 * shppro) - 2, 2 - (4 * shppro));
+                    waterfire = true;
                 }
-                if (firebonus > cap)
+                else
                 {
-                    firebonus = cap;
+                    firemultiplier = 1 - shppro;
                 }
-
+            }
+            firebonus = (int)(firemultiplier * inputDamage);
+            if (firemultiplier > 0 && firebonus < 1)
+            {
+                firebonus = 1;
             }
 
-            if (!target.hitLastTurn && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
+            if (!waterfire && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
             {
-                waterbonus = (int)((2.00001f / 3f) * (inputDamage));
+                waterbonus = (int)((2.00001f / 3f) * (shppro) * (inputDamage));
 
                 if (waterbonus < 1)
                 {
@@ -3977,15 +4013,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
             }
 
-            //hitThisTurn is set later so this is not always active (intended)
-            if (target.hitThisTurn && ((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
+            if (((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
             {
-                earthbonus = (int)((2.00001f / 3f) * (inputDamage));
+                float earthcap = (int)((2.00001f / 3f) * (inputDamage));
 
-                if (earthbonus < 1)
+                if (earthcap < 1 && inputDamage > 0)
                 {
-                    earthbonus = 1;
+                    earthcap = 1;
                 }
+
+                earthbonus = (int)Mathf.Min(earthcap, caller.damageTakenThisTurn + caller.damageTakenLastTurn);
             }
 
             //nothing
@@ -3999,6 +4036,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             inputDamage++;
         }
 
+        Debug.Log("Base: " + inputDamage + " Light: " + lightbonus + ", Dark: " + darkbonus + ", Fire: " + firebonus + ", Water: " + waterbonus + ", Earth: " + earthbonus);
+
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.IgnoreElementCalculation))
         {
             inputDamage += lightbonus;
@@ -4007,8 +4046,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             inputDamage += waterbonus;
             inputDamage += earthbonus;
             inputDamage += airbonus;
-
-            //Debug.Log("Light: " + lightbonus + ", Dark: " + darkbonus + ", Fire: " + firebonus + ", Water: " + waterbonus + ", Earth: " + earthbonus);
         }
 
 

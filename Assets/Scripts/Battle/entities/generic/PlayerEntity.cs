@@ -2198,9 +2198,10 @@ public class PlayerEntity : BattleEntity
                 HealCoins(damage);
                 //BattleControl.Instance.AddCoins(this, damage);
             }
-        }        
+        }
 
         //Apply Astral Wall
+        damageTakenThisTurn += damage;
         if (HasEffect(Effect.EffectType.CounterFlare))
         {
             counterFlareTrackedDamage += damage;
@@ -2219,7 +2220,7 @@ public class PlayerEntity : BattleEntity
             astralWallTrackedDamage += damage;
             if (astralWallTrackedDamage > GetEffectEntry(Effect.EffectType.AstralWall).potency)
             {
-                int diff = damageTakenThisTurn - GetEffectEntry(Effect.EffectType.AstralWall).potency;
+                int diff = astralWallTrackedDamage - GetEffectEntry(Effect.EffectType.AstralWall).potency;
 
                 damageTakenThisTurn -= diff;
                 astralWallTrackedDamage -= diff;
