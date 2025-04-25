@@ -14,14 +14,14 @@ public class BaseOptionSpriteScript : MonoBehaviour
     private Color[] colors = new Color[]
     {
         new Color(1f,1f,1f, 0.9f), //jump
-        new Color(1,0.75f,0.6f, 0.9f),      //weapon
-        new Color(0.75f,1,0.666f, 0.9f), //items
-        new Color(0.666f,0.666f,1, 0.9f),      //soul
-        new Color(0.666f,0.9f,1, 0.9f), //tactics
+        new Color(1,0.9f,0.8f, 0.9f),      //weapon
+        new Color(0.9f,1,0.8f, 0.9f), //items
+        new Color(0.8f,0.8f,1, 0.9f),      //soul
+        new Color(0.8f,0.95f,1, 0.9f), //tactics
         
-        new Color(1,0.9f,0.7f, 0.9f),     //badge swap
-        new Color(1,0.7f,0.888f, 0.9f),      //ribbon swap
-        new Color(0.666f,1,0.9f, 0.9f), //turn relay
+        new Color(1,0.975f,0.8f, 0.9f),     //badge swap
+        new Color(1,0.8f,0.95f, 0.9f),      //ribbon swap
+        new Color(0.8f,1,0.95f, 0.9f), //turn relay
 
         //disabled is the last one
         new Color(0.4f,0.4f,0.4f, 0.9f)
@@ -84,6 +84,7 @@ public class BaseOptionSpriteScript : MonoBehaviour
         if (!canUse)
         {
             index2 = colors.Length - 1;
+            backImage.color = colors[index2];
         }
 
         backImage.color = colors[index2];

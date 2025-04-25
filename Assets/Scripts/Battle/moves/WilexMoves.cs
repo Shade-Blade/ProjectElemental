@@ -272,10 +272,10 @@ public class WM_Focus : WilexMove
         switch (level)
         {
             case 1: return 1;
-            case 2: return 3;
-            case 3: return 9;
+            case 2: return 4;
+            case 3: return 12;
         }
-        return BaseCostCalculation(1, level, 3, 2);
+        return BaseCostCalculation(1, level, 3, 5);
     }
 
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
@@ -285,10 +285,10 @@ public class WM_Focus : WilexMove
         switch (level)
         {
             case 1: return CostModification(caller, level, 1);
-            case 2: return CostModification(caller, level, 3);
-            case 3: return CostModification(caller, level, 9);
+            case 2: return CostModification(caller, level, 4);
+            case 3: return CostModification(caller, level, 12);
         }
-        return CostCalculation(caller, level, 3, 2);
+        return CostCalculation(caller, level, 3, 5);
     }
 
     /*
@@ -397,7 +397,7 @@ public class WM_MultiStomp : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, true);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(3);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(4);
 
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
@@ -561,10 +561,10 @@ public class WM_ElectroStomp : WM_HighStomp
     {
         switch (level)
         {
-            case 1: return 5;
-            case 2: return 9;
+            case 1: return 6;
+            case 2: return 10;
         }
-        return BaseCostCalculation(5, level, 4);
+        return BaseCostCalculation(6, level, 4);
     }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
@@ -572,8 +572,8 @@ public class WM_ElectroStomp : WM_HighStomp
     {
         switch (level)
         {
-            case 1: return CostModification(caller, level, 5);
-            case 2: return CostModification(caller, level, 9);
+            case 1: return CostModification(caller, level, 6);
+            case 2: return CostModification(caller, level, 10);
         }
         return CostCalculation(caller, level, 4);
     }
@@ -694,7 +694,7 @@ public class WM_Taunt : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(2, level, 3);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(3, level, 3);
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return CostCalculation(caller, level, 3);
@@ -808,7 +808,7 @@ public class WM_ParalyzeStomp : WM_HighStomp
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost(int level=1) => BaseCostCalculation(7, level, 3);
+    public override int GetBaseCost(int level=1) => BaseCostCalculation(8, level, 3);
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return CostCalculation(caller, level, 3);
@@ -925,15 +925,15 @@ public class WM_FlameStomp : WM_HighStomp
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(8, level, 4);    
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(10, level, 4);    
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         switch (level)
         {
-            case 1: return CostModification(caller, level, 8);
-            case 2: return CostModification(caller, level, 12);
+            case 1: return CostModification(caller, level, 10);
+            case 2: return CostModification(caller, level, 14);
         }
         return CostCalculation(caller, level, 4);
     }
@@ -1084,15 +1084,15 @@ public class WM_DoubleStomp : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(9, level, 3);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(11, level, 3);
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         switch (level)
         {
-            case 1: return CostModification(caller, level, 9);
-            case 2: return CostModification(caller, level, 12);
+            case 1: return CostModification(caller, level, 11);
+            case 2: return CostModification(caller, level, 14);
         }
         return CostCalculation(caller, level, 3);
     }
@@ -1284,7 +1284,7 @@ public class WM_Overstomp : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost(int level = 1) => 10;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(12, level, 3);
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return CostCalculation(caller, level, 3);
@@ -1436,7 +1436,7 @@ public class WM_SmartStomp : WM_HighStomp
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, false);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(8, level);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(11, level);
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override void StompEffects(BattleEntity caller, bool result)
@@ -1653,7 +1653,7 @@ public class WM_TeamQuake : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyGrounded, true);
     //public override float GetBasePower() => 0.5f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(15, level, 5);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(18, level, 5);
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
     public override int GetCost(BattleEntity caller, int level = 1)
@@ -2863,7 +2863,7 @@ public class WM_PoisonSlash : WM_Slash
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(6, level, 2);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(7, level, 2);
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return CostCalculation(caller, level, 2);
@@ -2973,7 +2973,7 @@ public class WM_PreciseStab : WM_Slash
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(8, level, 3);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(10, level, 3);
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
     public override int GetCost(BattleEntity caller, int level = 1)
@@ -3108,7 +3108,7 @@ public class WM_SwordDischarge : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(9, level, 4);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(11, level, 4);
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return CostCalculation(caller, level, 4);
@@ -3223,7 +3223,7 @@ public class WM_SwordDance : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow, false);
     //public override float GetBasePower() => 1.5f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(6, level, 4);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(12, level, 4);
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return CostCalculation(caller, level, 4);
@@ -3283,7 +3283,7 @@ public class WM_SwordDance : WilexMove
                 {
                     properties |= (ulong)BattleHelper.DamageProperties.AC_Success;
                     caller.DealDamage(caller.curTarget, sd + 3 - 3 * level, BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Weapon);
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(level * 2), Effect.INFINITE_DURATION));
+                    caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(level * 3), Effect.INFINITE_DURATION));
                 }
                 else
                 {
@@ -3406,7 +3406,7 @@ public class WM_BoomerangSlash : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(11, level, 4);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(13, level, 4);
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return CostCalculation(caller, level, 4);
@@ -3554,10 +3554,10 @@ public class WM_DarkSlash : WM_Slash
     {
         switch (level)
         {
-            case 1: return 13;
-            case 2: return 16;
+            case 1: return 15;
+            case 2: return 18;
         }
-        return BaseCostCalculation(13, level, 6, -3);
+        return BaseCostCalculation(15, level, 6, -3);
     }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
@@ -3565,8 +3565,8 @@ public class WM_DarkSlash : WM_Slash
     {
         switch (level)
         {
-            case 1: return CostModification(caller, level, 13);
-            case 2: return CostModification(caller, level, 16);
+            case 1: return CostModification(caller, level, 15);
+            case 2: return CostModification(caller, level, 18);
         }
         return CostCalculation(caller, level, 6,-3);
     }
@@ -3697,11 +3697,11 @@ public class WM_Aetherize : WilexMove
     {
         switch (level)
         {
-            case 1: return 3;
-            case 2: return 6;
-            case 3: return 15;
+            case 1: return 4;
+            case 2: return 8;
+            case 3: return 16;
         }
-        return BaseCostCalculation(3, level, 6, 3);
+        return BaseCostCalculation(4, level, 6, 0);
     }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
@@ -3720,11 +3720,11 @@ public class WM_Aetherize : WilexMove
     {
         switch (level)
         {
-            case 1: return CostModification(caller, level, 3);
-            case 2: return CostModification(caller, level, 6);
-            case 3: return CostModification(caller, level, 15);
+            case 1: return CostModification(caller, level, 4);
+            case 2: return CostModification(caller, level, 8);
+            case 3: return CostModification(caller, level, 16);
         }
-        return CostCalculation(caller, level, 6,3);
+        return CostCalculation(caller, level, 6,0);
     }
 
     /*
@@ -3850,7 +3850,7 @@ public class WM_FlameBat : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy, false);
     //public override float GetBasePower() => 1.5f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(6, level, 3);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(8, level, 3);
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return CostCalculation(caller, level, 3);
@@ -3973,11 +3973,11 @@ public class WM_AstralWall : WilexMove
     {
         switch (level)
         {
-            case 1: return 6;
-            case 2: return 10;
-            case 3: return 14;
+            case 1: return 8;
+            case 2: return 12;
+            case 3: return 16;
         }
-        return BaseCostCalculation(6, level, 2, 4);
+        return BaseCostCalculation(8, level, 2, 4);
     }
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Weapon;
 
@@ -3996,9 +3996,9 @@ public class WM_AstralWall : WilexMove
     {
         switch (level)
         {
-            case 1: return CostModification(caller, level, 6);
-            case 2: return CostModification(caller, level, 10);
-            case 3: return CostModification(caller, level, 14);
+            case 1: return CostModification(caller, level, 8);
+            case 2: return CostModification(caller, level, 12);
+            case 3: return CostModification(caller, level, 16);
         }
         return CostCalculation(caller, level, 2, 4);
     }
@@ -4038,7 +4038,7 @@ public class WM_AstralWall : WilexMove
             switch (level)
             {
                 case 1:
-                    caller.InflictEffect(caller, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(caller.maxHP / 4f), 3));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(caller.maxHP / 4f), 3));
                     break;
                 case 2:
                     List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));

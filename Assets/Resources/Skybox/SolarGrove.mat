@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: SolarGrove
   m_Shader: {fileID: 4800000, guid: f939e65906c3b3743a098296e009ca05, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -83,11 +86,11 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SkyColor1: {r: 0.45660377, g: 0.942232, b: 1, a: 0}
-    - _SkyColor2: {r: 0.24313726, g: 0.60784316, b: 0.94509804, a: 0}
-    - _SkyColor3: {r: 0.9333334, g: 0.909804, b: 0.43921572, a: 0}
-    - _SkyColor4: {r: 0.6117647, g: 0.3529412, b: 0.26666668, a: 0}
-    - _SkyColor5: {r: 0.6886792, g: 0.5933803, b: 0.04158059, a: 0}
-    - _SkyColor6: {r: 0.35141453, g: 0.5176471, b: 0.011764695, a: 0}
+    - _SkyColor1: {r: 0.6, g: 0.95683444, b: 1, a: 0}
+    - _SkyColor2: {r: 0.2086369, g: 0.6514058, b: 1, a: 0}
+    - _SkyColor3: {r: 0.8867924, g: 0.87547165, b: 0.62075466, a: 0}
+    - _SkyColor4: {r: 0.5396226, g: 0.37748608, b: 0.3247917, a: 0}
+    - _SkyColor5: {r: 0.5396226, g: 0.50818396, b: 0.3247917, a: 0}
+    - _SkyColor6: {r: 0.3346818, g: 0.398, b: 0.199, a: 0}
     - _SunColor: {r: 2.8062434, g: 2.5622222, b: 1.2311977, a: 0}
   m_BuildTextureStacks: []

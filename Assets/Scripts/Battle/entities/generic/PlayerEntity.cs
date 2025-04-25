@@ -1911,8 +1911,23 @@ public class PlayerEntity : BattleEntity
     public override int TakeDamage(int damage, DamageType type, ulong properties) //default type damage
     {
         lastDamageTakenInput = damage;
-        string localBonusDamageString = bonusDamageString;
-        bonusDamageString = null;
+        float localBonusDamageElemental = bonusDamageElemental;
+        bonusDamageElemental = 0;
+
+        //Bonus damage string set by deal damage stuff and reset by takedamage  (Hacky setup to avoid adding more parameters to TakeDamage)
+        string boostString = null;
+        if (localBonusDamageElemental != 0)
+        {
+            if (localBonusDamageElemental > 0)
+            {
+                boostString = "+" + MainManager.Percent(localBonusDamageElemental) + "%";
+            }
+            else
+            {
+                boostString = "-" + MainManager.Percent(-localBonusDamageElemental) + "%";
+            }
+        }
+        string localBonusDamageString = boostString;
 
         if (Invulnerable())
         {
@@ -2323,12 +2338,8 @@ public class PlayerEntity : BattleEntity
 
         //Sound effects
         bool normalDamage = true;
+        bool crit = false;
 
-        //block sound has precedence
-        if (b || sb)
-        {
-            normalDamage = false;
-        }
 
         if (damage == 0 || Invulnerable())
         {
@@ -2339,45 +2350,120 @@ public class PlayerEntity : BattleEntity
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Light);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.4444f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_LightCrit);
+                }
+            }
         }
         if ((type & DamageType.Dark) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Dark);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.6666f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_DarkCrit);
+                }
+            }
         }
         if ((type & DamageType.Fire) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Fire);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.6666f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_FireCrit);
+                }
+            }
         }
         if ((type & DamageType.Water) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Water);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.4444f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_WaterCrit);
+                }
+            }
         }
         if ((type & DamageType.Air) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Air);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.3333f || damage <= Mathf.CeilToInt((GetDefense(DamageType.Normal) - GetDefense(DamageType.Air))))
+                {
+                    crit = true;
+                }
+            }
         }
         if ((type & DamageType.Earth) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Earth);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.4444f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_EarthCrit);
+                }
+            }
         }
         if ((type & DamageType.Prismatic) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Prismatic);
+
+            if (damage >= BattleHelper.CRIT_THRESHOLD)
+            {
+                crit = true;
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_PrismaticCrit);
+            }
         }
         if ((type & DamageType.Void) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Void);
+
+            if (damage >= BattleHelper.CRIT_THRESHOLD)
+            {
+                crit = true;
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_VoidCrit);
+            }
         }
         if (normalDamage)
         {
-            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Normal);
+            //block sound has precedence
+            if (!b && !sb)
+            {
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Normal);
+            }
+
+            if (damage >= BattleHelper.CRIT_THRESHOLD)
+            {
+                crit = true;
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_NormalCrit);
+            }
         }
 
 
@@ -2448,17 +2534,38 @@ public class PlayerEntity : BattleEntity
                     if (sb)
                     {
                         lastHitWasBlocked = true;
-                        BattleControl.Instance.CreateDamageEffect(DamageEffect.SuperBlockedDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                        if (crit)
+                        {
+                            BattleControl.Instance.CreateDamageEffect(DamageEffect.CritSuperBlockedDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                        }
+                        else
+                        {
+                            BattleControl.Instance.CreateDamageEffect(DamageEffect.SuperBlockedDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                        }
                     }
                     else if (b || safetyBlock)
                     {
                         lastHitWasBlocked = true;
-                        BattleControl.Instance.CreateDamageEffect(DamageEffect.BlockedDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                        if (crit)
+                        {
+                            BattleControl.Instance.CreateDamageEffect(DamageEffect.CritBlockedDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                        }
+                        else
+                        {
+                            BattleControl.Instance.CreateDamageEffect(DamageEffect.BlockedDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                        }
                     }
                     else
                     {
                         lastHitWasBlocked = false;
-                        BattleControl.Instance.CreateDamageEffect(DamageEffect.Damage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                        if (crit)
+                        {
+                            BattleControl.Instance.CreateDamageEffect(DamageEffect.CritDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                        }
+                        else
+                        {
+                            BattleControl.Instance.CreateDamageEffect(DamageEffect.Damage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                        }
                     }
                 }
             }
@@ -3264,7 +3371,7 @@ public class PlayerEntity : BattleEntity
         {
             if (nonItemHitsDealt % 4 == 3)
             {
-                bonus += 3 * BadgeEquippedCount(Badge.BadgeType.PowerGear);
+                bonus += 4 * BadgeEquippedCount(Badge.BadgeType.PowerGear);
             } else
             {
                 bonus -= BadgeEquippedCount(Badge.BadgeType.PowerGear);
@@ -3388,7 +3495,7 @@ public class PlayerEntity : BattleEntity
         {
             if (hitsTaken % 4 == 3)
             {
-                bonus += 3 * BadgeEquippedCount(Badge.BadgeType.ShieldGear);
+                bonus += 4 * BadgeEquippedCount(Badge.BadgeType.ShieldGear);
             } else
             {
                 bonus -= BadgeEquippedCount(Badge.BadgeType.ShieldGear);
@@ -3472,7 +3579,7 @@ public class PlayerEntity : BattleEntity
         {
             if (movesUsed % 4 == 3)
             {
-                bonus += 3 * BadgeEquippedCount(Badge.BadgeType.EnergyGear);
+                bonus += 4 * BadgeEquippedCount(Badge.BadgeType.EnergyGear);
             } else 
             {
                 bonus -= BadgeEquippedCount(Badge.BadgeType.EnergyGear);

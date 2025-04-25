@@ -21,7 +21,7 @@ public class BoxMenuScript : MonoBehaviour
     public void SetLevelChangeIndicator(bool isUpgradeable)
     {
         levelChangeIndicator.SetActive(isUpgradeable);
-        selectorArrow.color = isUpgradeable ? new Color(1, 0.9f, 0) : Color.blue;
+        selectorArrow.color = isUpgradeable ? new Color(1, 0.9f, 0) : new Color(1, 1, 1); //Color.blue;
     }
 
     public static Vector3 GetRelativePosition(float relIndex)

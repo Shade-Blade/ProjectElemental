@@ -10,10 +10,6 @@ public class AnimationController_Wilex : AnimationController_Player
     {
         string modifiedName = name;
 
-        //Hacky fix
-        sprite.transform.localPosition = Vector3.zero;
-        sprite.transform.localRotation = Quaternion.identity;
-
         //also making talk animations not have back variants
         if (showBack && !name.Contains("slash") && !name.Contains("smash") && !name.Contains("talk") && !name.Contains("hurt"))
         {
@@ -43,6 +39,14 @@ public class AnimationController_Wilex : AnimationController_Player
                 animator.Play(modifiedName);
             }
         }
+    }
+
+    public void OnDisable()
+    {
+        //Unity is being stupid
+        //Hacky fix
+        sprite.transform.localPosition = Vector3.zero;
+        sprite.transform.localRotation = Quaternion.identity;
     }
 
     public override void SetMaterial(int id)

@@ -1055,6 +1055,7 @@ public class BA_Flee : BattleAction
             {
                 yield return StartCoroutine(playerParty[i].Jump(playerParty[i].transform.position, 0.5f, 0.25f));
             }
+            Debug.Log("loop");
         }
         if (success)
         {

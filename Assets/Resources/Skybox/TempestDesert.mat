@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: TempestDesert
   m_Shader: {fileID: 4800000, guid: f939e65906c3b3743a098296e009ca05, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -83,11 +86,11 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SkyColor1: {r: 0.14509805, g: 0.99215686, b: 0.92448515, a: 0}
-    - _SkyColor2: {r: 0.27058825, g: 0.7686275, b: 0.91372555, a: 0}
-    - _SkyColor3: {r: 0.27058828, g: 0.7689056, b: 0.9137255, a: 0}
-    - _SkyColor4: {r: 0.8117648, g: 0.8313726, b: 0.53333336, a: 0}
-    - _SkyColor5: {r: 0.7568628, g: 0.7019608, b: 0.40784317, a: 0}
-    - _SkyColor6: {r: 0.6117647, g: 0.4901961, b: 0.16862746, a: 0}
+    - _SkyColor1: {r: 0.22745097, g: 0.8811206, b: 1, a: 0}
+    - _SkyColor2: {r: 0.2117647, g: 0.68048453, b: 1, a: 0}
+    - _SkyColor3: {r: 0.21223079, g: 0.6795426, b: 1, a: 0}
+    - _SkyColor4: {r: 0.7490196, g: 0.6969691, b: 0.5954706, a: 0}
+    - _SkyColor5: {r: 0.6754716, g: 0.63707113, b: 0.5492986, a: 0}
+    - _SkyColor6: {r: 0.4037736, g: 0.36575103, b: 0.26435742, a: 0}
     - _SunColor: {r: 3.732132, g: 3.7174962, b: 2.5466313, a: 0}
   m_BuildTextureStacks: []

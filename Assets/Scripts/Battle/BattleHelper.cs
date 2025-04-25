@@ -1236,6 +1236,8 @@ public static class BattleHelper
     public const float AIRBORNE_CUTOFFHEIGHT = 0.4f;
     public const float LOWSTOMPABLE_CUTOFFHEIGHT = 1.35f;   //was 1.6 before, but now is 1.35 so that Cactupoles are not low stompable, (But you can still low stomp Burrow Traps and Sundews as they are 1.25 height)
 
+    public const int CRIT_THRESHOLD = 12;
+
     [Flags]
     public enum BattleProperties : ulong
     {
@@ -1402,8 +1404,11 @@ public static class BattleHelper
         NegativeHeal,
         Energize,
         DrainEnergy,
+        CritDamage,
         BlockedDamage,
+        CritBlockedDamage,
         SuperBlockedDamage,
+        CritSuperBlockedDamage,
         UnblockableDamage,
         MaxHPDamage,
         SoftDamage,
@@ -1690,6 +1695,17 @@ public class EncounterData
             if (levelArray[i] < levelNormal + 2 && levelArray[i] > levelNormal - 2)
             {
                 startIndices.Add(i);
+            }
+        }
+
+        if (startIndices.Count == 0)
+        {
+            for (int i = 0; i < levelArray.Length; i++)
+            {
+                if (levelArray[i] < levelNormal + 4 && levelArray[i] > levelNormal - 4)
+                {
+                    startIndices.Add(i);
+                }
             }
         }
 

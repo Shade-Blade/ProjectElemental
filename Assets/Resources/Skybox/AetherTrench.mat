@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: AetherTrench
   m_Shader: {fileID: 4800000, guid: f939e65906c3b3743a098296e009ca05, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -83,11 +86,11 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SkyColor1: {r: 0.6226415, g: 0.13062303, b: 0.019971479, a: 0}
-    - _SkyColor2: {r: 0.32156864, g: 0.10980392, b: 0.08627451, a: 0}
-    - _SkyColor3: {r: 0.32156864, g: 0.10781298, b: 0.086274505, a: 0}
-    - _SkyColor4: {r: 0.45882353, g: 0.06666666, b: 0.16974577, a: 0}
-    - _SkyColor5: {r: 0.45882356, g: 0.06666667, b: 0.17254902, a: 0}
-    - _SkyColor6: {r: 0.015686274, g: 0.068935774, b: 0.07450981, a: 0}
+    - _SkyColor1: {r: 0.4792453, g: 0.20234577, b: 0.179943, a: 0}
+    - _SkyColor2: {r: 0.24528301, g: 0.12740831, b: 0.11431113, a: 0}
+    - _SkyColor3: {r: 0.2462014, g: 0.12743773, b: 0.11443538, a: 0}
+    - _SkyColor4: {r: 0.2905661, g: 0.13322179, b: 0.16008542, a: 0}
+    - _SkyColor5: {r: 0.23018861, g: 0.14897111, b: 0.16373791, a: 0}
+    - _SkyColor6: {r: 0, g: 0.06691815, b: 0.07169801, a: 0}
     - _SunColor: {r: 1.866066, g: 0.53420717, b: 0, a: 0}
   m_BuildTextureStacks: []

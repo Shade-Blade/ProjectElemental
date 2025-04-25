@@ -75,8 +75,11 @@ public class EffectScript_Damage : MonoBehaviour
         new Color(0.0f,0.0f,0.0f),      //negative heal
         new Color(0.9f,0.4f,0.0f),      //energy
         new Color(1.0f,1.0f,1.0f),      //negative energy
+        new Color(1.0f,0.6f,0.6f),      //unused (crit) (damage uses the hp bar colors)
         new Color(0.9f,0.9f,1.0f),      //block
+        new Color(1.0f,0.6f,0.6f),      //unused (crit block) (damage uses the hp bar colors)
         new Color(0.95f,0.82f,0.56f),   //super block (second color)
+        new Color(1.0f,0.6f,0.6f),      //unused (crit super blocked) (damage uses the hp bar colors)
         new Color(1.0f,0.6f,0.6f),      //unused (unblockable) (damage uses the hp bar colors)
         new Color(1.0f,0.6f,0.6f),      //unused (max hp) (damage uses the hp bar colors)
         new Color(0.6f,1f,0.6f),      //unused (soft) (damage uses the hp bar colors)
@@ -142,8 +145,9 @@ public class EffectScript_Damage : MonoBehaviour
         switch (b)
         {
             case BattleHelper.DamageEffect.BlockedDamage:
+            case BattleHelper.DamageEffect.CritBlockedDamage:
                 text.color = BattleControl.Instance.GetHPBarColors()[3];
-                Color blockColor = numberColors[5];
+                Color blockColor = numberColors[6];
 
                 Color midpoint = new Color(Mathf.Lerp(text.color.r, blockColor.r, 0.5f), Mathf.Lerp(text.color.g, blockColor.g, 0.5f), Mathf.Lerp(text.color.b, blockColor.b, 0.5f));
                 TMPro.VertexGradient gradient = new TMPro.VertexGradient(text.color, midpoint, midpoint, blockColor);
@@ -151,8 +155,9 @@ public class EffectScript_Damage : MonoBehaviour
                 text.color = Color.white;
                 break;
             case BattleHelper.DamageEffect.SuperBlockedDamage:
+            case BattleHelper.DamageEffect.CritSuperBlockedDamage:
                 text.color = BattleControl.Instance.GetHPBarColors()[3];
-                TMPro.VertexGradient gradient2 = new TMPro.VertexGradient(text.color, numberColors[5], numberColors[5], numberColors[6]);
+                TMPro.VertexGradient gradient2 = new TMPro.VertexGradient(text.color, numberColors[6], numberColors[6], numberColors[8]);
                 text.colorGradient = gradient2;
                 text.color = Color.white;
                 break;
@@ -166,6 +171,7 @@ public class EffectScript_Damage : MonoBehaviour
                 text.color = Color.white;
                 break;
             case BattleHelper.DamageEffect.Damage:
+            case BattleHelper.DamageEffect.CritDamage:
             case BattleHelper.DamageEffect.UnblockableDamage:
             case BattleHelper.DamageEffect.MaxHPDamage:
                 text.color = BattleControl.Instance.GetHPBarColors()[3];
@@ -181,10 +187,13 @@ public class EffectScript_Damage : MonoBehaviour
         switch (b)
         {
             case BattleHelper.DamageEffect.BlockedDamage:
+            case BattleHelper.DamageEffect.CritBlockedDamage:
             case BattleHelper.DamageEffect.SuperBlockedDamage:
+            case BattleHelper.DamageEffect.CritSuperBlockedDamage:
             case BattleHelper.DamageEffect.UnblockableDamage:
             case BattleHelper.DamageEffect.MaxHPDamage:
             case BattleHelper.DamageEffect.SoftDamage:
+            case BattleHelper.DamageEffect.CritDamage:
             case BattleHelper.DamageEffect.Damage:
                 if (type != BattleHelper.DamageType.Normal && type != BattleHelper.DamageType.Default)
                 {
@@ -244,16 +253,27 @@ public class EffectScript_Damage : MonoBehaviour
         switch (b)
         {
             case BattleHelper.DamageEffect.BlockedDamage:
+            case BattleHelper.DamageEffect.CritBlockedDamage:
             case BattleHelper.DamageEffect.SuperBlockedDamage:
+            case BattleHelper.DamageEffect.CritSuperBlockedDamage:
             case BattleHelper.DamageEffect.UnblockableDamage:
             case BattleHelper.DamageEffect.MaxHPDamage:
             case BattleHelper.DamageEffect.SoftDamage:
+            case BattleHelper.DamageEffect.CritDamage:
             case BattleHelper.DamageEffect.Damage:
                 backSpriteA.sprite = BattleControl.Instance.damageEffectStar;
                 backSpriteB.sprite = BattleControl.Instance.damageEffectStar;
                 //text.color = BattleControl.Instance.GetHPBarColors()[3];
                 backSpriteA.color = BattleControl.Instance.GetHPBarColors()[0];
                 backSpriteB.color = BattleControl.Instance.GetHPBarColors()[3];
+
+                if (b == BattleHelper.DamageEffect.CritDamage || b == BattleHelper.DamageEffect.CritBlockedDamage || b == BattleHelper.DamageEffect.CritSuperBlockedDamage)
+                {
+                    //wacky idea
+                    GameObject backSpriteCOBJ = Instantiate(backSpriteB.gameObject, backSpriteA.transform);
+                    backSpriteCOBJ.transform.localScale = Vector3.one * 1.25f;
+                    backSpriteCOBJ.GetComponent<SpriteRenderer>().color = BattleControl.Instance.GetHPBarColors()[3];
+                }
                 break;
             case BattleHelper.DamageEffect.Heal:
                 backSpriteA.sprite = BattleControl.Instance.heartEffect;
@@ -433,13 +453,19 @@ public class EffectScript_Damage : MonoBehaviour
         switch (be)
         {
             case BattleHelper.DamageEffect.SuperBlockedDamage:
+            case BattleHelper.DamageEffect.CritSuperBlockedDamage:
             case BattleHelper.DamageEffect.BlockedDamage:
+            case BattleHelper.DamageEffect.CritBlockedDamage:
             case BattleHelper.DamageEffect.Damage:
                 backSpriteB.transform.eulerAngles = Vector3.forward * (144f + 36f * Mathf.Min(number,15)/15f);
                 backSpriteB.transform.localPosition = Vector3.up * 0.01f;
                 break;
             case BattleHelper.DamageEffect.UnblockableDamage:
                 backSpriteB.transform.eulerAngles = Vector3.forward * (180f + 144f * completion);
+                backSpriteB.transform.localPosition = Vector3.up * 0.01f;
+                break;
+            case BattleHelper.DamageEffect.CritDamage:
+                backSpriteB.transform.eulerAngles = Vector3.forward * (144f + 36f);
                 backSpriteB.transform.localPosition = Vector3.up * 0.01f;
                 break;
             case BattleHelper.DamageEffect.MaxHPDamage:

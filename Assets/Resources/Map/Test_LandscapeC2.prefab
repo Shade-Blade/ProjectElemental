@@ -348,8 +348,10 @@ MonoBehaviour:
   mapName: Test_LandscapeC2
   worldLocation: TempestDesert
   skyboxID: TempestDesert
-  ambientLight: {r: 0.55, g: 0.55, b: 0.5, a: 1}
+  ambientLight: {r: 0.6, g: 0.6, b: 0.54857147, a: 1}
   playerHolder: {fileID: 75118967011850446}
+  useDefaultLight: 0
+  useDefaultParticles: 0
   exits: []
   worldObjects: []
   worldEntities: []

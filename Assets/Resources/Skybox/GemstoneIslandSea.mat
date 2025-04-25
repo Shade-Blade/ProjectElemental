@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: GemstoneIslandSea
   m_Shader: {fileID: 4800000, guid: f939e65906c3b3743a098296e009ca05, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -83,9 +86,9 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SkyColor1: {r: 0.45660377, g: 0.942232, b: 1, a: 0}
-    - _SkyColor2: {r: 0.24313726, g: 0.60784316, b: 0.94509804, a: 0}
-    - _SkyColor3: {r: 0.24313727, g: 0.60784316, b: 0.9450981, a: 0}
+    - _SkyColor1: {r: 0.20507877, g: 0.93011117, b: 1, a: 0}
+    - _SkyColor2: {r: 0.058823522, g: 0.45953897, b: 0.92156863, a: 0}
+    - _SkyColor3: {r: 0.05951124, g: 0.46207705, b: 0.92158204, a: 0}
     - _SkyColor4: {r: 0.30035415, g: 0.24672478, b: 0.7830189, a: 0}
     - _SkyColor5: {r: 0.2509804, g: 0.20784315, b: 0.6392157, a: 0}
     - _SkyColor6: {r: 0.12941177, g: 0.058823533, b: 0.47058827, a: 0}

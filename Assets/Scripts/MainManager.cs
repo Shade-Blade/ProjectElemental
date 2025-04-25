@@ -351,20 +351,30 @@ public class PlayerData
             //  Also makes the first EP upgrade too impactful (1 to 2 agility is a massive jump)
             //12 and 16 (with +6.001)
             //  0.001 changes the rounding for 30 ep so that it becomes 4 and 3 instead of 3 and 3
+            //10 and 15
+            //  12 ep: 2, 2
+            //  18 ep: 3, 2
+            //  24 ep: 3, 2
+            //  30 ep: 4, 3
+            //  36 ep: 5, 3
+            //  42 ep: 5, 3 
+            //  48 ep: 6, 4
+            //  54 ep: 7, 4
+            //  Max should be 7, 5
             //  Current
 
             switch (eid)
             {
                 case BattleHelper.EntityID.Wilex:
-                    return 12f;
+                    return 9f;
                 case BattleHelper.EntityID.Luna:
-                    return 16f;
+                    return 15f;
             }
             return 1;
         }
         public int GetAgility(int maxEP)
         {
-            return Mathf.CeilToInt((maxEP + 7f) / GetBaseAgilityDivisor(entityID));
+            return Mathf.CeilToInt((maxEP + 2.5f) / GetBaseAgilityDivisor(entityID));
         }
 
         public static string GetName(BattleHelper.EntityID eid)
@@ -2898,6 +2908,21 @@ public class MainManager : MonoBehaviour
         SFX_Hit_Earth,
         SFX_Hit_Prismatic,
         SFX_Hit_Void,
+
+        //crit sound layers above the normal sound
+        //generic condition: >=12
+        //for elementals: get at least 2/3 of the max boost?
+        //for air: enemy has at least ceil(base / 3) defense (normal - air defense >= ceil(base / 3))
+        SFX_Hit_NormalCrit, //>=12
+        SFX_Hit_LightCrit,
+        SFX_Hit_WaterCrit,
+        SFX_Hit_AirCrit,
+        SFX_Hit_DarkCrit,
+        SFX_Hit_FireCrit,
+        SFX_Hit_EarthCrit,
+        SFX_Hit_PrismaticCrit,
+        SFX_Hit_VoidCrit,
+
     }
     public enum SoundType
     {

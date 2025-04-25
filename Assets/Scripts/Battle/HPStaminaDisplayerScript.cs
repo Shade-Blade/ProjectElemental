@@ -26,6 +26,8 @@ public class HPStaminaDisplayerScript : MonoBehaviour
     public const float STAT_SCROLL_SPEED = 30;
     public const float STAT_HIGHLIGHT_MINIMUM = 0.3f;
 
+    public bool setcolor;
+
     public void SetEntity(PlayerEntity b)
     {
         entity = b;
@@ -34,18 +36,32 @@ public class HPStaminaDisplayerScript : MonoBehaviour
         HPImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.HP];
         STImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.Stamina];
 
+        if (setcolor)
+        {
+            switch (b.entityID)
+            {
+                case BattleHelper.EntityID.Wilex:
+                    backImage.color = new Color(1, 0.8f, 0.8f, 0.9f);
+                    characterImage.sprite = wilexSprite;
+                    break;
+                case BattleHelper.EntityID.Luna:
+                    backImage.color = new Color(0.8f, 1f, 0.8f, 0.9f);
+                    characterImage.sprite = lunaSprite;
+                    break;
+                default:
+                    backImage.color = new Color(0.6f, 1, 1f, 0.9f);
+                    break;
+            }
+        }
         switch (b.entityID)
         {
             case BattleHelper.EntityID.Wilex:
-                backImage.color = new Color(1, 0.8f, 0.8f, 0.9f);
                 characterImage.sprite = wilexSprite;
                 break;
             case BattleHelper.EntityID.Luna:
-                backImage.color = new Color(0.8f, 1f, 0.8f, 0.9f);
                 characterImage.sprite = lunaSprite;
                 break;
             default:
-                backImage.color = new Color(0.6f, 1, 1f, 0.9f);
                 break;
         }
 
@@ -68,7 +84,7 @@ public class HPStaminaDisplayerScript : MonoBehaviour
     public void SetPosition(int index)
     {
         float pos = 100f + index * 158;
-        backImage.rectTransform.anchoredPosition = new Vector3(pos,-40,0);
+        backImage.rectTransform.anchoredPosition = new Vector3(pos,-44,0);
     }
 
     public static bool HighlightActive()

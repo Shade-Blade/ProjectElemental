@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: ForsakenMountains
   m_Shader: {fileID: 4800000, guid: f939e65906c3b3743a098296e009ca05, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -86,8 +89,8 @@ Material:
     - _SkyColor1: {r: 0.6784314, g: 0.8643452, b: 0.99215686, a: 0}
     - _SkyColor2: {r: 0.5176471, g: 0.4117647, b: 0.90588236, a: 0}
     - _SkyColor3: {r: 0.5175451, g: 0.41176468, b: 0.90588236, a: 0}
-    - _SkyColor4: {r: 0.10588236, g: 0.4039216, b: 0.2901961, a: 0}
-    - _SkyColor5: {r: 0.13333334, g: 0.2901961, b: 0.26666668, a: 0}
-    - _SkyColor6: {r: 0.07058824, g: 0.007843138, b: 0.21176472, a: 0}
+    - _SkyColor4: {r: 0.27556428, g: 0.3660378, b: 0.3660378, a: 0}
+    - _SkyColor5: {r: 0.23002486, g: 0.335849, b: 0.33192956, a: 0}
+    - _SkyColor6: {r: 0.16068518, g: 0.109668896, b: 0.2754717, a: 0}
     - _SunColor: {r: 2.6082377, g: 2.6082377, b: 1.2699796, a: 0}
   m_BuildTextureStacks: []

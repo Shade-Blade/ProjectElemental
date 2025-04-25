@@ -19,6 +19,8 @@ public class OWHPDisplayerScript : MonoBehaviour
     public float displayHPCooldown;
     public bool highlightHP;
 
+    public bool setcolor;
+
     public void SetEntity(PlayerData.PlayerDataEntry p_pde)
     {
         pde = p_pde;
@@ -27,18 +29,32 @@ public class OWHPDisplayerScript : MonoBehaviour
         //backImage = GetComponentInChildren<Image>();
         HPImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.HP];
 
+        if (setcolor)
+        {
+            switch (pde.entityID)
+            {
+                case BattleHelper.EntityID.Wilex:
+                    backImage.color = new Color(1, 0.8f, 0.8f, 0.9f);
+                    characterImage.sprite = wilexSprite;
+                    break;
+                case BattleHelper.EntityID.Luna:
+                    backImage.color = new Color(0.8f, 1f, 0.8f, 0.9f);
+                    characterImage.sprite = lunaSprite;
+                    break;
+                default:
+                    backImage.color = new Color(0.6f, 1, 1f, 0.9f);
+                    break;
+            }
+        }
         switch (pde.entityID)
         {
             case BattleHelper.EntityID.Wilex:
-                backImage.color = new Color(1, 0.8f, 0.8f, 0.9f);
                 characterImage.sprite = wilexSprite;
                 break;
             case BattleHelper.EntityID.Luna:
-                backImage.color = new Color(0.8f, 1f, 0.8f, 0.9f);
                 characterImage.sprite = lunaSprite;
                 break;
             default:
-                backImage.color = new Color(0.6f, 1, 1f, 0.9f);
                 break;
         }
 

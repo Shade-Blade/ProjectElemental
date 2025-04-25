@@ -101,8 +101,10 @@ MonoBehaviour:
   mapName: Test_LandscapeC8
   worldLocation: CrystalHills
   skyboxID: CrystalHills
-  ambientLight: {r: 0.5, g: 0.57, b: 0.57, a: 1}
+  ambientLight: {r: 0.5325843, g: 0.6, b: 0.6, a: 1}
   playerHolder: {fileID: 388424779153874435}
+  useDefaultLight: 0
+  useDefaultParticles: 0
   exits: []
   worldObjects: []
   worldEntities: []

@@ -8,10 +8,6 @@ public class AnimationController_Luna : AnimationController_Player
 
     public override void SetAnimation(string name, bool force = false)
     {
-        //Hacky fix
-        sprite.transform.localPosition = Vector3.zero;
-        sprite.transform.localRotation = Quaternion.identity;
-
         string modifiedName = name;
 
         //Debug.Log(showBack + " " + !name.Contains("smash") + " " + !name.Contains("slash") + " " + name);
@@ -34,7 +30,6 @@ public class AnimationController_Luna : AnimationController_Player
 
         //fixes a problem I'm having somehow
         //update = true;
-        //Debug.Log("Play " + currentAnim + " " + update);
 
 
         if (animator != null && update)
@@ -49,6 +44,14 @@ public class AnimationController_Luna : AnimationController_Player
                 animator.Play(modifiedName);
             }
         }
+    }
+
+    public void OnDisable()
+    {
+        //Unity is being stupid
+        //Hacky fix
+        sprite.transform.localPosition = Vector3.zero;
+        sprite.transform.localRotation = Quaternion.identity;
     }
 
     public override void SetMaterial(int id)

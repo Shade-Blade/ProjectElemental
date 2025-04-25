@@ -120,6 +120,7 @@ public class BoxMenu : MenuHandler
 
         menuBaseO = Instantiate(MainManager.Instance.menuBase, MainManager.Instance.Canvas.transform);
         descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
+        descriptionBoxO.transform.SetSiblingIndex(menuBaseO.transform.GetSiblingIndex());
         descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
         //menuBaseO.transform.position = new Vector3(250, -70, 0);
         menuEntriesO = new List<GameObject>();

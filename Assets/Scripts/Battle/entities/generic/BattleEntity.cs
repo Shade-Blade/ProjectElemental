@@ -719,7 +719,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int damageTakenThisTurn;                                        //Non-status damage taken since last PostMove call (Used to calculate Astral Wall stuff)
     public int astralWallTrackedDamage;                                     //damage tracked by Astral Wall to determine if it should activate (note: may get Astral Wall mid turn so not synced with damageTakenThisTurn)
 
-    public string bonusDamageString;                                        //Bonus damage string set by deal damage stuff and reset by takedamage  (Hacky setup to avoid adding more parameters to TakeDamage)
+    public float bonusDamageElemental;                                      //Bonus damage string set by deal damage stuff and reset by takedamage  (Hacky setup to avoid adding more parameters to TakeDamage)
 
 
     //
@@ -1751,8 +1751,25 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual int TakeDamage(int damage, BattleHelper.DamageType type, ulong properties) //default type damage
     {
         lastDamageTakenInput = damage;
-        string localBonusDamageString = bonusDamageString;
-        bonusDamageString = null;
+        float localBonusDamageElemental = bonusDamageElemental;
+        bonusDamageElemental = 0;
+
+        //Bonus damage string set by deal damage stuff and reset by takedamage  (Hacky setup to avoid adding more parameters to TakeDamage)
+        string boostString = null;
+        if (localBonusDamageElemental != 0)
+        {
+            if (localBonusDamageElemental > 0)
+            {
+                boostString = "+" + MainManager.Percent(localBonusDamageElemental) + "%";
+            }
+            else
+            {
+                boostString = "-" + MainManager.Percent(-localBonusDamageElemental) + "%";
+            }
+        }
+        string localBonusDamageString = boostString;
+
+
 
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.ContactHazard) && ShouldShowHPBar())
         {
@@ -1900,6 +1917,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             hp -= damage;
         }
 
+        bool crit = false;
+
+        Debug.Log("Boost = " + localBonusDamageElemental);
+
 
         //Sound effects
         bool normalDamage = true;
@@ -1912,45 +1933,116 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Light);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.4444f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_LightCrit);
+                }
+            }
         }
         if ((type & DamageType.Dark) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Dark);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.6666f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_DarkCrit);
+                }
+            }
         }
         if ((type & DamageType.Fire) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Fire);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.6666f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_FireCrit);
+                }
+            }
         }
         if ((type & DamageType.Water) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Water);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.4444f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_WaterCrit);
+                }
+            }
         }
         if ((type & DamageType.Air) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Air);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental > 0.3333f || damage <= Mathf.CeilToInt((GetDefense(DamageType.Normal) - GetDefense(DamageType.Air))))
+                {
+                    crit = true;
+                }
+            }
         }
         if ((type & DamageType.Earth) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Earth);
+
+            if (damage > 0)
+            {
+                if (localBonusDamageElemental  > 0.4444f)
+                {
+                    crit = true;
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_EarthCrit);
+                }
+            }
         }
         if ((type & DamageType.Prismatic) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Prismatic);
+
+            if (damage >= BattleHelper.CRIT_THRESHOLD)
+            {
+                crit = true;
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_PrismaticCrit);
+            }
         }
         if ((type & DamageType.Void) != 0)
         {
             normalDamage = false;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Void);
+
+            if (damage >= BattleHelper.CRIT_THRESHOLD)
+            {
+                crit = true;
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_VoidCrit);
+            }
         }
         if (normalDamage)
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Normal);
+
+            if (damage >= BattleHelper.CRIT_THRESHOLD)
+            {
+                crit = true;
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_NormalCrit);
+            }
         }
 
 
@@ -2000,7 +2092,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 else
                 {
-                    BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                    if (crit)
+                    {
+                        BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.CritDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                    }
+                    else
+                    {
+                        BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Damage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);
+                    }
                 }
             }
         }
@@ -2917,7 +3016,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return d;
         }
 
-        int inputDamage = AttackBoostCalculation(target, damage, type, properties);
+        int inputDamage = AttackBoostCalculation(target, damage, type, properties, out float boost);
         int reducedDamage = DefenseCalculation(target, inputDamage, type, properties);
 
         int takenDamage = 0;
@@ -2931,6 +3030,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         else
         {
+            target.bonusDamageElemental = boost;
             takenDamage = target.TakeDamage(reducedDamage, type, properties);
             OnHitEffects(target, takenDamage, type, properties, inputDamage);
         }
@@ -3015,7 +3115,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
 
         //The true damage number, accounting for all attack bonuses and modifiers
-        int inputDamage = AttackBoostCalculation(target, damage, type, properties);
+        int inputDamage = AttackBoostCalculation(target, damage, type, properties, out float boost);
         int reducedDamage = DefenseCalculation(target, inputDamage, type, properties);
         int takenDamage = 0;
 
@@ -3045,6 +3145,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         else
         {
+            target.bonusDamageElemental = boost;
             takenDamage = target.TakeDamage(reducedDamage, type, properties);
             OnHitEffects(target, takenDamage, type, properties, reductionFormula(inputDamage, hitIndex));
         }
@@ -3135,9 +3236,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return d;
         }
 
-        int inputDamage = AttackBoostCalculation(target, damage, type, properties);
+        int inputDamage = AttackBoostCalculation(target, damage, type, properties, out float boostA);
         //Debug.Log(inputDamage);
-        inputDamage += other.AttackBoostCalculation(target, damageO, type, properties);
+        int inputDamageB = other.AttackBoostCalculation(target, damageO, type, properties, out float boostB);
+
+        float boost = (boostA * inputDamage + boostB * inputDamageB) / (inputDamage + inputDamageB);
+
+        inputDamage += inputDamageB;
         //Debug.Log(inputDamage);
         int reducedDamage = DefenseCalculation(target, inputDamage, type, properties);
         int takenDamage = 0;
@@ -3151,6 +3256,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         else
         {
+            target.bonusDamageElemental = boost;
             takenDamage = target.TakeDamage(reducedDamage, type, properties);
             OnHitEffects(target, takenDamage, type, properties, inputDamage);
         }
@@ -3232,8 +3338,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return d;
         }
 
-        int inputDamage = AttackBoostCalculation(target, damage, type, properties);
-        inputDamage += other.AttackBoostCalculation(target, damageO, type, properties);
+        int inputDamage = AttackBoostCalculation(target, damage, type, properties, out float boostA);
+        int inputDamageB = other.AttackBoostCalculation(target, damageO, type, properties, out float boostB);
+
+        float boost = (boostA * inputDamage + boostB * inputDamageB) / (inputDamage + inputDamageB);
+
+        inputDamage += inputDamageB;
+
         int reducedDamage = DefenseCalculation(target, inputDamage, type, properties);
         int takenDamage = 0;
 
@@ -3249,6 +3360,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         else
         {
+            target.bonusDamageElemental = boost;
             takenDamage = target.TakeDamage(reducedDamage, type, properties);
             OnHitEffects(target, takenDamage, type, properties, reductionFormula(inputDamage, hitIndex));
         }
@@ -3276,7 +3388,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //applies attack boosts (note: paraylze's attack down has to be here)
     public int AttackBoostCalculation(BattleEntity target, int damage, BattleHelper.DamageType type, ulong properties)
     {
-        int output = AttackBoostCalculationStatic(this, target, damage, GetBadgeAttackBonus(), GetEffectAttackBonus(), type, properties);
+        return AttackBoostCalculation(target, damage, type, properties, out _);
+    }
+    public int AttackBoostCalculation(BattleEntity target, int damage, BattleHelper.DamageType type, ulong properties, out float boost)
+    {
+        int output = AttackBoostCalculationStatic(this, target, damage, GetBadgeAttackBonus(), GetEffectAttackBonus(), type, properties, out float staticboost);
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
             if ((type & DamageType.Fire) != 0 && BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AdvancedElementCalc))
@@ -3388,6 +3504,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
         }
 
+        boost = staticboost;
         return output;
     }
 
@@ -3400,8 +3517,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //applies attack boosts
     public static int AttackBoostCalculationSourcelessStatic(BattleEntity target, int damage, int badgeDamage, int effectDamage, BattleHelper.DamageType type, ulong properties)
     {
+        return AttackBoostCalculationSourcelessStatic(target, damage, badgeDamage, effectDamage, type, properties, out _);
+    }
+    public static int AttackBoostCalculationSourcelessStatic(BattleEntity target, int damage, int badgeDamage, int effectDamage, BattleHelper.DamageType type, ulong properties, out float boost)
+    {
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
         {
+            boost = 0;
             return damage;
         }
 
@@ -3636,6 +3758,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             inputDamage++;
         }
 
+        boost = 0;
+
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.IgnoreElementCalculation))
         {
             inputDamage += lightbonus;
@@ -3646,15 +3770,28 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             inputDamage += airbonus;
 
             //Debug.Log("Light: " + lightbonus + ", Dark: " + darkbonus + ", Fire: " + firebonus + ", Water: " + waterbonus + ", Earth: " + earthbonus);
-        }
+            int totalbonus = lightbonus + darkbonus + firebonus + waterbonus + earthbonus + airbonus;
+            boost = (totalbonus + 0.0f) / (inputDamage - totalbonus);
 
+            Debug.Log(boost);
+
+            if ((inputDamage - totalbonus) == 0 || totalbonus == 0)
+            {
+                boost = 0;
+            }
+        }
 
         return inputDamage;
     }
     public static int AttackBoostCalculationStatic(BattleEntity caller, BattleEntity target, int damage, int badgeDamage, int effectDamage, BattleHelper.DamageType type, ulong properties)
     {
+        return AttackBoostCalculationStatic(caller, target, damage, badgeDamage, effectDamage, type, properties, out _);
+    }
+    public static int AttackBoostCalculationStatic(BattleEntity caller, BattleEntity target, int damage, int badgeDamage, int effectDamage, BattleHelper.DamageType type, ulong properties, out float boost)
+    {
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
         {
+            boost = 0;
             return damage;
         }
 
@@ -4036,8 +4173,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             inputDamage++;
         }
 
-        Debug.Log("Base: " + inputDamage + " Light: " + lightbonus + ", Dark: " + darkbonus + ", Fire: " + firebonus + ", Water: " + waterbonus + ", Earth: " + earthbonus);
+        //Debug.Log("Base: " + inputDamage + " Light: " + lightbonus + ", Dark: " + darkbonus + ", Fire: " + firebonus + ", Water: " + waterbonus + ", Earth: " + earthbonus);
 
+        boost = 0;
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.IgnoreElementCalculation))
         {
             inputDamage += lightbonus;
@@ -4046,6 +4184,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             inputDamage += waterbonus;
             inputDamage += earthbonus;
             inputDamage += airbonus;
+
+            int totalbonus = lightbonus + darkbonus + firebonus + waterbonus + earthbonus + airbonus;
+            boost = (totalbonus + 0.0f) / (inputDamage - totalbonus);
+
+            Debug.Log(boost);
+            if ((inputDamage - totalbonus) == 0 || totalbonus == 0)
+            {
+                boost = 0;
+            }
         }
 
 
@@ -4527,7 +4674,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         int output = 0;
 
-        int inputDamage = AttackBoostCalculationSourcelessStatic(target, damage, 0, 0, type, properties);
+        int inputDamage = AttackBoostCalculationSourcelessStatic(target, damage, 0, 0, type, properties, out float boost);
         int reducedDamage = DefenseCalculationStatic(target, inputDamage, type, properties);
 
         if (target.GetDefense(type) > DefenseTableEntry.IMMUNITY_CONSTANT)
@@ -4538,6 +4685,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         else
         {
+            target.bonusDamageElemental = boost;
             output = target.TakeDamage(reducedDamage, type, properties);
         }
 
@@ -4675,6 +4823,22 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return !b; //high enough
         }
 
+        //new change
+        //give up on logic
+        //hardcode all airborne enemies as not low stompable
+        if ((property & BattleHelper.EntityProperties.LowStompable) != 0 && ((stompOffset.y * height + homePos.y) < LOWSTOMPABLE_CUTOFFHEIGHT && homePos.y <= AIRBORNE_CUTOFFHEIGHT))
+        {
+            //Debug.Log("high");
+            return b; //high enough
+        }
+        if ((property & BattleHelper.EntityProperties.LowStompable) != 0 && ((stompOffset.y * height + homePos.y) >= LOWSTOMPABLE_CUTOFFHEIGHT || homePos.y > AIRBORNE_CUTOFFHEIGHT))
+        {
+            //Debug.Log("high");
+            return !b; //high enough
+        }
+
+
+        /*
         if ((property & BattleHelper.EntityProperties.LowStompable) != 0 && (stompOffset.y * height + homePos.y) < LOWSTOMPABLE_CUTOFFHEIGHT)
         {
             //Debug.Log("high");
@@ -4685,6 +4849,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //Debug.Log("high");
             return !b; //high enough
         }
+        */
 
 
         //Debug.Log(entityProperties + " vs "+(uint)property + " is "+ ((entityProperties / (uint)property) % 2 == 1));        
@@ -7885,13 +8050,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                         SendAnimationData("xflip");
                     }
                 }
-                if ((transform.position - pastPos).y > 0)
+
+                if ((transform.position - pastPos).y != 0)
                 {
-                    SetAnimation(upAnim);
-                }
-                else
-                {
-                    SetAnimation(downAnim);
+                    if ((transform.position - pastPos).y > 0)
+                    {
+                        SetAnimation(upAnim);
+                    }
+                    else
+                    {
+                        SetAnimation(downAnim);
+                    }
                 }
             }
             completion = (Time.time - initialTime) / duration;

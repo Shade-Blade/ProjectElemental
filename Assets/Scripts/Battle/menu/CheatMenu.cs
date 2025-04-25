@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using static MainManager;
 
 public class CheatMenu : MenuHandler
@@ -607,6 +608,26 @@ public class CheatMenu : MenuHandler
                 }
             }
 
+            //toggle postprocessing globally
+            //may make into a setting later
+            if (input[1].Equals("pp"))
+            {
+                PostProcessVolume[] ppvl = FindObjectsOfType<PostProcessVolume>();
+                if (toggle)
+                {
+                    foreach (PostProcessVolume ppv in ppvl)
+                    {
+                        ppv.enabled = !ppv.enabled;
+                    }
+                }
+                else
+                {
+                    foreach (PostProcessVolume ppv in ppvl)
+                    {
+                        ppv.enabled = setValue;
+                    }
+                }
+            }
 
             if (input[1].Equals("BadgeAnarchy") || input[1].Equals("ba"))
             {

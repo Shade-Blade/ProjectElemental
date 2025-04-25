@@ -106,8 +106,8 @@ DefenseBoost,5,FALSE,DefenseBoost,TRUE,2,4
 DefenseBoostB,5,FALSE,DefenseBoost,TRUE,2,6
 EnduranceBoost,6,FALSE,EnduranceBoost,TRUE,2,5
 EnduranceBoostB,6,FALSE,EnduranceBoost,TRUE,2,7
-AgilityBoost,6,FALSE,AgilityBoost,TRUE,2,3
-AgilityBoostB,6,FALSE,AgilityBoost,TRUE,2,8
+AgilityBoost,9,FALSE,AgilityBoost,TRUE,2,3
+AgilityBoostB,9,FALSE,AgilityBoost,TRUE,2,8
 VitalEnergy,4,FALSE,VitalEnergy,TRUE,1,4
 SoulfulEnergy,4,FALSE,SoulfulEnergy,TRUE,1,4
 StaminaEnergy,10,FALSE,StaminaEnergy,TRUE,1,7

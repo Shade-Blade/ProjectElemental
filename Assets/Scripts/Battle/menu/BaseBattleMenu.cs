@@ -679,7 +679,7 @@ public class BaseBattleMenu : MenuHandler
     public Vector3 scaleFromAngle(float angle)
     {
         float max = 0.8f;
-        float min = 0.5f;
+        float min = 0.4f;
         float val = (max + min) / 2 + ((max - min) / 2) * Mathf.Cos(angle * (Mathf.PI / 180));
 
         return new Vector3(val, val, 1);
@@ -687,8 +687,8 @@ public class BaseBattleMenu : MenuHandler
 
     public Vector3 offsetFromAngle(float angle)
     {
-        float width = 180;
-        float height = 90;
+        float width = 200;
+        float height =100;
 
         Vector3 output = new Vector3(1, 1, 1);
         output.y = (height/2) * -Mathf.Cos(angle * (Mathf.PI / 180));

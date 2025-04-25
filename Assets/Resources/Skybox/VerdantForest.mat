@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: VerdantForest
   m_Shader: {fileID: 4800000, guid: f939e65906c3b3743a098296e009ca05, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -85,9 +88,9 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SkyColor1: {r: 0.45660377, g: 0.942232, b: 1, a: 0}
     - _SkyColor2: {r: 0.24313726, g: 0.60784316, b: 0.94509804, a: 0}
-    - _SkyColor3: {r: 0.2784314, g: 0.7294118, b: 0.28235295, a: 0}
-    - _SkyColor4: {r: 0.60784316, g: 0.3921569, b: 0.14901961, a: 0}
-    - _SkyColor5: {r: 0.027450982, g: 0.3529412, b: 0.13333334, a: 0}
-    - _SkyColor6: {r: 0.0825, g: 0.15, b: 0.10427419, a: 0}
+    - _SkyColor3: {r: 0.40791023, g: 0.6377357, b: 0.41038147, a: 0}
+    - _SkyColor4: {r: 0.4490565, g: 0.37955335, b: 0.30078313, a: 0}
+    - _SkyColor5: {r: 0.26966888, g: 0.381132, b: 0.27870643, a: 0}
+    - _SkyColor6: {r: 0.11132074, g: 0.19999999, b: 0.120822094, a: 0}
     - _SunColor: {r: 2.79544, g: 2.5612671, b: 1.2294083, a: 0}
   m_BuildTextureStacks: []
