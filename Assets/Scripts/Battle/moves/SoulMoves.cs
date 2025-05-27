@@ -62,6 +62,7 @@ public class SM_Hasten : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -201,6 +202,7 @@ public class SM_Revitalize : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -355,6 +357,7 @@ public class SM_LeafStorm : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -512,6 +515,7 @@ public class SM_ElectroDischarge : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -648,6 +652,7 @@ public class SM_MistWave : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -804,6 +809,7 @@ public class SM_Overheat : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -940,6 +946,7 @@ public class SM_VoidCrush : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -1103,6 +1110,7 @@ public class SM_FlashFreeze : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -1194,7 +1202,7 @@ public class SM_FlashFreeze : SoulMove
     {
         if (caller is PlayerEntity pcallerA)
         {
-            if (!pcallerA.BadgeEquipped(Badge.BadgeType.StatusSight))
+            if (!pcallerA.BadgeEquipped(Badge.BadgeType.AilmentSight))
             {
                 return "";
             }
@@ -1285,6 +1293,7 @@ public class SM_Cleanse : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -1419,6 +1428,7 @@ public class SM_Blight : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -1588,12 +1598,12 @@ public class SM_ElementalConflux : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressATimed actionCommand = null;
+        AC_PressATimedMultiple actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressATimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimedMultiple>();
             actionCommand.Init(pcaller);
-            actionCommand.Setup(1.0f);
+            actionCommand.Setup(2.0f, 3);
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
@@ -1605,6 +1615,7 @@ public class SM_ElementalConflux : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -1742,6 +1753,7 @@ public class SM_ElementalConflux : SoulMove
 
     public IEnumerator CastAnimation(BattleEntity caller, int level)
     {
+        yield return new WaitForSeconds(1.0f);
         caller.SetAnimation("itemuse");
         GameObject eo = null;
         eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/SoulMoves/Effect_FireFlowIn"), BattleControl.Instance.transform);
@@ -1782,6 +1794,11 @@ public class SM_ElementalConflux : SoulMove
     public override void PostMove(BattleEntity caller, int level = 1)
     {
     }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimedMultiple.GetACDesc();
+    }
 }
 
 public class SM_PrismaticBlast : SoulMove
@@ -1819,12 +1836,12 @@ public class SM_PrismaticBlast : SoulMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        AC_PressATimed actionCommand = null;
+        AC_PressATimedMultiple actionCommand = null;
         if (caller is PlayerEntity pcaller) //we have technology
         {
-            actionCommand = gameObject.AddComponent<AC_PressATimed>();
+            actionCommand = gameObject.AddComponent<AC_PressATimedMultiple>();
             actionCommand.Init(pcaller);
-            actionCommand.Setup(0.5f);
+            actionCommand.Setup(2.0f, 3);
         }
 
         caller.SetAnimation("itemuse");
@@ -1835,6 +1852,7 @@ public class SM_PrismaticBlast : SoulMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -1948,5 +1966,10 @@ public class SM_PrismaticBlast : SoulMove
         }
 
         return val;
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_PressATimedMultiple.GetACDesc();
     }
 }

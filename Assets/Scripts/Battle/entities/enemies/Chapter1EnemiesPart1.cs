@@ -272,7 +272,7 @@ public class BM_BurrowTrap_PollenBite : EnemyMove
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 1));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 2));
                 }
             }
             else
@@ -319,7 +319,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 1));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, 2));
                 }
             }
             else
@@ -563,7 +563,7 @@ public class BM_Sundew_Hard_ExhaustBall : EnemyMove
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Exhausted, 1, 1));
+                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Exhausted, 1, 2));
                 }
             }
             else

@@ -1,9 +1,9 @@
 Index (unused),Name,Description,L2 Description,Infinite Stacking
 0,Hasten,Get 2 actions next turn.,Targets both.,"Gives <var,1,-1> turns of Hustle."
 1,Revitalize,Recover 6 HP and 6 EP. Cures most negative effects. Can revive dead allies.,"Targets both, heals 9 HP and 9 EP.","Targets both, heals <var,3> HP and <var,3> EP."
-2,Leaf Storm,"Deal (4 base) Earth damage to all enemies. (Earth damage is boosted based on damage the user took this turn and last turn, up to +0.66x base damage)",8 damage base.,"Deals <var,4> damage base."
+2,Leaf Storm,"Deal (4 base) Earth damage to all enemies. (<commontext,explainearth>)",8 damage base.,"Deals <var,4> damage base."
 3,Electro Discharge,Inflict Attack Down 2 for 3 turns to all enemies,Also inflicts Defense Down 2 for 3 turns.,"Inflicts Attack Down 2 and Defense Down 2 for <var,1,1> turns."
-4,Mist Wave,"Deal (6 base) Water damage to all enemies. (Water damage is stronger when the user is at high HP, up to a +0.66x boost.)",12 damage base.,"Deals <var,5> damage base."
+4,Mist Wave,"Deal (6 base) Water damage to all enemies. (<commontext,explainwater>)",12 damage base.,"Deals <var,5> damage base."
 5,Overheat,Inflict Defense Down 2 for 3 turns to all enemies,Also inflicts Sunder 6.,"Inflicts Defense Down <var,1> for 3 turns and Sunder <var,2>."
 6,Void Crush,Can instakill enemies. Susceptibility is based on enemy hp and enemy level. Enemies with a status are twice as susceptible. Weak enemies you can't get xp from are guaranteed to be instakilled.,"Always kills if threshold is above 0, inflicts 6 defocus if it doesn't kill.","Always kills if threshold is above 0, inflicts Defocus <var,6> if it doesn't kill."
 7,Flash Freeze,"Inflict Freeze for 3 turns to all enemies (Frozen enemies can't move, but the next hit against them deals 1 more damage and unfreezes them.)",Also inflicts Defocus 2 and Sunder 2.,"Inflicts Freeze for <var,2,1> turns and Defocus <var,1> and Sunder <var,1>"

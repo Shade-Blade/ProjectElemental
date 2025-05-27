@@ -253,15 +253,15 @@ public class GlobalItemScript : MonoBehaviour
         string output = "";
 
         int length = itemText[(int)(i)].Length;
-        output += "<descriptionfluffcolor>" + FormattedString.InsertEscapeSequences(itemText[(int)(i)][3]) + "</descriptionfluffcolor>";
-        output += " <color,#000000>" + FormattedString.InsertEscapeSequences(itemText[(int)(i)][4]) + "</color><line>";
+        output += "<descriptionfluffcolor>" + FormattedString.InsertEscapeSequences(FormattedString.ReplaceTextFileTags(itemText[(int)(i)][3])) + "</descriptionfluffcolor>";
+        output += " <color,#000000>" + FormattedString.InsertEscapeSequences(FormattedString.ReplaceTextFileTags(itemText[(int)(i)][4])) + "</color><line>";
         if (length > 4 && itemText[(int)(i)][5].Length > 0)
         {
-            output += "<descriptionnoticecolor>(" + FormattedString.InsertEscapeSequences(itemText[(int)(i)][5]) + ")</descriptionnoticecolor> ";
+            output += "<descriptionnoticecolor>(" + FormattedString.InsertEscapeSequences(FormattedString.ReplaceTextFileTags(itemText[(int)(i)][5])) + ")</descriptionnoticecolor> ";
         }
         if (length > 5 && itemText[(int)(i)][6].Length > 0)
         {
-            output += "<descriptionwarncolor>(" + FormattedString.InsertEscapeSequences(itemText[(int)(i)][6]) + ")</descriptionwarncolor>";
+            output += "<descriptionwarncolor>(" + FormattedString.InsertEscapeSequences(FormattedString.ReplaceTextFileTags(itemText[(int)(i)][6])) + ")</descriptionwarncolor>";
         }
         //Debug.Log(output);
         //Debug.Log((int)itemText[(int)(i)][5][0]);
@@ -367,7 +367,7 @@ public class GlobalItemScript : MonoBehaviour
             case ItemModifier.None:
                 return "";
             case ItemModifier.Echo:
-                return "Echo: Item is 0.8x as powerful, but becomes an Echoed copy.";
+                return "Echo: Item is 0.8x as powerful, but becomes Echoed after use.";
             case ItemModifier.Echoed:
                 return "Echoed: Item is 0.4x as powerful. (Produced by an Echo item)";
             case ItemModifier.Glistening:
@@ -3113,6 +3113,8 @@ public abstract class ItemMove : Move, IEntityHighlighter
         ItemType it = GetItemType();
         ItemDataEntry ide = Item.GetItemDataEntry(item.type);
         Debug.Log("Item anim: "+it);
+
+        MainManager.Instance.PlaySound(caller.gameObject, MainManager.Sound.SFX_Item_Use);
 
         //spawn a sprite
         Sprite isp = GlobalItemScript.GetItemSprite(it);

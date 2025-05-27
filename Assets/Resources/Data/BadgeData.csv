@@ -175,9 +175,9 @@ Icebreaker,2,FALSE,Icebreaker,TRUE,1,6
 Supercooled,2,FALSE,Supercooled,TRUE,1,6
 HealthSight,0,TRUE,HealthSight,TRUE,1,4
 DefenseSight,0,TRUE,DefenseSight,TRUE,1,2
-StatusSight,0,TRUE,StatusSight,TRUE,1,3
+AilmentSight,0,TRUE,AilmentSight,TRUE,1,3
 CharmSight,0,TRUE,CharmSight,TRUE,1,4
-PowerSight,0,TRUE,PowerSight,TRUE,1,0
+PowerSight,0,TRUE,PowerSight,TRUE,1,4
 ItemSight,0,TRUE,ItemSight,TRUE,1,2
 BattleSight,0,TRUE,BattleSight,TRUE,1,0
 SoftTouch,2,FALSE,SoftTouch,TRUE,1,3

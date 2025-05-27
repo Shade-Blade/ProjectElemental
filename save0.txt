@@ -1,10 +1,10 @@
 Envy
-d_rh_v0.5
+d_rh_v0.12
 GF_FileCode_Envy:True,GF_FileCodeExplain_Envy:True,GF_RandomItemModifiers:True,GF_Bestiary_Sentry:True,GF_Bestiary_Sandswimmer:True,GF_Recipe_BerryCarrot:True,GF_Bestiary_SirenFish:True,GF_Bestiary_LumistarSoldier:True,GF_Bestiary_Shrouder:True,GF_Bestiary_Shimmerwing:True,GF_ACH_Halfway:True
 GV_PitFloor:50,GV_PitAltar:5
 InfernalCaldera,RabbitHole_RestFloor,1.03912|0.375|-2.578611
 3205.918
-14,0,18,18,12,12,12,12,89,30,0,0,10,32,6,6,6,26,21,136,1210,391,26,14,62,62,0,0
+14,0,18,18,12,12,12,12,89,30,0,0,10,32,6,6,6,26,21,136,1210,391,26,14,62,62,0,1
 SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP
 
 SilverPudding|Glistening|Overworld,PowerSteak|Echo|Overworld,MoonlightBerry|Void|EnemyDrop|0|26,SpicyCherry|Void|EnemyDrop|0|25,SilverPudding|Spread|Overworld|0|24,FriedEgg|Spread|Overworld,SnowCone|Quick|Overworld|0|23,DeliciousMeal|Glistening|Overworld|0|22,ScaleSteak|Void|EnemyDrop|0|21,Coconut|Void|EnemyDrop|0|19,Flour|Glistening|EnemyDrop,FlowerSyrup|Glistening|EnemyDrop|0|16,CarrotSalad|Spread|Overworld|0|12,RabbitBun|Glistening|Overworld|0|11,LightSeed|Void|Overworld|0|8,BerryBronze|Void|Overworld|0|6,Lemon|Void|Overworld|0|4,ClearStrawberry|Void|EnemyDrop|0|2

@@ -1,6 +1,7 @@
 Menu Text,
-HP,HP
-EP,EP
-SP,SP
-SE,SE
-Coin,coin
+ExplainLight,"Light damage boosted against high HP enemies, up to +0.66x."
+ExplainDark,"Dark damage boosted against low HP enemies, up to +1.0x."
+ExplainWater,"Water damage boosted when user HP is high, up to +0.66x."
+ExplainFire,"Fire damage boosted when user HP is low, up to +1.0x."
+ExplainEarth,"Earth damage boosted based on user damage taken this turn and last turn, up to +0.66x."
+ExplainAir,Air/Electric damage pierces normal defense.

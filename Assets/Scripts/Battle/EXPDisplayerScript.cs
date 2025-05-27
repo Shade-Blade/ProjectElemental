@@ -9,8 +9,9 @@ public class EXPDisplayerScript : MonoBehaviour
 
     public TMPro.TMP_Text textIcon;
     public TMPro.TMP_Text textNumber;
-    public Image backImage;
-    public Image epImage;
+    public RectTransform rt;
+    public Image expImage;
+    public Image barImage;
 
     public float displayXPCooldown = 0;
     public float lastXP;
@@ -26,13 +27,20 @@ public class EXPDisplayerScript : MonoBehaviour
         pd = p_pd;
         lastXP = pd.exp % 100;
         //backImage = GetComponentInChildren<Image>();
-        epImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.XP];
-        textNumber.text = pd.exp + "/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
+        expImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.XP];
+        textNumber.text = "" + (pd.exp % 100) + "<space=0.1em>/<space=0.1em><size=60%>100</size>";
+
+        barImage.rectTransform.anchoredPosition = Vector2.left * (1 - pd.exp / 100f) * (rt.sizeDelta.x - 15 - 27.5f);
+
+        if (pd.level >= PlayerData.GetMaxLevel())
+        {
+            barImage.rectTransform.anchoredPosition = Vector2.zero;
+        }
     }
 
     public void SetPosition()
     {
-        backImage.rectTransform.anchoredPosition = new Vector3(-80, 30, 0);
+        rt.anchoredPosition = new Vector3(-85, -28, 0);
     }
 
     // Update is called once per frame
@@ -51,12 +59,19 @@ public class EXPDisplayerScript : MonoBehaviour
         }
         lastXP = pd.exp % 100;
 
-        if (displayXPCooldown > 0)
+        if (displayXPCooldown > 0 || pd.level >= PlayerData.GetMaxLevel())
         {
-            textNumber.text = "<color=#00c0c0>" + (pd.exp % 100) + "</color>/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
+            textNumber.text = "<color=#80ffff>" + (pd.exp % 100) + "</color><space=0.1em>/<space=0.1em><size=60%>100</size>";
         } else
         {
-            textNumber.text = (pd.exp % 100) + "/<size=" + MainManager.Instance.fontSize / 2 + ">100</size>";
+            textNumber.text = "" + (pd.exp % 100) + "<space=0.1em>/<space=0.1em><size=60%>100</size>";
+        }
+
+        barImage.rectTransform.anchoredPosition = Vector2.left * (1 - pd.exp % 100 / 100f) * (rt.sizeDelta.x - 15 - 27.5f);
+
+        if (pd.level >= PlayerData.GetMaxLevel() || (pd.level == PlayerData.GetMaxLevel() - 1 && pd.exp >= 100))
+        {
+            barImage.rectTransform.anchoredPosition = Vector2.zero;
         }
     }
 }

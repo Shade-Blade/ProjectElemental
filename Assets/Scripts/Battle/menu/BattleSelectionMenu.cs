@@ -131,7 +131,7 @@ public class BattleSelectionMenu : MenuHandler
                         spsBase = pointers[0].GetComponent<SelectPointerScript>();
                     }
                     spsBase.SetText(eh.GetHighlightText(caller, possibleEntities[selectionIndex], level));
-                    spsBase.RepositionTextBelow(MainManager.Instance.WorldPosToCanvasPosProportion(spsBase.transform.position).y >= 0.8f);
+                    spsBase.RepositionTextBelow(MainManager.Instance.WorldPosToCanvasPosProportion(pointers[0].targetPos).y >= 0.8f);
                 }
 
                 /*
@@ -251,7 +251,7 @@ public class BattleSelectionMenu : MenuHandler
                         p.transform.position = startPos + Vector3.up * 3.75f;
                         SelectPointerScript sps = p.GetComponent<SelectPointerScript>();
                         sps.SetText(eh.GetHighlightText(caller, possibleEntities[i], level));
-                        sps.RepositionTextBelow(MainManager.Instance.WorldPosToCanvasPosProportion(sps.transform.position).y >= 0.8f);
+                        sps.RepositionTextBelow(MainManager.Instance.WorldPosToCanvasPosProportion(startPos).y >= 0.8f);
                         sps.targetPos = startPos;
                         pointers.Add(sps);
                     }
@@ -264,7 +264,7 @@ public class BattleSelectionMenu : MenuHandler
                     p.transform.position = startPos + Vector3.up * 3.75f;
                     SelectPointerScript sps = p.GetComponent<SelectPointerScript>();
                     sps.SetText(eh.GetHighlightText(caller, possibleEntities[selectionIndex], level));
-                    sps.RepositionTextBelow(MainManager.Instance.WorldPosToCanvasPosProportion(sps.transform.position).y >= 0.8f);
+                    sps.RepositionTextBelow(MainManager.Instance.WorldPosToCanvasPosProportion(startPos).y >= 0.8f);
                     sps.targetPos = startPos;
                     pointers.Add(sps);
                 }

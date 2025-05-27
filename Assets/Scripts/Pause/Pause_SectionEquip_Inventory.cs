@@ -123,8 +123,12 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 //which menu entry to update?
                 int selectedScriptIndex = selectedIndex - loadedTopIndex;
 
-                EquipBoxMenuEntryScript ebmes = (EquipBoxMenuEntryScript)menuEntriesS[selectedScriptIndex];
-                ebmes.Setup((RibbonMenuEntry)(menuEntries[selectedIndex]));
+                EquipBoxMenuEntryScript ebmes = null;
+                if (selectedScriptIndex >= 0 && selectedScriptIndex < menuEntriesS.Count)
+                {
+                    ebmes = (EquipBoxMenuEntryScript)menuEntriesS[selectedScriptIndex];
+                    ebmes.Setup((RibbonMenuEntry)(menuEntries[selectedIndex]));
+                }
 
                 //seek out the others?
                 if (et != BadgeMenuEntry.EquipType.None)
@@ -177,8 +181,12 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 //which menu entry to update?
                 int selectedScriptIndex = selectedIndex - loadedTopIndex;
 
-                EquipBoxMenuEntryScript ebmes = (EquipBoxMenuEntryScript)menuEntriesS[selectedScriptIndex];
-                ebmes.Setup((BadgeMenuEntry)(menuEntries[selectedIndex]));
+                EquipBoxMenuEntryScript ebmes = null;
+                if (selectedScriptIndex >= 0 && selectedScriptIndex < menuEntriesS.Count)
+                {
+                    ebmes = (EquipBoxMenuEntryScript)menuEntriesS[selectedScriptIndex];
+                    ebmes.Setup((BadgeMenuEntry)(menuEntries[selectedIndex]));
+                }
 
                 //unfortunately I still have to update everything's "can use" value (which changes based on whenever you equip or unequip badges, so you end up in this if statement)
                 for (int i = 0; i < menuEntries.Length; i++)
@@ -213,8 +221,11 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                         {
                             pbme.canUse = newCanUse;
 
-                            ebmes = (EquipBoxMenuEntryScript)menuEntriesS[newIndex];
-                            ebmes.Setup(pbme);
+                            if (ebmes != null)
+                            {
+                                ebmes = (EquipBoxMenuEntryScript)menuEntriesS[newIndex];
+                                ebmes.Setup(pbme);
+                            }
                         }
 
                         //}

@@ -21,7 +21,7 @@ MonoBehaviour:
   m_GetFontFeaturesAtRuntime: 1
   m_missingGlyphCharacter: 0
   m_warningsDisabled: 1
-  m_defaultFontAsset: {fileID: 11400000, guid: 0ba0a7979e8bd084a9e193b714a983d5, type: 2}
+  m_defaultFontAsset: {fileID: 11400000, guid: eb3fdf7a39a98b74b8857d154ba367ee, type: 2}
   m_defaultFontAssetPath: Fonts & Materials/
   m_defaultFontSize: 36
   m_defaultAutoSizeMinRatio: 0.5
@@ -31,6 +31,8 @@ MonoBehaviour:
   m_autoSizeTextContainer: 0
   m_IsTextObjectScaleStatic: 0
   m_fallbackFontAssets:
+  - {fileID: 11400000, guid: 24b213de787316c4cb823f8833ac97e6, type: 2}
+  - {fileID: 11400000, guid: 0ba0a7979e8bd084a9e193b714a983d5, type: 2}
   - {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_matchMaterialPreset: 1
   m_defaultSpriteAsset: {fileID: 11400000, guid: c41005c129ba4d66911b75229fd70b45,

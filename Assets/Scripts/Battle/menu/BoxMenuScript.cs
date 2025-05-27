@@ -11,6 +11,7 @@ public class BoxMenuScript : MonoBehaviour
     public Image downArrow;
     public Image selectorArrow;
     public Image menuBox;
+    public Image borderBox;
     public RectMask2D mask;
 
     public Image descriptorBox;
@@ -48,6 +49,6 @@ public class BoxMenuScript : MonoBehaviour
         }
         */
 
-        return Vector3.up * 70 + Vector3.down * (150 / (BoxMenu.MENU_SIZE_PER_PAGE - 1)) * relIndex;
+        return Vector3.up * 57.5f + Vector3.down * (120 / (BoxMenu.MENU_SIZE_PER_PAGE - 1)) * relIndex;
     }
 }

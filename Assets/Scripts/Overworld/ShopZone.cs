@@ -32,14 +32,14 @@ public class ShopZone : WorldZone
         {
             if (coinCounter)
             {
-                MainManager.Instance.ShowCoinCounter();
+                MainManager.Instance.ShowHUD();
             }
         }
         if (lastActive && !active)
         {
             if (coinCounter)
             {
-                MainManager.Instance.HideCoinCounter();
+                MainManager.Instance.HideHUD();
             }
             activeShopItems = null;
             if (descriptionO != null)

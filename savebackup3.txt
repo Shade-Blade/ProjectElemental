@@ -1,10 +1,10 @@
 sus
-d_rh_v0.6
+d_rh_v0.11
 GF_Recipe_SourJam:True,GF_Bestiary_Fluffling:True,GF_Bestiary_Shrublet:True,GF_Bestiary_PuffJelly:True,GF_Bestiary_Honeybud:True,GF_Bestiary_Rockling:True,GF_Bestiary_Leafling:True,GF_Recipe_CarrotSalad:True,GF_Recipe_RoastedNut:True,GF_Bestiary_Renegade:True,GF_Bestiary_LumistarSoldier:True,GF_Bestiary_Heatwing:True,GF_Bestiary_Bandit:True,GF_Bestiary_Slimebloom:True,GF_Bestiary_Slimewalker:True,GF_Bestiary_Slimeworm:True,GF_Bestiary_Embercrest:True,GF_Bestiary_Flametongue:True,GF_Bestiary_Sandswimmer:True,GF_Bestiary_SirenFish:True
 GV_PitFloor:40,GV_PitAltar:4
 GemstoneIslands,RabbitHole_RestFloor,-0.5387086|0.375|-2.798958
 3062.196
-12,0,17,30,27,30,30,24,54,679,0,0,10,32,6,6,6,44,36,115,902,579,27,17,47,42,5,8
+12,0,17,30,27,30,30,24,54,679,0,0,10,32,6,6,6,44,36,115,902,579,27,17,47,42,5,9
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,HP
 
 SleepDart|None|EnemyDrop,WarpedCookie|None|Overworld|0|44,ScaleSteak|None|EnemyDrop|0|43,Dragonfruit|None|EnemyDrop|0|42,Dragonfruit|None|EnemyDrop|0|41,LavaPepper|None|EnemyDrop|0|40,BasaltNut|None|EnemyDrop|0|36,DeliciousMeal|None|Overworld|0|27,SpicyCherry|None|Overworld|0|23,MelonJug|None|Overworld|0|21

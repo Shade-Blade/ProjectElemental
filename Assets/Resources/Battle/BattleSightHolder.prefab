@@ -32,7 +32,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6869103162195006464}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -69,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Damage Taken: 100 (100) | 100 (100) | 1000 (1000)'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0ba0a7979e8bd084a9e193b714a983d5, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 777a9fd5fc592ea4b82f4f0a91855cde, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: eb3fdf7a39a98b74b8857d154ba367ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: fb144d9f6f2e6234b96c5427a6ad1d4f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -94,8 +93,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -189,7 +188,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6869103162195006464}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -226,8 +224,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Max Damage Per Turn: 10 | 10 | 10'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0ba0a7979e8bd084a9e193b714a983d5, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 777a9fd5fc592ea4b82f4f0a91855cde, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: eb3fdf7a39a98b74b8857d154ba367ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: fb144d9f6f2e6234b96c5427a6ad1d4f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -251,8 +249,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -346,7 +344,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6869103162195006464}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -383,8 +380,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Damage Dealt: 100 (100) | 100 (100) | 1000 (1000)'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0ba0a7979e8bd084a9e193b714a983d5, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 777a9fd5fc592ea4b82f4f0a91855cde, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: eb3fdf7a39a98b74b8857d154ba367ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: fb144d9f6f2e6234b96c5427a6ad1d4f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -408,8 +405,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -503,7 +500,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6869103162195006464}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -540,8 +536,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Max Damage Single Hit: 10 | 10 | 10'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0ba0a7979e8bd084a9e193b714a983d5, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 777a9fd5fc592ea4b82f4f0a91855cde, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: eb3fdf7a39a98b74b8857d154ba367ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: fb144d9f6f2e6234b96c5427a6ad1d4f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -565,8 +561,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -663,7 +659,6 @@ RectTransform:
   - {fileID: 3512931050557565503}
   - {fileID: 5645837452036460279}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -719,7 +714,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6869103162195006464}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -756,8 +750,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Turn 1 - Battle 1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0ba0a7979e8bd084a9e193b714a983d5, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 6e9869110fb299f44ad434e602a9c683, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: eb3fdf7a39a98b74b8857d154ba367ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 1087c70f5fbbd4f4baa2bf613dd0ae9e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

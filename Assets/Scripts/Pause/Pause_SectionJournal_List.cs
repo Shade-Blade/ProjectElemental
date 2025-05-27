@@ -160,7 +160,7 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
             b.Setup(menuEntries[i + loadedTopIndex]);
         }
 
-        upArrow.enabled = false; //menuTopIndex > 0;
+        upArrow.enabled = menuTopIndex > 0;
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
 
         visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);

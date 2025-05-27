@@ -1,0 +1,23 @@
+pit test 3
+d_rh_v0.12
+GF_RandomItemModifiers:False,GF_Recipe_CarrotSalad:True,GF_Recipe_RoastedNut:True,GF_Bestiary_Sentry:True,GF_Bestiary_Bandit:True,GF_Bestiary_Slime:True,GF_Bestiary_Honeybud:True,GF_Bestiary_Sandswimmer:True,GF_Bestiary_Renegade:True,GF_Bestiary_Heatwing:True,GF_Bestiary_Slimeworm:True,GF_Bestiary_Ashcrest:True,GF_Bestiary_SpikeShroom:True,GF_Bestiary_Blazecrest:True,GF_ACH_Halfway:True,GF_Recipe_SpicyNut:True
+GV_PitFloor:50,GV_PitAltar:5
+InfernalCaldera,RabbitHole_RestFloor,-0.5610452|0.375|-2.87409
+4059.583
+14,0,36,36,17,36,36,36,58,57,0,0,10,32,6,6,6,45,44,191,1263,1030,26,15,52,52,0,8
+EP,SP,HP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP
+
+SpicyNut|None|CookSizzle|0|45,SpicyNut|None|CookSizzle|0|44,ScaleSteak|None|EnemyDrop,ScaleSteak|None|EnemyDrop,MosquitoNeedle|None|EnemyDrop|0|43,MoonlightBerry|None|Overworld|0|42,LavaPepper|None|EnemyDrop|0|40,HoneyCaramel|None|Overworld|0|37,BombJuice|None|Overworld|0|30,DeliciousMeal|None|Overworld
+
+CrystalKey|2
+SuperCurse|1,UltraCurse|2,MegaCurse|3,MultiStomp|10,ElectroStomp|14,ParalyzeStomp|20,MultiSlash|7,BoomerangSlash|36,DashThrough|26,FlipKick|19,SleepStomp|34,DazzleSmash|9,MomentumSmash|37,EPPlusC|33,RiskyShield|22,ProtectivePower|35,FirstShield|11,SpiritPower|21,ItemRebate|4,DarkPower|28,SoftPower|17,TenaciousStrikes|31,HealthRegen|6,EnergyRegen|12,Instinct|13,SweetDreams|23,RagesPower|5,RageShield|24,WeakStomach|25,DefenseSight|15,PerfectVictory|16,DecisiveVictory|8,LongRest|30,EnergySteal|32,RiskyRush|27,ProtectiveRush|38,VictorySurge|29,ItemFinder|18
+SuperCurse|1,MultiStomp|10,ElectroStomp|14,MultiSlash|7,BoomerangSlash|36,ItemRebate|4,HealthRegen|6,RagesPower|5,DefenseSight|15,DecisiveVictory|8,ProtectiveRush|38,ItemFinder|18
+SuperCurse|1,MultiStomp|10,ElectroStomp|14,MultiSlash|7,BoomerangSlash|36,ItemRebate|4,DefenseSight|15,DecisiveVictory|8,ItemFinder|18
+SharpRibbon|1,SafetyRibbon|2,ChampionRibbon|4,SlimyRibbon|5,FlashyRibbon|3
+
+
+2,0
+Luna,21,42,1,1,SafetyRibbon|2,25,606,700,11,8,138,3079.191
+RagesPower|5,ProtectiveRush|38
+Wilex,25,28,2,1,ChampionRibbon|4,19,657,330,20,15,53,938.5577
+HealthRegen|6

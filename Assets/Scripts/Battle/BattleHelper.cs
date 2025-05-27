@@ -41,7 +41,7 @@ public class Effect
     public enum EffectClass
     {
         Static,
-        Status,
+        Ailment,
         BuffDebuff,
         Token
     }
@@ -342,7 +342,7 @@ public class Effect
         }
         else if ((int)se < FIRST_BUFF_ID)
         {
-            return EffectClass.Status;
+            return EffectClass.Ailment;
         }
         else if ((int)se < FIRST_TOKEN_ID)
         {
@@ -352,6 +352,21 @@ public class Effect
         {
             return EffectClass.Token;
         }
+    }
+
+    public static bool PotencylessEffect(EffectType se)
+    {
+        switch (se)
+        {
+            case EffectType.Seal:
+            case EffectType.Immunity:
+            case EffectType.Sticky:
+            case EffectType.EffectStasis:
+            case EffectType.Ethereal:
+                return true;
+        }
+
+        return false;
     }
 
     public static bool IsBlockableDebuff(EffectType se)
@@ -972,7 +987,7 @@ public static class BattleHelper
 
         //don't use these, use the advanced formulas instead (*or just use these for the outcome check)
         Spectral =  Light | Water | Air,    
-        Soul =      Light | Earth | Fire,
+        Solar =      Light | Earth | Fire,
         Astral =    Water | Earth | Dark,
         Aether =    Dark | Fire | Air,
 
@@ -1486,13 +1501,13 @@ public static class BattleHelper
         {
             //remnant of further out camera
             //return Vector3.left * 2.0f + Vector3.right * 1.5f * id + Vector3.forward * (id + 1) * 0.15f;
-            return Vector3.left * 0.8f + Vector3.right * 0.8f * id + Vector3.forward * (id + 1) * 0.15f;
+            return Vector3.left * 0.7f + Vector3.right * 0.8f * id + Vector3.forward * (id + 1) * 0.15f;
         }
         else
         {
             //was 5 per line but 10 is easier to tell at a glance
             //Note: current setup can only really fit 4 per line (5 per line battles should be avoided anyway?)
-            return new Vector3(-0.05f, 0.0f, 0.12f) +
+            return new Vector3(0.05f, 0.0f, 0.12f) +
                 0.8f * Vector3.right * (id % 10) + 0.8f * Vector3.up * (id / 10) - 0.12f * Vector3.forward * (id % 10);
         }
     }

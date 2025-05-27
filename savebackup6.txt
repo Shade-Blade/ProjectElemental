@@ -1,0 +1,23 @@
+pit test 3
+d_rh_v0.12
+GF_RandomItemModifiers:False,GF_Recipe_CarrotSalad:True,GF_Recipe_RoastedNut:True,GF_Bestiary_Sentry:True,GF_Bestiary_Bandit:True,GF_Bestiary_Slime:True,GF_Bestiary_Honeybud:True,GF_Bestiary_Sandswimmer:True,GF_Bestiary_Renegade:True,GF_Bestiary_Heatwing:True,GF_Bestiary_Slimeworm:True,GF_Bestiary_Ashcrest:True
+GV_PitFloor:40,GV_PitAltar:4
+GemstoneIslands,RabbitHole_RestFloor,0.4969462|0.375|-1.755615
+2941.579
+11,0,30,30,30,30,30,24,24,214,0,0,10,32,6,6,6,33,24,140,797,526,26,15,41,41,0,7
+EP,SP,HP,HP,EP,SP,HP,EP,SP,HP
+
+SleepDart|None|EnemyDrop,BombFruit|None|EnemyDrop,BerrySilver|None|Overworld|0|31,BombJuice|None|Overworld|0|30,BasaltNut|None|EnemyDrop,DeliciousMeal|None|Overworld,BronzePudding|None|Overworld,BombFruit|None|Overworld,SleepDart|None|Overworld|0|23,BronzeSalad|None|Overworld|0|22
+
+CrystalKey|1
+SuperCurse|1,UltraCurse|2,MegaCurse|3,MultiStomp|10,ElectroStomp|14,ParalyzeStomp|20,MultiSlash|7,FlipKick|19,DazzleSmash|9,RiskyShield|22,FirstShield|11,SpiritPower|21,ItemRebate|4,SoftPower|17,HealthRegen|6,EnergyRegen|12,Instinct|13,SweetDreams|23,RagesPower|5,RageShield|24,WeakStomach|25,DefenseSight|15,PerfectVictory|16,DecisiveVictory|8,ItemFinder|18
+SuperCurse|1,MultiSlash|7,ItemRebate|4,HealthRegen|6,RagesPower|5,DefenseSight|15,DecisiveVictory|8,ItemFinder|18
+SuperCurse|1,MultiSlash|7,ItemRebate|4,DefenseSight|15,DecisiveVictory|8,ItemFinder|18
+SharpRibbon|1,SafetyRibbon|2,ChampionRibbon|4,FlashyRibbon|3
+
+Absorb|1
+2,0
+Luna,34,36,1,1,SafetyRibbon|2,15,443,342,11,8,95,2093.954
+RagesPower|5
+Wilex,18,24,1,1,ChampionRibbon|4,9,354,184,15,15,45,813.9239
+HealthRegen|6

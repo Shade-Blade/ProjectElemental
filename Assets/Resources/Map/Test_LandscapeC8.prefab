@@ -967,7 +967,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: water
-    battleMapName: 0
+    battleMapName: TestBattle_CrystalHills
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0
@@ -1631,6 +1631,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8505527360572074317}
   - {fileID: 6008238762951540245}
   - {fileID: 3593650766277338615}
   - {fileID: 7497351330694260296}
@@ -2114,7 +2115,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_CrystalHills
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0
@@ -6941,6 +6942,80 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 25411faeeb515a449873f83c0191da7d,
     type: 3}
   m_PrefabInstance: {fileID: 7701573998834413163}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8102916605771690818
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6786730867240316834}
+    m_Modifications:
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8580236709972728970, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+        type: 3}
+      propertyPath: m_Name
+      value: Effect_Enviro_CrystalSparkles
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3c3f2208bc2a1944384052c0d20f3d7c, type: 3}
+--- !u!4 &8505527360572074317 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 466935827212081679, guid: 3c3f2208bc2a1944384052c0d20f3d7c,
+    type: 3}
+  m_PrefabInstance: {fileID: 8102916605771690818}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8141862378239670656
 PrefabInstance:

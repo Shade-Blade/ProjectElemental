@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class DescriptionBoxScript : TextDisplayer
 {
     public Image baseBox;
+    public Image borderBox;
 
     public override void Start()
     {
@@ -14,6 +15,7 @@ public class DescriptionBoxScript : TextDisplayer
         //baseBox = GetComponentInChildren<Image>();
 
         baseBox.enabled = inputString != null && inputString.Length != 0;
+        borderBox.enabled = baseBox.enabled;
         //Debug.Log((inputString != null && inputString.Length != 0) + "1");
     }
     public override void SetTextNoFormat(string text)
@@ -22,6 +24,7 @@ public class DescriptionBoxScript : TextDisplayer
         //baseBox = GetComponentInChildren<Image>();
 
         baseBox.enabled = text != null && text.Length != 0;
+        borderBox.enabled = baseBox.enabled;
 
         //Debug.Log((text != null && text.Length != 0) + "2");
 
@@ -29,18 +32,19 @@ public class DescriptionBoxScript : TextDisplayer
 
         base.SetTextNoFormat(text);
     }
-    public override void SetText(string text, bool complete = true, bool forceOpaque = true)
+    public override void SetText(string text, bool complete = true, bool forceOpaque = true, float fontSize = -1)
     {
         //Debug.Log(text);
         //textMesh = GetComponentInChildren<TMPro.TMP_Text>();
         //baseBox = GetComponentInChildren<Image>();
 
         baseBox.enabled = text != null && text.Length != 0;
+        borderBox.enabled = baseBox.enabled;
 
         //Debug.Log((text != null && text.Length != 0) + "3");
 
         Canvas.ForceUpdateCanvases();
 
-        base.SetText(text, complete, forceOpaque);
+        base.SetText(text, complete, forceOpaque, fontSize);
     }
 }

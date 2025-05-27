@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class BoxMenu : MenuHandler
 {
-    public const int MENU_SIZE_PER_PAGE = 8;
+    public const int MENU_SIZE_PER_PAGE = 6;
     public const float HYPER_SCROLL_TIME = 0.3f;
 
     public BoxMenuEntry[] menuEntries;
@@ -127,7 +127,7 @@ public class BoxMenu : MenuHandler
         bm = menuBaseO.GetComponent<BoxMenuScript>();
 
         rectTransform = menuBaseO.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = GetMenuAnchoredPosition() + Vector2.right * 300;
+        rectTransform.anchoredPosition = GetMenuAnchoredPosition() + Vector2.left * 300;
     }
     public void PostEntriesInit()
     {
@@ -149,8 +149,8 @@ public class BoxMenu : MenuHandler
             bm.descriptorTextBox.SetText(descriptorString, true);
 
             //Resize it to fit the text
-            float height = 36;
-            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, height);
+            //float height = 22;
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, bm.descriptorTextBox.textMesh.GetRenderedValues()[1] * 1.1f + 10);
         }
         else
         {
@@ -472,11 +472,11 @@ public class BoxMenu : MenuHandler
 
     public virtual Vector3 GetSelectorPosition(Vector3 position)
     {
-        return Vector3.left * 145f + position + Vector3.up * 7.5f;
+        return Vector3.left * 140f + position + Vector3.up * 22.5f;
     }
     public static Vector2 GetMenuAnchoredPosition()
     {
-        return Vector2.left * 190f + Vector2.up * 128f;
+        return Vector2.right * 200f + Vector2.down * 260f;
     }
 
     /*

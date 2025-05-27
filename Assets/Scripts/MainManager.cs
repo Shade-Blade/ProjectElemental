@@ -2429,7 +2429,7 @@ public class MainManager : MonoBehaviour
     //public const int MAP_VAR_COUNT = 8;
 
     public OverworldHUDScript curOverworldHUD;
-    public bool showCoins;
+    public bool showHud;
     public float hudShowTime;
     public int lastCoinCount;
     public const float HUD_MIN_SHOW_TIME = 1f;  //when you get coins and stuff it shows the hud for some time
@@ -2485,6 +2485,7 @@ public class MainManager : MonoBehaviour
 
 
         GF_RandomItemModifiers,
+        GF_RandomStatuses,
 
         GF_QuestStart_Prologue_Test,
         GF_QuestComplete_Prologue_Test,
@@ -2853,6 +2854,8 @@ public class MainManager : MonoBehaviour
 
     public enum Sound
     {
+        None,       //Placeholder for no sound, do not fill it with a none soundfile
+
         Menu_Select,
         Menu_Cancel,
         Menu_Error, //pressing an invalid option
@@ -2860,8 +2863,10 @@ public class MainManager : MonoBehaviour
         Menu_Unpause,
         Menu_Open,
         Menu_Close,
-        Menu_Equip,
-        Menu_Unequip,
+        Menu_EquipBadge,
+        Menu_UnequipBadge,
+        Menu_EquipRibbon,
+        Menu_UnequipRibbon,
         Menu_ScrollUp,  
         Menu_ScrollDown,
         Menu_BigScrollUp,
@@ -2871,7 +2876,16 @@ public class MainManager : MonoBehaviour
         Menu_BSwap,
         Menu_CharacterSwap,
         Menu_Save,
+        Menu_LivelyBud,
 
+        SFX_Pickup_Coin,    //same as SFX_Coins below?
+        SFX_Pickup_Shard,
+        SFX_Pickup_Item,
+        SFX_Pickup_KeyItem,
+        SFX_Pickup_Badge,
+        SFX_Pickup_Ribbon,
+
+        SFX_Item_Use,
         SFX_Item_Throw,
         SFX_Item_Bite,
         SFX_Item_Gulp,
@@ -2884,11 +2898,123 @@ public class MainManager : MonoBehaviour
         SFX_Buff,
         SFX_Debuff,
         SFX_EffectWearOff,
+        SFX_Ailment,
+        SFX_AilmentTooEarly,
         SFX_Immunity,
         SFX_Seal,
         SFX_Cure,
         SFX_Cleanse,
 
+        SFX_HPDrain,
+        SFX_EPDrain,
+
+        SFX_Effect_AttackBoost,
+        SFX_Effect_DefenseBoost,
+        SFX_Effect_EnduranceBoost,
+        SFX_Effect_AgilityBoost,
+        SFX_Effect_MaxHPBoost,
+        SFX_Effect_MaxEPBoost,
+        SFX_Effect_MaxSEBoost,
+        SFX_Effect_Swift,
+
+        SFX_Effect_AttackReduction,
+        SFX_Effect_DefenseReduction,
+        SFX_Effect_EnduranceReduction,
+        SFX_Effect_AgilityReduction,
+        SFX_Effect_MaxHPReduction,
+        SFX_Effect_MaxEPReduction,
+        SFX_Effect_MaxSEReduction,
+        SFX_Effect_Slow,
+
+        SFX_Effect_Berserk,
+        SFX_Effect_Sleep,
+        SFX_Effect_Poison,
+        SFX_Effect_Freeze,
+        SFX_Effect_Dizzy,
+        SFX_Effect_Paralyze,
+        SFX_Effect_Soulbleed,
+        SFX_Effect_Sunflame,
+        SFX_Effect_Brittle,
+        SFX_Effect_Inverted,
+        SFX_Effect_Dread,
+        SFX_Effect_ArcDischarge,
+        SFX_Effect_TimeStop,
+        SFX_Effect_Exhausted,
+        SFX_Effect_Splotch,
+
+        SFX_Effect_AttackUp,
+        SFX_Effect_DefenseUp,
+        SFX_Effect_EnduranceUp,
+        SFX_Effect_AgilityUp,
+        SFX_Effect_FlowUp,
+        SFX_Effect_HealthRegen,
+        SFX_Effect_EnergyRegen,
+        SFX_Effect_SoulRegen,
+        SFX_Effect_Hustle,
+        SFX_Effect_EffectStasis,
+        SFX_Effect_Immunity,
+        SFX_Effect_Ethereal,
+        SFX_Effect_Illuminate,
+        SFX_Effect_MistWall,
+        SFX_Effect_AstralWall,
+        SFX_Effect_ParryAura,
+        SFX_Effect_BolsterAura,
+        SFX_Effect_AstralRecovery,
+        SFX_Effect_Elusive,
+        SFX_Effect_CounterFlare,
+        SFX_Effect_Supercharge,
+        SFX_Effect_QuantumShield,
+        SFX_Effect_Soften,
+
+        SFX_Effect_AttackDown,
+        SFX_Effect_DefenseDown,
+        SFX_Effect_EnduranceDown,
+        SFX_Effect_AgilityDown,
+        SFX_Effect_FlowDown,
+        SFX_Effect_HealthLoss,
+        SFX_Effect_EnergyLoss,
+        SFX_Effect_SoulLoss,
+        SFX_Effect_Sluggish,
+        SFX_Effect_DrainSprout,
+        SFX_Effect_BoltSprout,
+        SFX_Effect_Seal,
+        SFX_Effect_Sticky,
+        SFX_Effect_DamageOverTime,
+
+        SFX_Effect_Focus,
+        SFX_Effect_Absorb,
+        SFX_Effect_Burst,
+        SFX_Effect_Haste,
+        SFX_Effect_BonusTurns,
+        SFX_Effect_Awaken,
+        SFX_Effect_Miracle,
+        SFX_Effect_Freebie,
+        SFX_Effect_ItemBoost,  //1 = 1.33, 2 = 1.5, 3 = 2
+
+        SFX_Effect_Defocus,
+        SFX_Effect_Sunder,
+        SFX_Effect_Enervate,
+        SFX_Effect_Hamper,
+        SFX_Effect_Cooldown,
+        SFX_Effect_Disorient,
+
+        SFX_EffectActivate_DrainSprout,
+        SFX_EffectActivate_BoltSprout,
+        SFX_EffectActivate_CounterFlare,
+        SFX_EffectActivate_ArcDischarge,
+        SFX_EffectActivate_AstralWall,      //only after it caps
+        SFX_EffectActivate_AstralRecovery,
+        SFX_EffectActivate_QuantumShield,
+        SFX_EffectActivate_ParryAura,
+        SFX_EffectActivate_BolsterAura,
+        SFX_EffectActivate_Illuminate,
+        SFX_EffectActivate_Splotch,
+        SFX_EffectActivate_Brittle,
+        SFX_EffectActivate_Elusive,
+        SFX_EffectActivate_Miracle,
+
+        SFX_AC_Success,
+        SFX_AC_Fail,
         SFX_AC_Nice,
         SFX_AC_Good,
         SFX_AC_Great,
@@ -2896,9 +3022,10 @@ public class MainManager : MonoBehaviour
 
         SFX_Hit_Immune,
         SFX_Hit_Absorb,
+        SFX_Hit_Miss,           //bad naming but ehh
         SFX_Hit_Block,
-        SFX_Hit_BlockSpecial,
-        SFX_Hit_BlockPerfect,
+        SFX_Hit_BlockSpecial,   //Layers over Block sound (except for the non-damage reducing blocks)
+        SFX_Hit_BlockPerfect,   //Layers over Block sound
         SFX_Hit_Normal,
         SFX_Hit_Light,
         SFX_Hit_Water,
@@ -2922,6 +3049,24 @@ public class MainManager : MonoBehaviour
         SFX_Hit_EarthCrit,
         SFX_Hit_PrismaticCrit,
         SFX_Hit_VoidCrit,
+
+        SFX_Talk_Generic,
+        SFX_Talk_Rabbit,
+        SFX_Talk_Hawk,
+        SFX_Talk_Sparrow,
+        SFX_Talk_Flamecrest,
+        SFX_Talk_Flametongue,
+        SFX_Talk_Plateshell,
+        SFX_Talk_Frog,
+        SFX_Talk_Jellyfish,
+        SFX_Talk_Mosquito,
+        SFX_Talk_Plaguebud,
+
+        SFX_NPCSquish,
+        SFX_EnemyAlert,
+        SFX_EnemyReact,
+        SFX_EnemyDie,
+        SFX_PlayerDie,
 
     }
     public enum SoundType
@@ -3026,10 +3171,13 @@ public class MainManager : MonoBehaviour
         CrystalCity,
         CrystalCitadel,
         RealmOfPossibility,
+        EdgeOfPossibility,
         VerdantForest,
+        Swamproot,
         SacredGrove,
         TrialOfSimplicity,
         TempestDesert,
+        Windspire,
         BanditCaverns,
         HiddenOasis,
         TrialOfHaste,
@@ -3038,9 +3186,11 @@ public class MainManager : MonoBehaviour
         SapphireAtoll,
         TrialOfPatience,
         InfernalCaldera,
+        Pyroguard,
         MoltenPit,
         TrialOfZeal,
         ShroudedValley,
+        Foulbank,
         SinisterCave,
         TrialOfAmbition,
         RadiantPlateau,
@@ -3048,11 +3198,13 @@ public class MainManager : MonoBehaviour
         RadiantPeak,
         TrialOfResolve,
         AetherTrench,
+        Metalmaw,
         MoltenTitan,
         GoldenPort,
         ForsakenMountains,
         ForsakenPass,
-        ForsakenPeak
+        HiddenVillage,
+        ForsakenPeak,
     }
     public enum MapID
     {
@@ -3106,17 +3258,18 @@ public class MainManager : MonoBehaviour
     }
     
     //characters you can control
+    //note: matches SpriteID numbering
     public enum PlayerCharacter
     {
-        Wilex = 0,
-        Luna = 1
+        Wilex = 1,
+        Luna = 2
     }
     public enum SpriteID
     {
-        Default = -1,   //error condition
+        None = 0,   //error condition
 
-        Wilex = 0,
-        Luna = 1,
+        Wilex = 1,
+        Luna,
         Keru,
         Aster,
         Leafling,
@@ -3357,12 +3510,16 @@ public class MainManager : MonoBehaviour
         Dead,   //not really used in most cases
     }
 
+    //random boilerplate stuff copied all over the place
     public enum CommonTextLine
     {
-        HP,
-        EP,
-        SP,
-        Coin,
+        None,
+        ExplainLight,
+        ExplainDark,
+        ExplainWater,
+        ExplainFire,
+        ExplainEarth,
+        ExplainAir,
     }
 
     //Nonstatic methods
@@ -3911,6 +4068,333 @@ public class MainManager : MonoBehaviour
                 yield break;
         }
     }
+    public void PickupInstant(PickupUnion pu)
+    {
+        if (pu.type == PickupUnion.PickupType.KeyItem && pu.keyItem.type == KeyItem.KeyItemType.CrystalKey)
+        {
+            if (playerData.CountKeyItemStacking(KeyItem.KeyItemType.CrystalKey) >= 4)
+            {
+                AwardAchievement(Achievement.ACH_KeyHoarder);
+            }
+        }
+
+        if (pu.type == PickupUnion.PickupType.Ribbon && pu.ribbon.type == Ribbon.RibbonType.DiamondRibbon)
+        {
+            AwardAchievement(Achievement.ACH_DiamondRibbon);
+        }
+
+        switch (pu.type)
+        {
+            case PickupUnion.PickupType.None:
+                break;
+            case PickupUnion.PickupType.Coin:
+                playerData.coins++;
+                if (playerData.coins > PlayerData.MAX_MONEY)
+                {
+                    playerData.coins = PlayerData.MAX_MONEY;
+                }
+                break;
+            case PickupUnion.PickupType.SilverCoin:
+                playerData.coins += 5;
+                if (playerData.coins > PlayerData.MAX_MONEY)
+                {
+                    playerData.coins = PlayerData.MAX_MONEY;
+                }
+                break;
+            case PickupUnion.PickupType.GoldCoin:
+                playerData.coins += 25;
+                if (playerData.coins > PlayerData.MAX_MONEY)
+                {
+                    playerData.coins = PlayerData.MAX_MONEY;
+                }
+                break;
+            case PickupUnion.PickupType.Shard:
+                playerData.shards++;
+                playerData.cumulativeShards++;
+                break;
+            case PickupUnion.PickupType.Item:
+                //playerData.itemInventory.Add(pu.item);
+                bool a = true;
+                if (pu.item.type != Item.ItemType.None)
+                {
+                    a = playerData.AddItem(pu.item);
+                }
+                break;
+            case PickupUnion.PickupType.KeyItem:
+                if (KeyItem.IsStackable(pu.keyItem) && pu.keyItem.bonusData == 0)
+                {
+                    Debug.Log("Stackable Key Item Count: 0 to 1");
+                    pu.keyItem.bonusData = 1;
+                }
+                if (pu.keyItem.type != KeyItem.KeyItemType.None)
+                {
+                    if (KeyItem.IsStackable(pu.keyItem))
+                    {
+                        playerData.AddKeyItemStacking(pu.keyItem);
+                    }
+                    else
+                    {
+                        playerData.AddKeyItem(pu.keyItem);
+                    }
+                }
+                break;
+            case PickupUnion.PickupType.Badge:
+                if (pu.badge.type != Badge.BadgeType.None)
+                {
+                    playerData.AddBadge(pu.badge);
+                    if (Cheat_TooManyBadges)
+                    {
+                        playerData.AddBadge(pu.badge);
+                    }
+                }
+                break;
+            case PickupUnion.PickupType.Ribbon:
+                //playerData.ribbonInventory.Add(pu.ribbon);
+                if (pu.ribbon.type != Ribbon.RibbonType.None)
+                {
+                    playerData.AddRibbon(pu.ribbon);
+                }
+                break;
+            case PickupUnion.PickupType.Misc:
+                //Hardcoded what this does
+                PlayerData.PlayerDataEntry pde;
+                switch (pu.misc)
+                {
+                    case MiscSprite.MysteryItem:
+                        //Transform into the item to give to you
+                        Item.ItemType it;
+                        while (true)
+                        {
+                            it = (Item.ItemType)RandomGenerator.GetIntRange(0, 256);
+                            if (!Item.GetItemDataEntry(it).isRecipe)
+                            {
+                                break;
+                            }
+                        }
+                        bool mi = true;
+                        pu.type = PickupUnion.PickupType.Item;
+                        pu.item = new Item(it, Item.ItemModifier.None);
+                        if (pu.item.type != Item.ItemType.None)
+                        {
+                            mi = playerData.AddItem(pu.item);
+                        }
+                        break;
+                    case MiscSprite.MysteryRecipe:
+                        Item.ItemType rt;
+                        while (true)
+                        {
+                            rt = (Item.ItemType)RandomGenerator.GetIntRange(1, (int)Item.ItemType.EndOfTable);
+                            if (Item.GetItemDataEntry(rt).isRecipe)
+                            {
+                                break;
+                            }
+                        }
+                        bool mr = true;
+                        pu.type = PickupUnion.PickupType.Item;
+                        pu.item = new Item(rt, Item.ItemModifier.None);
+                        if (pu.item.type != Item.ItemType.None)
+                        {
+                            mr = playerData.AddItem(pu.item);
+                        }
+                        break;
+                    case MiscSprite.MysteryBadge:
+                        pu.badge.type = (Badge.BadgeType)RandomGenerator.GetIntRange(1, (int)Badge.BadgeType.EndOfTable);
+                        pu.type = PickupUnion.PickupType.Badge;
+                        if (pu.badge.type != Badge.BadgeType.None)
+                        {
+                            playerData.AddBadge(pu.badge);
+                            if (Cheat_TooManyBadges)
+                            {
+                                playerData.AddBadge(pu.badge);
+                            }
+                        }
+                        break;
+                    case MiscSprite.MysteryRibbon:
+                        pu.ribbon.type = (Ribbon.RibbonType)RandomGenerator.GetIntRange(1, (int)Ribbon.RibbonType.EndOfTable); ;
+                        pu.type = PickupUnion.PickupType.Ribbon;
+                        if (pu.ribbon.type != Ribbon.RibbonType.None)
+                        {
+                            playerData.AddRibbon(pu.ribbon);
+                        }
+                        break;
+                    case MiscSprite.NoItem:
+                    case MiscSprite.NoRecipe:
+                    case MiscSprite.NoBadge:
+                    case MiscSprite.NoRibbon:
+                        break;
+                    case MiscSprite.AbilitySlash:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 0)
+                            {
+                                pde.weaponLevel = 0;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilitySlash2:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 1)
+                            {
+                                pde.weaponLevel = 1;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilitySlash3:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 2)
+                            {
+                                pde.weaponLevel = 2;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilityAetherize:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 2)
+                            {
+                                pde.weaponLevel = 2;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilityDoubleJump:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.jumpLevel < 1)
+                            {
+                                pde.jumpLevel = 1;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilitySuperJump:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Wilex);
+                        if (pde != null)
+                        {
+                            if (pde.jumpLevel < 2)
+                            {
+                                pde.jumpLevel = 2;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilitySmash:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 0)
+                            {
+                                pde.weaponLevel = 0;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilitySmash2:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 1)
+                            {
+                                pde.weaponLevel = 1;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilitySmash3:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 2)
+                            {
+                                pde.weaponLevel = 2;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilityIlluminate:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.weaponLevel < 2)
+                            {
+                                pde.weaponLevel = 2;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilityDashHop:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.jumpLevel < 1)
+                            {
+                                pde.jumpLevel = 1;
+                            }
+                        }
+                        break;
+                    case MiscSprite.AbilityDig:
+                        pde = playerData.GetPlayerDataEntry(BattleHelper.EntityID.Luna);
+                        if (pde != null)
+                        {
+                            if (pde.jumpLevel < 2)
+                            {
+                                pde.jumpLevel = 2;
+                            }
+                        }
+                        break;
+                    case MiscSprite.Health6:
+                        playerData.HealHealth(6);
+                        break;
+                    case MiscSprite.Health12:
+                        playerData.HealHealth(12);
+                        break;
+                    case MiscSprite.Health30:
+                        playerData.HealHealth(30);
+                        break;
+                    case MiscSprite.Health60:
+                        playerData.HealHealth(60);
+                        break;
+                    case MiscSprite.Energy6:
+                        playerData.HealEnergy(6);
+                        break;
+                    case MiscSprite.Energy12:
+                        playerData.HealEnergy(12);
+                        break;
+                    case MiscSprite.Energy30:
+                        playerData.HealEnergy(30);
+                        break;
+                    case MiscSprite.Energy60:
+                        playerData.HealEnergy(60);
+                        break;
+                    case MiscSprite.Soul6:
+                        playerData.HealSoul(6);
+                        break;
+                    case MiscSprite.Soul12:
+                        playerData.HealSoul(12);
+                        break;
+                    case MiscSprite.Soul30:
+                        playerData.HealSoul(30);
+                        break;
+                    case MiscSprite.Soul60:
+                        playerData.HealSoul(60);
+                        break;
+                    case MiscSprite.XP10:
+                        playerData.AddXP(10);
+                        break;
+                    case MiscSprite.XP25:
+                        playerData.AddXP(25);
+                        break;
+                    case MiscSprite.XP50:
+                        playerData.AddXP(50);
+                        break;
+                    case MiscSprite.XP99:
+                        playerData.AddXP(99);
+                        break;
+                }
+                break;
+        }
+    }
+
     public IEnumerator GetItemPopup(PickupUnion pu)
     {
         GetItemPopupMenuScript gipms = GetItemPopupMenuScript.BuildMenu(pu);
@@ -4509,6 +4993,23 @@ public class MainManager : MonoBehaviour
 
         return Vector3.positiveInfinity;
     }
+    public Vector3 WorldPosCameraTopEdge(Vector3 wpos, float offset)
+    {
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.camera, wpos);
+        screenPos.y = Screen.height - offset;
+        Ray r = RectTransformUtility.ScreenPointToRay(Camera.camera, screenPos);
+
+        //Plane containing target point perpendicular to camrea
+        Plane p = new Plane(Camera.transform.forward, wpos);
+
+        //ray intersection of ray and plane
+        if (p.Raycast(r, out float enter))
+        {
+            return r.GetPoint(enter);
+        }
+
+        return Vector3.positiveInfinity;
+    }
     public Vector2 WorldPosToCanvasPosB(Vector3 wpos)   //not sure how this is different from above. Possibly occurs due to anchor positioning acting weird for some reason
     {
         //actually: probably because it is just WorldToScreenPoint since the multiplication and division cancel out
@@ -4812,6 +5313,9 @@ public class MainManager : MonoBehaviour
                 eef.disableMovement = disableMovement;
                 break;
             case WorldLocation.CrystalHills:
+                go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_CrystalSparkles"), parent);
+                eef = go.GetComponent<EffectEnviroFollower>();
+                eef.disableMovement = disableMovement;
                 break;
             case WorldLocation.ForsakenMountains:
                 go = Instantiate((GameObject)Resources.Load("VFX/Environmental/Effect_Enviro_AstralDots"), parent);
@@ -5198,7 +5702,7 @@ public class MainManager : MonoBehaviour
         weaponColors[3] = new Color[] { new Color(0.4f, -2f, 0f, 1), new Color(0.65f, 0f, 0.1f, 1), new Color(0.8f, 0f, 0.15f, 1), new Color(1f, 0.2f, 0.3f, 1) };
         weaponColors[4] = new Color[] { new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0) };
         weaponColors[5] = new Color[] { new Color(0.42f, 0.34f, 0.24f, 1), new Color(0.54f, 0.44f, 0.32f, 1), new Color(0.68f, 0.57f, 0.43f, 1), new Color(0.84f, 0.74f, 0.62f, 1) };
-        weaponColors[6] = new Color[] { new Color(0.48f, 0.51f, 0.56f, 0), new Color(0.74f, 0.75f, 0.76f, 1), new Color(0.87f, 0.88f, 0.89f, 1), new Color(1f, 1f, 1f, 1) };
+        weaponColors[6] = new Color[] { new Color(0.48f, 0.51f, 0.56f, 1), new Color(0.74f, 0.75f, 0.76f, 1), new Color(0.87f, 0.88f, 0.89f, 1), new Color(1f, 1f, 1f, 1) };
         weaponColors[7] = new Color[] { new Color(0.53f, 0.46f, 0.22f, 1), new Color(1f, 0.9f, 0.5f, 1), new Color(1.3f, 1.2f, 0.6f, 1), new Color(1.4f, 1.3f, 0.82f, 1) };
     }
 
@@ -5376,7 +5880,7 @@ public class MainManager : MonoBehaviour
             }
 
             //Debug.Log(showCoins + " " + (hudShowTime) + " " + (idleTime));
-            if (showCoins || hudShowTime > 0 || idleTime > 2)
+            if (showHud || hudShowTime > 0 || idleTime > 2)
             {
                 curOverworldHUD.settableFadeIn = 1;
             }
@@ -5465,7 +5969,7 @@ public class MainManager : MonoBehaviour
     public bool StartGlobalCutscenes()
     {
         //todo: make it a real file
-        string[][] fileCodeText = new string[7][];
+        string[][] fileCodeText = new string[8][];
         fileCodeText[0] = new string[1];
         fileCodeText[0][0] = "<system>File Code Greed: Your Max HP is capped at a low value, but you have infinite money and start with many Shield badges. Many badges relating to health or coins will be replaced with other badges.";
         fileCodeText[1] = new string[1];
@@ -5479,7 +5983,9 @@ public class MainManager : MonoBehaviour
         fileCodeText[5] = new string[1];
         fileCodeText[5][0] = "<system>File Code Pride: Failed action commands for attacking moves deal half damage, and failing to block causes you to take 50% more damage. Action commands and blocking are more difficult.";
         fileCodeText[6] = new string[1];
-        fileCodeText[6][0] = "<system>File Code Randomizer: Randomizes the locations of badges and ribbons.";
+        fileCodeText[6][0] = "<system>File Code Lust: Status effects last 50% longer. Ailments are harder to resist (blocking no longer reduces duration). Each damage type inflicts a certain Ailment corresponding to that element.";
+        fileCodeText[7] = new string[1];
+        fileCodeText[7][0] = "<system>File Code Randomizer: Randomizes the locations of badges and ribbons.";
 
         if (GetGlobalFlag(GlobalFlag.GF_FileCode_Greed) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Greed))
         {
@@ -5523,9 +6029,16 @@ public class MainManager : MonoBehaviour
             return true;
         }
 
-        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Randomizer) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Randomizer))
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Lust) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Lust))
         {
             StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 6));
+            SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Lust);
+            return true;
+        }
+
+        if (GetGlobalFlag(GlobalFlag.GF_FileCode_Randomizer) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Randomizer))
+        {
+            StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 7));
             SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Randomizer);
             return true;
         }
@@ -5702,7 +6215,7 @@ public class MainManager : MonoBehaviour
 
     public void LoadBaseAssets()
     {
-        font = Resources.Load<Font>("Fonts & Materials/Rubik-SemiBold");
+        font = Resources.Load<Font>("Fonts & Materials/ShantellSans-Bold");
 
         //there isn't a good reason why it's in the battle folder
         overworldHUD = Resources.Load<GameObject>("Battle/Overworld HUD");
@@ -6176,6 +6689,11 @@ public class MainManager : MonoBehaviour
         if (name.Equals("Sloth"))
         {
             return GlobalFlag.GF_FileCode_Sloth;
+        }
+
+        if (name.Equals("Lust"))
+        {
+            return GlobalFlag.GF_FileCode_Lust;
         }
 
         if (name.Equals("Randomizer"))
@@ -6965,7 +7483,7 @@ public class MainManager : MonoBehaviour
     public void LoadMap(MapID mapName, int exit, Vector3 offsetPos = default, float yawOffset = 0)
     {
         ResetHUD();
-        showCoins = false;
+        showHud = false;
         MapScript ms = CreateMap(mapName);
         mapScript = ms;
         ms.MapInit();
@@ -7283,16 +7801,16 @@ public class MainManager : MonoBehaviour
     }
 
 
-    public void ShowCoinCounter()
+    public void ShowHUD()
     {
         //Debug.Log("Show coins: " + playerData.coins);
-        showCoins = true;
+        showHud = true;
     }
 
-    public void HideCoinCounter()
+    public void HideHUD()
     {
         //Debug.Log("Hide coins");
-        showCoins = false;
+        showHud = false;
     }
 
 
@@ -7485,7 +8003,7 @@ public class MainManager : MonoBehaviour
         {
             return SoundType.Music;
         }
-        if (soundName.Contains("System") || soundName.Contains("Menu"))
+        if (soundName.Contains("System") || soundName.Contains("Menu") || soundName.Contains("AC"))
         {
             return SoundType.System;
         }
@@ -7497,15 +8015,15 @@ public class MainManager : MonoBehaviour
         return SoundType.SFX;
     }
 
-    public void PlaySound(GameObject parent, Sound s, float pitch = 1)
+    public void PlaySound(GameObject parent, Sound s, float pitch = 1, float randomDeviance = 0f)
     {
-        StartCoroutine(PlaySoundCoroutine(parent, s, pitch));
+        StartCoroutine(PlaySoundCoroutine(parent, s, pitch, randomDeviance));
     }
-    public IEnumerator PlaySoundCoroutine(GameObject parent, Sound s, float pitch = 1)
+    public IEnumerator PlaySoundCoroutine(GameObject parent, Sound s, float pitch = 1, float randomDeviance = 0f)
     {
         if (parent == null)
         {
-            yield return StartCoroutine(PlayGlobalSoundCoroutine(s, pitch));
+            yield return StartCoroutine(PlayGlobalSoundCoroutine(s, pitch, randomDeviance));
             yield break;
         }
 
@@ -7518,7 +8036,7 @@ public class MainManager : MonoBehaviour
 
         //Wait until done
         aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
-        aso.pitch = pitch;
+        aso.pitch = pitch + RandomGenerator.GetRange(-randomDeviance, randomDeviance);
         aso.Play();
 
         while (aso.isPlaying)
@@ -7546,12 +8064,12 @@ public class MainManager : MonoBehaviour
     }
 
 
-    public void PlayGlobalSound(Sound s, float pitch = 1)
+    public void PlayGlobalSound(Sound s, float pitch = 1, float randomDeviance = 0f)
     {
         StartCoroutine(PlayGlobalSoundCoroutine(s, pitch));
     }
     //Sound stuff
-    public IEnumerator PlayGlobalSoundCoroutine(Sound s, float pitch = 1)
+    public IEnumerator PlayGlobalSoundCoroutine(Sound s, float pitch = 1, float randomDeviance = 0f)
     {
         AudioSource aso = gameObject.AddComponent<AudioSource>();
 
@@ -7561,7 +8079,7 @@ public class MainManager : MonoBehaviour
 
         //Wait until done
         aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
-        aso.pitch = pitch;
+        aso.pitch = pitch + RandomGenerator.GetRange(-randomDeviance, randomDeviance);
         aso.Play();
 
         while (aso.isPlaying)
@@ -7595,6 +8113,16 @@ public class MainManager : MonoBehaviour
             SoundType st = GetSoundType(aso.clip.name);
             aso.volume = GetSoundMultiplier(st);
         }
+    }
+
+    public static Sound SpriteIDToBleepSound(SpriteID spriteID)
+    {
+        //todo: replace default with some generic text
+        return Sound.SFX_Talk_Generic;
+    }
+    public static float SpriteIDToBleepPitch(SpriteID spriteID)
+    {
+        return 1;
     }
 
 

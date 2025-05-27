@@ -160,6 +160,7 @@ public class TMPString
                 {
                     if (tag.args == null || tag.args.Length == 0)
                     {
+                        output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold Outline\"><color=#ffffff>";
                         break;
                     }
                     ColorNames color;
@@ -168,7 +169,70 @@ public class TMPString
                         tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
                     }
 
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold Outline\"><color=" + tag.args[0] + ">";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold Outline\"><color=" + tag.args[0] + ">";
+                }
+                break;
+            case TagEntry.TextTag.GrayOutline:
+                if (!tag.open)
+                {
+                    output = "</color></font>";
+                }
+                else
+                {
+                    if (tag.args == null || tag.args.Length == 0)
+                    {
+                        output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold Gray Outline\"><color=#ffffff>";
+                        break;
+                    }
+                    ColorNames color;
+                    if (Enum.TryParse(tag.args[0], out color))
+                    {
+                        tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
+                    }
+
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold Gray Outline\"><color=" + tag.args[0] + ">";
+                }
+                break;
+            case TagEntry.TextTag.ColorDarkOutline:
+                if (!tag.open)
+                {
+                    output = "</color></font>";
+                }
+                else
+                {
+                    if (tag.args == null || tag.args.Length == 0)
+                    {
+                        output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold ColorMatchDark Outline\"><color=#ffffff>";
+                        break;
+                    }
+                    ColorNames color;
+                    if (Enum.TryParse(tag.args[0], out color))
+                    {
+                        tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
+                    }
+
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold ColorMatchDark Outline\"><color=" + tag.args[0] + ">";
+                }
+                break;
+            case TagEntry.TextTag.ColorOutline:
+                if (!tag.open)
+                {
+                    output = "</color></font>";
+                }
+                else
+                {
+                    if (tag.args == null || tag.args.Length == 0)
+                    {
+                        output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold ColorMatch Outline\"><color=#ffffff>";
+                        break;
+                    }
+                    ColorNames color;
+                    if (Enum.TryParse(tag.args[0], out color))
+                    {
+                        tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
+                    }
+
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold ColorMatch Outline\"><color=" + tag.args[0] + ">";
                 }
                 break;
             case TagEntry.TextTag.Underlay:
@@ -188,7 +252,7 @@ public class TMPString
                         tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
                     }
 
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold Underlay\"><color=" + tag.args[0] + ">";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold Underlay\"><color=" + tag.args[0] + ">";
                 }
                 break;
             case TagEntry.TextTag.ChaoticUnderlay:
@@ -208,7 +272,7 @@ public class TMPString
                         tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
                     }
 
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold Chaotic\"><color=" + tag.args[0] + ">";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold Chaotic\"><color=" + tag.args[0] + ">";
                 }
                 break;
             case TagEntry.TextTag.Metallic:
@@ -228,7 +292,7 @@ public class TMPString
                         tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
                     }
 
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold Metallic\"><color=" + tag.args[0] + ">";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold Metallic\"><color=" + tag.args[0] + ">";
                 }
                 break;
             case TagEntry.TextTag.Iridescent:
@@ -248,7 +312,7 @@ public class TMPString
                         tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
                     }
 
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold Iridescent\"><color=" + tag.args[0] + ">";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold Iridescent\"><color=" + tag.args[0] + ">";
                 }
                 break;
             case TagEntry.TextTag.Effect:
@@ -398,7 +462,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkGreen Outline + Overlay\"><color=#00ff00>";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold DarkGreen Outline + Overlay\"><color=#00ff00>";
                 }
                 break;
             case TagEntry.TextTag.HighlightNoColor:
@@ -408,7 +472,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkRed Outline + Overlay\"><color=#ff0000>";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold DarkRed Outline + Overlay\"><color=#ff0000>";
                 }
                 break;
             case TagEntry.TextTag.HighlightDangerColor:
@@ -418,7 +482,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkOrange Outline + Overlay\"><color=#ff8000>";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold DarkOrange Outline + Overlay\"><color=#ff8000>";
                 }
                 break;
             case TagEntry.TextTag.DescriptionWarnColor:
@@ -428,7 +492,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<color=#e80000>";
+                    output = "<color=#e02060>";
                 }
                 break;
             case TagEntry.TextTag.DescriptionCautionColor:
@@ -458,7 +522,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<color=#a0a0a0>";
+                    output = "<color=#808080>";
                 }
                 break;
             case TagEntry.TextTag.HighlightHPColor:
@@ -468,7 +532,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkGreen Outline + Overlay\"><color=#00ff00>";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold DarkGreen Outline + Overlay\"><color=#00ff00>";
                 }
                 break;
             case TagEntry.TextTag.HighlightEPColor:
@@ -478,7 +542,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkYellow Outline + Overlay\"><color=#ffff00>";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold DarkYellow Outline + Overlay\"><color=#ffff00>";
                 }
                 break;
             case TagEntry.TextTag.HighlightSEColor:
@@ -488,7 +552,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkMagenta Outline + Overlay\"><color=#ff00ff>";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold DarkMagenta Outline + Overlay\"><color=#ff00ff>";
                 }
                 break;
             case TagEntry.TextTag.HighlightSTColor:
@@ -498,7 +562,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold DarkMint Outline + Overlay\"><color=#a0ffa0>";
+                    output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold DarkMint Outline + Overlay\"><color=#a0ffa0>";
                 }
                 break;
             case TagEntry.TextTag.Sprite:
@@ -862,6 +926,9 @@ public class TagEntry
 
         //things that use materials
         Outline,    //outline text
+        GrayOutline,    //outline text
+        ColorDarkOutline,    //outline text
+        ColorOutline,    //outline text
         Underlay,   //underlay text
         ChaoticUnderlay,    //chaotic underlay
         Metallic,   //metallic
@@ -1972,10 +2039,19 @@ public class FormattedString
                     if (tags[i].args.Length > 0 && int.TryParse(tags[i].args[0], out n1))
                     {
 
+                    } else
+                    {
+                        if (tags[i].args.Length > 0 && Enum.TryParse(tags[i].args[0], true, out MainManager.CommonTextLine ctl))
+                        {
+                            n1 = (int)ctl;
+                        }
                     }
                     if (tags[i].args.Length > 1 && int.TryParse(tags[i].args[1], out n2))
                     {
 
+                    } else
+                    {
+                        n2 = 1;
                     }
                     insert = MainManager.Instance.GetTextFromFile(MainManager.Instance.commonText, n1, n2);
                     break;

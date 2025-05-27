@@ -26,7 +26,7 @@ public class OverworldHUDScript : MonoBehaviour
 
     public List<GameObject> statDisplayers;
 
-    public const float FADE_IN_DISTANCE = 100;
+    public const float FADE_IN_DISTANCE = 150;
 
     public float settableFadeIn;
     public float fadein;
@@ -43,18 +43,25 @@ public class OverworldHUDScript : MonoBehaviour
             OWHPDisplayerScript s = g.GetComponent<OWHPDisplayerScript>();
             l_owStatDisplayers.Add(s);
             s.SetEntity(pd.party[i]);
-            s.SetPosition(pd.party.Count - i - 1);
+            if (pd.party.Count == 1)
+            {
+                s.SetPosition(0.5f);
+            }
+            else
+            {
+                s.SetPosition(pd.party.Count - i - 1);
+            }
             statDisplayers.Add(g);
         }
 
-        GameObject h = Instantiate(epDisplayer, topRight);
+        GameObject h = Instantiate(epDisplayer, topLeft);
         EPDisplayerScript d = h.GetComponent<EPDisplayerScript>();
         l_epDisplayer = d;
         d.Setup(pd);
         d.SetPosition();
         statDisplayers.Add(h);
 
-        GameObject k = Instantiate(seDisplayer, topRight);
+        GameObject k = Instantiate(seDisplayer, topLeft);
         SEDisplayerScript se = k.GetComponent<SEDisplayerScript>();
         l_seDisplayer = se;
         se.Setup(pd);
@@ -62,21 +69,21 @@ public class OverworldHUDScript : MonoBehaviour
         statDisplayers.Add(k);
 
         //Bad naming
-        GameObject ex = Instantiate(expDisplayer, bottomRight);
+        GameObject ex = Instantiate(expDisplayer, topRight);
         EXPDisplayerScript exp = ex.GetComponent<EXPDisplayerScript>();
         l_expDisplayer = exp;
         exp.Setup(pd);
         //se.SetPosition();
         statDisplayers.Add(ex);
 
-        GameObject cn = Instantiate(coinDisplayer, bottomRight);
+        GameObject cn = Instantiate(coinDisplayer, topRight);
         CoinDisplayerScript cns = cn.GetComponent<CoinDisplayerScript>();
         l_coinDisplayer = cns;
         cns.Setup(pd);
         //se.SetPosition();
         statDisplayers.Add(cn);
 
-        GameObject it = Instantiate(itemDisplayer, bottomRight);
+        GameObject it = Instantiate(itemDisplayer, topRight);
         ItemDisplayerScript its = it.GetComponent<ItemDisplayerScript>();
         l_itemDisplayer = its;
         its.Setup(pd);

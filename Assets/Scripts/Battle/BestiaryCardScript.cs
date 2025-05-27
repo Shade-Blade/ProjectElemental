@@ -18,7 +18,7 @@ public class BestiaryCardScript : MonoBehaviour
     {
         if (fadeout)
         {
-            rect.anchoredPosition = MainManager.EasingQuadraticTime(rect.anchoredPosition, Vector2.right * 150, 12500);
+            rect.anchoredPosition = MainManager.EasingQuadraticTime(rect.anchoredPosition, Vector2.right * 150 + rect.anchoredPosition.y * Vector2.up, 12500);
             if (animtime > 0.15f)
             {
                 Destroy(gameObject);
@@ -26,7 +26,7 @@ public class BestiaryCardScript : MonoBehaviour
         }
         else
         {
-            rect.anchoredPosition = MainManager.EasingQuadraticTime(rect.anchoredPosition, Vector2.left * 125, 12500);
+            rect.anchoredPosition = MainManager.EasingQuadraticTime(rect.anchoredPosition, Vector2.left * 125 + rect.anchoredPosition.y * Vector2.up, 12500);
         }
         animtime += Time.deltaTime;
     }
@@ -37,7 +37,7 @@ public class BestiaryCardScript : MonoBehaviour
         this.text.SetText(text, true, true);
         image.sprite = sprite;
 
-        rect.anchoredPosition = Vector2.right * 150;
+        rect.anchoredPosition = Vector2.right * 150 + rect.anchoredPosition.y * Vector2.up;
 
         animtime = 0;
         fadeout = false;

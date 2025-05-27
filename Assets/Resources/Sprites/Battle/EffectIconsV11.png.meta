@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -33,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 0
@@ -63,6 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
@@ -75,6 +77,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -87,6 +90,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -99,6 +103,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -111,6 +116,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -1870,92 +1876,91 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      EffectIconsV11_52: -1617576716
-      EffectIconsV11_45: -322764090
+      EffectIconsV11_0: 1041436434
+      EffectIconsV11_1: 1719403754
+      EffectIconsV11_10: 779311166
+      EffectIconsV11_11: -1125842685
+      EffectIconsV11_12: -1219252815
+      EffectIconsV11_13: -3299479
+      EffectIconsV11_14: 733190893
+      EffectIconsV11_15: -1300335655
       EffectIconsV11_16: 779348208
-      EffectIconsV11_61: 1029483205
-      EffectIconsV11_75: -1748514932
-      EffectIconsV11_82: 1187741070
+      EffectIconsV11_17: -343359463
+      EffectIconsV11_18: -697875470
+      EffectIconsV11_19: -1991727307
       EffectIconsV11_2: -1032083470
       EffectIconsV11_20: -1307828007
-      EffectIconsV11_24: 1415413476
-      EffectIconsV11_37: -363202535
-      EffectIconsV11_46: 1708880142
-      EffectIconsV11_72: -1131345768
-      EffectIconsV11_3: -1920647795
-      EffectIconsV11_28: -666658575
-      EffectIconsV11_38: -588190937
       EffectIconsV11_21: -1294301368
-      EffectIconsV11_73: -981427007
-      EffectIconsV11_5: -1272044357
-      EffectIconsV11_36: 1804569883
-      EffectIconsV11_11: -1125842685
-      EffectIconsV11_66: 697471296
-      EffectIconsV11_78: -1264070942
-      EffectIconsV11_4: 370990959
-      EffectIconsV11_18: -697875470
-      EffectIconsV11_56: 1351579234
-      EffectIconsV11_40: -1915682712
-      EffectIconsV11_81: 1985828638
-      EffectIconsV11_50: -251364688
       EffectIconsV11_22: -896335771
-      EffectIconsV11_13: -3299479
-      EffectIconsV11_35: -1720815044
       EffectIconsV11_23: 1121051169
-      EffectIconsV11_65: 1292772782
-      EffectIconsV11_69: -1553948766
-      EffectIconsV11_58: -146982551
-      EffectIconsV11_43: -311853045
-      EffectIconsV11_15: -1300335655
-      EffectIconsV11_8: -1949091836
-      EffectIconsV11_0: 1041436434
-      EffectIconsV11_7: 641731168
-      EffectIconsV11_41: 1852677529
-      EffectIconsV11_39: -586847901
-      EffectIconsV11_63: -272902717
-      EffectIconsV11_64: -899976966
-      EffectIconsV11_60: 1689518220
-      EffectIconsV11_57: -1806843083
-      EffectIconsV11_31: 2011151740
-      EffectIconsV11_12: -1219252815
-      EffectIconsV11_14: 733190893
-      EffectIconsV11_47: -1898291810
-      EffectIconsV11_19: -1991727307
-      EffectIconsV11_76: 1885861801
-      EffectIconsV11_44: -903896813
-      EffectIconsV11_59: 72242287
-      EffectIconsV11_29: 705425119
-      EffectIconsV11_51: 1406791701
-      EffectIconsV11_53: -272895277
-      EffectIconsV11_79: -527941245
-      EffectIconsV11_55: 1265240849
-      EffectIconsV11_42: 795603541
-      EffectIconsV11_68: -331763657
-      EffectIconsV11_62: -724456944
-      EffectIconsV11_10: 779311166
+      EffectIconsV11_24: 1415413476
+      EffectIconsV11_25: -376232175
       EffectIconsV11_26: -873455315
-      EffectIconsV11_1: 1719403754
-      EffectIconsV11_80: 1443098223
-      EffectIconsV11_33: -1298379322
       EffectIconsV11_27: -447908617
+      EffectIconsV11_28: -666658575
+      EffectIconsV11_29: 705425119
+      EffectIconsV11_3: -1920647795
+      EffectIconsV11_30: 1371991977
+      EffectIconsV11_31: 2011151740
       EffectIconsV11_32: -1410435052
-      EffectIconsV11_71: 1011089519
-      EffectIconsV11_9: -846484566
-      EffectIconsV11_77: 890282324
-      EffectIconsV11_6: 1718651626
+      EffectIconsV11_33: -1298379322
+      EffectIconsV11_34: 1509126057
+      EffectIconsV11_35: -1720815044
+      EffectIconsV11_36: 1804569883
+      EffectIconsV11_37: -363202535
+      EffectIconsV11_38: -588190937
+      EffectIconsV11_39: -586847901
+      EffectIconsV11_4: 370990959
+      EffectIconsV11_40: -1915682712
+      EffectIconsV11_41: 1852677529
+      EffectIconsV11_42: 795603541
+      EffectIconsV11_43: -311853045
+      EffectIconsV11_44: -903896813
+      EffectIconsV11_45: -322764090
+      EffectIconsV11_46: 1708880142
+      EffectIconsV11_47: -1898291810
       EffectIconsV11_48: -24061003
       EffectIconsV11_49: 1483078894
-      EffectIconsV11_17: -343359463
-      EffectIconsV11_70: 316543256
-      EffectIconsV11_67: 846756782
-      EffectIconsV11_30: 1371991977
-      EffectIconsV11_25: -376232175
-      EffectIconsV11_34: 1509126057
-      EffectIconsV11_74: -1174026603
+      EffectIconsV11_5: -1272044357
+      EffectIconsV11_50: -251364688
+      EffectIconsV11_51: 1406791701
+      EffectIconsV11_52: -1617576716
+      EffectIconsV11_53: -272895277
       EffectIconsV11_54: 193650078
-  spritePackingTag: 
+      EffectIconsV11_55: 1265240849
+      EffectIconsV11_56: 1351579234
+      EffectIconsV11_57: -1806843083
+      EffectIconsV11_58: -146982551
+      EffectIconsV11_59: 72242287
+      EffectIconsV11_6: 1718651626
+      EffectIconsV11_60: 1689518220
+      EffectIconsV11_61: 1029483205
+      EffectIconsV11_62: -724456944
+      EffectIconsV11_63: -272902717
+      EffectIconsV11_64: -899976966
+      EffectIconsV11_65: 1292772782
+      EffectIconsV11_66: 697471296
+      EffectIconsV11_67: 846756782
+      EffectIconsV11_68: -331763657
+      EffectIconsV11_69: -1553948766
+      EffectIconsV11_7: 641731168
+      EffectIconsV11_70: 316543256
+      EffectIconsV11_71: 1011089519
+      EffectIconsV11_72: -1131345768
+      EffectIconsV11_73: -981427007
+      EffectIconsV11_74: -1174026603
+      EffectIconsV11_75: -1748514932
+      EffectIconsV11_76: 1885861801
+      EffectIconsV11_77: 890282324
+      EffectIconsV11_78: -1264070942
+      EffectIconsV11_79: -527941245
+      EffectIconsV11_8: -1949091836
+      EffectIconsV11_80: 1443098223
+      EffectIconsV11_81: 1985828638
+      EffectIconsV11_82: 1187741070
+      EffectIconsV11_9: -846484566
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

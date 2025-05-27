@@ -24,7 +24,21 @@ public class MoveBoxMenu : BoxMenu
                     g.transform.localPosition = BoxMenuScript.GetRelativePosition(i);
                     menuEntriesO.Add(g);
                     BoxMenuEntryScript b = menuEntriesO[i].GetComponent<BoxMenuEntryScript>();
-                    b.Setup(menuEntries[i]);
+                    if (caller.stamina < caller.jumpMoves[i].GetStaminaCost(caller, caller.jumpMoves[i].level))
+                    {
+                        b.Setup(menuEntries[i], true, null, "#a04070", null);
+                    }
+                    else
+                    {
+                        if (caller.GetRealAgility() < caller.jumpMoves[i].GetStaminaCost(caller, caller.jumpMoves[i].level))
+                        {
+                            b.Setup(menuEntries[i], true, null, "#703040", null);
+                        }
+                        else
+                        {
+                            b.Setup(menuEntries[i]);
+                        }
+                    }
                 }
                 //Cost reduction
                 if (caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus() != 0)
@@ -47,7 +61,21 @@ public class MoveBoxMenu : BoxMenu
                     g.transform.localPosition = BoxMenuScript.GetRelativePosition(i);
                     menuEntriesO.Add(g);
                     BoxMenuEntryScript b = menuEntriesO[i].GetComponent<BoxMenuEntryScript>();
-                    b.Setup(menuEntries[i]);
+                    if (caller.stamina < caller.weaponMoves[i].GetStaminaCost(caller, caller.weaponMoves[i].level))
+                    {
+                        b.Setup(menuEntries[i], true, null, "#a04070", null);
+                    }
+                    else
+                    {
+                        if (caller.GetRealAgility() < caller.weaponMoves[i].GetStaminaCost(caller, caller.weaponMoves[i].level))
+                        {
+                            b.Setup(menuEntries[i], true, null, "#703040", null);
+                        }
+                        else
+                        {
+                            b.Setup(menuEntries[i]);
+                        }
+                    }
                 }
                 //Cost reduction
                 if (caller.GetBadgeEnduranceBonus() + caller.GetEffectEnduranceBonus() != 0)
@@ -196,7 +224,22 @@ public class MoveBoxMenu : BoxMenu
         ((MoveMenuEntry)menuEntries[menuIndex]).RecalculateMove(caller);
 
         BoxMenuEntryScript b = menuEntriesO[menuIndex].GetComponent<BoxMenuEntryScript>();
-        b.Setup(menuEntries[menuIndex]);
+
+        if (caller.stamina < ((MoveMenuEntry)menuEntries[menuIndex]).staminaCost)
+        {
+            b.Setup(menuEntries[menuIndex], true, null, "#a03060", null);
+        }
+        else
+        {
+            if (caller.GetRealAgility() < ((MoveMenuEntry)menuEntries[menuIndex]).staminaCost)
+            {
+                b.Setup(menuEntries[menuIndex], true, null, "#703040", null);
+            } else
+            {
+                b.Setup(menuEntries[menuIndex]);
+            }
+        }
+
         descriptionBoxScript.SetText(menuEntries[menuIndex].description);
     }
 
@@ -983,7 +1026,7 @@ public class RibbonSwapBoxMenu : BoxMenu
                 canUse = false;
             }
 
-            menuEntries[i] = new RibbonMenuEntry(ribbons[i], et, canUse);            
+            menuEntries[i] = new RibbonMenuEntry(ribbons[i], et, canUse, BattleControl.Instance.playerData.BadgeEquipped(Badge.BadgeType.RibbonPower));            
 
             switch (et)
             {

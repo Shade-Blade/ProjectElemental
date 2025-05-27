@@ -136,7 +136,7 @@ public class BM_SunSapling_FrontSlam : EnemyMove
 
         if (ss.summonRight == null)
         {
-            ss.summonRight = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Sunflower, 24);
+            ss.summonRight = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Sunflower, 23);
             ss.InflictEffectForce(ss.summonRight, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             summon = true;
         }
@@ -236,7 +236,7 @@ public class BM_SunSapling_GrowCharge : EnemyMove
 
         if (ss.summonRight == null)
         {
-            ss.summonRight = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Sunflower, 24);
+            ss.summonRight = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Sunflower, 23);
             ss.InflictEffectForce(ss.summonRight, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             summon = true;
         }

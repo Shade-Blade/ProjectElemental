@@ -19,6 +19,8 @@ public class LivelyBudScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
         GameObject eo = null;
         EffectScript_Sparkle es_s = null;
 
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.Menu_LivelyBud);
+
         eo = Instantiate(Resources.Load<GameObject>("VFX/Effect_Sparkle"), gameObject.transform);
         eo.transform.position = transform.position;
         es_s = eo.GetComponent<EffectScript_Sparkle>();

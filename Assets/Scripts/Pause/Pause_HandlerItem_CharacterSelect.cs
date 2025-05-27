@@ -114,9 +114,8 @@ public class Pause_HandlerItem_CharacterSelect : Pause_HandlerShared
     void Select()
     {
         //even more submenus (but we are getting close to the end)
-        Debug.Log(item + " selecting " + sortedParty[index]);
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_Item_Use);
         Item.UseOutOfBattle(sortedParty[index], item, itemIndex);
-        Debug.Log("After: " + playerData);
         section.ApplyUpdate(sortedParty[index].entityID);
         //you go back automatically
         PopSelf();

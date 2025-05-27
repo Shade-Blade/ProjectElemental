@@ -1080,7 +1080,7 @@ public class CheatMenu : MenuHandler
             else
             {
                 bool setFlag;
-                if (input.Length > 1)
+                if (input.Length > 2)
                 {
                     bool.TryParse(input[2], out setFlag);
                 }
@@ -1138,7 +1138,7 @@ public class CheatMenu : MenuHandler
                             {
                                 if (input.Length > 4)
                                 {
-                                    if (sbyte.TryParse(input[4], out n1))
+                                    if (sbyte.TryParse(input[4], out n2))
                                     {
                                         be.ReceiveEffectForce(new Effect(et, n1, n2));
                                     }
@@ -1220,6 +1220,34 @@ public class CheatMenu : MenuHandler
             } else
             {
                 MainManager.Instance.StartCoroutine(MainManager.Instance.Pickup(new PickupUnion(getItem)));
+            }
+        }
+
+        if (input[0].Equals("gai"))
+        {
+            if (MainManager.Instance.worldMode != MainManager.WorldMode.Overworld && MainManager.Instance.worldMode != MainManager.WorldMode.Battle)
+            {
+                doexit = false;
+                cs.log.SetText("Not possible in this mode!", true, true);
+            }
+            else
+            {
+                if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
+                {
+                    BattleControl.Instance.playerData.itemInventory.Clear();
+                    for (int i = 1; i < (int)Item.ItemType.EndOfTable; i++)
+                    {
+                        BattleControl.Instance.playerData.itemInventory.Add(new Item((Item.ItemType)i, Item.ItemModifier.None, Item.ItemOrigin.Cheating));
+                    }
+                }
+                else
+                {
+                    MainManager.Instance.playerData.itemInventory.Clear();
+                    for (int i = 1; i < (int)Item.ItemType.EndOfTable; i++)
+                    {
+                        MainManager.Instance.playerData.itemInventory.Add(new Item((Item.ItemType)i, Item.ItemModifier.None, Item.ItemOrigin.Cheating));
+                    }
+                }
             }
         }
 

@@ -66,7 +66,7 @@ public class Text_EffectSprite : Text_SpecialSprite
         //Debug.Log("Display " + badge);
         Effect.EffectType effectType = (Effect.EffectType)(-1);
 
-        Enum.TryParse(effect, out effectType);
+        Enum.TryParse(effect, true, out effectType);
 
         //random failsafe thing I guess
         //Note: effect type 0 is valid, so check for less than 0

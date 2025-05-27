@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0, g: 0.40625, b: 1, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: a251b8cf4c695fe41bf587bf4044f805, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: b82863fc6a8eb23449c55392586054e8, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -1081,7 +1081,7 @@ MonoBehaviour:
   lastSaveLocation: 0
   lastSaveMap: 0
   curOverworldHUD: {fileID: 0}
-  showCoins: 0
+  showHud: 0
   hudShowTime: 0
   lastCoinCount: 0
   Cheat_CheatMenuAvailable: 1

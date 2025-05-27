@@ -68,8 +68,8 @@ public class BoxMenuEntryScript : MonoBehaviour
             }
             else
             {
-                mainString = "<color,red>" + mainString + "</color>";
-                rightString = "<color,red>" + rightString + "</color>";
+                mainString = "<descriptionwarncolor>" + mainString + "</color>";
+                rightString = "<descriptionwarncolor>" + rightString + "</color>";
             }
         }
 
@@ -132,8 +132,8 @@ public class BoxMenuEntryScript : MonoBehaviour
             //maintext.color = disabledColor;
             //righttext.color = disabledColor;
 
-            mainString = "<color,red>" + mainString + "</color>";
-            rightString = "<color,red>" + rightString + "</color>";
+            mainString = "<descriptionwarncolor>" + mainString + "</color>";
+            rightString = "<descriptionwarncolor>" + rightString + "</color>";
         }
 
 

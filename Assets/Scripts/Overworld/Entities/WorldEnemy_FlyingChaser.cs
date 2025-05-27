@@ -158,7 +158,7 @@ public class WorldEnemy_FlyingChaser : WorldEnemyEntity
                     }
                 }
 
-                float yMove = (Mathf.Sin(Time.time * 6f) * 0.125f + startPosition.y - transform.position.y) * (1 / 0.2f);
+                float yMove = (Mathf.Sin(Time.time * 5f) * 0.1f + startPosition.y - transform.position.y) * (1 / 0.2f);
                 if (yMove > 1)
                 {
                     yMove = 1;
@@ -204,7 +204,7 @@ public class WorldEnemy_FlyingChaser : WorldEnemyEntity
 
                 //move
                 //Change y velocity to try to go back to home pos
-                float yMoveB = (Mathf.Sin(Time.time * 6f) * 0.125f + startPosition.y - transform.position.y) * (1 / 0.2f);
+                float yMoveB = (Mathf.Sin(Time.time * 5f) * 0.1f + startPosition.y - transform.position.y) * (1 / 0.2f);
                 if (yMoveB > 1)
                 {
                     yMoveB = 1;

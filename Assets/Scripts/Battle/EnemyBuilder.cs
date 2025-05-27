@@ -159,7 +159,7 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.E_DrainBud;
         }
 
-        return MainManager.SpriteID.Default;
+        return MainManager.SpriteID.None;
     }
 
     //initializes posid to -1

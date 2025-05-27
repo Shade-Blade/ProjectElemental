@@ -1,23 +1,23 @@
 Envy
 d_rh_v0.5
-GF_FileCode_Envy:True,GF_FileCodeExplain_Envy:True,GF_RandomItemModifiers:True,GF_Bestiary_Sentry:True,GF_Bestiary_Sandswimmer:True,GF_Recipe_BerryCarrot:True,GF_Bestiary_SirenFish:True,GF_Bestiary_LumistarSoldier:True,GF_Bestiary_Shrouder:True,GF_Bestiary_Shimmerwing:True
-GV_PitFloor:40,GV_PitAltar:4
-GemstoneIslands,RabbitHole_RestFloor,1.104207|0.375|-3.332724
-2415.292
-12,0,18,18,11,11,11,11,1,139,0,0,10,32,6,6,6,23,12,97,827,244,26,11,50,50,0,0
-SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP
+GF_FileCode_Envy:True,GF_FileCodeExplain_Envy:True,GF_RandomItemModifiers:True,GF_Bestiary_Sentry:True,GF_Bestiary_Sandswimmer:True,GF_Recipe_BerryCarrot:True,GF_Bestiary_SirenFish:True,GF_Bestiary_LumistarSoldier:True,GF_Bestiary_Shrouder:True,GF_Bestiary_Shimmerwing:True,GF_ACH_Halfway:True
+GV_PitFloor:50,GV_PitAltar:5
+InfernalCaldera,RabbitHole_RestFloor,1.03912|0.375|-2.578611
+3205.918
+14,0,18,18,12,12,12,12,89,30,0,0,10,32,6,6,6,26,21,136,1210,391,26,14,62,62,0,0
+SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP
 
-SnowCone|Quick|Overworld|0|23,DeliciousMeal|Glistening|Overworld|0|22,ScaleSteak|Void|EnemyDrop|0|21,Coconut|Void|EnemyDrop|0|19,FlowerSyrup|Glistening|Overworld|0|18,BronzeCake|Focus|Overworld,Flour|Glistening|EnemyDrop,FlowerSyrup|Glistening|EnemyDrop|0|16,CarrotSalad|Spread|Overworld|0|12,RabbitBun|Glistening|Overworld|0|11,LightSeed|Void|Overworld|0|8,BronzeSalad|Echo|Overworld|0|7,BerryBronze|Void|Overworld|0|6,Carrot|Echo|EnemyDrop|0|5,Lemon|Void|Overworld|0|4,ClearStrawberry|Void|EnemyDrop|0|2
+SilverPudding|Glistening|Overworld,PowerSteak|Echo|Overworld,MoonlightBerry|Void|EnemyDrop|0|26,SpicyCherry|Void|EnemyDrop|0|25,SilverPudding|Spread|Overworld|0|24,FriedEgg|Spread|Overworld,SnowCone|Quick|Overworld|0|23,DeliciousMeal|Glistening|Overworld|0|22,ScaleSteak|Void|EnemyDrop|0|21,Coconut|Void|EnemyDrop|0|19,Flour|Glistening|EnemyDrop,FlowerSyrup|Glistening|EnemyDrop|0|16,CarrotSalad|Spread|Overworld|0|12,RabbitBun|Glistening|Overworld|0|11,LightSeed|Void|Overworld|0|8,BerryBronze|Void|Overworld|0|6,Lemon|Void|Overworld|0|4,ClearStrawberry|Void|EnemyDrop|0|2
 
 AppleCandle
-SuperCurse|1,UltraCurse|2,MegaCurse|3,MultiStomp|21,MultiSlash|24,PoisonSlash|17,FluffHeal|26,BreakerSmash|33,HPPlus|13,HPPlusB|23,EPPlus|8,RiskyPower|34,RiskyEndurance|14,ProtectiveShield|28,ProtectiveEndurance|9,SpiritPower|27,NullPower|7,SoulfulEnergy|30,SoftPower|22,MetalPower|20,HealthRegen|5,HealthRegen|6,HealthRegenB|36,EnergyRegen|12,Trance|19,UnsteadyStance|15,RagesPower|11,RageRally|32,ToxicStrength|29,DefenseSight|16,StatusSight|31,PowerSight|10,BattleSight|4,PerfectVictory|18,RibbonSwap|35,ProtectiveRush|38,Overkill|25,HasteStep|37
-HPPlus|13,HPPlusB|23,EPPlus|8,RiskyPower|34,MetalPower|20,HealthRegen|6,HealthRegen|5,EnergyRegen|12,RagesPower|11,RageRally|32,DefenseSight|16,StatusSight|31,PowerSight|10,BattleSight|4,RibbonSwap|35,ProtectiveRush|38,Overkill|25,HasteStep|37
-EPPlus|8,DefenseSight|16,StatusSight|31,PowerSight|10,BattleSight|4,RibbonSwap|35,Overkill|25,HasteStep|37
-SharpRibbon|1,SafetyRibbon|2,ExpertRibbon|5,SoftRibbon|4,ThornyRibbon|3
-Attack|10|2|6
+SuperCurse|1,UltraCurse|2,MegaCurse|3,MultiStomp|21,MultiSlash|24,PoisonSlash|17,PreciseStab|44,SwordDance|51,FluffHeal|26,BreakerSmash|33,HPPlus|13,HPPlusB|23,EPPlus|8,EPPlusB|49,SEPlus|41,RiskyPower|34,RiskyShield|48,RiskyEndurance|14,ProtectivePower|42,ProtectiveShield|28,ProtectiveEndurance|9,SpiritPower|27,GoldenPower|46,NullPower|7,SoulfulEnergy|30,SoftPower|22,MetalPower|20,HealthRegen|5,HealthRegen|6,HealthRegenB|36,EnergyRegen|12,EnergyRegenB|43,Trance|19,UnsteadyStance|15,RagesPower|11,RageRally|32,ToxicStrength|29,Supercooled|40,HealthSight|39,DefenseSight|16,StatusSight|31,PowerSight|10,BattleSight|4,PerfectVictory|18,StatusResistB|45,RibbonSwap|35,EnergySteal|50,ProtectiveRush|38,MoneyBoost|47,Overkill|25,HasteStep|37
+HPPlus|13,HPPlusB|23,EPPlus|8,RiskyPower|34,MetalPower|20,HealthRegen|6,HealthRegen|5,HealthRegenB|36,EnergyRegen|12,RagesPower|11,RageRally|32,HealthSight|39,DefenseSight|16,StatusSight|31,PowerSight|10,BattleSight|4,RibbonSwap|35,ProtectiveRush|38,MoneyBoost|47,Overkill|25,HasteStep|37
+EPPlus|8,HealthSight|39,DefenseSight|16,StatusSight|31,PowerSight|10,BattleSight|4,RibbonSwap|35,MoneyBoost|47,Overkill|25,HasteStep|37
+SharpRibbon|1,SafetyRibbon|2,SafetyRibbon|6,ExpertRibbon|5,SoftRibbon|4,ThornyRibbon|3
+Defense|3|5|6
 
 2,0
-Luna,18,18,1,1,SafetyRibbon|2,6,579,163,24,11,79,1944.146
-HPPlusB|23,RiskyPower|34,MetalPower|20,HealthRegen|5,HealthRegen|6,RagesPower|11,RageRally|32,ProtectiveRush|38
-Wilex,12,12,1,1,SoftRibbon|4,6,248,81,18,9,18,401.946
+Luna,9,18,1,1,SafetyRibbon|2,12,819,267,25,12,104,2495.126
+HPPlusB|23,RiskyPower|34,MetalPower|20,HealthRegen|5,HealthRegen|6,HealthRegenB|36,RagesPower|11,RageRally|32,ProtectiveRush|38
+Wilex,5,12,2,1,SoftRibbon|4,9,391,124,18,14,32,634.0859
 HPPlus|13,EnergyRegen|12

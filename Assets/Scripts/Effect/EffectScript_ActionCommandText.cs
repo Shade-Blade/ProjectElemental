@@ -9,6 +9,7 @@ public class EffectScript_ActionCommandText : MonoBehaviour
 
     public float maxScale;
     public float maxScaleTime;
+    public float shrinkStartTime;
 
     public float bezierDuration;
     Vector3 startPos;
@@ -54,6 +55,20 @@ public class EffectScript_ActionCommandText : MonoBehaviour
         completion *= 0.8f;
         float falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
 
+        float scompletion = (lifetime / maxScaleTime);
+        if (scompletion > 1)
+        {
+            scompletion = 1;
+        }
+        float scaleheaviness = 3f;
+        float scalecompletion = scompletion * (1f + scaleheaviness) + scompletion * scompletion * -scaleheaviness;
+
+        float endscale = (1 - (lifetime - shrinkStartTime) / (maxLifetime - shrinkStartTime));
+        if (lifetime < shrinkStartTime)
+        {
+            endscale = 1;
+        }
+
         //float startdegree = 0;
 
         switch (dir)
@@ -73,11 +88,11 @@ public class EffectScript_ActionCommandText : MonoBehaviour
 
         if (lifetime < maxScaleTime)
         {
-            proxy.transform.localScale = Vector3.one * maxScale * (lifetime / maxScaleTime);
+            proxy.transform.localScale = Vector3.one * maxScale * (scalecompletion);
         }
         else
         {
-            proxy.transform.localScale = new Vector3(1, 1, 1) * maxScale;
+            proxy.transform.localScale = new Vector3(1, 1, 1) * maxScale * endscale;
         }
 
         lifetime += Time.deltaTime;

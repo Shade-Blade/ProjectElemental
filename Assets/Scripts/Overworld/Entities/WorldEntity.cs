@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static BattleHelper;
 
 //special class for data setup of NPCs and enemies
 //Note that super specific stuff shouldn't end up here (this should be for more generic data)
@@ -1027,6 +1028,17 @@ public class WorldEntity : WorldObject, ITextSpeaker
         timeSinceLaunch = 0;
     }
 
+    public MainManager.SpriteID GetRealSprite()
+    {
+        MainManager.SpriteID realSprite;
+        Enum.TryParse(spriteID, true, out realSprite);
+        if (realSprite == MainManager.SpriteID.None)
+        {
+            Debug.LogError("Could not parse sprite " + spriteID);
+        }
+
+        return realSprite;
+    }
     //Call this when subobject is null (to make the right animation controller)
     public void MakeAnimationController()
     {
@@ -1037,13 +1049,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
             return;
         }
 
-        MainManager.SpriteID realSprite;
-        Enum.TryParse(spriteID, true, out realSprite);
-        if (realSprite == MainManager.SpriteID.Wilex && !spriteID.Equals("Wilex"))
-        {
-            Debug.LogError("Could not parse sprite " + spriteID);
-        }
-        ac = MainManager.CreateAnimationController(realSprite, gameObject);
+        ac = MainManager.CreateAnimationController(GetRealSprite(), gameObject);
 
         this.ac = ac;
         subObject = ac.gameObject;
@@ -1160,7 +1166,15 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
     public virtual void TextBleep()
     {
+        MainManager.Sound s = MainManager.SpriteIDToBleepSound(GetRealSprite());
+        float p = MainManager.SpriteIDToBleepPitch(GetRealSprite());
 
+        if (s == MainManager.Sound.None)
+        {
+            return;
+        }
+        MainManager.Instance.StopSound(gameObject, s);
+        MainManager.Instance.PlaySound(gameObject, s, p, 0.2f);
     }
 
 

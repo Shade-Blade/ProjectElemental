@@ -86,6 +86,11 @@ public class OWItemBoxMenu : BoxMenu
     {
         base.Init();
 
+        if (requiresTarget || zSelect)
+        {
+            MainManager.Instance.ShowHUD();
+        }
+
         //get items from item inventory
         List<Item> inv = itemList; //MainManager.Instance.playerData.itemInventory;
         menuEntries = new BoxMenuEntry[inv.Count];
@@ -136,6 +141,18 @@ public class OWItemBoxMenu : BoxMenu
         {
             if (menuIndex < canUseList.Count)
             {
+                if (menuIndex == -1)
+                {
+                    //MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+                    InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
+                    if (requiresTarget || zSelect)
+                    {
+                        MainManager.Instance.HideHUD();
+                    }
+                    //MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
+                    //return;
+                    return;
+                }
                 if (!canUseList[menuIndex])
                 {
                     MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
@@ -157,6 +174,10 @@ public class OWItemBoxMenu : BoxMenu
         }
         else
         {
+            if (requiresTarget || zSelect)
+            {
+                MainManager.Instance.HideHUD();
+            }
             InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
             //Clear();
         }
@@ -688,7 +709,10 @@ public class GenericBoxMenu : BoxMenu
     }
     public override void SelectOption()
     {
-        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+        if (menuIndex != -1)
+        {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+        }
         InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
     }
     public override void ZOption()
@@ -876,6 +900,8 @@ public class OWCharacterBoxMenu : BoxMenu
         //Clear();
         MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         InvokeExit(this, new MenuExitEventArgs(GetFullResult()));
+
+        MainManager.Instance.HideHUD();
     }
     public override void ZOption()
     {
@@ -913,7 +939,7 @@ public class OWCharacterBoxMenu : BoxMenu
 
 public class PromptBoxMenu : BoxMenu
 {
-    public Image baseBox;
+    //public Image baseBox;
 
     public string[][] table; //Create a table of entry-line pairs (choose entry to output a value)
     public int cancelIndex;
@@ -996,8 +1022,9 @@ public class PromptBoxMenu : BoxMenu
         Vector3 dimensions = Vector3.up * 40 * table.Length + (maxWidth + 35) * Vector3.right;
         bm.GetComponent<RectTransform>().sizeDelta = dimensions;
         width = dimensions.x;
-        bm.menuBox.rectTransform.sizeDelta = dimensions;
-        bm.mask.rectTransform.sizeDelta = dimensions - Vector3.right * 10 - Vector3.up * 10;
+        bm.menuBox.rectTransform.sizeDelta = dimensions + Vector3.up * 10;
+        bm.borderBox.rectTransform.sizeDelta = dimensions + Vector3.up * 10;
+        bm.mask.rectTransform.sizeDelta = dimensions - Vector3.right * 10 - Vector3.up * 5;
         if (topText == null || topText.Length == 0)
         {
             bm.descriptorBox.gameObject.SetActive(false);
@@ -1005,8 +1032,9 @@ public class PromptBoxMenu : BoxMenu
         {
             bm.descriptorTextBox.SetText(topText, true, true);
             bm.descriptorBox.rectTransform.anchoredPosition = Vector2.up * (dimensions.y * 0.5f + 35);
+            bm.descriptorBox.rectTransform.sizeDelta = new Vector2(bm.descriptorTextBox.textMesh.GetRenderedValues()[0] + 20, 30);
         }
-        baseBox = bm.menuBox;
+        //baseBox = bm.menuBox;
 
         bm.selectorArrow.transform.localPosition = GetSelectorPosition(menuEntriesO[menuIndex].transform.localPosition);
     }

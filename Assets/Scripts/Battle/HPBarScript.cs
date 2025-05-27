@@ -62,7 +62,7 @@ public class HPBarScript : MonoBehaviour
             if (hpText.color == Color.black)
             {
                 //Very hacky fix
-                hpText.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">?</font>";
+                hpText.text = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold White Outline + Overlay\">?</font>";
             }
             else
             {
@@ -104,16 +104,6 @@ public class HPBarScript : MonoBehaviour
         bufferBar.transform.localScale = Vector3.up * HP_LIGHTER_HEIGHT + Vector3.forward * 1 + Vector3.right * HP_BAR_WIDTH * bufferWidth;
         bufferBar.transform.localPosition = Vector3.up * HP_UP_OFFSET + Vector3.right * HP_BAR_WIDTH * (bufferCenter - 0.5f);
 
-        if (hpText.color == Color.black)
-        {
-            //Very hacky fix
-            hpText.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">" + hp + "</font>";
-        }
-        else
-        {
-            hpText.text = "" + hp;
-        }
-
         if (def != int.MinValue)
         {
             if (def > DefenseTableEntry.IMMUNITY_CONSTANT)
@@ -139,6 +129,16 @@ public class HPBarScript : MonoBehaviour
         emptybar.color = BattleControl.Instance.GetHPBarColors()[3];
         hpText.color = BattleControl.Instance.GetHPBarColors()[4];
 
+        if (hpText.color.grayscale < 0.01f)
+        {
+            //Very hacky fix
+            hpText.text = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold White Outline + Overlay\">" + hp + "</font>";
+        }
+        else
+        {
+            hpText.text = "" + hp;
+        }
+
         lastHP = hp;
         lastDef = def;
     }
@@ -162,7 +162,7 @@ public class HPBarScript : MonoBehaviour
                 if (hpText.color == Color.black)
                 {
                     //Very hacky fix
-                    hpText.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">?</font>";
+                    hpText.text = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold White Outline + Overlay\">?</font>";
                 }
                 else
                 {
@@ -290,10 +290,10 @@ public class HPBarScript : MonoBehaviour
 
                 if (lastHP != entity.hp)
                 {
-                    if (hpText.color == Color.black)
+                    if (hpText.color.grayscale < 0.01f)
                     {
                         //Very hacky fix
-                        hpText.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">" + entity.hp + "</font>";
+                        hpText.text = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold White Outline + Overlay\">" + entity.hp + "</font>";
                     }
                     else
                     {

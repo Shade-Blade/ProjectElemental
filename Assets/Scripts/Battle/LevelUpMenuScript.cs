@@ -379,6 +379,7 @@ public class LevelUpMenuScript : MonoBehaviour
                 break;
             case 3:
                 stateWait += Time.deltaTime;
+                descBox.gameObject.SetActive(false);
                 gameObject.transform.localPosition = Vector3.up * stateWait * 5000;
 
                 if (stateWait > 0.25f)

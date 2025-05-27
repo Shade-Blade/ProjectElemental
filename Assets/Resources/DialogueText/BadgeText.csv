@@ -123,7 +123,7 @@ PowerGear,Power Gear,"For every 4th hit of damage you deal, your Attack is incre
 ShieldGear,Shield Gear,"For every 4th hit of damage taken, your Defense is increased by 4, but your Defense is decreased by 1 for the other 3 hits taken.",,
 EnergyGear,Energy Gear,"For every 4th skill used, your Endurance is increased by 4, but your Endurance is decreased by 1 for the other 3 moves. (Endurance reduces energy costs.) (0 cost moves will be unaffected)",,
 PowerMomentum,Power Momentum,"The exhaustion penalty is doubled (from 25% per action taken to 50% per action taken), but your Attack is increased by 2 for every action taken after the first.",,
-TenaciousStrikes,Tenacious Strikes,Enemies can no longer be immune to damage from your attacks under most circumstances. (Minimum damage for every hit is 1) (Absorbed damage is unaffected by this.),,No additional effect when stacked.
+TenaciousStrikes,Tenacious Strikes,Enemies can no longer be immune to damage from your attacks under most circumstances.,Minimum damage for every hit is 1. Absorbed damage types are not affected by this.,No additional effect when stacked.
 HealthGrowth,Health Growth,"When you are at Max HP at the end of your turn, you get 2 Absorb.",,
 EnergyGrowth,Energy Growth,"When you are at Max EP at the end of your turn, you get 2 Burst.",,
 HealthRegen,Health Regen A,You regenerate 1 HP every turn.,,
@@ -175,7 +175,7 @@ Icebreaker,Icebreaker,"While Frozen, getting hit out of it will give you 3 Focus
 Supercooled,Supercooled,"Every time you get hit while unfrozen, you get Frozen for 2 turns, but you have +2 Defense",Does not remove the defense penalty when being unfrozen.,
 HealthSight,Health Sight,Reveals enemy health even if you haven't Checked or Scanned the enemy yet.,,No additional effect when stacked.
 DefenseSight,Defense Sight,Reveals enemy defense when their health bars are displayed.,,No additional effect when stacked.
-StatusSight,Status Sight,Reveals information about enemy status weaknesses when you select the move and hover over an enemy.,,No additional effect when stacked.
+AilmentSight,Ailment Sight,Reveals information about enemy status weaknesses when you select the move and hover over an enemy.,,No additional effect when stacked.
 CharmSight,Charm Sight,Reveals information about your currently active charms in battle.,,No additional effect when stacked.
 PowerSight,Power Sight,Reveals information about the attack power of your moves.,,No additional effect when stacked.
 ItemSight,Item Sight,"Reveals information about what effects your items will have. In the overworld, when you stand still, you will see particles that point you towards collectibles in the current map.",,No additional effect when stacked.

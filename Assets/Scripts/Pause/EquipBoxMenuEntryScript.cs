@@ -53,8 +53,8 @@ public class EquipBoxMenuEntryScript : BoxMenuEntryScript
             //maintext.color = disabledColor;
             //righttext.color = disabledColor;
 
-            mainString = "<color,#808080>" + mainString + "</color>";
-            rightString = "<color,#808080>" + rightString + "</color>";
+            mainString = "<descriptionfluffcolor>" + mainString + "</color>";
+            rightString = "<descriptionfluffcolor>" + rightString + "</color>";
         }
 
         //Debug.Log("Badge: " + mainString);
@@ -110,8 +110,8 @@ public class EquipBoxMenuEntryScript : BoxMenuEntryScript
             //maintext.color = disabledColor;
             //righttext.color = disabledColor;
 
-            mainString = "<color,#808080>" + mainString + "</color>";
-            rightString = "<color,#808080>" + rightString + "</color>";
+            mainString = "<descriptionfluffcolor>" + mainString + "</color>";
+            rightString = "<descriptionfluffcolor>" + rightString + "</color>";
         }
 
         //Debug.Log("Badge: " + mainString);

@@ -25,9 +25,9 @@ public class ACObject_PressATimed : MonoBehaviour
         float width = (Mathf.Clamp01(1 - completion)) * 200 + 100;
         emptyBar.rectTransform.sizeDelta = Vector2.right * width + Vector2.up * width;
 
-        if (completion >= 1 && state == ActionCommand.AC_State.Complete)
+        if (state == ActionCommand.AC_State.Complete)
         {
-            fullBar.color = success ? Color.green : Color.red;
+            fullBar.color = success ? new Color(0.75f, 1, 1) : new Color(0.5f, 0f, 0);
         }
     }
 }

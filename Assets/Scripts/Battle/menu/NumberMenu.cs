@@ -16,6 +16,7 @@ public class NumberMenu : MenuHandler
     bool cancel;
 
     public const float HYPER_SCROLL_TIME = 0.3f;
+    public const int CANCEL_VALUE = int.MinValue;
 
     public GameObject baseObject;
     public NumberMenuScript nms;
@@ -164,6 +165,10 @@ public class NumberMenu : MenuHandler
         {
             SelectOption();
         }
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButton(InputManager.Button.B))
+        {
+            Cancel();
+        }
     }
 
     public void SelectOption()
@@ -184,7 +189,7 @@ public class NumberMenu : MenuHandler
     {
         if (cancel)
         {
-            return new MenuResult(int.MinValue);
+            return new MenuResult(CANCEL_VALUE);
         }
         return new MenuResult(currentNum);
     }

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class BaseOptionSpriteScript : MonoBehaviour
 {
     public Image backImage;
+    public Image backborderImage;
     public Image iconImage;
 
     public BaseBattleMenu.BaseMenuName bname;
@@ -24,7 +25,7 @@ public class BaseOptionSpriteScript : MonoBehaviour
         new Color(0.8f,1,0.95f, 0.9f), //turn relay
 
         //disabled is the last one
-        new Color(0.4f,0.4f,0.4f, 0.9f)
+        new Color(0.4f,0.4f,0.4f, 0.6f)
     };
     public List<Sprite> sprites;
 
@@ -85,10 +86,32 @@ public class BaseOptionSpriteScript : MonoBehaviour
         {
             index2 = colors.Length - 1;
             backImage.color = colors[index2];
+            //use default material I guess
+            backImage.material = null;
+            backborderImage.color = new Color(0.6f, 0.6f, 0.6f, 0.8f);
         }
 
-        backImage.color = colors[index2];
+        //backImage.color = colors[index2];
         //backImage.color = new Color(0.85f, 1f, 1f, 0.8f);
         iconImage.sprite = sprites[index];
+    }
+
+    public void SetOpacity(float opacity)
+    {
+        if (opacity > 1)
+        {
+            opacity = 1;
+        }
+
+        if (canUse)
+        {
+            backImage.color = new Color(backImage.color.r, backImage.color.g, backImage.color.b, opacity * 0.97f);
+            backborderImage.color = new Color(backborderImage.color.r, backborderImage.color.g, backborderImage.color.b, opacity * 1f);
+        } else
+        {
+            backImage.color = new Color(backImage.color.r, backImage.color.g, backImage.color.b, opacity * 0.6f);
+            backborderImage.color = new Color(backborderImage.color.r, backborderImage.color.g, backborderImage.color.b, opacity * 0.8f);
+        }
+        iconImage.color = new Color(1, 1, 1, opacity * 1);
     }
 }

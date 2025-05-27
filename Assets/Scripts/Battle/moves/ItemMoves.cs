@@ -2240,7 +2240,7 @@ public class Item_GenericThrowable : ItemMove
                             }
 
                             //check for status problem
-                            if (Effect.GetEffectClass(targets[i].effects[j].effect) == Effect.EffectClass.Status)
+                            if (Effect.GetEffectClass(targets[i].effects[j].effect) == Effect.EffectClass.Ailment)
                             {
                                 if (targets[i].statusMaxTurns < bonus)
                                 {
@@ -2504,7 +2504,7 @@ public class Item_GenericThrowable : ItemMove
         for (int j = 0; j < statusList.Length; j++)
         {
             //caller.InflictEffect(target, statusList[i]);
-            if (Effect.GetEffectClass(statusList[j].effect) == Effect.EffectClass.Status)
+            if (Effect.GetEffectClass(statusList[j].effect) == Effect.EffectClass.Ailment)
             {
                 status = statusList[j].effect;
             }

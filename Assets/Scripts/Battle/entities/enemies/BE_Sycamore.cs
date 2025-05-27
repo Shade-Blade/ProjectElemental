@@ -256,7 +256,7 @@ public class BM_Sycamore_Pollenate : EnemyMove
             if (caller.GetAttackHit(t, 0))
             {
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 2));
             }
             else
             {
@@ -373,7 +373,7 @@ public class BM_Sycamore_FullBloom : EnemyMove
             if (caller.GetAttackHit(t, 0))
             {
                 caller.DealDamage(t, 4, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 2));
             }
             else
             {

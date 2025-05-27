@@ -75,6 +75,12 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
             return false;
         }
 
+        //make sure at least one target is available
+        if (GetBaseTarget().range != TargetArea.TargetAreaType.None && BattleControl.Instance.GetEntities(caller, GetBaseTarget()).Count == 0)
+        {
+            return false;
+        }
+
         if (GetBaseCost() == 0)
         {
             return true;
@@ -373,7 +379,7 @@ public class BA_Rest : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.None, false);
     public override string GetName() => "Rest";
-    public override string GetDescription() => "Do nothing until the next turn. Gives you one turn worth of Stamina and 3 Soul Energy.";
+    public override string GetDescription() => "Do nothing until the next turn. Gives you one turn worth of Stamina and 3 Soul Energy. (If you are in stamina debt, this is guaranteed to at least get you to 0 stamina.)";
     public override bool ForfeitTurn() => true;
 
     public override int GetBaseCost() => 0;
@@ -387,9 +393,9 @@ public class BA_Rest : BattleAction
             caller.stamina = BattleControl.Instance.GetMaxStamina(caller);
         }
         */
-        caller.HealStamina(caller.GetRealAgility());
 
         Ribbon.RibbonType rt = Ribbon.RibbonType.None;
+
         bool ribbonPower = false;
         int ribbonMult = 1;
 
@@ -419,6 +425,11 @@ public class BA_Rest : BattleAction
             }
             pcaller.lastRestTurn = BattleControl.Instance.turnCount;
         }
+
+        if (rt != Ribbon.RibbonType.BeginnerRibbon)
+        {
+            caller.HealStamina(Mathf.Max(caller.GetRealAgility(), -caller.stamina));
+        }
         caller.HealSoulEnergy(value);
 
 
@@ -428,14 +439,14 @@ public class BA_Rest : BattleAction
             case Ribbon.RibbonType.BeginnerRibbon:
                 if (ribbonPower)
                 {
-                    caller.HealStamina((int)(restBoost * (3 * ribbonMult) * (caller.GetRealAgility() / 2)));
+                    caller.HealStamina(Mathf.Max((int)(restBoost * (3 * ribbonMult) * (caller.GetRealAgility() / 2)) + caller.GetRealAgility(), -caller.stamina));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Defocus, (sbyte)(1 * ribbonMult), Effect.INFINITE_DURATION));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Sunder, (sbyte)(1 * ribbonMult), Effect.INFINITE_DURATION));
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Enervate, (sbyte)(1 * ribbonMult), Effect.INFINITE_DURATION));
                 }
                 else
                 {
-                    caller.HealStamina((int)(restBoost  * (caller.GetRealAgility() / 2)));
+                    caller.HealStamina(Mathf.Max((int)(restBoost * (caller.GetRealAgility() / 2)) + caller.GetRealAgility(), -caller.stamina));
                 }
                 RibbonEffect(caller, new Color(0.7f, 0.3f, 0), ribbonPower);
                 break;
@@ -1644,14 +1655,17 @@ public class BA_BadgeSwap : BattleAction
             case BadgeMenuEntry.EquipType.Party:
                 pd.partyEquippedBadges.Remove(badge);
                 pd.equippedBadges.Remove(badge);
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_UnequipBadge);
                 break;
             case BadgeMenuEntry.EquipType.Wilex:
                 pd.GetPlayerDataEntry(BattleHelper.EntityID.Wilex).equippedBadges.Remove(badge);
                 pd.equippedBadges.Remove(badge);
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_UnequipBadge);
                 break;
             case BadgeMenuEntry.EquipType.Luna:
                 pd.GetPlayerDataEntry(BattleHelper.EntityID.Luna).equippedBadges.Remove(badge);
                 pd.equippedBadges.Remove(badge);
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_UnequipBadge);
                 break;
             case BadgeMenuEntry.EquipType.None:
                 BadgeDataEntry bde = Badge.GetBadgeDataEntry(badge);
@@ -1664,6 +1678,7 @@ public class BA_BadgeSwap : BattleAction
                     pd.GetPlayerDataEntry(caller.entityID).equippedBadges.Add(badge);
                 }
                 pd.equippedBadges.Add(badge);
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_EquipBadge);
                 break;
         }
         pd.usedSP = pd.CalculateUsedSP();
@@ -1727,9 +1742,11 @@ public class BA_RibbonSwap : BattleAction
             case BadgeMenuEntry.EquipType.Luna:
                 //unequip self
                 pd.GetPlayerDataEntry(caller.entityID).ribbon = default;
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_UnequipRibbon);
                 break;
             case BadgeMenuEntry.EquipType.None:
                 pd.GetPlayerDataEntry(caller.entityID).ribbon = ribbon;
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_EquipRibbon);
                 break;
         }
 

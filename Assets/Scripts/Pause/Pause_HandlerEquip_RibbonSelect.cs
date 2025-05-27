@@ -155,7 +155,7 @@ public class Pause_HandlerEquip_RibbonSelect : Pause_HandlerShared_BoxMenu
 
         if (equipOrUnequip)
         {
-            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Unequip);
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_UnequipRibbon);
             //unequip
             for (int i = 0; i < sortedParty.Count; i++)
             {
@@ -167,7 +167,7 @@ public class Pause_HandlerEquip_RibbonSelect : Pause_HandlerShared_BoxMenu
         }
         else
         {
-            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Equip);
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_EquipRibbon);
             //equip (note: implicitly forces 1 ribbon per character)
             for (int i = 0; i < sortedParty.Count; i++)
             {

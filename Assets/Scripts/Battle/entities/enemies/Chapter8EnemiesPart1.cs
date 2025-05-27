@@ -933,7 +933,7 @@ public class BM_CrystalSlug_Slap : EnemyMove
             {
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 bool hasStatus = caller.curTarget.HasStatus();
-                if (!hasStatus)
+                if (!hasStatus && BattleControl.Instance.GetCurseLevel() > 0)
                 {
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Brittle, 1, 3));
                 }

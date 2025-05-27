@@ -42,6 +42,8 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
     [SerializeField]
     protected bool stompBoostable; //hold A for boost?
 
+    private bool stompAnimation;
+
     public virtual void OnDrawGizmosSelected()
     {
         if ((wed != null && !wed.inactive && wed.wandering) || (!(wed != null && !wed.inactive) && wandering))
@@ -446,7 +448,40 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
             {
                 WorldPlayer.Instance.Launch(stompLaunch * Vector3.up, 0);
             }
+
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NPCSquish);
+
             //also make some special animations?
+            IEnumerator StompAnimation()
+            {
+                if (stompAnimation)
+                {
+                    yield break;
+                }
+
+                stompAnimation = true;
+                float time = 0;
+                float duration = 0.10f;
+                float stompscale = 0.25f;
+                while (time < duration)
+                {
+                    time += Time.deltaTime;
+                    float lerpVal = Mathf.Min(2 * (time / duration), 2 - 2 * (time / duration));
+                    ac.transform.localScale = Vector3.Lerp(Vector3.one, (Vector3.up) * (1 - stompscale) + (Vector3.right + Vector3.forward) * (1 + stompscale), lerpVal);
+                    //need to position things lower to make it look correct
+                    ac.transform.localPosition = Vector3.down * 0.5f * (height * (lerpVal * stompscale));
+                    yield return null;
+                }
+
+                ac.transform.localScale = Vector3.one;
+                stompAnimation = false;
+            }
+
+            StartCoroutine(StompAnimation());
+
+            //particle too?
+            GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SmallShockwave"), MainManager.Instance.mapScript.transform);
+            effect.transform.position = transform.position + Vector3.up * ((height / 2) - 0.05f);
         }
     }
 }

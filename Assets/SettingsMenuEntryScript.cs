@@ -59,8 +59,8 @@ public class SettingsMenuEntryScript : BoxMenuEntryScript
             }
             else
             {
-                mainString = "<color,red>" + mainString + "</color>";
-                rightString = "<color,red>" + rightString + "</color>";
+                mainString = "<descriptionfluffcolor>" + mainString + "</color>";
+                rightString = "<descriptionfluffcolor>" + rightString + "</color>";
             }
         }
 
@@ -127,8 +127,8 @@ public class SettingsMenuEntryScript : BoxMenuEntryScript
             //maintext.color = disabledColor;
             //righttext.color = disabledColor;
 
-            mainString = "<color,red>" + mainString + "</color>";
-            rightString = "<color,red>" + rightString + "</color>";
+            mainString = "<descriptionfluffcolor>" + mainString + "</color>";
+            rightString = "<descriptionfluffcolor>" + rightString + "</color>";
         }
 
 

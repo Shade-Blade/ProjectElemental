@@ -734,7 +734,7 @@ public class BM_MasterOfAutumn_PollenStorm : EnemyMove
             if (caller.GetAttackHit(t, 0))
             {
                 caller.DealDamage(t, 4, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 2));
             }
             else
             {
@@ -867,7 +867,7 @@ public class BM_MasterOfAutumn_FullBloom : EnemyMove
             if (caller.GetAttackHit(t, 0))
             {
                 caller.DealDamage(t, 8, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 1));
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Dizzy, 1, 2));
             }
             else
             {

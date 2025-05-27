@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using TMPro;
+using Unity.Collections;
 using UnityEngine;
 
 public class TextDisplayer : MonoBehaviour
@@ -78,6 +79,10 @@ public class TextDisplayer : MonoBehaviour
 
     List<GameObject> specialSprites;
 
+    //takes the font size of the textmesh
+    private float defaultFontSize;
+    private float currentFontSize;
+
     //happens before accessing tags
     public event System.EventHandler<ScrollEventArgs> tagScroll;
     public class ScrollEventArgs : System.EventArgs
@@ -96,6 +101,7 @@ public class TextDisplayer : MonoBehaviour
         {
             textMesh = GetComponent<TMP_Text>();
         }
+        //defaultFontSize = textMesh.fontSize;
         /*
         inputString = textMesh.text;
         SetText(inputString);
@@ -161,18 +167,30 @@ public class TextDisplayer : MonoBehaviour
 
         StartEffectCoroutine(0);
     }
-    public virtual void SetText(string text, string[] vars, bool complete = false, bool forceOpaque = false)
+    public virtual void SetText(string text, string[] vars, bool complete = false, bool forceOpaque = false, float fontSize = -1)
     {
         //Debug.Log("td " + (vars != null ? vars[0] : ""));
         //if the vars are tags then this will apply them here
         //don't do that though
         string fixedString = FormattedString.ParseVars(text, vars);
 
-        SetText(fixedString, complete, forceOpaque);
+        SetText(fixedString, complete, forceOpaque, fontSize);
     }
 
-    public virtual void SetText(string text, bool complete = false, bool forceOpaque = false)
+    public virtual void SetText(string text, bool complete = false, bool forceOpaque = false, float fontSize = -1)
     {
+        if (defaultFontSize == 0)
+        {
+            defaultFontSize = textMesh.fontSize;
+        }
+        if (fontSize < 0)
+        {
+            textMesh.fontSize = defaultFontSize;
+        } else
+        {
+            textMesh.fontSize = fontSize;
+        }
+
         DestroySpecialSprites();
         specialSprites = new List<GameObject>();
 
@@ -191,7 +209,8 @@ public class TextDisplayer : MonoBehaviour
 
         //need to preprocess and remove strings that resolve as actual text
         //(so variables and stuff)
-        string internalString = FormattedString.ParseCutTags(text);
+        string internalString = FormattedString.ReplaceTextFileTags(text);
+        internalString = FormattedString.ParseCutTags(internalString);
         internalString = FormattedString.ParseLines(internalString);
         internalString = FormattedString.ParseSymbols(internalString);
         internalString = FormattedString.ParseNonlocalVars(internalString);
@@ -342,8 +361,15 @@ public class TextDisplayer : MonoBehaviour
         TMP_TextInfo textInfo = textMesh.textInfo;
         textInfo.ClearAllMeshInfo();
 
+        //new fix: need to adjust the startindex if the offset is updated
+        List<int> tagOffsets = new List<int>();
+        for (int i = 0; i < tags.Count; i++)
+        {
+            tagOffsets.Add(0);
+        }
+
         //Determine where certain effects should be applied.
-        for (int j = 0; j < cleanString.Length + 1; j++)
+        for (int j = 0; j < cleanString.Length + 1 + offset; j++)
         {
             //Debug.Log(cleanString[j]);
             float[] t_args = new float[0]; //null;
@@ -353,8 +379,9 @@ public class TextDisplayer : MonoBehaviour
                 {
                     continue;
                 }
-                
-                
+
+                tagOffsets[i] = offset;
+
                 if (tags[i].args == null)
                 {
                     t_args = new float[0];
@@ -717,6 +744,7 @@ public class TextDisplayer : MonoBehaviour
                 }
             }
 
+
             /*
             string temp2 = "";
             for (int l = 0; l < t_args.Length; l++)
@@ -768,7 +796,12 @@ public class TextDisplayer : MonoBehaviour
             }
         }
 
-        for (int j = 0; j < cleanString.Length; j++)
+        for (int i = 0; i < tags.Count; i++)
+        {
+            tags[i].startIndex += tagOffsets[i];
+        }
+
+        for (int j = 0; j < cleanString.Length + offset; j++)
         {
             TextEffectSet t = new TextEffectSet(j, null);
             t.pieces = new List<TextEffectSet.TextEffectPiece>();
@@ -847,6 +880,17 @@ public class TextDisplayer : MonoBehaviour
         //textInfo.Clear();
         //textMesh.ForceMeshUpdate();
 
+        //-2 = special case (do not shrink text to fit the box)
+        //  Used for popups that have dynamic heights
+        if (textMesh.GetRenderedValues()[1] > textMesh.rectTransform.sizeDelta.y && fontSize != -2)
+        {
+            Debug.Log(textMesh.GetRenderedValues()[1] + " " + textMesh.rectTransform.sizeDelta.y);
+            //try again
+            SetText(text, complete, forceOpaque, textMesh.fontSize * (12f / 15f));
+            return;
+        }
+
+
         StartEffectCoroutine(offset);
     }
 
@@ -865,8 +909,18 @@ public class TextDisplayer : MonoBehaviour
         Debug.Log(a);
         */
 
-        TMP_CharacterInfo charInfoA = textInfo.characterInfo[offset - 1];
-        TMP_CharacterInfo charInfoB = textInfo.characterInfo[offset];
+        TMP_CharacterInfo charInfoA;// = textInfo.characterInfo[offset - 1];
+        TMP_CharacterInfo charInfoB;// = textInfo.characterInfo[offset];
+
+        charInfoB = textInfo.characterInfo[offset];
+        if (offset == 0)
+        {
+            charInfoA = charInfoB;
+        }
+        else
+        {
+            charInfoA = textInfo.characterInfo[offset - 1];
+        }
 
         Vector3 bottomLeft = Vector3.zero;
         Vector3 topRight = Vector3.zero;
@@ -1917,7 +1971,7 @@ public class TextDisplayer : MonoBehaviour
 
                 if (unseenTags != null && unseenTags.Count > 0)
                 {
-                    TagEntry t = unseenTags.Find((e) => (e.startIndex <= charsVisible));
+                    TagEntry t = unseenTags.Find((e) => (e.startIndex <= charsVisible - 1));
                     while (t != null)
                     {
                         //Debug.Log(t);
@@ -2049,7 +2103,7 @@ public class TextDisplayer : MonoBehaviour
             {
                 Text_SpecialSprite sps = specialSprites[i].GetComponent<Text_SpecialSprite>();
                 
-                if (sps.index > charsVisible + 1)
+                if (sps.index > charsVisible)
                 {
                     specialSprites[i].SetActive(false);
                 } else
@@ -2209,11 +2263,6 @@ public class TextDisplayer : MonoBehaviour
 
 
                     float waveAngle = set.index * wavycharoffset * a_waveOffset + wavyomega * a_waveOmega * Time.time;
-                    if (waveAngle < 0)
-                    {
-                        waveAngle += 360;
-                    }
-                    waveAngle %= 360;
                     
                     //vertAnim.angle = Mathf.SmoothStep(-vertAnim.angleRange, vertAnim.angleRange, Mathf.PingPong(loopCount / 25f * vertAnim.speed, 1f));
 

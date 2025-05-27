@@ -657,6 +657,7 @@ public class BattleControl : MonoBehaviour
     public GameObject baseMenuOption;
     public GameObject baseMenuDescriptor;
     public GameObject baseMenuBSwap;
+    public GameObject baseRibbonHelper;
 
     //Other sprites
     public Sprite damageEffectStar;
@@ -924,7 +925,7 @@ public class BattleControl : MonoBehaviour
 
     public static void SetCameraDefault(float halfLife = 0.05f)
     {
-        MainManager.Instance.Camera.SetManual(new Vector3(0, 1.1f, -3.5f), new Vector3(0, 0, 0), halfLife);
+        MainManager.Instance.Camera.SetManual(new Vector3(0, 1.1f, -3.2f), new Vector3(0, 0, 0), halfLife);
 
         //MainManager.Instance.Camera.SetManual(new Vector3(0, 1.5f, -4.8f), new Vector3(0, 0, 0), halfLife);
 
@@ -937,7 +938,7 @@ public class BattleControl : MonoBehaviour
     }
     public static void SetCameraDefaultDelayed(float halfLife = 0.05f)
     {
-        MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.1f, -3.5f), new Vector3(0, 0, 0), halfLife);
+        MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.1f, -3.2f), new Vector3(0, 0, 0), halfLife);
 
         //MainManager.Instance.Camera.SetManualDelayed(new Vector3(0, 1.5f, -4.8f), new Vector3(0, 0, 0), halfLife);
 
@@ -1544,6 +1545,20 @@ public class BattleControl : MonoBehaviour
             entities[i].HideHPBar();
         }
     }
+    public void ShowRibbonHelpers()
+    {
+        foreach (PlayerEntity p in GetPlayerEntities())
+        {
+            p.ShowRibbonHelper();
+        }
+    }
+    public void HideRibbonHelpers()
+    {
+        foreach (PlayerEntity p in GetPlayerEntities())
+        {
+            p.HideRibbonHelper();
+        }
+    }
 
     public Color[] GetHPBarColors()
     {
@@ -1553,10 +1568,10 @@ public class BattleControl : MonoBehaviour
         output = hpBarColors[GetHPBarStyleIndex()];
 
         /*
-        output[0] = hpBarColorA;
+        output[0] = hpBarColorA;    + damage light star
         output[1] = hpBarColorB;
         output[2] = bufferBar;
-        output[3] = emptyBar;
+        output[3] = emptyBar;       + damage dark star
         output[4] = hpTextColor;
         output[5] = hpOutlineColor;
         */
@@ -2130,6 +2145,7 @@ public class BattleControl : MonoBehaviour
         baseMenuOption = (GameObject)Resources.Load("Menu/BaseMenuOption");
         baseMenuDescriptor = (GameObject)Resources.Load("Menu/BaseMenuDescriptor");
         baseMenuBSwap = (GameObject)Resources.Load("Menu/BaseMenuBSwap");
+        baseRibbonHelper = (GameObject)Resources.Load("Battle/RibbonGuardHelper");
 
         damageEffectStar = MainManager.Instance.damageEffectStar;
         energyEffect = MainManager.Instance.energyEffect;
@@ -2155,6 +2171,7 @@ public class BattleControl : MonoBehaviour
         //to do: make this a data table
         //manually specifying everything in code is messy
 
+        /*
         //"easy" (green/blue) (blue numbers though)
         hpBarColors[0] = new Color[] { new Color(0f, 1f, 0.57f, 1), new Color(0f, 0.80f, 0.5f, 1), new Color(0.66f, 0.91f, 0.99f, 1), new Color(0, 0.55f, 0.6f, 1), new Color(0.66f, 0.91f, 0.99f, 1), new Color(0, 0, 0, 1) };
 
@@ -2178,6 +2195,31 @@ public class BattleControl : MonoBehaviour
 
         //(white/black) (HP number colors are black with white outline (inverted of normal))
         hpBarColors[7] = new Color[] { new Color(1, 1, 1, 1), new Color(1, 1, 1, 1), new Color(0.5f, 0.5f, 0.5f, 1), new Color(0, 0, 0, 1), new Color(0, 0, 0, 1), new Color(1, 1, 1, 1) };
+        */
+
+        //"easy" (green/blue) (blue numbers though)
+        hpBarColors[0] = new Color[] { new Color(0.5f, 1f, 0.9f, 1), new Color(0.4f, 0.9f, 0.8f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0.25f, 0.65f, 0.7f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0, 0, 0, 1) };
+
+        //"normal" (yellow/red)
+        hpBarColors[1] = new Color[] { new Color(1f, 1f, 0.5f, 1), new Color(0.9f, 0.9f, 0.4f, 1), new Color(1, 1, 1, 1), new Color(1f, 0.2f, 0.2f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
+
+        //"hard / super curse" (red/dark pink)
+        hpBarColors[2] = new Color[] { new Color(1f, 0.35f, 0.35f, 1), new Color(0.9f, 0.25f, 0.25f, 1), new Color(1, 0.8f, 0.8f, 1), new Color(0.6f, 0.2f, 0.4f, 1), new Color(1, 0.8f, 0.8f, 1), new Color(0, 0, 0, 1) };
+
+        //"ultra curse" (gold/brown)
+        hpBarColors[3] = new Color[] { new Color(1, 0.95f, 0.6f, 1), new Color(0.9f, 0.85f, 0.5f, 1), new Color(1, 1, 0.8f, 1), new Color(0.8f, 0.45f, 0.25f, 1), new Color(1, 1, 0.8f, 1), new Color(0, 0, 0, 1) };
+
+        //"mega curse" (cyan/dark gray)
+        hpBarColors[4] = new Color[] { new Color(0.5f, 1f, 1f, 1), new Color(0.4f, 0.9f, 0.9f, 1), new Color(0.8f, 1, 1, 1), new Color(0.65f, 0.65f, 0.8f, 1), new Color(0.8f, 1, 1, 1), new Color(0, 0, 0, 1) };
+
+        //(lime ish green/dark green)
+        hpBarColors[5] = new Color[] { new Color(0.85f, 1f, 0.5f, 1), new Color(0.75f, 0.9f, 0.4f, 1), new Color(0.8f, 1, 0.8f, 1), new Color(0, 0.8f, 0, 1), new Color(0.8f, 1, 0.8f, 1), new Color(0, 0, 0, 1) };
+
+        //(magenta/purple)
+        hpBarColors[6] = new Color[] { new Color(1f, 0.5f, 1f, 1), new Color(0.9f, 0.4f, 0.9f, 1), new Color(1, 0.8f, 1, 1), new Color(0.6f, 0.25f, 0.8f, 1), new Color(1, 0.8f, 1, 1), new Color(0, 0, 0, 1) };
+
+        //(white/black) (HP number colors are black with white outline (inverted of normal))
+        hpBarColors[7] = new Color[] { new Color(1, 1, 1, 1), new Color(0.9f, 0.9f, 0.9f, 1), new Color(0.5f, 0.5f, 0.5f, 1), new Color(0, 0, 0, 1), new Color(0, 0, 0, 1), new Color(1, 1, 1, 1) };
     }
     /*
     public void UnloadBattleAssets()
@@ -2387,6 +2429,7 @@ public class BattleControl : MonoBehaviour
         for (int i = 0; i < pel.Count; i++)
         {
             perTurnDamage += pel[i].perTurnDamageDealt;
+            pel[i].SetInactiveColor(false);
         }
 
         switch (outcome)
@@ -2804,6 +2847,7 @@ public class BattleControl : MonoBehaviour
 
         if (levelupText.Length > 0)
         {
+            levelupText = "<system>" + levelupText;
             yield return StartCoroutine(MainManager.Instance.DisplayTextBox(levelupText, null));
         }
 
@@ -3024,6 +3068,7 @@ public class BattleControl : MonoBehaviour
         float playermult = player ? -1 : 1;
         be.sameFrameHealEffects++;
 
+        //I don't think I'll need 7 but I'll just code it anyway
         if (be.sameFrameHealEffects == 2)
         {
             position += Vector3.right * 0.5f * playermult;
@@ -3034,11 +3079,19 @@ public class BattleControl : MonoBehaviour
         }
         if (be.sameFrameHealEffects == 4)
         {
-            position += Vector3.right * 0.3f * playermult + Vector3.up;
+            position += Vector3.right * 0.3f * playermult + Vector3.up * 0.5f;
         }
         if (be.sameFrameHealEffects == 5)
         {
-            position += Vector3.left * 0.3f * playermult + Vector3.up;
+            position += Vector3.left * 0.3f * playermult + Vector3.up * 0.5f;
+        }
+        if (be.sameFrameHealEffects == 6)
+        {
+            position += Vector3.left * 0.3f * playermult + Vector3.down * 0.5f;
+        }
+        if (be.sameFrameHealEffects == 7)
+        {
+            position += Vector3.right * 0.3f * playermult + Vector3.down * 0.5f;
         }
 
         o.transform.position = position;
@@ -3871,6 +3924,14 @@ public class BattleControl : MonoBehaviour
 
             s.gameObject.transform.position = posB;
 
+            time = 0;
+            while (time < 1)
+            {
+                time += Time.deltaTime / (duration / 6);
+                s.gameObject.transform.localScale = Vector3.one * 1.5f * (1 - time);
+                yield return null;
+            }
+
             Destroy(s.gameObject);
         }
 
@@ -4028,20 +4089,27 @@ public class BattleControl : MonoBehaviour
             GameObject g = Instantiate(hpStaminaDisplayer, MainManager.Instance.Canvas.transform);
             HPStaminaDisplayerScript s = g.GetComponent<HPStaminaDisplayerScript>();
             s.SetEntity(blist[i]);
-            s.SetPosition(blist.Count - i - 1);
+            if (blist.Count == 1)
+            {
+                s.SetPosition(0.5f);
+            }
+            else
+            {
+                s.SetPosition(blist.Count - i - 1);
+            }
             statDisplayers.Add(g);
         }
 
         GameObject h = Instantiate(epDisplayer, MainManager.Instance.Canvas.transform);
         EPDisplayerScript d = h.GetComponent<EPDisplayerScript>();
         d.Setup(playerData);
-        d.SetPosition();
+        d.SetPositionBattle();
         statDisplayers.Add(h);
 
         GameObject k = Instantiate(seDisplayer, MainManager.Instance.Canvas.transform);
         SEDisplayerScript se = k.GetComponent<SEDisplayerScript>();
         se.Setup(playerData);
-        se.SetPosition();
+        se.SetPositionBattle();
         statDisplayers.Add(k);
 
         GameObject x = Instantiate(xpDisplayer, MainManager.Instance.Canvas.transform);
@@ -4220,6 +4288,19 @@ public class BattleControl : MonoBehaviour
         Debug.Log("current: " + output);
         */
     }
+
+    public int GetPartyCumulativeEffectPotency(int posId, Effect.EffectType effect)
+    {
+        int potency = 0;
+
+        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted((e) => ((e.posId < 0) == (posId < 0))))
+        {
+            potency += b.GetEffectPotency(effect);
+        }
+
+        return potency;
+    }
+
     public void Update()
     {
         if (!turnLoopRunning && doTurnLoop)
@@ -4442,8 +4523,10 @@ public class BattleControl : MonoBehaviour
 
             if (current.HasPreBattleCoroutine())
             {
+                ShowRibbonHelpers();
                 yield return StartCoroutine(current.PreBattleCoroutine());
                 yield return new WaitForSeconds(0.5f);
+                HideRibbonHelpers();
             }
         }
 
@@ -4581,7 +4664,15 @@ public class BattleControl : MonoBehaviour
                     BattleEntity firstStriker = elist[0]; //GetEntityByID(firstStrikePosId);
                     if (firstStriker != null)
                     {
+                        if (firstStriker.posId >= 0)
+                        {
+                            ShowRibbonHelpers();
+                        }
                         yield return StartCoroutine(firstStriker.FirstStrike(firstStrikeMove));
+                        if (firstStriker.posId >= 0)
+                        {
+                            HideRibbonHelpers();
+                        }
                     }
                 }
                 else
@@ -4589,7 +4680,15 @@ public class BattleControl : MonoBehaviour
                     BattleEntity firstStriker = GetEntityByID(firstStrikePosId);
                     if (firstStriker != null)
                     {
+                        if (firstStriker.posId >= 0)
+                        {
+                            ShowRibbonHelpers();
+                        }
                         yield return StartCoroutine(firstStriker.FirstStrike(firstStrikeMove));
+                        if (firstStriker.posId >= 0)
+                        {
+                            HideRibbonHelpers();
+                        }
                     }
                 }
             }
@@ -4642,6 +4741,7 @@ public class BattleControl : MonoBehaviour
 
         PlayerTurnController.Instance.ResetActionCommands();
         PlayerTurnController.Instance.ResetPlayerSprites();
+        ShowRibbonHelpers();
 
         AbsorbFocusCheck();
         //apply buffered effects
@@ -4671,8 +4771,10 @@ public class BattleControl : MonoBehaviour
                     ItemMove i = (ItemMove)(reactionMoveList[0].move);
                     if (Instance.playerData.HasItem(i.GetItem()))
                     {
+                        reactionMoveList[0].user.StopIdle();
                         yield return StartCoroutine(reactionMoveList[0].user.PreReact(reactionMoveList[0].move, reactionMoveList[0].target));
                         yield return StartCoroutine(reactionMoveList[0].move.ExecuteOutOfTurn(reactionMoveList[0].user, reactionMoveList[0].target));
+                        reactionMoveList[0].user.StartIdle();
                         //yield return StartCoroutine(CheckEndBattle());
                         //if (reactionMoveList.Count > 1)
                         //{
@@ -4687,15 +4789,17 @@ public class BattleControl : MonoBehaviour
                         DisplayMovePopup(reactionMoveList[0].move.GetName());
                     }
                     //this replaces the wait for 0.25 seconds
+                    reactionMoveList[0].user.StopIdle();
                     yield return StartCoroutine(reactionMoveList[0].user.PreReact(reactionMoveList[0].move, reactionMoveList[0].target));
                     yield return StartCoroutine(reactionMoveList[0].move.ExecuteOutOfTurn(reactionMoveList[0].user, reactionMoveList[0].target));
+                    reactionMoveList[0].user.StartIdle();
                     //yield return StartCoroutine(CheckEndBattle());
                     DestroyMovePopup();
                     //if (reactionMoveList.Count > 1)
                     //{
                     //    yield return new WaitForSeconds(0.5f);
                     //}
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(0.7f);
                 }
             }
 
@@ -4718,6 +4822,7 @@ public class BattleControl : MonoBehaviour
 
         float timestamp = Time.time;
 
+        HideRibbonHelpers();
         yield return StartCoroutine(HandleBattlePopups());
 
         //wait until animations done (putting this after the popup check since the popups won't interfere with the events)
@@ -5391,16 +5496,18 @@ public class BattleControl : MonoBehaviour
 
                 if (current.currMove != null)
                 {
+                    ShowRibbonHelpers();
                     current.moveExecuting = true;
                     current.moveActive = true;
                     if (current.currMove.ShowNamePopup())
                     {
                         DisplayMovePopup(current.currMove.GetName());
                     }
-                    yield return new WaitForSeconds(0.5f); //note: not in reactions because they have their own standard particle effect
+                    yield return new WaitForSeconds(0.6f); //note: not in reactions because they have their own standard particle effect
                     StartCoroutine(current.ExecuteMoveCoroutine(current.currMove));
                     yield return new WaitUntil(() => current == null || !current.moveActive);
                     DestroyMovePopup();
+                    HideRibbonHelpers();
                 }
 
                 //try to use bonus moves
@@ -5485,7 +5592,7 @@ public class BattleControl : MonoBehaviour
                 {
                     DisplayMovePopup(sp.GetName());
                 }
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.7f);
                 yield return sp.Execute(current);
                 DestroyMovePopup();
             }
@@ -5496,7 +5603,7 @@ public class BattleControl : MonoBehaviour
                 {
                     DisplayMovePopup(sp.GetName());
                 }
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.7f);
                 yield return sp.Execute(current);
                 DestroyMovePopup();
             }
@@ -5507,7 +5614,7 @@ public class BattleControl : MonoBehaviour
                 {
                     DisplayMovePopup(sp.GetName());
                 }
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.7f);
                 yield return sp.Execute(current);
                 DestroyMovePopup();
             }
@@ -5518,7 +5625,7 @@ public class BattleControl : MonoBehaviour
                 {
                     DisplayMovePopup(cf.GetName());
                 }
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.7f);
                 yield return cf.Execute(current);
                 DestroyMovePopup();
             }
@@ -5607,7 +5714,7 @@ public class BattleControl : MonoBehaviour
         {
             battleMapScript.OnPostTurn();
         }
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.7f);
 
         yield return StartCoroutine(RunOutOfTurnEvents());
         turnLoopRunning = false;

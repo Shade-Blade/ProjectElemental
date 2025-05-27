@@ -372,6 +372,7 @@ public class RibbonMenuEntry : BoxMenuEntry
 public class MoveMenuEntry : BoxMenuEntry
 {
     public int cost;
+    public int staminaCost;
     //public bool isHP = false;         (MoveCurrency.HP)
     //public bool hasPrice = true;      rightText != null
     public TargetArea target = new TargetArea(TargetArea.TargetAreaType.None);
@@ -396,11 +397,24 @@ public class MoveMenuEntry : BoxMenuEntry
         name = move.GetName();
         description = move.GetDescription();
         cost = move.GetBaseCost();
+        staminaCost = move.GetBaseStaminaCost();
         target = move.GetBaseTarget();
         currency = move.GetCurrency();
 
         rightText = cost > 0 ? cost.ToString() : null;
         spriteString = cost > 0 ? " " + BattleHelper.GetCurrencyIcon(currency) : null;
+
+        if (staminaCost != 0)
+        {
+            if (cost == staminaCost)
+            {
+                spriteString += BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina);
+            }
+            else
+            {
+                spriteString += "<size,50%>" + staminaCost + " " + BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina) + "</size>";
+            }
+        }        
     }
 
     //calculates costs too
@@ -410,6 +424,7 @@ public class MoveMenuEntry : BoxMenuEntry
         name = move.GetName();
         description = move.GetDescription(move.level);
         cost = move.GetCost(caller, move.level);
+        staminaCost = move.GetStaminaCost(caller, move.level);
         target = move.GetTargetArea(caller, move.level);
         canUse = move.CanChoose(caller, move.level);
         maxLevel = move.GetMaxLevel(caller);
@@ -418,9 +433,9 @@ public class MoveMenuEntry : BoxMenuEntry
         //redundant?
         this.move = move;
 
-        if (cost != move.GetBaseCost())
+        if (cost != move.GetBaseCost(level) && move.GetCurrency(caller) == move.GetCurrency())
         {
-            rightText = cost > 0 ? cost.ToString() + " <strikethrough><size,50%><color,red>" + move.GetBaseCost() + "</color></size></strikethrough>" : null;
+            rightText = cost > 0 ? cost.ToString() + " <strikethrough><size,50%><descriptionwarncolor>" + move.GetBaseCost(level) + "</color></size></strikethrough>" : null;
         }
         else
         {
@@ -428,6 +443,18 @@ public class MoveMenuEntry : BoxMenuEntry
         }
 
         spriteString = GetSpriteString(currency);
+
+        if (staminaCost != 0)
+        {
+            if (cost == staminaCost)
+            {
+                spriteString += BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina);
+            }
+            else
+            {
+                spriteString += "<size,50%>" + staminaCost + " " + BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina) + "</size>";
+            }
+        }
     }
 
     public string GetSpriteString(BattleHelper.MoveCurrency currency)
@@ -444,10 +471,11 @@ public class MoveMenuEntry : BoxMenuEntry
         description = move.GetDescription(level);
         canUse = move.CanChoose(caller, level);
         cost = move.GetCost(caller, level);
+        staminaCost = move.GetStaminaCost(caller, level);
         target = move.GetTargetArea(caller, level);
-        if (cost != move.GetBaseCost(level))
+        if (cost != move.GetBaseCost(level) && move.GetCurrency(caller) == move.GetCurrency())
         {
-            rightText = cost > 0 ? cost.ToString() + " <strikethrough><size,50%><color,red>" + move.GetBaseCost(level) + "</color></size></strikethrough>" : null;
+            rightText = cost > 0 ? cost.ToString() + " <strikethrough><size,50%><descriptionwarncolor>" + move.GetBaseCost(level) + "</color></size></strikethrough>" : null;
         }
         else
         {
@@ -455,6 +483,18 @@ public class MoveMenuEntry : BoxMenuEntry
         }
         currency = move.GetCurrency(caller);
         spriteString = GetSpriteString(currency);
+
+        if (staminaCost != 0)
+        {
+            if (cost == staminaCost)
+            {
+                spriteString += BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina);
+            }
+            else
+            {
+                spriteString += "<size,50%>" + staminaCost + " " + BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina) + "</size>";
+            }
+        }
     }
 }
 

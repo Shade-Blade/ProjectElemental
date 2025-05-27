@@ -1707,7 +1707,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_SolarGrove
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0
@@ -3146,6 +3146,11 @@ PrefabInstance:
         type: 3}
       propertyPath: wed.initialFacingAngle
       value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
+        type: 3}
+      propertyPath: encounter.battleMapName
+      value: TestBattle_SolarGrove
       objectReference: {fileID: 0}
     - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
         type: 3}
@@ -6670,6 +6675,11 @@ PrefabInstance:
         type: 3}
       propertyPath: wed.initialFacingAngle
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: encounter.battleMapName
+      value: TestBattle_SolarGrove
       objectReference: {fileID: 0}
     - target: {fileID: 6213000682675710652, guid: 453de82eec53d64479e0ce262eafa944,
         type: 3}

@@ -82,7 +82,7 @@ public class BE_Blazecrest : BattleEntity
             {
                 lastHitWeakness = true;
             }
-            if (hp * 2 <= maxHP || lastHitWeakness)
+            if (hp < maxHP)
             {
                 usedRageFlare = true;
                 counterCount++;
@@ -531,7 +531,7 @@ public class BM_Heatwing_Hard_DreadScreech : EnemyMove
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Dark))
             {
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
-                caller.InflictEffect(t, new Effect(Effect.EffectType.Dread, 1, 1));
+                caller.InflictEffect(t, new Effect(Effect.EffectType.Dread, 1, 2));
             }
             else
             {

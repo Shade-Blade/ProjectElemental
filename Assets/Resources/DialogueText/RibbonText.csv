@@ -1,14 +1,14 @@
-Index,Name,Block,Rest Effect,Passive,Ribbon Power
-SafetyRibbon,Safety Ribbon,"Hold <button,a> to do a Safety Block, which acts the same as blocking normally but causes you to lose 2 energy every time.",No effect.,,
-SharpRibbon,Sharp Ribbon,"Hold <button,b> to do a Sharp Block, which causes you to take 1 more damage instead of 1 less damage, but the enemy takes 1 damage as a contact hazard.",No effect.,,
-BeginnerRibbon,Beginner Ribbon,Block window is increased.,Gain Stamina equal to half of your Agility.,,"Gives you 1 Defocus, Sunder and Enervate."
-ExpertRibbon,Expert Ribbon,"Block window is decreased, but blocking reduces damage by 3 instead of 1.",Cures most negative effects.,,Gives you 3 turns of Seal and Immunity.
-ChampionRibbon,Champion Ribbon,"Quickly press <button,a> twice to do a Perfect Block, which will reduce damage by 4 and prevent most negative effects from being inflicted.","If the user has no living allies, you get 5 hp and 5 ep.",,"Gives you 3 turns of Attack Down 1, Defense Down 1 and Endurance Down 1."
-StaticRibbon,Static Ribbon,"Tap <button,left> and <button,a> to do an Absorbing Block, which does not reduce damage taken but you gain energy equal to half the damage taken.",Gives you 2 energy.,,Gives you 3 turns of Paralyze.
-SlimyRibbon,Slimy Ribbon,"Tap <button,up> and <button,a> to do a Dark Block, which acts as a contact hazard that does 3 dark damage.",Gives you Attack Up 1 for 3 turns,,Gives you 3 turns of Poison.
-FlashyRibbon,Flashy Ribbon,"Tap <button,down> and <button,a> to do a Clear Block, which prevents most negative effects from being inflicted.",Gives you Defense Up 1 for 3 turns,,Gives you 3 turns of Dizzy.
-SoftRibbon,Soft Ribbon,"Tap <button,right> and <button,a> to do a Soft Block, which reduces damage by 2 instead of 1.",Gives you 2 health.,,Gives you 3 turns of Sleep.
-MimicRibbon,Mimic Ribbon,,,Mimics the effects and appearance of the ribbon the other character is wearing. No effect if they are not wearing any ribbons.,
-ThornyRibbon,Thorny Ribbon,Can't block,Take 1 damage.,"Attack power increases by 1, but take 1 damage every turn.",Gives you 3 turns of Berserk and Focus 2.
-DiamondRibbon,Diamond Ribbon,"Tap <button,b> and <button,a> to do a Diamond Block, which does not reduce damage taken but you gain coins equal to damage taken.",Gives you 15 coins.,,Gives you 3 turns of Freeze.
-RainbowRibbon,Rainbow Ribbon,Gives you access to the special blocking of the other ribbons.,No effect.,,
+Index,Name,Block,Rest Effect,Passive,Ribbon Power,Helper
+SharpRibbon,Sharp Ribbon,"Hold <button,b> to do a Sharp Block, which causes you to take 1 more damage instead of 1 less damage, but the enemy takes 1 damage as a contact hazard.",No effect.,,,"Hold <button,B>"
+SafetyRibbon,Safety Ribbon,"Hold <button,a> to do a Safety Block, which acts the same as blocking normally but causes you to lose 2 energy every time.",No effect.,,,"Hold <button,A>"
+BeginnerRibbon,Beginner Ribbon,Block window is increased.,Gain Stamina equal to half of your Agility.,,"Gives you 1 Defocus, Sunder and Enervate.","<button,A>"
+ExpertRibbon,Expert Ribbon,"Block window is decreased, but blocking reduces damage by 3 instead of 1.",Cures most negative effects.,,Gives you 3 turns of Seal and Immunity.,"<button,A>"
+ChampionRibbon,Champion Ribbon,"Quickly press <button,a> twice to do a Perfect Block, which will reduce damage by 4 and prevent most negative effects from being inflicted.","If the user has no living allies, you get 5 hp and 5 ep.",,"Gives you 3 turns of Attack Down 1, Defense Down 1 and Endurance Down 1.","<button,A> + <button,A>"
+StaticRibbon,Static Ribbon,"Tap <button,left> and <button,a> to do an Absorbing Block, which does not reduce damage taken but you gain energy equal to half the damage taken.",Gives you 2 energy.,,Gives you 3 turns of Paralyze.,"<button,left> + <button,A>"
+SlimyRibbon,Slimy Ribbon,"Tap <button,up> and <button,a> to do a Dark Block, which acts as a contact hazard that does 3 dark damage.",Gives you Attack Up 1 for 3 turns,,Gives you 3 turns of Poison.,"<button,up> + <button,A>"
+FlashyRibbon,Flashy Ribbon,"Tap <button,down> and <button,a> to do a Clear Block, which prevents most negative effects from being inflicted.",Gives you Defense Up 1 for 3 turns,,Gives you 3 turns of Dizzy.,"<button,down> + <button,A>"
+SoftRibbon,Soft Ribbon,"Tap <button,right> and <button,a> to do a Soft Block, which reduces damage by 2 instead of 1.",Gives you 2 health.,,Gives you 3 turns of Sleep.,"<button,right> + <button,A>"
+MimicRibbon,Mimic Ribbon,,,Mimics the effects and appearance of the ribbon the other character is wearing. No effect if they are not wearing any ribbons.,,No special block
+ThornyRibbon,Thorny Ribbon,Can't block,Take 1 damage.,"Attack power increases by 1, but take 1 damage every turn.",Gives you 3 turns of Berserk and Focus 2.,Can't block
+DiamondRibbon,Diamond Ribbon,"Tap <button,b> and <button,a> to do a Diamond Block, which does not reduce damage taken but you gain coins equal to damage taken.",Gives you 15 coins.,,Gives you 3 turns of Freeze.,"<button,B> + <button,A>"
+RainbowRibbon,Rainbow Ribbon,Gives you access to the special blocking of the other ribbons.,No effect.,,,<rainbow>All special blocks</rainbow>

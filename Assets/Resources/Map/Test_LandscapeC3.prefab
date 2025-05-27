@@ -103,6 +103,8 @@ MonoBehaviour:
   skyboxID: GemstoneIslands
   ambientLight: {r: 0.5, g: 0.5, b: 0.6, a: 1}
   playerHolder: {fileID: 388424779153874435}
+  useDefaultLight: 0
+  useDefaultParticles: 0
   exits: []
   worldObjects: []
   worldEntities: []
@@ -964,7 +966,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_GemstoneIslands
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0
@@ -1918,7 +1920,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_GemstoneIslands
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0
@@ -2112,7 +2114,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_GemstoneIslands
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0

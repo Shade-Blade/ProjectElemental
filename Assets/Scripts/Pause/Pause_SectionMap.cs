@@ -13,6 +13,8 @@ public class Pause_SectionMap : Pause_SectionShared
 
     public TextDisplayer nameBox;
 
+    public GameObject dotParent;
+
     //Handler should handle this
     //also works in negative direction
     //public Vector3 maxMapDelta; //120,280
@@ -101,6 +103,12 @@ public class Pause_SectionMap : Pause_SectionShared
         //move it to the current worldlocation
         MainManager.WorldLocation curLocation = MainManager.WorldLocation.None;
         Enum.TryParse(MainManager.Instance.mapScript.worldLocation, out curLocation);
+
+        dots = new List<MapDotScript>();
+        foreach (MapDotScript mds in FindObjectsOfType<MapDotScript>(dotParent))
+        {
+            dots.Add(mds);
+        }
 
         //move pointer to right place
         selectedDot = dots.Find((e) => (curLocation == e.worldLocation));

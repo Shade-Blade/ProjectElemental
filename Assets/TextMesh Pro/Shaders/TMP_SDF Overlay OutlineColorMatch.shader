@@ -1,4 +1,4 @@
-Shader "TextMeshPro/Distance Field Overlay 1" {
+Shader "TextMeshPro/Distance Field Overlay OutlineColorMatch" {
 
 Properties {
 	_FaceTex			("Face Texture", 2D) = "white" {}
@@ -252,7 +252,7 @@ SubShader {
 			float softness = (_OutlineSoftness * _ScaleRatioA) * scale;
 
 			half4 faceColor = _FaceColor;
-			half4 outlineColor = _OutlineColor;
+			half4 outlineColor = _OutlineColor * input.color;
 
 			faceColor.rgb *= input.color.rgb;
 

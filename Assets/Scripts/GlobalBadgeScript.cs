@@ -396,7 +396,7 @@ public struct Badge
         Supercooled,
         HealthSight,
         DefenseSight,
-        StatusSight,
+        AilmentSight,
         CharmSight,
         PowerSight,
         ItemSight,
@@ -554,6 +554,10 @@ public struct Badge
             if (split[0].Equals("StatusConversion"))
             {
                 output.type = BadgeType.AilmentConversion;
+            }
+            if (split[0].Equals("StatusSight"))
+            {
+                output.type = BadgeType.AilmentSight;
             }
         }
 

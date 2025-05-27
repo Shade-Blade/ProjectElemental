@@ -7,6 +7,7 @@ public class AchievementPopupScript : TextDisplayer
 {
     public float width;
     public Image baseBox;
+    public Image baseBoxBorder;
 
     Vector3 targetPos;
     public RectTransform rectTransform;
@@ -49,7 +50,7 @@ public class AchievementPopupScript : TextDisplayer
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
         base.SetTextNoFormat(text);
     }
-    public override void SetText(string text, string[] vars, bool complete = true, bool forceOpaque = true)
+    public override void SetText(string text, string[] vars, bool complete = true, bool forceOpaque = true, float fontSize = -1)
     {
         //textMesh = GetComponentInChildren<TMPro.TMP_Text>();
         //baseBox = GetComponentInChildren<Image>();
@@ -62,9 +63,9 @@ public class AchievementPopupScript : TextDisplayer
         rectTransform.anchoredPosition = Vector3.up * ypos + Vector3.right * width;
 
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
-        base.SetText(text, vars, complete, forceOpaque);
+        base.SetText(text, vars, complete, forceOpaque, fontSize);
     }
-    public override void SetText(string text, bool complete = true, bool forceOpaque = true)
+    public override void SetText(string text, bool complete = true, bool forceOpaque = true, float fontSize = -1)
     {
         //textMesh = GetComponentInChildren<TMPro.TMP_Text>();
         //baseBox = GetComponentInChildren<Image>();
@@ -77,7 +78,7 @@ public class AchievementPopupScript : TextDisplayer
         rectTransform.anchoredPosition = Vector3.up * ypos + Vector3.right * width;
 
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
-        base.SetText(text, complete, forceOpaque);
+        base.SetText(text, complete, forceOpaque, fontSize);
     }
 
     public void RecalculateBoxSize()
@@ -89,7 +90,7 @@ public class AchievementPopupScript : TextDisplayer
         textMesh.rectTransform.sizeDelta = new Vector2(width, textMesh.GetRenderedValues()[1] + 10); //baseBox.rectTransform.sizeDelta.y);
 
         baseBox.rectTransform.sizeDelta = new Vector2(width + 30, textMesh.GetRenderedValues()[1] + 20); //baseBox.rectTransform.sizeDelta.y);
-
+        baseBoxBorder.rectTransform.sizeDelta = baseBox.rectTransform.sizeDelta;
     }
 
     public void Update()

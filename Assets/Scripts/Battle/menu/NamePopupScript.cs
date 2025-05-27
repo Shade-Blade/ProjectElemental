@@ -7,6 +7,7 @@ public class NamePopupScript : TextDisplayer
 {
     public float width;
     public Image baseBox;
+    public Image baseBoxBorder;
 
     Vector3 targetPos;
     public RectTransform rectTransform;
@@ -41,12 +42,12 @@ public class NamePopupScript : TextDisplayer
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
         base.SetTextNoFormat(text);
     }
-    public override void SetText(string text, string[] vars, bool complete = true, bool forceOpaque = true)
+    public override void SetText(string text, string[] vars, bool complete = true, bool forceOpaque = true, float fontSize = -1)
     {
         //textMesh = GetComponentInChildren<TMPro.TMP_Text>();
         //baseBox = GetComponentInChildren<Image>();
 
-        base.SetText(text, vars, complete, forceOpaque);
+        base.SetText(text, vars, complete, forceOpaque, fontSize);
         Canvas.ForceUpdateCanvases();
         RecalculateBoxSize();
 
@@ -54,14 +55,14 @@ public class NamePopupScript : TextDisplayer
         rectTransform.anchoredPosition = Vector3.up * ypos + Vector3.right * width;
 
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
-        base.SetText(text, vars, complete, forceOpaque);
+        base.SetText(text, vars, complete, forceOpaque, fontSize);
     }
-    public override void SetText(string text, bool complete = true, bool forceOpaque = true)
+    public override void SetText(string text, bool complete = true, bool forceOpaque = true, float fontSize = -1)
     {
         //textMesh = GetComponentInChildren<TMPro.TMP_Text>();
         //baseBox = GetComponentInChildren<Image>();
 
-        base.SetText(text, complete, forceOpaque);
+        base.SetText(text, complete, forceOpaque, fontSize);
         Canvas.ForceUpdateCanvases();
         RecalculateBoxSize();
 
@@ -69,7 +70,7 @@ public class NamePopupScript : TextDisplayer
         rectTransform.anchoredPosition = Vector3.up * ypos + Vector3.right * width;
 
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
-        base.SetText(text, complete, forceOpaque);
+        base.SetText(text, complete, forceOpaque, fontSize);
     }
 
     public void RecalculateBoxSize()
@@ -81,7 +82,7 @@ public class NamePopupScript : TextDisplayer
         textMesh.rectTransform.sizeDelta = new Vector2(width, textMesh.GetRenderedValues()[1] + 10); //baseBox.rectTransform.sizeDelta.y);
 
         baseBox.rectTransform.sizeDelta = new Vector2(width + 30, textMesh.GetRenderedValues()[1] + 20); //baseBox.rectTransform.sizeDelta.y);
-
+        baseBoxBorder.rectTransform.sizeDelta = baseBox.rectTransform.sizeDelta;
     }
 
     public void Update()
@@ -96,6 +97,6 @@ public class NamePopupScript : TextDisplayer
         }
         curlifetime += Time.deltaTime;
 
-        rectTransform.anchoredPosition = MainManager.EasingQuadraticTime(rectTransform.anchoredPosition, targetPos, 7000);
+        rectTransform.anchoredPosition = MainManager.EasingQuadraticTime(rectTransform.anchoredPosition, targetPos, 5000);
     }
 }

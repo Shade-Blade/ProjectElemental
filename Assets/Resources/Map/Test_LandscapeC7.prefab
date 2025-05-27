@@ -103,6 +103,8 @@ MonoBehaviour:
   skyboxID: AetherTrench
   ambientLight: {r: 0.4509804, g: 0.3, b: 0.3, a: 1}
   playerHolder: {fileID: 388424779153874435}
+  useDefaultLight: 0
+  useDefaultParticles: 0
   exits: []
   worldObjects: []
   worldEntities: []
@@ -964,7 +966,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: active
-    battleMapName: 0
+    battleMapName: TestBattle_AetherTrench
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0
@@ -1919,7 +1921,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_AetherTrench
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0
@@ -2113,7 +2115,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_AetherTrench
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0

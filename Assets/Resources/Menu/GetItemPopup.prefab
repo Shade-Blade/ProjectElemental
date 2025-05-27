@@ -32,7 +32,6 @@ RectTransform:
   - {fileID: 6626641090355930379}
   - {fileID: 2789255101027271170}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -64,6 +63,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8622189795390753481}
     m_Modifications:
     - target: {fileID: 2103077806437279840, guid: afac3241c564a6f49a49cfb3d8330604,
@@ -151,7 +151,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: DescriptionBox
       objectReference: {fileID: 0}
+    - target: {fileID: 3523523212576246821, guid: afac3241c564a6f49a49cfb3d8330604,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: eb3fdf7a39a98b74b8857d154ba367ee,
+        type: 2}
+    - target: {fileID: 3523523212576246821, guid: afac3241c564a6f49a49cfb3d8330604,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -6589427819961961903, guid: eb3fdf7a39a98b74b8857d154ba367ee,
+        type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afac3241c564a6f49a49cfb3d8330604, type: 3}
 --- !u!114 &2789255101027271169 stripped
 MonoBehaviour:
@@ -176,6 +191,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8622189795390753481}
     m_Modifications:
     - target: {fileID: 3197174316178361434, guid: a1ad49c2ef7ed5c45a331fa8f81b2aaf,
@@ -289,6 +305,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1ad49c2ef7ed5c45a331fa8f81b2aaf, type: 3}
 --- !u!114 &513226315366828890 stripped
 MonoBehaviour:

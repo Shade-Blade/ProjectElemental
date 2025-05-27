@@ -398,6 +398,16 @@ public abstract class PlayerMove : Move, IEntityHighlighter
     //public abstract float GetBasePower();
 
     public abstract int GetBaseCost(int level = 1);
+    public int GetBaseStaminaCost(int level = 1)
+    {
+        if (UseStamina())
+        {
+            return GetBaseCost(level);
+        } else
+        {
+            return 0;
+        }
+    }
 
     public abstract BaseBattleMenu.BaseMenuName GetMoveType();
 
@@ -569,6 +579,49 @@ public abstract class PlayerMove : Move, IEntityHighlighter
     public virtual int GetCost(BattleEntity caller, int level = 1)
     {
         return StandardCostCalculation(caller, level);
+    }
+    public virtual int GetStaminaCost(BattleEntity caller, int level = 1)
+    {
+        int cost = GetCost(caller, level);
+
+        //not a stamina using move = 0 stamina cost
+        if (!UseStamina())
+        {
+            return 0;
+        }
+
+        //currency = stamina -> also say 0 stamina cost
+        if (GetCurrency(caller) == BattleHelper.MoveCurrency.Stamina)
+        {
+            return 0;
+        }
+
+        //
+        int staminaCost = cost;
+        if (caller is PlayerEntity pcaller)
+        {
+            if (GetCurrency(caller) == BattleHelper.MoveCurrency.Coins && pcaller.BadgeEquipped(Badge.BadgeType.GoldenEnergy))
+            {
+                staminaCost = cost / 5;
+            }
+
+            if (GetCurrency(caller) == BattleHelper.MoveCurrency.Stamina && pcaller.BadgeEquipped(Badge.BadgeType.StaminaEnergy))
+            {
+                //the actual cost check was earlier in this case so this check doesn't really matter
+                staminaCost = 0;
+            }
+
+            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand)
+            {
+                staminaCost /= 2;
+            }
+            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfHaste)
+            {
+                staminaCost = 0;
+            }
+        }
+
+        return staminaCost;
     }
 
     //does this cost stamina?
@@ -795,10 +848,13 @@ public abstract class PlayerMove : Move, IEntityHighlighter
             }
         }
 
+        //new: allow for stamina debt
+        /*
         if (!MainManager.Instance.Cheat_StaminaAnarchy && (UseStamina() && (caller.stamina < staminaCost - caller.GetEffectHasteBonus())))
         {
             return false;
         }
+        */
 
         return base.CanChoose(caller, level);
     }    
@@ -910,10 +966,13 @@ public abstract class PlayerMove : Move, IEntityHighlighter
         if (UseStamina() && GetCurrency(caller) != BattleHelper.MoveCurrency.Stamina)
         {
             caller.stamina -= staminaCost;
+            //new: stamina debt
+            /*
             if (caller.stamina < 0)
             {
                 caller.stamina = 0;
             }
+            */
         }
 
         //Remove burst and haste tokens if move costs stuff

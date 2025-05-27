@@ -8,7 +8,7 @@ public class StatusIconScript : MonoBehaviour
     public SpriteRenderer sprite;
     public TMPro.TMP_Text potencyText;
     public TMPro.TMP_Text durationText;
-    public const float VOFFSET = 0.35f;
+    public const float VOFFSET = 0.3f;
     public const int MAX_STACK = 7;
 
     public void Setup(Effect s)
@@ -16,7 +16,7 @@ public class StatusIconScript : MonoBehaviour
         status = s;
         sprite.sprite = MainManager.Instance.effectSprites[(int)s.effect];
 
-        if (Effect.GetEffectClass(s.effect) != Effect.EffectClass.Status)
+        if (Effect.GetEffectClass(s.effect) != Effect.EffectClass.Ailment && !Effect.PotencylessEffect(s.effect))
         {
             potencyText.text = s.potency.ToString();
         }

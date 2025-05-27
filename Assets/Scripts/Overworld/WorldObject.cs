@@ -9,7 +9,7 @@ public class WorldObject : MonoBehaviour
     [HideInInspector]
     public MapScript mapScript;
     public Rigidbody rb;
-    [HideInInspector]
+    //[HideInInspector]
     public Vector3 bufferVelocity;
     [HideInInspector]
     public bool forceKinematic;
@@ -35,11 +35,12 @@ public class WorldObject : MonoBehaviour
             {
                 bufferVelocity = rb.velocity;
             }
-            rb.isKinematic = nextKinematic;
             if (rb.isKinematic && !nextKinematic)
             {
+                rb.isKinematic = nextKinematic; //can't set velocity before this is set (but need to preserve the old value of rb.isKinematic so can't move this if statement below)
                 rb.velocity = bufferVelocity;
             }
+            rb.isKinematic = nextKinematic;
         }
         if (!mapScript.GetHalted())
         {

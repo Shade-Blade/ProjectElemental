@@ -12,6 +12,11 @@ public class LauncherScript : WorldObject
     public float heightThreshold;
     public Vector3 altLaunchVelocity; // if last grounded height is higher than the height threshold, do alt launch instead
 
+    //signal sent when player touches
+    public ISignalReceiver target;
+    public GameObject targetGO;
+    public int targetSignal;
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
@@ -61,6 +66,15 @@ public class LauncherScript : WorldObject
             if (collision.transform.GetComponent<WorldEntity>() != null)
             {
                 WorldEntity w = collision.transform.GetComponent<WorldEntity>();
+
+                if (w is WorldPlayer)
+                {
+                    if (target != null)
+                    {
+                        target.ReceiveSignal(targetSignal);
+                    }
+                }
+
                 Vector3 launchVel;
                 if (w.lastGroundedHeight > heightThreshold)
                 {

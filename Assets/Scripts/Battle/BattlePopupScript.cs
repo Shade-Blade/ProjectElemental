@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class BattlePopupScript : TextDisplayer
 {
     public Image baseBox;
+    public Image borderBox;
 
     public override void Start()
     {
@@ -30,29 +31,29 @@ public class BattlePopupScript : TextDisplayer
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
         base.SetTextNoFormat(text);
     }
-    public override void SetText(string text, string[] vars, bool complete = true, bool forceOpaque = true)
+    public override void SetText(string text, string[] vars, bool complete = true, bool forceOpaque = true, float fontSize = -1)
     {
         //textMesh = GetComponentInChildren<TMPro.TMP_Text>();
         //baseBox = GetComponentInChildren<Image>();
 
-        base.SetText(text, vars, complete, forceOpaque);
+        base.SetText(text, vars, complete, forceOpaque, -2);
         Canvas.ForceUpdateCanvases();
         RecalculateBoxSize();
 
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
-        base.SetText(text, vars, complete, forceOpaque);
+        base.SetText(text, vars, complete, forceOpaque, fontSize);
     }
-    public override void SetText(string text, bool complete = true, bool forceOpaque = true)
+    public override void SetText(string text, bool complete = true, bool forceOpaque = true, float fontSize = -1)
     {
         //textMesh = GetComponentInChildren<TMPro.TMP_Text>();
         //baseBox = GetComponentInChildren<Image>();
 
-        base.SetText(text, complete, forceOpaque);
+        base.SetText(text, complete, forceOpaque, -2);
         Canvas.ForceUpdateCanvases();
         RecalculateBoxSize();
         
         //this is going to cause stupid dependencies (may lead to the box size being wrong again :/)
-        base.SetText(text, complete, forceOpaque);
+        base.SetText(text, complete, forceOpaque, fontSize);
     }
 
     public void RecalculateBoxSize()
@@ -64,6 +65,6 @@ public class BattlePopupScript : TextDisplayer
         textMesh.rectTransform.sizeDelta = new Vector2(width, textMesh.GetRenderedValues()[1] + 10); //baseBox.rectTransform.sizeDelta.y);
 
         baseBox.rectTransform.sizeDelta = new Vector2(width + 20, textMesh.GetRenderedValues()[1] + 20); //baseBox.rectTransform.sizeDelta.y);
-        
+        borderBox.rectTransform.sizeDelta = new Vector2(width + 20, textMesh.GetRenderedValues()[1] + 20); //baseBox.rectTransform.sizeDelta.y);
     }
 }

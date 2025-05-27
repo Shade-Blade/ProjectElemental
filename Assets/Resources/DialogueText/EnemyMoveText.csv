@@ -96,14 +96,14 @@ Sirenfish_PowerSong,Power Song,(Targets All Allies) Gives 1 Focus to all allies.
 Sirenfish_Hard_NightmareBite,(Hard) Nightmare Bite,"<color,red>(Only on higher difficulties)</color> (Targets Any Sleeping Enemy) Bite a sleeping target to deal strong Dark damage.",
 Blazecrest_FlameBreath,Flame Breath,(Targets All Enemies) Breathe fire to deal Fire damage to all targets.,
 Blazecrest_Roar,Roar,(Targets All Enemies) Roar powerfully to hit all targets to deal normal damage and inflict Berserk.,
-Blazecrest_Hard_CounterFlameFocus,(Hard) Counter - Rage Flare,"<color,red>(Only on higher difficulties)</color> (Targets Self) (1/battle) Get 3 turns of Counter Flare. (Triggers when below half health, or when the last incoming hit was Water or Light damage.)",
+Blazecrest_Hard_CounterFlameFocus,(Hard) Counter - Rage Flare,"<color,red>(Only on higher difficulties)</color> (Targets Self) (1/battle) Get 3 turns of Counter Flare. (Triggers the first time they are hit.)",
 Embercrest_Fireball,Fireball,(Targets Any Enemy) Breathe a fireball that hits a single target and deals Fire damage.,(Higher Difficulties: Gives 3 turns of Illuminate.)
 Ashcrest_ThornBomb,Thorn Bomb,(Targets Any Enemy) Hits a single target with Electric damage.,(Higher difficulties: Inflicts Defense Down)
 Ashcrest_SplashBomb,Splash Bomb,(Targets Any Enemy) Hits a single target with Water damage and inflicts Defocus.,(Higher difficulties: Inflicts Attack Down)
 Flametongue_FlameLick,Flame Lick,(Targets All Enemies) Lick with a long fiery tongue to deal Fire damage to all targets.,
 Flametongue_Hard_HustleLick,(Hard) Hustle Lick,(Targets Any Ally) Apply Hustle for 1 turn to one ally.,
 Heatwing_FlameSpread,Flame Spread,"(Targets Any Enemy) Spread fire by flapping your wings to deal Fire damage to all targets. (Usable while grounded, will fly up before the move.)",
-Heatwing_Hard_DreadScreech,(Hard) Dread Screech,(Targets All Enemies) Screech to deal Dark damage and inflict Dread for 1 turn. Dread reduces damage dealt to 0 and prevents Soul Moves from being used.,
+Heatwing_Hard_DreadScreech,(Hard) Dread Screech,(Targets All Enemies) Screech to deal Dark damage and inflict Dread for 2 turns. Dread reduces damage dealt to 0 and prevents Soul Moves from being used.,
 EyeSpore_SporeBeam,Spore Beam,(Targets Lowest Health Enemy) Shoot spores at the weakest target to deal Dark damage.,
 EyeSpore_Hard_CounterSpiteBeam,(Hard) Counter - Spite Beam,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Shoot a cloud of spores at the attacker to deal Dark damage.",(Higher difficulties: Inflicts Defocus)
 SpikeSpore_PoisonSpikes,Poison Spikes,(Targets Any Enemy) Stab the target to deal normal damage and inflict Poison.,

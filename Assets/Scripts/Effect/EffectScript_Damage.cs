@@ -10,6 +10,7 @@ public class EffectScript_Damage : MonoBehaviour
 
     public float maxScale;
     public float maxScaleTime;
+    public float shrinkStartTime;
 
     public float bezierDuration;
     Vector3 startPos;
@@ -85,8 +86,8 @@ public class EffectScript_Damage : MonoBehaviour
         new Color(0.6f,1f,0.6f),      //unused (soft) (damage uses the hp bar colors)
         new Color(0.7f,0.7f,1.0f),      //soul energy heal
         new Color(0.1f,0.1f,0.6f),      //negative soul energy
-        new Color(0.2f,0.5f,0.2f),      //stamina
-        new Color(0.5f,0.5f,0.8f),      //negative stamina
+        new Color(0.9f,1f,0.9f),      //stamina
+        new Color(0.1f,0.4f,0.1f),      //negative stamina
         new Color(1f,1f,1f),      //coins
         new Color(1f,0.2f,0.3f),      //negative coins
     };
@@ -114,13 +115,13 @@ public class EffectScript_Damage : MonoBehaviour
         if (textBonus.color == Color.black)
         {
             //Very hacky fix
-            textBonus.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">" + textBonus.text + "</font>";
+            textBonus.text = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold White Outline + Overlay\">" + textBonus.text + "</font>";
         }
         textReduction.color = BattleControl.Instance.GetHPBarColors()[4];
         if (textReduction.color == Color.black)
         {
             //Very hacky fix
-            textReduction.text = "<font=\"Rubik-SemiBold SDF\" material=\"Rubik-SemiBold White Outline + Overlay\">" + textReduction.text + "</font>";
+            textReduction.text = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold White Outline + Overlay\">" + textReduction.text + "</font>";
         }
 
 
@@ -135,10 +136,12 @@ public class EffectScript_Damage : MonoBehaviour
         } else
         {
             text.text = number.ToString();
+            /*
             if (number.ToString().Equals("1"))  //The font I'm using has the number 1 being off center to an extent that I have to manually fix it
             {
                 text.transform.localPosition = Vector3.left * 0.005f;
             }
+            */
         }
 
         //set up stuff based on battle effect
@@ -272,6 +275,7 @@ public class EffectScript_Damage : MonoBehaviour
                     //wacky idea
                     GameObject backSpriteCOBJ = Instantiate(backSpriteB.gameObject, backSpriteA.transform);
                     backSpriteCOBJ.transform.localScale = Vector3.one * 1.25f;
+                    backSpriteCOBJ.transform.localPosition = Vector3.forward * 0.003f;
                     backSpriteCOBJ.GetComponent<SpriteRenderer>().color = BattleControl.Instance.GetHPBarColors()[3];
                 }
                 break;
@@ -328,8 +332,8 @@ public class EffectScript_Damage : MonoBehaviour
                 backSpriteB.sprite = BattleControl.Instance.staminaEffect;
                 backSpriteA.transform.localPosition = Vector3.zero;
                 backSpriteB.transform.localPosition = Vector3.zero;
-                backSpriteA.color = new Color(0.6f, 1.0f, 0.5f);
-                backSpriteB.color = new Color(0.6f, 1.0f, 0.5f);
+                backSpriteA.color = new Color(0.5f, 1.0f, 0.4f);
+                backSpriteB.color = new Color(0.5f, 1.0f, 0.4f);
                 break;
             case BattleHelper.DamageEffect.DrainStamina:
                 backSpriteA.sprite = BattleControl.Instance.staminaEffect;
@@ -364,7 +368,7 @@ public class EffectScript_Damage : MonoBehaviour
     //against enemy: goes right
     public void SetDir(bool isPlayer)
     {
-        dir = isPlayer ? -1 : 1;
+        dir = isPlayer ? 1 : -1;
     }
 
     // Start is called before the first frame update
@@ -380,6 +384,21 @@ public class EffectScript_Damage : MonoBehaviour
         float heaviness = 0.5f;
         float completion = (lifetime / bezierDuration);
         float falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
+
+
+        float scompletion = (lifetime / maxScaleTime);
+        if (scompletion > 1)
+        {
+            scompletion = 1;
+        }
+        float scaleheaviness = 3f;
+        float scalecompletion = scompletion * (1f + scaleheaviness) + scompletion * scompletion * -scaleheaviness;
+
+        float endscale = (1 - (lifetime - shrinkStartTime) / (maxLifetime - shrinkStartTime));
+        if (lifetime < shrinkStartTime)
+        {
+            endscale = 1;
+        }
 
         float startdegree = 0;
         float degreespread = 0;
@@ -434,18 +453,18 @@ public class EffectScript_Damage : MonoBehaviour
                     tempdegree += 360;
                 }
 
-                Vector3 tempOffset = Vector3.up * Mathf.Cos(tempdegree * dtr) + Vector3.right * Mathf.Sin(tempdegree * dtr);
+                Vector3 tempOffset = Vector3.up * Mathf.Cos(tempdegree * dtr) + Vector3.right * Mathf.Sin(tempdegree * dtr) + Vector3.forward * 0.06f;
                 tempOffset *= starOffset;
 
                 ministars[i].transform.position = MainManager.BezierCurve(falsecompletion, startPos, startPos + tempOffset, startPos);
 
                 if (lifetime < maxScaleTime)
                 {
-                    ministars[i].transform.localScale = Vector3.one * maxScale * (lifetime / maxScaleTime) * 0.04f;
+                    ministars[i].transform.localScale = Vector3.one * maxScale * (scalecompletion) * 0.04f;
                 }
                 else
                 {
-                    ministars[i].transform.localScale = Vector3.one * maxScale * 0.04f;
+                    ministars[i].transform.localScale = Vector3.one * maxScale * 0.04f * endscale;
                 }
             }
         }
@@ -458,15 +477,15 @@ public class EffectScript_Damage : MonoBehaviour
             case BattleHelper.DamageEffect.CritBlockedDamage:
             case BattleHelper.DamageEffect.Damage:
                 backSpriteB.transform.eulerAngles = Vector3.forward * (144f + 36f * Mathf.Min(number,15)/15f);
-                backSpriteB.transform.localPosition = Vector3.up * 0.01f;
+                backSpriteB.transform.localPosition = Vector3.up * 0.01f + Vector3.forward * 0.005f;
                 break;
             case BattleHelper.DamageEffect.UnblockableDamage:
                 backSpriteB.transform.eulerAngles = Vector3.forward * (180f + 144f * completion);
-                backSpriteB.transform.localPosition = Vector3.up * 0.01f;
+                backSpriteB.transform.localPosition = Vector3.up * 0.01f + Vector3.forward * 0.005f;
                 break;
             case BattleHelper.DamageEffect.CritDamage:
                 backSpriteB.transform.eulerAngles = Vector3.forward * (144f + 36f);
-                backSpriteB.transform.localPosition = Vector3.up * 0.01f;
+                backSpriteB.transform.localPosition = Vector3.up * 0.01f + Vector3.forward * 0.005f;
                 break;
             case BattleHelper.DamageEffect.MaxHPDamage:
                 break;
@@ -474,7 +493,7 @@ public class EffectScript_Damage : MonoBehaviour
 
         if (lifetime < maxScaleTime)
         {
-            proxy.transform.localScale = Vector3.one * maxScale * (lifetime / maxScaleTime);            
+            proxy.transform.localScale = Vector3.one * maxScale * (scalecompletion);            
             backSpriteA.transform.localScale = backSpriteScale * numScale;
             if (be == BattleHelper.DamageEffect.MaxHPDamage)
             {
@@ -494,21 +513,21 @@ public class EffectScript_Damage : MonoBehaviour
         }
         else
         {
-            proxy.transform.localScale = new Vector3(1, 1, 1) * maxScale;
-            backSpriteA.transform.localScale = backSpriteScale * numScale;
+            proxy.transform.localScale = new Vector3(1, 1, 1) * maxScale * endscale;
+            backSpriteA.transform.localScale = backSpriteScale * numScale * endscale;
             if (be == BattleHelper.DamageEffect.MaxHPDamage)
             {
-                backSpriteB.transform.localScale = backSpriteScale * numScale + Vector3.one * 0.05f;
+                backSpriteB.transform.localScale = backSpriteScale * numScale + Vector3.one * 0.05f * endscale;
             }
             else
             {
                 if (number < 0)
                 {
-                    backSpriteB.transform.localScale = backSpriteScale * numScale * (Mathf.Min(0.7f - 0.02f * number, 1f));
+                    backSpriteB.transform.localScale = backSpriteScale * numScale * (Mathf.Min(0.7f - 0.02f * number, 1f)) * endscale;
                 }
                 else
                 {
-                    backSpriteB.transform.localScale = backSpriteScale * numScale * (Mathf.Min(0.7f + 0.02f * number, 1f));
+                    backSpriteB.transform.localScale = backSpriteScale * numScale * (Mathf.Min(0.7f + 0.02f * number, 1f)) * endscale;
                 }
             }
         }

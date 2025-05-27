@@ -9,8 +9,9 @@ public class SEDisplayerScript : MonoBehaviour
     PlayerData pd;
 
     public TMPro.TMP_Text textNumber;
-    public Image backImage;
+    public RectTransform rt;
     public Image SEImage;
+    public Image barImage;
 
     public float displaySE;
     public float displaySECooldown;
@@ -28,14 +29,58 @@ public class SEDisplayerScript : MonoBehaviour
         pd = p_pd;
         //backImage = GetComponentInChildren<Image>();
         SEImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.SE];
-        textNumber.text = pd.se + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pd.maxSE + "</size>";
-
         displaySE = pd.se;
+
+        string seText;
+        if (displaySECooldown > 0 || (HPStaminaDisplayerScript.HighlightActive() && highlightSE))
+        {
+            seText = "<color=#8080ff>" + Mathf.Round(displaySE) + "</color>";
+            textNumber.text = "<color=#8080ff>" + Mathf.Round(displaySE) + "</color><space=0.1em>/<space=0.1em><size=60%>" + pd.maxSE + "</size>";
+        }
+        else
+        {
+            seText = "" + Mathf.Round(displaySE);
+            textNumber.text = "" + Mathf.Round(displaySE) + "<space=0.1em>/<space=0.1em><size=60%>" + pd.maxSE + "</size>";
+        }
+        int deltaMaxSE = 0;
+        if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
+        {
+            deltaMaxSE = BattleControl.Instance.GetPartyCumulativeEffectPotency(-1, Effect.EffectType.MaxSEBoost) - BattleControl.Instance.GetPartyCumulativeEffectPotency(-1, Effect.EffectType.MaxSEReduction);
+        }
+        if (deltaMaxSE != 0)
+        {
+            if (deltaMaxSE > 0)
+            {
+                seText += "<space=0.1em>/<space=0.1em><size=60%><color=#80ff80>" + pd.maxSE + "</color></size>";
+            }
+            else
+            {
+                seText += "<space=0.1em>/<space=0.1em><size=60%><color=#ff8080>" + pd.maxSE + "</color></size>";
+            }
+        }
+        else
+        {
+            seText += "<space=0.1em>/<space=0.1em><size=60%>" + pd.maxSE + "</size>";
+        }
+        textNumber.text = seText;
+
+        if (pd.maxSE == 0)
+        {
+            barImage.rectTransform.anchoredPosition = Vector2.zero;
+        }
+        else
+        {
+            barImage.rectTransform.anchoredPosition = Vector2.left * (1 - (displaySE / pd.maxSE)) * (rt.sizeDelta.x - 15 - 27.5f);
+        }
     }
 
     public void SetPosition()
     {
-        backImage.rectTransform.anchoredPosition = new Vector3(-80f, -30f, 0);
+        rt.anchoredPosition = new Vector3(216, -79f, 0);
+    }
+    public void SetPositionBattle()
+    {
+        rt.anchoredPosition = new Vector3(216, -106f, 0);
     }
 
     // Update is called once per frame
@@ -55,13 +100,46 @@ public class SEDisplayerScript : MonoBehaviour
             displaySECooldown = 0;
         }
 
+        string seText;
         if (displaySECooldown > 0 || (HPStaminaDisplayerScript.HighlightActive() && highlightSE))
         {
-            textNumber.text = "<color=#0000c0>" + Mathf.Round(displaySE) + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pd.maxSE + "</size></color>";
+            seText = "<color=#8080ff>" + Mathf.Round(displaySE) + "</color>";
+            textNumber.text = "<color=#8080ff>" + Mathf.Round(displaySE) + "</color><space=0.1em>/<space=0.1em><size=60%>" + pd.maxSE + "</size>";
         }
         else
         {
-            textNumber.text = Mathf.Round(displaySE) + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pd.maxSE + "</size>";
+            seText = "" + Mathf.Round(displaySE);
+            textNumber.text = "" + Mathf.Round(displaySE) + "<space=0.1em>/<space=0.1em><size=60%>" + pd.maxSE + "</size>";
+        }
+        int deltaMaxSE = 0;
+        if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
+        {
+            deltaMaxSE = BattleControl.Instance.GetPartyCumulativeEffectPotency(-1, Effect.EffectType.MaxSEBoost) - BattleControl.Instance.GetPartyCumulativeEffectPotency(-1, Effect.EffectType.MaxSEReduction);
+        }
+        if (deltaMaxSE != 0)
+        {
+            if (deltaMaxSE > 0)
+            {
+                seText += "<space=0.1em>/<space=0.1em><size=60%><color=#80ff80>" + pd.maxSE + "</color></size>";
+            }
+            else
+            {
+                seText += "<space=0.1em>/<space=0.1em><size=60%><color=#ff8080>" + pd.maxSE + "</color></size>";
+            }
+        }
+        else
+        {
+            seText += "<space=0.1em>/<space=0.1em><size=60%>" + pd.maxSE + "</size>";
+        }
+        textNumber.text = seText;
+
+        if (pd.maxSE == 0)
+        {
+            barImage.rectTransform.anchoredPosition = Vector2.zero;
+        }
+        else
+        {
+            barImage.rectTransform.anchoredPosition = Vector2.left * (1 - (displaySE / pd.maxSE)) * (rt.sizeDelta.x - 15 - 27.5f);
         }
     }
 }

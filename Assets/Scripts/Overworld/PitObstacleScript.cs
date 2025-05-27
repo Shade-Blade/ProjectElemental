@@ -585,8 +585,11 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
             }
         }
     }
-    public void ChooseRandomReward(int floor)
+
+    public static (PickupUnion, int) ChooseRandomRewardStatic(int floor)
     {
+        PickupUnion pu = new PickupUnion();
+
         PlayerData pd = MainManager.Instance.playerData;
         List<IRandomTableEntry<PickupUnion.PickupType>> randomtableEntries = new List<IRandomTableEntry<PickupUnion.PickupType>>
         {
@@ -753,7 +756,8 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                     {
                         pu.badge.type = RandomTable<Badge.BadgeType>.ChooseRandom(badgePool);
                     }
-                } else
+                }
+                else
                 {
                     pu.badge.type = RandomTable<Badge.BadgeType>.ChooseRandom(badgePool);
                 }
@@ -838,7 +842,8 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                         if (power > 60)
                         {
                             msresult = MainManager.MiscSprite.Health60;
-                        } else if (power > 30)
+                        }
+                        else if (power > 30)
                         {
                             if (RandomGenerator.PsuedoIntGenerate(30, 60, power) == 60)
                             {
@@ -855,7 +860,8 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                             if (RandomGenerator.PsuedoIntGenerate(12, 30, power) == 30)
                             {
                                 msresult = MainManager.MiscSprite.Health30;
-                            } else
+                            }
+                            else
                             {
                                 msresult = MainManager.MiscSprite.Health12;
                             }
@@ -1076,8 +1082,14 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
 
         pu.Mutate();
 
-        cost = Mathf.CeilToInt((RandomGenerator.Get() * 0.66f + 0.66f) * PickupUnion.GetBaseCost(pu));
+        int cost = Mathf.CeilToInt((RandomGenerator.Get() * 0.66f + 0.66f) * PickupUnion.GetBaseCost(pu));
         //Debug.Log(pu + " " + cost);
+
+        return (pu, cost);
+    }
+    public void ChooseRandomReward(int floor)
+    {
+        (pu, cost) = ChooseRandomRewardStatic(floor);
     }
 
     public Color GetColor(PitObstacleType pot)

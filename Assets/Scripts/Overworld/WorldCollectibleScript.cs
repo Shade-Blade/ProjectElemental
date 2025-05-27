@@ -178,22 +178,23 @@ public class WorldCollectibleScript : WorldObject
         {
             rb.useGravity = true;
         }
+        //remove this? what if a cutscene shoots out an item somehow
         if (worldPlayer != null && MainManager.Instance.inCutscene)
         {
-            if (!rb.isKinematic)
-            {
-                bufferVelocity = rb.velocity;
-            }
+            //if (!rb.isKinematic)
+            //{
+            //    bufferVelocity = rb.velocity;
+            //}
 
-            rb.isKinematic = true;
+            //rb.isKinematic = true;
         } else
         {
-            if (rb.isKinematic)
-            {
-                rb.velocity = bufferVelocity;
-            }
+            //if (rb.isKinematic)
+            //{
+            //    rb.velocity = bufferVelocity;
+            //}
 
-            rb.isKinematic = false;
+            //rb.isKinematic = false;
         }
         if (lifetime > NO_INTERACT_TIME && !intangible && attract && worldPlayer != null)
         {
@@ -204,6 +205,18 @@ public class WorldCollectibleScript : WorldObject
                 rb.useGravity = false;
                 rb.velocity = -delta.normalized * ((1 / (0.1f + delta.magnitude)) + 0.3f) * attractDelta * Time.fixedDeltaTime;
             } 
+
+            //snap
+            //prevent situation where coins whip around you when you can't collect them in a dialogue box
+            if (doAttract && rb.velocity.magnitude * Time.fixedDeltaTime > delta.magnitude)
+            {
+                if (rb.velocity.magnitude > 0)
+                {
+                    rb.velocity = rb.velocity * (delta.magnitude / (rb.velocity.magnitude * Time.fixedDeltaTime));
+                }
+
+            }
+
             /*else
             {
                 rb.velocity -= 0.25f * (rb.velocity.x * Vector3.right + rb.velocity.z * Vector3.forward);
@@ -264,27 +277,35 @@ public class WorldCollectibleScript : WorldObject
                     break;
                 case PickupUnion.PickupType.Coin:
                     Particles(new Color(1f, 0.75f, 0.5f, 1f), 1);
+                    MainManager.Instance.PlaySound(WorldPlayer.Instance.gameObject, MainManager.Sound.SFX_Pickup_Coin);
                     break;
                 case PickupUnion.PickupType.SilverCoin:
                     Particles(new Color(1f, 0.75f, 0.5f, 1f), 1);
+                    MainManager.Instance.PlaySound(WorldPlayer.Instance.gameObject, MainManager.Sound.SFX_Pickup_Coin);
                     break;
                 case PickupUnion.PickupType.GoldCoin:
                     Particles(new Color(1f, 0.75f, 0.5f, 1f), 2);
+                    MainManager.Instance.PlaySound(WorldPlayer.Instance.gameObject, MainManager.Sound.SFX_Pickup_Coin);
                     break;
                 case PickupUnion.PickupType.Shard:
                     Particles(new Color(0.25f, 0.75f, 0.75f, 1f), 1);
+                    MainManager.Instance.PlaySound(WorldPlayer.Instance.gameObject, MainManager.Sound.SFX_Pickup_Shard);
                     break;
                 case PickupUnion.PickupType.Item:
                     Particles(new Color(0.25f, 0.75f, 0.25f, 1f), 1);
+                    MainManager.Instance.PlaySound(WorldPlayer.Instance.gameObject, MainManager.Sound.SFX_Pickup_Item);
                     break;
                 case PickupUnion.PickupType.KeyItem:
                     Particles(new Color(0.25f, 0.75f, 0.25f, 1f), 1);
+                    MainManager.Instance.PlaySound(WorldPlayer.Instance.gameObject, MainManager.Sound.SFX_Pickup_KeyItem);
                     break;
                 case PickupUnion.PickupType.Badge:
                     Particles(new Color(0.75f, 0.25f, 0.25f, 1f), 1);
+                    MainManager.Instance.PlaySound(WorldPlayer.Instance.gameObject, MainManager.Sound.SFX_Pickup_Badge);
                     break;
                 case PickupUnion.PickupType.Ribbon:
                     Particles(new Color(0.75f, 0.25f, 0.75f, 1f), 1);
+                    MainManager.Instance.PlaySound(WorldPlayer.Instance.gameObject, MainManager.Sound.SFX_Pickup_Ribbon);
                     break;
             }
 

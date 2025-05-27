@@ -21,6 +21,7 @@ public class PlayerEntity : BattleEntity
 
     public int actionCommandSuccesses;
     public int blockSuccesses;
+    public GameObject ribbonHelper;
 
     //statistics (there might be badges that use these)
     public int damageDealt;
@@ -81,7 +82,7 @@ public class PlayerEntity : BattleEntity
         //offset = Vector3.up * (height / 2);
         //statusOffset = Vector3.up * (height) + Vector3.right * ((width / 2) + 0.4f);
         //selectionOffset = Vector3.up * (height + 0.5f);    
-        statusOffset = Vector3.right * (0.1f);
+        statusOffset = Vector3.right * (0.0f);
 
         //Dropshadow is parallel to subobject (because it should not inherit subobject's rotation)
         if (!noShadow && dropShadow == null)
@@ -1157,7 +1158,7 @@ public class PlayerEntity : BattleEntity
             statusMultiplier = 0;
         }
 
-        if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status || Effect.IsBlockableDebuff(se.effect))
+        if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Ailment || Effect.IsBlockableDebuff(se.effect))
         {
             if (se.duration != Effect.INFINITE_DURATION)
             {
@@ -1245,7 +1246,7 @@ public class PlayerEntity : BattleEntity
             statusMultiplier = 0;
         }
 
-        if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status || Effect.IsBlockableDebuff(se.effect))
+        if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Ailment || Effect.IsBlockableDebuff(se.effect))
         {
             if (se.duration != Effect.INFINITE_DURATION)
             {
@@ -1598,8 +1599,7 @@ public class PlayerEntity : BattleEntity
             return false;
         }
 
-        //tap input
-        if (InputManager.GetTimeSinceNeutralJoystick() >= BASE_GUARD_WINDOW)
+        if (InputManager.GetTimeSinceNeutralJoystick() >= BASE_GUARD_WINDOW / 60f)
         {
             return false;
         }
@@ -1627,7 +1627,7 @@ public class PlayerEntity : BattleEntity
         }
 
         //tap input
-        if (InputManager.GetTimeSinceNeutralJoystick() >= BASE_GUARD_WINDOW)
+        if (InputManager.GetTimeSinceNeutralJoystick() >= BASE_GUARD_WINDOW / 60f)
         {
             return false;
         }
@@ -1655,7 +1655,7 @@ public class PlayerEntity : BattleEntity
         }
 
         //tap input
-        if (InputManager.GetTimeSinceNeutralJoystick() >= BASE_GUARD_WINDOW)
+        if (InputManager.GetTimeSinceNeutralJoystick() >= BASE_GUARD_WINDOW / 60f)
         {
             return false;
         }
@@ -1683,7 +1683,7 @@ public class PlayerEntity : BattleEntity
         }
 
         //tap input
-        if (InputManager.GetTimeSinceNeutralJoystick() >= BASE_GUARD_WINDOW)
+        if (InputManager.GetTimeSinceNeutralJoystick() >= BASE_GUARD_WINDOW / 60f)
         {
             return false;
         }
@@ -1711,7 +1711,7 @@ public class PlayerEntity : BattleEntity
         }
 
         //button press
-        if (InputManager.GetButton(InputManager.Button.B) && !InputManager.GetButtonHeldLonger(InputManager.Button.B, BASE_GUARD_WINDOW))
+        if (InputManager.GetButton(InputManager.Button.B) && !InputManager.GetButtonHeldLonger(InputManager.Button.B, BASE_GUARD_WINDOW / 60f))
         {
             return true;
         }
@@ -1824,8 +1824,8 @@ public class PlayerEntity : BattleEntity
 
         //recalculate maxhp, maxep, maxse
         maxHP = BattleControl.Instance.playerData.GetMaxHP(entityID) + GetEffectPotency(Effect.EffectType.MaxHPBoost) - GetEffectPotency(Effect.EffectType.MaxHPReduction);
-        BattleControl.Instance.maxEP = BattleControl.Instance.playerData.GetMaxEP() + GetPartyMaxEffectPotency(Effect.EffectType.MaxEPBoost) - GetPartyMaxEffectPotency(Effect.EffectType.MaxEPReduction);
-        BattleControl.Instance.maxSE = BattleControl.Instance.playerData.GetMaxSE() + GetPartyMaxEffectPotency(Effect.EffectType.MaxSEBoost) - GetPartyMaxEffectPotency(Effect.EffectType.MaxSEReduction);
+        BattleControl.Instance.maxEP = BattleControl.Instance.playerData.GetMaxEP() + GetPartyCumulativeEffectPotency(Effect.EffectType.MaxEPBoost) - GetPartyCumulativeEffectPotency(Effect.EffectType.MaxEPReduction);
+        BattleControl.Instance.maxSE = BattleControl.Instance.playerData.GetMaxSE() + GetPartyCumulativeEffectPotency(Effect.EffectType.MaxSEBoost) - GetPartyCumulativeEffectPotency(Effect.EffectType.MaxSEReduction);
 
         if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Greed))
         {
@@ -2024,7 +2024,7 @@ public class PlayerEntity : BattleEntity
                 damage -= 4; //BASE_GUARD_AMOUNT;
                 blockSuccesses++;
                 BattleControl.Instance.CreateActionCommandEffect(BattleHelper.ActionCommandText.Perfect, GetDamageEffectPosition(), this);
-                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Block);
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Block, 1, 0.01f);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockPerfect);
             }
             else if (b || safetyBlock || sharpBlock)
@@ -2051,7 +2051,7 @@ public class PlayerEntity : BattleEntity
 
                 if (!noReduction)
                 {
-                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Block);
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_Block, 1, 0.01f);
                 }
             }
 
@@ -2200,7 +2200,9 @@ public class PlayerEntity : BattleEntity
             //Quantum Shield
             if (TokenRemoveOne(Effect.EffectType.QuantumShield))
             {
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_QuantumShield, 1, 0.01f);
                 damage = 0;
+                ValidateEffects();
             }
 
             if (!noSpecial && GetAbsorbBlock())
@@ -2219,15 +2221,18 @@ public class PlayerEntity : BattleEntity
         damageTakenThisTurn += damage;
         if (HasEffect(Effect.EffectType.CounterFlare))
         {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_CounterFlare, 1, 0.01f);
             counterFlareTrackedDamage += damage;
         }
         if (HasEffect(Effect.EffectType.ArcDischarge))
         {
-            arcDischargeDamage += damage;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_ArcDischarge, 1, 0.01f);
+            arcDischargeTrackedDamage += damage;
         }
         if (HasEffect(Effect.EffectType.Splotch))
         {
-            splotchDamage += damage;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_Splotch, 1, 0.01f);
+            splotchTrackedDamage += damage;
         }
 
         if (!BattleHelper.GetDamageProperty(properties, DamageProperties.Hardcode) && HasEffect(Effect.EffectType.AstralWall))
@@ -2235,6 +2240,7 @@ public class PlayerEntity : BattleEntity
             astralWallTrackedDamage += damage;
             if (astralWallTrackedDamage > GetEffectEntry(Effect.EffectType.AstralWall).potency)
             {
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_AstralWall, 1, 0.01f);
                 int diff = astralWallTrackedDamage - GetEffectEntry(Effect.EffectType.AstralWall).potency;
 
                 damageTakenThisTurn -= diff;
@@ -2253,6 +2259,7 @@ public class PlayerEntity : BattleEntity
         {
             if (damage >= hp)
             {
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_Miracle, 1, 0.01f);
                 BattleControl.Instance.CreateEffectParticles(GetEffectEntry(Effect.EffectType.Miracle), this);
                 TokenRemoveOne(Effect.EffectType.Miracle);
                 SetEntityProperty(BattleHelper.EntityProperties.NoMiracle, true);
@@ -2339,7 +2346,6 @@ public class PlayerEntity : BattleEntity
         //Sound effects
         bool normalDamage = true;
         bool crit = false;
-
 
         if (damage == 0 || Invulnerable())
         {
@@ -2844,7 +2850,7 @@ public class PlayerEntity : BattleEntity
 
         for (int i = 0; i < effects.Count; i++)
         {
-            if (Effect.GetEffectClass(effects[i].effect) == Effect.EffectClass.Status)
+            if (Effect.GetEffectClass(effects[i].effect) == Effect.EffectClass.Ailment)
             {
                 bool noblock = true;
                 for (int j = 0; j < effectlist.Length; j++)
@@ -2880,6 +2886,19 @@ public class PlayerEntity : BattleEntity
         } else
         {
             sp.color = new Color(1f, 1f, 1f, 1);
+        }
+    }
+    //this is basically a different "can't move" state so slightly brighter than inactive color
+    public void SetStaminaDebtColor(bool set)
+    {
+        SpriteRenderer sp = ac.GetComponentInChildren<SpriteRenderer>();
+        if (set)
+        {
+            sp.color = new Color(0.85f, 0.65f, 0.65f, 1);
+        }
+        else
+        {
+            sp.color = new Color(0.65f, 0.45f, 0.45f, 1);
         }
     }
 
@@ -3744,12 +3763,14 @@ public class PlayerEntity : BattleEntity
         //Apply HP drain
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.HPDrainOneToOne))
         {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_HPDrain, 1, 0.01f);
             HealHealth(damage);
         }
 
         //Astral recovery
         if (target.HasEffect(Effect.EffectType.AstralRecovery) && target.hp > 0 && !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_AstralRecovery, 1, 0.01f);
             target.HealHealth(startDamage / 5);
         }
 
@@ -3805,7 +3826,7 @@ public class PlayerEntity : BattleEntity
                         Effect status = null;
                         for (int i = 0; i < target.effects.Count; i++)
                         {
-                            if (Effect.GetEffectClass(target.effects[i].effect) == Effect.EffectClass.Status)
+                            if (Effect.GetEffectClass(target.effects[i].effect) == Effect.EffectClass.Ailment)
                             {
                                 status = target.effects[i];
                             }
@@ -3859,11 +3880,13 @@ public class PlayerEntity : BattleEntity
 
             if (BadgeEquipped(Badge.BadgeType.HealthSteal))
             {
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_HPDrain, 1, 0.01f);
                 HealHealth(BadgeEquippedCount(Badge.BadgeType.HealthSteal));
             }
 
             if (BadgeEquipped(Badge.BadgeType.EnergySteal))
             {
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EPDrain, 1, 0.01f);
                 HealEnergy(BadgeEquippedCount(Badge.BadgeType.EnergySteal));
             }
         }
@@ -3871,6 +3894,7 @@ public class PlayerEntity : BattleEntity
         //Apply sprout
         if (target.HasEffect(Effect.EffectType.DrainSprout))
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_DrainSprout, 1, 0.01f);
             //target gets defocus
             //note: inflict status
             sbyte drain = target.GetEffectEntry(Effect.EffectType.DrainSprout).potency;
@@ -3880,6 +3904,7 @@ public class PlayerEntity : BattleEntity
 
         if (target.HasEffect(Effect.EffectType.BoltSprout))
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_BoltSprout, 1, 0.01f);
             //target gets sunder (buffered)
             //note: inflict status
             sbyte drain = target.GetEffectEntry(Effect.EffectType.BoltSprout).potency;
@@ -3912,16 +3937,28 @@ public class PlayerEntity : BattleEntity
 
         if (target.HasEffect(Effect.EffectType.ParryAura))
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_ParryAura, 1, 0.01f);
             InflictEffect(target, new Effect(Effect.EffectType.Focus, target.GetEffectEntry(Effect.EffectType.ParryAura).potency, Effect.INFINITE_DURATION));
         }
         if (target.HasEffect(Effect.EffectType.BolsterAura))
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_BolsterAura, 1, 0.01f);
             InflictEffectBuffered(target, new Effect(Effect.EffectType.Absorb, target.GetEffectEntry(Effect.EffectType.BolsterAura).potency, Effect.INFINITE_DURATION));
         }
 
         if (target.HasEffect(Effect.EffectType.Elusive))
         {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_Elusive, 1, 0.01f);
             InflictEffectBuffered(target, new Effect(Effect.EffectType.Ethereal, 1, target.GetEffectEntry(Effect.EffectType.Elusive).potency));
+        }
+
+        if (HasEffect(Effect.EffectType.Illuminate))
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_Illuminate, 1, 0.01f);
+        }
+        if (target.HasEffect(Effect.EffectType.Brittle))
+        {
+            MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_Brittle, 1, 0.01f);
         }
     }
 
@@ -3995,6 +4032,70 @@ public class PlayerEntity : BattleEntity
             if (hp <= 0 && !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Combo))
             {
                 QueueEvent(BattleHelper.Event.Death);
+            }
+        }
+
+
+        bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Lust);
+        if (bol)
+        {
+            if ((type & (DamageType.Aether)) == DamageType.Aether)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Soulbleed, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Solar)) == DamageType.Solar)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Sunflame, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Spectral)) == DamageType.Spectral)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Brittle, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Astral)) == DamageType.Astral)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Inverted, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Phlox)) == DamageType.Phlox)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Dread, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Plasma)) == DamageType.Plasma)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.ArcDischarge, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Quantum)) == DamageType.Quantum)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.TimeStop, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Vitrum)) == DamageType.Vitrum)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Exhausted, 3), Effect.INFINITE_DURATION);
+            }
+
+
+            else if ((type & (DamageType.Light)) != 0)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Freeze, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Dark)) != 0)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Poison, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Water)) != 0)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Sleep, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Fire)) != 0)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Berserk, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Earth)) != 0)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Dizzy, 3), Effect.INFINITE_DURATION);
+            }
+            else if ((type & (DamageType.Air)) != 0)
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Paralyze, 3), Effect.INFINITE_DURATION);
             }
         }
     }
@@ -4100,7 +4201,7 @@ public class PlayerEntity : BattleEntity
             }
 
             //check status table?
-            if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status)
+            if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Ailment)
             {
                 StatusTableEntry st = target.GetStatusTableEntry(se.effect);
 
@@ -4130,7 +4231,7 @@ public class PlayerEntity : BattleEntity
             else
             {
                 //blocked, but why
-                bool statusBlocked = (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status) && target.StatusWorkingHP(se.effect) > 0;
+                bool statusBlocked = (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Ailment) && target.StatusWorkingHP(se.effect) > 0;
 
                 if (statusBlocked)
                 {
@@ -4200,7 +4301,7 @@ public class PlayerEntity : BattleEntity
             bool statusWorks = true;
 
             //check status table?
-            if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status)
+            if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Ailment)
             {
                 StatusTableEntry st = target.GetStatusTableEntry(se.effect);
 
@@ -4229,7 +4330,7 @@ public class PlayerEntity : BattleEntity
             else
             {
                 //blocked, but why
-                bool statusBlocked = (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Status) && target.StatusWorkingHP(se.effect) > 0;
+                bool statusBlocked = (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Ailment) && target.StatusWorkingHP(se.effect) > 0;
 
                 if (statusBlocked)
                 {
@@ -4404,10 +4505,7 @@ public class PlayerEntity : BattleEntity
             currMove.PreMove(this);
         }
 
-        if (idleRunning)
-        {
-            StopCoroutine("Idle");
-        }
+        StopIdle();
 
         yield return null;
     }
@@ -5221,10 +5319,7 @@ public class PlayerEntity : BattleEntity
         //Fix a problem I'm having
         SetIdleAnimation();
 
-        if (!idleRunning && hasIdle && idleActive)
-        {
-            StartCoroutine("Idle");
-        }
+        StartIdle();
     }
 
     public override IEnumerator PostBattle()
@@ -5295,14 +5390,14 @@ public class PlayerEntity : BattleEntity
         return BattleControl.Instance.playerData.burstCap;
     }
 
-
+    public override IEnumerator Idle()
+    {
+        yield return null;
+    }
     //rewrite some parts
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
     {
-        if (idleRunning)
-        {
-            StopCoroutine("Idle");
-        }
+        StopIdle();
 
         inEvent = true;
 
@@ -5398,10 +5493,7 @@ public class PlayerEntity : BattleEntity
         inEvent = false;
 
         //by default the idle script is stopped
-        if (!idleRunning && hasIdle && idleActive)
-        {
-            StartCoroutine("Idle");
-        }
+        StartIdle();
     }
     public void OnDeathEffects()
     {
@@ -5481,6 +5573,40 @@ public class PlayerEntity : BattleEntity
         //}
     }
 
+    public void ShowRibbonHelper()
+    {
+        HideRibbonHelper();
+        if (GetVisualRibbon().type == Ribbon.RibbonType.None || !CanBlock() || AutoMove())
+        {
+            return;
+        }
+
+        bool shouldShow = false;
+
+        string ribbonString = "<ribbon," + GetVisualRibbon().type.ToString() + ">: " + GlobalRibbonScript.Instance.GetRibbonText(GetVisualRibbon().type, 6);
+        if (GlobalRibbonScript.Instance.GetRibbonText(GetVisualRibbon().type, 6).Length > 0)
+        {
+            shouldShow = true;
+        }
+
+        if (!shouldShow)
+        {
+            return;
+        }
+
+        float xCoord = MainManager.Instance.WorldPosToCanvasPos(transform.position)[0];
+        ribbonHelper = Instantiate(BattleControl.Instance.baseRibbonHelper, MainManager.Instance.Canvas.transform);
+        ribbonHelper.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.down * 225;
+        ribbonHelper.GetComponent<TextDisplayer>().SetText(ribbonString, true, true);
+    }
+    public void HideRibbonHelper()
+    {
+        if (ribbonHelper != null)
+        {
+            Destroy(ribbonHelper);
+        }
+    }
+
     public override void SetIdleAnimation(bool force = false)
     {
         BattleControl.Instance.playerData.GetPlayerDataEntry(entityID).hp = hp;
@@ -5511,7 +5637,7 @@ public class PlayerEntity : BattleEntity
         {
             SetAnimation("idleangry", force);
         }
-        else if (ShowDangerAnim() || HasEffect(Effect.EffectType.Poison) || HasEffect(Effect.EffectType.Paralyze) || HasEffect(Effect.EffectType.Soulbleed) || HasEffect(Effect.EffectType.Exhausted))
+        else if (ShowDangerAnim() || stamina < 0 || staminaBlock || HasEffect(Effect.EffectType.Poison) || HasEffect(Effect.EffectType.Paralyze) || HasEffect(Effect.EffectType.Soulbleed) || HasEffect(Effect.EffectType.Exhausted))
         {
             SetAnimation("idleweak", force);
         }

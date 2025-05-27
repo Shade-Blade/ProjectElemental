@@ -52,11 +52,14 @@ public abstract class ActionCommand : MonoBehaviour
         return window;
     }
 
-    //How long should certain action commands stay on screen to give you feedback? (Not all action commands use this)
-    public const float FEEDBACK_TIME = 0.30f;
+    //How long should certain action commands stay on screen to give you feedback?
+    public const float END_LAG = 0.15f;
 
     //How long the fade in animation is
     public const float FADE_IN_TIME = 0.1f;
+
+    public GameObject descriptionBoxO;
+    public DescriptionBoxScript descriptionBoxScript;
 
     public abstract bool IsStarted();   //(usually used for polling loops) usually it waits until the thing is true (the holding [direction] command uses this to wait to start)
     public abstract bool IsComplete();      //(usually used for polling loops) When it returns true, the action command is done (not accepting input anymore)
@@ -70,6 +73,15 @@ public abstract class ActionCommand : MonoBehaviour
         subObjects = new List<GameObject>();
         caller = p_caller;
         lifetime = 0;
+
+        if (!autoComplete)
+        {
+            descriptionBoxO = Instantiate(MainManager.Instance.descriptionBoxBase, MainManager.Instance.Canvas.transform);
+            descriptionBoxO.GetComponent<RectTransform>().anchoredPosition = descriptionBoxO.GetComponent<RectTransform>().anchoredPosition[1] * Vector2.up;
+            descriptionBoxScript = descriptionBoxO.GetComponent<DescriptionBoxScript>();
+            descriptionBoxScript.SetText(GetDescription(), true);
+            subObjects.Add(descriptionBoxO);
+        }
     }
 
     //destroy everything (then you get rid of the actioncommand)
@@ -90,6 +102,8 @@ public abstract class ActionCommand : MonoBehaviour
     {
         lifetime += Time.deltaTime;
     }
+
+    public abstract string GetDescription();
 }
 
 public class AC_Jump : ActionCommand
@@ -148,6 +162,11 @@ public class AC_Jump : ActionCommand
     {
         return "Press <button,A> right before landing on the target.";
     }
+
+    public override string GetDescription()
+    {
+        return GetACDesc();
+    }
 }
 
 public class AC_MashLeft : ActionCommand
@@ -175,16 +194,19 @@ public class AC_MashLeft : ActionCommand
         if (!autoComplete)
         {
             GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_MashLeft"), MainManager.Instance.Canvas.transform);
-            subObjects = new List<GameObject>
-            {
-                o
-            };
+            subObjects.Add(o);
             acobject = o.GetComponent<ACObject_MashBar>();
         }
     }
 
     public override void End()
     {
+        //?
+        if (!GetSuccess())
+        {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Fail);
+        }
+
         base.End();
     }
 
@@ -231,12 +253,15 @@ public class AC_MashLeft : ActionCommand
         base.Update();
 
         float completion = mashCount / (mashObjective + 0.0f);
-        bool success = mashCount == mashObjective;
+        bool success = GetSuccess();
         displayBar = MainManager.EasingExponentialTime(displayBar, completion, 0.3f);
 
         if (!autoComplete)
         {
-            acobject.SetValues(completion, success);
+            if (lifetime <= duration)
+            {
+                acobject.SetValues(completion, success);
+            }
         }
 
         switch (state)
@@ -273,6 +298,7 @@ public class AC_MashLeft : ActionCommand
 
                 if (completion == 1)
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Success);
                     state = AC_State.Complete;
                 }
                 break;
@@ -284,6 +310,11 @@ public class AC_MashLeft : ActionCommand
     public static string GetACDesc()
     {
         return "Mash <button,left> to fill the bar.";
+    }
+
+    public override string GetDescription()
+    {
+        return GetACDesc();
     }
 }
 
@@ -313,16 +344,19 @@ public class AC_MashLeftRight : ActionCommand
         if (!autoComplete)
         {
             GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_MashLeft"), MainManager.Instance.Canvas.transform);
-            subObjects = new List<GameObject>
-            {
-                o
-            };
+            subObjects.Add(o);
             acobject = o.GetComponent<ACObject_MashBar>();
         }
     }
 
     public override void End()
     {
+        //?
+        if (!GetSuccess())
+        {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Fail);
+        }
+
         base.End();
     }
 
@@ -368,12 +402,15 @@ public class AC_MashLeftRight : ActionCommand
         base.Update();
 
         float completion = mashCount / (mashObjective + 0.0f);
-        bool success = mashCount == mashObjective;
+        bool success = GetSuccess();
         displayBar = MainManager.EasingExponentialTime(displayBar, completion, 0.3f);
 
         if (!autoComplete)
         {
-            acobject.SetValues(completion, success);
+            if (lifetime <= duration)
+            {
+                acobject.SetValues(completion, success);
+            }
         }
 
         switch (state)
@@ -385,7 +422,7 @@ public class AC_MashLeftRight : ActionCommand
                 }
                 break;
             case AC_State.Active:
-                if (InputManager.GetAxisHorizontal() < -0.5f * (rightLast ? 1 : -1))
+                if (InputManager.GetAxisHorizontal() * (rightLast ? 1 : -1) < -0.5f)
                 {
                     rightLast = !rightLast;
                     if (!isHolding)
@@ -405,6 +442,7 @@ public class AC_MashLeftRight : ActionCommand
 
                 if (completion == 1)
                 {
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Success);
                     state = AC_State.Complete;
                 }
                 break;
@@ -416,6 +454,11 @@ public class AC_MashLeftRight : ActionCommand
     public static string GetACDesc()
     {
         return "Alternate <button,left> and <button,right> quickly to fill the bar.";
+    }
+
+    public override string GetDescription()
+    {
+        return GetACDesc();
     }
 }
 
@@ -439,10 +482,7 @@ public class AC_HoldLeft : ActionCommand
         if (!autoComplete)
         {
             GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_HoldLeft"), MainManager.Instance.Canvas.transform);
-            subObjects = new List<GameObject>
-            {
-                o
-            };
+            subObjects.Add(o);
             acobject = o.GetComponent<ACObject_HoldBar>();
         }
     }
@@ -471,7 +511,7 @@ public class AC_HoldLeft : ActionCommand
 
     public bool GetSuccess()
     {
-        return autoComplete || holdTime >= duration && holdTime < duration + window;
+        return autoComplete || holdTime >= duration && holdTime < duration + GetTimingWindow();
     }
 
     public override void Update()
@@ -479,11 +519,14 @@ public class AC_HoldLeft : ActionCommand
         base.Update();
 
         float completion = Mathf.Clamp01((holdTime / duration));
-        bool success = (holdTime >= duration && holdTime < duration + window);
+        bool success = GetSuccess();
 
         if (!autoComplete)
         {
-            acobject.SetValues(completion, success);
+            if (lifetime <= duration + window)
+            {
+                acobject.SetValues(completion, success);
+            }
         }
 
         switch (state)
@@ -499,6 +542,14 @@ public class AC_HoldLeft : ActionCommand
                 if (!autoComplete && (InputManager.GetAxisHorizontal() >= 0 || holdTime >= duration + window))
                 {
                     state = AC_State.Complete;
+
+                    if (GetSuccess())
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Success);
+                    } else
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Fail);
+                    }
                 }
                 if (autoComplete && holdTime >= duration)
                 {
@@ -513,6 +564,11 @@ public class AC_HoldLeft : ActionCommand
     public static string GetACDesc()
     {
         return "Hold <button,left> until the bar is full, then release <button,left>.";
+    }
+
+    public override string GetDescription()
+    {
+        return GetACDesc();
     }
 }
 
@@ -537,10 +593,7 @@ public class AC_PressATimed : ActionCommand
         if (!autoComplete)
         {
             GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_PressButtonTimed"), MainManager.Instance.Canvas.transform);
-            subObjects = new List<GameObject>
-            {
-                o
-            };
+            subObjects.Add(o);
             acobject = o.GetComponent<ACObject_PressATimed>();
         }
     }
@@ -556,7 +609,7 @@ public class AC_PressATimed : ActionCommand
     }
     public override bool IsComplete()
     {
-        return finishTime > FEEDBACK_TIME;
+        return finishTime > END_LAG;
     }
 
 
@@ -577,11 +630,21 @@ public class AC_PressATimed : ActionCommand
         base.Update();
 
         float completion = Mathf.Clamp01(((lifetime - FADE_IN_TIME) / duration)) ;
-        bool success = (pressTime >= duration && pressTime < duration + window);
+        bool success = GetSuccess();
 
         if (!autoComplete)
         {
-            acobject.SetValues(completion, success, state);
+            if (lifetime <= duration + GetTimingWindow())
+            {
+                if (state == AC_State.Complete)
+                {
+                    completion = Mathf.Clamp01(((pressTime - FADE_IN_TIME) / duration));
+                    acobject.SetValues(completion, success, state);
+                } else
+                {
+                    acobject.SetValues(completion, success, state);
+                }
+            }
         }
 
         switch (state)
@@ -593,11 +656,19 @@ public class AC_PressATimed : ActionCommand
                 }
                 break;
             case AC_State.Active:
-                if (!autoComplete && (InputManager.GetButtonDown(InputManager.Button.A) || (lifetime >= duration + window)))
+                if (!autoComplete && (InputManager.GetButtonDown(InputManager.Button.A) || (lifetime >= duration + GetTimingWindow())))
                 {
                     state = AC_State.Complete;
                     pressTime = lifetime;
                     finishTime = 0;
+
+                    if (GetSuccess())
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Success);
+                    } else
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Fail);
+                    }
                 }
                 if (autoComplete && lifetime >= duration)
                 {
@@ -615,5 +686,176 @@ public class AC_PressATimed : ActionCommand
     public static string GetACDesc()
     {
         return "Press <button,a> when the large box and the small box are the same size.";
+    }
+
+    public override string GetDescription()
+    {
+        return GetACDesc();
+    }
+}
+
+public class AC_PressATimedMultiple : ActionCommand
+{
+    public const float DEFAULT_DURATION = 0.5f;
+    public float duration;
+    public float window;
+    public int amount;
+    public float[] completionAmounts;
+    public int successes;
+
+    ACObject_PressATimedMultiple acobject;
+    public AC_State state;
+
+    public float finishTime;
+    public float stopTime;
+
+    public override void Init(PlayerEntity caller)
+    {
+        base.Init(caller);
+
+        state = AC_State.Idle;
+
+        if (!autoComplete)
+        {
+            GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_PressButtonTimedMultiple"), MainManager.Instance.Canvas.transform);
+            subObjects.Add(o);
+            acobject = o.GetComponent<ACObject_PressATimedMultiple>();
+        }
+    }
+
+    public override void End()
+    {
+        base.End();
+    }
+
+    public override bool IsStarted()
+    {
+        return true;
+    }
+    public override bool IsComplete()
+    {
+        return finishTime > END_LAG;
+    }
+
+
+    public void Setup(float p_duration = DEFAULT_DURATION, int p_amount = 2, float maxoffset = 0.25f)
+    {
+        duration = p_duration;
+        window = GetTimingWindow();
+        amount = p_amount;
+        stopTime = -1;
+
+        completionAmounts = new float[amount];
+        for (int i = 0; i < completionAmounts.Length; i++)
+        {
+            if (i == completionAmounts.Length - 1)
+            {
+                completionAmounts[i] = 1;
+            } else
+            {
+                completionAmounts[i] = 0.5f + (i + RandomGenerator.GetRange(-maxoffset, maxoffset)) * (0.5f / amount);
+            }
+        }
+        acobject.SetValues(0, completionAmounts, 0, state);
+    }
+
+
+    public bool GetSuccess()
+    {
+        return autoComplete || successes >= amount;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        float completion = Mathf.Clamp01(((lifetime - FADE_IN_TIME) / duration));
+        bool success = GetSuccess();
+
+        if (!autoComplete)
+        {
+            if (lifetime <= duration + GetTimingWindow())
+            {
+                if (state == AC_State.Complete)
+                {
+                    completion = Mathf.Clamp01(((stopTime - FADE_IN_TIME) / duration));
+                    if (stopTime < 0)
+                    {
+                        completion = 1;
+                    }
+                    acobject.SetValues(completion, completionAmounts, successes, state);
+                }
+                else
+                {
+                    acobject.SetValues(completion, completionAmounts, successes, state);
+                }
+            }
+        }
+
+        switch (state)
+        {
+            case AC_State.Idle:
+                if (lifetime >= FADE_IN_TIME)
+                {
+                    state = AC_State.Active;
+                }
+                break;
+            case AC_State.Active:
+                //press A
+                if (!autoComplete && InputManager.GetButtonDown(InputManager.Button.A))
+                {
+                    //success or fail
+                    float subduration = completionAmounts[successes] * duration;
+
+                    if (lifetime >= subduration && lifetime < subduration + GetTimingWindow())
+                    {
+                        //success
+                        successes++;
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Success);
+                    } else
+                    {
+                        //fail
+                        state = AC_State.Complete;
+                        finishTime = 0;
+                        stopTime = lifetime;
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Fail);
+                    }
+                }
+
+                //timeout
+                if (successes < amount && lifetime > completionAmounts[successes] * duration + GetTimingWindow())
+                {
+                    state = AC_State.Complete;
+                    finishTime = 0;
+                    stopTime = lifetime;
+                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.SFX_AC_Fail);
+                }
+
+                if (!autoComplete && (lifetime >= duration + GetTimingWindow()))
+                {
+                    state = AC_State.Complete;
+                    finishTime = 0;
+                }
+                if ((autoComplete && lifetime >= duration) || successes == amount)
+                {
+                    state = AC_State.Complete;
+                    successes = amount;
+                    finishTime = 0;
+                }
+                break;
+            case AC_State.Complete:
+                finishTime += Time.deltaTime;
+                break;
+        }
+    }
+
+    public static string GetACDesc()
+    {
+        return "Press <button,a> when the large boxes and the small box are the same size.";
+    }
+
+    public override string GetDescription()
+    {
+        return GetACDesc();
     }
 }

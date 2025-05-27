@@ -24,6 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3765632821123276717}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.65, y: 0.8, z: 0.65}
@@ -31,7 +32,6 @@ Transform:
   m_Children:
   - {fileID: 3731388854293527934}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5222646251391860883
 MonoBehaviour:
@@ -62,6 +62,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3765632821123276718}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f33681ca0a6fc504f9c063abedb832a6,
@@ -130,6 +131,9 @@ PrefabInstance:
       value: slash
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f33681ca0a6fc504f9c063abedb832a6, type: 3}
 --- !u!23 &2470839208638960120 stripped
 MeshRenderer:

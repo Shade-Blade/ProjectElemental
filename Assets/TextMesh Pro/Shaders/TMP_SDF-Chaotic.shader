@@ -240,8 +240,8 @@ SubShader {
 			UNITY_SETUP_INSTANCE_ID(input);
 
 			_Chaos = 0.004;
-			float deltaX = _Chaos * (0.6 * sin(_Time.x * 60 + 100 * input.atlas.x) + 0.3 * sin(_Time.x * 90.62 + 800 * input.atlas.x));
-			float deltaY = _Chaos * (0.6 * sin(_Time.x * 60.97 + 20.1 + 100 * input.atlas.y) + 0.3 * sin(_Time.x * 86.76 + 50.1 + 800 * input.atlas.y));
+			float deltaX = _Chaos * (0.6 * sin(_Time.x * 60 + 25.2 * input.textures.x) + 0.3 * sin(_Time.x * 90.62 + 16.1 * input.textures.x));
+			float deltaY = _Chaos * (0.6 * sin(_Time.x * 60.97 + 20.1 + 25.2 * input.textures.y) + 0.3 * sin(_Time.x * 86.76 + 50.1 + 16.1 * input.textures.y));
 
 			float c = tex2D(_MainTex, input.atlas + float2(deltaX, deltaY)).a;
 

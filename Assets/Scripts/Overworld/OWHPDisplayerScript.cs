@@ -7,9 +7,12 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 public class OWHPDisplayerScript : MonoBehaviour
 {
     public TMPro.TMP_Text textNumber;
+    public RectTransform rt;
     public Image backImage;
+    public Image iconBackImage;
     public Image HPImage;
     public Image characterImage;
+    public Image barImage;
     public Sprite wilexSprite;
     public Sprite lunaSprite;
 
@@ -34,15 +37,20 @@ public class OWHPDisplayerScript : MonoBehaviour
             switch (pde.entityID)
             {
                 case BattleHelper.EntityID.Wilex:
-                    backImage.color = new Color(1, 0.8f, 0.8f, 0.9f);
+                    //barImage.color = new Color(1, 0.95f, 0.95f, 0.9f);
+                    //backImage.color = new Color(0.7f, 0.4f, 0.4f, 0.9f);
+                    iconBackImage.color = new Color(1, 0.75f, 0.75f, 1f);
                     characterImage.sprite = wilexSprite;
                     break;
                 case BattleHelper.EntityID.Luna:
-                    backImage.color = new Color(0.8f, 1f, 0.8f, 0.9f);
+                    //barImage.color = new Color(0.95f, 1f, 0.95f, 0.9f);
+                    //backImage.color = new Color(0.4f, 0.7f, 0.4f, 0.9f);
+                    iconBackImage.color = new Color(0.75f, 1f, 0.75f, 1f);
                     characterImage.sprite = lunaSprite;
                     break;
                 default:
-                    backImage.color = new Color(0.6f, 1, 1f, 0.9f);
+                    //barImage.color = new Color(0.95f, 1, 1f, 0.9f);
+                    //backImage.color = new Color(0.4f, 0.7f, 0.4f, 0.9f);
                     break;
             }
         }
@@ -60,13 +68,29 @@ public class OWHPDisplayerScript : MonoBehaviour
 
         if (pde != null)
         {
-            textNumber.text = pde.hp + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pde.maxHP + "</size>";
+            if (displayHP <= PlayerData.PlayerDataEntry.GetDangerHP(pde.entityID))
+            {
+                textNumber.text = "<color=#e02060>" + Mathf.RoundToInt(displayHP) + "</color><space=0.1em>/<space=0.1em><size=60%>" + pde.maxHP + "</size>";
+            }
+            else
+            {
+                if (displayHPCooldown > 0 || (HPStaminaDisplayerScript.HighlightActive() && highlightHP))
+                {
+                    textNumber.text = "<color=#ff8080>" + Mathf.RoundToInt(displayHP) + "</color><space=0.1em>/<space=0.1em><size=60%>" + pde.maxHP + "</size>";
+                }
+                else
+                {
+                    textNumber.text = "" + Mathf.RoundToInt(displayHP) + "<space=0.1em>/<space=0.1em><size=60%>" + pde.maxHP + "</size>";
+                }
+            }
         }
+
+        barImage.rectTransform.anchoredPosition = Vector2.left * (1 - (displayHP / pde.maxHP)) * (rt.sizeDelta.x - 15 - 27.5f);
     }
-    public void SetPosition(int index)
+    public void SetPosition(float index)
     {
-        float pos = 100f + index * 158;
-        backImage.rectTransform.anchoredPosition = new Vector3(pos, -30, 0);
+        float pos = 76f + index * 140;
+        rt.anchoredPosition = new Vector3(pos, -28, 0);
     }
 
     // Update is called once per frame
@@ -81,7 +105,7 @@ public class OWHPDisplayerScript : MonoBehaviour
         {
             displayHPCooldown = HPStaminaDisplayerScript.STAT_HIGHLIGHT_MINIMUM;
         }
-        displayHP = MainManager.EasingQuadraticTime(displayHP, pde.hp, 60);
+        displayHP = MainManager.EasingQuadraticTime(displayHP, pde.hp, HPStaminaDisplayerScript.STAT_SCROLL_SPEED);
         if (displayHPCooldown > 0)
         {
             displayHPCooldown -= Time.deltaTime;
@@ -91,12 +115,22 @@ public class OWHPDisplayerScript : MonoBehaviour
             displayHPCooldown = 0;
         }
 
-        if (displayHPCooldown > 0 || (HPStaminaDisplayerScript.HighlightActive() && highlightHP))
+        if (displayHP <= PlayerData.PlayerDataEntry.GetDangerHP(pde.entityID))
         {
-            textNumber.text = "<color=#c00000>" + pde.hp + "</color>/<size=" + MainManager.Instance.fontSize / 2 + ">" + pde.maxHP + "</size>";
-        } else
-        {
-            textNumber.text = pde.hp + "/<size=" + MainManager.Instance.fontSize / 2 + ">" + pde.maxHP + "</size>";
+            textNumber.text = "<color=#e02060>" + Mathf.RoundToInt(displayHP) + "</color><space=0.1em>/<space=0.1em><size=60%>" + pde.maxHP + "</size>";
         }
+        else
+        {
+            if (displayHPCooldown > 0 || (HPStaminaDisplayerScript.HighlightActive() && highlightHP))
+            {
+                textNumber.text = "<color=#ff8080>" + Mathf.RoundToInt(displayHP) + "</color><space=0.1em>/<space=0.1em><size=60%>" + pde.maxHP + "</size>";
+            }
+            else
+            {
+                textNumber.text = "" + Mathf.RoundToInt(displayHP) + "<space=0.1em>/<space=0.1em><size=60%>" + pde.maxHP + "</size>";
+            }
+        }
+
+        barImage.rectTransform.anchoredPosition = Vector2.left * (1 - (displayHP / pde.maxHP)) * (rt.sizeDelta.x - 15 - 27.5f);
     }
 }

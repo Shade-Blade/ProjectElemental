@@ -37,6 +37,12 @@ public class WorldspaceShopEntryScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //How is this happening?
+        if (evalPoint == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         transform.position = MainManager.Instance.WorldPosToCanvasPosB(evalPoint.position);
     }
 }

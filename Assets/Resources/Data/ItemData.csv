@@ -266,4 +266,4 @@ BitterEgg,,,,,34,DefenseUp:1/4,,,Spectral|NoOverworld,FALSE,EatBad,MagicEgg,FALS
 LightEgg,,,,,34,,,,Spectral|NoOverworld,FALSE,None,MagicEgg,TRUE,Light,,4,10,FALSE
 DarkEgg,,,,,34,,,,Spectral|NoOverworld,FALSE,None,MagicEgg,TRUE,Dark,,4,10,FALSE
 SilverEgg,,,,,67,AttackDown:1/4|DefenseDown:1/4,,,Spectral|NoOverworld,FALSE,None,MagicEgg,TRUE,Light,,8,10,FALSE
-GoldenEgg,12,12,,,100,AttackUp:1/4|DefenseUp:1/4,,,Spectral|NoOverworld,FALSE,EatGood,MagicEgg,TRUE,,,,10,FALSE
+GoldenEgg,12,12,,,100,AttackUp:1/4|DefenseUp:1/4,,,Spectral|NoOverworld,FALSE,EatGood,MagicEgg,FALSE,,,,10,FALSE

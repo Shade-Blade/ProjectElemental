@@ -177,10 +177,10 @@ public class TextboxScript : MonoBehaviour
                 Debug.LogWarning("Null (invalid) tag detected: " + t.startIndex + " / " + t.trueStartIndex + " to " + t.trueEndIndex);
                 break;
             case TagEntry.TextTag.ShowCoins:
-                MainManager.Instance.ShowCoinCounter();
+                MainManager.Instance.ShowHUD();
                 break;
             case TagEntry.TextTag.HideCoins:
-                MainManager.Instance.HideCoinCounter();
+                MainManager.Instance.HideHUD();
                 break;
             case TagEntry.TextTag.Minibubble:
                 //Makes a minibubble args: [mode bool, whether it is detached or not (Detached means it acts like a small independent text box, Non-detached means it gets closed when going to the next text box)], [text, use shorthand], ["B" + float OR int (meid)])
@@ -1370,11 +1370,6 @@ public class TextboxScript : MonoBehaviour
             text.bPress = false;
             text.aPressTime = 0;
         }
-    }
-
-    public void Bleep()
-    {
-
     }
 
     public void MenuExit(object sender, MenuExitEventArgs meea)

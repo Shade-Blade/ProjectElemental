@@ -10,8 +10,9 @@ public class CoinDisplayerScript : MonoBehaviour
     PlayerData pd;
 
     public TMPro.TMP_Text textNumber;
-    public Image backImage;
+    public RectTransform rt;
     public Image epImage;
+    public Image barImage;
 
     public float displayCoins;
     public float displayCoinsCooldown;
@@ -28,14 +29,19 @@ public class CoinDisplayerScript : MonoBehaviour
         pd = p_pd;
         //backImage = GetComponentInChildren<Image>();
         epImage.sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.Coin];
-        textNumber.text = pd.coins + "";
-
         displayCoins = pd.coins;
+        textNumber.text = "" + Mathf.Round(displayCoins) + "";
+
+        barImage.rectTransform.anchoredPosition = Vector2.left * (1 - (pd.coins / 999f)) * (rt.sizeDelta.x - 15 - 27.5f);
     }
 
     public void SetPosition()
     {
-        backImage.rectTransform.anchoredPosition = new Vector3(-220, 30, 0);
+        rt.anchoredPosition = new Vector3(-245, -28, 0);
+    }
+    public static bool HighlightActive()
+    {
+        return (int)(Time.time * 3) % 2 == 0;
     }
 
     // Update is called once per frame
@@ -55,13 +61,15 @@ public class CoinDisplayerScript : MonoBehaviour
             displayCoinsCooldown = 0;
         }
 
-        if (displayCoinsCooldown > 0 || (HPStaminaDisplayerScript.HighlightActive() && highlightCoins))
+        if (displayCoinsCooldown > 0 || (HighlightActive() && (HPStaminaDisplayerScript.HighlightActive() && highlightCoins)) || displayCoins == 999)
         {
-            textNumber.text = "<color=#c06000>"+Mathf.Round(displayCoins) + "</color>";
+            textNumber.text = "<color=#ffb080>" + Mathf.Round(displayCoins) + "</color>";
         }
         else
         {
-            textNumber.text = Mathf.Round(displayCoins) + "";
+            textNumber.text = "" + Mathf.Round(displayCoins) + "";
         }
+
+        barImage.rectTransform.anchoredPosition = Vector2.left * (1 - (displayCoins / 999f)) * (rt.sizeDelta.x - 15 - 27.5f);
     }
 }

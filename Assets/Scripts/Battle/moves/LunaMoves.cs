@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.Windows;
 
 
 public abstract class LunaMove : PlayerMove
@@ -300,6 +301,7 @@ public class LM_Brace : LunaMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -429,6 +431,7 @@ public class LM_DashThrough : LunaMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -441,6 +444,14 @@ public class LM_DashThrough : LunaMove
             Vector3 target = transform.position + Vector3.right * 3f;
             for (int i = 0; i < 4; i++)
             {
+                GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SmallShockwave"), BattleControl.Instance.battleMapScript.transform);
+                effect.transform.position = transform.position;
+                effect.transform.rotation = Quaternion.LookRotation(Vector3.up) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
+
+                GameObject effectB = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_DashDust"), BattleControl.Instance.battleMapScript.transform);
+                effectB.transform.position = transform.position;
+                effectB.transform.rotation = Quaternion.LookRotation(Vector3.left);
+
                 yield return caller.Jump(target, 0.45f, 0.35f, "dashjump", "dashfall");
                 target = target + Vector3.right * 3f;
             }
@@ -757,6 +768,7 @@ public class LM_FluffHeal : LunaMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -874,7 +886,7 @@ public class LM_SleepStomp : LM_HeavyStomp
                 damageDisplay = true;
             }
 
-            if (pcallerA.BadgeEquipped(Badge.BadgeType.StatusSight))
+            if (pcallerA.BadgeEquipped(Badge.BadgeType.AilmentSight))
             {
                 statusDisplay = true;
             }
@@ -1204,6 +1216,7 @@ public class LM_UnderStrike : LunaMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -1710,7 +1723,7 @@ public class LM_ElementalStomp : LunaMove
         //but that is complicated
         //This is technically exponentially bad (but modern computers go brr)
         int count = Mathf.Clamp(level, 1, 6);
-        for (int i = 1; i < 63; i++)
+        for (int i = 1; i < 64; i++)
         {
             int bitCount = 0;
             for (int j = 0; j < 6; j++)
@@ -1960,11 +1973,11 @@ public class LM_TeamThrow : LunaMove
             //spinny (but also busy wait for actionCommand.IsComplete())
 
             float radialVel = 0;
-            float radialMax = 25;
+            float radialMax = 360 * 4;
             float radialPos = 0;
             while (!actionCommand.IsComplete())
             {
-                radialVel = radialMax * actionCommand.GetCompletion();
+                radialVel = radialMax * actionCommand.GetCompletion() * Time.deltaTime;
                 radialPos += radialVel;
                 if (radialPos > 360)
                 {
@@ -1985,9 +1998,9 @@ public class LM_TeamThrow : LunaMove
 
             while (true)
             {
-                if (radialVel < radialMax * 0.05f)
+                if (radialVel < radialMax * 0.05f * Time.deltaTime)
                 {
-                    radialVel = radialMax * 0.05f;
+                    radialVel = radialMax * 0.05f * Time.deltaTime;
                 }
                 //radialVel = radialMax * actionCommand.GetCompletion();
                 radialPos += radialVel;
@@ -2017,21 +2030,11 @@ public class LM_TeamThrow : LunaMove
             Vector3 wPos3 = Vector3.up * 0.5f * caller.height + Vector3.right * xoffset3;
             other.Warp(caller.transform.position + wPos3);
 
-            //without this the release timing is somewhat hard to predict
-            yield return new WaitForSeconds(0.2f);
-
-            caller.SetAnimation("teamthrowrelease");
-            other.SetAnimation("teamthrowfly");
-
-            //yield return new WaitUntil(() => actionCommand.IsComplete());
-
             Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.kickOffset) + (other.width / 2) * Vector3.left;
             Vector3 tpos2 = grabPos + 1.5f * (tpos - grabPos);
             //Vector3 spos = transform.position;
 
-            //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
-            //StartCoroutine(caller.RevertScale(0.1f));
-
+            //signal the end with the lack of action command
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             float completion = actionCommand == null ? 0 : actionCommand.GetCompletion();
             tpos2 = grabPos + 1.5f * (tpos - grabPos) * completion;
@@ -2041,6 +2044,53 @@ public class LM_TeamThrow : LunaMove
                 actionCommand.End();
                 Destroy(actionCommand);
             }
+
+            //without this the release timing is somewhat hard to predict
+            //yield return new WaitForSeconds(0.2f);
+            //change: just rotate 1 more time
+
+            radialPos = 0.001f;
+            while (true)
+            {
+                if (radialVel < radialMax * 0.05f * Time.deltaTime)
+                {
+                    radialVel = radialMax * 0.05f * Time.deltaTime;
+                }
+                //radialVel = radialMax * actionCommand.GetCompletion();
+                radialPos += radialVel;
+                if (radialPos > 360)
+                {
+                    radialPos = 0;
+                }
+
+                caller.SetRotation(Vector3.up * -radialPos);
+                other.SetRotation(Vector3.up * (-radialPos));
+
+                float xoffset2 = (caller.width * 0.5f + other.width * 0.5f - 0.05f);
+                Vector3 wPos2 = Vector3.up * 0.05f * caller.height + Vector3.right * xoffset2 * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset2 * Mathf.Sin(radialPos * (Mathf.PI / 180)) + Vector3.back * 0.002f;
+                other.Warp(caller.transform.position + wPos2);
+
+                yield return null;
+
+                if (radialPos == 0)
+                {
+                    break;
+                }
+            }
+
+            caller.SetRotation(Vector3.zero);
+            other.SetRotation(Vector3.zero);
+            other.Warp(caller.transform.position + wPos3);
+
+
+            caller.SetAnimation("teamthrowrelease");
+            other.SetAnimation("teamthrowfly");
+
+            //yield return new WaitUntil(() => actionCommand.IsComplete());
+
+
+            //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
+            //StartCoroutine(caller.RevertScale(0.1f));
 
             if (GetOutcome(caller, other, sd))
             {
@@ -2404,6 +2454,13 @@ public class LM_DoubleEgg : LunaMove
     {
         //do psuedo random things
         int radix = caller.hp * 3 + turnOffset * 7 + offset + caller.actionCounter;
+
+        //random extra step using more prime numbers
+        if (radix % 5 == 0 || radix % 11 == 0)
+        {
+            radix *= 17;
+        }
+
         radix %= 12;
 
         if (fail)
@@ -2432,6 +2489,7 @@ public class LM_DoubleEgg : LunaMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -2449,14 +2507,14 @@ public class LM_DoubleEgg : LunaMove
 
             for (int i = 0; i < eggTypes.Length; i++)
             {
-                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, 0, false);
+                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, i * 17, false);
             }
         }
         else
         {
             for (int i = 0; i < eggTypes.Length; i++)
             {
-                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, 0, true);
+                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, i * 17, true);
             }
         }
 
@@ -2467,7 +2525,7 @@ public class LM_DoubleEgg : LunaMove
             eggObjects[i] = MakeEggSprite(caller, eggTypes[i]);
             eggObjects[i].transform.localScale = Vector3.zero;
             yield return new WaitForSeconds(0.2f);
-            StartCoroutine(EggAnimation(caller, eggTypes[i], 0.25f + 0.25f * i, eggObjects[i]));
+            StartCoroutine(EggAnimation(caller, eggTypes[i], 0.25f + 0.25f * i * (0.2f + 1f / eggTypes.Length), eggObjects[i]));
             yield return new WaitForSeconds(0.5f);
 
             BattleControl.Instance.playerData.AddItem(new Item(eggTypes[i], Item.ItemModifier.None, Item.ItemOrigin.Egg, 0, 0));
@@ -2487,6 +2545,16 @@ public class LM_DoubleEgg : LunaMove
                 yield break;
             }
         }
+
+        for (int j = 0; j < eggObjects.Length; j++)
+        {
+            Destroy(eggObjects[j]);
+            if (eggObjects[j] == null)
+            {
+                continue;
+            }
+        }
+        caller.SetIdleAnimation();
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -2561,6 +2629,7 @@ public class LM_Smash : LunaMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -2906,7 +2975,7 @@ public class LM_DazzleSmash : LM_Smash
                 damageDisplay = true;
             }
 
-            if (pcallerA.BadgeEquipped(Badge.BadgeType.StatusSight))
+            if (pcallerA.BadgeEquipped(Badge.BadgeType.AilmentSight))
             {
                 statusDisplay = true;
             }
@@ -3024,6 +3093,7 @@ public class LM_HammerThrow : LunaMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -3406,6 +3476,7 @@ public class LM_MomentumSmash : LM_Smash
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -3577,6 +3648,7 @@ public class LM_QuakeSmash : LunaMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -3724,13 +3796,13 @@ public class LM_LightSmash : LM_Smash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, sd + 4, BattleHelper.DamageType.Light, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 6, BattleHelper.DamageType.Light, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
-                    caller.DealDamage(caller.curTarget, sd + 7, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 9, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
-                    caller.DealDamage(caller.curTarget, sd + 1 + 3 * level, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 3 + 3 * level, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }
@@ -3739,13 +3811,13 @@ public class LM_LightSmash : LM_Smash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 4, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 6, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 7, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 9, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 1 + 3 * level, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 3 + 3 * level, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }
@@ -3797,13 +3869,13 @@ public class LM_LightSmash : LM_Smash
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Light, (ulong)BattleHelper.DamageProperties.AC_Success);
+                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Light, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 7, BattleHelper.DamageType.Light, propertyBlock);
+                val = caller.DealDamageCalculation(target, sd + 9, BattleHelper.DamageType.Light, propertyBlock);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd + 1 + 3 * level, BattleHelper.DamageType.Light, propertyBlock);
+                val = caller.DealDamageCalculation(target, sd + 3 + 3 * level, BattleHelper.DamageType.Light, propertyBlock);
                 break;
         }
 
@@ -3879,6 +3951,7 @@ public class LM_Illuminate : LunaMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -4021,6 +4094,7 @@ public class LM_HammerBeat : LunaMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -4126,6 +4200,7 @@ public class LM_MistWall : LunaMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }

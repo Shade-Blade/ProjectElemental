@@ -3398,7 +3398,6 @@ public class WorldPlayer : WorldEntity
         GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SmallShockwave"), MainManager.Instance.mapScript.transform);
         effect.transform.position = kickpos;
         effect.transform.rotation = Quaternion.LookRotation(kicknormal) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
-
         //Debug.Log("Bonk: " + kickpos + " with normal " + kicknormal);
     }
 
@@ -4498,6 +4497,11 @@ public class WorldPlayer : WorldEntity
 
         GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SmallShockwave"), MainManager.Instance.mapScript.transform);
         effect.transform.position = transform.position + Vector3.down * ((height / 2) + 0.05f);
+        effect.transform.rotation = Quaternion.LookRotation(floorNormal) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
+
+        GameObject effectB = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_DashDust"), MainManager.Instance.mapScript.transform);
+        effectB.transform.position = transform.position + Vector3.down * ((height / 2) + 0.05f);
+        effectB.transform.rotation = Quaternion.LookRotation(inputXY.x * -Vector3.right + inputXY.y * -Vector3.forward);
 
         applyDashJumpLift = true;
         SetActionState(ActionState.Dash);
@@ -4542,9 +4546,14 @@ public class WorldPlayer : WorldEntity
         effect.transform.position = transform.position + Vector3.down * ((height / 2) + 0.05f);
 
         GameObject eo = null;
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_FireTrail"), realOrientationObject.transform);
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_FireParticleTrail"), realOrientationObject.transform);
         eo.transform.localPosition = Vector3.down * 0.375f;
         eo.transform.localRotation = Quaternion.identity;
+
+        GameObject eoB = null;
+        eoB = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_FireTrail"), gameObject.transform);
+        eoB.transform.localPosition = Vector3.down * 0.325f + MainManager.Instance.Camera.transform.forward * 0.01f;
+        eoB.transform.localRotation = Quaternion.identity;
 
         //decided to instead just mess with settings to mimic what it should look like instead of using this
         //since the collision plane thing would mess up if you moved upwards after digging

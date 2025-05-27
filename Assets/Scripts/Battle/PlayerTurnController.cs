@@ -91,18 +91,38 @@ public class PlayerTurnController : MonoBehaviour
     {
         foreach (PlayerEntity p in movableParty)
         {
-            p.SetInactiveColor(false);
+            if (p.stamina < 0)
+            {
+                p.SetStaminaDebtColor(false);
+            }
+            else
+            {
+                p.SetInactiveColor(false);
+            }
         }
         foreach (PlayerEntity p in immovableParty)
         {
-            p.SetInactiveColor(true);
+            if (p.stamina < 0)
+            {
+                p.SetStaminaDebtColor(true);
+            }
+            else
+            {
+                p.SetInactiveColor(true);
+            }
         }
     }
     public void ResetPlayerSprites()
     {
         foreach (PlayerEntity p in BattleControl.Instance.GetPlayerEntities())
         {
-            p.SetInactiveColor(false);
+            if (p.CanMove() && p.stamina < 0)
+            {
+                p.SetStaminaDebtColor(false);
+            } else
+            {
+                p.SetInactiveColor(false);
+            }
         }
     }
     public void ResetActionCommands()
@@ -230,6 +250,8 @@ public class PlayerTurnController : MonoBehaviour
         movableParty = movableParty.FindAll((e) => e.CanMove());
         maxMovable = movableParty.Count;
 
+        immovableParty.ForEach((e) => { if (e.stamina < 0) e.HealStamina(-e.stamina); });
+
         foreach (PlayerEntity p in immovableParty)
         {
             p.SetInactiveColor(true);
@@ -244,6 +266,7 @@ public class PlayerTurnController : MonoBehaviour
             cooldownParty[i].SetInactiveColor(true);
             cooldownParty[i].TokenRemoveOne(Effect.EffectType.Cooldown);
         }
+        cooldownParty.ForEach((e) => { if (e.stamina < 0) e.HealStamina(-e.stamina); });
 
         //better place to do this then at EOT
         GlobalItemScript.Instance.ClearItemMoves();
@@ -286,6 +309,22 @@ public class PlayerTurnController : MonoBehaviour
 
             PlayerEntity mover = movableParty[0];
 
+            //stamina debt automove priority
+            if ((movableParty[0].stamina >= 0) && movableCount > 1)
+            {
+                for (int i = 1; i < movableCount; i++)
+                {
+                    if (movableParty[i].stamina < 0)
+                    {
+                        PlayerEntity p = movableParty[i];
+                        movableParty.Remove(p);
+                        movableParty.Insert(0, p);
+                        mover = p;
+                        break;
+                    }
+                }
+            }
+
             //berserk gets priority
             //push them up the list if there is one
             //(but lazy pushing where only the first one gets to the front is probably fine)
@@ -303,7 +342,7 @@ public class PlayerTurnController : MonoBehaviour
                         break;
                     }
                 }
-            }
+            }            
 
             Debug.Log(mover);
             //Debug.Log(mover.actionCounter);
@@ -498,6 +537,30 @@ public class PlayerTurnController : MonoBehaviour
         if (MultiSupply != null)
         {
             Destroy(MultiSupply);
+        }
+
+        //stamina debt
+        //stamina anarchy disables this mechanic
+        if (caller.stamina < 0 && !MainManager.Instance.Cheat_StaminaAnarchy)
+        {
+            if (!caller.CanMove())
+            {
+                //just auto reset stamina?
+                caller.stamina = 0;
+                yield break;
+            }
+
+            //force rest
+            BA_Rest br = GetOrAddComponent<BA_Rest>();
+            yield return br.Execute(caller);
+
+            //reset
+            //but I made Rest just give you enough anyway so this shouldn't do anything
+            if (caller.stamina < 0)
+            {
+                caller.stamina = 0;
+            }
+            yield break;
         }
 
 
@@ -1154,6 +1217,7 @@ public class PlayerTurnController : MonoBehaviour
     }
 
     //These are "filters"
+    //note: currently they just use the generic "can't move" reason
     //(so you can disable stuff remotely)
     //  (This is mainly for tutorials where you are scripted to use certain moves)
     public bool CanChoose(Move pm, BattleEntity b)

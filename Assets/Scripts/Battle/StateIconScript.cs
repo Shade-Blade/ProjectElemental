@@ -8,7 +8,7 @@ public class StateIconScript : MonoBehaviour
     public SpriteRenderer sprite;
     public TMPro.TMP_Text potencyText;
     public TMPro.TMP_Text durationText;
-    public const float VOFFSET = 0.35f;
+    public const float VOFFSET = 0.3f;
 
     public void Setup(BattleHelper.EntityState p_state, int potency = int.MinValue, int duration = int.MinValue)
     {

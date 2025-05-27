@@ -200,10 +200,11 @@ public class BaseBattleMenu : MenuHandler
                     tempangle += 360f;
                 }
 
-                baseMenuRectTransforms[i].anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + appearScale * (Vector3.up * 60 + offsetFromAngle(tempangle));
+                baseMenuRectTransforms[i].anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + appearScale * (Vector3.up * 60 + offsetFromAngle(tempangle) + Vector3.up * 10);
                 baseMenuOptionsO[i].transform.localScale = appearScale * scaleFromAngle(tempangle);
                 //Debug.Log(weaponLevel);
                 baseMenuOptionsS[i].Setup(menuOptions[i], baseMenuOptions[i].canSelect, caller.entityID == BattleHelper.EntityID.Wilex, weaponLevel);
+                baseMenuOptionsS[i].SetOpacity(opacityFromAngle(tempangle));
             }
 
             Sort();
@@ -558,7 +559,7 @@ public class BaseBattleMenu : MenuHandler
                 tempangle += 360f;
             }
 
-            baseMenuRectTransforms[i].anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + appearScale * (Vector3.up * 60 + offsetFromAngle(tempangle));
+            baseMenuRectTransforms[i].anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + appearScale * (Vector3.up * 60 + offsetFromAngle(tempangle) + Vector3.up * 10);
             baseMenuOptionsO[i].transform.localScale = appearScale * scaleFromAngle(tempangle);
             //Debug.Log(weaponLevel);
             baseMenuOptionsS[i].Setup(menuOptions[i], baseMenuOptions[i].canSelect, caller.entityID == BattleHelper.EntityID.Wilex, weaponLevel);
@@ -568,7 +569,7 @@ public class BaseBattleMenu : MenuHandler
         o = Instantiate(BattleControl.Instance.baseMenuDescriptor, MainManager.Instance.Canvas.transform);
         baseMenuDescriptor = o.GetComponent<TextDisplayer>();
         baseMenuDescriptor.SetText(MenuNameToString(baseMenuOptions[baseMenuIndex].oname, caller), true, true);
-        baseMenuDescriptor.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.up * -50;
+        baseMenuDescriptor.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.up * -40;
 
         o = Instantiate(BattleControl.Instance.baseMenuBSwap, MainManager.Instance.Canvas.transform);
         baseMenuBSwap = o.GetComponent<TextDisplayer>();
@@ -586,7 +587,7 @@ public class BaseBattleMenu : MenuHandler
         {
             baseMenuBSwap.SetText("", true, true);
         }
-        baseMenuBSwap.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.down * 200;
+        baseMenuBSwap.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.down * 225;
 
         Sort();
         Canvas.ForceUpdateCanvases();
@@ -683,6 +684,15 @@ public class BaseBattleMenu : MenuHandler
         float val = (max + min) / 2 + ((max - min) / 2) * Mathf.Cos(angle * (Mathf.PI / 180));
 
         return new Vector3(val, val, 1);
+    }
+
+    public float opacityFromAngle(float angle)
+    {
+        float max = 1.2f;
+        float min = 0.5f;
+        float val = (max + min) / 2 + ((max - min) / 2) * Mathf.Cos(angle * (Mathf.PI / 180));
+
+        return val;
     }
 
     public Vector3 offsetFromAngle(float angle)

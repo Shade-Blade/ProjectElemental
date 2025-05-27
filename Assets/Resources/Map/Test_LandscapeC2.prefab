@@ -902,7 +902,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_TempestDesert
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0
@@ -1246,7 +1246,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_TempestDesert
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0
@@ -2365,7 +2365,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    battleMapName: 0
+    battleMapName: TestBattle_TempestDesert
   frameTimer: -1
   firstStrikeTimer: -1
   state: 0

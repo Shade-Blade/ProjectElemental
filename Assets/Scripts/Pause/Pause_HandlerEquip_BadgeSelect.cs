@@ -341,7 +341,7 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
             }
             else
             {
-                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Unequip);
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_UnequipBadge);
                 playerData.equippedBadges.Remove(b);
 
                 if (bde.singleOrParty)
@@ -373,7 +373,7 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
                 MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Error);
             } else
             {
-                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Equip);
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_EquipBadge);
                 if (bde.singleOrParty)
                 {
                     playerData.equippedBadges.Add(b);

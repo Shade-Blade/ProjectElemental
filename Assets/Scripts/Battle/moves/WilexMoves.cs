@@ -93,7 +93,7 @@ public abstract class WilexMove : PlayerMove
 
         if (level != 1)
         {
-            if (level >= 4 || BattleControl.Instance.lunaText[index + 1][1 + level].Length < 2) //if I didn't write a description, use the infinite stacking one
+            if (level >= 4 || BattleControl.Instance.wilexText[index + 1][1 + level].Length < 2) //if I didn't write a description, use the infinite stacking one
             {
                 string[] vars = new string[] { "0", (level).ToString(), (level * 2).ToString(), (level * 3).ToString(), (level * 4).ToString(), (level * 5).ToString(), (level * 6).ToString(), (level * 7).ToString(), (level * 8).ToString() };
                 output += " <color,#5000ff>(Lv. " + level + ": " + FormattedString.ParseVars(BattleControl.Instance.wilexText[index + 1][5], vars) + ")</color>";
@@ -316,6 +316,7 @@ public class WM_Focus : WilexMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -397,7 +398,7 @@ public class WM_MultiStomp : WilexMove
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyTopmost, true);
     //public override float GetBasePower() => 1.0f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(4);
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(4, level);
 
     public override BaseBattleMenu.BaseMenuName GetMoveType() => BaseBattleMenu.BaseMenuName.Jump;
 
@@ -721,6 +722,7 @@ public class WM_Taunt : WilexMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -758,7 +760,7 @@ public class WM_Taunt : WilexMove
     {
         if (caller is PlayerEntity pcallerA)
         {
-            if (!pcallerA.BadgeEquipped(Badge.BadgeType.StatusSight))
+            if (!pcallerA.BadgeEquipped(Badge.BadgeType.AilmentSight))
             {
                 return "";
             }
@@ -852,7 +854,7 @@ public class WM_ParalyzeStomp : WM_HighStomp
                 damageDisplay = true;
             }
 
-            if (pcallerA.BadgeEquipped(Badge.BadgeType.StatusSight))
+            if (pcallerA.BadgeEquipped(Badge.BadgeType.AilmentSight))
             {
                 statusDisplay = true;
             }
@@ -951,9 +953,14 @@ public class WM_FlameStomp : WM_HighStomp
         effect.transform.position = caller.transform.position + Vector3.down * (0.05f);
 
         GameObject eo = null;
-        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_FireTrail"), caller.transform);
-        eo.transform.localPosition = Vector3.down * 0.375f;
+        eo = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_FireParticleTrail"), caller.transform);
+        eo.transform.localPosition = Vector3.zero;
         eo.transform.localRotation = Quaternion.identity;
+
+        GameObject eoB = null;
+        eoB = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_FireTrail"), caller.transform);
+        eoB.transform.localPosition = MainManager.Instance.Camera.transform.forward * 0.01f + Vector3.up * 0.05f;
+        eoB.transform.localRotation = Quaternion.identity;
 
         IEnumerator DestroyDelayed(GameObject particle)
         {
@@ -1540,7 +1547,7 @@ public class WM_SmartStomp : WM_HighStomp
                 damageDisplay = true;
             }
 
-            if (pcallerA.BadgeEquipped(Badge.BadgeType.StatusSight))
+            if (pcallerA.BadgeEquipped(Badge.BadgeType.AilmentSight))
             {
                 statusDisplay = true;
             }
@@ -1752,6 +1759,7 @@ public class WM_TeamQuake : WilexMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -1975,6 +1983,13 @@ public class WM_EggToss : WilexMove
     {
         //do psuedo random things
         int radix = caller.hp * 3 + turnOffset * 7 + offset + caller.actionCounter;
+
+        //random extra step using more prime numbers
+        if (radix % 5 == 0 || radix % 11 == 0)
+        {
+            radix *= 17;
+        }
+
         radix %= 12;
 
         if (fail)
@@ -2002,6 +2017,7 @@ public class WM_EggToss : WilexMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -2018,27 +2034,29 @@ public class WM_EggToss : WilexMove
 
             for (int i = 0; i < eggTypes.Length; i++)
             {
-                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, 0, false);
+                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, i * 17, false);
             }
         }
         else
         {
             for (int i = 0; i < eggTypes.Length; i++)
             {
-                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, 0, true);
+                eggTypes[i] = GetEggType(caller, BattleControl.Instance.turnCount, i * 17, true);
             }
         }
 
         GameObject[] eggObjects = new GameObject[eggTypes.Length];
         for (int i = 0; i < eggTypes.Length; i++)
         {
-            caller.SetAnimation("egglay");
+            caller.SetAnimation("egglay", true);
             eggObjects[i] = MakeEggSprite(caller, eggTypes[i]);
             eggObjects[i].transform.localScale = Vector3.zero;
             yield return new WaitForSeconds(0.2f);
-            StartCoroutine(EggAnimation(caller, eggTypes[i], 0.25f + 0.25f * i, eggObjects[i]));
+            StartCoroutine(EggAnimation(caller, eggTypes[i], 0.25f + 0.25f * i * (0.2f + 1f / eggTypes.Length), eggObjects[i]));
             yield return new WaitForSeconds(0.3f);
         }
+
+        BattleEntity oldTarget = caller.curTarget;
 
         for (int i = 0; i < eggTypes.Length; i++)
         {
@@ -2049,6 +2067,9 @@ public class WM_EggToss : WilexMove
             if (im.GetTargetArea(caller, 1).GetCheckerResult(caller, caller))
             {
                 caller.curTarget = caller;
+            } else
+            {
+                caller.curTarget = oldTarget;
             }
 
             if (!BattleControl.Instance.EntityValid(caller.curTarget))
@@ -2160,6 +2181,7 @@ public class WM_Slash : WilexMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -2337,6 +2359,7 @@ public class WM_MultiSlash : WM_Slash
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -2726,6 +2749,7 @@ public class WM_SlipSlash : WilexMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -2904,7 +2928,7 @@ public class WM_PoisonSlash : WM_Slash
                 damageDisplay = true;
             }
 
-            if (pcallerA.BadgeEquipped(Badge.BadgeType.StatusSight))
+            if (pcallerA.BadgeEquipped(Badge.BadgeType.AilmentSight))
             {
                 statusDisplay = true;
             }
@@ -3017,13 +3041,13 @@ public class WM_PreciseStab : WM_Slash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, sd + 4, BattleHelper.DamageType.Water, propertyBlockB, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Water, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
-                    caller.DealDamage(caller.curTarget, sd + 7, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 6, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
-                    caller.DealDamage(caller.curTarget, sd + 3 + level * 2, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 2 + level * 2, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }
@@ -3032,13 +3056,13 @@ public class WM_PreciseStab : WM_Slash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 4, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 7, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 6, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 3 + level * 2, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 2 + level * 2, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }
@@ -3075,13 +3099,13 @@ public class WM_PreciseStab : WM_Slash
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 4, BattleHelper.DamageType.Water, (ulong)BattleHelper.DamageProperties.AC_Success);
+                val = caller.DealDamageCalculation(target, sd + 3, BattleHelper.DamageType.Water, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 7, BattleHelper.DamageType.Water, propertyBlock);
+                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Water, propertyBlock);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd + 3 + level * 2, BattleHelper.DamageType.Water, propertyBlock);
+                val = caller.DealDamageCalculation(target, sd + 2 + level * 2, BattleHelper.DamageType.Water, propertyBlock);
                 break;
         }
 
@@ -3131,11 +3155,11 @@ public class WM_SwordDischarge : WilexMove
         {
             int sd = 2;
 
-            AC_HoldLeft actionCommand = null;
+            AC_MashLeftRight actionCommand = null;
             if (caller is PlayerEntity pcaller)
             {
                 sd = pcaller.GetWeaponDamage();
-                actionCommand = gameObject.AddComponent<AC_HoldLeft>();
+                actionCommand = gameObject.AddComponent<AC_MashLeftRight>();
                 actionCommand.Init(pcaller);
                 actionCommand.Setup(0.5f);
             }
@@ -3147,6 +3171,7 @@ public class WM_SwordDischarge : WilexMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -3205,7 +3230,7 @@ public class WM_SwordDischarge : WilexMove
 
     public override string GetActionCommandDesc(int level = 1)
     {
-        return AC_HoldLeft.GetACDesc();
+        return AC_MashLeftRight.GetACDesc();
     }
 }
 
@@ -3273,6 +3298,7 @@ public class WM_SwordDance : WilexMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -3445,6 +3471,7 @@ public class WM_BoomerangSlash : WilexMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -3591,13 +3618,13 @@ public class WM_DarkSlash : WM_Slash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, sd + 6, BattleHelper.DamageType.Dark, propertyBlockB, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 7, BattleHelper.DamageType.Dark, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
-                    caller.DealDamage(caller.curTarget, sd + 9, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 10, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
-                    caller.DealDamage(caller.curTarget, sd + 3 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, sd + 4 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }
@@ -3606,13 +3633,13 @@ public class WM_DarkSlash : WM_Slash
             switch (level)
             {
                 case 1:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 6, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 7, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 9, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 10, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 3 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
+                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 4 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
         }
@@ -3660,13 +3687,13 @@ public class WM_DarkSlash : WM_Slash
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 6, BattleHelper.DamageType.Dark, (ulong)BattleHelper.DamageProperties.AC_Success);
+                val = caller.DealDamageCalculation(target, sd + 7, BattleHelper.DamageType.Dark, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 9, BattleHelper.DamageType.Dark, propertyBlock);
+                val = caller.DealDamageCalculation(target, sd + 10, BattleHelper.DamageType.Dark, propertyBlock);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd + 3 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock);
+                val = caller.DealDamageCalculation(target, sd + 4 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock);
                 break;
         }
 
@@ -3751,6 +3778,7 @@ public class WM_Aetherize : WilexMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -3893,6 +3921,7 @@ public class WM_FlameBat : WilexMove
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
+                yield return new WaitForSeconds(ActionCommand.END_LAG);
                 actionCommand.End();
                 Destroy(actionCommand);
             }
@@ -4027,6 +4056,7 @@ public class WM_AstralWall : WilexMove
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
+            yield return new WaitForSeconds(ActionCommand.END_LAG);
             actionCommand.End();
             Destroy(actionCommand);
         }
@@ -4059,7 +4089,7 @@ public class WM_AstralWall : WilexMove
                     List<BattleEntity> targetsC = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsC)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(b.maxHP / (1f + level)), (sbyte)(level)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt(b.maxHP / (1.0001f + level)), (sbyte)(level)));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AstralRecovery, 1, (sbyte)(level)));
                     }
                     break;
@@ -4091,7 +4121,7 @@ public class WM_AstralWall : WilexMove
                     List<BattleEntity> targetsC = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
                     foreach (BattleEntity b in targetsC)
                     {
-                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt((b.maxHP * 2) / (1f + level)), (sbyte)(level)));
+                        caller.InflictEffect(b, new Effect(Effect.EffectType.AstralWall, (sbyte)Mathf.CeilToInt((b.maxHP * 2) / (1.0001f + level)), (sbyte)(level)));
                         caller.InflictEffect(b, new Effect(Effect.EffectType.AstralRecovery, 1, (sbyte)(level)));
                     }
                     break;

@@ -3,7 +3,7 @@ Carrot,Carrot,a,"A nice, crunchy carrot.",Restores 6 hp to one ally.,,
 BerrySyrup,Berry Syrup,some,Sugary syrup made from different types of berries.,Restores 6 ep to one ally.,,
 SourBerry,Sour Berry,a,The sourness makes you stronger.,Gives an ally Attack Up 1 for 3 turns.,,
 SweetBerry,Sweet Berry,a,A sweet berry that makes you more protected.,Gives an ally Defense Up 1 for 3 turns.,,
-LightSeed,Light Seed,a,A bright seed that can be thrown at enemies.,Deals 3 Light damage to any enemy.,"Light damage is stronger against enemies at high HP, up to a +0.66x boost.",
+LightSeed,Light Seed,a,A bright seed that can be thrown at enemies.,Deals 3 Light damage to any enemy.,"<commontext,explainlight>",
 MiracleDrop,Miracle Drop,a,A small drop that is still enough to revive you.,Restores 5 hp to one ally. Can be used on dead allies.,,
 Mistake,Mistake,a,A lesson on why you should be careful when cooking…,"Restores 1 hp and 1 ep to one ally, but also gives them 3 turns of poison.",,
 BigMistake,Big Mistake,a,"At this point, it isn't really ""food"" anymore…","Reduces one ally's HP and EP by 10, and gives them 5 turns of poison.",,
@@ -18,7 +18,7 @@ BronzeCarrot,Bronze Carrot,a,"A shiny, healthy carrot.",Restores 12 hp to one al
 FlowerSyrup,Flower Syrup,some,Sugary syrup made from flower nectar.,Restores 12 ep to one ally.,,
 Apple,Apple,an,A tangy apple that makes it easier to move.,"Restores 3 hp and 2 ep to one ally, and gives them Endurance Up 1 for 2 turns.",,
 BitterBean,Bitter Bean,a,So bitter it makes you dizzy! Makes you move faster though.,"Gives an ally Dizzy for 2 turns, and Hustle for 1 turn.",,
-RockNut,Rock Nut,a,This nut is too hard to eat. You're better off throwing it away…,"Deals 4 Earth damage to any target, and inflicts Dizzy for 2 turns.","Earth damage is boosted based on damage the user took this turn and last turn, up to +0.66x base damage",
+RockNut,Rock Nut,a,This nut is too hard to eat. You're better off throwing it away…,"Deals 4 Earth damage to any target, and inflicts Dizzy for 2 turns.","<commontext,explainearth>",
 LivelyLeaf,Lively Leaf,a,Life giving leaves that are common in the Verdant Forests.,Restores 5 ep and gives an ally 3 absorb and 3 stamina.,,
 ClearStrawberry,Clear Strawberry,a,A very juicy strawberry.,"Cures negative effects on one ally. For each effect removed, ally gets 3 burst.",,
 BronzeSalad,Bronze Salad,a,A healthy salad made from diced Bronze Carrots.,Restores 18 hp to one ally.,,
@@ -33,7 +33,7 @@ Lemon,Lemon,a,A super sour fruit that makes you hit harder!,"Restores 2 hp and 7
 Flour,Flour,a,"A versatile cooking ingredient. You can eat it raw, but you probably shouldn't.",Restores 3 hp and 3 ep to all allies.,,
 Dragonfruit,Dragonfruit,a,Fruit of a cactus.,"Restores 5 hp and 5 ep to one ally, and gives then 2 focus and 2 absorb.",,
 MistWater,Mist Water,some,Purified water that is always refreshing.,Cures negative effects on all allies.,,
-StaticThorn,Static Thorn,a,These thorns can passively absorb the electrical energy of the Tempest Desert. Make sure you don't shock yourself!,"Deals 4 Air/Electric damage to any target, and inflicts Paralyze for 2 turns.",Air/Electric damage pierces defense.,
+StaticThorn,Static Thorn,a,These thorns can passively absorb the electrical energy of the Tempest Desert. Make sure you don't shock yourself!,"Deals 4 Air/Electric damage to any target, and inflicts Paralyze for 2 turns.","<commontext,explainair>",
 WarpedLeaf,Warped Leaf,a,A strangely shaped leaf that warps your stats. Cooking it with other items often has strange results.,"Swaps an ally's current HP and EP. (If they would go to 0 hp, they instead go to 1 hp.)",,
 CarrotCake,Carrot Cake,a,A cake big enough to share.,Restores 4 hp and 4 ep to all allies.,,
 BronzeCake,Bronze Cake,a,A bronze cake big enough to share.,Restores 8 hp and 8 ep to all allies.,,
@@ -51,7 +51,7 @@ CarrotBunch,Carrot Bunch,a,Two carrots tied together. It's hard to cook them lik
 Watermelon,Watermelon,a,A massive fruit too large to eat all at once that has a refreshing taste.,"Restores 10 hp and 20 ep to one ally, and gives then 6 burst. Becomes a Watermelon Slice when used.",,
 MelonSlice,Melon Slice,a,One slice of a watermelon that tastes refreshing.,"Restores 5 hp and 10 ep to one ally, and gives them 3 burst.",,
 Coconut,Coconut,a,A hard fruit you can throw at enemies.,Deals 6 normal damage to any target.,,
-SleepDart,Sleep Dart,a,A dart covered with sedative slime. Be careful when handling it!,Deals 4 Water damage to any target and inflicts Sleep for 2 turns.,"Water damage is stronger when the user is at high HP, up to a +0.66x boost.",
+SleepDart,Sleep Dart,a,A dart covered with sedative slime. Be careful when handling it!,Deals 4 Water damage to any target and inflicts Sleep for 2 turns.,"<commontext,explainwater>",
 BerryCarrotBunch,Berry Carrot Bunch,a,Two Berry Carrots tied together. You can eat them one at a time.,Restores 12 hp and 12 ep to one ally. Becomes a Berry Carrot when used.,,
 CarrotPudding,Carrot Pudding,a,Pudding made from carrots that heals you over time.,Restores 9 hp and 9 ep to one ally over 3 turns.,3 hp and 3 ep per turn.,
 BronzePudding,Bronze Pudding,a,Pudding made from Bronze Carrots that heals you over time.,Restores 18 hp and 18 ep to one ally over 3 turns.,6 hp and 6 ep per turn.,
@@ -65,7 +65,7 @@ MilkCoffee,Milk Coffee,a,Mild coffee that makes you move faster.,Gives an ally a
 TropicalParfait,Tropical Parfait,a,A fruity dessert that is the signature dish of the Gemstone Islands.,Restores 25 hp and 25 ep to one ally.,,
 SleepyTea,Sleepy Tea,some,Tea that heals you but also makes you sleepy.,"Restores 40 hp to one ally, but puts them to sleep for 2 turns.",,
 Meringue,Meringue,a,Special dessert you can share with an ally.,Restores 15 hp and 15 ep to all allies over 3 turns.,5 hp and 5 ep per turn.,
-SlimeBomb,Slime Bomb,a,A slime ball that has a mind of its own.,Deals 3 Water damage to all targets. (Automatically activates when you use Rest.),"Water damage is stronger when the user is at high HP, up to a +0.66x boost. Only one copy will activate a a time.",
+SlimeBomb,Slime Bomb,a,A slime ball that has a mind of its own.,Deals 3 Water damage to all targets. (Automatically activates when you use Rest.),"<commontext,explainwater>",
 SilverCarrot,Silver Carrot,a,"An above average, shiny carrot.",Restores 30 hp to one ally.,,
 ScaleSteak,Scale Steak,a,A big slice of meat from one of the creatures in the Infernal Caldera.,Restores 14 hp to one ally and gives them Attack Up 3 for 2 turns.,,
 RockEgg,Rock Egg,a,These rock-shaped eggs are full of protein.,Restores 9 hp to one ally and gives them Attack Up 2 for 3 turns.,,
@@ -90,13 +90,13 @@ PepperNeedle,Pepper Needle,a,Auto activate when you take damage,Deals 2 fire dam
 DragonShake,Dragon Shake,a,A spicy shake that makes you as strong as a dragon. Supposedly.,Gives an ally Focus 4 and Absorb 4.,,
 HoneySyrup,Honey Syrup,some,Sweet syrup made from the nectar of Honeybuds.,Restores 30 ep to one ally.,,
 BronzeBunch,Bronze Bunch,a,Two Bronze Carrots tied together. It's hard to cook them like this but you can still eat them.,Restores 20 hp to one ally. Becomes a Bronze Carrot when used.,,
-DarkNeedle,Dark Needle,a,A very pointy needle that's full of poison.,"Deals 4 Dark damage to any target, and inflicts Poison for 2 turns.","Dark type damage is stronger against enemies at low hp, up to a +1.0x boost.",
+DarkNeedle,Dark Needle,a,A very pointy needle that's full of poison.,"Deals 4 Dark damage to any target, and inflicts Poison for 2 turns.","<commontext,explaindark>",
 Eggplant,Eggplant,an,A strange fruit that boosts your stamina somewhat.,Restores 6 stamina to one ally.,,
 DarkMushroom,Dark Mushroom,a,A toxic mushroom that probably isn't too safe to eat.,"Restores 11 ep to one ally, but removes 5 hp from them.",Negative HP healing cannot reduce you below 1 hp.,
 MoonlightBerry,Moonlight Berry,a,"This berry makes you difficult to see, but it also makes it difficult for you to see too.",Gives an ally Ethereal for 1 turn but Dizzy for 1 turn.,,
-MosquitoNeedle,Mosquito Needle,a,A hollow needle that can siphon health from enemies.,"Deals 4 Dark damage to any target, and the user is healed for the damage dealt.","Dark type damage is stronger against enemies at low hp, up to a +1.0x boost.",
+MosquitoNeedle,Mosquito Needle,a,A hollow needle that can siphon health from enemies.,"Deals 4 Dark damage to any target, and the user is healed for the damage dealt.","<commontext,explaindark>",
 StrangeBud,Strange Bud,a,"For some reason, the flowers of these plants have never been seen.","Sets an ally's HP to their missing HP, and their EP to their missing EP",Missing stat: max stat - current stat,
-StickySpore,Sticky Spore,a,This mushroom seems to have a mind of its own. Make sure they hit your enemies instead of you.,Deals 2 dark damage to any target. (Automatically activates when an enemy takes damage.),"Dark type damage is stronger against enemies at low hp, up to a +1.0x boost. All copies will be used at the same time.",
+StickySpore,Sticky Spore,a,This mushroom seems to have a mind of its own. Make sure they hit your enemies instead of you.,Deals 2 dark damage to any target. (Automatically activates when an enemy takes damage.),"<commontext,explaindark>",
 FlowerBronzeBunch,Flower Bronze Bunch,a,Two Flower Bronzes tied together. You can eat them one at a time.,Restores 20 hp and 20 ep to one ally. Becomes a Flower Bronze when used.,,
 HoneyCandy,Honey Candy,a,Sweet candy that gives you a burst of energy.,Restores 45 ep to one ally. Surplus EP becomes X Burst where X = surplus / 3 rounded up.,,
 HoneyCarrot,Honey Carrot,a,A carrot covered in Honey Syrup.,Restores 6 hp and 30 ep to one ally.,,
@@ -112,7 +112,7 @@ MiracleShroom,Miracle Shroom,a,A lifesaving mushroom that revives you when you'r
 PoisonSkewer,Poison Skewer,a,"A mushroom on a stick that is quite tasty. Unfortunately, both the stick and the mushroom are full of poison.",Restores 35 hp and 35 ep to one ally but gives them Poison for 3 turns.,,
 WeirdTea,Weird Tea,some,Weird tasting tea that does weird things to your energy.,Swaps your current EP and SE.,,
 MoonCookie,Moon Cookie,a,A moon-shaped cookie that makes Soul Moves easier to use.,Gives you Flow Up 4 for 3 turns.,Flow Up reduces Soul Move costs.,
-MintIcicle,Mint Icicle,a,A sharp plant crystal that can be used as a healing item or thrown at enemies.,"In the overworld, restores 11 hp to one ally. In battle, deals 4 Light damage to any target and inflicts Freeze for 2 turns.","Light damage is stronger against enemies at high HP, up to a +0.66x boost.",
+MintIcicle,Mint Icicle,a,A sharp plant crystal that can be used as a healing item or thrown at enemies.,"In the overworld, restores 11 hp to one ally. In battle, deals 4 Light damage to any target and inflicts Freeze for 2 turns.","<commontext,explainlight>",
 IcePotato,Ice Potato,an,A hardy potato that can somehow grow in the Radiant Plateau.,"Restores 13 hp to one ally and gives them Defense Up 5 for 2 turns, but Attack Down 3 and Freeze for 2 turns.",,
 IcePumpkin,Ice Pumpkin,an,A large fruit that makes you feel protected.,Restores 19 hp and 7 ep to one ally and gives them 4 Absorb.,,
 CrystalLeaf,Crystal Leaf,a,A leaf that looks a lot like a snowflake.,Gives Absorb 6 to one ally.,,
@@ -142,16 +142,16 @@ LuxurySteak,Luxury Steak,a,"A massive, delicious steak that makes everyone who e
 DeluxeDinner,Deluxe Dinner,a,Delicious meal that increases your stats for a long time.,Restores 40 hp and 40 ep to one ally and gives them Attack Up 2 for 4 turns and Defense Up 2 for 4 turns.,,
 SnowyMeringue,Snowy Meringue,a,A snowy treat that you can share.,Restores 30 hp and 30 ep to all allies over 3 turns. Becomes Meringue when used.,10 hp and 10 ep per turn.,
 PeachPie,Peach Pie,a,A sweet pie that gives you many benefits.,"Restores 45 ep to one ally and gives them Attack Up 2, Defense Up 2 and Endurance Up 2 for 3 turns.",,
-MintSpikes,Mint Spikes,some,Multiple Mint Icicles stuck together.,"In the overworld, restores 22 hp to one ally. In battle, deals 2 Light damage to any target three times and inflicts Freeze for 2 turns on the final hit.","Light damage is stronger against enemies at high HP, up to a +0.66x boost.",
+MintSpikes,Mint Spikes,some,Multiple Mint Icicles stuck together.,"In the overworld, restores 22 hp to one ally. In battle, deals 2 Light damage to any target three times and inflicts Freeze for 2 turns on the final hit.","<commontext,explainlight>",
 SwiftCake,Swift Cake,a,"The outside is cooked, but the inside is cold ice cream. The pinnacle of Sizzle's technique.",Restores 10 hp and 21 ep to all allies and gives them Hustle for 1 turn and Focus 3.,,
 TwinCarrot,Twin Carrot,a,"Two carrots that are somehow linked, but you eat them one at a time.",Restores 36 hp to one ally. Becomes a Half Carrot when used.,,
 HalfCarrot,Half Carrot,a,Half of a larger carrot.,Restores 18 hp to one ally.,,
 GoldenLeaf,Golden Leaf,a,A shiny leaf that can be cooked into many things.,Trade up to 15 hp for a defense boost. Lost HP becomes Defense Up X for 3 turns where X = lost / 10 rounded up.,,
 BrightMushroom,Bright Mushroom,a,A glowing mushroom that is always warm to the touch.,Trade up to 15 ep for an attack boost. Lost EP becomes Attack Up X for 3 turns where X = lost / 10 rounded up.,,
 GoldenPineapple,Golden Pineapple,a,One of the few fruits capable of growing in the Aether Trench.,Trade up to 15 ep for an endurance boost. Lost EP becomes Endurance Up X for 3 turns where X = lost / 10 rounded up.,,
-DrainSeed,Drain Seed,a,A strange seed that you can plant in enemies that lets you get health from them.,Throw at any enemy to deal 4 Earth damage. Inflicts Attack Down 1 and Drain Sprout for 3 turns.,"Earth damage is boosted based on damage the user took this turn and last turn, up to +0.66x base damage",
-BoltSeed,Bolt Seed,a,A strange seed that you can plant in enemies that lets you get energy from them.,Throw at any enemy to deal 4 Electric damage. Inflicts Defense Down 1 and Bolt Sprout for 3 turns.,Air/Electric damage pierces defense.,
-GoldBomb,Gold Bomb,a,A very unstable bomb that explodes on the slightest provocation. Make sure it explodes on your enemies and not on you!,Deals 9 fire damage to all enemies.,Fire damage gets boosted up to +1.0x based on how low your HP percentage is.,Will explode one at a time and damage you if you get hit.
+DrainSeed,Drain Seed,a,A strange seed that you can plant in enemies that lets you get health from them.,Throw at any enemy to deal 4 Earth damage. Inflicts Attack Down 1 and Drain Sprout for 3 turns.,"<commontext,explainearth>",
+BoltSeed,Bolt Seed,a,A strange seed that you can plant in enemies that lets you get energy from them.,Throw at any enemy to deal 4 Electric damage. Inflicts Defense Down 1 and Bolt Sprout for 3 turns.,"<commontext,explainair>",
+GoldBomb,Gold Bomb,a,An unstable bomb that explodes on the slightest provocation. Make sure it explodes on your enemies and not on you!,Deals 9 fire damage to all enemies.,Fire damage gets boosted up to +1.0x based on how low your HP percentage is.,Will explode one at a time on you if you get hit.
 TwinSalad,Twin Salad,a,Two salads made from diced Twin Carrots. You eat them one at a time.,Restores 54 hp to one ally. Becomes a Half Salad when used.,,
 HalfSalad,Half Salad,a,A half portion of a larger carrot salad.,Restores 27 hp to one ally.,,
 BerryTwins,Berry Twins,a,Twin carrots covered in Berry Syrup.,Restores 36 hp and 3 ep to one ally. Becomes a Berry Half when used.,,
@@ -191,7 +191,7 @@ GoldenCarrot,Golden Carrot,a,"A high quality, golden carrot.",Restores 60 hp to 
 RoyalSyrup,Royal Syrup,some,Rare syrup that requires the purest nectar to produce.,Restores 60 ep to one ally.,,
 SunTomato,Sun Tomato,a,"A big, juicy tomato that makes you stronger for a while.",Restores 20 hp and 5 ep to one ally and gives them Attack Up 1 for 4 turns.,,
 SunSeed,Sun Seed,a,An edible seed that heals you slowly.,Restores 36 hp to one ally over 6 turns.,,
-FlashBud,Flash Bud,a,"A strange, crystalline bud imbued with some power from the Realm of Possibility.",Restores your stats to what they were before the battle started.,Can revive dead allies.,
+FlashBud,Flash Bud,a,"A strange, crystalline bud imbued with some power from the Realm of Possibility.",Restores your stats to what they were before the battle started.,Can revive dead allies.,1/battle
 GoldenSalad,Golden Salad,a,A healthy salad made from diced Golden Carrots.,Restores 90 hp to one ally. Surplus HP becomes X Absorb where X = surplus / 10 rounded up.,,
 RoyalCandy,Royal Candy,a,Sweet candy that makes it easier to move.,Restores 90 ep to one ally. Surplus EP becomes Endurance Up X for 3 turns where X = surplus / 10 rounded up.,,
 BerryGolden,Berry Golden,a,A Golden Carrot covered in Berry Syrup.,Restores 60 hp and 6 ep to one ally.,,
@@ -229,7 +229,7 @@ GoldenApple,Golden Apple,a,Shiny golden apple from the tallest tree in the Verda
 EmeraldLime,Emerald Lime,an,"A rare, shiny fruit that grows only in the Oasis.","Restores 100 ep to one ally, gives them Absorb 6 and increases their max EP by 5.",Max EP boost lasts until the end of battle.,1/battle
 AzureRose,Azure Rose,an,"An special rose that burns eternally with a blue flame. Massively increases your attack for a short time, but also gives you a permanent boost.",Gives one ally Attack Boost 1 and Focus 6.,Attack Boost 1 lasts until the end of battle.,1/battle
 RubyFruit,Ruby Fruit,a,Rare fruit that can only grow underwater.,Gives one ally Endurance Boost 1 and increases the duration of all their effects by 1.,Endurance Boost 1 lasts until the end of battle.,1/battle
-VoidIcicle,Void Icicle,a,The center of this icicle is unusually dark.,"Deals 5 Light + Dark damage to any target, and gives the user Defense Boost 1.","Defense Boost 1 lasts until the end of battle. Light + Dark damage is boosted at +2.0x when the enemy is at max HP or 0 HP, and not boosted at half HP.",1/battle
+VoidIcicle,Void Icicle,a,The center of this icicle is unusually dark.,"Deals 5 Light + Dark damage to any target, and gives the user Defense Boost 1.","Defense Boost 1 lasts until the end of battle. Light + Dark damage boosted up to +2.0x when the enemy is high HP or low HP, not boosted at half HP.",1/battle
 DiamondMushroom,Diamond Mushroom,a,"A bright, shiny mushroom that only grows in the darkest of places.",Restores 15 stamina to one ally and gives them Agility Boost 1.,Agility Boost 1 lasts until the end of battle.,1/battle
 CursedStew,Cursed Stew,a,Punishment for your culinary crimes!,Removes all the target's hp and ep and gives them permanent Poison.,,
 AetherSalad,Aether Salad,an,The energy within Aether Carrots is quite volatile. Somehow cooking it makes it drain your energy instead of healing you.,Trade all your EP for an attack boost. Lost EP becomes Focus X and Attack Up X for 3 turns where X = surplus / 15 rounded up.,,
@@ -253,17 +253,17 @@ MiracleApple,Miracle Apple,a,A miraculous apple that very few people are worthy 
 Limeade,Limeade,a,A special drink that makes you more energized for a long time.,"Restores 100 ep to one ally, gives them Focus 6, Absorb 6 and increases their max EP by 10.",Max EP boost lasts until the end of battle.,1/battle
 FlamingTea,Flaming Tea,a,Somehow safe to drink. Gives you a massive attack boost.,Gives one ally Attack Boost 1 and Focus 9.,Attack Boost 1 lasts until the end of battle.,1/battle
 RubyJuice,Ruby Juice,a,Rare juice that makes it easier to move.,Gives one ally Endurance Boost 1 and increases the duration of all their effects by 2.,Endurance Boost 1 lasts until the end of battle.,1/battle
-VoidCone,Void Cone,a,Eat it and throw it at your enemies!,"Deals 8 Light + Dark damage to any target, and gives the user Defense Boost 1.","Defense Boost 1 lasts until the end of battle. Light + Dark damage is boosted at +2.0x when the enemy is at max HP or 0 HP, and not boosted at half HP.",1/battle
+VoidCone,Void Cone,a,Eat it and throw it at your enemies!,"Deals 8 Light + Dark damage to any target, and gives the user Defense Boost 1.","Defense Boost 1 lasts until the end of battle. Light + Dark damage boosted up to +2.0x when the enemy is high HP or low HP, not boosted at half HP.",1/battle
 DiamondSoup,Diamond Soup,a,Soup created from a Diamond Mushroom that makes you move faster.,Restores 25 stamina to one ally and gives them Agility Boost 1.,Agility Boost 1 lasts until the end of battle.,1/battle
 SpicyEgg,Spicy Egg,a,A spicy egg that makes you stronger.,Gives an ally Attack Up 1 for 4 turns.,,Disappears after battle.
-LavaEgg,Lava Egg,a,A hot egg that can be thrown at enemies.,Deals 4 Fire damage to all enemies.,Fire damage gets boosted up to +1.0x based on how low your HP percentage is.,Disappears after battle.
-ShockEgg,Shock Egg,a,A shocking egg that can be thrown at enemies.,"Deals 4 Air/Electric damage to any target, and inflicts Paralyze for 2 turns.",Air/Electric damage pierces defense.,Disappears after battle.
+LavaEgg,Lava Egg,a,A hot egg that can be thrown at enemies.,Deals 4 Fire damage to all enemies.,"<commontext,explainfire>",Disappears after battle.
+ShockEgg,Shock Egg,a,A shocking egg that can be thrown at enemies.,"Deals 4 Air/Electric damage to any target, and inflicts Paralyze for 2 turns.","<commontext,explainair>",Disappears after battle.
 SourEgg,Sour Egg,a,A sour egg that makes you energized.,Restores 12 ep to one ally.,,Disappears after battle.
-LeafyEgg,Leafy Egg,a,A leafy egg that can be thrown at enemies.,"Deals 4 Earth damage to any target, and inflicts Dizzy for 2 turns.","Earth damage is boosted based on damage the user took this turn and last turn, up to +0.66x base damage",Disappears after battle.
+LeafyEgg,Leafy Egg,a,A leafy egg that can be thrown at enemies.,"Deals 4 Earth damage to any target, and inflicts Dizzy for 2 turns.","<commontext,explainearth>",Disappears after battle.
 SweetEgg,Sweet Egg,a,A sweet egg that makes you more healthy.,Restores 12 hp to one ally.,,Disappears after battle.
-WaveEgg,Wave Egg,a,A slimy egg that can be thrown at enemies.,Deals 4 Water damage to any target and inflicts Sleep for 2 turns.,"Water damage is stronger when the user is at high HP, up to a +0.66x boost.",Disappears after battle.
+WaveEgg,Wave Egg,a,A slimy egg that can be thrown at enemies.,Deals 4 Water damage to any target and inflicts Sleep for 2 turns.,"<commontext,explainwater>",Disappears after battle.
 BitterEgg,Bitter Egg,a,A bitter egg that makes you more protected.,Gives an ally Defense Up 1 for 4 turns.,,Disappears after battle.
-LightEgg,Light Egg,a,A bright egg that can be thrown at enemies.,Deals 4 Light damage to any target.,"Light damage is stronger against enemies at high HP, up to a +0.66x boost.",Disappears after battle.
-DarkEgg,Dark Egg,a,A dark egg that can be thrown at enemies.,Deals 4 Dark damage to any target.,"Dark type damage is stronger against enemies at low hp, up to a +1.0x boost.",Disappears after battle.
-SilverEgg,Silver Egg,a,A silvery egg that can be thrown at enemies.,Deals 8 Light damage to any enemy. Inflicts Attack Down 1 and Defense Down 1 for 4 turns.,"Light damage is stronger against enemies at high HP, up to a +0.66x boost.",Disappears after battle.
+LightEgg,Light Egg,a,A bright egg that can be thrown at enemies.,Deals 4 Light damage to any target.,"<commontext,explainlight>",Disappears after battle.
+DarkEgg,Dark Egg,a,A dark egg that can be thrown at enemies.,Deals 4 Dark damage to any target.,"<commontext,explaindark>",Disappears after battle.
+SilverEgg,Silver Egg,a,A silvery egg that can be thrown at enemies.,Deals 8 Light damage to any enemy. Inflicts Attack Down 1 and Defense Down 1 for 4 turns.,"<commontext,explainlight>",Disappears after battle.
 GoldenEgg,Golden Egg,a,A golden egg that gives you several boosts.,Restores 12 hp and 12 ep to one ally and Attack Up 1 and Defense Up 1 for 4 turns.,,Disappears after battle.
