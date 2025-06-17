@@ -1,3 +1,3 @@
-MasterVolume:20|MusicVolume:10|SFXVolume:10|TextVolume:10|SystemVolume:10|FPS:3|AlwaysRetry:0|EasyActionCommands:0|RebindControls:0|ReloadSave:0|MainMenu:0|EndOfSettings:0
+MasterVolume:20|MusicVolume:3|SFXVolume:10|TextVolume:10|SystemVolume:10|FPS:3|AlwaysRetry:0|EasyActionCommands:0|RebindControls:0|ReloadSave:0|MainMenu:0|EndOfSettings:0
 Space,Slash,Period,Comma,Q,E,Escape
 W,S,D,A

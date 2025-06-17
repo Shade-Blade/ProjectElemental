@@ -2486,6 +2486,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: 0
   frameTimer: -1
   firstStrikeTimer: -1
@@ -3190,16 +3191,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Sundew
       posid: 1
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: BurrowTrap
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: 0
   frameTimer: -1
   firstStrikeTimer: -1
@@ -3384,16 +3388,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Honeybud
       posid: 6
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Shrublet
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: 0
   frameTimer: -1
   firstStrikeTimer: -1
@@ -7371,6 +7378,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: 0
   frameTimer: -1
   firstStrikeTimer: -1
@@ -12835,6 +12843,8 @@ MonoBehaviour:
   launchVelocity: {x: 0, y: 10, z: 0}
   heightThreshold: 1
   altLaunchVelocity: {x: 0, y: 5, z: 0}
+  targetGO: {fileID: 0}
+  targetSignal: 0
 --- !u!1 &3868111840453834242
 GameObject:
   m_ObjectHideFlags: 0
@@ -20282,6 +20292,8 @@ MonoBehaviour:
   launchVelocity: {x: 10, y: 3, z: 0}
   heightThreshold: 1
   altLaunchVelocity: {x: 10, y: 1, z: 0}
+  targetGO: {fileID: 0}
+  targetSignal: 0
 --- !u!1 &3868111840562842468
 GameObject:
   m_ObjectHideFlags: 0
@@ -38385,6 +38397,8 @@ MonoBehaviour:
   launchVelocity: {x: 10, y: 3, z: 0}
   heightThreshold: 1
   altLaunchVelocity: {x: 10, y: 1, z: 0}
+  targetGO: {fileID: 0}
+  targetSignal: 0
 --- !u!1 &3868111841292082350
 GameObject:
   m_ObjectHideFlags: 0
@@ -38767,6 +38781,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: 0
   frameTimer: -1
   firstStrikeTimer: -1
@@ -44785,6 +44800,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: 0
   frameTimer: -1
   firstStrikeTimer: -1
@@ -47746,6 +47762,8 @@ MonoBehaviour:
   launchVelocity: {x: 5, y: 5, z: 0}
   heightThreshold: 1
   altLaunchVelocity: {x: -5, y: 5, z: 0}
+  targetGO: {fileID: 0}
+  targetSignal: 0
 --- !u!1 &3868111841589136332
 GameObject:
   m_ObjectHideFlags: 0
@@ -66294,6 +66312,8 @@ MonoBehaviour:
   launchVelocity: {x: 10, y: 3, z: 0}
   heightThreshold: 1
   altLaunchVelocity: {x: 10, y: 1, z: 0}
+  targetGO: {fileID: 0}
+  targetSignal: 0
 --- !u!1 &3868111842375328432
 GameObject:
   m_ObjectHideFlags: 0
@@ -69955,6 +69975,8 @@ MonoBehaviour:
   launchVelocity: {x: 40, y: 5, z: -40}
   heightThreshold: 1
   altLaunchVelocity: {x: -5, y: 5, z: 0}
+  targetGO: {fileID: 0}
+  targetSignal: 0
 --- !u!1 &3868111842425140905
 GameObject:
   m_ObjectHideFlags: 0
@@ -71392,6 +71414,7 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: 0
   frameTimer: -1
   firstStrikeTimer: -1
@@ -97430,16 +97453,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Flowerling
       posid: 6
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Shrublet
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: 0
   frameTimer: -1
   firstStrikeTimer: -1
@@ -105384,7 +105410,7 @@ PrefabInstance:
     - target: {fileID: 5684341124164993693, guid: f4b752594013eac479bf7b763e7d2b15,
         type: 3}
       propertyPath: floor
-      value: 100
+      value: 120
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -106546,7 +106572,7 @@ PrefabInstance:
     - target: {fileID: 5684341124164993693, guid: f4b752594013eac479bf7b763e7d2b15,
         type: 3}
       propertyPath: floor
-      value: 80
+      value: 140
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -109996,7 +110022,7 @@ PrefabInstance:
     - target: {fileID: 5684341124164993693, guid: f4b752594013eac479bf7b763e7d2b15,
         type: 3}
       propertyPath: floor
-      value: 90
+      value: 130
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

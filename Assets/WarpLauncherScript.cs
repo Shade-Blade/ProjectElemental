@@ -31,9 +31,11 @@ public class WarpLauncherScript : WorldObject, ITextSpeaker, ISignalReceiver
 
     public virtual IEnumerator WarpCutscene()
     {
-        string[][] testTextFile = new string[4][];
+        string[][] testTextFile = new string[2][];
         testTextFile[0] = new string[1];
+        testTextFile[1] = new string[1];
         testTextFile[0][0] = FormattedString.ReplaceTextFileShorthand(signstring);
+        testTextFile[1][0] = "<system>Warp to Floor <var,0>?<prompt,Yes,1,No,2,1>";
 
         yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 0, this));
 
@@ -43,11 +45,39 @@ public class WarpLauncherScript : WorldObject, ITextSpeaker, ISignalReceiver
         if (state == NumberMenu.CANCEL_VALUE)
         {
             //cancel
+            foreach (WorldFollower wf in WorldPlayer.Instance.followers)
+            {
+                WorldPlayer.Instance.FollowerWarp(WorldPlayer.Instance.FacingVector() * 0.075f);
+                wf.ScriptedLaunch(3 * (Vector3.back + Vector3.up), 0f);
+            }
+            WorldPlayer.Instance.ScriptedLaunch(3 * (Vector3.back + Vector3.up), 0f);
+            Debug.Log("launch " + WorldPlayer.Instance.rb.velocity);
+            yield return new WaitForSeconds(0.5f);  //block the next instance of this cutscene from starting?
             active = false;
             yield break;
         }
 
-        StartCoroutine(MainManager.Instance.ExecuteCutscene(FlyCutscene(state)));
+        int floortowarp = state;
+
+        yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, 1, this, new string[] { floortowarp.ToString()}));
+        menuResult = MainManager.Instance.lastTextboxMenuResult;
+        int.TryParse(menuResult, out state);
+
+        if (state == 2)
+        {
+            //cancel
+            foreach (WorldFollower wf in WorldPlayer.Instance.followers)
+            {
+                WorldPlayer.Instance.FollowerWarp(WorldPlayer.Instance.FacingVector() * 0.075f);
+                wf.ScriptedLaunch(3 * (Vector3.back + Vector3.up), 0f);
+            }
+            WorldPlayer.Instance.ScriptedLaunch(3 * (Vector3.back + Vector3.up), 0f);
+            yield return new WaitForSeconds(0.5f);  //block the next instance of this cutscene from starting?
+            active = false;
+            yield break;
+        }
+
+        StartCoroutine(MainManager.Instance.ExecuteCutscene(FlyCutscene(floortowarp)));
     }
 
     public IEnumerator FlyCutscene(int floor) {

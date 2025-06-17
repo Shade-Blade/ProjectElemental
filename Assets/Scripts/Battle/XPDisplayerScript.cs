@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class XPDisplayerScript : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class XPDisplayerScript : MonoBehaviour
 
         for (int i = 0; i < bigOrbs.Count; i++)
         {
+            bigOrbs[i].GetComponent<Image>().sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.XP];
             if (i < tensDigit)
             {
                 bigOrbs[i].SetActive(true);
@@ -37,6 +39,7 @@ public class XPDisplayerScript : MonoBehaviour
         }
         for (int i = 0; i < littleOrbs.Count; i++)
         {
+            littleOrbs[i].GetComponent<Image>().sprite = MainManager.Instance.commonSprites[(int)Text_CommonSprite.SpriteType.XP];
             if (i < onesDigit)
             {
                 littleOrbs[i].SetActive(true);

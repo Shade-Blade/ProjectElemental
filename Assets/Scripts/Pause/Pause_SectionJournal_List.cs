@@ -11,6 +11,37 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
 
     public Pause_HandlerJournal.JournalSubpage subpage;
 
+    //to reuse code I'll just have this set by init instead of completely recalculating it
+    public int currentCount;
+    public int totalCount;
+
+    public string GetRemainingTextString()
+    {
+        string output = "";
+        //add a sprite string of some kind
+        switch (subpage)
+        {
+            case Pause_HandlerJournal.JournalSubpage.Recipe:
+                output = "<common,recipe>";
+                break;
+            case Pause_HandlerJournal.JournalSubpage.Bestiary:
+                output = "<common,enemy>";
+                break;
+            case Pause_HandlerJournal.JournalSubpage.Lore:
+                output = "<common,lore>";
+                break;
+            case Pause_HandlerJournal.JournalSubpage.Information:
+                output = "<common,info>";
+                break;
+        }
+
+        if (output.Length > 0)
+        {
+            output += " ";
+        }
+        output += currentCount + "/" + totalCount;
+        return output;
+    }
 
     public override void Init()
     {
@@ -48,11 +79,14 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
                     GlobalItemScript.Instance.LoadRecipeDataTable();
                 }
                 menuEntries = new BoxMenuEntry[GlobalItemScript.Instance.recipeOrder.Length];
+                totalCount = menuEntries.Length;
+                currentCount = 0;
                 for (int i = 0; i < menuEntries.Length; i++)
                 {
                     Item.ItemType it = GlobalItemScript.Instance.recipeOrder[i];
                     if (MainManager.Instance.GetRecipeFlag(it))
                     {
+                        currentCount++;
                         //Debug.Log(it);
                         menuEntries[i] = new InformationMenuEntry(GlobalItemScript.GetItemSprite(it), null, (i + 1) + ". " + Item.GetName(it), GlobalItemScript.Instance.GetRecipeText(it), null, GlobalItemScript.Instance.GetItemDescription(it));
                         menuEntries[i].canUse = true;
@@ -67,12 +101,15 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
                 break;
             case Pause_HandlerJournal.JournalSubpage.Bestiary:
                 menuEntries = new BoxMenuEntry[MainManager.Instance.bestiaryOrder.Length];
+                totalCount = menuEntries.Length;
+                currentCount = 0;
                 for (int i = 0; i < menuEntries.Length; i++)
                 {
                     BattleHelper.EntityID eid = MainManager.Instance.bestiaryOrder[i].eid;
 
                     if (BattleEntity.GetBestiaryFlag(eid))
                     {
+                        currentCount++;
                         string bestiaryOrderNumber = MainManager.Instance.bestiaryOrder[i].index.ToString();
                         if (MainManager.Instance.bestiaryOrder[i].subindex != 0)
                         {
@@ -97,18 +134,24 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
                 }
                 break;
             case Pause_HandlerJournal.JournalSubpage.Lore:
+                totalCount = menuEntries.Length;
+                currentCount = 0;
                 //Todo: flag check
                 menuEntries = new BoxMenuEntry[loreText.Length - 2];
                 for (int i = 1; i < menuEntries.Length + 1; i++)
                 {
+                    currentCount++;
                     menuEntries[i - 1] = new InformationMenuEntry(null, null, (i) + ". " + loreText[i][1], loreText[i][2], loreText[i][3]);
                 }
                 break;
             case Pause_HandlerJournal.JournalSubpage.Information:
+                totalCount = menuEntries.Length;
+                currentCount = 0;
                 //Todo: flag check
                 menuEntries = new BoxMenuEntry[infoText.Length - 2];
                 for (int i = 1; i < menuEntries.Length + 1; i++)
                 {
+                    currentCount++;
                     menuEntries[i - 1] = new InformationMenuEntry(null, null, (i) + ". " + infoText[i][1], infoText[i][2], infoText[i][3]);
                 }
                 break;
@@ -161,7 +204,11 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
         }
 
         upArrow.enabled = menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,z>", true, true);
 
         visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
         for (int i = 0; i < menuEntriesS.Count; i++)
@@ -207,12 +254,18 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
             Clear();
             Init();
             selectorArrow.color = new Color(0.5f, 0.5f, 0.5f, 1);
+            upArrowControlHint.SetText("", true, true);
+            upArrowControlHint.enabled = false;
+            downArrowControlHint.SetText("", true, true);
+            downArrowControlHint.enabled = false;
             return;
         }
 
         selectorArrow.gameObject.SetActive(true);
         selectorArrow.enabled = true;
         selectorArrow.color = new Color(1, 1, 1, 1);
+        upArrowControlHint.enabled = true;
+        downArrowControlHint.enabled = true;
 
         int index = (int)state;
         menuIndex = index;
@@ -230,7 +283,11 @@ public class Pause_SectionJournal_List : Pause_SectionShared_BoxMenu
 
         //put this in init too
         upArrow.enabled = menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,z>", true, true);
 
         sidetext.ApplyUpdate((InformationMenuEntry)(menuEntries[menuIndex]));
 

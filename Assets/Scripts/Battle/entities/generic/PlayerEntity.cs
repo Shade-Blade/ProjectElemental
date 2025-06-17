@@ -2047,7 +2047,15 @@ public class PlayerEntity : BattleEntity
                     damage += 1;
                 }
                 blockSuccesses++;
-                BattleControl.Instance.CreateActionCommandEffect(blockSuccesses, GetDamageEffectPosition(), this);
+
+                //they will say Perfect no matter what since these are meant to be difficult timings
+                if ((sb || b) && (GetDamageProperty(properties, DamageProperties.Block_Negate) || GetDamageProperty(properties, DamageProperties.Block_Resist)))
+                {
+                    BattleControl.Instance.CreateActionCommandEffect(BattleHelper.ActionCommandText.Perfect, GetDamageEffectPosition(), this);
+                } else
+                {
+                    BattleControl.Instance.CreateActionCommandEffect(blockSuccesses, GetDamageEffectPosition(), this);
+                }
 
                 if (!noReduction)
                 {
@@ -2470,6 +2478,16 @@ public class PlayerEntity : BattleEntity
                 crit = true;
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_NormalCrit);
             }
+        }
+
+        float shakeAmount = 0.02f * damage;
+        if (shakeAmount > 0.3f)
+        {
+            shakeAmount = 0.3f;
+        }
+        if (shakeAmount > 0)
+        {
+            StartCoroutine(MainManager.Instance.StandardCameraShake(Mathf.Max(0.1f, shakeAmount), shakeAmount));
         }
 
 
@@ -3397,6 +3415,23 @@ public class PlayerEntity : BattleEntity
             }
         }
 
+        if (BadgeEquipped(Badge.BadgeType.HeavyGear))
+        {
+            if (BattleControl.Instance.turnCount <= 5)
+            {
+                bonus -= BadgeEquippedCount(Badge.BadgeType.HeavyGear);
+            }
+            else
+            {
+                bonus += BadgeEquippedCount(Badge.BadgeType.HeavyGear);
+            }
+        }
+
+        if (BadgeEquipped(Badge.BadgeType.FocusGear))
+        {
+            bonus -= BadgeEquippedCount(Badge.BadgeType.FocusGear);
+        }
+
         if (BadgeEquipped(Badge.BadgeType.PowerMomentum))
         {
             bonus += 2 * actionCounter * BadgeEquippedCount(Badge.BadgeType.PowerMomentum);
@@ -3510,14 +3545,14 @@ public class PlayerEntity : BattleEntity
             }
         }
 
-        if (BadgeEquipped(Badge.BadgeType.ShieldGear))
+        if (BadgeEquipped(Badge.BadgeType.HeavyGear))
         {
-            if (hitsTaken % 4 == 3)
+            if (BattleControl.Instance.turnCount <= 5)
             {
-                bonus += 4 * BadgeEquippedCount(Badge.BadgeType.ShieldGear);
+                bonus -= BadgeEquippedCount(Badge.BadgeType.HeavyGear);
             } else
             {
-                bonus -= BadgeEquippedCount(Badge.BadgeType.ShieldGear);
+                bonus += BadgeEquippedCount(Badge.BadgeType.HeavyGear);
             }
         }
 
@@ -3594,14 +3629,15 @@ public class PlayerEntity : BattleEntity
 
         bonus += BadgeEquippedCount(Badge.BadgeType.EnduranceBoost);
 
-        if (BadgeEquipped(Badge.BadgeType.EnergyGear))
+        if (BadgeEquipped(Badge.BadgeType.HeavyGear))
         {
-            if (movesUsed % 4 == 3)
+            if (BattleControl.Instance.turnCount <= 5)
             {
-                bonus += 4 * BadgeEquippedCount(Badge.BadgeType.EnergyGear);
-            } else 
+                bonus -= BadgeEquippedCount(Badge.BadgeType.HeavyGear);
+            }
+            else
             {
-                bonus -= BadgeEquippedCount(Badge.BadgeType.EnergyGear);
+                bonus += BadgeEquippedCount(Badge.BadgeType.HeavyGear);
             }
         }
 
@@ -4895,7 +4931,7 @@ public class PlayerEntity : BattleEntity
 
             if (HasEffect(Effect.EffectType.Dizzy) && BadgeEquipped(Badge.BadgeType.Trance))
             {
-                int soulHeal = Mathf.CeilToInt(0.001f + (BattleControl.Instance.GetSE(this) / (20.0f / BadgeEquippedCount(Badge.BadgeType.Trance))));
+                int soulHeal = Mathf.CeilToInt(-0.001f + (BattleControl.Instance.GetSE(this) / (20.0f / BadgeEquippedCount(Badge.BadgeType.Trance))));
                 if (soulHeal < 1)
                 {
                     soulHeal = 1;
@@ -4911,6 +4947,11 @@ public class PlayerEntity : BattleEntity
                 yield return new WaitForSeconds(0.5f);
             }
 
+            if (BadgeEquipped(Badge.BadgeType.FocusGear))
+            {
+                InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(1 * BadgeEquippedCount(Badge.BadgeType.FocusGear)), Effect.INFINITE_DURATION));
+                yield return new WaitForSeconds(0.5f);
+            }
 
             if (HasEffect(Effect.EffectType.Poison) && BadgeEquipped(Badge.BadgeType.ToxicStrength))
             {
@@ -5394,6 +5435,42 @@ public class PlayerEntity : BattleEntity
     {
         yield return null;
     }
+
+    public override IEnumerator DefaultHurtEvent(bool combo)
+    {
+        ResetSubobjectTransform();
+        if (combo)
+        {
+            yield break;
+        }
+
+        switch (specialHitAnim)
+        {
+            case BattleHelper.SpecialHitAnim.Default:
+                yield return StartCoroutine(Shake(0.4f, 0.2f));
+                break;
+            case BattleHelper.SpecialHitAnim.Spin:
+                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.4f, 0.7f));
+                break;
+            case BattleHelper.SpecialHitAnim.Squish:
+                yield return StartCoroutine(Squish(0.075f, 0.3f / height));
+                yield return StartCoroutine(RevertScale(0.075f));
+                break;
+            case BattleHelper.SpecialHitAnim.ReverseSquish: //squeeze
+                yield return StartCoroutine(Squish(0.075f, -0.3f / height));
+                yield return StartCoroutine(RevertScale(0.075f));
+                break;
+            case BattleHelper.SpecialHitAnim.Launch:
+                //idea: also squishes
+                StartCoroutine(JumpHeavy(homePos, 0.5f, 0.15f, 1, false, false));
+                yield return StartCoroutine(Squish(0.075f, 0.3f / height));
+                yield return StartCoroutine(RevertScale(0.075f));
+                break;
+        }
+
+        specialHitAnim = BattleHelper.SpecialHitAnim.Default;
+    }
+
     //rewrite some parts
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
     {
@@ -5402,8 +5479,6 @@ public class PlayerEntity : BattleEntity
         inEvent = true;
 
         IsAlive();
-
-        //Debug.Log(eventID);
 
         BattleControl.Instance.BroadcastEvent(this, eventID);
 
@@ -5418,20 +5493,26 @@ public class PlayerEntity : BattleEntity
                     if (lastHitWasBlocked)
                     {
                         SetAnimation("block", true);
+                        specialHitAnim = SpecialHitAnim.Default;
+                        StartCoroutine(DefaultHurtEvent(eventID == BattleHelper.Event.StatusInflicted));
+                        lastHitWasBlocked = false;  //?
                     }
                     else
                     {
                         SetAnimation("hurt", true);
+                        StartCoroutine(DefaultHurtEvent(eventID == BattleHelper.Event.StatusInflicted));
                     }
-                   
+
+                    //hurtResetTime = 0.6f;
                     IEnumerator animReset()
                     {
                         yield return new WaitForSeconds(0.6f);
                         if (!moveActive && alive && !dead && ac.timeSinceLastAnimChange >= 0.6f - Time.deltaTime)// && (ac.GetCurrentAnim().Equals("hurt") || ac.GetCurrentAnim().Equals("block")))
                         {
-                            SetIdleAnimation();
+                            SetIdleAnimation(true);
                         }
                     }
+                    //?
                     StartCoroutine(animReset());
                 }
                 break;
@@ -5527,6 +5608,35 @@ public class PlayerEntity : BattleEntity
     public override void Update()
     {
         base.Update();
+
+        /*
+        if (!moveActive && alive && !dead && ac.timeSinceLastAnimChange >= 0.6f - Time.deltaTime)
+        {
+            if (hurtResetTime > 0)
+            {
+                hurtResetTime -= Time.deltaTime;
+                if (hurtResetTime <= 0)
+                {
+                    hurtResetTime = 0;
+                    Debug.Log("Hurt reset normal");
+                    SetIdleAnimation();
+                }
+            }
+        } else
+        {
+            if (hurtResetTime != 0)
+            {
+                Debug.Log("Hurt reset alt");
+                hurtResetTime = 0;
+            }
+        }
+        if ((ac.GetCurrentAnim().Equals("hurt") || ac.GetCurrentAnim().Equals("block")) && hurtResetTime == 0)
+        {
+            Debug.Log("Hurt reset alt B");
+            SetIdleAnimation();
+        }
+        */
+
         if (blockFrames == -2)
         {
             blockFrames = -1;
@@ -5609,6 +5719,15 @@ public class PlayerEntity : BattleEntity
 
     public override void SetIdleAnimation(bool force = false)
     {
+        //?        
+        if ((ac.GetCurrentAnim().Equals("hurt") || ac.GetCurrentAnim().Equals("block"))) {
+            if (!force)
+            {
+                return;
+            }
+        }        
+
+
         BattleControl.Instance.playerData.GetPlayerDataEntry(entityID).hp = hp;
         if (dead)
         {

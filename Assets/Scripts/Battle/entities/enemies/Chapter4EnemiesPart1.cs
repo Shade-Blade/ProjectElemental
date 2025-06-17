@@ -213,6 +213,7 @@ public class BM_Embercrest_Fireball : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Fire))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 //note that the illuminate effect also boosts this pretty high
                 switch (caller.entityID)
                 {
@@ -339,6 +340,7 @@ public class BM_Ashcrest_SplashBomb : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
@@ -399,6 +401,7 @@ public class BM_Flametongue_FlameLick : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
             }
             else
@@ -495,6 +498,7 @@ public class BM_Heatwing_FlameSpread : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
             }
             else

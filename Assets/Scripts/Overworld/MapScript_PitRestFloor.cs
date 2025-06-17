@@ -34,9 +34,10 @@ public class MapScript_PitRestFloor : MapScript
         }
 
         int i = ((floor - 1) / 10);
+        i %= 10;
         mr.material = materials[i];
         mr_block.material = materials[i];
-        MainManager.WorldLocation wl = MainManager.WorldLocation.None;
+        MainManager.WorldLocation wl = MainManager.WorldLocation.Nowhere;
 
         switch (i)
         {

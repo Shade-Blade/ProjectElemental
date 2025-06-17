@@ -142,7 +142,8 @@ public class PitNPCSpawner : WorldObject
                     }
                     if (index > 11)
                     {
-                        index = 11;
+                        index = RandomGenerator.GetIntRange(0, 12);
+                        //index = 11;
                     }
 
                     switch (index)

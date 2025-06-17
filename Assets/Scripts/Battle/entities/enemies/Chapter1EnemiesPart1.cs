@@ -256,7 +256,7 @@ public class BM_BurrowTrap_PollenBite : EnemyMove
         }
 
         Vector3 bpos = caller.homePos + caller.curTarget.height * 2 * Vector3.down;
-        yield return StartCoroutine(caller.Move(bpos, 6));
+        yield return StartCoroutine(caller.MoveEasing(bpos, 6, (e) => MainManager.EasingIn(e)));
 
         if (caller.curTarget != null)
         {
@@ -264,11 +264,12 @@ public class BM_BurrowTrap_PollenBite : EnemyMove
             caller.transform.position = spos;
             Vector3 tpos2 = caller.curTarget.transform.position - caller.curTarget.transform.position.y * Vector3.up + caller.curTarget.width * 0.5f * Vector3.right;
 
-            yield return StartCoroutine(caller.Move(tpos2, 6));
+            yield return StartCoroutine(caller.MoveEasing(tpos2, 6, (e) => MainManager.EasingIn(e)));
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
@@ -280,11 +281,11 @@ public class BM_BurrowTrap_PollenBite : EnemyMove
                 caller.InvokeMissEvents(caller.curTarget);
             }
 
-            yield return StartCoroutine(caller.Move(spos, 6));
+            yield return StartCoroutine(caller.MoveEasing(spos, 6, (e) => MainManager.EasingIn(e)));
         }
 
         caller.transform.position = bpos;
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingIn(e)));
     }
 }
 
@@ -303,7 +304,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
         }
 
         Vector3 bpos = caller.homePos + caller.curTarget.height * 2 * Vector3.down;
-        yield return StartCoroutine(caller.Move(bpos, 6));
+        yield return StartCoroutine(caller.MoveEasing(bpos, 6, (e) => MainManager.EasingIn(e)));
 
         if (caller.curTarget != null)
         {
@@ -311,11 +312,12 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
             caller.transform.position = spos;
             Vector3 tpos2 = caller.curTarget.transform.position - caller.curTarget.transform.position.y * Vector3.up + caller.curTarget.width * 0.5f * Vector3.right;
 
-            yield return StartCoroutine(caller.Move(tpos2, 6));
+            yield return StartCoroutine(caller.MoveEasing(tpos2, 6, (e) => MainManager.EasingIn(e)));
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
@@ -333,7 +335,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
                 yield return StartCoroutine(caller.DefaultDeathEvent());
                 yield break;
             }
-            yield return StartCoroutine(caller.Move(spos, 6));
+            yield return StartCoroutine(caller.MoveEasing(spos, 6, (e) => MainManager.EasingIn(e)));
         }
 
         if (caller.hp == 0)
@@ -344,7 +346,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
         }
 
         caller.transform.position = bpos;
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => (MainManager.EasingIn(e))));
     }
 }
 
@@ -484,6 +486,7 @@ public class BM_Sundew_PoisonToss : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Earth))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
@@ -519,6 +522,7 @@ public class BM_Sundew_CounterPoisonToss : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
@@ -560,6 +564,7 @@ public class BM_Sundew_Hard_ExhaustBall : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {

@@ -10,6 +10,9 @@ using static TextDisplayer;
 
 public class Text_SpecialSprite : MonoBehaviour
 {
+    //don't know what this number actually represents
+    //it's probably height * something? or height * x + y or some other formula
+    public const float MULTIPLIER = 53f;
 
     //normal scaling is 20px
     protected const float defaultSize = 20f;

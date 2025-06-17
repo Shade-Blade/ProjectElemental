@@ -9,6 +9,7 @@ public class HPBarScript : MonoBehaviour
     public SpriteRenderer sprite;
     public TMPro.TMP_Text hpText;
     public TMPro.TMP_Text defText;
+    public SpriteRenderer defShield;
 
     public SpriteRenderer emptybar;
     public SpriteRenderer fullbarA;
@@ -41,9 +42,11 @@ public class HPBarScript : MonoBehaviour
     {
         int defense = int.MinValue;
 
+        defShield.enabled = false;
         if (BattleControl.Instance.playerData.BadgeEquipped(Badge.BadgeType.DefenseSight))
         {
             defense = b.GetDefense();
+            defShield.enabled = true;
         }
 
         Setup(b.hp, b.maxHP, defense);

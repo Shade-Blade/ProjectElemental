@@ -71,7 +71,7 @@ public abstract class MenuHandler : MonoBehaviour, IMenuHandler
     protected IMenuHandler parent;
 
     public float lifetime = 0;
-    public const float MIN_SELECT_TIME = 0.0667f;
+    public const float MIN_SELECT_TIME = 0.125f;
 
     public abstract event EventHandler<MenuExitEventArgs> menuExit;
 

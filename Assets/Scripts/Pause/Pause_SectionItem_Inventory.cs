@@ -139,7 +139,11 @@ public class Pause_SectionItem_Inventory : Pause_SectionShared_BoxMenu
         }
 
         upArrow.enabled = false; //menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,z>", true, true);
 
         //visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
         for (int i = 0; i < menuEntriesS.Count; i++)
@@ -220,12 +224,18 @@ public class Pause_SectionItem_Inventory : Pause_SectionShared_BoxMenu
 
         selectorArrow.gameObject.SetActive(true);
         selectorArrow.color = new Color(1, 1, 1, 1);
+        upArrowControlHint.enabled = true;
+        downArrowControlHint.enabled = true;
 
         //BoxMenuScript bm = menuBaseO.GetComponent<BoxMenuScript>();
 
         //put this in init too
         upArrow.enabled = menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,z>", true, true);
 
         if (textbox != null)
         {

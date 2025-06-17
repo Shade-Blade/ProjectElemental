@@ -639,6 +639,14 @@ public class TMPString
                     {
                         break;
                     }
+                    //unnecessary?
+                    /*
+                    ColorNames color;
+                    if (Enum.TryParse(tag.args[0], out color))
+                    {
+                        tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
+                    }
+                    */
                     output = "<color=" + tag.args[0] + ">";
                 }
                 break;
@@ -653,12 +661,6 @@ public class TMPString
                     {
                         break;
                     }
-                    ColorNames color;
-                    if (Enum.TryParse(tag.args[0], out color))
-                    {
-                        tag.args[0] = ColorUtility.ToHtmlStringRGB(baseColors[(int)color]);
-                    }
-
                     output = "<size=" + tag.args[0] + ">";
                 }
                 break;

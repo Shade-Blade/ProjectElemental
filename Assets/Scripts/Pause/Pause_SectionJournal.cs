@@ -8,6 +8,8 @@ public class Pause_SectionJournal : Pause_SectionShared_SideTabs
     public Pause_SectionShared_InfoBox infoBox;
     public Pause_SectionJournal_List list;
 
+    public TextDisplayer remainingText;
+
     public Image selectorArrow;
 
     public override void ApplyUpdate(object state)
@@ -54,6 +56,7 @@ public class Pause_SectionJournal : Pause_SectionShared_SideTabs
         list.subpage = (Pause_HandlerJournal.JournalSubpage)tabIndex;
         list.Init();
         list.ApplyUpdate(null);
+        remainingText.SetText(list.GetRemainingTextString(), true, true);
 
         return;
     }
@@ -78,6 +81,7 @@ public class Pause_SectionJournal : Pause_SectionShared_SideTabs
         list.subpage = (Pause_HandlerJournal.JournalSubpage)tabIndex;
         list.Init();
         list.ApplyUpdate(null);
+        remainingText.SetText(list.GetRemainingTextString(), true, true);
 
         //Hacky
         textbox.transform.parent.transform.parent.gameObject.SetActive(false);

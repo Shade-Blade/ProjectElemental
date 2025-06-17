@@ -40,18 +40,19 @@ public class BM_Shared_Bite : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Leafling:
@@ -85,7 +86,7 @@ public class BM_Shared_Bite : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -129,7 +130,7 @@ public class BM_Shared_SwoopDown : EnemyMove
 
             float dist = tposA.x - tposend.x - 0.25f;
 
-            yield return StartCoroutine(caller.Move(tposA));
+            yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
 
             Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
 
@@ -139,6 +140,7 @@ public class BM_Shared_SwoopDown : EnemyMove
 
                 //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Flowerling:
@@ -162,7 +164,7 @@ public class BM_Shared_SwoopDown : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -195,18 +197,19 @@ public class BM_Shared_BiteThenFly : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Honeybud:
@@ -229,7 +232,7 @@ public class BM_Shared_BiteThenFly : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
 
         //fly back up        
         yield return StartCoroutine(caller.FlyingFlyBackUp());
@@ -265,17 +268,18 @@ public class BM_Shared_Slash : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Renegade:
@@ -298,7 +302,7 @@ public class BM_Shared_Slash : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -331,17 +335,18 @@ public class BM_Shared_DualSlash : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Renegade:
@@ -358,6 +363,7 @@ public class BM_Shared_DualSlash : EnemyMove
                         break;
                 }
                 yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Renegade:
@@ -380,7 +386,7 @@ public class BM_Shared_DualSlash : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -417,7 +423,7 @@ public class BM_Shared_DoubleSwoop : EnemyMove
 
             float dist = tposA.x - tposend.x - 0.25f;
 
-            yield return StartCoroutine(caller.Move(tposA));
+            yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
 
             Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
             Vector3[] invpositions = new Vector3[] { tposend, tposmid, tposA };
@@ -430,6 +436,7 @@ public class BM_Shared_DoubleSwoop : EnemyMove
 
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     switch (caller.entityID)
                     {
                         case BattleHelper.EntityID.Heatwing:
@@ -452,7 +459,7 @@ public class BM_Shared_DoubleSwoop : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -489,7 +496,7 @@ public class BM_Shared_TripleSwoop : EnemyMove
 
             float dist = tposA.x - tposend.x - 0.25f;
 
-            yield return StartCoroutine(caller.Move(tposA));
+            yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
 
             Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
             Vector3[] invpositions = new Vector3[] { tposend, tposmid, tposA };
@@ -502,6 +509,7 @@ public class BM_Shared_TripleSwoop : EnemyMove
 
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     switch (caller.entityID)
                     {
                         case BattleHelper.EntityID.HoarderFly:
@@ -523,7 +531,7 @@ public class BM_Shared_TripleSwoop : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -570,18 +578,19 @@ public class BM_Shared_Hard_CounterRush : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Honeybud:
@@ -608,7 +617,7 @@ public class BM_Shared_Hard_CounterRush : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 

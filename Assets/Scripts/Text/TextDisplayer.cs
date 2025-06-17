@@ -179,6 +179,13 @@ public class TextDisplayer : MonoBehaviour
 
     public virtual void SetText(string text, bool complete = false, bool forceOpaque = false, float fontSize = -1)
     {
+        //fail
+        if (!isActiveAndEnabled)
+        {
+            textMesh.text = "";
+            return;
+        }
+
         if (defaultFontSize == 0)
         {
             defaultFontSize = textMesh.fontSize;
@@ -535,7 +542,7 @@ public class TextDisplayer : MonoBehaviour
 
                         Vector3 Eposition;
                         float Esize;
-                        (Esize, Eposition) = SpritePosition(textInfo, j + offset, 50);
+                        (Esize, Eposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                         GameObject Es = Text_EffectSprite.Create(tags[i].args, j + offset, Esize);
                         SpriteSetup(Es, Eposition, BuildTextEffectSet(j + offset));
@@ -550,7 +557,7 @@ public class TextDisplayer : MonoBehaviour
 
                         Vector3 Sposition;
                         float Ssize;
-                        (Ssize, Sposition) = SpritePosition(textInfo, j + offset, 50);
+                        (Ssize, Sposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                         GameObject Ss = Text_StateSprite.Create(tags[i].args, j + offset, Ssize);
                         SpriteSetup(Ss, Sposition, BuildTextEffectSet(j + offset));
@@ -595,7 +602,7 @@ public class TextDisplayer : MonoBehaviour
 
                         Vector3 Bposition;
                         float Bsize;
-                        (Bsize, Bposition) = SpritePosition(textInfo, j + offset, 50);
+                        (Bsize, Bposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                         GameObject bbs = Text_ButtonSprite.Create(tags[i].args, j + offset, Bsize);
                         SpriteSetup(bbs, Bposition, BuildTextEffectSet(j + offset));
@@ -610,7 +617,7 @@ public class TextDisplayer : MonoBehaviour
 
                         Vector3 Iposition;
                         float Isize;
-                        (Isize, Iposition) = SpritePosition(textInfo, j + offset, 50);
+                        (Isize, Iposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                         GameObject its = Text_ItemSprite.Create(tags[i].args, j + offset, Isize);
                         SpriteSetup(its, Iposition, BuildTextEffectSet(j + offset));
@@ -625,7 +632,7 @@ public class TextDisplayer : MonoBehaviour
 
                         Vector3 Kposition;
                         float Ksize;
-                        (Ksize, Kposition) = SpritePosition(textInfo, j + offset, 50);
+                        (Ksize, Kposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                         GameObject kits = Text_KeyItemSprite.Create(tags[i].args, j + offset, Ksize);
                         SpriteSetup(kits, Kposition, BuildTextEffectSet(j + offset));
@@ -640,7 +647,7 @@ public class TextDisplayer : MonoBehaviour
 
                         Vector3 BAposition;
                         float BAsize;
-                        (BAsize, BAposition) = SpritePosition(textInfo, j + offset, 50);
+                        (BAsize, BAposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                         GameObject bas = Text_BadgeSprite.Create(tags[i].args, j + offset, BAsize);
                         SpriteSetup(bas, BAposition, BuildTextEffectSet(j + offset));
@@ -655,7 +662,7 @@ public class TextDisplayer : MonoBehaviour
 
                         Vector3 Rposition;
                         float Rsize;
-                        (Rsize, Rposition) = SpritePosition(textInfo, j + offset, 50);
+                        (Rsize, Rposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                         GameObject ris = Text_RibbonSprite.Create(tags[i].args, j + offset, Rsize);
                         SpriteSetup(ris, Rposition, BuildTextEffectSet(j + offset));
@@ -696,7 +703,7 @@ public class TextDisplayer : MonoBehaviour
 
                             Vector3 Cposition;
                             float Csize;
-                            (Csize, Cposition) = SpritePosition(textInfo, j + offset, 65);
+                            (Csize, Cposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                             Csize *= 0.75f;
 
@@ -713,7 +720,7 @@ public class TextDisplayer : MonoBehaviour
 
                             Vector3 Cposition;
                             float Csize;
-                            (Csize, Cposition) = SpritePosition(textInfo, j + offset, 65);
+                            (Csize, Cposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                             Csize *= 0.75f;
 
@@ -732,7 +739,7 @@ public class TextDisplayer : MonoBehaviour
 
                         Vector3 Mposition;
                         float Msize;
-                        (Msize, Mposition) = SpritePosition(textInfo, j + offset, 50);
+                        (Msize, Mposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
                         GameObject mis = Text_MiscSprite.Create(tags[i].args, j + offset, Msize);
                         SpriteSetup(mis, Mposition, BuildTextEffectSet(j + offset));
@@ -884,7 +891,7 @@ public class TextDisplayer : MonoBehaviour
         //  Used for popups that have dynamic heights
         if (textMesh.GetRenderedValues()[1] > textMesh.rectTransform.sizeDelta.y && fontSize != -2)
         {
-            Debug.Log(textMesh.GetRenderedValues()[1] + " " + textMesh.rectTransform.sizeDelta.y);
+            //Debug.Log(textMesh.GetRenderedValues()[1] + " " + textMesh.rectTransform.sizeDelta.y);
             //try again
             SetText(text, complete, forceOpaque, textMesh.fontSize * (12f / 15f));
             return;
@@ -950,6 +957,7 @@ public class TextDisplayer : MonoBehaviour
 
         //100 is too high
         centerPosition.y += multiplier * (height / 2);
+        //Debug.Log(multiplier + " " + (height / 2) + " " + (multiplier * (height / 2)));
 
         //Debug.Log(charInfoA.character);
         //Debug.Log(charInfoA.index);

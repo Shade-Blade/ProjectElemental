@@ -995,9 +995,9 @@ public class BA_Flee : BattleAction
 
         for (int i = 0; i < enemyList.Count; i++)
         {
-            if ((enemyList[i].level / 2) > cost)
+            if (((enemyList[i].level * enemyList[i].statMultiplier) / 2) > cost)
             {
-                cost = (enemyList[i].level) / 2;
+                cost = (int)((enemyList[i].level * enemyList[i].statMultiplier) / 2);
             }
         }
 

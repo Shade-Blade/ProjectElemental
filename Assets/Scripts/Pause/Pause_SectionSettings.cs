@@ -91,8 +91,14 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
             b.Setup(menuEntries[i + loadedTopIndex]);
         }
 
+        upArrow.gameObject.SetActive(true);
+        downArrow.gameObject.SetActive(true);
         upArrow.enabled = false; //menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText("<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText("<button,z>", true, true);
 
         visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
         for (int i = 0; i < menuEntriesS.Count; i++)
@@ -242,6 +248,10 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
         rebindMenu.gameObject.SetActive(true);
         rebindArrow.gameObject.SetActive(true);
         selectorArrow.gameObject.SetActive(false);
+        upArrow.gameObject.SetActive(false);
+        upArrowControlHint.gameObject.SetActive(false);
+        downArrow.gameObject.SetActive(false);
+        downArrowControlHint.gameObject.SetActive(false);
         rebindMenu.Init();
     }
 
@@ -250,6 +260,12 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
         rebindMenu.Clear();
         rebindMenu.gameObject.SetActive(false);
         rebindArrow.gameObject.SetActive(false);
+        upArrow.gameObject.SetActive(true);
+        downArrow.gameObject.SetActive(true);
+        upArrowControlHint.gameObject.SetActive(true);
+        downArrowControlHint.gameObject.SetActive(true);
+        upArrowControlHint.SetText("<button,y>", true, true);
+        downArrowControlHint.SetText("<button,z>", true, true);
         selectorArrow.gameObject.SetActive(true);
     }
 
@@ -313,8 +329,17 @@ public class Pause_SectionSettings : Pause_SectionShared_BoxMenu
         menuEntriesS[index].Setup(menuEntries[index]);
 
         //put this in init too
+        upArrow.gameObject.SetActive(true);
+        downArrow.gameObject.SetActive(true);
+        upArrowControlHint.gameObject.SetActive(true);
+        downArrowControlHint.gameObject.SetActive(true);
+
         upArrow.enabled = menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText("<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText("<button,z>", true, true);
 
         if (textbox != null)
         {

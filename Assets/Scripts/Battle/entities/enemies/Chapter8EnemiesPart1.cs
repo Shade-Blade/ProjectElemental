@@ -58,7 +58,7 @@ public class BM_PuffJelly_Slam : EnemyMove
             Vector3 abovePos = caller.curTarget.transform.position + Vector3.up * 2;
             Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.stompOffset);
 
-            yield return StartCoroutine(caller.Move(abovePos));
+            yield return StartCoroutine(caller.MoveEasing(abovePos, (e) => MainManager.EasingOutIn(e)));
 
             Vector3 spos = transform.position;
 
@@ -66,8 +66,9 @@ public class BM_PuffJelly_Slam : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 1, 0, 0, BattleHelper.ContactLevel.Contact);
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
             else
             {
@@ -75,7 +76,7 @@ public class BM_PuffJelly_Slam : EnemyMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
     }
@@ -102,7 +103,7 @@ public class BM_PuffJelly_Hard_BlinkSlam : EnemyMove
             Vector3 abovePos = caller.curTarget.transform.position + Vector3.up * 2;
             Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.stompOffset);
 
-            yield return StartCoroutine(caller.Move(abovePos));
+            yield return StartCoroutine(caller.MoveEasing(abovePos, (e) => MainManager.EasingOutIn(e)));
 
             Vector3 spos = transform.position;
 
@@ -110,8 +111,9 @@ public class BM_PuffJelly_Hard_BlinkSlam : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Light))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
             else
             {
@@ -119,7 +121,7 @@ public class BM_PuffJelly_Hard_BlinkSlam : EnemyMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
     }
@@ -184,8 +186,9 @@ public class BM_Fluffling_Bash : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 1, 0, 0, BattleHelper.ContactLevel.Contact);
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
             else
             {
@@ -193,7 +196,7 @@ public class BM_Fluffling_Bash : EnemyMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
     }
@@ -222,8 +225,9 @@ public class BM_Fluffling_Hard_WaterTorpedo : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
             else
             {
@@ -231,7 +235,7 @@ public class BM_Fluffling_Hard_WaterTorpedo : EnemyMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
     }
@@ -427,17 +431,18 @@ public class BM_CloudJelly_IceSwing : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Light))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
             }
             else
@@ -446,7 +451,7 @@ public class BM_CloudJelly_IceSwing : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -485,6 +490,7 @@ public class BM_CloudJelly_BubbleToss : EnemyMove
 
         if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
             caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
         }
         else
@@ -516,6 +522,7 @@ public class BM_CloudJelly_BubbleBlast : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
@@ -551,6 +558,7 @@ public class BM_CloudJelly_PowerBolt : EnemyMove
 
         if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
             caller.DealDamage(caller.curTarget, 8, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
         }
         else
@@ -718,12 +726,12 @@ public class BM_CrystalCrab_TripleClaw : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
@@ -741,7 +749,7 @@ public class BM_CrystalCrab_TripleClaw : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -813,12 +821,12 @@ public class BM_CrystalCrab_Hard_CounterClearClaw : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
@@ -834,7 +842,7 @@ public class BM_CrystalCrab_Hard_CounterClearClaw : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -920,17 +928,18 @@ public class BM_CrystalSlug_Slap : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 bool hasStatus = caller.curTarget.HasStatus();
                 if (!hasStatus && BattleControl.Instance.GetCurseLevel() > 0)
@@ -944,7 +953,7 @@ public class BM_CrystalSlug_Slap : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -1196,6 +1205,7 @@ public class BM_Aurorawing_RubyDust : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
@@ -1242,6 +1252,7 @@ public class BM_Aurorawing_SapphireDust : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
@@ -1288,6 +1299,7 @@ public class BM_Aurorawing_EmeraldDust : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Earth))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
             }
             else

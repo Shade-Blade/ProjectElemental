@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using static MainManager;
-using UnityEngine.ProBuilder.MeshOperations;
-using UnityEngine.UIElements;
 
 public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
 {
@@ -67,7 +65,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
         }
         floor = int.Parse(floorNo);
 
-        switch ((floor - 1) / 10)
+        switch (((floor - 1) / 10) % 10)
         {
             case 0:
                 mr.material = materials[0];
@@ -146,7 +144,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
         } else
         {
             //need to not have wee.Setup() activate before this point so I have disabled the object
-            int effectiveFloor = Mathf.Max(cost / 2, floor - 10);
+            int effectiveFloor = Mathf.Max(cost / 2, (int)(floor * 0.75f));
             if (effectiveFloor > floor + 30)    //really high level floor enemies are hard
             {
                 effectiveFloor = effectiveFloor / 2 + 15;
@@ -285,10 +283,12 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
             }
 
             //my system breaks down
+            /*
             if (type == PitObstacleType.EnemyLock && cost > 220)
             {
                 resultLegal = false;
             }
+            */
 
             //Impossible to pay
             if (type == PitObstacleType.HealthLock)
@@ -593,7 +593,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
         PlayerData pd = MainManager.Instance.playerData;
         List<IRandomTableEntry<PickupUnion.PickupType>> randomtableEntries = new List<IRandomTableEntry<PickupUnion.PickupType>>
         {
-            new RandomTableEntry<PickupUnion.PickupType>(PickupUnion.PickupType.Item, 30),
+            new RandomTableEntry<PickupUnion.PickupType>(PickupUnion.PickupType.Item, pd.GetMaxInventorySize() - pd.itemInventory.Count > 5 ? 30 : 15),
             new RandomTableEntry<PickupUnion.PickupType>(PickupUnion.PickupType.Badge, 60), //badges are more useful so spawn them more
             new RandomTableEntry<PickupUnion.PickupType>(PickupUnion.PickupType.Ribbon, 10),    //less helpful
             new RandomTableEntry<PickupUnion.PickupType>(PickupUnion.PickupType.Misc, 10),  //usually less helpful (but there are also hardcoded ability spawns)
@@ -654,6 +654,12 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                 {
                     itemChapter = 9;
                 }
+
+                if (RandomGenerator.Get() * itemChapter > 7)
+                {
+                    itemChapter = RandomGenerator.GetIntRange(0, 10);
+                }
+
                 //Debug.Log(itemChapter);
                 List<Item.ItemType> itemPool = new List<Item.ItemType>();
                 for (int i = 1; i < (int)Item.ItemType.EndOfTable; i++)
@@ -746,11 +752,22 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                         }
                     }
 
+
                     if (badgePool.Count == 0)
                     {
-                        //failsafe 2: give you Random Badge
-                        pu.type = PickupUnion.PickupType.Misc;
-                        pu.misc = MainManager.MiscSprite.MysteryBadge;
+                        //failsafe 2: 50% chance of a random, 50% chance of mystery
+                        if (RandomGenerator.Get() < 0.5f)
+                        {
+                            for (int i = 1; i < (int)Badge.BadgeType.EndOfTable; i++)
+                            {
+                                badgePool.Add((Badge.BadgeType)i);
+                            }
+                            pu.badge.type = RandomTable<Badge.BadgeType>.ChooseRandom(badgePool);
+                        } else
+                        {
+                            pu.type = PickupUnion.PickupType.Misc;
+                            pu.misc = MainManager.MiscSprite.MysteryBadge;
+                        }
                     }
                     else
                     {
@@ -779,9 +796,20 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                 }
                 if (ribbonPool.Count == 0)
                 {
-                    //failsafe: give you Random Ribbon
-                    pu.type = PickupUnion.PickupType.Misc;
-                    pu.misc = MainManager.MiscSprite.MysteryRibbon;
+                    //failsafe 2: 50% chance of a random, 50% chance of mystery
+                    if (RandomGenerator.Get() < 0.5f)
+                    {
+                        for (int i = 1; i < (int)Ribbon.RibbonType.EndOfTable; i++)
+                        {
+                            ribbonPool.Add((Ribbon.RibbonType)i);
+                        }
+                        pu.ribbon.type = RandomTable<Ribbon.RibbonType>.ChooseRandom(ribbonPool);
+                    }
+                    else
+                    {
+                        pu.type = PickupUnion.PickupType.Misc;
+                        pu.misc = MainManager.MiscSprite.MysteryRibbon;
+                    }
                 }
                 else
                 {
@@ -791,10 +819,14 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
             case PickupUnion.PickupType.Misc:
                 List<IRandomTableEntry<MainManager.MiscSprite>> miscTableEntries = new List<IRandomTableEntry<MainManager.MiscSprite>>
                 {
-                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.Health6, 1),
-                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.Energy6, 1),
-                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.Soul6, 1),
+                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.Health6, pd.GetHealthPercentage() > 0.66f ? 0.3f : 1),
+                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.Energy6, pd.GetEnergyPercentage() > 0.66f ? 0.3f : 1),
+                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.Soul6, pd.GetSoulEnergyPercentage() > 0.66f ? 0.3f : 1),
                     new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.XP10, pd.level >= PlayerData.GetMaxLevel() ? 0 : 1),
+                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.ItemBag2, pd.GetMaxInventorySize() - pd.itemInventory.Count > 2 ? 1 : 0.3f),
+                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.RecipeBag2, pd.GetMaxInventorySize() - pd.itemInventory.Count > 2 ? 0.5f : 0.15f),
+                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.ItemBag4, pd.GetMaxInventorySize() - pd.itemInventory.Count > 4 ? 0.5f : 0.1f),
+                    new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.RecipeBag4, pd.GetMaxInventorySize() - pd.itemInventory.Count > 4 ? 0.25f : 0.05f),
                     new RandomTableEntry<MainManager.MiscSprite>(MainManager.MiscSprite.AbilitySlash, 0.25f)    //stand in for all the ability rewards   (Making this very rare because I have hardcoded spawns as well)
                 };
                 RandomTable<MainManager.MiscSprite> mstable = new RandomTable<MainManager.MiscSprite>(miscTableEntries);
@@ -1343,13 +1375,20 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
 
         testTextFile[0][0] = "<system>This lock costs <var,1> <var,2> to unlock. Do you want to unlock it?<prompt,Unlock,1,Cancel,-1,1>";
         testTextFile[1][0] = "<system>This lock costs <var,1> <var,2> to unlock. Do you want to unlock it? (Crystal Keys can unlock any lock. You have <var,3>.)<prompt,Unlock,1,Use Crystal Key,2,Cancel,-1,2>";
-        testTextFile[2][0] = "<system>This lock requires fighting an enemy to unlock. Do you want to unlock it?<prompt,Unlock,1,Cancel,-1,1>";
-        testTextFile[3][0] = "<system>This lock requires fighting an enemy to unlock. Do you want to unlock it? (Crystal Keys can unlock any lock. You have <var,3>.)<prompt,Unlock,1,Use Crystal Key,2,Cancel,-1,2>";
+        testTextFile[2][0] = "<system>This lock requires fighting an enemy to unlock. Do you want to unlock it? (Floor <color,blue><var,0></color> encounter)<prompt,Unlock,1,Cancel,-1,1>";
+        testTextFile[3][0] = "<system>This lock requires fighting an enemy to unlock. Do you want to unlock it? (Floor <color,blue><var,0></color> encounter) (Crystal Keys can unlock any lock. You have <var,3>.)<prompt,Unlock,1,Use Crystal Key,2,Cancel,-1,2>";
         testTextFile[4][0] = "<system>You don't have enough <var,1> to open this lock.";
 
-        string[] vars = new string[4] { "", cost + "", GetTypeCostString(), crystalKeyCount + ""};
 
-        string[] varsB = new string[2] { "", GetTypeCostStringStatic(type, true) };
+        int enemyFloor = Mathf.Max(cost / 2, floor - 10);
+        if (enemyFloor > floor + 30)    //really high level floor enemies are hard
+        {
+            enemyFloor = enemyFloor / 2 + 15;
+        }
+
+        string[] vars = new string[4] { enemyFloor + "", cost + "", GetTypeCostString(), crystalKeyCount + ""};
+
+        string[] varsB = new string[2] { enemyFloor + "", GetTypeCostStringStatic(type, true) };
 
         if (type == PitObstacleType.EnemyLock)
         {

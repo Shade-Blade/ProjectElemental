@@ -68,6 +68,8 @@ public class MapScript : MonoBehaviour
 
     public virtual void MapInit()
     {
+        MusicInit();
+
         init = true;
 
         ResetVars();
@@ -103,9 +105,9 @@ public class MapScript : MonoBehaviour
         }
 
         //checking
-        MainManager.WorldLocation wl = MainManager.WorldLocation.None;
+        MainManager.WorldLocation wl = MainManager.WorldLocation.Nowhere;
         Enum.TryParse(worldLocation, out wl);
-        if (wl == MainManager.WorldLocation.None && !worldLocation.Equals("None"))
+        if (wl == MainManager.WorldLocation.Nowhere && !worldLocation.Equals("None"))
         {
             Debug.LogError("World location " + worldLocation + " could not be parsed!");
         }
@@ -114,7 +116,7 @@ public class MapScript : MonoBehaviour
             Debug.LogWarning("Map with \"None\" location.");
         }
 
-        if (useDefaultLight && wl != MainManager.WorldLocation.None)
+        if (useDefaultLight && wl != MainManager.WorldLocation.Nowhere)
         {
             this.ambientLight = MainManager.GetDefaultAmbientColor(wl);
 
@@ -195,7 +197,13 @@ public class MapScript : MonoBehaviour
         //flags = new bool[MainManager.MAP_FLAG_COUNT];
         //vars = new string[MainManager.MAP_VAR_COUNT];
         flags = new Dictionary<string, bool>();
-        vars = new Dictionary<string, string>();
+        vars = new Dictionary<string, string>();        
+    }
+
+    public virtual void MusicInit()
+    {
+        //to do: play Music_Area_ (worldlocation) as default
+        MainManager.Instance.ReplaceMusic(MainManager.Sound.Music_Area_Generic, 0.2f);
     }
 
     //Conventionally, these are called instantly when the entrance / exit coroutines start

@@ -9,7 +9,9 @@ using UnityEngine.UI;
 public class Pause_SectionShared_BoxMenu : Pause_SectionShared
 {
     public Image upArrow;
+    public TextDisplayer upArrowControlHint;
     public Image downArrow;
+    public TextDisplayer downArrowControlHint;
     public Image selectorArrow;
     public Image menuBox;
     public RectMask2D mask;
@@ -63,7 +65,9 @@ public class Pause_SectionShared_BoxMenu : Pause_SectionShared
 
         //put this in init too
         upArrow.enabled = menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
 
         if (textbox != null)
         {

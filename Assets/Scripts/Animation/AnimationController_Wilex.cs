@@ -8,6 +8,7 @@ public class AnimationController_Wilex : AnimationController_Player
 
     public override void SetAnimation(string name, bool force = false)
     {
+        timeSinceLastAnimChange = 0;
         string modifiedName = name;
 
         //also making talk animations not have back variants

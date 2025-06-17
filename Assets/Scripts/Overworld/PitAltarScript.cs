@@ -37,7 +37,7 @@ public class PitAltarScript : WorldObject, IInteractable, ITextSpeaker
         int altar = int.Parse(pitaltar);
 
 
-        switch ((floor - 1) / 10)
+        switch (((floor - 1) / 10) % 10)
         {
             case 0:
                 mr.material = materials[0];

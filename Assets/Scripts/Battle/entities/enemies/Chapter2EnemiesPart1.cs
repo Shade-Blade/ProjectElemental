@@ -89,12 +89,12 @@ public class BM_Bandit_Slash : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             if (Random.Range(0,1) > 0.5f)
@@ -108,6 +108,7 @@ public class BM_Bandit_Slash : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
             }
             else
@@ -116,7 +117,7 @@ public class BM_Bandit_Slash : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -150,17 +151,18 @@ public class BM_Bandit_Hard_TeamCounter : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
             }
             else
@@ -169,7 +171,7 @@ public class BM_Bandit_Hard_TeamCounter : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -262,6 +264,7 @@ public class BM_Renegade_Hard_HeatWave : EnemyMove
         {
             if (caller.GetAttackHit(t, 0))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Enervate, 2, Effect.INFINITE_DURATION));
             }
@@ -273,7 +276,7 @@ public class BM_Renegade_Hard_HeatWave : EnemyMove
         }
         StartCoroutine(caller.RevertScale(0.1f));
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -411,6 +414,7 @@ public class BM_Sentry_Fling : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
@@ -572,7 +576,7 @@ public class BM_Cactupole_ThornShock : EnemyMove
 
             float dist = tposA.x - tposend.x - 0.25f;
 
-            yield return StartCoroutine(caller.Move(tposA));
+            yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
 
             Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
 
@@ -598,7 +602,7 @@ public class BM_Cactupole_ThornShock : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -709,12 +713,12 @@ public class BM_Sandswimmer_Bite : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             if (caller.GetAttackHit(caller.curTarget, 0))
@@ -722,6 +726,7 @@ public class BM_Sandswimmer_Bite : EnemyMove
                 yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
@@ -735,7 +740,7 @@ public class BM_Sandswimmer_Bite : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -781,6 +786,6 @@ public class BM_Sandswimmer_Hard_FlashDischarge : EnemyMove
         }
         StartCoroutine(caller.RevertScale(0.1f));
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }

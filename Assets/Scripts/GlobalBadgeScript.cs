@@ -341,8 +341,8 @@ public struct Badge
         DefenseFormation,
         MagicClock,
         PowerGear,
-        ShieldGear,
-        EnergyGear,
+        HeavyGear,
+        FocusGear,
         PowerMomentum,
         TenaciousStrikes,
         HealthGrowth,
@@ -558,6 +558,15 @@ public struct Badge
             if (split[0].Equals("StatusSight"))
             {
                 output.type = BadgeType.AilmentSight;
+            }
+
+            if (split[0].Equals("ShieldGear"))
+            {
+                output.type = BadgeType.HeavyGear;
+            }
+            if (split[0].Equals("EnergyGear"))
+            {
+                output.type = BadgeType.FocusGear;
             }
         }
 

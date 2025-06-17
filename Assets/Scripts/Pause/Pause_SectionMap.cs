@@ -95,13 +95,13 @@ public class Pause_SectionMap : Pause_SectionShared
 
     public override object GetState()
     {
-        return new Pause_HandlerMap.UpdateObject(pointer.transform.localPosition, selectedDot == null ? MainManager.WorldLocation.None : selectedDot.worldLocation);
+        return new Pause_HandlerMap.UpdateObject(pointer.transform.localPosition, selectedDot == null ? MainManager.WorldLocation.Nowhere : selectedDot.worldLocation);
     }
 
     public override void Init()
     {
         //move it to the current worldlocation
-        MainManager.WorldLocation curLocation = MainManager.WorldLocation.None;
+        MainManager.WorldLocation curLocation = MainManager.WorldLocation.Nowhere;
         Enum.TryParse(MainManager.Instance.mapScript.worldLocation, out curLocation);
 
         dots = new List<MapDotScript>();
@@ -117,7 +117,7 @@ public class Pause_SectionMap : Pause_SectionShared
 
         if (selectedDot != null)
         {
-            if (!selectedDot.isActiveAndEnabled && selectedDot.worldLocation == MainManager.WorldLocation.None)
+            if (!selectedDot.isActiveAndEnabled && selectedDot.worldLocation == MainManager.WorldLocation.Nowhere)
             {
                 nameBox.SetText("", true, true);
                 textbox.SetText("", true, true);

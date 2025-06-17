@@ -90,7 +90,7 @@ public class BM_Rootling_FrontSlam : EnemyMove
         {
             Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + caller.curTarget.width / 2) * Vector3.right;
 
-            yield return StartCoroutine(caller.Move(tpos));
+            yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
@@ -108,7 +108,7 @@ public class BM_Rootling_FrontSlam : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -152,7 +152,7 @@ public class BM_Rootling_DoubleSlam : EnemyMove
         }
         StartCoroutine(caller.RevertScale(0.1f));
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -224,6 +224,6 @@ public class BM_Rootling_Uproot : EnemyMove
             }
             StartCoroutine(caller.RevertScale(0.1f));
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }

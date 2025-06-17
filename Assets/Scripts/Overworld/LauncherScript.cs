@@ -75,6 +75,12 @@ public class LauncherScript : WorldObject
                     }
                 }
 
+                if (launchVelocity.magnitude == 0)
+                {
+                    //use when the signal receiver should deal with it?
+                    return;
+                }
+
                 Vector3 launchVel;
                 if (w.lastGroundedHeight > heightThreshold)
                 {

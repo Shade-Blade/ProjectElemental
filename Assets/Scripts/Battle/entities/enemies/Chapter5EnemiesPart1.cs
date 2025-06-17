@@ -79,6 +79,7 @@ public class BM_EyeSpore_SporeBeam : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Dark))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
@@ -110,6 +111,7 @@ public class BM_EyeSpore_Hard_CounterSpiteBeam : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Dark))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
@@ -217,18 +219,19 @@ public class BM_SpikeSpore_PoisonSpikes : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
@@ -241,7 +244,7 @@ public class BM_SpikeSpore_PoisonSpikes : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -267,6 +270,7 @@ public class BM_SpikeSpore_Hard_SpikeBomb : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Dark))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Soulbleed, 1, 3));
             }
@@ -385,48 +389,26 @@ public class BM_Shrouder_SporeCloud : EnemyMove
             caller.curTarget = null;
         }
 
-        if (caller.curTarget != null)
+        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+
+        foreach (BattleEntity t in targets)
         {
-            Vector3 itpos = Vector3.negativeInfinity;
-            bool backflag = false;
-            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            if (caller.GetAttackHit(t, 0))
             {
-                itpos = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.back * 0.5f;
-                backflag = true;
-            }
-
-            //Debug.Log(itpos);
-
-            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right;
-
-            if (backflag)
-            {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                caller.DealDamage(t, 4, 0, 0, BattleHelper.ContactLevel.Infinite);
+                caller.InflictEffect(t, new Effect(Effect.EffectType.EnduranceDown, 2, 3));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
-            }
-
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
-            List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
-            foreach (BattleEntity t in targets)
-            {
-                if (caller.GetAttackHit(t, 0))
-                {
-                    caller.DealDamage(t, 4, 0, 0, BattleHelper.ContactLevel.Infinite);
-                    caller.InflictEffect(t, new Effect(Effect.EffectType.EnduranceDown, 2, 3));
-                }
-                else
-                {
-                    //Miss
-                    caller.InvokeMissEvents(t);
-                }
+                //Miss
+                caller.InvokeMissEvents(t);
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -608,7 +590,7 @@ public class BM_HoarderFly_PoisonHeal : EnemyMove
 
             float dist = tposA.x - tposend.x - 0.25f;
 
-            yield return StartCoroutine(caller.Move(tposA));
+            yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
 
             Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
 
@@ -619,6 +601,7 @@ public class BM_HoarderFly_PoisonHeal : EnemyMove
                 //this order is so that it doesn't trigger the revive code thing
                 caller.curTarget.HealHealth(3);
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 0, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
@@ -632,7 +615,7 @@ public class BM_HoarderFly_PoisonHeal : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -660,6 +643,7 @@ public class BM_HoarderFly_Hard_DustWind : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Earth))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
@@ -777,12 +761,12 @@ public class BM_Mosquito_ShockNeedle : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             if (Random.Range(0, 1) > 0.5f)
@@ -810,7 +794,7 @@ public class BM_Mosquito_ShockNeedle : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -843,12 +827,12 @@ public class BM_Mosquito_DrainBite : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             if (Random.Range(0, 1) > 0.5f)
@@ -862,6 +846,7 @@ public class BM_Mosquito_DrainBite : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, (uint)BattleHelper.DamageProperties.HPDrainOneToOne, BattleHelper.ContactLevel.Contact);
             }
             else
@@ -870,7 +855,7 @@ public class BM_Mosquito_DrainBite : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 

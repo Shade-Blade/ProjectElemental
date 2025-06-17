@@ -274,18 +274,19 @@ public class BM_Honeybud_FrontBite : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.Move(itpos));
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
             }
             else
             {
-                yield return StartCoroutine(caller.Move(tpos));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Sunnybud:
@@ -307,7 +308,7 @@ public class BM_Honeybud_FrontBite : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
 
         //fly back up        
         yield return StartCoroutine(caller.FlyingFlyBackUp());
@@ -437,7 +438,7 @@ public class BM_Honeybud_SwoopHeal : EnemyMove
 
             float dist = tposA.x - tposend.x - 0.25f;
 
-            yield return StartCoroutine(caller.Move(tposA));
+            yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
 
             Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
 
@@ -447,6 +448,7 @@ public class BM_Honeybud_SwoopHeal : EnemyMove
 
                 //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Honeybud:
@@ -475,7 +477,7 @@ public class BM_Honeybud_SwoopHeal : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
 
 
         yield return DoHeal(caller);

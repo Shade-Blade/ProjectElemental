@@ -51,6 +51,8 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
 
         selectorArrow.gameObject.SetActive(true);
         selectorArrow.color = new Color(1, 1, 1, 1);
+        //upArrowControlHint.enabled = true;
+        //downArrowControlHint.enabled = true;
 
         List<PlayerData.PlayerDataEntry> sortedParty = MainManager.Instance.playerData.GetSortedParty();        
 
@@ -78,7 +80,11 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
 
         //put this in init too
         upArrow.enabled = menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText(!selectorArrow.enabled || selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText(!selectorArrow.enabled || selectorArrow.color.grayscale < 0.75f ? "" : "<button,z>", true, true);
 
         if (textbox != null)
         {
@@ -236,6 +242,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
 
         characterStats.ApplyUpdate(selectedPlayer);
         parent.UpdateSPUsage();
+        parent.DisableSortTip();
 
         //Debug.Log("Inventory section update: " + menuIndex + " " + menuTopIndex + " " + selectedPlayer);
         //Debug.Log("Selected index " + selectedIndex);
@@ -686,7 +693,11 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
         }
 
         upArrow.enabled = menuEntries.Length > 0 && menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled && selectorArrow.enabled;
+        upArrowControlHint.SetText(!selectorArrow.enabled || selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
         downArrow.enabled = menuEntries.Length > 0 && (menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE);
+        downArrowControlHint.enabled = downArrow.enabled && selectorArrow.enabled;
+        downArrowControlHint.SetText(!selectorArrow.enabled || selectorArrow.color.grayscale < 0.75f ? "" : "<button,z>", true, true);
 
         visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
         for (int i = 0; i < menuEntriesS.Count; i++)

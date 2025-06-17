@@ -120,8 +120,8 @@ AttackFormation,5,TRUE,AttackFormation,TRUE,1,7
 DefenseFormation,5,TRUE,DefenseFormation,TRUE,1,7
 MagicClock,4,FALSE,MagicClock,TRUE,1,6
 PowerGear,4,FALSE,PowerGear,TRUE,1,6
-ShieldGear,4,FALSE,ShieldGear,TRUE,1,6
-EnergyGear,4,FALSE,EnergyGear,TRUE,1,6
+HeavyGear,10,FALSE,HeavyGear,TRUE,1,6
+FocusGear,4,FALSE,FocusGear,TRUE,1,6
 PowerMomentum,8,FALSE,PowerMomentum,TRUE,1,6
 TenaciousStrikes,2,FALSE,TenaciousStrikes,TRUE,1,3
 HealthGrowth,6,FALSE,HealthGrowth,TRUE,1,6

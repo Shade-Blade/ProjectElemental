@@ -196,6 +196,7 @@ public class AC_MashLeft : ActionCommand
             GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_MashLeft"), MainManager.Instance.Canvas.transform);
             subObjects.Add(o);
             acobject = o.GetComponent<ACObject_MashBar>();
+            acobject.SetValues(0, false);
         }
     }
 
@@ -346,6 +347,7 @@ public class AC_MashLeftRight : ActionCommand
             GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_MashLeft"), MainManager.Instance.Canvas.transform);
             subObjects.Add(o);
             acobject = o.GetComponent<ACObject_MashBar>();
+            acobject.SetValues(0, false);
         }
     }
 
@@ -484,6 +486,7 @@ public class AC_HoldLeft : ActionCommand
             GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_HoldLeft"), MainManager.Instance.Canvas.transform);
             subObjects.Add(o);
             acobject = o.GetComponent<ACObject_HoldBar>();
+            acobject.SetValues(0, false);
         }
     }
 
@@ -511,7 +514,7 @@ public class AC_HoldLeft : ActionCommand
 
     public bool GetSuccess()
     {
-        return autoComplete || holdTime >= duration && holdTime < duration + GetTimingWindow();
+        return autoComplete || (holdTime >= duration && holdTime < duration + GetTimingWindow());
     }
 
     public override void Update()
@@ -523,7 +526,7 @@ public class AC_HoldLeft : ActionCommand
 
         if (!autoComplete)
         {
-            if (lifetime <= duration + window)
+            if (!IsComplete())
             {
                 acobject.SetValues(completion, success);
             }
@@ -532,6 +535,7 @@ public class AC_HoldLeft : ActionCommand
         switch (state)
         {
             case AC_State.Idle:
+                Debug.Log(((InputManager.GetAxisHorizontal() < 0) + " " + (lifetime >= FADE_IN_TIME)) + " " + state);
                 if (autoComplete || (InputManager.GetAxisHorizontal() < 0 && lifetime >= FADE_IN_TIME))
                 {
                     state = AC_State.Active;
@@ -595,6 +599,7 @@ public class AC_PressATimed : ActionCommand
             GameObject o = Instantiate(Resources.Load<GameObject>("Battle/ActionCommand/AC_PressButtonTimed"), MainManager.Instance.Canvas.transform);
             subObjects.Add(o);
             acobject = o.GetComponent<ACObject_PressATimed>();
+            acobject.SetValues(0, false, AC_State.Idle);
         }
     }
 
@@ -634,16 +639,20 @@ public class AC_PressATimed : ActionCommand
 
         if (!autoComplete)
         {
+            /*
             if (lifetime <= duration + GetTimingWindow())
             {
-                if (state == AC_State.Complete)
-                {
-                    completion = Mathf.Clamp01(((pressTime - FADE_IN_TIME) / duration));
-                    acobject.SetValues(completion, success, state);
-                } else
-                {
-                    acobject.SetValues(completion, success, state);
-                }
+                
+            }
+            */
+            if (state == AC_State.Complete)
+            {
+                completion = Mathf.Clamp01(((pressTime - FADE_IN_TIME) / duration));
+                acobject.SetValues(completion, success, state);
+            }
+            else
+            {
+                acobject.SetValues(completion, success, state);
             }
         }
 

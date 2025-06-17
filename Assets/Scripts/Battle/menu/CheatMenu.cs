@@ -1206,6 +1206,7 @@ public class CheatMenu : MenuHandler
                 {
                     float.TryParse(input[4], out yawOffset);
                 }
+                MainManager.Instance.fadeOutScript.SnapFade(1);
                 MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(mapID, exit, warpPos, yawOffset));
             }
         }

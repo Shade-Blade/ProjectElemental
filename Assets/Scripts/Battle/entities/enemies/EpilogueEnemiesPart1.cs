@@ -37,6 +37,7 @@ public class BM_Plaguebud_HeadSprout : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 4, 0, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DrainSprout, 1, 3));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
@@ -71,6 +72,7 @@ public class BM_Plaguebud_TailSprout : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 10, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.BoltSprout, 1, 3));
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, 3));
@@ -158,7 +160,7 @@ public class BM_Starfish_FeebleWave : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
             {
-                //Note that the focus last turn makes this pretty dangerous
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.AttackDown, 2, 3));
             }
@@ -192,7 +194,7 @@ public class BM_Starfish_FatigueFog : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Dark))
             {
-                //Note that the focus last turn makes this pretty dangerous
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.EnduranceDown, 2, 3));
             }
@@ -226,7 +228,7 @@ public class BM_Starfish_LeafStorm : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Earth))
             {
-                //Note that the focus last turn makes this pretty dangerous
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.DefenseDown, 2, 3));
             }
@@ -261,7 +263,7 @@ public class BE_CursedEye : BattleEntity
         {
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
-                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+                currMove = moveset[Mathf.Abs(posId + BattleControl.Instance.turnCount - 1) % 3];
                 if (currMove == moveset[2])
                 {
                     currMove = moveset[3];
@@ -269,7 +271,7 @@ public class BE_CursedEye : BattleEntity
             }
             else
             {
-                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+                currMove = moveset[Mathf.Abs(posId + BattleControl.Instance.turnCount - 1) % 2];
             }
         }
 
@@ -458,18 +460,21 @@ public class BE_StrangeTendril : BattleEntity
         BasicTargetChooser();
     }
 
-    public override IEnumerator DefaultHurtEvent()
+    public override IEnumerator DefaultHurtEvent(bool combo)
     {
-        List<BattleEntity> otherTendrils = BattleControl.Instance.GetEntities((e) => (e.entityID == BattleHelper.EntityID.StrangeTendril && e.posId != posId));
-        foreach (BattleEntity b in otherTendrils)
+        if (!combo)
         {
-            //Don't infinitely recurse
-            if (!b.immediateInEvent)
+            List<BattleEntity> otherTendrils = BattleControl.Instance.GetEntities((e) => (e.entityID == BattleHelper.EntityID.StrangeTendril && e.posId != posId));
+            foreach (BattleEntity b in otherTendrils)
             {
-                b.InvokeHurtEvents(lastDamageType, 0);
+                //Don't infinitely recurse
+                if (!b.immediateInEvent)
+                {
+                    b.InvokeHurtEvents(lastDamageType, 0);
+                }
             }
         }
-        yield return StartCoroutine(base.DefaultHurtEvent());
+        yield return StartCoroutine(base.DefaultHurtEvent(combo));
     }
 }
 
@@ -566,6 +571,7 @@ public class BM_StrangeTendril_Slam : EnemyMove
 
         if (caller.GetAttackHit(caller.curTarget, 0))
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
             caller.DealDamage(caller.curTarget, 12, 0, 0, BattleHelper.ContactLevel.Contact);
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
@@ -664,6 +670,7 @@ public class BM_DrainBud_Hard_DrainBloom : EnemyMove
         {
             if (caller.GetAttackHit(t, 0))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 2, 0, (ulong)(BattleHelper.DamageProperties.HPDrainOneToOne | BattleHelper.DamageProperties.EPLossOneToOne), BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.DrainSprout, 1, 3));
             }

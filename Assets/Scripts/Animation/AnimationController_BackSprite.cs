@@ -8,6 +8,7 @@ public class AnimationController_BackSprite : AnimationController
 
     public override void SetAnimation(string name, bool force = false)
     {
+        timeSinceLastAnimChange = 0;
         string modifiedName = name;
 
         //Hardcode talking animations not having back sprites (Note: also need to force this for special cases as well)

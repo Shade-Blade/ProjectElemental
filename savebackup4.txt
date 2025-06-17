@@ -4,7 +4,7 @@ GF_Recipe_SourJam:True,GF_Bestiary_Fluffling:True,GF_Bestiary_Shrublet:True,GF_B
 GV_PitFloor:90,GV_PitAltar:9
 CrystalHills,RabbitHole_RestFloor,0.5745384|0.375|-3.023037
 10565.16
-25,0,60,60,60,60,60,59,3,851,0,0,10,32,6,6,6,112,122,348,4034,2837,53,27,97,89,8,15
+25,0,60,60,60,60,60,59,3,851,0,0,10,32,6,6,6,112,122,348,4034,2837,53,27,97,89,8,20
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP
 
 Limeade|None|CookStella|0|112,MiracleCandy|None|CookStella|0|111,RoyalSyrup|None|EnemyDrop|0|110,FlashBud|None|EnemyDrop,FlashBud|None|EnemyDrop,MiracleCandy|None|Overworld,SupremeDinner|None|Overworld|0|106,RabbitCake|None|Overworld,Limeade|None|Overworld,VoidIcicle|None|Overworld|0|95

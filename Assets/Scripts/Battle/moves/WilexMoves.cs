@@ -184,7 +184,7 @@ public class WM_HighStomp : WilexMove
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                     //StartCoroutine(caller.RevertScale(0.1f));
                     yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
             }
             else
@@ -194,7 +194,7 @@ public class WM_HighStomp : WilexMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
         else
@@ -218,10 +218,12 @@ public class WM_HighStomp : WilexMove
     public virtual void DealDamageSuccess(BattleEntity caller, int sd)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact);
     }
     public virtual void DealDamageFailure(BattleEntity caller, int sd)
     {
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
     }
 
@@ -485,7 +487,7 @@ public class WM_MultiStomp : WilexMove
                 yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 2, 0.5f, 0.15f));
             } else
             {
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
         else
@@ -509,10 +511,12 @@ public class WM_MultiStomp : WilexMove
         {
             properties = (ulong)BattleHelper.DamageProperties.AC_SuccessStall;
         }
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, sd - 2 + level * 2, BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Contact);
     }
     public virtual void DealDamageFailure(BattleEntity caller, int sd)
     {
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 + level * 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
     }
 
@@ -608,13 +612,16 @@ public class WM_ElectroStomp : WM_HighStomp
         switch (level)
         {
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
                 break;
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Air, propertyBlockB, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, 2, 3), caller.posId);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, sd + 2 * level - 4, BattleHelper.DamageType.Air, propertyBlockB, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, (sbyte)(level * 2 - 2), 3), caller.posId);
                 break;
@@ -626,13 +633,16 @@ public class WM_ElectroStomp : WM_HighStomp
         switch (level)
         {
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
                 break;
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, 1, 3), caller.posId);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2 * level - 4, BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, (sbyte)(level - 1), 3), caller.posId);
                 break;
@@ -834,11 +844,13 @@ public class WM_ParalyzeStomp : WM_HighStomp
     public override void DealDamageSuccess(BattleEntity caller, int sd)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Infinite);
         caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, (sbyte)(1 + level * 2)), caller.posId);
     }
     public override void DealDamageFailure(BattleEntity caller, int sd)
     {
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
         caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Paralyze, 1, (sbyte)(1 + level)), caller.posId);
     }
@@ -1004,13 +1016,16 @@ public class WM_FlameStomp : WM_HighStomp
         switch (level)
         {
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
                 break;
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, sd + 4, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 3, Effect.INFINITE_DURATION), caller.posId);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, sd + level * 2, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, (sbyte)(level + 2), Effect.INFINITE_DURATION), caller.posId);
                 break;
@@ -1022,13 +1037,16 @@ public class WM_FlameStomp : WM_HighStomp
         switch (level)
         {
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
                 break;
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 4, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, 1, Effect.INFINITE_DURATION), caller.posId);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + level * 2, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffectBuffered(caller.curTarget, new Effect(Effect.EffectType.Sunder, (sbyte)(level + 1), Effect.INFINITE_DURATION), caller.posId);
                 break;
@@ -1175,7 +1193,7 @@ public class WM_DoubleStomp : WilexMove
                         //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                         //StartCoroutine(caller.RevertScale(0.1f));
                         yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
-                        yield return StartCoroutine(caller.Move(caller.homePos));
+                        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                         break;
                     }
                 }
@@ -1186,7 +1204,7 @@ public class WM_DoubleStomp : WilexMove
 
                     //extrapolate the move curve
                     yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                     break;
                 }
 
@@ -1224,10 +1242,12 @@ public class WM_DoubleStomp : WilexMove
         {
             propertyBlock |= (ulong)BattleHelper.DamageProperties.Combo;
         }
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamageMultihit(caller.curTarget, sd + 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, h, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
     }
     public virtual void DealDamageFailure(BattleEntity caller, int sd, int h)
     {
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact, h, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
     }
 
@@ -1353,7 +1373,7 @@ public class WM_Overstomp : WilexMove
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                     //StartCoroutine(caller.RevertScale(0.1f));
                     yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
             }
             else
@@ -1363,7 +1383,7 @@ public class WM_Overstomp : WilexMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
         else
@@ -1389,12 +1409,14 @@ public class WM_Overstomp : WilexMove
     {
         ulong propertyBlockB = (ulong)BattleHelper.DamageProperties.ContactHazard;
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, sd + 12 + 5 * level - 5, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
         caller.DealDamage(caller, sd + 3 * level - 3, 0, propertyBlockB, BattleHelper.ContactLevel.Contact);
     }
     public void DealDamageFailure(BattleEntity caller, int sd)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.ContactHazard;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 12 + 5 * level - 5, 0, 0, BattleHelper.ContactLevel.Contact);
         caller.DealDamage(caller, Mathf.CeilToInt(sd / 2f) + 3 * level - 3, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
     }
@@ -1458,6 +1480,7 @@ public class WM_SmartStomp : WM_HighStomp
     public override void DealDamageSuccess(BattleEntity caller, int sd)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, sd, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
 
         //Determining best status
@@ -1497,6 +1520,7 @@ public class WM_SmartStomp : WM_HighStomp
     }
     public override void DealDamageFailure(BattleEntity caller, int sd)
     {
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), 0, 0, BattleHelper.ContactLevel.Contact);
 
         //Determining best status
@@ -1801,10 +1825,12 @@ public class WM_TeamQuake : WilexMove
                 {
                     if (c == 1)
                     {
+                        target.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                         other.DealDamagePooledMultihit(caller, target, Mathf.CeilToInt(sdo / 2f) + 1, Mathf.CeilToInt(sd / 2f) + 1, BattleHelper.DamageType.Normal, blockA, BattleHelper.ContactLevel.Infinite, h, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
                     }
                     else
                     {
+                        target.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                         other.DealDamagePooledMultihit(caller, target, Mathf.CeilToInt(sdo / 2f) + 1, Mathf.CeilToInt(sd / 2f) + 1, BattleHelper.DamageType.Normal, blockB, BattleHelper.ContactLevel.Infinite, h, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
                     }
                 } else
@@ -2157,7 +2183,7 @@ public class WM_Slash : WilexMove
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
         target += Vector3.left * 0.5f * caller.width + 0.5f * Vector3.left;
         target.y = caller.homePos.y;
-        yield return StartCoroutine(caller.Move(target));
+        yield return StartCoroutine(caller.MoveEasing(target, (e) => MainManager.EasingOutIn(e)));
 
         if (caller.curTarget != null)
         {
@@ -2198,7 +2224,7 @@ public class WM_Slash : WilexMove
             }
             yield return new WaitForSeconds(0.1f);
         }
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 
     public virtual float ActionCommandTime()
@@ -2244,10 +2270,12 @@ public class WM_Slash : WilexMove
         if (result)
         {
             propertyBlock |= (ulong)BattleHelper.DamageProperties.AC_Success;
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
             caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
         }
         else
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
             caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
         }
     }
@@ -2335,7 +2363,7 @@ public class WM_MultiSlash : WM_Slash
 
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
         target += Vector3.left * 0.5f * caller.width + 0.5f * Vector3.left;
-        yield return StartCoroutine(caller.Move(target));
+        yield return StartCoroutine(caller.MoveEasing(target, (e) => MainManager.EasingOutIn(e)));
 
         if (caller.curTarget != null)
         {
@@ -2393,7 +2421,7 @@ public class WM_MultiSlash : WM_Slash
                 //yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             }
         }
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 
     public override float ActionCommandTime()
@@ -2524,10 +2552,12 @@ public class WM_MultiSlash : WM_Slash
 
         if (result)
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.SpinFast);
             caller.DealDamageMultihit(caller.curTarget, sd + 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
         }
         else
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.SpinFast);
             caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt((sd / 2f) + 1), BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
         }
     }
@@ -2661,13 +2691,13 @@ public class WM_SlipSlash : WilexMove
 
             yield return new WaitUntil(() => actionCommand.IsStarted());
 
-            yield return StartCoroutine(caller.Move(midpoint, caller.entitySpeed * 1.5f));
+            yield return StartCoroutine(caller.MoveEasing(midpoint, caller.entitySpeed * 1.5f, (e) => MainManager.EasingOut(e)));
             //doing multiple things at once
 
             bool move = true;
             IEnumerator MoveTracked()
             {
-                yield return caller.Move(target, caller.entitySpeed * 1.5f, "slipslashwalk");
+                yield return StartCoroutine(caller.MoveEasing(target, caller.entitySpeed * 1.5f, (e) => (MainManager.EasingIn(e)), "slipslashwalk"));
                 move = false;
             }
 
@@ -2687,12 +2717,15 @@ public class WM_SlipSlash : WilexMove
                             switch (level)
                             {
                                 case 1:
+                                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                                     caller.DealDamage(targets[i], sd - 2, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
                                     break;
                                 case 2:
+                                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                                     caller.DealDamage(targets[i], sd - 1, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
                                     break;
                                 default:
+                                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                                     caller.DealDamage(targets[i], sd + level - 3, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
                                     break;
                             }
@@ -2723,12 +2756,15 @@ public class WM_SlipSlash : WilexMove
                     switch (level)
                     {
                         case 1:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                             caller.DealDamage(targets[i], sd - 2, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
                             break;
                         case 2:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                             caller.DealDamage(targets[i], sd - 1, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
                             break;
                         default:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                             caller.DealDamage(targets[i], sd + level - 3, BattleHelper.DamageType.Normal, propertyBlockS, BattleHelper.ContactLevel.Weapon);
                             break;
                     }
@@ -2761,12 +2797,15 @@ public class WM_SlipSlash : WilexMove
                     switch (level)
                     {
                         case 1:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                             caller.DealDamage(caller.curTarget, sd + 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
                             break;
                         case 2:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                             caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
                             break;
                         default:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                             caller.DealDamage(caller.curTarget, sd + level - 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
                             break;
                     }
@@ -2776,12 +2815,15 @@ public class WM_SlipSlash : WilexMove
                     switch (level)
                     {
                         case 1:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                             caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                             break;
                         case 2:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                             caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                             break;
                         default:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                             caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + level - 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                             break;
                     }
@@ -2794,7 +2836,7 @@ public class WM_SlipSlash : WilexMove
                 yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             }
         }
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 
     public virtual IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
@@ -2899,11 +2941,13 @@ public class WM_PoisonSlash : WM_Slash
         if (result)
         {
             ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
             caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
             caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, (sbyte)(1 + level * 2)), caller.posId);
         }
         else
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
             caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
             caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Poison, 1, (sbyte)(1 + level)), caller.posId);
         }
@@ -3041,12 +3085,15 @@ public class WM_PreciseStab : WM_Slash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Water, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     caller.DealDamage(caller.curTarget, sd + 6, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     caller.DealDamage(caller.curTarget, sd + 2 + level * 2, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -3056,12 +3103,15 @@ public class WM_PreciseStab : WM_Slash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 6, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 2 + level * 2, BattleHelper.DamageType.Water, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -3149,7 +3199,7 @@ public class WM_SwordDischarge : WilexMove
 
         //Vector3 target = caller.curTarget.transform.position - caller.curTarget.width * Vector3.right;
         //target += Vector3.left * 0.5f;
-        //yield return StartCoroutine(caller.Move(target));
+        //yield return StartCoroutine(caller.MoveEasing(target));
 
         if (caller.curTarget != null)
         {
@@ -3195,7 +3245,7 @@ public class WM_SwordDischarge : WilexMove
                 yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             }
         }
-        //yield return StartCoroutine(caller.Move(caller.homePos));
+        //yield return StartCoroutine(caller.MoveEasing(caller.homePos));
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -3285,10 +3335,10 @@ public class WM_SwordDance : WilexMove
 
             yield return new WaitUntil(() => actionCommand.IsStarted());
 
-            yield return StartCoroutine(caller.Move(midpoint, caller.entitySpeed * 1.5f));
+            yield return StartCoroutine(caller.MoveEasing(midpoint, caller.entitySpeed * 1.5f, (e) => MainManager.EasingOut(e)));
             //doing multiple things at once
 
-            yield return StartCoroutine(caller.Move(target, caller.entitySpeed * 1.5f));
+            yield return StartCoroutine(caller.MoveEasing(target, caller.entitySpeed * 1.5f, (e) => MainManager.EasingIn(e)));
 
             caller.SetAnimation("slash_prepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());
@@ -3308,11 +3358,13 @@ public class WM_SwordDance : WilexMove
                 if (result)
                 {
                     properties |= (ulong)BattleHelper.DamageProperties.AC_Success;
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, sd + 3 - 3 * level, BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Weapon);
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(level * 3), Effect.INFINITE_DURATION));
                 }
                 else
                 {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f) + 3 - 3 * level), BattleHelper.DamageType.Normal, properties, BattleHelper.ContactLevel.Weapon);
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, (sbyte)(level), Effect.INFINITE_DURATION));
                 }
@@ -3325,36 +3377,7 @@ public class WM_SwordDance : WilexMove
             }
         }
 
-        List<BattleEntity> playerParty = BattleControl.Instance.GetEntities((e) => e.posId < 0);
-
-        //Store the info for the first entity on the list (for later)
-        Vector3 tempHPos = playerParty[0].homePos;
-        Vector3 tempPos = playerParty[0].transform.position;
-        //Not swapping posIds makes things still work
-        int tempID = playerParty[0].posId;
-
-        BattleControl.Instance.SwapEffectCasters(playerParty);
-
-        for (int i = 0; i < playerParty.Count; i++)
-        {
-            if (i == playerParty.Count - 1)
-            {
-                playerParty[i].homePos = tempHPos;
-                //playerParty[i].transform.position = tempPos;
-                playerParty[i].posId = tempID;
-            }
-            else
-            {
-                playerParty[i].homePos = playerParty[i + 1].homePos;
-                //playerParty[i].transform.position = playerParty[i + 1].transform.position;
-                playerParty[i].posId = playerParty[i + 1].posId;
-            }
-            if (playerParty[i] != caller)
-            {
-                StartCoroutine(playerParty[i].Move(playerParty[i].homePos, 15));
-            }
-        }
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 
     public virtual IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
@@ -3449,7 +3472,7 @@ public class WM_BoomerangSlash : WilexMove
 
         //Vector3 target = caller.curTarget.transform.position - caller.curTarget.width * Vector3.right;
         //target += Vector3.left * 0.5f;
-        //yield return StartCoroutine(caller.Move(target));
+        //yield return StartCoroutine(caller.MoveEasing(target));
 
         if (caller.curTarget != null)
         {
@@ -3482,20 +3505,24 @@ public class WM_BoomerangSlash : WilexMove
                 if (result)
                 {
                     propertyBlock |= (ulong)BattleHelper.DamageProperties.AC_Success;
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, sd - 2 + 2 * level, 0, propertyBlock, BattleHelper.ContactLevel.Infinite);
                 }
                 else
                 {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) - 2 + 2 * level, 0, propertyBlock, BattleHelper.ContactLevel.Infinite);
                 }
 
                 yield return new WaitForSeconds(0.5f);
                 if (result)
                 {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, sd - 1 + 2 * level, 0, propertyBlockB, BattleHelper.ContactLevel.Infinite);
                 }
                 else
                 {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) - 1 + 2 * level, 0, 0, BattleHelper.ContactLevel.Infinite);
                 }
             }
@@ -3506,7 +3533,7 @@ public class WM_BoomerangSlash : WilexMove
                 yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             }
         }
-        //yield return StartCoroutine(caller.Move(caller.homePos));
+        //yield return StartCoroutine(caller.MoveEasing(caller.homePos));
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -3618,12 +3645,15 @@ public class WM_DarkSlash : WM_Slash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, sd + 7, BattleHelper.DamageType.Dark, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, sd + 10, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, sd + 4 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -3633,12 +3663,15 @@ public class WM_DarkSlash : WM_Slash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 7, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 10, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f)) + 4 + 3 * level, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -3895,7 +3928,7 @@ public class WM_FlameBat : WilexMove
 
         //Vector3 target = caller.curTarget.transform.position - caller.curTarget.width * Vector3.right;
         //target += Vector3.left * 0.5f;
-        //yield return StartCoroutine(caller.Move(target));
+        //yield return StartCoroutine(caller.MoveEasing(target));
 
         if (caller.curTarget != null)
         {
@@ -3930,11 +3963,13 @@ public class WM_FlameBat : WilexMove
                 if (result)
                 {
                     ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt((sd / 2f) - 2 + level * 2), BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Infinite);
                     caller.InflictEffectForce(caller, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
                 }
                 else
                 {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 4f) - 1 + level, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                 }
             }
@@ -3945,7 +3980,7 @@ public class WM_FlameBat : WilexMove
                 yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             }
         }
-        //yield return StartCoroutine(caller.Move(caller.homePos));
+        //yield return StartCoroutine(caller.MoveEasing(caller.homePos));
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)

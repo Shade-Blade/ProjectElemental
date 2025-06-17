@@ -167,7 +167,11 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
         }
 
         upArrow.enabled = false; //menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
 
         visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
         for (int i = 0; i < menuEntriesS.Count; i++)
@@ -225,12 +229,18 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
             Clear();
             Init();
             selectorArrow.color = new Color(0.5f, 0.5f, 0.5f, 1);
+            upArrowControlHint.SetText("", true, true);
+            upArrowControlHint.enabled = false;
+            downArrowControlHint.SetText("", true, true);
+            downArrowControlHint.enabled = false;
             return;
         }
 
         selectorArrow.gameObject.SetActive(true);
         selectorArrow.enabled = true;
         selectorArrow.color = new Color(1, 1, 1, 1);
+        upArrowControlHint.enabled = true;
+        downArrowControlHint.enabled = true;
 
         int index = (int)state;
         menuIndex = index;
@@ -263,7 +273,11 @@ public class Pause_SectionQuest_List : Pause_SectionShared_BoxMenu
 
         //put this in init too
         upArrow.enabled = menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText(selectorArrow.color.grayscale < 0.75f ? "" : "<button,y>", true, true);
 
         if (menuEntries.Length == 0)
         {

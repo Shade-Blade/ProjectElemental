@@ -189,8 +189,8 @@ public class WorldPlayer : WorldEntity
         SuperKick
     }
 
-    ActionState actionState;
-    float timeSinceActionChange;
+    public ActionState actionState;
+    public float timeSinceActionChange;
 
     float timeSinceLastJump;
     bool enableDashLeniency;       //Used for making the dash input more lenient (allow for holding input)
@@ -595,9 +595,11 @@ public class WorldPlayer : WorldEntity
         }
     }
 
+    //Potential future problem:
+    //This is in Update()
+    //  (when this is doing physics things so it should be in fixedupdate())
     void ControlUpdate()
     {
-        //Debug.Log(actionState);
         Vector2 inputXY = Vector2.zero;
 
         inputXY.x = InputManager.GetAxisHorizontal();
@@ -653,6 +655,7 @@ public class WorldPlayer : WorldEntity
         }
 
 
+        //grounded = force neutral for fall states and stuff
         switch (actionState)
         {
             case ActionState.Jump:
@@ -933,7 +936,14 @@ public class WorldPlayer : WorldEntity
 
     void ScriptedUpdate()
     {
-        rb.velocity = scriptedInput.x * GetSpeed() * Vector3.right + scriptedInput.y * GetSpeed() * Vector3.forward + rb.velocity.y * Vector3.up;
+        //don't?
+        if (actionState == ActionState.LaunchFall)
+        {
+        } else
+        {
+            rb.velocity = scriptedInput.x * GetSpeed() * Vector3.right + scriptedInput.y * GetSpeed() * Vector3.forward + rb.velocity.y * Vector3.up;
+        }
+
         scriptedInput = Vector3.zero;
         disabledTime = 0.5f;
 
@@ -1618,6 +1628,12 @@ public class WorldPlayer : WorldEntity
 
     public void DoLanding(Collision collision)
     {
+        //forbid landing right after launch to fix a bug
+        if (timeSinceLaunch < Time.fixedDeltaTime * 2)
+        {
+            return;
+        }
+
         //lastGroundedHeight = contact.point.y;
         //floorNormal = contact.normal.normalized;
         isGrounded = true;
@@ -2663,7 +2679,8 @@ public class WorldPlayer : WorldEntity
         //Debug.Log(antiStuck + " " + antiStuckTime);
 
         //should anti stuck apply
-        if (actionState != ActionState.Hover && actionState != ActionState.NoClip && airTime > 0 && Mathf.Abs(antiStuck) / Time.fixedDeltaTime < ANTI_STUCK_DISTANCE)
+        //no anti stuck in cutscenes?
+        if (actionState != ActionState.Hover && actionState != ActionState.NoClip && airTime > 0 && Mathf.Abs(antiStuck) / Time.fixedDeltaTime < ANTI_STUCK_DISTANCE && !scriptedAnimation)
         {
             antiStuckTime += Time.fixedDeltaTime;
         } else
@@ -2763,7 +2780,7 @@ public class WorldPlayer : WorldEntity
                 {
                     rb.velocity = (rb.velocity - hit.normal * dot).normalized * speed;
                 }
-                //Debug.Log("snap " + hit.point);
+                Debug.Log("snap " + hit.point);
             }
         }
     }
@@ -3299,6 +3316,9 @@ public class WorldPlayer : WorldEntity
         //ParticleSystem ps = eo.GetComponent<ParticleSystem>();
         //ps.collision.SetPlane(0, floorNormalObject.transform);
 
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Dig);
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_DigPerpetual);
+
         perpetualParticleObject = eo;
         stalePerpetualParticles.Add(eo);
 
@@ -3372,6 +3392,8 @@ public class WorldPlayer : WorldEntity
             cc.height = 0.75f;
         }
 
+        MainManager.Instance.StopSound(gameObject, MainManager.Sound.SFX_Overworld_DigPerpetual);
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Undig);
 
         if (!MainManager.Instance.Cheat_SplitParty)
         {
@@ -3717,6 +3739,8 @@ public class WorldPlayer : WorldEntity
         {
             followers[i].SendAnimationData("aetherize");
         }
+
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Effect_Ethereal);
     }
 
     public void LightStart()
@@ -3757,6 +3781,8 @@ public class WorldPlayer : WorldEntity
         {
             followers[i].SendAnimationData("illuminate");
         }
+
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Effect_Illuminate);
     }
 
     public void AetherUpdate()
@@ -4375,6 +4401,8 @@ public class WorldPlayer : WorldEntity
         //Debug.Log("Jump " + timeSinceLastJump + " " + Time.deltaTime + " " + Time.time);
         rb.velocity = intendedMovement - rb.velocity.y * Vector3.up + Vector3.up * jumpImpulse;
 
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_JumpGeneric);
+
         if (lastFloorSticky)
         {
             rb.velocity += Vector3.up * STICKY_FLOOR_JUMP_PENALTY * 0.5f;
@@ -4429,6 +4457,8 @@ public class WorldPlayer : WorldEntity
         GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_Jump_Spark"), MainManager.Instance.mapScript.transform);
         effect.transform.position = transform.position;
 
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_JumpDouble);
+
         applyJumpLift = true;
         applyDoubleJumpLift = true;
         SetActionState(ActionState.DoubleJump);
@@ -4464,6 +4494,8 @@ public class WorldPlayer : WorldEntity
         inputXY = MainManager.Instance.WorldspaceXZTransform(inputXY);
 
         Vector3 newVelocity = inputXY.x * GetDashSpeed() * Vector3.right + inputXY.y * GetDashSpeed() * Vector3.forward + Vector3.up * dashJumpImpulse;
+
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_JumpDash);
 
         if (lastFloorSticky)
         {
@@ -4530,6 +4562,8 @@ public class WorldPlayer : WorldEntity
 
         //???
         PlatformJumpMomentum();
+
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_JumpSuper);
 
         /*
         if (!isGrounded)
@@ -4603,6 +4637,8 @@ public class WorldPlayer : WorldEntity
             rb.velocity += Vector3.up * STICKY_FLOOR_JUMP_PENALTY * 0.5f;
         }
 
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_JumpDash);
+
         /*
         if (!isGrounded)
         {
@@ -4659,6 +4695,8 @@ public class WorldPlayer : WorldEntity
 
         //???
         PlatformJumpMomentum();
+
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_JumpSuper);
 
         /*
         if (!isGrounded)

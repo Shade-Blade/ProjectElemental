@@ -909,10 +909,23 @@ public class PlayerData
 
     public static int GetMaxLevel()
     {
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_PrismaticShell))
+        {
+            return MAX_LEVEL_EXTENDED;
+        }
         return MAX_LEVEL;
     }
     public static int GetMaxUpgrades()
     {
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_PrismaticShell))
+        {
+            if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
+            {
+                return (int)(MAX_UPGRADES_EXTENDED * 1.5f);  //note that health is not upgradeable
+            }
+            return MAX_UPGRADES_EXTENDED;
+        }
+
         if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Greed))
         {
             return (int)(MAX_UPGRADES * 1.5f);  //note that health is not upgradeable
@@ -1103,6 +1116,15 @@ public class PlayerData
 
     public int GetMaxInventorySize()
     {
+        //?
+        maxInventorySize = 10;
+
+        if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_DarkShell))
+        {
+            maxInventorySize = 15;
+        }
+
+
         if (MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Gluttony))
         {
             return maxInventorySize * 2 + itemInventory.FindAll((e) => (e.modifier == Item.ItemModifier.Void)).Count;
@@ -2262,7 +2284,7 @@ public class MainManager : MonoBehaviour
     private Canvas intCanvas;
     private Canvas intCanvasS;
     [SerializeField]
-    private FadeoutScript fadeOutScript;
+    public FadeoutScript fadeOutScript;
     [SerializeField]
     private BattleFadeoutScript battleFadeOutScript;
     private GameObject textbox; //current textbox
@@ -2469,7 +2491,6 @@ public class MainManager : MonoBehaviour
         GF_FileCode_Sloth,
         GF_FileCode_Pride,
         GF_FileCode_Lust,
-
         GF_FileCode_Randomizer,
 
         GF_FileCodeExplain_Greed,
@@ -2479,13 +2500,18 @@ public class MainManager : MonoBehaviour
         GF_FileCodeExplain_Sloth,
         GF_FileCodeExplain_Pride,
         GF_FileCodeExplain_Lust,
-
         GF_FileCodeExplain_Randomizer,
-
-
 
         GF_RandomItemModifiers,
         GF_RandomStatuses,
+
+        GF_LightShell,
+        GF_DarkShell,
+        GF_AirShell,
+        GF_EarthShell,
+        GF_FireShell,
+        GF_WaterShell,
+        GF_PrismaticShell,
 
         GF_QuestStart_Prologue_Test,
         GF_QuestComplete_Prologue_Test,
@@ -2849,7 +2875,15 @@ public class MainManager : MonoBehaviour
         XP10,
         XP25,
         XP50,
-        XP99
+        XP99,
+        ItemBag2,
+        ItemBag4,
+        ItemBag8,
+        ItemBagX,
+        RecipeBag2,
+        RecipeBag4,
+        RecipeBag8,
+        RecipeBagX,
     }
 
     public enum Sound
@@ -2895,6 +2929,11 @@ public class MainManager : MonoBehaviour
         SFX_Soul,
         SFX_Stamina,
         SFX_Coins,
+        SFX_NegativeHeal,
+        SFX_NegativeEnergize,
+        SFX_NegativeSoul,
+        SFX_NegativeStamina,
+        SFX_NegativeCoins,
         SFX_Buff,
         SFX_Debuff,
         SFX_EffectWearOff,
@@ -3062,12 +3101,90 @@ public class MainManager : MonoBehaviour
         SFX_Talk_Mosquito,
         SFX_Talk_Plaguebud,
 
-        SFX_NPCSquish,
-        SFX_EnemyAlert,
+        SFX_Overworld_NPCSquish,
+        SFX_Overworld_EnemyAlert,
         SFX_EnemyReact,
         SFX_EnemyDie,
         SFX_PlayerDie,
 
+        SFX_Overworld_JumpGeneric,
+        SFX_Overworld_JumpDash,
+        SFX_Overworld_JumpDouble,
+        SFX_Overworld_JumpSuper,
+
+        SFX_Overworld_Dig,
+        SFX_Overworld_DigPerpetual,
+        SFX_Overworld_Undig,
+
+        Music_Title,
+
+        Music_Battle_BattleWin,
+        Music_Battle_LevelUp,
+        Music_Battle_Normal,
+
+        Music_Battle_NormalMidgame,
+        Music_Battle_NormalEndgame,
+        Music_Battle_NormalEpilogue,
+        Music_Battle_Scripted,
+        Music_Battle_Boss,
+
+        Music_Battle_BossC0,
+        Music_Battle_BossC1,
+        Music_Battle_BossC2,
+        Music_Battle_BossC3,
+        Music_Battle_BossC4,
+        Music_Battle_BossC5,
+        Music_Battle_BossC6,
+        Music_Battle_BossC7,
+        Music_Battle_BossC8,
+        Music_Battle_BossC9Order,
+        Music_Battle_BossC9Chaos,
+
+        Music_Battle_Chaos,
+        Music_Battle_Cutle,
+
+        Music_Area_Generic,
+
+        Music_Area_SolarGrove,
+        Music_Area_Dawnhold,
+        Music_Area_CrystalHills,
+        Music_Area_CrystalCity,
+        Music_Area_CrystalCitadel,
+        Music_Area_RealmOfPossibility,
+        Music_Area_EdgeOfPossibility,
+        Music_Area_VerdantForest,
+        Music_Area_Swamproot,
+        Music_Area_SacredGrove,
+        Music_Area_TrialOfSimplicity,
+        Music_Area_TempestDesert,
+        Music_Area_Windspire,
+        Music_Area_BanditCaverns,
+        Music_Area_HiddenOasis,
+        Music_Area_TrialOfHaste,
+        Music_Area_GemstoneIslands,
+        Music_Area_SapphireIsland,
+        Music_Area_SapphireAtoll,
+        Music_Area_TrialOfPatience,
+        Music_Area_InfernalCaldera,
+        Music_Area_Pyroguard,
+        Music_Area_MoltenPit,
+        Music_Area_TrialOfZeal,
+        Music_Area_ShroudedValley,
+        Music_Area_Foulbank,
+        Music_Area_SinisterCave,
+        Music_Area_TrialOfAmbition,
+        Music_Area_RadiantPlateau,
+        Music_Area_Lumistar,
+        Music_Area_RadiantPeak,
+        Music_Area_TrialOfResolve,
+        Music_Area_AetherTrench,
+        Music_Area_Metalmaw,
+        Music_Area_MoltenTitan,
+        Music_Area_GoldenPort,
+        Music_Area_ForsakenMountains,
+        Music_Area_ForsakenPass,
+        Music_Area_HiddenVillage,
+        Music_Area_ForsakenPeak,
     }
     public enum SoundType
     {
@@ -3075,6 +3192,33 @@ public class MainManager : MonoBehaviour
         SFX,        //sfx
         Text,       //text bleeps
         System,     //menus
+    }
+    public enum Music
+    {
+        None,
+
+        Battle_Normal,
+
+        Battle_NormalMidgame,
+        Battle_NormalEndgame,
+        Battle_NormalEpilogue,
+        Battle_Scripted,
+        Battle_Boss,
+
+        Battle_BossC0,
+        Battle_BossC1,
+        Battle_BossC2,
+        Battle_BossC3,
+        Battle_BossC4,
+        Battle_BossC5,
+        Battle_BossC6,
+        Battle_BossC7,
+        Battle_BossC8,
+        Battle_BossC9Order,
+        Battle_BossC9Chaos,
+
+        Battle_Chaos,
+        Battle_Cutle,
     }
 
     //area flags are stored per area, but are cleared when leaving area (used for things like enemy spawning)
@@ -3147,6 +3291,11 @@ public class MainManager : MonoBehaviour
 
     public float greedPartialCoins;
 
+    public List<KeyValuePair<Sound, AudioSource>> audio_menu = new List<KeyValuePair<Sound, AudioSource>>();
+    public List<KeyValuePair<Sound, AudioSource>> audio_sfx = new List<KeyValuePair<Sound, AudioSource>>();
+    public List<KeyValuePair<Sound, AudioSource>> audio_text = new List<KeyValuePair<Sound, AudioSource>>();
+    public List<KeyValuePair<Sound, AudioSource>> audio_music = new List<KeyValuePair<Sound, AudioSource>>();
+
     public enum GameConst
     {
         PartyCount,     //# of characters in full party
@@ -3165,8 +3314,9 @@ public class MainManager : MonoBehaviour
     //where to put you on the world map and what to say on the pause screen
     public enum WorldLocation
     {
-        None = 0,
+        Nowhere = 0,
         SolarGrove,
+        Dawnhold,
         CrystalHills,
         CrystalCity,
         CrystalCitadel,
@@ -4062,6 +4212,109 @@ public class MainManager : MonoBehaviour
                         playerData.AddXP(99);
                         yield return StartCoroutine(GetItemPopupBlocking(pu));
                         yield break;
+                    case MiscSprite.ItemBag2:
+                    case MiscSprite.ItemBag4:
+                    case MiscSprite.ItemBag8:
+                    case MiscSprite.ItemBagX:
+                        int iblc = 2;
+                        switch (pu.misc)
+                        {
+
+                            case MiscSprite.ItemBag2:
+                                iblc = 2;
+                                break;
+                            case MiscSprite.ItemBag4:
+                                iblc = 4;
+                                break;
+                            case MiscSprite.ItemBag8:
+                                iblc = 8;
+                                break;
+                            case MiscSprite.ItemBagX:
+                                iblc = (playerData.GetMaxInventorySize() - playerData.itemInventory.Count);
+                                break;
+                        }
+                        for (int i = 0; i < iblc; i++)
+                        {
+                            //Transform into the item to give to you
+                            Item.ItemType itm;
+                            while (true)
+                            {
+                                itm = (Item.ItemType)RandomGenerator.GetIntRange(0, 256);
+                                if (!Item.GetItemDataEntry(itm).isRecipe)
+                                {
+                                    break;
+                                }
+                            }
+                            bool mim = true;
+                            pu.type = PickupUnion.PickupType.Item;
+                            pu.item = new Item(itm, Item.ItemModifier.None);
+                            if (pu.item.type != Item.ItemType.None)
+                            {
+                                mim = playerData.AddItem(pu.item);
+                            }
+                            Debug.Log(pu.item);
+                            if (mim)
+                            {
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                            }
+                            else
+                            {
+                                //Too many items!
+                                yield return StartCoroutine(TooManyItemsPopupBlocking(pu));
+                            }
+                        }
+                        yield break;
+                    case MiscSprite.RecipeBag2:
+                    case MiscSprite.RecipeBag4:
+                    case MiscSprite.RecipeBag8:
+                    case MiscSprite.RecipeBagX:
+                        int rblc = 2;
+                        switch (pu.misc)
+                        {
+                            case MiscSprite.ItemBag2:
+                                rblc = 2;
+                                break;
+                            case MiscSprite.ItemBag4:
+                                rblc = 4;
+                                break;
+                            case MiscSprite.ItemBag8:
+                                rblc = 8;
+                                break;
+                            case MiscSprite.ItemBagX:
+                                rblc = (playerData.GetMaxInventorySize() - playerData.itemInventory.Count);
+                                break;
+                        }
+                        for (int i = 0; i < rblc; i++)
+                        {
+                            //Transform into the item to give to you
+                            Item.ItemType itr;
+                            while (true)
+                            {
+                                itr = (Item.ItemType)RandomGenerator.GetIntRange(0, 256);
+                                if (Item.GetItemDataEntry(itr).isRecipe)
+                                {
+                                    break;
+                                }
+                            }
+                            bool mir = true;
+                            pu.type = PickupUnion.PickupType.Item;
+                            pu.item = new Item(itr, Item.ItemModifier.None);
+                            if (pu.item.type != Item.ItemType.None)
+                            {
+                                mir = playerData.AddItem(pu.item);
+                            }
+                            Debug.Log(pu.item);
+                            if (mir)
+                            {
+                                yield return StartCoroutine(GetItemPopupBlocking(pu));
+                            }
+                            else
+                            {
+                                //Too many items!
+                                yield return StartCoroutine(TooManyItemsPopupBlocking(pu));
+                            }
+                        }
+                        break;
                 }
 
                 yield return StartCoroutine(GetItemPopupBlocking(pu));
@@ -4390,8 +4643,102 @@ public class MainManager : MonoBehaviour
                     case MiscSprite.XP99:
                         playerData.AddXP(99);
                         break;
+                    case MiscSprite.ItemBag2:
+                    case MiscSprite.ItemBag4:
+                    case MiscSprite.ItemBag8:
+                    case MiscSprite.ItemBagX:
+                        int iblc = 2;
+                        switch (pu.misc)
+                        {
+
+                            case MiscSprite.ItemBag2:
+                                iblc = 2;
+                                break;
+                            case MiscSprite.ItemBag4:
+                                iblc = 4;
+                                break;
+                            case MiscSprite.ItemBag8:
+                                iblc = 8;
+                                break;
+                            case MiscSprite.ItemBagX:
+                                iblc = (playerData.GetMaxInventorySize() - playerData.itemInventory.Count);
+                                break;
+                        }
+                        for (int i = 0; i < iblc; i++)
+                        {
+                            InstantRandomItem();
+                        }
+                        break;
+                    case MiscSprite.RecipeBag2:
+                    case MiscSprite.RecipeBag4:
+                    case MiscSprite.RecipeBag8:
+                    case MiscSprite.RecipeBagX:
+                        int rblc = 2;
+                        switch (pu.misc)
+                        {
+                            case MiscSprite.RecipeBag2:
+                                rblc = 2;
+                                break;
+                            case MiscSprite.RecipeBag4:
+                                rblc = 4;
+                                break;
+                            case MiscSprite.RecipeBag8:
+                                rblc = 8;
+                                break;
+                            case MiscSprite.RecipeBagX:
+                                rblc = (playerData.GetMaxInventorySize() - playerData.itemInventory.Count);
+                                break;
+                        }
+                        for (int i = 0; i < rblc; i++)
+                        {
+                            InstantRandomRecipe();
+                        }
+                        break;
                 }
                 break;
+        }
+    }
+
+    public void InstantRandomItem()
+    {
+        PickupUnion pu = new PickupUnion();
+        //Transform into the item to give to you
+        Item.ItemType it;
+        while (true)
+        {
+            it = (Item.ItemType)RandomGenerator.GetIntRange(0, 256);
+            if (!Item.GetItemDataEntry(it).isRecipe)
+            {
+                break;
+            }
+        }
+        bool mi = true;
+        pu.type = PickupUnion.PickupType.Item;
+        pu.item = new Item(it, Item.ItemModifier.None);
+        if (pu.item.type != Item.ItemType.None)
+        {
+            mi = playerData.AddItem(pu.item);
+        }
+    }
+    public void InstantRandomRecipe()
+    {
+        PickupUnion pu = new PickupUnion();
+        //Transform into the item to give to you
+        Item.ItemType it;
+        while (true)
+        {
+            it = (Item.ItemType)RandomGenerator.GetIntRange(0, 256);
+            if (Item.GetItemDataEntry(it).isRecipe)
+            {
+                break;
+            }
+        }
+        bool mi = true;
+        pu.type = PickupUnion.PickupType.Item;
+        pu.item = new Item(it, Item.ItemModifier.None);
+        if (pu.item.type != Item.ItemType.None)
+        {
+            mi = playerData.AddItem(pu.item);
         }
     }
 
@@ -6272,8 +6619,8 @@ public class MainManager : MonoBehaviour
         keyItemSprites = Resources.LoadAll<Sprite>("Sprites/Items/KeyItemSpritesV2");
         badgeSprites = Resources.LoadAll<Sprite>("Sprites/Badges/BadgeSpritesV6");
         ribbonSprites = Resources.LoadAll<Sprite>("Sprites/Ribbons/RibbonSpritesV2");
-        commonSprites = Resources.LoadAll<Sprite>("Sprites/CommonSpritesV2");
-        miscSprites = Resources.LoadAll<Sprite>("Sprites/Misc/MiscSpritesV1");
+        commonSprites = Resources.LoadAll<Sprite>("Sprites/CommonSpritesV3");
+        miscSprites = Resources.LoadAll<Sprite>("Sprites/Misc/MiscSpritesV2");
 
         effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV11");
         stateSprites = Resources.LoadAll<Sprite>("Sprites/Battle/StateIconsV5");
@@ -6460,7 +6807,7 @@ public class MainManager : MonoBehaviour
 
         string[] splitB = split[4].Split(",");
 
-        WorldLocation wl = WorldLocation.None;
+        WorldLocation wl = WorldLocation.Nowhere;
         MapID mid = MapID.None;
         Vector3 newPos = Vector3.zero;
 
@@ -6823,7 +7170,7 @@ public class MainManager : MonoBehaviour
 
         lastSaveTimestamp = 0;
         lastSaveMap = MapID.None;
-        lastSaveLocation = WorldLocation.None;
+        lastSaveLocation = WorldLocation.Nowhere;
 
         Dictionary<GlobalFlag, bool> newFlags = new Dictionary<GlobalFlag, bool>();
 
@@ -6840,7 +7187,7 @@ public class MainManager : MonoBehaviour
         output += "\n";
         output += UnparseGlobalVarDictionary(new Dictionary<GlobalVar, string>());
         output += "\n";
-        output += WorldLocation.None;
+        output += WorldLocation.Nowhere;
         output += ",";
         output += MapID.RabbitHole_Lobby;
         output += ",";
@@ -6875,7 +7222,7 @@ public class MainManager : MonoBehaviour
 
         string[] splitB = split[4].Split(",");
 
-        WorldLocation wl = WorldLocation.None;
+        WorldLocation wl = WorldLocation.Nowhere;
         MapID mid = MapID.None;
         Vector3 newPos = Vector3.zero;
 
@@ -7101,7 +7448,7 @@ public class MainManager : MonoBehaviour
 
                 string[] splitB = split[4].Split(",");
 
-                WorldLocation wl = WorldLocation.None;
+                WorldLocation wl = WorldLocation.Nowhere;
                 MapID mid = MapID.None;
                 Vector3 newPos = Vector3.zero;
 
@@ -7118,7 +7465,7 @@ public class MainManager : MonoBehaviour
                 output.name = (index + 1) + ". " + saveName;
                 output.worldLocation = GetAreaName(wl);
                 output.worldMap = GetMapName(mid);
-                output.playtime = ParseTime(playTime);
+                output.playtime = playTime == 0 ? "<color,blue>New File</color>" : ParseTime(playTime);
                 output.specialSprites = GetSpecialString(new_globalFlags, new_globalVars);
                 output.progressSprites = GetProgressString(new_globalFlags, new_globalVars);
                 Color? col = GetSaveColor(new_globalFlags, new_globalVars);
@@ -7432,6 +7779,17 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    public IEnumerator FastTravelWarp(WorldLocation wl)
+    {
+        //need to fadeout the last map
+        fadeOutScript.SnapFade(1);
+
+        //todo: fix 
+        MapID mid = MapID.Test_Main;
+        int exit = 0;
+
+        yield return ChangeMap(mid, exit);
+    }
     public IEnumerator ChangeMap(MapID mapName, int exit, Vector3 offsetPos = default, float yawOffset = 0)
     {
         if (mapName == MapID.None)
@@ -7439,7 +7797,7 @@ public class MainManager : MonoBehaviour
             Debug.LogError("Invalid map ID");
         }
 
-        WorldLocation wl = WorldLocation.None;
+        WorldLocation wl = WorldLocation.Nowhere;
         SkyboxID sid = curSkybox;
         //delete current map
         MapChangeCleanup();
@@ -7797,7 +8155,13 @@ public class MainManager : MonoBehaviour
         //hacky fix for a problem I'm having
         //WorldPlayer.Instance.rb.velocity = Vector3.zero;
         //I forgot what this was fixing, so I hope only zeroing out the y velocity is not a problem
-        WorldPlayer.Instance.rb.velocity -= XZProjectPreserve(WorldPlayer.Instance.rb.velocity);
+
+        //hmm what happens if I just remove it completely
+        //Debug.Log("wp" + WorldPlayer.Instance.rb.velocity);
+        if (WorldPlayer.Instance.actionState != WorldPlayer.ActionState.LaunchFall)
+        {
+            WorldPlayer.Instance.rb.velocity -= XZProjectPreserve(WorldPlayer.Instance.rb.velocity);
+        }
     }
 
 
@@ -7999,6 +8363,8 @@ public class MainManager : MonoBehaviour
 
     public SoundType GetSoundType(string soundName)
     {
+        //note: music is in its own folder
+        //but some world ish music / ambience won't be there?
         if (soundName.Contains("Music") || soundName.Contains("Song") || soundName.Contains("Ambient"))
         {
             return SoundType.Music;
@@ -8015,12 +8381,95 @@ public class MainManager : MonoBehaviour
         return SoundType.SFX;
     }
 
+    public void AddSoundToList(Sound s, AudioSource aso)
+    {
+        SoundValidate();
+        switch (GetSoundType(s.ToString()))
+        {
+            case SoundType.System:
+                audio_menu.Add(new KeyValuePair<Sound, AudioSource>(s, aso));
+                break;
+            case SoundType.SFX:
+                audio_sfx.Add(new KeyValuePair<Sound, AudioSource>(s, aso));
+                break;
+            case SoundType.Text:
+                audio_text.Add(new KeyValuePair<Sound, AudioSource>(s, aso));
+                break;
+            case SoundType.Music:   //don't
+                audio_music.Add(new KeyValuePair<Sound, AudioSource>(s, aso));
+                break;
+        }
+    }
+    public void SoundValidate()
+    {
+        for (int i = 0; i < audio_menu.Count; i++)
+        {
+            if (i < 0)
+            {
+                continue;
+            }
+            if (audio_menu[i].Value == null)
+            {
+                audio_menu.RemoveAt(i);
+                i--;
+                continue;
+            }
+        }
+        for (int i = 0; i < audio_sfx.Count; i++)
+        {
+            if (i < 0)
+            {
+                continue;
+            }
+            if (audio_sfx[i].Value == null)
+            {
+                audio_sfx.RemoveAt(i);
+                i--;
+                continue;
+            }
+        }
+        for (int i = 0; i < audio_text.Count; i++)
+        {
+            if (i < 0)
+            {
+                continue;
+            }
+            if (audio_text[i].Value == null)
+            {
+                audio_text.RemoveAt(i);
+                i--;
+                continue;
+            }
+        }
+        for (int i = 0; i < audio_music.Count; i++)
+        {
+            if (i < 0)
+            {
+                continue;
+            }
+            if (audio_music[i].Value == null)
+            {
+                audio_music.RemoveAt(i);
+                i--;
+                continue;
+            }
+        }
+    }
+
     public void PlaySound(GameObject parent, Sound s, float pitch = 1, float randomDeviance = 0f)
     {
+        if (s == Sound.None)
+        {
+            return;
+        }
         StartCoroutine(PlaySoundCoroutine(parent, s, pitch, randomDeviance));
     }
     public IEnumerator PlaySoundCoroutine(GameObject parent, Sound s, float pitch = 1, float randomDeviance = 0f)
     {
+        if (s == Sound.None)
+        {
+            yield break;
+        }
         if (parent == null)
         {
             yield return StartCoroutine(PlayGlobalSoundCoroutine(s, pitch, randomDeviance));
@@ -8054,14 +8503,280 @@ public class MainManager : MonoBehaviour
     }
     public void StopSound(GameObject parent, Sound s)
     {
+        List<AudioSource> matchingSounds = new List<AudioSource>();
+        switch (GetSoundType(s.ToString()))
+        {
+            case SoundType.System:
+                foreach (KeyValuePair<Sound, AudioSource> kvp in audio_menu)
+                {
+                    if (kvp.Key == s)
+                    {
+                        matchingSounds.Add(kvp.Value);
+                    }
+                }
+                break;
+            case SoundType.SFX:
+                foreach (KeyValuePair<Sound, AudioSource> kvp in audio_sfx)
+                {
+                    if (kvp.Key == s)
+                    {
+                        matchingSounds.Add(kvp.Value);
+                    }
+                }
+                break;
+            case SoundType.Text:
+                foreach (KeyValuePair<Sound, AudioSource> kvp in audio_text)
+                {
+                    if (kvp.Key == s)
+                    {
+                        matchingSounds.Add(kvp.Value);
+                    }
+                }
+                break;
+
+            case SoundType.Music:
+                foreach (KeyValuePair<Sound, AudioSource> kvp in audio_music)
+                {
+                    if (kvp.Key == s)
+                    {
+                        matchingSounds.Add(kvp.Value);
+                    }
+                }
+                break;
+        }
+
         foreach (AudioSource aso in parent.GetComponents<AudioSource>())
         {
-            if (aso.clip.name.Equals(s.ToString()))
+            if (matchingSounds.Contains(aso))
             {
                 aso.Stop();
             }
         }
     }
+    public void StopSound(GameObject parent, SoundType s)
+    {
+        List<AudioSource> matchingSounds = new List<AudioSource>();
+        switch (GetSoundType(s.ToString()))
+        {
+            case SoundType.System:
+                foreach (KeyValuePair<Sound, AudioSource> kvp in audio_menu)
+                {
+                    matchingSounds.Add(kvp.Value);
+                }
+                break;
+            case SoundType.SFX:
+                foreach (KeyValuePair<Sound, AudioSource> kvp in audio_sfx)
+                {
+                    matchingSounds.Add(kvp.Value);
+                }
+                break;
+            case SoundType.Text:
+                foreach (KeyValuePair<Sound, AudioSource> kvp in audio_text)
+                {
+                    matchingSounds.Add(kvp.Value);
+                }
+                break;
+
+            case SoundType.Music:
+                foreach (KeyValuePair<Sound, AudioSource> kvp in audio_music)
+                {
+                    matchingSounds.Add(kvp.Value);
+                }
+                break;
+        }
+
+        foreach (AudioSource aso in parent.GetComponents<AudioSource>())
+        {
+            if (matchingSounds.Contains(aso))
+            {
+                aso.Stop();
+            }
+        }
+    }
+
+    public void ReplaceMusic(Sound s)
+    {
+        //Is this music the exact same thing that's already playing? If so: ignore
+        foreach (KeyValuePair<Sound, AudioSource> kvp in audio_music)
+        {
+            if (kvp.Value.clip == null)
+            {
+                Debug.LogWarning("Music track list contains broken audio");
+                continue;
+            }
+            if (kvp.Key == s)
+            {
+                return;
+            }
+        }
+        PopMusic();
+        PlayMusic(s);
+    }
+    public void ReplaceMusic(Sound s, float fade)
+    {
+        StartCoroutine(ReplaceMusicCoroutine(s, fade));
+    }
+    public IEnumerator ReplaceMusicCoroutine(Sound s, float fade)
+    {
+        //Is this music the exact same thing that's already playing? If so: ignore
+        foreach (KeyValuePair<Sound, AudioSource> kvp in audio_music)
+        {
+            Debug.Log(kvp.Key);
+            if (kvp.Key == s)
+            {
+                yield break;
+            }
+        }
+        yield return StartCoroutine(PlayMusicCoroutine(s, fade));
+        if (audio_music.Count > 1)
+        {
+            Destroy(audio_music[audio_music.Count - 2].Value);
+            audio_music.RemoveAt(audio_music.Count - 2);
+        }
+    }
+
+    public void PlayMusic(Sound s)
+    {
+        //Is this music the exact same thing that's already playing? If so: ignore
+        foreach (KeyValuePair<Sound, AudioSource> kvp in audio_music)
+        {
+            if (kvp.Key == s)
+            {
+                return;
+            }
+        }
+
+        AudioSource aso = gameObject.AddComponent<AudioSource>();
+
+        //Load clip from resources?
+        //Will become inefficient later: implement some kind of cache?
+        string pathString = "Audio/" + s.ToString().Replace("_", "/");
+        aso.clip = Resources.Load<AudioClip>(pathString);
+
+        if (aso.clip == null)
+        {
+            Debug.LogWarning("Missing music path: " + pathString);
+        }
+
+        //Wait until done
+        aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
+        aso.pitch = 1;
+        aso.Play();
+
+        if (audio_music.Count > 0)
+        {
+            audio_music[audio_music.Count - 1].Value.mute = true;
+        }
+        audio_music.Add(new KeyValuePair<Sound, AudioSource>(s, aso));
+    }
+    public void PopMusic()
+    {
+        if (audio_music.Count == 0)
+        {
+            return;
+        }
+        Destroy(audio_music[audio_music.Count - 1].Value);
+        audio_music.RemoveAt(audio_music.Count - 1);
+        if (audio_music.Count > 0)
+        {
+            audio_music[audio_music.Count - 1].Value.mute = false;
+        }
+    }
+    public void PlayMusic(Sound s, float fadeIn)
+    {
+        StartCoroutine(PlayMusicCoroutine(s, fadeIn));
+    }
+    public void PopMusic(float fadeOut)
+    {
+        if (audio_music.Count == 0)
+        {
+            return;
+        }
+        StartCoroutine(PopMusicCoroutine(fadeOut));
+    }
+    public IEnumerator PlayMusicCoroutine(Sound s, float duration)
+    {
+        //Is this music the exact same thing that's already playing? If so: ignore
+        foreach (KeyValuePair<Sound, AudioSource> kvp in audio_music)
+        {
+            if (kvp.Key == s)
+            {
+                yield break;
+            }
+        }
+
+        AudioSource aso = gameObject.AddComponent<AudioSource>();
+
+        //Load clip from resources?
+        //Will become inefficient later: implement some kind of cache?
+        string pathString = "Audio/" + s.ToString().Replace("_", "/");
+        aso.clip = Resources.Load<AudioClip>(pathString);
+
+        if (aso.clip == null)
+        {
+            Debug.LogWarning("Missing music path: " + pathString);
+        }
+
+        //Wait until done
+        aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
+        aso.pitch = 1;
+        aso.volume = 0;
+        aso.Play();
+
+        float completion = 0;
+        while (completion < 1)
+        {
+            aso.volume = completion * GetSoundMultiplier(SoundType.Music);
+            if (audio_music.Count > 0)
+            {
+                audio_music[audio_music.Count - 1].Value.volume = (1 - completion) * GetSoundMultiplier(SoundType.Music);
+            }
+
+            completion += (Time.deltaTime / duration);
+            yield return null;
+        }
+
+        if (audio_music.Count > 0)
+        {
+            audio_music[audio_music.Count - 1].Value.volume = 0;
+            audio_music[audio_music.Count - 1].Value.mute = true;
+        }
+        aso.volume = GetSoundMultiplier(SoundType.Music);
+        aso.mute = false;
+        audio_music.Add(new KeyValuePair<Sound, AudioSource>(s, aso));
+    }
+    public IEnumerator PopMusicCoroutine(float duration)
+    {
+        if (audio_music.Count == 0)
+        {
+            yield break;
+        }
+        audio_music[audio_music.Count - 1].Value.mute = false;
+        if (audio_music.Count > 1)
+        {
+            audio_music[audio_music.Count - 2].Value.mute = false;
+        }
+        float completion = 0;
+        while (completion < 1)
+        {
+            audio_music[audio_music.Count - 1].Value.volume = (1 - completion) * GetSoundMultiplier(SoundType.Music);
+            if (audio_music.Count > 1)
+            {
+                audio_music[audio_music.Count - 2].Value.volume = (completion) * GetSoundMultiplier(SoundType.Music);
+            }
+
+            completion += (Time.deltaTime / duration);
+            yield return null;
+        }
+
+        Destroy(audio_music[audio_music.Count - 1].Value);
+        audio_music.RemoveAt(audio_music.Count - 1);    //remove a null
+        if (audio_music.Count > 0)
+        {
+            audio_music[audio_music.Count - 1].Value.mute = false;
+        }
+    }
+
 
 
     public void PlayGlobalSound(Sound s, float pitch = 1, float randomDeviance = 0f)
@@ -8071,6 +8786,11 @@ public class MainManager : MonoBehaviour
     //Sound stuff
     public IEnumerator PlayGlobalSoundCoroutine(Sound s, float pitch = 1, float randomDeviance = 0f)
     {
+        if (s == Sound.None)
+        {
+            yield break;
+        }
+
         AudioSource aso = gameObject.AddComponent<AudioSource>();
 
         //Load clip from resources?
@@ -8095,23 +8815,70 @@ public class MainManager : MonoBehaviour
     }
     public void StopGlobalSound(Sound s)
     {
-        foreach (AudioSource aso in GetComponents<AudioSource>())
-        {
-            if (aso.clip.name.Equals(s.ToString()))
-            {
-                aso.Stop();
-            }
-        }
+        StopSound(gameObject, s);
+    }
+    public void StopGlobalSound(GameObject parent, SoundType s)
+    {
+        StopSound(gameObject, s);
     }
 
     public void SoundUpdate(SettingsManager.Setting s)
     {
-        //may be slow, may want to refactor later
-        //refactor by keeping some global list of audio sources?
-        foreach (AudioSource aso in FindObjectsOfType<AudioSource>())
+        for (int i = 0; i < audio_sfx.Count; i++)
         {
-            SoundType st = GetSoundType(aso.clip.name);
-            aso.volume = GetSoundMultiplier(st);
+            if (i < 0)
+            {
+                continue;
+            }
+            if (audio_sfx[i].Value == null)
+            {
+                audio_sfx.RemoveAt(i);
+                i--;
+                continue;
+            }
+            audio_sfx[i].Value.volume = GetSoundMultiplier(SoundType.SFX);
+        }
+        for (int i = 0; i < audio_menu.Count; i++)
+        {
+            if (i < 0)
+            {
+                continue;
+            }
+            if (audio_menu[i].Value == null)
+            {
+                audio_menu.RemoveAt(i);
+                i--;
+                continue;
+            }
+            audio_menu[i].Value.volume = GetSoundMultiplier(SoundType.System);
+        }
+        for (int i = 0; i < audio_text.Count; i++)
+        {
+            if (i < 0)
+            {
+                continue;
+            }
+            if (audio_text[i].Value == null)
+            {
+                audio_text.RemoveAt(i);
+                i--;
+                continue;
+            }
+            audio_text[i].Value.volume = GetSoundMultiplier(SoundType.Text);
+        }
+        for (int i = 0; i < audio_music.Count; i++)
+        {
+            if (i < 0)
+            {
+                continue;
+            }
+            if (audio_music[i].Value == null)
+            {
+                audio_music.RemoveAt(i);
+                i--;
+                continue;
+            }
+            audio_music[i].Value.volume = GetSoundMultiplier(SoundType.Music);
         }
     }
 
@@ -9312,6 +10079,26 @@ public class MainManager : MonoBehaviour
         float termB = Mathf.Sqrt(h * h - 4 * h * x + 2 * h + 1) / (2 * h);
 
         return termA - termB;
+    }
+    public static float EasingOutIn(float input, float heaviness = 0.75f)
+    {
+        float c = Mathf.Pow(2, heaviness);
+
+        if (input < 0.5f)
+        {
+            return c * Mathf.Pow(input, heaviness + 1);
+        } else
+        {
+            return 1 - (c * Mathf.Pow((1 - input), heaviness + 1));
+        }
+    }
+    public static float EasingOut(float input, float heaviness = 0.75f)
+    {
+        return 2 * EasingOutIn(input * 0.5f, heaviness);
+    }
+    public static float EasingIn(float input, float heaviness = 0.75f)
+    {
+        return 2 * EasingOutIn(input * 0.5f + 0.5f, heaviness) - 1;
     }
 
 

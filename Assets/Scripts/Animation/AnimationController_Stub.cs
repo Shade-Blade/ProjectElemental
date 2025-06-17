@@ -11,6 +11,7 @@ public class AnimationController_Stub : AnimationController_BackSprite
 
     public override void SetAnimation(string name, bool force = false)
     {
+        timeSinceLastAnimChange = 0;
         name = "idle";
 
         string modifiedName = name;

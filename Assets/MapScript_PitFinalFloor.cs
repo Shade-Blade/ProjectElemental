@@ -21,7 +21,7 @@ public class MapScript_PitFinalFloor : MapScript
 
         MainManager.Instance.AwardAchievement(MainManager.Achievement.ACH_Complete);
 
-        MainManager.WorldLocation wl = MainManager.WorldLocation.None;
+        MainManager.WorldLocation wl = MainManager.WorldLocation.Nowhere;
 
         int i = ((floor - 1) / 10);
         switch (i)

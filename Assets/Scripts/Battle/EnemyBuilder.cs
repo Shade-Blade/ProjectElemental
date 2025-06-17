@@ -163,7 +163,7 @@ public class EnemyBuilder// : MonoBehaviour
     }
 
     //initializes posid to -1
-    public static GameObject BuildEnemy(BattleHelper.EntityID id, Vector3 pos)
+    public static GameObject BuildEnemy(BattleHelper.EntityID id, Vector3 pos, float multiplier = 1)
     {
         //create base game object
         GameObject g = new GameObject(id.ToString());
@@ -583,6 +583,7 @@ public class EnemyBuilder// : MonoBehaviour
         b.entityID = id;
         b.subObject = h;
         b.flipDefault = ((int)id >= 0); //note: makes all enemies flipped visually
+        b.statMultiplier = multiplier;
         b.Initialize();
         if (debugSprite)
         {

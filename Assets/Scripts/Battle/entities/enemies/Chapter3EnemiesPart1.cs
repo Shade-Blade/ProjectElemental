@@ -85,6 +85,7 @@ public class BM_Slime_Stomp : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 2, 0.5f, 0.15f));
             }
@@ -94,11 +95,11 @@ public class BM_Slime_Stomp : EnemyMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -124,6 +125,7 @@ public class BM_Slime_SplashStomp : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
                 yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 2, 0.5f, 0.15f));
             }
@@ -133,11 +135,11 @@ public class BM_Slime_SplashStomp : EnemyMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -229,6 +231,7 @@ public class BM_Slimewalker_WaterCannon : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
             }
             else
@@ -261,6 +264,7 @@ public class BM_Slimewalker_Hard_SoftSplash : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.DefenseDown, 2, 3));
                 yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 2, 0.5f, 0.15f));
@@ -271,11 +275,11 @@ public class BM_Slimewalker_Hard_SoftSplash : EnemyMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -365,6 +369,7 @@ public class BM_Slimeworm_Mortar : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Water))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 //Note that the focus last turn makes this pretty dangerous
                 caller.DealDamage(t, 1, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
             }
@@ -398,6 +403,7 @@ public class BM_Slimeworm_DeepMortar : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
             {
+                t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 //Note that the focus last turn makes this pretty dangerous
                 caller.DealDamage(t, 1, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                 caller.InflictEffect(t, new Effect(Effect.EffectType.Splotch, 1, 2));
@@ -517,6 +523,7 @@ public class BM_Slimebloom_Lob : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
@@ -643,6 +650,7 @@ public class BM_Sirenfish_BubbleSong : EnemyMove
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
@@ -724,14 +732,14 @@ public class BM_Sirenfish_NightmareBite : EnemyMove
 
             float dist = tposA.x - tposend.x - 0.25f;
 
-            yield return StartCoroutine(caller.Move(tposA));
+            yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
 
             Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
 
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Dark))
             {
                 yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.4f : 0.3f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
-
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Contact);
             }
             else
@@ -741,6 +749,6 @@ public class BM_Sirenfish_NightmareBite : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }

@@ -449,7 +449,7 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
                 WorldPlayer.Instance.Launch(stompLaunch * Vector3.up, 0);
             }
 
-            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NPCSquish);
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_NPCSquish);
 
             //also make some special animations?
             IEnumerator StompAnimation()

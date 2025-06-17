@@ -230,7 +230,7 @@ EmeraldLime,,100,,,100,MaxEPBoost:5/X|Absorb:6/X,,,Limited,FALSE,Eat,BaseRare,FA
 AzureRose,,,,,100,AttackBoost:1/X|Focus:6/X,,,Limited|NoOverworld,FALSE,Eat,BaseRare,FALSE,,,,9,FALSE
 RubyFruit,,,,,100,EnduranceBoost:1/X,,,Limited|NoOverworld,TRUE,Eat,BaseRare,FALSE,,,,9,FALSE
 VoidIcicle,,,,,100,DefenseBoost:1/X,,,Limited|NoOverworld,FALSE,Eat,BaseRare,TRUE,Light|Dark,,5,9,FALSE
-DiamondMushroom,,,,15,100,AgilityBoost:1/X,,,Limited,FALSE,Eat,BaseRare,FALSE,,,,9,FALSE
+DiamondMushroom,,,,15,100,AgilityBoost:1/X,,,Limited|NoOverworld,FALSE,Eat,BaseRare,FALSE,,,,9,FALSE
 CursedStew,,,,,0,Poison:1/X,,,,TRUE,EatBad,Mistake,FALSE,,,,9,TRUE
 AetherSalad,,,,,67,,FocusAttack,15,,TRUE,Eat,GridFillRecipe,FALSE,,,,9,TRUE
 CrystalSalad,100,,,,67,,HPRegen,10,Cure|Limited,FALSE,Eat,GridFillRecipe,FALSE,,,,9,TRUE

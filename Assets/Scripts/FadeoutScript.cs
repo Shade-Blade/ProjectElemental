@@ -35,6 +35,7 @@ public class FadeoutScript : MonoBehaviour
     public void SnapFade(float f)
     {
         FadeOutProgress = f;
+        image.color = new Color(0, 0, 0, FadeOutProgress);
     }
 
     public IEnumerator UnfadeToBlack()
@@ -74,5 +75,10 @@ public class FadeoutScript : MonoBehaviour
         }
         FadeOutProgress = 0;
         image.color = new Color(1, 1, 1, 0);
+    }
+
+    private void Update()
+    {
+        image.rectTransform.sizeDelta = Vector2.right * 800 + Vector2.up * 800 * (MainManager.Instance.SuperCanvas.GetComponent<RectTransform>().rect.height / (MainManager.Instance.SuperCanvas.GetComponent<RectTransform>().rect.width + 0f));
     }
 }

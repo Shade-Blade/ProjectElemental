@@ -2732,6 +2732,26 @@ public struct Item
                     players.se = 0;
                 }
                 break;
+            case ItemType.AetherPudding:
+                player.hp += (int)(ide.hp * boost);
+                players.ep += (int)(ide.ep * boost);
+                if (player.hp < 1)
+                {
+                    player.hp = 1;
+                }
+                if (player.hp > player.maxHP)
+                {
+                    player.hp = player.maxHP;
+                }
+                if (players.ep > players.maxEP)
+                {
+                    players.ep = players.maxEP;
+                }
+                if (players.ep < 0)
+                {
+                    players.ep = 0;
+                }
+                break;
         }
 
         return;

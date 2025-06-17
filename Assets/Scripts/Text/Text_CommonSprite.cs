@@ -35,7 +35,14 @@ public class Text_CommonSprite : Text_SpecialSprite
         GoldCoin,
         Shard,
         XP,
-        AstralToken
+        AstralToken,
+        Badge,
+        Ribbon,
+        ItemBag,
+        Recipe,
+        Enemy,
+        Lore,
+        Info,
     }
 
     //build an item sprite with given args

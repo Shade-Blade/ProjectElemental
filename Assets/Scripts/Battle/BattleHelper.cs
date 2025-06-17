@@ -120,6 +120,7 @@ public class Effect
         Sluggish,
         DrainSprout,
         BoltSprout,
+        //non curable debuffs
         Seal,
         Sticky,
         DamageOverTime,
@@ -130,6 +131,7 @@ public class Effect
         Haste,
         BonusTurns,
         Awaken,
+        //non cleanseable buffs
         Miracle,
         Freebie,
         ItemBoost,  //1 = 1.33, 2 = 1.5, 3 = 2
@@ -171,10 +173,29 @@ public class Effect
     //these are bidirectional, so you can't get more of the debuff than the cap
     //To do: way to increase this
     public const int FOCUS_CAP = 6;
+    public const int FOCUS_CAP_EXTENDED = 6;
     public const int ABSORB_CAP = 6;
+    public const int ABSORB_CAP_EXTENDED = 6;
     public const int BURST_CAP = 99;    //ehh there's no realistic way to make this too broken (?)
 
     public const int ILLUMINATE_CAP = 3;
+
+    public static int GetFocusCap()
+    {
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FireShell))
+        {
+            return FOCUS_CAP_EXTENDED;
+        }
+        return FOCUS_CAP;
+    }
+    public static int GetAbsorbCap()
+    {
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_LightShell))
+        {
+            return ABSORB_CAP_EXTENDED;
+        }
+        return ABSORB_CAP;
+    }
 
     public Effect(EffectType effect, sbyte potency, sbyte duration, int casterID)
     {
@@ -1064,6 +1085,16 @@ public static class BattleHelper
         NoCounterProperties = ContactHazard | Static,
     }
 
+    public enum SpecialHitAnim
+    {
+        Default,
+        Squish,
+        ReverseSquish,
+        Launch,   //squish but go upwards (i.e. under strike)
+        Spin,
+        SpinFast,
+    }
+
     public enum ActionCommandText
     {
         Nice,
@@ -1493,7 +1524,7 @@ public static class BattleHelper
         //Special allies: spawn behind you and closer together
         if (id <= -10)
         {
-            return Vector3.left * 0.8f + Vector3.right * (0.5f * (id + 10) - 2.5f) + Vector3.forward * (((id + 10) + 1) * 0.15f + 0.6f);
+            return Vector3.left * 0.8f + Vector3.right * (0.5f * ((id % 10)) - 2.5f) + Vector3.forward * (((id % 10) + 1) * 0.15f + 0.6f) - 0.8f * Vector3.up * ((id / 10) + 1);
         }
 
 
@@ -1618,6 +1649,7 @@ public class EncounterData
         public bool usePos;
         public Vector3 pos;
         public string bonusdata;
+        public float multiplier = 1;
 
         public EncounterDataEntry(BattleHelper.EntityID entid, int posid)
         {
@@ -1625,6 +1657,16 @@ public class EncounterData
             this.posid = posid;
             usePos = false;
             this.pos = Vector3.zero;
+            this.multiplier = 1;
+        }
+
+        public EncounterDataEntry(BattleHelper.EntityID entid, int posid, float multiplier)
+        {
+            this.entid = entid.ToString();
+            this.posid = posid;
+            usePos = false;
+            this.pos = Vector3.zero;
+            this.multiplier = multiplier;
         }
 
         public EncounterDataEntry(BattleHelper.EntityID entid, int posid, Vector3 pos)
@@ -1633,6 +1675,16 @@ public class EncounterData
             this.posid = posid;
             usePos = true;
             this.pos = pos;
+            this.multiplier = 1;
+        }
+
+        public EncounterDataEntry(BattleHelper.EntityID entid, int posid, Vector3 pos, float multiplier)
+        {
+            this.entid = entid.ToString();
+            this.posid = posid;
+            usePos = true;
+            this.pos = pos;
+            this.multiplier = multiplier;
         }
 
         public BattleHelper.EntityID GetEntityID()
@@ -1647,7 +1699,7 @@ public class EncounterData
 
         public override string ToString()
         {
-            return "(" + entid + " " + posid + " " + bonusdata + ")";
+            return "(" + entid + " " + posid + " " + bonusdata + " " + multiplier + ")";
         }
     }
 
@@ -1680,6 +1732,12 @@ public class EncounterData
 
     public static EncounterData GeneratePitEncounter(int floor, float weirdnessFactor = 1)
     {
+        if (floor >= 100 || RandomGenerator.Get() * weirdnessFactor > Mathf.Max(2f, weirdnessFactor * 0.6f))
+        {
+            return GeneratePitEncounterExtended(floor, weirdnessFactor);
+        }
+
+
         string[][] pitEnemyData = MainManager.CSVParse(Resources.Load<TextAsset>("Data/PitEnemyPool").text);
 
 
@@ -1689,12 +1747,6 @@ public class EncounterData
         {
             idArray[i - 1] = Enum.Parse<BattleHelper.EntityID>(pitEnemyData[i][0], true);
             levelArray[i - 1] = int.Parse(pitEnemyData[i][1]);
-        }
-
-        //formula breaks since 36 is the max level of the enemies I have?
-        if (floor > 124)
-        {
-            floor = 124;
         }
 
         float levelNormal = 3 + (30f * floor / 100f); //5 + (25f * floor / 100f);
@@ -1906,6 +1958,404 @@ public class EncounterData
 
         return ed;
     }
+    public static EncounterData GeneratePitEncounterExtended(int floor, float weirdnessFactor = 1, bool allowSpecial = true)
+    {
+        if (floor < 1)
+        {
+            return GeneratePitEncounterExtended(1, weirdnessFactor, allowSpecial);
+        }
+
+        if (RandomGenerator.Get() < Mathf.Max(weirdnessFactor * 0.1f, 0.75f) && allowSpecial)
+        {
+            return GeneratePitEncounterExtendedSpecial(floor, weirdnessFactor);
+        }
+
+        string[][] pitEnemyData = MainManager.CSVParse(Resources.Load<TextAsset>("Data/PitEnemyPool").text);
+
+
+        BattleHelper.EntityID[] idArray = new BattleHelper.EntityID[pitEnemyData.Length];
+        int[] levelArray = new int[pitEnemyData.Length - 1];
+        for (int i = 1; i < pitEnemyData.Length - 1; i++)
+        {
+            idArray[i - 1] = Enum.Parse<BattleHelper.EntityID>(pitEnemyData[i][0], true);
+            levelArray[i - 1] = int.Parse(pitEnemyData[i][1]);
+        }
+        
+        float levelNormal = 3 + (30f * (floor)) / 100f; //5 + (25f * floor / 100f);
+
+        float factor = levelNormal / 36;
+
+        factor *= 2;
+        factor += (RandomGenerator.GetIntRange(1, floor)) / 20;
+        if (factor > 2 && factor < 3)
+        {
+            factor = 3;
+        }
+        factor = Mathf.FloorToInt(factor);
+        factor /= 2;
+
+        if (factor < 1)
+        {
+            factor = 1;
+        }
+
+        levelNormal /= factor;
+
+
+
+
+
+
+
+        //range = +-2
+
+        //Debug.Log(levelNormal);
+
+        List<BattleHelper.EntityID> startEnemies = new List<BattleHelper.EntityID>();
+        List<int> startIndices = new List<int>();
+        for (int i = 0; i < levelArray.Length; i++)
+        {
+            if (levelArray[i] < levelNormal + 2 && levelArray[i] > levelNormal - 2)
+            {
+                startIndices.Add(i);
+            }
+        }
+
+        if (startIndices.Count == 0)
+        {
+            for (int i = 0; i < levelArray.Length; i++)
+            {
+                if (levelArray[i] < levelNormal + 4 && levelArray[i] > levelNormal - 4)
+                {
+                    startIndices.Add(i);
+                }
+            }
+        }
+
+        if (startIndices.Count == 0)
+        {
+            for (int i = 0; i < levelArray.Length; i++)
+            {
+                if (levelArray[i] < levelNormal + 12 && levelArray[i] > levelNormal - 12)
+                {
+                    startIndices.Add(i);
+                }
+            }
+        }
+
+        //Give up
+        if (startIndices.Count == 0)
+        {
+            for (int i = 0; i < levelArray.Length; i++)
+            {
+                startIndices.Add(i);
+            }
+        }
+
+        //sus static syntax
+        int randomIndex = RandomTable<int>.ChooseRandom(startIndices);
+
+        //Now add enemies to a new list
+        List<BattleHelper.EntityID> newEnemyList = new List<BattleHelper.EntityID>();
+        List<int> newLevelList = new List<int>();
+
+        int levelTotal = (int)(levelNormal * (2.7f + floor / 50f));
+
+        while (levelTotal > 0)
+        {
+            int newRandomIndex = 0;
+            if (RandomGenerator.Get() < 0.05f * weirdnessFactor)
+            {
+                //Choose a later enemy
+                //Range = +-4 from randomIndex + 16
+                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 12, randomIndex + 20);
+            }
+            else if (RandomGenerator.Get() < 0.1f * weirdnessFactor)
+            {
+                //Choose from a bigger range
+                //Range = +-8 from randomIndex
+                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 8, randomIndex + 8);
+            }
+            else
+            {
+                //Choose normally
+                //Range = +-2 from randomIndex
+                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 2, randomIndex + 3);
+            }
+
+            //if out of bounds, choose again
+            //(Choose from the 5 enemies at the start of the table)
+            if (newRandomIndex < 0)
+            {
+                newRandomIndex = RandomGenerator.GetIntRange(0, 6);
+            }
+
+            //(Choose from the 5 enemies at the end of the table)
+            if (newRandomIndex >= levelArray.Length)
+            {
+                newRandomIndex = RandomGenerator.GetIntRange(levelArray.Length - 5, levelArray.Length);
+            }
+
+            //no
+            if (idArray[newRandomIndex] == BattleHelper.EntityID.DebugEntity)
+            {
+                continue;
+            }
+
+            //Now add
+            newEnemyList.Add(idArray[newRandomIndex]);
+            newLevelList.Add(levelArray[newRandomIndex]);
+            levelTotal -= levelArray[newRandomIndex];
+
+            if (newEnemyList.Count > 3)
+            {
+                break;
+            }
+        }
+
+        if (levelTotal < 0)
+        {
+            for (int i = 0; i < newEnemyList.Count; i++)
+            {
+                if (newLevelList[i] < -2 * levelTotal)
+                {
+                    newLevelList.RemoveAt(i);
+                    newEnemyList.RemoveAt(i);
+                }
+            }
+        }
+
+        //swap indices such that the front enemy is the highest level one (with some small margin of error)
+        //(Stops that situation where a low level enemy is on the field but a really high level enemy is in the battle behind it)
+        for (int i = 1; i < newEnemyList.Count; i++)
+        {
+            if (newLevelList[i] > newLevelList[0] + 4)
+            {
+                int swaplevel = newLevelList[0];
+                BattleHelper.EntityID swapEID = newEnemyList[0];
+
+                newLevelList[0] = newLevelList[i];
+                newEnemyList[0] = newEnemyList[i];
+
+                newLevelList[i] = swaplevel;
+                newEnemyList[i] = swapEID;
+            }
+        }
+
+        //build an encounter with this information
+        EncounterData ed = new EncounterData();
+        ed.encounterList = new List<EncounterDataEntry>();
+
+        int offset = 0;
+        if (newEnemyList.Count < 3)
+        {
+            offset = 1;
+        }
+        if (newEnemyList.Count < 2)
+        {
+            offset = 2;
+        }
+        for (int i = 0; i < newEnemyList.Count; i++)
+        {
+            bool airborne = false;
+
+            airborne = (BattleEntityData.GetBattleEntityData(newEnemyList[i]).entityProperties & (ulong)BattleHelper.EntityProperties.Airborne) != 0;
+
+            EncounterDataEntry ede = null;
+            if (newEnemyList[i] == BattleHelper.EntityID.Cactupole)
+            {
+                //hardcoded exception
+                ede = new EncounterDataEntry(newEnemyList[i], airborne ? 20 + i + offset : i + offset, factor);
+            }
+            else
+            {
+                ede = new EncounterDataEntry(newEnemyList[i], airborne ? 10 + i + offset : i + offset, factor);
+            }
+
+            if (newEnemyList[i] == BattleHelper.EntityID.CloudJelly)
+            {
+                switch (RandomGenerator.GetIntRange(0, 3))
+                {
+                    case 0:
+                        ede.bonusdata = "cloud";
+                        break;
+                    case 1:
+                        ede.bonusdata = "water";
+                        break;
+                    case 2:
+                        ede.bonusdata = "ice";
+                        break;
+                }
+            }
+
+            if (newEnemyList[i] == BattleHelper.EntityID.Sawcrest)
+            {
+                if (RandomGenerator.Get() < 0.5f)
+                {
+                    ede.bonusdata = "active";
+                }
+            }
+
+            ed.encounterList.Add(ede);
+        }
+
+        //Choose the map
+        switch (((floor - 1) / 10) % 10)
+        {
+            case 0:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_SolarGrove.ToString();
+                break;
+            case 1:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_VerdantForest.ToString();
+                break;
+            case 2:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_TempestDesert.ToString();
+                break;
+            case 3:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_GemstoneIslands.ToString();
+                break;
+            case 4:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_InfernalCaldera.ToString();
+                break;
+            case 5:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_ShroudedValley.ToString();
+                break;
+            case 6:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_RadiantPlateau.ToString();
+                break;
+            case 7:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_AetherTrench.ToString();
+                break;
+            case 8:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_CrystalHills.ToString();
+                break;
+            case 9:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_ForsakenMountains.ToString();
+                break;
+        }
+
+        return ed;
+    }
+    public static EncounterData GeneratePitEncounterExtendedSpecial(int floor, float weirdnessFactor = 1)
+    {
+        EncounterData a = GeneratePitEncounterExtended((int)(floor + RandomGenerator.GetRange(5, 15)), weirdnessFactor * 0.75f, false);
+        EncounterData b = GeneratePitEncounterExtended((int)(floor + RandomGenerator.GetRange(-20, -10)), weirdnessFactor * 2f, false);
+        EncounterData c = GeneratePitEncounterExtended(floor, weirdnessFactor, false);
+
+        //c.encounterList = new List<EncounterDataEntry>();
+        for (int i = 1; i < a.encounterList.Count; i++)
+        {
+            c.encounterList.Add(a.encounterList[i]);
+        }
+        for (int i = 1; i < b.encounterList.Count; i++)
+        {
+            c.encounterList.Add(b.encounterList[i]);
+        }
+        c.encounterList = MainManager.ShuffleList(c.encounterList);
+
+        c.encounterList.Insert(0, a.encounterList[0]);
+
+        while (c.encounterList.Count > 4)
+        {
+            c.encounterList.RemoveAt(c.encounterList.Count() - 1);
+        }
+
+
+
+        //build an encounter with this information
+        EncounterData ed = new EncounterData();
+        ed.encounterList = new List<EncounterDataEntry>();
+
+        int offset = 0;
+        if (c.encounterList.Count < 3)
+        {
+            offset = 1;
+        }
+        if (c.encounterList.Count < 2)
+        {
+            offset = 2;
+        }
+        for (int i = 0; i < c.encounterList.Count; i++)
+        {
+            bool airborne = false;
+
+            airborne = (BattleEntityData.GetBattleEntityData(c.encounterList[i].GetEntityID()).entityProperties & (ulong)BattleHelper.EntityProperties.Airborne) != 0;
+
+            EncounterDataEntry ede = null;
+            if (c.encounterList[i].GetEntityID() == BattleHelper.EntityID.Cactupole)
+            {
+                //hardcoded exception
+                ede = new EncounterDataEntry(c.encounterList[i].GetEntityID(), airborne ? 20 + i + offset : i + offset, c.encounterList[i].multiplier);
+            }
+            else
+            {
+                ede = new EncounterDataEntry(c.encounterList[i].GetEntityID(), airborne ? 10 + i + offset : i + offset, c.encounterList[i].multiplier);
+            }
+
+            if (c.encounterList[i].GetEntityID() == BattleHelper.EntityID.CloudJelly)
+            {
+                switch (RandomGenerator.GetIntRange(0, 3))
+                {
+                    case 0:
+                        ede.bonusdata = "cloud";
+                        break;
+                    case 1:
+                        ede.bonusdata = "water";
+                        break;
+                    case 2:
+                        ede.bonusdata = "ice";
+                        break;
+                }
+            }
+
+            if (c.encounterList[i].GetEntityID() == BattleHelper.EntityID.Sawcrest)
+            {
+                if (RandomGenerator.Get() < 0.5f)
+                {
+                    ede.bonusdata = "active";
+                }
+            }
+
+            ed.encounterList.Add(ede);
+        }
+
+        //Choose the map
+        switch (((floor - 1) / 10) % 10)
+        {
+            case 0:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_SolarGrove.ToString();
+                break;
+            case 1:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_VerdantForest.ToString();
+                break;
+            case 2:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_TempestDesert.ToString();
+                break;
+            case 3:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_GemstoneIslands.ToString();
+                break;
+            case 4:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_InfernalCaldera.ToString();
+                break;
+            case 5:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_ShroudedValley.ToString();
+                break;
+            case 6:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_RadiantPlateau.ToString();
+                break;
+            case 7:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_AetherTrench.ToString();
+                break;
+            case 8:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_CrystalHills.ToString();
+                break;
+            case 9:
+                ed.battleMapName = MainManager.BattleMapID.TestBattle_ForsakenMountains.ToString();
+                break;
+        }
+
+        return ed;
+    }
 
     public int GetOverkillLevel()
     {
@@ -1914,9 +2364,9 @@ public class EncounterData
         foreach (var e in encounterList)
         {
             BattleEntityData bed = BattleEntityData.GetBattleEntityData(Enum.Parse<BattleHelper.EntityID>(encounterList[0].entid, true));
-            if (bed.level > level)
+            if (bed.level * e.multiplier > level)
             {
-                level = bed.level;
+                level = (int)(bed.level * e.multiplier);
             }
         }
 

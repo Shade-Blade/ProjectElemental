@@ -23,6 +23,7 @@ public class StartMenuManager : MonoBehaviour
         }
         MainManager.Instance.Camera.SetManual(new Vector3(0, 2, -6.5f), new Vector3(0, 0, 0), 0.05f);
         MainManager.Instance.SetSkybox(MainManager.SkyboxID.SolarGrove);
+        MainManager.Instance.PlayMusic(MainManager.Sound.Music_Title);
     }
 
     public void Clear()

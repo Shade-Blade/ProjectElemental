@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static MainManager;
 
 public class Pause_HandlerMap : Pause_HandlerShared
 {
@@ -25,11 +26,14 @@ public class Pause_HandlerMap : Pause_HandlerShared
 
     public float holdTime;
 
-    //TODO: fast travel system
-    //Also requires an areaname to map translation so that the destination is proper
-    //Copy yes no prompt from Settings menu
+    public bool awaitWarp;
+    public PromptBoxMenu prompt;
+
     #pragma warning disable CS0067
     public override event EventHandler<MenuExitEventArgs> menuExit;
+
+
+
 
     public static Pause_HandlerMap BuildMenu(Pause_SectionShared section = null)
     {
@@ -64,13 +68,44 @@ public class Pause_HandlerMap : Pause_HandlerShared
         }
     }
 
+    public bool FastTravelUnlocked()
+    {
+        return MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_AirShell);
+    }
+
     public virtual void MenuUpdate()
     {
         lifetime += Time.deltaTime;
+        if (prompt != null && !prompt.menuDone)
+        {
+            //Reset these so that things don't become sus after you select something
+            holdTime = 0;
+            return;
+        }
+        if (prompt != null && prompt.menuDone && awaitWarp)
+        {
+            int index = prompt.menuIndex;
+            prompt.Clear();
+            Destroy(prompt.gameObject);
+            prompt = null;
+            if (index == 0)
+            {
+                MainManager.Instance.pauseMenuScript.Unpause();
+                MainManager.Instance.StartCoroutine(MainManager.Instance.FastTravelWarp(worldLocation));
+            }
+            awaitWarp = false;
+            return;
+        }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
             MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
             PopSelf();
+        }
+        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A) && FastTravelUnlocked() && selectedDot != null)
+        {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+            prompt = PromptBoxMenu.BuildMenu(new string[] { "Yes", "No" }, new string[] { "0", "1" }, 1, "Do you want to warp to " + MainManager.GetAreaName(selectedDot.worldLocation) +"?");
+            awaitWarp = true;
         }
 
         Vector3 inputDir = Vector2.up * (InputManager.GetAxisVertical()) + Vector2.right * (InputManager.GetAxisHorizontal());
@@ -130,7 +165,7 @@ public class Pause_HandlerMap : Pause_HandlerShared
         if (selectedDot != null && (pointerPos - selectedDot.transform.localPosition).magnitude > 12.5f) 
         {
             selectedDot = null;
-            worldLocation = MainManager.WorldLocation.None;
+            worldLocation = MainManager.WorldLocation.Nowhere;
         } else
         {
             //Seek out other dots?

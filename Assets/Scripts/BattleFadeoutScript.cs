@@ -72,4 +72,9 @@ public class BattleFadeoutScript : MonoBehaviour
         FadeOutProgress = 0;
         image.color = new Color(color.r, color.g, color.b, 0);
     }
+
+    private void Update()
+    {
+        image.rectTransform.sizeDelta = Vector2.right * 800 + Vector2.up * 800 * (MainManager.Instance.SuperCanvas.GetComponent<RectTransform>().rect.height / (MainManager.Instance.SuperCanvas.GetComponent<RectTransform>().rect.width + 0f));
+    }
 }

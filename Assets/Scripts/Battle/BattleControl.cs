@@ -513,6 +513,7 @@ public class BattleStartArguments
     public Vector3 position;    //Overworld position (for the fadeout thing)
     public string mapData;
     public ulong properties;    //BattleHelper.BattleProperties
+    public MainManager.Sound battleMusic;
 
     public const int FIRSTSTRIKE_NULL_ENTITY = int.MinValue;
     public const int FIRSTSTRIKE_FRONTMOST_ALLY = int.MinValue + 1;
@@ -534,13 +535,14 @@ public class BattleStartArguments
         Dig
     }
 
-    public BattleStartArguments(int p_firstStrikePosId = FIRSTSTRIKE_NULL_ENTITY, FirstStrikeMove p_move = FirstStrikeMove.Default, List<VariableEntry> p_variableList = null, Vector3 p_position = default, string p_mapData = null)
+    public BattleStartArguments(int p_firstStrikePosId = FIRSTSTRIKE_NULL_ENTITY, FirstStrikeMove p_move = FirstStrikeMove.Default, List<VariableEntry> p_variableList = null, Vector3 p_position = default, string p_mapData = null, MainManager.Sound p_battleMusic = MainManager.Sound.Music_Battle_Normal)
     {
         firstStrikePosId = p_firstStrikePosId;
         move = p_move;
         variableList = p_variableList;
         position = p_position;
         mapData = p_mapData;
+        battleMusic = p_battleMusic;
     }
 
     public class VariableEntry
@@ -963,9 +965,9 @@ public class BattleControl : MonoBehaviour
     {
         return SummonEntity(eid, FindUnoccupiedID(negativeID));
     } //finds a positional ID that is available
-    public BattleEntity SummonEntity(BattleHelper.EntityID eid, int posid, string bonusData = null)
+    public BattleEntity SummonEntity(BattleHelper.EntityID eid, int posid, string bonusData = null, float multiplier = 1)
     {
-        GameObject g = EnemyBuilder.BuildEnemy(eid, BattleHelper.GetDefaultPosition(posid));
+        GameObject g = EnemyBuilder.BuildEnemy(eid, BattleHelper.GetDefaultPosition(posid), multiplier);
         BattleEntity b = g.GetComponent<BattleEntity>();
         b.posId = posid;
         b.homePos = BattleHelper.GetDefaultPosition(posid);
@@ -974,9 +976,9 @@ public class BattleControl : MonoBehaviour
         b.SetEncounterVariables(bonusData);
         return b;
     }
-    public BattleEntity SummonEntity(BattleHelper.EntityID eid, int posid, Vector3 vpos, string bonusData = null)
+    public BattleEntity SummonEntity(BattleHelper.EntityID eid, int posid, Vector3 vpos, string bonusData = null, float multiplier = 1)
     {
-        GameObject g = EnemyBuilder.BuildEnemy(eid, vpos);
+        GameObject g = EnemyBuilder.BuildEnemy(eid, vpos, multiplier);
         BattleEntity b = g.GetComponent<BattleEntity>();
         b.posId = posid;
         b.homePos = vpos;
@@ -989,7 +991,7 @@ public class BattleControl : MonoBehaviour
     {
         BattleEntity b = SummonEntity(pdataentry.entityID, posid, vpos);
         b.maxHP = pdataentry.maxHP;
-        b.attackMultiplier = 1;
+        b.statMultiplier = 1;
         b.applyCurseAttack = MainManager.Instance.Cheat_PlayerCurseAttack;
         b.hp = pdataentry.hp;
         b.stamina = 0;
@@ -1009,10 +1011,10 @@ public class BattleControl : MonoBehaviour
             BattleEntity b;
             if (ede.usePos)
             {
-                b = SummonEntity(ede.GetEntityID(), ede.posid, ede.pos, ede.bonusdata);
+                b = SummonEntity(ede.GetEntityID(), ede.posid, ede.pos, ede.bonusdata, ede.multiplier);
             } else
             {
-                b = SummonEntity(ede.GetEntityID(), ede.posid, ede.bonusdata);
+                b = SummonEntity(ede.GetEntityID(), ede.posid, ede.bonusdata, ede.multiplier);
             }
             output.Add(b);
         }
@@ -2304,6 +2306,8 @@ public class BattleControl : MonoBehaviour
         //astralEnergy = 0;
         //aetherEnergy = 0;
 
+        StartMusic(bsa);
+
         //get enemy party
         SummonEntities(encounterData);
 
@@ -2347,6 +2351,19 @@ public class BattleControl : MonoBehaviour
         {
             battleMapScript.OnBattleStart();
         }
+    }
+    
+    public void StartMusic(BattleStartArguments bsa)
+    {
+        if (bsa.battleMusic == MainManager.Sound.None)
+        {
+            bsa.battleMusic = MainManager.Sound.Music_Battle_Normal;
+        }
+        MainManager.Instance.PlayMusic(bsa.battleMusic, 0.2f);
+    }
+    public void StopMusic()
+    {
+        MainManager.Instance.PopMusic(0.2f);
     }
 
     public static bool EntityCountsForBattleEnd(BattleEntity b)
@@ -2434,7 +2451,7 @@ public class BattleControl : MonoBehaviour
 
         switch (outcome)
         {
-            case BattleHelper.BattleOutcome.Win:
+            case BattleHelper.BattleOutcome.Win:                
                 playerData.battlesWon++;
                 break;
             case BattleHelper.BattleOutcome.Flee:
@@ -2502,6 +2519,8 @@ public class BattleControl : MonoBehaviour
         if (battleMapScript != null)
             battleMapScript.OnBattleEnd();
 
+        StopMusic();
+
         //Try to start coroutine from mainmanager to avoid problems with this script being destroyed
         MainManager.Instance.StartCoroutine(MainManager.Instance.ReturnFromBattle(outcome, GetProperty(BattleHelper.BattleProperties.CanRetry)));
 
@@ -2513,6 +2532,7 @@ public class BattleControl : MonoBehaviour
     }
     public IEnumerator BattleVictory()
     {
+        MainManager.Instance.ReplaceMusic(MainManager.Sound.Music_Battle_BattleWin, 0.2f);
         //The "you got X xp" cutscene
         //If you level up then go to the level up cutscene
 
@@ -2615,6 +2635,11 @@ public class BattleControl : MonoBehaviour
             lowItemBoost = 2;
         }
 
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_EarthShell))
+        {
+            itemFinder++;
+        }
+
         //if you use a massive curse level then you get a ton of items I guess
         int curseBoost = curseLevel >= 0 ? curseLevel : 0;
 
@@ -2695,6 +2720,7 @@ public class BattleControl : MonoBehaviour
     }
     public IEnumerator LevelUp()
     {
+        MainManager.Instance.ReplaceMusic(MainManager.Sound.Music_Battle_LevelUp, 0.2f);
         List<PlayerEntity> pe = GetPlayerEntities();
 
         bool healdone = false;
@@ -2715,7 +2741,7 @@ public class BattleControl : MonoBehaviour
         bool wtpB = false;
         IEnumerator WalkToPositionTrackedA(BattleEntity be, Vector3 position)
         {
-            yield return StartCoroutine(be.Move(position));
+            yield return StartCoroutine(be.MoveEasing(position, (e) => MainManager.EasingOutIn(e)));
             be.SetAnimation("levelup");
             if (be.entityID == EntityID.Luna)
             {
@@ -2729,7 +2755,7 @@ public class BattleControl : MonoBehaviour
         }
         IEnumerator WalkToPositionTrackedB(BattleEntity be, Vector3 position)
         {
-            yield return StartCoroutine(be.Move(position));
+            yield return StartCoroutine(be.MoveEasing(position, (e) => MainManager.EasingOutIn(e)));
             be.SetAnimation("levelup");
             if (be.entityID == EntityID.Luna)
             {
@@ -2884,7 +2910,7 @@ public class BattleControl : MonoBehaviour
     //also create effects?
     public void DropExperience(BattleEntity be)
     {
-        int coinsDropped = Mathf.CeilToInt(be.level * be.moneyMult / 2f);   //15-20 ish per encounter in a chapter 1 state (Should be enough to buy everything you need)
+        int coinsDropped = Mathf.CeilToInt(be.level * be.statMultiplier * be.moneyMult / 2f);   //15-20 ish per encounter in a chapter 1 state (Should be enough to buy everything you need)
         //Balancing note
         //Roughly 20 ish encounters per chapter (???)
         //20 ish coins per encounter in chapter 1 is enough to buy 1 item per encounter
@@ -2909,7 +2935,7 @@ public class BattleControl : MonoBehaviour
         }
 
 
-        int xpDropped = MainManager.XPCalculation(startEnemyCount, playerData.level, be.level, be.bonusLevel);
+        int xpDropped = MainManager.XPCalculation(startEnemyCount, playerData.level, (int)(be.level * be.statMultiplier), be.bonusLevel);
 
 
         //curse multiplication
@@ -2946,6 +2972,12 @@ public class BattleControl : MonoBehaviour
         {
             //Debug.Log("Coins: " + (coinsDropped));
             coinDrops += coinsDropped;
+        }
+
+
+        if (MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_WaterShell))
+        {
+            coinDrops *= 2;
         }
 
 
@@ -4347,6 +4379,11 @@ public class BattleControl : MonoBehaviour
     //Usually for more complicated decisionmaking in enemies
     public int GetPsuedoRandom(int maxExclusive, int offset = 0)
     {
+        if (offset < 0)
+        {
+            return GetPsuedoRandom(maxExclusive, 2 - offset);
+        }
+
         //may get slow with big numbers
         //but low numbers are pretty fast ish
         //nth prime is roughly n log n  (might be an O notation ish bound though)

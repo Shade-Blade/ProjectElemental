@@ -956,16 +956,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    - entid: Starfish
+      multiplier: 0
+    - entid: DrainBud
       posid: 1
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    - entid: Starfish
+      multiplier: 0
+    - entid: DrainBud
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: TestBattle_ForsakenMountains
   frameTimer: -1
   firstStrikeTimer: -1
@@ -1910,16 +1913,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: StrangeTendril
       posid: 1
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Starfish
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: TestBattle_ForsakenMountains
   frameTimer: -1
   firstStrikeTimer: -1
@@ -2104,16 +2110,25 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 1
     - entid: CursedEye
       posid: 11
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 1
     - entid: StrangeTendril
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 1
+    - entid: DrainBud
+      posid: 3
+      usePos: 0
+      pos: {x: 0, y: 0, z: 0}
+      bonusdata: 
+      multiplier: 1
     battleMapName: TestBattle_ForsakenMountains
   frameTimer: -1
   firstStrikeTimer: -1

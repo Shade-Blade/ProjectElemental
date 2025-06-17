@@ -17,6 +17,9 @@ public class Pause_HandlerItem_KeyItemMenu : Pause_HandlerShared_BoxMenu
 
     private List<KeyItem> keyItemList;
 
+    public bool awaitUse;
+    public PromptBoxMenu prompt;
+
     public static Pause_HandlerItem_KeyItemMenu BuildMenu(Pause_SectionShared section = null, PlayerData p_playerData = null)
     {
         GameObject newObj = new GameObject("Pause Key Item Menu");
@@ -165,6 +168,29 @@ public class Pause_HandlerItem_KeyItemMenu : Pause_HandlerShared_BoxMenu
     */
     public override void MenuUpdate()
     {
+        //improper to make the menu work like this but ehh
+        if (prompt != null && !prompt.menuDone)
+        {
+            //Reset these so that things don't become sus after you select something
+            inputDir = 0;
+            holdDur = 0;
+            holdValue = 0;
+            return;
+        }
+        if (prompt != null && prompt.menuDone && awaitUse)
+        {
+            int index = prompt.menuIndex;
+            prompt.Clear();
+            Destroy(prompt.gameObject);
+            prompt = null;
+            if (index == 0)
+            {
+                UseKeyItem();
+            }
+            awaitUse = false;
+            return;
+        }
+
         base.MenuUpdate();
 
         if ((lifetime > MIN_SELECT_TIME && Mathf.Sign(InputManager.GetAxisHorizontal()) != lrDir) || InputManager.GetAxisHorizontal() == 0)
@@ -243,6 +269,13 @@ public class Pause_HandlerItem_KeyItemMenu : Pause_HandlerShared_BoxMenu
             return;
         }
 
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+        prompt = PromptBoxMenu.BuildMenu(new string[] { "Yes", "No" }, new string[] { "0", "1" }, 1, "Do you want to use the " + KeyItem.GetName(keyItemList[index]) + "?");
+        awaitUse = true;
+    }    
+
+    public void UseKeyItem()
+    {
         //I will have to manually create scripts for every single key item (or at least one per each "kind" of usable key item)
 
         PlayerData pd = MainManager.Instance.playerData;
@@ -363,7 +396,8 @@ public class Pause_HandlerItem_KeyItemMenu : Pause_HandlerShared_BoxMenu
 
         //to make you go back
         //PopSelf();
-    }    
+    }
+
 
     public override void Init()
     {

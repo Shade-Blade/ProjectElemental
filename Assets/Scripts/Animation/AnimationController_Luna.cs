@@ -8,6 +8,7 @@ public class AnimationController_Luna : AnimationController_Player
 
     public override void SetAnimation(string name, bool force = false)
     {
+        timeSinceLastAnimChange = 0;
         string modifiedName = name;
 
         //Debug.Log(showBack + " " + !name.Contains("smash") + " " + !name.Contains("slash") + " " + name);

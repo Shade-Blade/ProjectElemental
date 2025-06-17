@@ -178,7 +178,7 @@ public class LM_HeavyStomp : LunaMove
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                     //StartCoroutine(caller.RevertScale(0.1f));
                     yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
             }
             else
@@ -188,7 +188,7 @@ public class LM_HeavyStomp : LunaMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
         else
@@ -204,10 +204,12 @@ public class LM_HeavyStomp : LunaMove
     public virtual void DealDamageSuccess(BattleEntity caller, int sd, int level)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact);
     }
     public virtual void DealDamageFailure(BattleEntity caller, int sd, int level)
     {
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
     }
 
@@ -455,7 +457,7 @@ public class LM_DashThrough : LunaMove
                 yield return caller.Jump(target, 0.45f, 0.35f, "dashjump", "dashfall");
                 target = target + Vector3.right * 3f;
             }
-            //yield return caller.Move(target, caller.entitySpeed * 2f);
+            //yield return caller.MoveEasing(target, caller.entitySpeed * 2f);
             move = false;
         }
 
@@ -471,27 +473,54 @@ public class LM_DashThrough : LunaMove
                     //Debug.Log(targets[i]);
                     if (caller.GetAttackHit(targets[i], 0))
                     {
-                        count++;
-                        ulong propertyBlock = 0;
-                        if (count == 1)
+                        if (result)
                         {
-                            propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+                            count++;
+                            ulong propertyBlock = 0;
+                            if (count == 1)
+                            {
+                                propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+                            }
+                            else
+                            {
+                                propertyBlock = (ulong)BattleHelper.DamageProperties.AC_SuccessStall;
+                            }
+                            //Note: this is before the action command is done, so these are independent of action command
+                            switch (level)
+                            {
+                                case 1:
+                                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                                    caller.DealDamage(targets[i], sd - 2, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact);
+                                    break;
+                                case 2:
+                                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                                    caller.DealDamage(targets[i], sd - 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                                    break;
+                                default:
+                                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                                    caller.DealDamage(targets[i], sd + 2 * level - 5, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                                    break;
+                            }
                         } else
                         {
-                            propertyBlock = (ulong)BattleHelper.DamageProperties.AC_SuccessStall;
-                        }
-                        //Note: this is before the action command is done, so these are independent of action command
-                        switch (level)
-                        {
-                            case 1:
-                                caller.DealDamage(targets[i], sd - 2, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact);
-                                break;
-                            case 2:
-                                caller.DealDamage(targets[i], sd - 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
-                                break;
-                            default:
-                                caller.DealDamage(targets[i], sd + 2 * level - 5, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
-                                break;
+                            count++;
+                            ulong propertyBlock = 0;
+                            //Note: this is before the action command is done, so these are independent of action command
+                            switch (level)
+                            {
+                                case 1:
+                                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                                    caller.DealDamage(targets[i], Mathf.CeilToInt(sd / 2f) - 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact);
+                                    break;
+                                case 2:
+                                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                                    caller.DealDamage(targets[i], Mathf.CeilToInt(sd / 2f) - 0, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                                    break;
+                                default:
+                                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                                    caller.DealDamage(targets[i], Mathf.CeilToInt(sd / 2f) + 2 * level - 4, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Infinite);
+                                    break;
+                            }
                         }
                     } else
                     {
@@ -505,7 +534,7 @@ public class LM_DashThrough : LunaMove
         }
 
         caller.Warp(caller.homePos + Vector3.left * 4);
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -644,7 +673,7 @@ public class LM_FlipKick : LunaMove
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                     //StartCoroutine(caller.RevertScale(0.1f));
                     yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
             }
             else
@@ -654,7 +683,7 @@ public class LM_FlipKick : LunaMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
         else
@@ -670,10 +699,12 @@ public class LM_FlipKick : LunaMove
     public virtual void DealDamageSuccess(BattleEntity caller, int sd, bool result, int level)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
         caller.DealDamage(caller.curTarget, sd - 5 + 4 * level, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact);
     }
     public virtual void DealDamageFailure(BattleEntity caller, int sd, bool result, int level)
     {
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 3 + 2 * level, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
     }
 
@@ -866,11 +897,13 @@ public class LM_SleepStomp : LM_HeavyStomp
     public override void DealDamageSuccess(BattleEntity caller, int sd, int level)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, sd, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
         caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Sleep, 1, (sbyte)(1 + 2 * level)), caller.posId);
     }
     public override void DealDamageFailure(BattleEntity caller, int sd, int level)
     {
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), 0, 0, BattleHelper.ContactLevel.Contact);
         caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Sleep, 1, (sbyte)(1 + 1 * level)), caller.posId);
     }
@@ -1031,7 +1064,7 @@ public class LM_MeteorStomp : LunaMove
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                     //StartCoroutine(caller.RevertScale(0.1f));
                     yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
             }
             else
@@ -1041,7 +1074,7 @@ public class LM_MeteorStomp : LunaMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
         else
@@ -1070,13 +1103,16 @@ public class LM_MeteorStomp : LunaMove
         switch (level)
         {
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, sd + 2, BattleHelper.DamageType.Fire, propertyBlockB, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackDown, 2, 3), caller.posId);
                 break;
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, sd + 2, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, sd - 2 + level * 2, BattleHelper.DamageType.Fire, propertyBlockB, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackDown, (sbyte)(level * 2 - 4), 3), caller.posId);
                 break;
@@ -1088,13 +1124,16 @@ public class LM_MeteorStomp : LunaMove
         switch (level)
         {
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackDown, 2, 3), caller.posId);
                 break;
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 + level * 2, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackDown, (sbyte)(level * 2 - 4), 3), caller.posId);
                 break;
@@ -1186,9 +1225,10 @@ public class LM_UnderStrike : LunaMove
             int sd = 2;
 
             Vector3 bpos = caller.homePos + 2 * Vector3.down;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Dig);
             DigParticles(caller);
             caller.SetAnimation("dig");
-            yield return StartCoroutine(caller.Move(bpos, 16, false, false));
+            yield return StartCoroutine(caller.MoveEasing(bpos, 16, (e) => MainManager.EasingOut(e), false, false));
 
             AC_PressATimed actionCommand = null;
             if (caller is PlayerEntity pcaller) //we have technology
@@ -1227,6 +1267,7 @@ public class LM_UnderStrike : LunaMove
                 {
                     if (level > 1)
                     {
+                        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Undig);
                         DigParticles(caller);
                         ShockwaveEffect(caller);
                         DealDamageSuccessA(caller, sd);
@@ -1237,7 +1278,7 @@ public class LM_UnderStrike : LunaMove
                             actionCommand2.Init(pcaller2);
                             actionCommand2.Setup(0.65f);
                         }
-                        yield return StartCoroutine(caller.JumpHeavy(tpos2, 3f, 0.65f, 0.15f));
+                        yield return StartCoroutine(caller.JumpHeavy(tpos2, 3f, 0.65f, 0.15f, true, true, MainManager.Sound.None));
 
                         bool result2 = actionCommand2 == null ? true : actionCommand2.GetSuccess();
                         if (actionCommand2 != null)
@@ -1262,24 +1303,26 @@ public class LM_UnderStrike : LunaMove
                             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                             //StartCoroutine(caller.RevertScale(0.1f));
                             yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
-                            yield return StartCoroutine(caller.Move(caller.homePos));
+                            yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                         }
                     }
                     else
                     {
+                        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Undig);
                         DigParticles(caller);
                         ShockwaveEffect(caller);
                         DealDamageSuccess(caller, sd);
                         yield return StartCoroutine(caller.JumpHeavy(spos, 2, 0.5f, 0.15f));
                     }
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
                 else
                 {
+                    MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Undig);
                     DigParticles(caller);
                     DealDamageFailure(caller, sd);
-                    yield return StartCoroutine(caller.JumpHeavy(spos, 0.5f, 0.5f, 0.15f));
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.JumpHeavy(spos, 0.5f, 0.5f, 0.15f, true, true, MainManager.Sound.None));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
             }
             else
@@ -1287,10 +1330,14 @@ public class LM_UnderStrike : LunaMove
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
 
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Undig);
+                DigParticles(caller);
+                ShockwaveEffect(caller);
+
                 //extrapolate the move curve
                 //yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.JumpHeavy(spos, 2, 0.5f, 0.15f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.JumpHeavy(spos, 2, 0.5f, 0.15f, true, true, MainManager.Sound.None));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
         else
@@ -1319,6 +1366,7 @@ public class LM_UnderStrike : LunaMove
     public void DealDamageSuccess(BattleEntity caller, int sd)
     {
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
         caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Contact);
     }
     public void DealDamageFailure(BattleEntity caller, int sd)
@@ -1326,13 +1374,16 @@ public class LM_UnderStrike : LunaMove
         switch (level)
         {
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 3, Effect.INFINITE_DURATION), caller.posId);
                 break;
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Contact);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                 caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 + 2 * level, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 3, Effect.INFINITE_DURATION), caller.posId);
                 break;
@@ -1344,12 +1395,15 @@ public class LM_UnderStrike : LunaMove
         switch (level)
         {
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                 caller.DealDamage(caller.curTarget, sd + 2, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Contact);
                 break;
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                 caller.DealDamage(caller.curTarget, sd + 2, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Contact);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                 caller.DealDamage(caller.curTarget, sd - 2 + 2 * level, BattleHelper.DamageType.Dark, propertyBlock, BattleHelper.ContactLevel.Contact);
                 break;
         }
@@ -1360,13 +1414,16 @@ public class LM_UnderStrike : LunaMove
         switch (level)
         {
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamageMultihit(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 6, Effect.INFINITE_DURATION), caller.posId);
                 break;
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamageMultihit(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamageMultihit(caller.curTarget, sd - 4 + 2 * level, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, (sbyte)(level * 3), Effect.INFINITE_DURATION), caller.posId);
                 break;
@@ -1377,13 +1434,16 @@ public class LM_UnderStrike : LunaMove
         switch (level)
         {
             case 2:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 4, Effect.INFINITE_DURATION), caller.posId);
                 break;
             case 1:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 break;
             default:
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 * level, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceHalf);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, (sbyte)(level * 2), Effect.INFINITE_DURATION), caller.posId);
                 break;
@@ -1520,7 +1580,7 @@ public class LM_IronStomp : LunaMove
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                     //StartCoroutine(caller.RevertScale(0.1f));
                     yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
             }
             else
@@ -1530,7 +1590,7 @@ public class LM_IronStomp : LunaMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
         else
@@ -1557,12 +1617,14 @@ public class LM_IronStomp : LunaMove
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
         int defBonus = caller.GetEffectDefenseBonus() + caller.GetBadgeDefenseBonus();
         defBonus *= level;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, sd + 3 + level + defBonus, 0, propertyBlock, BattleHelper.ContactLevel.Contact);
     }
     public void DealDamageFailure(BattleEntity caller, int sd)
     {
         int defBonus = caller.GetEffectDefenseBonus() + caller.GetBadgeDefenseBonus();
         defBonus *= level;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 3 + level + defBonus, 0, 0, BattleHelper.ContactLevel.Contact);
     }
 
@@ -1676,7 +1738,7 @@ public class LM_ElementalStomp : LunaMove
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                     //StartCoroutine(caller.RevertScale(0.1f));
                     yield return StartCoroutine(caller.Jump(targetPos, 0.5f, 0.3f));
-                    yield return StartCoroutine(caller.Move(caller.homePos));
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
             }
             else
@@ -1686,7 +1748,7 @@ public class LM_ElementalStomp : LunaMove
 
                 //extrapolate the move curve
                 yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
-                yield return StartCoroutine(caller.Move(caller.homePos));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
             }
         }
         else
@@ -1766,6 +1828,7 @@ public class LM_ElementalStomp : LunaMove
         */
 
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamageMultihit(caller.curTarget, sd + 2, best, propertyBlock, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
     }
     public void DealDamageFailure(BattleEntity caller, int sd)
@@ -1801,6 +1864,7 @@ public class LM_ElementalStomp : LunaMove
             }
         }
 
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
         caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, best, 0, BattleHelper.ContactLevel.Contact, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
     }
 
@@ -1841,7 +1905,7 @@ public class LM_ElementalStomp : LunaMove
                 continue;
             }
 
-            int temp = caller.DealDamageMultihitCalculation(caller.curTarget, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
+            int temp = caller.DealDamageMultihitCalculation(target, sd + 2, (BattleHelper.DamageType)i, (ulong)BattleHelper.DamageProperties.AC_Success, 1, BattleHelper.MultihitReductionFormula.ReduceThreeFourths);
 
             //one evaluated later wins
             //(note that this is roughly in order of which types are most likely to be highest)
@@ -2132,7 +2196,7 @@ public class LM_TeamThrow : LunaMove
                         //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
                         //StartCoroutine(caller.RevertScale(0.1f));
                         yield return StartCoroutine(other.Jump(targetPos, 0.5f, 0.3f));
-                        yield return StartCoroutine(other.Move(other.homePos));
+                        yield return StartCoroutine(other.MoveEasing(other.homePos, (e) => MainManager.EasingOutIn(e)));
                     }
 
                 }
@@ -2140,7 +2204,7 @@ public class LM_TeamThrow : LunaMove
                 {
                     //Fly off into space
                     //extrapolate the move curve
-                    //yield return StartCoroutine(other.Move(tpos2, 15));
+                    //yield return StartCoroutine(other.MoveEasing(tpos2, 15));
 
                     //other.transform.position = other.transform.position - other.transform.position.y * Vector3.up;
                     //fall down
@@ -2170,14 +2234,14 @@ public class LM_TeamThrow : LunaMove
                     {
                         other.Warp(other.homePos + Vector3.left * 4);
                     }
-                    yield return StartCoroutine(other.Move(other.homePos));
+                    yield return StartCoroutine(other.MoveEasing(other.homePos, (e) => MainManager.EasingOutIn(e)));
                 }
             }
             else
             {
                 //Fly off into space
                 //extrapolate the move curve
-                //yield return StartCoroutine(other.Move(tpos2, 15));
+                //yield return StartCoroutine(other.MoveEasing(tpos2, 15));
 
                 //other.transform.position = other.transform.position - other.transform.position.y * Vector3.up;
                 //fall down
@@ -2227,7 +2291,7 @@ public class LM_TeamThrow : LunaMove
                 {
                     other.Warp(other.homePos + Vector3.left * 4);
                 }
-                yield return StartCoroutine(other.Move(other.homePos));
+                yield return StartCoroutine(other.MoveEasing(other.homePos, (e) => MainManager.EasingOutIn(e)));
             }
 
             caller.InflictEffectForce(other, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
@@ -2263,6 +2327,7 @@ public class LM_TeamThrow : LunaMove
                 break;
         }
         ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
         other.DealDamagePooled(caller, caller.curTarget, a, b, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Contact);
     }
     public virtual void DealDamageFailure(BattleEntity caller, BattleEntity other, int sd, bool result)
@@ -2280,6 +2345,7 @@ public class LM_TeamThrow : LunaMove
                 b = ((PlayerEntity)caller).GetStompDamage() + 11;
                 break;
         }
+        caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
         other.DealDamagePooled(caller, caller.curTarget, a, b, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
     }
 
@@ -2606,7 +2672,7 @@ public class LM_Smash : LunaMove
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
         target += Vector3.left * 0.5f * caller.width + 0.4f * Vector3.left;
         target.y = caller.homePos.y;
-        yield return StartCoroutine(caller.Move(target));
+        yield return StartCoroutine(caller.MoveEasing(target, (e) => MainManager.EasingOutIn(e)));
 
         if (caller.curTarget != null)
         {
@@ -2647,7 +2713,7 @@ public class LM_Smash : LunaMove
             }
             yield return new WaitForSeconds(0.1f);
         }
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 
     public virtual float ActionCommandTime()
@@ -2700,10 +2766,12 @@ public class LM_Smash : LunaMove
         if (result)
         {
             propertyBlock |= (ulong)BattleHelper.DamageProperties.AC_Success;
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
             caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
         }
         else
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
             caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
         }
     }
@@ -2826,15 +2894,19 @@ public class LM_PowerSmash : LM_Smash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd + 2, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd + 6, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 3:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd + 10, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd - 2 + level * 4, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -2844,15 +2916,19 @@ public class LM_PowerSmash : LM_Smash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 6, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 3:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 10, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 + level * 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -2946,11 +3022,13 @@ public class LM_DazzleSmash : LM_Smash
         if (result)
         {
             ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
             caller.DealDamage(caller.curTarget, sd, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
             caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, (sbyte)(1 + level * 2)), caller.posId);
         }
         else
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
             caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f), BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
             caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Dizzy, 1, (sbyte)(1 + level)), caller.posId);
         }
@@ -3070,7 +3148,7 @@ public class LM_HammerThrow : LunaMove
 
         //Vector3 target = caller.curTarget.transform.position - caller.curTarget.width * Vector3.right;
         //target += Vector3.left * 0.5f;
-        //yield return StartCoroutine(caller.Move(target));
+        //yield return StartCoroutine(caller.MoveEasing(target));
 
         if (caller.curTarget != null)
         {
@@ -3105,12 +3183,15 @@ public class LM_HammerThrow : LunaMove
                     switch (level)
                     {
                         case 2:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                             caller.DealDamage(caller.curTarget, sd + 6, 0, propertyBlock, BattleHelper.ContactLevel.Infinite);
                             break;
                         case 1:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                             caller.DealDamage(caller.curTarget, sd + 2, 0, propertyBlock, BattleHelper.ContactLevel.Infinite);
                             break;
                         default:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                             caller.DealDamage(caller.curTarget, sd - 2 + 4 * level, 0, propertyBlock, BattleHelper.ContactLevel.Infinite);
                             break;
                     }
@@ -3120,12 +3201,15 @@ public class LM_HammerThrow : LunaMove
                     switch (level)
                     {
                         case 2:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                             caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 6, 0, 0, BattleHelper.ContactLevel.Infinite);
                             break;
                         case 1:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                             caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, 0, 0, BattleHelper.ContactLevel.Infinite);
                             break;
                         default:
+                            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                             caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 + 4 * level, 0, 0, BattleHelper.ContactLevel.Infinite);
                             break;
                     }
@@ -3138,7 +3222,7 @@ public class LM_HammerThrow : LunaMove
                 yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
             }
         }
-        //yield return StartCoroutine(caller.Move(caller.homePos));
+        //yield return StartCoroutine(caller.MoveEasing(caller.homePos));
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -3238,12 +3322,15 @@ public class LM_BreakerSmash : LM_Smash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd + 5, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd + 1 + level * 2, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -3253,12 +3340,15 @@ public class LM_BreakerSmash : LM_Smash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 5, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 1 + level * 2, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -3363,10 +3453,12 @@ public class LM_FlameSmash : LM_Smash
         if (result)
         {
             ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
             caller.DealDamage(caller.curTarget, sd + 2 + 3 * level, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Weapon);
         }
         else
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
             caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2 + 3 * level, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Weapon);
         }
     }
@@ -3453,7 +3545,7 @@ public class LM_MomentumSmash : LM_Smash
 
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
         target += Vector3.left * 0.5f * caller.width + 0.4f * Vector3.left;
-        yield return StartCoroutine(caller.Move(target));
+        yield return StartCoroutine(caller.MoveEasing(target, (e) => MainManager.EasingOutIn(e)));
 
         bool miss = true;
         if (caller.curTarget != null)
@@ -3498,41 +3590,10 @@ public class LM_MomentumSmash : LM_Smash
 
         if (miss)
         {
-            yield return StartCoroutine(caller.Move(caller.homePos));
+            yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
         }
         else
         {
-            List<BattleEntity> playerParty = BattleControl.Instance.GetEntities((e) => e.posId < 0);
-
-            //Store the info for the first entity on the list (for later)
-            Vector3 tempHPos = playerParty[0].homePos;
-            Vector3 tempPos = playerParty[0].transform.position;
-            //Not swapping posIds makes things still work
-            int tempID = playerParty[0].posId;
-
-            BattleControl.Instance.SwapEffectCasters(playerParty);
-
-            for (int i = 0; i < playerParty.Count; i++)
-            {
-                //Debug.Log("[" + i + "] " + playerParty[i].homePos + " " + playerParty[i].posId);
-                if (i == playerParty.Count - 1)
-                {
-                    playerParty[i].homePos = tempHPos;
-                    //playerParty[i].transform.position = tempPos;
-                    playerParty[i].posId = tempID;
-                }
-                else
-                {
-                    playerParty[i].homePos = playerParty[i + 1].homePos;
-                    //playerParty[i].transform.position = playerParty[i + 1].transform.position;
-                    playerParty[i].posId = playerParty[i + 1].posId;
-                }
-                //Debug.Log("[" + i + "] " + playerParty[i].homePos + " " + playerParty[i].posId);
-                if (playerParty[i] != caller)
-                {
-                    StartCoroutine(playerParty[i].Move(playerParty[i].homePos, 15));
-                }
-            }
             yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 2, 0.5f, 0.15f));
         }
     }
@@ -3552,10 +3613,12 @@ public class LM_MomentumSmash : LM_Smash
         if (result)
         {
             propertyBlock |= (ulong)BattleHelper.DamageProperties.AC_Success;
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
             caller.DealDamage(caller.curTarget, sd + 2 * level, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
         }
         else
         {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
             caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2 * level, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon);
         }
     }
@@ -3669,10 +3732,12 @@ public class LM_QuakeSmash : LunaMove
                 }
                 if (result)
                 {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                     caller.DealDamage(target, sd - 2 + level, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Infinite);
                 }
                 else
                 {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Launch);
                     caller.DealDamage(target, Mathf.CeilToInt((sd - 1) / 2f) - 1 + level, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 }
             } else
@@ -3682,7 +3747,7 @@ public class LM_QuakeSmash : LunaMove
         }
 
 
-        yield return StartCoroutine(caller.Move(caller.homePos));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 
     public virtual IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
@@ -3796,12 +3861,15 @@ public class LM_LightSmash : LM_Smash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd + 6, BattleHelper.DamageType.Light, propertyBlock, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd + 9, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, sd + 3 + 3 * level, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -3811,12 +3879,15 @@ public class LM_LightSmash : LM_Smash
             switch (level)
             {
                 case 1:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 6, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Weapon);
                     break;
                 case 2:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 9, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
                 default:
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                     caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 3 + 3 * level, BattleHelper.DamageType.Light, propertyBlockB, BattleHelper.ContactLevel.Weapon);
                     break;
             }
@@ -4068,7 +4139,7 @@ public class LM_HammerBeat : LunaMove
 
         //Vector3 target = caller.curTarget.transform.position - caller.curTarget.width * Vector3.right;
         //target += Vector3.left * 0.5f;
-        //yield return StartCoroutine(caller.Move(target));
+        //yield return StartCoroutine(caller.MoveEasing(target));
 
         if (caller.curTarget != null)
         {
@@ -4119,7 +4190,7 @@ public class LM_HammerBeat : LunaMove
                 }
             }
         }
-        //yield return StartCoroutine(caller.Move(caller.homePos));
+        //yield return StartCoroutine(caller.MoveEasing(caller.homePos));
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)

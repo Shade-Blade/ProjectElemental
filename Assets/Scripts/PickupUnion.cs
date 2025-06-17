@@ -248,6 +248,22 @@ public class PickupUnion
                 return "50 XP";
             case MainManager.MiscSprite.XP99:
                 return "99 XP";
+            case MainManager.MiscSprite.ItemBag2:
+                return "Item Bag (2)";
+            case MainManager.MiscSprite.ItemBag4:
+                return "Item Bag (4)";
+            case MainManager.MiscSprite.ItemBag8:
+                return "Item Bag (8)";
+            case MainManager.MiscSprite.ItemBagX:
+                return "Item Bag (X)";
+            case MainManager.MiscSprite.RecipeBag2:
+                return "Recipe Bag (2)";
+            case MainManager.MiscSprite.RecipeBag4:
+                return "Recipe Bag (4)";
+            case MainManager.MiscSprite.RecipeBag8:
+                return "Recipe Bag (8)";
+            case MainManager.MiscSprite.RecipeBagX:
+                return "Recipe Bag (X)";
         }
         return "?";
     }
@@ -327,6 +343,22 @@ public class PickupUnion
                 return "The whole party gains 50 XP. This will not put you over 99 XP.";
             case MainManager.MiscSprite.XP99:
                 return "The whole party gains 99 XP. This will not put you over 99 XP.";
+            case MainManager.MiscSprite.ItemBag2:
+                return "A bag containing 2 random items.";
+            case MainManager.MiscSprite.ItemBag4:
+                return "A bag containing 4 random items.";
+            case MainManager.MiscSprite.ItemBag8:
+                return "A bag containing 8 random items.";
+            case MainManager.MiscSprite.ItemBagX:
+                return "A bag containing enough random items to fill your inventory completely.";
+            case MainManager.MiscSprite.RecipeBag2:
+                return "A bag containing 2 random recipe items.";
+            case MainManager.MiscSprite.RecipeBag4:
+                return "A bag containing 4 random recipe items.";
+            case MainManager.MiscSprite.RecipeBag8:
+                return "A bag containing 8 random recipe items.";
+            case MainManager.MiscSprite.RecipeBagX:
+                return "A bag containing enough random recipe items to fill your inventory completely.";
         }
         return "?";
     }
@@ -653,6 +685,22 @@ public class PickupUnion
                 return 150;
             case MainManager.MiscSprite.XP99:
                 return 299;
+            case MainManager.MiscSprite.ItemBag2:
+                return 60;
+            case MainManager.MiscSprite.ItemBag4:
+                return 120;
+            case MainManager.MiscSprite.ItemBag8:
+                return 240;
+            case MainManager.MiscSprite.ItemBagX:
+                return 240;
+            case MainManager.MiscSprite.RecipeBag2:
+                return 100;
+            case MainManager.MiscSprite.RecipeBag4:
+                return 200;
+            case MainManager.MiscSprite.RecipeBag8:
+                return 400;
+            case MainManager.MiscSprite.RecipeBagX:
+                return 400;
         }
 
         return 0;

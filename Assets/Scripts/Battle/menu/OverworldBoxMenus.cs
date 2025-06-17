@@ -949,7 +949,8 @@ public class PromptBoxMenu : BoxMenu
     public string topText;
 
     public float width;
-    
+
+    //public new const float MIN_SELECT_TIME = 0.15f;
 
     public static PromptBoxMenu BuildMenu(string[] text, string[] args, int p_cancelIndex = -2, string topText = null)
     {

@@ -173,7 +173,10 @@ public class BattleSelectionMenu : MenuHandler
         //this also happens before the B button is checked so you can't somehow back out in that 1 frame window
         if (lifetime > MIN_SELECT_TIME && ((InputManager.GetButtonDown(InputManager.Button.A) && possibleEntities.Count != 0) || targetArea.range == TargetArea.TargetAreaType.None)) //Time to move!
         {
-            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+            if (targetArea.range != TargetArea.TargetAreaType.None)
+            {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+            }
             menuExit?.Invoke(this, new MenuExitEventArgs(GetFullResult()));
             switch (parentMenuName)
             {

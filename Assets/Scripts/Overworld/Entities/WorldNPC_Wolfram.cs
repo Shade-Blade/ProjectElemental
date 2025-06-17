@@ -48,13 +48,19 @@ public class WorldNPC_Wolfram : WorldNPCEntity
         List<Badge.BadgeType> badgePool = new List<Badge.BadgeType>();
         for (int i = 1; i < (int)Badge.BadgeType.EndOfTable; i++)
         {
-            int c = Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter;
-            if (c == badgeChapter || (RandomGenerator.Get() < 0.25f && c == badgeChapter + 1) || (RandomGenerator.Get() < 0.25f && c == badgeChapter - 1))
+            if (floor > 100)
             {
-                //???
-                if (pd.badgeInventory.Find((e) => (e.type == (Badge.BadgeType)i)).type != (Badge.BadgeType)i)
+                badgePool.Add((Badge.BadgeType)i);
+            } else
+            {
+                int c = Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter;
+                if (c == badgeChapter || (RandomGenerator.Get() < 0.25f && c == badgeChapter + 1) || (RandomGenerator.Get() < 0.25f && c == badgeChapter - 1))
                 {
-                    badgePool.Add((Badge.BadgeType)i);
+                    //???
+                    if (pd.badgeInventory.Find((e) => (e.type == (Badge.BadgeType)i)).type != (Badge.BadgeType)i)
+                    {
+                        badgePool.Add((Badge.BadgeType)i);
+                    }
                 }
             }
         }
@@ -70,12 +76,18 @@ public class WorldNPC_Wolfram : WorldNPCEntity
         badgePool = new List<Badge.BadgeType>();
         for (int i = 1; i < (int)Badge.BadgeType.EndOfTable; i++)
         {
-            int c = Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter;
-            if (c < badgeChapter && c > badgeChapter - 3)
+            if (floor > 100)
             {
-                if (pd.badgeInventory.Find((e) => (e.type == (Badge.BadgeType)i)).type != (Badge.BadgeType)i)
+                badgePool.Add((Badge.BadgeType)i);
+            } else
+            {
+                int c = Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter;
+                if (c < badgeChapter && c > badgeChapter - 3)
                 {
-                    badgePool.Add((Badge.BadgeType)i);
+                    if (pd.badgeInventory.Find((e) => (e.type == (Badge.BadgeType)i)).type != (Badge.BadgeType)i)
+                    {
+                        badgePool.Add((Badge.BadgeType)i);
+                    }
                 }
             }
         }
@@ -91,12 +103,18 @@ public class WorldNPC_Wolfram : WorldNPCEntity
         badgePool = new List<Badge.BadgeType>();
         for (int i = 1; i < (int)Badge.BadgeType.EndOfTable; i++)
         {
-            int c = Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter;
-            if (c > badgeChapter && c < badgeChapter - 3)
+            if (floor > 100)
             {
-                if (pd.badgeInventory.Find((e) => (e.type == (Badge.BadgeType)i)).type != (Badge.BadgeType)i)
+                badgePool.Add((Badge.BadgeType)i);
+            } else
+            {
+                int c = Badge.GetBadgeDataEntry((Badge.BadgeType)i).chapter;
+                if (c > badgeChapter && c < badgeChapter - 3)
                 {
-                    badgePool.Add((Badge.BadgeType)i);
+                    if (pd.badgeInventory.Find((e) => (e.type == (Badge.BadgeType)i)).type != (Badge.BadgeType)i)
+                    {
+                        badgePool.Add((Badge.BadgeType)i);
+                    }
                 }
             }
         }

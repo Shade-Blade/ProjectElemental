@@ -487,6 +487,7 @@ public class BattleEntityMovesetData
         //Each line is 42? chars
 
         //so to be safe I'll only allow 13 lines per page
+        //Note that my new textbox failsafe will enforce it not overflowing the page but it looks very ugly
         string output = "Moveset Data<line>";
 
         bool hard = false;
@@ -618,7 +619,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public List<DefenseTableEntry> defenseTable = new List<DefenseTableEntry>();    //determines defense to damage types
 
-    public float attackMultiplier;
+    public float statMultiplier;
     public bool applyCurseAttack;
 
     //battle variables
@@ -732,6 +733,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public bool perfectKill;    //was this entity perfect killed? Set to true in the take damage things
 
+    public float hurtResetTime;
+    public BattleHelper.SpecialHitAnim specialHitAnim;
+
     public List<BattleHelper.Event> eventQueue = new List<BattleHelper.Event>();                                     //what events this entity has to do (When inEvent is false, start the next one on the list)
     public bool inEvent;
     public bool immediateInEvent    //inEvent but also works even if this is the same frame as an event being queued
@@ -761,7 +765,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //replace this with something that reads from file
     public virtual string GetName()
     {
-        return GetNameStatic(entityID);
+        return GetNameStatic(entityID) + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier)/100));
     }
     public static string GetNameStatic(BattleHelper.EntityID entityID)
     {
@@ -922,12 +926,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             return;
         }
 
-        maxHP = BattleControl.Instance.CurseMultiply(bed.maxHP);        
+        if (statMultiplier <= 0)    //fix default 0s
+        {
+            statMultiplier = 1;
+        }
+
+        maxHP = Mathf.CeilToInt(BattleControl.Instance.CurseMultiply(bed.maxHP) * statMultiplier);        
         if (bed.maxHP > 0 && maxHP < 1)
         {
             maxHP = 1;
         }
-        level = bed.level;
+        level = Mathf.CeilToInt(bed.level * statMultiplier);
         bonusLevel = bed.bonusXP;
         heavy = bed.heavy;
         moneyMult = bed.moneyMult;
@@ -1007,7 +1016,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         SetStatsWithBEData();
 
         //attackMultiplier = BattleControl.Instance.GetCurseMultiplier();
-        attackMultiplier = 1;
+        //statMultiplier = 1;
         applyCurseAttack = true;
         statusMaxTurns = baseStatusMaxTurns;
         hp = maxHP;
@@ -2078,6 +2087,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
         }
 
+        float shakeAmount = 0.02f * damage;
+        if (shakeAmount > 0.3f)
+        {
+            shakeAmount = 0.3f;
+        }
+        if (shakeAmount > 0)
+        {
+            StartCoroutine(MainManager.Instance.StandardCameraShake(Mathf.Max(0.1f, shakeAmount), shakeAmount));
+        }
+
 
 
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -2356,6 +2375,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Heal);
         }
+        if (health < 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NegativeHeal);
+        }
 
         if (!BattleControl.IsPlayerControlled(this, false) && ShouldShowHPBar())
         {
@@ -2451,6 +2474,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Heal);
         }
+        if (health < 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NegativeHeal);
+        }
 
         //Subtle difference: Negative healing will not reduce you to 0 and bypasses all the damage stuff
         /*
@@ -2520,12 +2547,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Energize);
         }
+        if (energy < 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NegativeEnergize);
+        }
 
         BattleControl.Instance.AddEP(this, energy);
 
         //Vector3 hoffset = offset;
 
-        if (energy > 0)
+        if (energy >= 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Energize, energy, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
@@ -2549,12 +2580,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Energize);
         }
+        if (energy < 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NegativeEnergize);
+        }
 
         int overheal = BattleControl.Instance.AddEP(this, energy);
 
         //Vector3 hoffset = offset;
 
-        if (energy > 0)
+        if (energy >= 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Energize, energy, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateEnergyParticles(this, (int)(1 + 9 * Mathf.Log(energy, 60)));
@@ -2579,10 +2614,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Soul);
         }
+        if (se < 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NegativeSoul);
+        }
 
         BattleControl.Instance.AddSE(this, se);
 
-        if (se > 0)
+        if (se >= 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.SoulEnergize, se, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
@@ -2599,10 +2638,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Soul);
         }
+        if (se < 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NegativeSoul);
+        }
 
         int overheal = BattleControl.Instance.AddSE(this, se);
 
-        if (se > 0)
+        if (se >= 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.SoulEnergize, se, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
@@ -2635,9 +2678,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Stamina);
         }
+        if (st < 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NegativeStamina);
+        }
 
         stamina += st;
-        if (st > 0)
+        if (st >= 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Stamina, st, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
@@ -2664,9 +2711,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Stamina);
         }
+        if (st < 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_NegativeStamina);
+        }
 
         stamina += st;
-        if (st > 0)
+        if (st >= 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Stamina, st, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateStaminaParticles(this, (int)(1 + 9 * Mathf.Log(st, 60)));
@@ -2715,10 +2766,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Coins);
         }
+        if (coins < 0)
+        {
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Coins);
+        }
 
         BattleControl.Instance.AddCoins(this, coins);
 
-        if (coins > 0)
+        if (coins >= 0)
         {
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.Coins, coins, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateCoinParticles(this, (int)(1 + 9 * Mathf.Log(coins, 60)));
@@ -3023,7 +3078,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             {
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
             }
-            damage = (int)(damage * attackMultiplier + 0.001f);
+            damage = (int)(damage * statMultiplier + 0.001f);
         }
 
         bool canCounterProperties = !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NoCounterProperties);
@@ -3123,7 +3178,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             {
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
             }
-            damage = (int)(damage * attackMultiplier + 0.001f);
+            damage = (int)(damage * statMultiplier + 0.001f);
         }
 
         bool canCounterProperties = !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NoCounterProperties);
@@ -3237,8 +3292,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 damageO = BattleControl.Instance.CurseAttackCalculation(damageO);
             }
 
-            damage = (int)(damage * attackMultiplier + 0.001f);
-            damageO = (int)(damageO * other.attackMultiplier + 0.001f);
+            damage = (int)(damage * statMultiplier + 0.001f);
+            damageO = (int)(damageO * other.statMultiplier + 0.001f);
         }
 
         //Debug.Log(damage + " " + damageO);
@@ -3341,8 +3396,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 damageO = BattleControl.Instance.CurseAttackCalculation(damageO);
             }
 
-            damage = (int)(damage * attackMultiplier + 0.001f);
-            damageO = (int)(damageO * other.attackMultiplier + 0.001f);
+            damage = (int)(damage * statMultiplier + 0.001f);
+            damageO = (int)(damageO * other.statMultiplier + 0.001f);
         }
 
         bool canCounterProperties = !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NoCounterProperties);
@@ -4247,7 +4302,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 boost = 0;
             }
 
-            Debug.Log("Boost : " + boost + " with original " + (inputDamage - totalbonus));
+            //Debug.Log("Boost : " + boost + " with original " + (inputDamage - totalbonus));
         }
 
 
@@ -4327,7 +4382,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             {
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
             }
-            damage = (int)(damage * attackMultiplier + 0.001f);
+            damage = (int)(damage * statMultiplier + 0.001f);
         }
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -4360,7 +4415,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             {
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
             }
-            damage = (int)(damage * attackMultiplier + 0.001f);
+            damage = (int)(damage * statMultiplier + 0.001f);
         }
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -4399,8 +4454,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
                 damageO = BattleControl.Instance.CurseAttackCalculation(damageO);
             }
-            damage = (int)(damage * attackMultiplier + 0.001f);
-            damageO = (int)(damageO * other.attackMultiplier + 0.001f);
+            damage = (int)(damage * statMultiplier + 0.001f);
+            damageO = (int)(damageO * other.statMultiplier + 0.001f);
         }
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -4435,8 +4490,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
                 damageO = BattleControl.Instance.CurseAttackCalculation(damageO);
             }
-            damage = (int)(damage * attackMultiplier + 0.001f);
-            damageO = (int)(damageO * other.attackMultiplier + 0.001f);
+            damage = (int)(damage * statMultiplier + 0.001f);
+            damageO = (int)(damageO * other.statMultiplier + 0.001f);
         }
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -5572,7 +5627,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         int hp = 0;
         int maxHP = target.maxHP;
-        int levDiff = target.level + target.bonusLevel - level;
+        int levDiff = (int)(target.level * target.statMultiplier) + target.bonusLevel - level;
 
         bool hasStatus = false;
 
@@ -6623,16 +6678,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //Note: enemies are allowed to cheat the positive cap (Ha)
             if (effects[i].effect == Effect.EffectType.Focus || effects[i].effect == Effect.EffectType.Defocus)
             {
-                if (effects[i].potency > Effect.FOCUS_CAP && !(!BattleControl.IsPlayerControlled(this, true) && effects[i].effect == Effect.EffectType.Focus))
+                if (effects[i].potency > Effect.GetFocusCap() && !(!BattleControl.IsPlayerControlled(this, true) && effects[i].effect == Effect.EffectType.Focus))
                 {
-                    effects[i].potency = Effect.FOCUS_CAP;
+                    effects[i].potency = (sbyte)Effect.GetFocusCap();
                 }
             }
             if (effects[i].effect == Effect.EffectType.Absorb || effects[i].effect == Effect.EffectType.Sunder)
             {
-                if (effects[i].potency > Effect.ABSORB_CAP && !(!BattleControl.IsPlayerControlled(this, true) && effects[i].effect == Effect.EffectType.Absorb))
+                if (effects[i].potency > Effect.GetAbsorbCap() && !(!BattleControl.IsPlayerControlled(this, true) && effects[i].effect == Effect.EffectType.Absorb))
                 {
-                    effects[i].potency = Effect.ABSORB_CAP;
+                    effects[i].potency = (sbyte)Effect.GetAbsorbCap();
                 }
 
             }
@@ -6668,7 +6723,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         effects.Sort((a, b) => ((int)a.effect - (int)b.effect));
 
         //recalculate maxHP using max HP Boost
-        maxHP = BattleControl.Instance.CurseMultiply(BattleEntityData.GetBattleEntityData(entityID).maxHP) + GetEffectPotency(Effect.EffectType.MaxHPBoost) - GetEffectPotency(Effect.EffectType.MaxHPReduction);
+        maxHP = Mathf.CeilToInt(BattleControl.Instance.CurseMultiply(BattleEntityData.GetBattleEntityData(entityID).maxHP) * statMultiplier) + GetEffectPotency(Effect.EffectType.MaxHPBoost) - GetEffectPotency(Effect.EffectType.MaxHPReduction);
 
         if (maxHP < 0)
         {
@@ -7708,6 +7763,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         yield return StartCoroutine(DefaultEventHandler(eventID));
     }
 
+    public void SetSpecialHurtAnim(BattleHelper.SpecialHitAnim specialHitAnim)
+    {
+        this.specialHitAnim = specialHitAnim;
+    }
+
     //Default event handlers
     public IEnumerator DefaultEventHandler(BattleHelper.Event eventID)
     {
@@ -7733,16 +7793,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 yield return StartCoroutine(DefaultDeathEvent());
                 break;
             case BattleHelper.Event.HiddenHurt:
+                //reset this also
+                specialHitAnim = SpecialHitAnim.Default;
                 break;
             case BattleHelper.Event.ComboHurt:
                 SetAnimation("hurt", true);
+                yield return StartCoroutine(DefaultHurtEvent(true));
                 //yield return StartCoroutine(Shake(0.1f, 0.05f));
                 inCombo = true;
                 break;
             case BattleHelper.Event.StatusHurt:
             case BattleHelper.Event.Hurt:
                 SetAnimation("hurt", true);
-                yield return StartCoroutine(DefaultHurtEvent());
+                yield return StartCoroutine(DefaultHurtEvent(false));
                 SetIdleAnimation();
                 break;
             case BattleHelper.Event.KnockbackHurt:
@@ -7801,17 +7864,18 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             case BattleHelper.Event.HiddenHurt:
                 break;
             case BattleHelper.Event.ComboHurt:
-                //yield return StartCoroutine(Shake(0.1f, 0.05f));
+                SetAnimation("hurt");
                 inCombo = true;
+                yield return StartCoroutine(DefaultHurtEvent(true));
                 break;
             case BattleHelper.Event.StatusHurt:
                 SetAnimation("hurt");
-                yield return StartCoroutine(DefaultHurtEvent());
+                yield return StartCoroutine(DefaultHurtEvent(false));
                 SetIdleAnimation();
                 break;
             case BattleHelper.Event.Hurt:
                 SetAnimation("hurt");
-                yield return StartCoroutine(DefaultHurtEvent());
+                yield return StartCoroutine(DefaultHurtEvent(false));
                 yield return StartCoroutine(FlyingFallDown());
                 SetIdleAnimation();
                 break;
@@ -7865,7 +7929,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //Fall down
             float dist = homePos.y;
             homePos.y = 0;
-            yield return StartCoroutine(Jump(homePos, 0, dist / 8));
+            yield return StartCoroutine(Jump(homePos, 0, dist / 8, true, true, MainManager.Sound.None));
             SetEntityProperty(BattleHelper.EntityProperties.Grounded, true);
         }
     }
@@ -7891,10 +7955,18 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         sameFrameHealEffects = 0;
     }
 
+    public virtual void ResetSubobjectTransform()
+    {
+        subObject.transform.localPosition = Vector3.zero;
+        subObject.transform.localEulerAngles = Vector3.zero;
+    }
+
     public virtual IEnumerator DefaultKnockbackHurt(bool meta)
     {
         HideHPBar();
         BattleEntity target = BattleControl.Instance.GetKnockbackTarget(this);
+
+        specialHitAnim = BattleHelper.SpecialHitAnim.Default;
 
         if (heavy)
         {
@@ -7929,6 +8001,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public virtual IEnumerator DefaultDeathEvent()
     {
+        specialHitAnim = BattleHelper.SpecialHitAnim.Default;
+
         alive = false;
         BattleControl.Instance.AddToDeathList(this);
         RemoveAllEffects();
@@ -7950,20 +8024,59 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         Destroy(gameObject);
     }
 
-    public virtual IEnumerator DefaultHurtEvent()
+    public virtual IEnumerator DefaultHurtEvent(bool combo)
     {
-        inCombo = false;
-        yield return StartCoroutine(Shake(0.5f, 0.05f));
-        if (!BattleControl.Instance.showHPBars)
+        if (!combo)
         {
-            HideHPBar();
+            inCombo = false;
+        }
+
+        ResetSubobjectTransform();
+
+        //?
+        SpecialHitAnim localHitAnim = specialHitAnim;
+        switch (localHitAnim)
+        {
+            case BattleHelper.SpecialHitAnim.Default:
+                yield return StartCoroutine(Shake(0.4f, 0.2f));
+                break;
+            case BattleHelper.SpecialHitAnim.Spin:
+                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.4f, 0.7f));
+                break;
+            case BattleHelper.SpecialHitAnim.SpinFast:
+                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.125f, 0.7f));
+                break;
+            case BattleHelper.SpecialHitAnim.Squish:
+                yield return StartCoroutine(Squish(0.1f, Mathf.Min(0.8f, 0.35f / height)));
+                yield return StartCoroutine(RevertScale(0.1f));
+                break;
+            case BattleHelper.SpecialHitAnim.ReverseSquish: //squeeze
+                yield return StartCoroutine(Squish(0.1f, Mathf.Max(-0.8f, -0.35f / height)));
+                yield return StartCoroutine(RevertScale(0.1f));
+                break;
+            case BattleHelper.SpecialHitAnim.Launch:
+                //idea: also squishes
+                StartCoroutine(JumpHeavy(homePos, 0.5f, 0.15f, 1, false, false));
+                yield return StartCoroutine(Squish(0.1f, Mathf.Min(0.8f, 0.35f / height)));
+                yield return StartCoroutine(RevertScale(0.1f));
+                break;
+        }
+
+        specialHitAnim = BattleHelper.SpecialHitAnim.Default;
+
+        if (!combo)
+        {
+            if (!BattleControl.Instance.showHPBars)
+            {
+                HideHPBar();
+            }
         }
     }
 
     public virtual IEnumerator DefaultCureEffect()
     {
         MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectWearOff, 1);
-        yield return StartCoroutine(Jump(homePos, 0.5f, 0.25f));
+        yield return StartCoroutine(Jump(homePos, 0.5f, 0.15f));
     }
 
     public virtual IEnumerator DefaultHealEvent()
@@ -8051,73 +8164,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public IEnumerator Move(Vector3 position, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
-        if (transform.position == position)
-        {
-            yield break;
-        }
-
-        bool frameOne = false;
-
-        if (animate)
-        {
-            yield return null;
-            if (flipDefault)
-            {
-                if ((transform.position - position).x < 0)
-                {
-                    SendAnimationData("xunflip");
-                }
-            }
-            else
-            {
-                if ((transform.position - position).x > 0)
-                {
-                    SendAnimationData("xflip");
-                }
-            }
-            SetAnimation("walk");
-        }
-
-        while (true)
-        {
-            if (transform.position == position)
-            {
-                break;
-            }
-
-            //try moving
-            Vector3 diff = position - transform.position;
-            if (diff.magnitude > entitySpeed * Time.deltaTime)
-            {
-                diff = diff.normalized * entitySpeed * Time.deltaTime;
-                transform.position += diff;
-                frameOne = true;
-                yield return null; //Keep going
-            }
-            else
-            {
-                transform.position = position;
-                break;
-            }
-        }
-
-        if (!frameOne)
-        {
-            yield return null;
-        }
-
-        if (animate && animateEnd)
-        {
-            if (flipDefault)
-            {
-                SendAnimationData("xflip");
-            }
-            else
-            {
-                SendAnimationData("xunflip");
-            }
-            SetIdleAnimation();
-        }
+        yield return StartCoroutine(Move(position, entitySpeed, "walk", animate, animateEnd));
     }
     public IEnumerator Move(Vector3 position, float speed, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
@@ -8177,6 +8224,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
         }
 
+        //enforce the move coroutine lasting at least 1 frame
         if (!frameOne)
         {
             yield return null;
@@ -8196,9 +8244,77 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
     }
 
-    public IEnumerator Jump(Vector3 targetPos, float height, float duration, string upAnim, string downAnim, bool animate = true, bool animateEnd = true)
+    public IEnumerator MoveEasing(Vector3 position, Func<float, float> easing, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    {
+        yield return StartCoroutine(MoveEasing(position, entitySpeed, easing, "walk", animate, animateEnd));
+    }
+    public IEnumerator MoveEasing(Vector3 position, float speed, Func<float, float> easing, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    {
+        yield return StartCoroutine(MoveEasing(position, speed, easing, "walk", animate, animateEnd));
+    }
+    public IEnumerator MoveEasing(Vector3 position, float speed, Func<float, float> easing, string anim, bool animate = true, bool animateEnd = true)
+    {
+        Vector3 startPos = transform.position;
+        Vector3 endPos = position;
+        float duration = (endPos - startPos).magnitude / speed;
+        float initialTime = Time.time;
+
+        if (transform.position == position)
+        {
+            yield break;
+        }
+
+        if (animate)
+        {
+            yield return null;
+            if (flipDefault)
+            {
+                if ((transform.position - position).x < 0)
+                {
+                    SendAnimationData("xunflip");
+                }
+            }
+            else
+            {
+                if ((transform.position - position).x > 0)
+                {
+                    SendAnimationData("xflip");
+                }
+            }
+            SetAnimation(anim);
+        }
+
+        float completion = 0;
+
+        while (completion < 1)
+        {
+            //try moving
+            transform.position = Vector3.Lerp(startPos, endPos, easing(completion));
+
+            completion = (Time.time - initialTime) / duration;
+            yield return null;
+        }
+
+        transform.position = endPos;
+
+        if (animate && animateEnd)
+        {
+            if (flipDefault)
+            {
+                SendAnimationData("xflip");
+            }
+            else
+            {
+                SendAnimationData("xunflip");
+            }
+            SetIdleAnimation();
+        }
+    }
+
+    public IEnumerator Jump(Vector3 targetPos, float height, float duration, string upAnim, string downAnim, bool animate = true, bool animateEnd = true, MainManager.Sound sound = MainManager.Sound.SFX_Overworld_JumpGeneric)
     {
         yield return null;
+        MainManager.Instance.PlaySound(gameObject, sound);
         float initialTime = Time.time;
         Vector3 initialPos = transform.position;
         Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
@@ -8257,13 +8373,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             SetIdleAnimation();
         }
     }
-    public IEnumerator Jump(Vector3 targetPos, float height, float duration, bool animate = true, bool animateEnd = true)
+    public IEnumerator Jump(Vector3 targetPos, float height, float duration, bool animate = true, bool animateEnd = true, MainManager.Sound sound = MainManager.Sound.SFX_Overworld_JumpGeneric)
     {
-        yield return StartCoroutine(Jump(targetPos, height, duration, "jump", "fall", animate, animateEnd));
+        yield return StartCoroutine(Jump(targetPos, height, duration, "jump", "fall", animate, animateEnd, sound));
     }
-    public IEnumerator JumpHeavy(Vector3 targetPos, float height, float duration, float heaviness, string upAnim, string downAnim, bool animate = true, bool animateEnd = true)  //-1.0 - 1.0, negative = slow start, heavy end, positive = heavy start, slow end. Values outside the -1.0 to 1.0 range create overshooting
+    public IEnumerator JumpHeavy(Vector3 targetPos, float height, float duration, float heaviness, string upAnim, string downAnim, bool animate = true, bool animateEnd = true, MainManager.Sound sound = MainManager.Sound.SFX_Overworld_JumpGeneric)  //-1.0 - 1.0, negative = slow start, heavy end, positive = heavy start, slow end. Values outside the -1.0 to 1.0 range create overshooting
     {
         yield return null;
+        MainManager.Instance.PlaySound(gameObject, sound);
         float initialTime = Time.time;
         Vector3 initialPos = transform.position;
         Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
@@ -8320,11 +8437,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             SetIdleAnimation();
         }
     }
-    public IEnumerator JumpHeavy(Vector3 targetPos, float height, float duration, float heaviness, bool animate = true, bool animateEnd = true)  //-1.0 - 1.0, negative = slow start, heavy end, positive = heavy start, slow end. Values outside the -1.0 to 1.0 range create overshooting
+    public IEnumerator JumpHeavy(Vector3 targetPos, float height, float duration, float heaviness, bool animate = true, bool animateEnd = true, MainManager.Sound sound = MainManager.Sound.SFX_Overworld_JumpGeneric)  //-1.0 - 1.0, negative = slow start, heavy end, positive = heavy start, slow end. Values outside the -1.0 to 1.0 range create overshooting
     {
-        yield return StartCoroutine(JumpHeavy(targetPos, height, duration, heaviness, "jump", "fall", animate, animateEnd));        
+        yield return StartCoroutine(JumpHeavy(targetPos, height, duration, heaviness, "jump", "fall", animate, animateEnd, sound));        
     }
-    public IEnumerator Jump(Vector3 targetPos, float height, bool animate = true, bool animateEnd = true) //calculate duration from speed and x diff
+    public IEnumerator Jump(Vector3 targetPos, float height, bool animate = true, bool animateEnd = true, MainManager.Sound sound = MainManager.Sound.SFX_Overworld_JumpGeneric) //calculate duration from speed and x diff
     {
         Vector3 initialPos = transform.position;
         float duration = (targetPos[0] - initialPos[0]) / entitySpeed;
@@ -8332,7 +8449,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             duration = -duration;
         }
-        yield return StartCoroutine(Jump(targetPos, height, duration, animate, animateEnd));
+        yield return StartCoroutine(Jump(targetPos, height, duration, animate, animateEnd, sound));
     }
     //calculates a jump from 100% to whenever you hit the ground
     public IEnumerator ExtrapolateJumpHeavy(Vector3 startPos, Vector3 targetPos, float height, float duration, float heaviness, string upAnim, string downAnim, bool animate = true, bool animateEnd = true)
@@ -8684,6 +8801,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //Debug.Log("end");
         subObject.transform.eulerAngles = initialAngle + angle;
     }
+    public IEnumerator SpinHeavy(Vector3 angle, float duration, float heaviness, bool animate = true) //euler angle rotation
+    {
+        yield return StartCoroutine(Spin(angle, (c) => (MainManager.EasingQuadratic(c, heaviness)), duration, animate));
+    }
     public IEnumerator Spin(Vector3 angle, Func<float, float> easing, float duration, bool animate = true) //euler angle rotation
     {
         float initialTime = Time.time;
@@ -8757,7 +8878,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         while (completion < 1)
         {
             offset = UnityEngine.Random.insideUnitSphere;
-            offset *= magnitude;
+            offset *= magnitude * (1 - completion) * (1 - completion);
             subObject.transform.position = initialPos + offset;
             completion = (Time.time - initialTime) / duration;
             yield return null;

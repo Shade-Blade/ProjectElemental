@@ -106,10 +106,13 @@ public class MapScript_PitFloor : MapScript
         Color lightColor = new Color(1f, 1f, 1f, 1f);
 
         int f = ((floor - 1) / 10);
+
+        f %= 10;
+
         mr.material = materials[f];
         mr_block.material = materials[f];
         mr_blockB.material = materialsBlockTransparent[f];
-        MainManager.WorldLocation wl = MainManager.WorldLocation.None;
+        MainManager.WorldLocation wl = MainManager.WorldLocation.Nowhere;
 
         switch (f)
         {

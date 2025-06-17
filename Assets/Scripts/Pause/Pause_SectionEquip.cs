@@ -22,6 +22,7 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
     public override void ApplyUpdate(object state)
     {
         selectorArrow.color = new Color(0.5f, 0.5f, 0.5f, 1);
+        sortTip.gameObject.SetActive(true);
         textbox.transform.parent.transform.parent.gameObject.SetActive(false);
         if (state == null)
         {
@@ -95,6 +96,10 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
         badgeText.SetText((pd.sp - pd.usedSP) + "/" + pd.sp + " SP", true, true);
         badgePieChart.fillAmount = 1 - (pd.usedSP / (pd.sp + 0.0f));
     }
+    public void DisableSortTip()
+    {
+        sortTip.gameObject.SetActive(false);
+    }
     public override object GetState()
     {
         //polls stuff from SectionEquip_Inventory
@@ -131,10 +136,8 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
 
         selectorArrow.gameObject.SetActive(false);
 
-        if (sortTip.isActiveAndEnabled)
-        {
-            sortTip.SetText("(<button,z> to change)", true, true);
-        }
+        sortTip.gameObject.SetActive(true);
+        sortTip.SetText("(<button,z> to change)", true, true);
 
         PlayerData pd = MainManager.Instance.playerData;
         subobject.SetActive(true);

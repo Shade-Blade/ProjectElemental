@@ -69,7 +69,11 @@ public class Pause_SectionSettings_ControlRebinding : Pause_SectionShared_BoxMen
         }
 
         upArrow.enabled = false; //menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText("<button,y>", true, true);   //controls may change, need to set this again
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText("<button,z>", true, true);
 
         visualTopIndex = MainManager.EasingQuadraticTime(visualTopIndex, menuTopIndex, 25);
         for (int i = 0; i < menuEntriesS.Count; i++)
@@ -259,7 +263,11 @@ public class Pause_SectionSettings_ControlRebinding : Pause_SectionShared_BoxMen
 
         //put this in init too
         upArrow.enabled = menuTopIndex > 0;
+        upArrowControlHint.enabled = upArrow.enabled;
+        upArrowControlHint.SetText("<button,y>", true, true);
         downArrow.enabled = menuTopIndex < menuEntries.Length - MENU_SIZE_PER_PAGE && menuEntries.Length > MENU_SIZE_PER_PAGE;
+        downArrowControlHint.enabled = downArrow.enabled;
+        downArrowControlHint.SetText("<button,z>", true, true);
 
         if (textbox != null)
         {
