@@ -71,7 +71,7 @@ public class BM_Plateshell_RageFireball : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -198,7 +198,7 @@ public class BM_Speartongue_TongueStab : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -228,7 +228,7 @@ public class BM_Speartongue_Shroud : EnemyMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.InflictEffect(caller, new Effect(Effect.EffectType.Ethereal, 1, 2));
     }
 }
@@ -246,7 +246,7 @@ public class BM_Speartongue_Stare : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -347,7 +347,7 @@ public class BM_Chaintail_ShockClaw : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
@@ -412,7 +412,7 @@ public class BM_Chaintail_TailWhip : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
@@ -465,7 +465,7 @@ public class BM_Chaintail_Hard_PowerFlash : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Light))
             {
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
@@ -758,7 +758,7 @@ public class BM_Sawcrest_CounterSawToggle : EnemyMove
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         if (caller is BE_Sawcrest sc)
         {
             sc.SetSawState(!sc.sawActive);
@@ -780,7 +780,7 @@ public class BM_Sawcrest_Hard_CounterRevUp : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         if (caller is BE_Sawcrest sc)
         {
             sc.SetSawState(!sc.sawActive);
@@ -942,7 +942,7 @@ public class BM_Coiler_Slap : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
@@ -966,7 +966,7 @@ public class BM_Coiler_Charge : EnemyMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateContactHazardHeavy);
         caller.SetDefense(BattleHelper.DamageType.Normal, 8);
@@ -986,7 +986,7 @@ public class BM_Coiler_ElectroStorm : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 

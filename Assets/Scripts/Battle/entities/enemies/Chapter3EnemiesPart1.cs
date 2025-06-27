@@ -225,7 +225,7 @@ public class BM_Slimewalker_WaterCannon : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         if (caller.curTarget != null)
         {
@@ -328,7 +328,7 @@ public class BM_Slimeworm_Charge : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -361,7 +361,7 @@ public class BM_Slimeworm_Mortar : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -395,7 +395,7 @@ public class BM_Slimeworm_DeepMortar : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -478,7 +478,7 @@ public class BM_Slimebloom_Zap : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -516,7 +516,7 @@ public class BM_Slimebloom_Lob : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -555,7 +555,7 @@ public class BM_Slimebloom_Hard_Flash : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -643,7 +643,7 @@ public class BM_Sirenfish_BubbleSong : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -685,7 +685,7 @@ public class BM_Sirenfish_PowerSong : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 

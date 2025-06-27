@@ -439,7 +439,7 @@ public class BM_CloudJelly_IceSwing : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Light))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
@@ -463,7 +463,7 @@ public class BM_CloudJelly_FrostFortify : EnemyMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 3, Effect.INFINITE_DURATION));
         caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, 3, Effect.INFINITE_DURATION));
         if (BattleControl.Instance.GetCurseLevel() > 0)
@@ -486,7 +486,7 @@ public class BM_CloudJelly_BubbleToss : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
         {
@@ -514,7 +514,7 @@ public class BM_CloudJelly_BubbleBlast : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -554,7 +554,7 @@ public class BM_CloudJelly_PowerBolt : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
         {
@@ -580,7 +580,7 @@ public class BM_CloudJelly_PowerCharge : EnemyMove
         //fly back up        
         yield return StartCoroutine(caller.FlyingFlyBackUp());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.HealHealth(4);
         caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 4, Effect.INFINITE_DURATION));
         if (BattleControl.Instance.GetCurseLevel() > 0)
@@ -602,7 +602,7 @@ public class BM_CloudJelly_CounterFormChange : EnemyMove
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         if (caller is BE_CloudJelly cj)
         {
             if (((caller.lastDamageType & BattleHelper.DamageType.Light) != 0) || ((caller.lastDamageType & BattleHelper.DamageType.Water) != 0) || ((caller.lastDamageType & BattleHelper.DamageType.Air) != 0))
@@ -734,13 +734,13 @@ public class BM_CrystalCrab_TripleClaw : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
             }
             else
@@ -766,7 +766,7 @@ public class BM_CrystalCrab_DarkClaw : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -829,7 +829,7 @@ public class BM_CrystalCrab_Hard_CounterClearClaw : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
@@ -936,7 +936,7 @@ public class BM_CrystalSlug_Slap : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
@@ -970,7 +970,7 @@ public class BM_CrystalSlug_ChillingStare : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -1094,7 +1094,7 @@ public class BM_CrystalClam_CleansingBreath : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -1128,7 +1128,7 @@ public class BM_CrystalClam_Explode : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -1197,7 +1197,7 @@ public class BM_Aurorawing_RubyDust : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -1244,7 +1244,7 @@ public class BM_Aurorawing_SapphireDust : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -1291,7 +1291,7 @@ public class BM_Aurorawing_EmeraldDust : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 

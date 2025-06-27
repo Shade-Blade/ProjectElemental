@@ -5450,7 +5450,10 @@ public class PlayerEntity : BattleEntity
                 yield return StartCoroutine(Shake(0.4f, 0.2f));
                 break;
             case BattleHelper.SpecialHitAnim.Spin:
-                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.4f, 0.7f));
+                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.4f, 1));
+                break;
+            case BattleHelper.SpecialHitAnim.SpinFast:
+                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.125f, 1));
                 break;
             case BattleHelper.SpecialHitAnim.Squish:
                 yield return StartCoroutine(Squish(0.075f, 0.3f / height));
@@ -5462,7 +5465,7 @@ public class PlayerEntity : BattleEntity
                 break;
             case BattleHelper.SpecialHitAnim.Launch:
                 //idea: also squishes
-                StartCoroutine(JumpHeavy(homePos, 0.5f, 0.15f, 1, false, false));
+                StartCoroutine(JumpHeavy(homePos, 0.5f, 0.15f, 1, false, false, Sound.None));
                 yield return StartCoroutine(Squish(0.075f, 0.3f / height));
                 yield return StartCoroutine(RevertScale(0.075f));
                 break;
@@ -5527,9 +5530,9 @@ public class PlayerEntity : BattleEntity
                 if (!dead)
                 {
                     SetAnimation("hurt", true);
-                    yield return StartCoroutine(Spin(Vector3.up * 360, 0.5f));
+                    yield return StartCoroutine(SpinHeavy(Vector3.up * 720, 0.8f, -1.5f));
                     yield return StartCoroutine(Move(homePos, 10,false)); //so you die from counters properly
-                    yield return StartCoroutine(Spin(Vector3.left * 90, 0.125f));
+                    yield return StartCoroutine(SpinHeavy(Vector3.left * 90, 0.2f, -2));
                 }
                 SetRotation(Vector3.zero);
                 SetAnimation("dead",true);

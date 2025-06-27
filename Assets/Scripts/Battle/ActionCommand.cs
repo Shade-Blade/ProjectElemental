@@ -348,6 +348,7 @@ public class AC_MashLeftRight : ActionCommand
             subObjects.Add(o);
             acobject = o.GetComponent<ACObject_MashBar>();
             acobject.SetValues(0, false);
+            acobject.controlHint.SetText("Mash <button,left> and <button,right>", true, true);
         }
     }
 
@@ -386,6 +387,7 @@ public class AC_MashLeftRight : ActionCommand
         {
             mashObjective = Mathf.CeilToInt(mashObjective * 0.666f);
         }
+        acobject.controlHint.SetText("Mash <button,left> and <button,right>", true, true);
     }
 
 
@@ -412,6 +414,7 @@ public class AC_MashLeftRight : ActionCommand
             if (lifetime <= duration)
             {
                 acobject.SetValues(completion, success);
+                acobject.controlHint.SetText("Mash <button,left> and <button,right>", true, true);
             }
         }
 

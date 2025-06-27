@@ -723,6 +723,7 @@ public class BattleControl : MonoBehaviour
     public int battleXP = 0;
     public float visualXP = 0;
     public bool perfectKillSatisfied;
+    public int overkillDamage;
 
     public int coinDrops;
     public Item.ItemType dropItem = Item.ItemType.None;
@@ -2301,6 +2302,7 @@ public class BattleControl : MonoBehaviour
         }
 
         perfectKillSatisfied = true;
+        overkillDamage = 0;
 
         //spectralEnergy = 0;
         //astralEnergy = 0;
@@ -4894,6 +4896,26 @@ public class BattleControl : MonoBehaviour
 
         return false;
     }
+    public bool ItemReactionExists(Item.ItemProperty ip)
+    {
+        for (int i = 0; i < reactionMoveList.Count; i++)
+        {
+            if (!reactionMoveList[i].isItem)
+            {
+                continue;
+            }
+
+            ItemMove im = (ItemMove)(reactionMoveList[i].move);
+
+            ItemDataEntry ide = Item.GetItemDataEntry(im.GetItemType());
+            if (Item.GetProperty(ide, ip) != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public static int PosCompare(BattleEntity a, BattleEntity b)
     {
@@ -5138,6 +5160,8 @@ public class BattleControl : MonoBehaviour
         //To do: create a more decentralized system for checking this? (a special method)
         for (int i = 0; i < playerData.itemInventory.Count; i++)
         {
+            ItemDataEntry ide = Item.GetItemDataEntry(playerData.itemInventory[i]);
+
             /*
             if (!autoReviveActivation && playerData.itemInventory[i].type == Item.ItemType.DebugAutoRevive)
             {

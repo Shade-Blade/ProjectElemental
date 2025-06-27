@@ -3491,6 +3491,7 @@ public class WorldPlayer : WorldEntity
         eoI.transform.localPosition = Vector3.up * 0.1f;
         eoI.transform.localRotation = Quaternion.identity;
         swooshParticle = eoI;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Slash);
     }
 
     public string GetSmashAnim()
@@ -3547,6 +3548,7 @@ public class WorldPlayer : WorldEntity
         eoI.transform.localPosition = Vector3.zero;
         eoI.transform.localRotation = Quaternion.identity;
         swooshParticle = eoI;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Smash);
     }
 
     public void ResetWeapon()
@@ -3597,6 +3599,8 @@ public class WorldPlayer : WorldEntity
                         break;
                 }
 
+                MainManager.Instance.StandardCameraShake(0.1f, 0.1f);
+
                 //"slightly wrong" interpolation
                 //"correct" interpolation is to use the arc the hammer travels through but that is annoying
                 Vector3 midpoint = (weaponLastPos + weaponGlobalPos) / 2;
@@ -3612,10 +3616,14 @@ public class WorldPlayer : WorldEntity
                 effect.transform.position = midpoint + delta;
 
                 effect.transform.rotation = Quaternion.LookRotation(delta) * Quaternion.FromToRotation(Vector3.up, Vector3.back);
+                MainManager.Instance.StopSound(gameObject, MainManager.Sound.SFX_Overworld_Smash);
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_SmashHit);
             }
             else
             {
                 swooshParticle.GetComponent<Effect_Swoosh>().StopRotationSword();
+                MainManager.Instance.StopSound(gameObject, MainManager.Sound.SFX_Overworld_Slash);
+                MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_SlashHit);
             }
         }
         //Interrupt slash or smash in the middle of its animation

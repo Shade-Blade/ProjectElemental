@@ -358,7 +358,7 @@ public class BM_BurrowTrap_Hard_SunBloom : EnemyMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.InflictEffect(caller, new Effect(Effect.EffectType.Illuminate, 1, 3));
     }
 }
@@ -479,7 +479,7 @@ public class BM_Sundew_PoisonToss : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         if (caller.curTarget != null)
         {
@@ -515,7 +515,7 @@ public class BM_Sundew_CounterPoisonToss : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         if (caller.curTarget != null)
         {
@@ -557,7 +557,7 @@ public class BM_Sundew_Hard_ExhaustBall : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         if (caller.curTarget != null)
         {

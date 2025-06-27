@@ -142,7 +142,7 @@ public class GameOverControl : MonoBehaviour
 
         int tempCancel = -1;    //B = nothing happens
 
-        string time = MainManager.ParseTime(MainManager.Instance.playTime - MainManager.Instance.lastSaveTimestamp);
+        string time = MainManager.ParseTime((float)MainManager.Instance.playTime - MainManager.Instance.lastSaveTimestamp);
 
         if (MainManager.Instance.lastSaveTimestamp == 0)
         {

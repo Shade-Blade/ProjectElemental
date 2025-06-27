@@ -31,7 +31,7 @@ public class BM_Plaguebud_HeadSprout : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -66,7 +66,7 @@ public class BM_Plaguebud_TailSprout : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         if (caller.curTarget != null)
         {
@@ -152,7 +152,7 @@ public class BM_Starfish_FeebleWave : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -186,7 +186,7 @@ public class BM_Starfish_FatigueFog : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -220,7 +220,7 @@ public class BM_Starfish_LeafStorm : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -326,7 +326,7 @@ public class BM_CursedEye_UnnervingStare : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
         foreach (BattleEntity t in targets)
@@ -356,7 +356,7 @@ public class BM_CursedEye_MaliciousStare : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -390,7 +390,7 @@ public class BM_CursedEye_CounterSpitefulStare : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
 
         if (caller.curTarget != null)
@@ -427,7 +427,7 @@ public class BM_CursedEye_Hard_InvertedStare : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
         foreach (BattleEntity t in targets)
@@ -491,7 +491,7 @@ public class BM_StrangeTendril_StrangeCoil : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -565,7 +565,7 @@ public class BM_StrangeTendril_Slam : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -630,7 +630,7 @@ public class BM_DrainBud_PowerDrain : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -663,7 +663,7 @@ public class BM_DrainBud_Hard_DrainBloom : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
         foreach (BattleEntity t in targets)

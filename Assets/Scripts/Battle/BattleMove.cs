@@ -962,6 +962,11 @@ public abstract class PlayerMove : Move, IEntityHighlighter
             {
                 pcaller.staminaBlock = true;
             }
+
+            if (UseStamina() && caller.stamina < staminaCost)
+            {
+                pcaller.staminaBlock = true;
+            }
         }
         if (UseStamina() && GetCurrency(caller) != BattleHelper.MoveCurrency.Stamina)
         {

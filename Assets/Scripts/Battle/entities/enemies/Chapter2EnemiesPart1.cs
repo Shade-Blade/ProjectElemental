@@ -99,11 +99,11 @@ public class BM_Bandit_Slash : EnemyMove
 
             if (Random.Range(0,1) > 0.5f)
             {
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.75f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.75f));
             }
             else
             {
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             }
 
             if (caller.GetAttackHit(caller.curTarget, 0))
@@ -159,7 +159,7 @@ public class BM_Bandit_Hard_TeamCounter : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
@@ -408,7 +408,7 @@ public class BM_Sentry_Fling : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -439,7 +439,7 @@ public class BM_Sentry_CounterFling : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
 
         if (caller.curTarget != null)
@@ -614,7 +614,7 @@ public class BM_Cactupole_Hard_StormFortify : EnemyMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.InflictEffect(caller, new Effect(Effect.EffectType.Focus, 2, Effect.INFINITE_DURATION));
         caller.InflictEffect(caller, new Effect(Effect.EffectType.QuantumShield, 1, 3));
     }

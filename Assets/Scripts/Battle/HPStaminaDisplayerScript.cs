@@ -124,11 +124,11 @@ public class HPStaminaDisplayerScript : MonoBehaviour
 
             if (entity.staminaBlock)
             {
-                staminaText += "<descriptionwarncolor><strikethrough><size,60%>(" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor></outline>";
+                staminaText += "<descriptionwarncolor><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor></outline>";
             }
             else
             {
-                staminaText += "<size,60%>(" + entity.GetRealAgility() + ")</size></strikethrough></outline>";
+                staminaText += "<size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></outline>";
             }
             textNumber2.SetText(staminaText, true, true);
         }
@@ -257,11 +257,11 @@ public class HPStaminaDisplayerScript : MonoBehaviour
         }
         if (entity.staminaBlock)
         {
-            staminaText += "<descriptionwarncolor><strikethrough><size,60%>(" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor>";
+            staminaText += "<descriptionwarncolor><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor>";
         }
         else
         {
-            staminaText += "<size,60%>(" + entity.GetRealAgility() + ")</size></strikethrough>";
+            staminaText += "<size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough>";
         }
         textNumber2.SetText(staminaText, true, true);
 

@@ -296,7 +296,7 @@ public class LM_Brace : LunaMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         BraceEffect(caller);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -429,7 +429,7 @@ public class LM_DashThrough : LunaMove
 
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
-        //yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+        //yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
         if (actionCommand != null)
         {
@@ -639,7 +639,7 @@ public class LM_FlipKick : LunaMove
             IEnumerator SpinSetAnimation()
             {
                 caller.SetAnimation("jump");
-                yield return StartCoroutine(caller.Spin(Vector3.back * 270, 0.3f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.back * 270, 0.3f));
                 caller.subObject.transform.eulerAngles = Vector3.zero;
                 caller.SetAnimation("teamthrowfall");
                 caller.SendAnimationData("xunflip");
@@ -793,7 +793,7 @@ public class LM_FluffHeal : LunaMove
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
         caller.SetAnimation("soulcaststart");
-        //StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        //StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
         bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -2548,7 +2548,7 @@ public class LM_DoubleEgg : LunaMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        //StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        //StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         caller.SetAnimation("eggsquat");
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -2737,6 +2737,7 @@ public class LM_Smash : LunaMove
                 break;
         }
         eoS.transform.position = transform.position + Vector3.up * 0.26f;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Smash);
 
         yield return new WaitForSeconds(0.2f);
         //Impact effect
@@ -2755,6 +2756,7 @@ public class LM_Smash : LunaMove
                 break;
         }
         eoShockwave.transform.position = transform.position + Vector3.right * 0.56f;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_SmashHit);
     }
     public virtual bool GetOutcome(BattleEntity caller)
     {
@@ -2863,6 +2865,7 @@ public class LM_PowerSmash : LM_Smash
                 break;
         }
         eoS.transform.position = transform.position + Vector3.up * 0.26f;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Smash);
 
         yield return new WaitForSeconds(0.2f);
         //Impact effect
@@ -2881,6 +2884,7 @@ public class LM_PowerSmash : LM_Smash
                 break;
         }
         eoShockwave.transform.position = transform.position + Vector3.right * 0.56f;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_SmashHit);
     }
     public override bool GetOutcome(BattleEntity caller)
     {
@@ -3167,7 +3171,7 @@ public class LM_HammerThrow : LunaMove
             caller.SetAnimation("smash_prepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
@@ -3219,7 +3223,7 @@ public class LM_HammerThrow : LunaMove
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             }
         }
         //yield return StartCoroutine(caller.MoveEasing(caller.homePos));
@@ -3574,7 +3578,7 @@ public class LM_MomentumSmash : LM_Smash
             }
             if (GetOutcome(caller))
             {
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
 
                 DealDamage(caller, sd, result);
                 caller.InflictEffect(caller, new Effect(Effect.EffectType.Absorb, (sbyte)(1 + level), Effect.INFINITE_DURATION));
@@ -3584,7 +3588,7 @@ public class LM_MomentumSmash : LM_Smash
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             }
         }
 
@@ -3767,12 +3771,14 @@ public class LM_QuakeSmash : LunaMove
                 break;
         }
         eoS.transform.position = transform.position + Vector3.up * 0.325f;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Smash);
 
         yield return new WaitForSeconds(0.2f);
         //Impact effect
         GameObject eoShockwave;
         eoShockwave = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_QuakeShockwave"), BattleControl.Instance.transform);
         eoShockwave.transform.position = transform.position + Vector3.right * 0.7f + Vector3.down * 0.2f;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_SmashHit);
     }
 
     public override void PreMove(BattleEntity caller, int level = 1)
@@ -4161,7 +4167,7 @@ public class LM_HammerBeat : LunaMove
             yield return new WaitUntil(() => actionCommand.IsStarted());
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {

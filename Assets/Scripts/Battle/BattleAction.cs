@@ -313,15 +313,16 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
             {
                 pcaller.staminaBlock = true;
             }
+
+            if (UseStamina() && caller.stamina < staminaCost)
+            {
+                pcaller.staminaBlock = true;
+            }
         }
 
         if (UseStamina() && GetCurrency(caller) != BattleHelper.MoveCurrency.Stamina)
         {
-            caller.stamina -= staminaCost;
-            if (caller.stamina < 0)
-            {
-                caller.stamina = 0;
-            }
+            caller.stamina -= staminaCost;           
         }
 
         //Remove burst and haste tokens if move costs stuff
@@ -764,10 +765,10 @@ public class BA_SuperSwapEntities : BattleAction //switches everyone around 1 po
 
         for (int i = 0; i < playerParty.Count; i++)
         {
-            StartCoroutine(playerParty[i].Spin(Vector3.up * 360, 0.3f));
+            StartCoroutine(playerParty[i].SpinHeavy(Vector3.up * 360, 0.3f));
             if (i == playerParty.Count - 1)
             {
-                yield return StartCoroutine(playerParty[i].Spin(Vector3.up * 360, 0.3f));
+                yield return StartCoroutine(playerParty[i].SpinHeavy(Vector3.up * 360, 0.3f));
             }
         }
 
@@ -955,8 +956,8 @@ public class BA_SwapEntities : BattleAction
     //use caller's target
     public override IEnumerator Execute(BattleEntity caller)
     {
-        StartCoroutine(caller.curTarget.Spin(Vector3.up * 360, 0.3f));
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.3f));
+        StartCoroutine(caller.curTarget.SpinHeavy(Vector3.up * 360, 0.3f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.3f));
 
         BattleEntity target = caller.curTarget;
 
@@ -1200,8 +1201,8 @@ public class BA_TurnRelay : BattleAction
     //use caller's target
     public override IEnumerator Execute(BattleEntity caller)
     {
-        StartCoroutine(caller.curTarget.Spin(Vector3.up * 360, 0.3f));
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.3f));
+        StartCoroutine(caller.curTarget.SpinHeavy(Vector3.up * 360, 0.3f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.3f));
 
         BattleEntity target = caller.curTarget;
 
@@ -1231,8 +1232,8 @@ public class BA_EffectRelay : BattleAction
     //use caller's target
     public override IEnumerator Execute(BattleEntity caller)
     {
-        StartCoroutine(caller.curTarget.Spin(Vector3.up * 360, 0.3f));
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.3f));
+        StartCoroutine(caller.curTarget.SpinHeavy(Vector3.up * 360, 0.3f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.3f));
 
         BattleEntity target = caller.curTarget;
 

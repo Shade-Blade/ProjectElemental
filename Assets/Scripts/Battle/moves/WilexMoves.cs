@@ -311,7 +311,7 @@ public class WM_Focus : WilexMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         FocusEffect(caller);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -1777,7 +1777,7 @@ public class WM_TeamQuake : WilexMove
 
             Vector3 targetPos = caller.transform.position + Vector3.up * caller.height;
             StartCoroutine(other.JumpHeavy(targetPos, 2, 0.5f, -0.25f));
-            //StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+            //StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
@@ -2255,6 +2255,7 @@ public class WM_Slash : WilexMove
                 break;
         }
         eoS.transform.position = transform.position + Vector3.up * 0.325f;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Slash);
 
         //slightly before the end (So that damage is dealt before the effect completes)
         yield return new WaitForSeconds(0.1f);
@@ -2418,7 +2419,7 @@ public class WM_MultiSlash : WM_Slash
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                //yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                //yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             }
         }
         yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
@@ -2463,6 +2464,7 @@ public class WM_MultiSlash : WM_Slash
                     break;
             }
             eoS.transform.position = transform.position + Vector3.up * 0.325f;
+            MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Slash);
 
             //2 hits: 30, 30
             //4 hits: 30, 30, 15, 15
@@ -2833,7 +2835,7 @@ public class WM_SlipSlash : WilexMove
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             }
         }
         yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
@@ -2856,6 +2858,7 @@ public class WM_SlipSlash : WilexMove
                 break;
         }
         eoS.transform.position = transform.position + Vector3.up * 0.325f;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Slash);
 
         //slightly before the end (So that damage is dealt before the effect completes)
         yield return new WaitForSeconds(0.1f);
@@ -3217,7 +3220,7 @@ public class WM_SwordDischarge : WilexMove
             yield return new WaitUntil(() => actionCommand.IsStarted());
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
@@ -3242,7 +3245,7 @@ public class WM_SwordDischarge : WilexMove
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             }
         }
         //yield return StartCoroutine(caller.MoveEasing(caller.homePos));
@@ -3373,7 +3376,7 @@ public class WM_SwordDance : WilexMove
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             }
         }
 
@@ -3397,6 +3400,7 @@ public class WM_SwordDance : WilexMove
                 break;
         }
         eoS.transform.position = transform.position + Vector3.up * 0.325f;
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Slash);
 
         //slightly before the end (So that damage is dealt before the effect completes)
         yield return new WaitForSeconds(0.1f);
@@ -3490,7 +3494,7 @@ public class WM_BoomerangSlash : WilexMove
             yield return new WaitUntil(() => actionCommand.IsStarted());
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
@@ -3530,7 +3534,7 @@ public class WM_BoomerangSlash : WilexMove
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             }
         }
         //yield return StartCoroutine(caller.MoveEasing(caller.homePos));
@@ -3950,7 +3954,7 @@ public class WM_FlameBat : WilexMove
             yield return new WaitUntil(() => actionCommand.IsStarted());
             yield return new WaitUntil(() => actionCommand.IsComplete());
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             bool result = actionCommand == null ? true : actionCommand.GetSuccess();
             if (actionCommand != null)
             {
@@ -3977,7 +3981,7 @@ public class WM_FlameBat : WilexMove
             {
                 //Miss
                 caller.InvokeMissEvents(caller.curTarget);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.15f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.15f));
             }
         }
         //yield return StartCoroutine(caller.MoveEasing(caller.homePos));

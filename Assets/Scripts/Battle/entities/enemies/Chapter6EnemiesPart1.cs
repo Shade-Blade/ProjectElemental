@@ -57,12 +57,12 @@ public class BM_Shieldwing_DualPeck : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
             }
@@ -89,7 +89,7 @@ public class BM_Shieldwing_ChillingScreech : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -130,7 +130,7 @@ public class BM_Shieldwing_FeatherWall : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -423,7 +423,7 @@ public class BM_Shimmerwing_DazzlingScreech : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -461,7 +461,7 @@ public class BM_Shimmerwing_RallySong : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -492,7 +492,7 @@ public class BM_Shimmerwing_Hard_StaticFlurry : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -559,7 +559,7 @@ public class BM_LumistarVanguard_HornBlast : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -591,7 +591,7 @@ public class BM_LumistarVanguard_LanternRally : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -630,7 +630,7 @@ public class BM_LumistarVanguard_Hard_SoftGlow : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Soften, 1, 3));
     }
@@ -715,7 +715,7 @@ public class BM_LumistarSoldier_Charge : EnemyMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
@@ -766,7 +766,7 @@ public class BM_LumistarSoldier_ChargeSlash : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
@@ -861,12 +861,12 @@ public class BM_LumistarStriker_DualSlash : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
             }
@@ -891,7 +891,7 @@ public class BM_LumistarStriker_Charge : EnemyMove
     {
         yield return StartCoroutine(caller.FlyingFallDown());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
@@ -944,13 +944,13 @@ public class BM_LumistarStriker_QuadSlash : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                 for (int i = 0; i < 3; i++)
                 {
-                    yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                    yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
                     caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                     caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                 }

@@ -4,6 +4,8 @@ using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Item;
+using static MainManager;
+using static UnityEngine.GraphicsBuffer;
 
 public class Item_GenericConsumable : ItemMove
 {
@@ -95,6 +97,187 @@ public class Item_GenericConsumable : ItemMove
             };
         }
 
+
+        Vector3 targetPos = Vector3.zero;
+        foreach (BattleEntity be in targets)
+        {
+            targetPos += be.ApplyScaledOffset(be.stompOffset);
+        }
+        targetPos /= targets.Count;
+        if (targets.Count > 1)
+        {
+            targetPos.y = 0;
+        }
+
+        (GameObject, SpriteRenderer) SpawnSprite()
+        {
+            //spawn a sprite
+            Sprite isp = GlobalItemScript.GetItemSprite(GetItem().type);
+            Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 0.1f;
+
+            GameObject so = new GameObject("Item Use Sprite");
+            so.transform.parent = BattleControl.Instance.transform;
+            SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+            s.sprite = isp;
+            s.material = GlobalItemScript.GetItemModifierMaterial(GetModifier());
+            so.transform.position = position;
+
+            return (so, s);
+        }
+
+        IEnumerator ItemThrowSpin(Vector3 targetPos, bool explode)
+        {
+            float height = 1f;
+            float heaviness = 0.5f;
+            float duration = 0.5f;
+            GameObject itemSprite = null;
+            SpriteRenderer itemSpriteRenderer = null;
+
+            (itemSprite, itemSpriteRenderer) = SpawnSprite();
+
+            yield return null;
+            float initialTime = Time.time;
+            Vector3 initialPos = itemSprite.transform.position;
+            Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
+            float completion = (Time.time - initialTime) / duration;
+            float falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+            //make a bezier curve
+
+            while (completion < 1)
+            {
+                Vector3 pastPos = itemSprite.transform.position;
+
+                itemSprite.transform.position = MainManager.BezierCurve(falsecompletion, initialPos, midPos, targetPos);
+
+                //spin
+                itemSprite.transform.localEulerAngles = Vector3.forward * 360 * 3 * falsecompletion;
+
+                completion = (Time.time - initialTime) / duration;
+                falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
+                yield return null;
+            }
+            //force position = endpoint (prevent lag glitches)
+            itemSprite.transform.position = targetPos;
+            itemSprite.transform.localEulerAngles = Vector3.zero;
+
+            //explode?
+            if (explode)
+            {
+                float explodeDuration = 0.2f;
+
+                initialTime = Time.time;
+                completion = (Time.time - initialTime) / explodeDuration;
+                falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                float explosionSize = 2.5f;
+
+                while (completion < 1)
+                {
+                    completion = (Time.time - initialTime) / explodeDuration;
+                    falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                    itemSprite.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * explosionSize, falsecompletion);
+
+                    float alpha = Mathf.Lerp(1, 0, falsecompletion);
+
+                    itemSpriteRenderer.color = new Color(1, 1, 1, alpha);
+
+                    yield return null;
+                }
+
+                //last frame: set alpha to 0?
+                itemSpriteRenderer.color = new Color(1, 1, 1, 0);
+            }
+
+            //cleanup
+            Destroy(itemSprite);
+        }
+        IEnumerator ItemThrowNeedle(Vector3 targetPos, bool explode)
+        {
+            float height = 1f;
+            float heaviness = 0.5f;
+            float duration = 0.5f;
+            GameObject itemSprite = null;
+            SpriteRenderer itemSpriteRenderer = null;
+
+            (itemSprite, itemSpriteRenderer) = SpawnSprite();
+
+            yield return null;
+            float initialTime = Time.time;
+            Vector3 initialPos = itemSprite.transform.position;
+            Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
+            float completion = (Time.time - initialTime) / duration;
+            float falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+            //make a bezier curve
+
+            while (completion < 1)
+            {
+                Vector3 pastPos = itemSprite.transform.position;
+
+                itemSprite.transform.position = MainManager.BezierCurve(falsecompletion, initialPos, midPos, targetPos);
+
+                //orient based on derivative
+                //note: 0 point is pointing up + right since that is how the sprites are drawn
+                Vector3 pointer = MainManager.BezierCurveDerivative(falsecompletion, initialPos, midPos, targetPos);
+                itemSprite.transform.localEulerAngles = Vector3.forward * Vector3.SignedAngle(Vector3.up + Vector3.right, pointer, Vector3.forward);
+
+                completion = (Time.time - initialTime) / duration;
+                falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
+                yield return null;
+            }
+            //force position = endpoint (prevent lag glitches)
+            itemSprite.transform.position = targetPos;
+
+            //explode?
+            if (explode)
+            {
+                float explodeDuration = 0.2f;
+
+                initialTime = Time.time;
+                completion = (Time.time - initialTime) / explodeDuration;
+                falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                float explosionSize = 2.5f;
+
+                while (completion < 1)
+                {
+                    completion = (Time.time - initialTime) / explodeDuration;
+                    falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                    itemSprite.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * explosionSize, falsecompletion);
+
+                    float alpha = Mathf.Lerp(1, 0, falsecompletion);
+
+                    itemSpriteRenderer.color = new Color(1, 1, 1, alpha);
+
+                    yield return null;
+                }
+
+                //last frame: set alpha to 0?
+                itemSpriteRenderer.color = new Color(1, 1, 1, 0);
+            }
+
+            //cleanup
+            Destroy(itemSprite);
+        }
+
+
+        Item.ItemUseAnim useAnim = GetItemDataEntry(item.type).useAnim;
+
+        bool allDead = true;
+        foreach (BattleEntity b in targets)
+        {
+            if (b.hp > 0)
+            {
+                allDead = false;
+            }
+        }
+        if (allDead && useAnim != ItemUseAnim.ThrowNeedle)
+        {
+            useAnim = ItemUseAnim.ThrowSpin;
+        }
+
+
         //animation
         switch (GetItemDataEntry(item.type).useAnim)
         {
@@ -121,6 +304,24 @@ public class Item_GenericConsumable : ItemMove
                     }
                 }
                 yield return new WaitForSeconds(1f);
+                break;
+            case ItemUseAnim.ThrowNeedle:
+            case ItemUseAnim.ThrowSpin:
+                caller.SetAnimation("itemthrow");
+                yield return new WaitForSeconds(0.1f);
+                switch (ide.useAnim)
+                {
+                    case ItemUseAnim.ThrowNeedle:
+                        StartCoroutine(ItemThrowNeedle(targetPos, targets.Count > 1));
+                        break;
+                    case ItemUseAnim.ThrowSpin:
+                    default:
+                        StartCoroutine(ItemThrowSpin(targetPos, targets.Count > 1));
+                        break;
+                }
+                yield return new WaitForSeconds(0.2f);
+                caller.SetIdleAnimation();
+                yield return new WaitForSeconds(targets.Count > 1 ? 0.6f : 0.3f);
                 break;
             case ItemUseAnim.None:
                 break;
@@ -1980,14 +2181,191 @@ public class Item_GenericThrowable : ItemMove
                 caller.curTarget
             };
         }
-        //note: throwables only target enemies so the special case of putting the caller first can never happen
+        //note: throwables only target enemies so the special case of putting the caller first can never happen (*)
+
+        ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
 
         caller.SetAnimation("itemuse");
         yield return StartCoroutine(DefaultStartAnim(caller));
         //yield return StartCoroutine(caller.SmoothScale(0.5f, new Vector3(2, 2, 2)));
 
+        Vector3 targetPos = Vector3.zero;
+        foreach (BattleEntity be in targets) {
+            targetPos += be.ApplyScaledOffset(be.stompOffset);
+        }
+        targetPos /= targets.Count;
+        if (targets.Count > 1)
+        {
+            targetPos.y = 0;
+        }
+
+        (GameObject, SpriteRenderer) SpawnSprite()
+        {
+            //spawn a sprite
+            Sprite isp = GlobalItemScript.GetItemSprite(GetItem().type);
+            Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 0.1f;
+
+            GameObject so = new GameObject("Item Use Sprite");
+            so.transform.parent = BattleControl.Instance.transform;
+            SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+            s.sprite = isp;
+            s.material = GlobalItemScript.GetItemModifierMaterial(GetModifier());
+            so.transform.position = position;
+
+            return (so, s);
+        }
+
+        IEnumerator ItemThrowSpin(Vector3 targetPos, bool explode)
+        {
+            float height = 1f;
+            float heaviness = 0.5f;
+            float duration = 0.5f;
+            GameObject itemSprite = null;
+            SpriteRenderer itemSpriteRenderer = null;
+
+            (itemSprite, itemSpriteRenderer) = SpawnSprite();
+
+            yield return null;
+            float initialTime = Time.time;
+            Vector3 initialPos = itemSprite.transform.position;
+            Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
+            float completion = (Time.time - initialTime) / duration;
+            float falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+            //make a bezier curve
+
+            while (completion < 1)
+            {
+                Vector3 pastPos = itemSprite.transform.position;
+
+                itemSprite.transform.position = MainManager.BezierCurve(falsecompletion, initialPos, midPos, targetPos);
+
+                //spin
+                itemSprite.transform.localEulerAngles = Vector3.forward * 360 * 3 * falsecompletion;
+
+                completion = (Time.time - initialTime) / duration;
+                falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
+                yield return null;
+            }
+            //force position = endpoint (prevent lag glitches)
+            itemSprite.transform.position = targetPos;
+            itemSprite.transform.localEulerAngles = Vector3.zero;
+
+            //explode?
+            if (explode)
+            {
+                float explodeDuration = 0.2f;
+
+                initialTime = Time.time;
+                completion = (Time.time - initialTime) / explodeDuration;
+                falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                float explosionSize = 2.5f;
+
+                while (completion < 1)
+                {
+                    completion = (Time.time - initialTime) / explodeDuration;
+                    falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                    itemSprite.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * explosionSize, falsecompletion);
+
+                    float alpha = Mathf.Lerp(1, 0, falsecompletion);
+
+                    itemSpriteRenderer.color = new Color(1, 1, 1, alpha);
+
+                    yield return null;
+                }
+
+                //last frame: set alpha to 0?
+                itemSpriteRenderer.color = new Color(1, 1, 1, 0);
+            }
+
+            //cleanup
+            Destroy(itemSprite);
+        }
+        IEnumerator ItemThrowNeedle(Vector3 targetPos, bool explode)
+        {
+            float height = 1f;
+            float heaviness = 0.5f;
+            float duration = 0.5f;
+            GameObject itemSprite = null;
+            SpriteRenderer itemSpriteRenderer = null;
+
+            (itemSprite, itemSpriteRenderer) = SpawnSprite();
+
+            yield return null;
+            float initialTime = Time.time;
+            Vector3 initialPos = itemSprite.transform.position;
+            Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
+            float completion = (Time.time - initialTime) / duration;
+            float falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+            //make a bezier curve
+
+            while (completion < 1)
+            {
+                Vector3 pastPos = itemSprite.transform.position;
+
+                itemSprite.transform.position = MainManager.BezierCurve(falsecompletion, initialPos, midPos, targetPos);
+
+                //orient based on derivative
+                //note: 0 point is pointing up + right since that is how the sprites are drawn
+                Vector3 pointer = MainManager.BezierCurveDerivative(falsecompletion, initialPos, midPos, targetPos);
+                itemSprite.transform.localEulerAngles = Vector3.forward * Vector3.SignedAngle(Vector3.up + Vector3.right, pointer, Vector3.forward);
+
+                completion = (Time.time - initialTime) / duration;
+                falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
+                yield return null;
+            }
+            //force position = endpoint (prevent lag glitches)
+            itemSprite.transform.position = targetPos;
+
+            //explode?
+            if (explode)
+            {
+                float explodeDuration = 0.2f;
+
+                initialTime = Time.time;
+                completion = (Time.time - initialTime) / explodeDuration;
+                falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                float explosionSize = 2.5f;
+
+                while (completion < 1)
+                {
+                    completion = (Time.time - initialTime) / explodeDuration;
+                    falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                    itemSprite.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * explosionSize, falsecompletion);
+
+                    float alpha = Mathf.Lerp(1, 0, falsecompletion);
+
+                    itemSpriteRenderer.color = new Color(1, 1, 1, alpha);
+
+                    yield return null;
+                }
+
+                //last frame: set alpha to 0?
+                itemSpriteRenderer.color = new Color(1, 1, 1, 0);
+            }
+
+            //cleanup
+            Destroy(itemSprite);
+        }
+
         caller.SetAnimation("itemthrow");
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.1f);
+        switch (ide.useAnim)
+        {
+            case ItemUseAnim.ThrowNeedle:
+                StartCoroutine(ItemThrowNeedle(targetPos, targets.Count > 1));
+                break;
+            case ItemUseAnim.ThrowSpin:
+            default:
+                StartCoroutine(ItemThrowSpin(targetPos, targets.Count > 1));
+                break;
+        }
+        yield return new WaitForSeconds(0.2f);
+        caller.SetIdleAnimation();
+        yield return new WaitForSeconds(targets.Count > 1 ? 0.6f : 0.3f);
         caller.SetIdleAnimation();
 
         yield return StartCoroutine(ExecuteEffect(caller, targets, Item.GetItemBoost(level - 1)));
@@ -1998,7 +2376,6 @@ public class Item_GenericThrowable : ItemMove
         if (caller is PlayerEntity pcaller)
         {
             yield return new WaitForSeconds(0.5f);
-            ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
             if (pcaller.BadgeEquipped(Badge.BadgeType.ItemRebate))
             {
                 pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.ItemRebate)));
@@ -2595,7 +2972,196 @@ public class Item_AutoConsumable : Item_GenericConsumable
         //animations are basically the same though
         yield return StartCoroutine(DefaultStartAnim(caller));
 
+        //Use this to build the list of targets
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller, level));
+        if (!GetMultiTarget())
+        {
+            targets = new List<BattleEntity>
+            {
+                caller.curTarget
+            };
+        }
+        Vector3 targetPos = Vector3.zero;
+        foreach (BattleEntity be in targets)
+        {
+            targetPos += be.ApplyScaledOffset(be.stompOffset);
+        }
+        targetPos /= targets.Count;
+        if (targets.Count > 1)
+        {
+            targetPos.y = 0;
+        }
+
+        (GameObject, SpriteRenderer) SpawnSprite()
+        {
+            //spawn a sprite
+            Sprite isp = GlobalItemScript.GetItemSprite(GetItem().type);
+            Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 0.1f;
+
+            GameObject so = new GameObject("Item Use Sprite");
+            so.transform.parent = BattleControl.Instance.transform;
+            SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+            s.sprite = isp;
+            s.material = GlobalItemScript.GetItemModifierMaterial(GetModifier());
+            so.transform.position = position;
+
+            return (so, s);
+        }
+
+        IEnumerator ItemThrowSpin(Vector3 targetPos, bool explode)
+        {
+            float height = 1f;
+            float heaviness = 0.5f;
+            float duration = 0.5f;
+            GameObject itemSprite = null;
+            SpriteRenderer itemSpriteRenderer = null;
+
+            (itemSprite, itemSpriteRenderer) = SpawnSprite();
+
+            yield return null;
+            float initialTime = Time.time;
+            Vector3 initialPos = itemSprite.transform.position;
+            Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
+            float completion = (Time.time - initialTime) / duration;
+            float falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+            //make a bezier curve
+
+            while (completion < 1)
+            {
+                Vector3 pastPos = itemSprite.transform.position;
+
+                itemSprite.transform.position = MainManager.BezierCurve(falsecompletion, initialPos, midPos, targetPos);
+
+                //spin
+                itemSprite.transform.localEulerAngles = Vector3.forward * 360 * 3 * falsecompletion;
+
+                completion = (Time.time - initialTime) / duration;
+                falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
+                yield return null;
+            }
+            //force position = endpoint (prevent lag glitches)
+            itemSprite.transform.position = targetPos;
+            itemSprite.transform.localEulerAngles = Vector3.zero;
+
+            //explode?
+            if (explode)
+            {
+                float explodeDuration = 0.2f;
+
+                initialTime = Time.time;
+                completion = (Time.time - initialTime) / explodeDuration;
+                falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                float explosionSize = 2.5f;
+
+                while (completion < 1)
+                {
+                    completion = (Time.time - initialTime) / explodeDuration;
+                    falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                    itemSprite.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * explosionSize, falsecompletion);
+
+                    float alpha = Mathf.Lerp(1, 0, falsecompletion);
+
+                    itemSpriteRenderer.color = new Color(1, 1, 1, alpha);
+
+                    yield return null;
+                }
+
+                //last frame: set alpha to 0?
+                itemSpriteRenderer.color = new Color(1, 1, 1, 0);
+            }
+
+            //cleanup
+            Destroy(itemSprite);
+        }
+        IEnumerator ItemThrowNeedle(Vector3 targetPos, bool explode)
+        {
+            float height = 1f;
+            float heaviness = 0.5f;
+            float duration = 0.5f;
+            GameObject itemSprite = null;
+            SpriteRenderer itemSpriteRenderer = null;
+
+            (itemSprite, itemSpriteRenderer) = SpawnSprite();
+
+            yield return null;
+            float initialTime = Time.time;
+            Vector3 initialPos = itemSprite.transform.position;
+            Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
+            float completion = (Time.time - initialTime) / duration;
+            float falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+            //make a bezier curve
+
+            while (completion < 1)
+            {
+                Vector3 pastPos = itemSprite.transform.position;
+
+                itemSprite.transform.position = MainManager.BezierCurve(falsecompletion, initialPos, midPos, targetPos);
+
+                //orient based on derivative
+                //note: 0 point is pointing up + right since that is how the sprites are drawn
+                Vector3 pointer = MainManager.BezierCurveDerivative(falsecompletion, initialPos, midPos, targetPos);
+                itemSprite.transform.localEulerAngles = Vector3.forward * Vector3.SignedAngle(Vector3.up + Vector3.right, pointer, Vector3.forward);
+
+                completion = (Time.time - initialTime) / duration;
+                falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
+                yield return null;
+            }
+            //force position = endpoint (prevent lag glitches)
+            itemSprite.transform.position = targetPos;
+
+            //explode?
+            if (explode)
+            {
+                float explodeDuration = 0.2f;
+
+                initialTime = Time.time;
+                completion = (Time.time - initialTime) / explodeDuration;
+                falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                float explosionSize = 2.5f;
+
+                while (completion < 1)
+                {
+                    completion = (Time.time - initialTime) / explodeDuration;
+                    falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                    itemSprite.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * explosionSize, falsecompletion);
+
+                    float alpha = Mathf.Lerp(1, 0, falsecompletion);
+
+                    itemSpriteRenderer.color = new Color(1, 1, 1, alpha);
+
+                    yield return null;
+                }
+
+                //last frame: set alpha to 0?
+                itemSpriteRenderer.color = new Color(1, 1, 1, 0);
+            }
+
+            //cleanup
+            Destroy(itemSprite);
+        }
+
         ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
+
+        //caller.SetAnimation("itemthrow");
+        yield return new WaitForSeconds(0.1f);
+        switch (ide.useAnim)
+        {
+            case ItemUseAnim.ThrowNeedle:
+                StartCoroutine(ItemThrowNeedle(targetPos, targets.Count > 1));
+                break;
+            case ItemUseAnim.ThrowSpin:
+            default:
+                StartCoroutine(ItemThrowSpin(targetPos, targets.Count > 1));
+                break;
+        }
+        yield return new WaitForSeconds(0.2f);
+        //caller.SetIdleAnimation();
+        yield return new WaitForSeconds(targets.Count > 1 ? 0.6f : 0.3f);
+
 
         //hacky fix
         bool removeQuick = false;
@@ -2684,8 +3250,190 @@ public class Item_AutoThrowable : Item_GenericThrowable
         }
 
 
+        ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
+
         yield return StartCoroutine(DefaultStartAnim(caller));
         //yield return StartCoroutine(caller.SmoothScale(0.5f, new Vector3(2, 2, 2)));
+
+        Vector3 targetPos = Vector3.zero;
+        foreach (BattleEntity be in targets)
+        {
+            targetPos += be.ApplyScaledOffset(be.stompOffset);
+        }
+        targetPos /= targets.Count;
+        if (targets.Count > 1)
+        {
+            targetPos.y = 0;
+        }
+
+        (GameObject, SpriteRenderer) SpawnSprite()
+        {
+            //spawn a sprite
+            Sprite isp = GlobalItemScript.GetItemSprite(GetItem().type);
+            Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 0.1f;
+
+            GameObject so = new GameObject("Item Use Sprite");
+            so.transform.parent = BattleControl.Instance.transform;
+            SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+            s.sprite = isp;
+            s.material = GlobalItemScript.GetItemModifierMaterial(GetModifier());
+            so.transform.position = position;
+
+            return (so, s);
+        }
+
+        IEnumerator ItemThrowSpin(Vector3 targetPos, bool explode)
+        {
+            float height = 1f;
+            float heaviness = 0.5f;
+            float duration = 0.5f;
+            GameObject itemSprite = null;
+            SpriteRenderer itemSpriteRenderer = null;
+
+            (itemSprite, itemSpriteRenderer) = SpawnSprite();
+
+            yield return null;
+            float initialTime = Time.time;
+            Vector3 initialPos = itemSprite.transform.position;
+            Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
+            float completion = (Time.time - initialTime) / duration;
+            float falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+            //make a bezier curve
+
+            while (completion < 1)
+            {
+                Vector3 pastPos = itemSprite.transform.position;
+
+                itemSprite.transform.position = MainManager.BezierCurve(falsecompletion, initialPos, midPos, targetPos);
+
+                //spin
+                itemSprite.transform.localEulerAngles = Vector3.forward * 360 * 3 * falsecompletion;
+
+                completion = (Time.time - initialTime) / duration;
+                falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
+                yield return null;
+            }
+            //force position = endpoint (prevent lag glitches)
+            itemSprite.transform.position = targetPos;
+            itemSprite.transform.localEulerAngles = Vector3.zero;
+
+            //explode?
+            if (explode)
+            {
+                float explodeDuration = 0.2f;
+
+                initialTime = Time.time;
+                completion = (Time.time - initialTime) / explodeDuration;
+                falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                float explosionSize = 2.5f;
+
+                while (completion < 1)
+                {
+                    completion = (Time.time - initialTime) / explodeDuration;
+                    falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                    itemSprite.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * explosionSize, falsecompletion);
+
+                    float alpha = Mathf.Lerp(1, 0, falsecompletion);
+
+                    itemSpriteRenderer.color = new Color(1, 1, 1, alpha);
+
+                    yield return null;
+                }
+
+                //last frame: set alpha to 0?
+                itemSpriteRenderer.color = new Color(1, 1, 1, 0);
+            }
+
+            //cleanup
+            Destroy(itemSprite);
+        }
+        IEnumerator ItemThrowNeedle(Vector3 targetPos, bool explode)
+        {
+            float height = 1f;
+            float heaviness = 0.5f;
+            float duration = 0.5f;
+            GameObject itemSprite = null;
+            SpriteRenderer itemSpriteRenderer = null;
+
+            (itemSprite, itemSpriteRenderer) = SpawnSprite();
+
+            yield return null;
+            float initialTime = Time.time;
+            Vector3 initialPos = itemSprite.transform.position;
+            Vector3 midPos = Vector3.Lerp(initialPos, targetPos, 0.5f) + height * Vector3.up;
+            float completion = (Time.time - initialTime) / duration;
+            float falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+            //make a bezier curve
+
+            while (completion < 1)
+            {
+                Vector3 pastPos = itemSprite.transform.position;
+
+                itemSprite.transform.position = MainManager.BezierCurve(falsecompletion, initialPos, midPos, targetPos);
+
+                //orient based on derivative
+                //note: 0 point is pointing up + right since that is how the sprites are drawn
+                Vector3 pointer = MainManager.BezierCurveDerivative(falsecompletion, initialPos, midPos, targetPos);
+                itemSprite.transform.localEulerAngles = Vector3.forward * Vector3.SignedAngle(Vector3.up + Vector3.right, pointer, Vector3.forward);
+
+                completion = (Time.time - initialTime) / duration;
+                falsecompletion = completion * (1f + heaviness) + completion * completion * -heaviness;
+                yield return null;
+            }
+            //force position = endpoint (prevent lag glitches)
+            itemSprite.transform.position = targetPos;
+
+            //explode?
+            if (explode)
+            {
+                float explodeDuration = 0.2f;
+
+                initialTime = Time.time;
+                completion = (Time.time - initialTime) / explodeDuration;
+                falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                float explosionSize = 2.5f;
+
+                while (completion < 1)
+                {
+                    completion = (Time.time - initialTime) / explodeDuration;
+                    falsecompletion = MainManager.EasingQuadratic(completion, heaviness);
+
+                    itemSprite.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * explosionSize, falsecompletion);
+
+                    float alpha = Mathf.Lerp(1, 0, falsecompletion);
+
+                    itemSpriteRenderer.color = new Color(1, 1, 1, alpha);
+
+                    yield return null;
+                }
+
+                //last frame: set alpha to 0?
+                itemSpriteRenderer.color = new Color(1, 1, 1, 0);
+            }
+
+            //cleanup
+            Destroy(itemSprite);
+        }
+
+        //caller.SetAnimation("itemthrow");
+        yield return new WaitForSeconds(0.1f);
+        switch (ide.useAnim)
+        {
+            case ItemUseAnim.ThrowNeedle:
+                StartCoroutine(ItemThrowNeedle(targetPos, targets.Count > 1));
+                break;
+            case ItemUseAnim.ThrowSpin:
+            default:
+                StartCoroutine(ItemThrowSpin(targetPos, targets.Count > 1));
+                break;
+        }
+        yield return new WaitForSeconds(0.2f);
+        //caller.SetIdleAnimation();
+        yield return new WaitForSeconds(targets.Count > 1 ? 0.6f : 0.3f);
+
 
         //hacky fix
         bool removeQuick = false;
@@ -2712,7 +3460,6 @@ public class Item_AutoThrowable : Item_GenericThrowable
         if (caller is PlayerEntity pcaller)
         {
             yield return new WaitForSeconds(0.5f);
-            ItemDataEntry ide = Item.GetItemDataEntry(GetItem());
             if (pcaller.BadgeEquipped(Badge.BadgeType.ItemRebate))
             {
                 pcaller.HealCoins((int)(ide.sellPrice * 0.75f * pcaller.BadgeEquippedCount(Badge.BadgeType.ItemRebate)));

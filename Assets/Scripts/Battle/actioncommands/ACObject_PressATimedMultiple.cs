@@ -7,13 +7,13 @@ public class ACObject_PressATimedMultiple : MonoBehaviour
 {
     public Image fullBar;
     public Image[] emptyBars;
+    public TextDisplayer controlHint;
 
     public float[] completionAmounts;
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -24,6 +24,7 @@ public class ACObject_PressATimedMultiple : MonoBehaviour
 
     public void SetValues(float completion, float[] completionAmounts, int successes, ActionCommand.AC_State state)
     {
+        controlHint.SetText("<button,a>", true, true);
         for (int i = 0; i < emptyBars.Length; i++)
         {
             emptyBars[i].rectTransform.sizeDelta = Vector2.zero;

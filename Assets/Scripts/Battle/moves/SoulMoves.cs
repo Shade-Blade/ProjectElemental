@@ -350,7 +350,7 @@ public class SM_LeafStorm : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -508,7 +508,7 @@ public class SM_ElectroDischarge : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -645,7 +645,7 @@ public class SM_MistWave : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -802,7 +802,7 @@ public class SM_Overheat : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -939,7 +939,7 @@ public class SM_VoidCrush : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -1103,7 +1103,7 @@ public class SM_FlashFreeze : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -1286,7 +1286,7 @@ public class SM_Cleanse : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -1421,7 +1421,7 @@ public class SM_Blight : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         CastAnimation(caller, level);
         yield return new WaitUntil(() => actionCommand.IsComplete());
 
@@ -1607,7 +1607,7 @@ public class SM_ElementalConflux : SoulMove
         }
 
         yield return new WaitForSeconds(ActionCommand.FADE_IN_TIME);
-        StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
         StartCoroutine(CastAnimation(caller, level));
         yield return new WaitUntil(() => actionCommand.IsComplete());
         caller.SetIdleAnimation();

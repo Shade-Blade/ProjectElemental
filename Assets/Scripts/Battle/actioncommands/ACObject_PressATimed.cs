@@ -7,11 +7,11 @@ public class ACObject_PressATimed : MonoBehaviour
 {
     public Image fullBar;
     public Image emptyBar;
+    public TextDisplayer controlHint;
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -22,6 +22,7 @@ public class ACObject_PressATimed : MonoBehaviour
 
     public void SetValues(float completion, bool success, ActionCommand.AC_State state)
     {
+        controlHint.SetText("<button,a>", true, true);
         float width = (Mathf.Clamp01(1 - completion)) * 200 + 100;
         emptyBar.rectTransform.sizeDelta = Vector2.right * width + Vector2.up * width;
 

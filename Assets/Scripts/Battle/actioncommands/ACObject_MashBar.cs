@@ -8,11 +8,11 @@ public class ACObject_MashBar : MonoBehaviour
     public Image fullBar;
     public Image emptyBar;
     public Image fullBall;
+    public TextDisplayer controlHint;
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -23,6 +23,7 @@ public class ACObject_MashBar : MonoBehaviour
 
     public void SetValues(float completion, bool ball)
     {
+        controlHint.SetText("Mash <button,left>", true, true);
         float width = completion * 150;
 
         fullBar.rectTransform.anchoredPosition = (width/2) * Vector2.right;

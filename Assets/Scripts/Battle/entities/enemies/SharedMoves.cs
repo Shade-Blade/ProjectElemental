@@ -276,7 +276,7 @@ public class BM_Shared_Slash : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
@@ -343,7 +343,7 @@ public class BM_Shared_DualSlash : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
@@ -362,7 +362,7 @@ public class BM_Shared_DualSlash : EnemyMove
                         caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
                         break;
                 }
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 switch (caller.entityID)
                 {

@@ -4,7 +4,7 @@ GF_ACH_Complete:True,GF_Bestiary_CursedEye:True,GF_Recipe_WarpedTea:True,GF_Best
 GV_PitFloor:110,GV_PitAltar:11
 SolarGrove,RabbitHole_RestFloor,-0.7094341|0.375|-2.911812
 1710.884
-25,0,34,60,35,60,60,59,0,999,0,0,10,32,6,6,6,15,8,80,781,776,67,27,9,9,0,0
+25,0,34,60,35,60,60,59,0,999,0,0,10,32,6,6,6,15,8,80,781,776,67,27,9,9,0,3
 EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP
 
 DrainSeed|None|EnemyDrop,StellarSyrup|None|EnemyDrop|0|14,PlagueRoot|None|EnemyDrop|0|12,WarpedTea|None|CookStella|0|11,RoyalTwins|None|Overworld|0|8,IceNectar|None|Overworld|0|6,MilkCoffee|None|Overworld|0|5,Limeade|None|Overworld|0|4,SilverSalad|None|Overworld|0|3,RubyFruit|None|Overworld|0|1

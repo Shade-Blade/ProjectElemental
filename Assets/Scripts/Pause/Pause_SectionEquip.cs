@@ -23,6 +23,7 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
     {
         selectorArrow.color = new Color(0.5f, 0.5f, 0.5f, 1);
         sortTip.gameObject.SetActive(true);
+        sortTip.SetText("(<button,z> to change)", true, true);
         textbox.transform.parent.transform.parent.gameObject.SetActive(false);
         if (state == null)
         {
@@ -137,6 +138,7 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
         selectorArrow.gameObject.SetActive(false);
 
         sortTip.gameObject.SetActive(true);
+        sortTip.enabled = true;
         sortTip.SetText("(<button,z> to change)", true, true);
 
         PlayerData pd = MainManager.Instance.playerData;

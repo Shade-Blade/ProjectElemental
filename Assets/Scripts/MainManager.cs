@@ -2430,7 +2430,9 @@ public class MainManager : MonoBehaviour
     public int saveIndex;
     public string saveName;
 
-    public float playTime;
+    public double playTime; //Note: float will start to have problems at around 24 hours of playtime? (Time.deltaTime = 1/120 if you are at 120 fps, but rounding error will make the number pretty wrong)
+    //note: not fixed for the timestamp because it doesn't really matter? (it only loses 1 second precision at around 4444 hours, which is longer than what you should be playing in one file for any reasonable person)
+
     public float lastSaveTimestamp;
 
     public WorldLocation lastSaveLocation;
@@ -2895,26 +2897,26 @@ public class MainManager : MonoBehaviour
         Menu_Error, //pressing an invalid option
         Menu_Pause,
         Menu_Unpause,
-        Menu_Open,
-        Menu_Close,
-        Menu_EquipBadge,
-        Menu_UnequipBadge,
-        Menu_EquipRibbon,
+        Menu_Open,          //opening a pause menu submenu? (may also use for battle opening menus)
+        Menu_Close,         //closing a pause menu submenu
+        Menu_EquipBadge,    //metal ish sound
+        Menu_UnequipBadge, 
+        Menu_EquipRibbon,   //cloth ish sound
         Menu_UnequipRibbon,
-        Menu_ScrollUp,  
-        Menu_ScrollDown,
-        Menu_BigScrollUp,
-        Menu_BigScrollDown,
-        Menu_ScrollRight,   //for pressing X or scrolling through levels for moves
-        Menu_ScrollLeft,
-        Menu_BSwap,
-        Menu_CharacterSwap,
-        Menu_Save,
-        Menu_LivelyBud,
+        Menu_ScrollUp,      //menu scrolling (should be a very unobtrusive sound)
+        Menu_ScrollDown,    //same as scroll up?
+        Menu_BigScrollUp,   //page scroll
+        Menu_BigScrollDown, //same as big scroll up?
+        Menu_ScrollRight,   //for pressing X or scrolling through levels for moves (currently a gear sound)
+        Menu_ScrollLeft,    //same as scroll right?
+        Menu_BSwap,         //
+        Menu_CharacterSwap, //swoosh thing (also used in overworld)
+        Menu_Save,          //save success
+        Menu_LivelyBud,     //some healing sound
 
-        SFX_Pickup_Coin,    //same as SFX_Coins below?
-        SFX_Pickup_Shard,
-        SFX_Pickup_Item,
+        SFX_Pickup_Coin,    //same as SFX_Coins below?  (some metalic sound)
+        SFX_Pickup_Shard,   //some crystally sound
+        SFX_Pickup_Item,    //?
         SFX_Pickup_KeyItem,
         SFX_Pickup_Badge,
         SFX_Pickup_Ribbon,
@@ -2924,30 +2926,29 @@ public class MainManager : MonoBehaviour
         SFX_Item_Bite,
         SFX_Item_Gulp,
 
-        SFX_Heal,
-        SFX_Energize,
-        SFX_Soul,
-        SFX_Stamina,
-        SFX_Coins,
+        SFX_Heal,           //get health
+        SFX_Energize,       //get energy
+        SFX_Soul,           //get soul energy
+        SFX_Stamina,        //get stamina
+        SFX_Coins,          //coin collecting sound (same as pickup_coin above?)
         SFX_NegativeHeal,
         SFX_NegativeEnergize,
         SFX_NegativeSoul,
         SFX_NegativeStamina,
         SFX_NegativeCoins,
-        SFX_Buff,
-        SFX_Debuff,
         SFX_EffectWearOff,
         SFX_Ailment,
-        SFX_AilmentTooEarly,
-        SFX_Immunity,
-        SFX_Seal,
-        SFX_Cure,
-        SFX_Cleanse,
+        SFX_AilmentTooEarly,    //trying to inflict something when the enemy is not vulnerable to it yet (i.e. it would work if it was lower HP)
+        SFX_Immunity,           //can't inflict X (negative) effect (Also caused by the Immunity effect)
+        SFX_Seal,               //can't inflict X (positive) effect
+        SFX_Cure,               //cure negative effects
+        SFX_Cleanse,            //cleanse positive effects
 
-        SFX_HPDrain,
-        SFX_EPDrain,
+        SFX_HPDrain,            //similar to heal?
+        SFX_EPDrain,            //similar to energize?
 
-        SFX_Effect_AttackBoost,
+        //a sound for every effect?
+        SFX_Effect_AttackBoost, //may be shared with the other attack boosting effects
         SFX_Effect_DefenseBoost,
         SFX_Effect_EnduranceBoost,
         SFX_Effect_AgilityBoost,
@@ -3037,6 +3038,7 @@ public class MainManager : MonoBehaviour
         SFX_Effect_Cooldown,
         SFX_Effect_Disorient,
 
+        //sounds for whenever the special thing the effect does activates (i.e. per hit for drain / bolt sprout and the other "activate on hit" things)
         SFX_EffectActivate_DrainSprout,
         SFX_EffectActivate_BoltSprout,
         SFX_EffectActivate_CounterFlare,
@@ -3056,24 +3058,24 @@ public class MainManager : MonoBehaviour
         SFX_AC_Fail,
         SFX_AC_Nice,
         SFX_AC_Good,
-        SFX_AC_Great,
-        SFX_AC_Perfect,
+        SFX_AC_Great,           //repeated a lot (it doesn't go up to "perfect" normally)
+        SFX_AC_Perfect,         //rarely used
 
-        SFX_Hit_Immune,
-        SFX_Hit_Absorb,
-        SFX_Hit_Miss,           //bad naming but ehh
-        SFX_Hit_Block,
+        SFX_Hit_Immune,         //similar to block?
+        SFX_Hit_Absorb,         //healing ish sound? (but the heal sound layers over this?)
+        SFX_Hit_Miss,           //bad naming but it fits in that folder
+        SFX_Hit_Block,          //
         SFX_Hit_BlockSpecial,   //Layers over Block sound (except for the non-damage reducing blocks)
         SFX_Hit_BlockPerfect,   //Layers over Block sound
-        SFX_Hit_Normal,
-        SFX_Hit_Light,
-        SFX_Hit_Water,
-        SFX_Hit_Air,
-        SFX_Hit_Dark,
-        SFX_Hit_Fire,
-        SFX_Hit_Earth,
-        SFX_Hit_Prismatic,
-        SFX_Hit_Void,
+        SFX_Hit_Normal,         //generic hurt sound (some kind of thud or something)
+        SFX_Hit_Light,          //icy ish sound?
+        SFX_Hit_Water,          //splash sound
+        SFX_Hit_Air,            //electric sound
+        SFX_Hit_Dark,           //? (toxic ish sound?)
+        SFX_Hit_Fire,           //fire sound
+        SFX_Hit_Earth,          //crunchy plant sound
+        SFX_Hit_Prismatic,      //? (similar to light)
+        SFX_Hit_Void,           //? (similar to dark)
 
         //crit sound layers above the normal sound
         //generic condition: >=12
@@ -3089,32 +3091,42 @@ public class MainManager : MonoBehaviour
         SFX_Hit_PrismaticCrit,
         SFX_Hit_VoidCrit,
 
+        //dialogue bleeps
         SFX_Talk_Generic,
-        SFX_Talk_Rabbit,
+        SFX_Talk_Rabbit,        //squeaky sound
         SFX_Talk_Hawk,
         SFX_Talk_Sparrow,
-        SFX_Talk_Flamecrest,
-        SFX_Talk_Flametongue,
-        SFX_Talk_Plateshell,
+        SFX_Talk_Flamecrest,    //reptile ish sound? (idk what that sounds like) (reuse for the other reptile ish people?)
+        SFX_Talk_Flametongue,   //?
+        SFX_Talk_Plateshell,    //turtle ish sound? (idk what that sounds like)
         SFX_Talk_Frog,
-        SFX_Talk_Jellyfish,
-        SFX_Talk_Mosquito,
-        SFX_Talk_Plaguebud,
+        SFX_Talk_Jellyfish,     //slimy ish sound
+        SFX_Talk_Mosquito,      //?
+        SFX_Talk_Plaguebud,     //deeper squeaky sound?
 
         SFX_Overworld_NPCSquish,
-        SFX_Overworld_EnemyAlert,
-        SFX_EnemyReact,
-        SFX_EnemyDie,
-        SFX_PlayerDie,
+        SFX_Overworld_EnemyAlert,   //Also used for enemies reacting to things
 
-        SFX_Overworld_JumpGeneric,
-        SFX_Overworld_JumpDash,
-        SFX_Overworld_JumpDouble,
-        SFX_Overworld_JumpSuper,
+        SFX_Overworld_JumpGeneric,  //used for enemies also
+        SFX_Overworld_JumpDash,     //? (you will hear this a lot)
+        SFX_Overworld_JumpDouble,   //electric ish
+        SFX_Overworld_JumpSuper,    //fiery ish
 
         SFX_Overworld_Dig,
         SFX_Overworld_DigPerpetual,
         SFX_Overworld_Undig,
+           
+        SFX_Overworld_Slash,        //sword slash
+        SFX_Overworld_SlashHit,     //sword hit
+        SFX_Overworld_Smash,        //swoosh
+        SFX_Overworld_SmashHit,     //hammer hit
+
+        //some other generic things for battle
+        SFX_Battle_EnemyDie,
+        SFX_Battle_PlayerDie,
+        SFX_Battle_Bite,
+        SFX_Battle_Swoop,
+        SFX_Battle_Roar,
 
         Music_Title,
 
@@ -3143,8 +3155,9 @@ public class MainManager : MonoBehaviour
         Music_Battle_Chaos,
         Music_Battle_Cutle,
 
-        Music_Area_Generic,
+        Music_Area_Generic,     //currently used for out of battle
 
+        //music for every area?
         Music_Area_SolarGrove,
         Music_Area_Dawnhold,
         Music_Area_CrystalHills,
@@ -7131,7 +7144,7 @@ public class MainManager : MonoBehaviour
 
     public string GetSaveFileString()
     {
-        lastSaveTimestamp = playTime;
+        lastSaveTimestamp = (float)playTime;
         Enum.TryParse(mapScript.mapName, out MapID mid);
         lastSaveMap = mid;
         Enum.TryParse(mapScript.worldLocation, out WorldLocation wl);
@@ -8486,6 +8499,10 @@ public class MainManager : MonoBehaviour
         //Wait until done
         aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
         aso.pitch = pitch + RandomGenerator.GetRange(-randomDeviance, randomDeviance);
+        if (s.ToString().Contains("Perpetual"))
+        {
+            aso.loop = true;
+        }
         aso.Play();
 
         while (aso.isPlaying)
@@ -8661,6 +8678,7 @@ public class MainManager : MonoBehaviour
         //Wait until done
         aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
         aso.pitch = 1;
+        aso.loop = true;
         aso.Play();
 
         if (audio_music.Count > 0)
@@ -8721,6 +8739,7 @@ public class MainManager : MonoBehaviour
         aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
         aso.pitch = 1;
         aso.volume = 0;
+        aso.loop = true;
         aso.Play();
 
         float completion = 0;
@@ -8800,6 +8819,10 @@ public class MainManager : MonoBehaviour
         //Wait until done
         aso.volume = GetSoundMultiplier(GetSoundType(s.ToString()));
         aso.pitch = pitch + RandomGenerator.GetRange(-randomDeviance, randomDeviance);
+        if (s.ToString().Contains("Perpetual"))
+        {
+            aso.loop = true;
+        }
         aso.Play();
 
         while (aso.isPlaying)
@@ -10061,6 +10084,33 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    //bezier curve derivative
+    //Use to point things along bezier curves
+    public static Vector3 BezierCurveDerivative(float t, params Vector3[] points)
+    {
+        //C'(u) = Sum   Bn-1,i (u)(n (P i+1 - P i))
+        //So this is equivalent to a new curve where the points = (n (P i+1 - P i))
+        if (points.Length < 1)
+        {
+            throw new ArgumentException("Need more than 0 arguments.");
+        }
+        else if (points.Length == 1)
+        {
+            //degenerate case
+            return Vector3.zero;
+        }
+        else {
+            //construct a new bezier
+            Vector3[] tempArray = new Vector3[points.Length - 1];
+            for (int i = 0; i < tempArray.Length; i++)
+            {
+                tempArray[i] = (points.Length) * (points[i + 1] - points[i]);
+            }
+            return BezierCurve(t, tempArray);
+        }
+    }
+
+
     //quadratic easing (positive = fast at start, slow at end, negative = slow at start, fast at end. Heaviness values outside [-1, 1] will return values outside [0,1] near the slow end but will rebound)
     //(graph out the formula for more specifics)
     public static float EasingQuadratic(float input, float heaviness)
@@ -10082,6 +10132,13 @@ public class MainManager : MonoBehaviour
     }
     public static float EasingOutIn(float input, float heaviness = 0.75f)
     {
+        //negative = breaks everything
+        //so it just defaults to the inverse of (-heaviness)
+        if (heaviness < 0)
+        {
+            heaviness = (1 / (-heaviness + 1)) - 1;
+        }
+
         float c = Mathf.Pow(2, heaviness);
 
         if (input < 0.5f)

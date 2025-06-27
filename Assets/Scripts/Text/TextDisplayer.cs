@@ -133,7 +133,12 @@ public class TextDisplayer : MonoBehaviour
         
 
         coroutineIndex++;
-        effectCor = StartCoroutine(AllEffects(coroutineIndex, offset));
+
+        //note: effect coroutine fails to start if it is not enabled / active
+        if (isActiveAndEnabled)
+        {
+            effectCor = StartCoroutine(AllEffects(coroutineIndex, offset));
+        }
     }
     public void StopEffectCoroutine()
     {
@@ -179,8 +184,10 @@ public class TextDisplayer : MonoBehaviour
 
     public virtual void SetText(string text, bool complete = false, bool forceOpaque = false, float fontSize = -1)
     {
+        //Debug.Log(text);
+
         //fail
-        if (!isActiveAndEnabled)
+        if (!enabled)
         {
             textMesh.text = "";
             return;

@@ -223,7 +223,7 @@ public class BM_Sycamore_ThornToss : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -249,7 +249,7 @@ public class BM_Sycamore_Pollenate : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -277,7 +277,7 @@ public class BM_Sycamore_FlowerShuriken : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -340,7 +340,7 @@ public class BM_Sycamore_VineStab : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -366,7 +366,7 @@ public class BM_Sycamore_FullBloom : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -394,7 +394,7 @@ public class BM_Sycamore_VineField : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -470,7 +470,7 @@ public class BM_Sycamore_Hard_RootShake : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -498,7 +498,7 @@ public class BM_Sycamore_Hard_RootGrasp : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {

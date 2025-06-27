@@ -151,7 +151,7 @@ public class Pause_SectionStatus : Pause_SectionShared
         }
         else
         {
-            lastSaveText.SetText(MainManager.GetAreaName(MainManager.Instance.lastSaveLocation) + "<line>(" + MainManager.ParseTime(MainManager.Instance.playTime - MainManager.Instance.lastSaveTimestamp) + ") ago", true, true);
+            lastSaveText.SetText(MainManager.GetAreaName(MainManager.Instance.lastSaveLocation) + "<line>(" + MainManager.ParseTime((float)MainManager.Instance.playTime - MainManager.Instance.lastSaveTimestamp) + ") ago", true, true);
         }
 
         levelText.SetText("Level " + playerData.level, true, true);
@@ -173,7 +173,7 @@ public class Pause_SectionStatus : Pause_SectionShared
         coinText.SetText(playerData.coins + "", true, true);
         shardText.SetText(playerData.shards + " (" + playerData.cumulativeShards + " total found)", true, true);
         itemText.SetText(playerData.itemInventory.Count + "", true, true);
-        playtimeText.SetText(MainManager.ParseTime(MainManager.Instance.playTime), true, true);
+        playtimeText.SetText(MainManager.ParseTime((float)MainManager.Instance.playTime), true, true);
 
         if (playerData.charmEffects == null || playerData.charmEffects.Count == 0)
         {

@@ -1984,6 +1984,8 @@ public struct Item
         DrinkBad,
         EatGood,
         DrinkGood,
+        ThrowNeedle,
+        ThrowSpin,
     }
     public enum OverhealPayEffect
     {

@@ -1999,9 +1999,14 @@ public class EncounterData
             factor = 1;
         }
 
+        //levelNormal /= factor;
+
+        //adjusted calculation
+        //early enemies are 3 above they should be?
+        Debug.Log(levelNormal + " " + factor);
         levelNormal /= factor;
-
-
+        levelNormal += 3 * Mathf.Clamp01(1 - (levelNormal / 36f));
+        Debug.Log(levelNormal + " after");
 
 
 

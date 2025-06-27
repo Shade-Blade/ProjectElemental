@@ -8,6 +8,7 @@ public class ACObject_HoldBar : MonoBehaviour
     public Image fullBar;
     public Image emptyBar;
     public Image fullBall;
+    public TextDisplayer controlHint;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,7 @@ public class ACObject_HoldBar : MonoBehaviour
 
     public void SetValues(float completion, bool ball)
     {
+        controlHint.SetText("Hold <button,left>", true, true);
         float width = completion * 150;
 
         fullBar.rectTransform.anchoredPosition = (width/2) * Vector2.right;

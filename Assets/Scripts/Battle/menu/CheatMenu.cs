@@ -310,6 +310,27 @@ public class CheatMenu : MenuHandler
             }
         }
 
+        if (input[0].Equals("ps"))
+        {
+            Enum.TryParse(input[1], out MainManager.Sound s);
+            MainManager.Instance.PlayGlobalSound(s);
+            doexit = false;
+            cs.log.SetText(input[1] + " is " + s, true, true);
+        }
+        if (input[0].Equals("ss"))  //stop sound
+        {
+            Enum.TryParse(input[1], out MainManager.Sound s);
+            MainManager.Instance.StopGlobalSound(s);
+            doexit = false;
+            cs.log.SetText(input[1] + " is " + s, true, true);
+        }
+        if (input[0].Equals("ws"))  //what sound
+        {
+            Enum.TryParse(input[1], out MainManager.Sound s);
+            doexit = false;
+            cs.log.SetText(input[1] + " is " + s, true, true);
+        }
+
 
         //set cheat
         if (input[0].Equals("sc"))

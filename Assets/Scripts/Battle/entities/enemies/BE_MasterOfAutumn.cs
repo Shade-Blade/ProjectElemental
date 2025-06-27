@@ -430,7 +430,7 @@ public class BM_GiantVine_Slam : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -456,7 +456,7 @@ public class BM_GiantVine_BigSlam : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         foreach (BattleEntity t in targets)
         {
@@ -486,7 +486,7 @@ public class BM_GiantVine_Telegraph : EnemyMove
             yield break;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
 
         BE_GiantVine gv = (BE_GiantVine)caller;
 
@@ -510,7 +510,7 @@ public class BM_GiantVine_Grab : EnemyMove
             yield break;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
 
         BE_GiantVine gv = (BE_GiantVine)caller;
 
@@ -600,7 +600,7 @@ public class BM_GiantVine_Constrict : EnemyMove
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
         BE_GiantVine gv = (BE_GiantVine)caller;
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (gv.grabbed != null)
         {
@@ -625,7 +625,7 @@ public class BM_GiantVine_Throw : EnemyMove
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity causer, int level = 1)
     {
         BE_GiantVine gv = (BE_GiantVine)caller;
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (gv.grabbed != null)
         {
@@ -663,7 +663,7 @@ public class BM_GiantVine_Hard_LashOut : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -694,7 +694,7 @@ public class BM_MasterOfAutumn_ThornToss : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -727,7 +727,7 @@ public class BM_MasterOfAutumn_PollenStorm : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -755,7 +755,7 @@ public class BM_MasterOfAutumn_FlowerShuriken : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -827,7 +827,7 @@ public class BM_MasterOfAutumn_VineStab : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -860,7 +860,7 @@ public class BM_MasterOfAutumn_FullBloom : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -888,7 +888,7 @@ public class BM_MasterOfAutumn_VineField : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -1036,7 +1036,7 @@ public class BM_MasterOfAutumn_Hard_RootShake : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {
@@ -1064,7 +1064,7 @@ public class BM_MasterOfAutumn_Hard_RootDrain : EnemyMove
     {
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         foreach (BattleEntity t in targets)
         {

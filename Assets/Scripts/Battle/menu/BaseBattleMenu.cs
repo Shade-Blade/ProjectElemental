@@ -215,7 +215,8 @@ public class BaseBattleMenu : MenuHandler
         {
             if (baseMenuOptions[baseMenuIndex].canSelect)
             {
-                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+                //MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Open);
                 /*
                 if (baseMenuOptions[baseMenuIndex].oname == BaseMenuName.Jump)
                 {

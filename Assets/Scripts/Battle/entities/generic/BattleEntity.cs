@@ -732,6 +732,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public bool alive;
 
     public bool perfectKill;    //was this entity perfect killed? Set to true in the take damage things
+    public int overkillDamage;
 
     public float hurtResetTime;
     public BattleHelper.SpecialHitAnim specialHitAnim;
@@ -1765,6 +1766,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (hp == 0 && damage != 0 && perfectKill)
         {
             perfectKill = false;    //if you take damage at 0 hp, forfeit the perfect kill bool
+            overkillDamage += damage;
         }
         if (hp == 0 && preAlive)
         {
@@ -1773,6 +1775,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (hp < 0)
         {
             perfectKill = false;
+            overkillDamage += -hp;
         }
         if (hp <= 0)
         {
@@ -2159,6 +2162,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (hp == 0 && damage != 0 && perfectKill)
         {
             perfectKill = false;    //if you take damage at 0 hp, forfeit the perfect kill bool
+            overkillDamage += damage;
         }
         if (hp == 0 && preAlive)
         {
@@ -2167,6 +2171,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (hp < 0)
         {
             perfectKill = false;
+            overkillDamage += -hp;
         }
         if (hp < 0)
         {
@@ -7975,7 +7980,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (target == null)
         {
-            yield return StartCoroutine(Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.25f, -2));
         }
         else
         {
@@ -8007,16 +8012,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         BattleControl.Instance.AddToDeathList(this);
         RemoveAllEffects();
         BattleControl.Instance.RemoveEntityAtId(posId); //create consistent death timing
-        yield return StartCoroutine(Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(SpinHeavy(Vector3.up * 720, 0.8f, -1.5f));
         BattleControl.Instance.CreateDeathSmoke(this);
         BattleControl.Instance.DropExperience(this);
-        yield return StartCoroutine(Spin(Vector3.left * 90, 0.125f)); //may have to remove this for midair entities
+        yield return StartCoroutine(SpinHeavy(Vector3.left * 90, 0.2f, -2)); //may have to remove this for midair entities
         HideHPBar();
         BattleControl.Instance.RemoveFromDeathList(this);
 
         if (!perfectKill)
         {
             BattleControl.Instance.perfectKillSatisfied = false;
+            BattleControl.Instance.overkillDamage += overkillDamage;
         }
 
         //Debug.Log("Perfect kill? " + (perfectKill ? "true" : "false"));
@@ -8041,10 +8047,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 yield return StartCoroutine(Shake(0.4f, 0.2f));
                 break;
             case BattleHelper.SpecialHitAnim.Spin:
-                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.4f, 0.7f));
+                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.4f, 1));
                 break;
             case BattleHelper.SpecialHitAnim.SpinFast:
-                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.125f, 0.7f));
+                yield return StartCoroutine(SpinHeavy(Vector3.up * 360, 0.125f, 1));
                 break;
             case BattleHelper.SpecialHitAnim.Squish:
                 yield return StartCoroutine(Squish(0.1f, Mathf.Min(0.8f, 0.35f / height)));
@@ -8056,7 +8062,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 break;
             case BattleHelper.SpecialHitAnim.Launch:
                 //idea: also squishes
-                StartCoroutine(JumpHeavy(homePos, 0.5f, 0.15f, 1, false, false));
+                StartCoroutine(JumpHeavy(homePos, 0.5f, 0.15f, 1, false, false, MainManager.Sound.None));
                 yield return StartCoroutine(Squish(0.1f, Mathf.Min(0.8f, 0.35f / height)));
                 yield return StartCoroutine(RevertScale(0.1f));
                 break;
@@ -8109,7 +8115,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         eo.transform.position = ApplyScaledOffset(stompOffset) + Vector3.down * 1;
         EffectScript_Generic es_g = eo.GetComponent<EffectScript_Generic>();
         es_g.Setup(1, 1);
-        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EnemyReact, 1, 0);
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_EnemyAlert, 1, 0);
     }
     public void Effect_ReactionDefend()
     {
@@ -8117,7 +8123,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         eo.transform.position = ApplyScaledOffset(stompOffset) + Vector3.down * 1;
         EffectScript_Generic es_g = eo.GetComponent<EffectScript_Generic>();
         es_g.Setup(1, 1);
-        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EnemyReact, 1, 0);
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_EnemyAlert, 1, 0);
     }
     public void Effect_ReactionAttack()
     {
@@ -8125,7 +8131,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         eo.transform.position = ApplyScaledOffset(stompOffset) + Vector3.down * 1;
         EffectScript_Generic es_g = eo.GetComponent<EffectScript_Generic>();
         es_g.Setup(1, 1);
-        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EnemyReact, 1, 0);
+        MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_EnemyAlert, 1, 0);
     }
 
     //called for every event
@@ -8801,9 +8807,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //Debug.Log("end");
         subObject.transform.eulerAngles = initialAngle + angle;
     }
-    public IEnumerator SpinHeavy(Vector3 angle, float duration, float heaviness, bool animate = true) //euler angle rotation
+    public IEnumerator SpinHeavy(Vector3 angle, float duration, float heaviness = 0.3f, bool animate = true) //euler angle rotation
     {
-        yield return StartCoroutine(Spin(angle, (c) => (MainManager.EasingQuadratic(c, heaviness)), duration, animate));
+        //yield return StartCoroutine(Spin(angle, (c) => (MainManager.EasingQuadratic(c, heaviness)), duration, animate));
+        yield return StartCoroutine(Spin(angle, (c) => (MainManager.EasingOut(c, heaviness)), duration, animate));
     }
     public IEnumerator Spin(Vector3 angle, Func<float, float> easing, float duration, bool animate = true) //euler angle rotation
     {
@@ -8817,12 +8824,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             amount = easing.Invoke(completion);
             if (amount < 0 || amount > 1)
             {
-                //Debug.LogWarning("Easing function returned value outside normal bounds.");
+                Debug.LogWarning("Easing function returned value outside normal bounds: " + amount);
             }
 
             if (animate)
             {
-                float newangle = (initialAngle + angle * completion).y;
+                float newangle = (initialAngle + angle * amount).y;
                 if ((newangle > 90 || newangle < -90) && (newangle < 270 && newangle > -270))
                 {
                     if (flipDefault)
@@ -8833,7 +8840,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     {
                         SendAnimationData("xflip");
                     }
-                    subObject.transform.eulerAngles = initialAngle + angle * completion + Vector3.up * 180;
+                    subObject.transform.eulerAngles = initialAngle + angle * amount + Vector3.up * 180;
                 }
                 else
                 {
@@ -8845,12 +8852,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     {
                         SendAnimationData("xunflip");
                     }
-                    subObject.transform.eulerAngles = initialAngle + angle * completion;
+                    subObject.transform.eulerAngles = initialAngle + angle * amount;
                 }
             }
             else
             {
-                subObject.transform.eulerAngles = initialAngle + angle * completion;
+                subObject.transform.eulerAngles = initialAngle + angle * amount;
             }
             completion = (Time.time - initialTime) / duration;
             yield return null;

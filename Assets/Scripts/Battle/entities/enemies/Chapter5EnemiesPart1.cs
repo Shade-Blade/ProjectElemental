@@ -73,7 +73,7 @@ public class BM_EyeSpore_SporeBeam : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         if (caller.curTarget != null)
         {
@@ -104,7 +104,7 @@ public class BM_EyeSpore_Hard_CounterSpiteBeam : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
 
         if (caller.curTarget != null)
@@ -227,7 +227,7 @@ public class BM_SpikeSpore_PoisonSpikes : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
                 bool hasStatus = caller.curTarget.HasStatus();
@@ -261,7 +261,7 @@ public class BM_SpikeSpore_Hard_SpikeBomb : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
         caller.InflictEffectBuffered(caller, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
@@ -389,7 +389,7 @@ public class BM_Shrouder_SporeCloud : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -425,7 +425,7 @@ public class BM_Shrouder_SporeCloak : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Ethereal, 1, 2));
     }
@@ -635,7 +635,7 @@ public class BM_HoarderFly_Hard_DustWind : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 1f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -669,7 +669,7 @@ public class BM_HoarderFly_Hard_FinalHeal : EnemyMove
             caller.curTarget = null;
         }
 
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.5f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
 
@@ -771,11 +771,11 @@ public class BM_Mosquito_ShockNeedle : EnemyMove
 
             if (Random.Range(0, 1) > 0.5f)
             {
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.75f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.75f));
             }
             else
             {
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             }
 
             if (caller.GetAttackHit(caller.curTarget, 0))
@@ -837,11 +837,11 @@ public class BM_Mosquito_DrainBite : EnemyMove
 
             if (Random.Range(0, 1) > 0.5f)
             {
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.75f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.75f));
             }
             else
             {
-                yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             }
 
             if (caller.GetAttackHit(caller.curTarget, 0))
@@ -867,7 +867,7 @@ public class BM_Mosquito_Hard_Shroud : EnemyMove
 
     public override IEnumerator Execute(BattleEntity caller, int level = 1)
     {
-        yield return StartCoroutine(caller.Spin(Vector3.up * 360, 0.25f));
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.InflictEffect(caller, new Effect(Effect.EffectType.Ethereal, 1, 2));
     }
 }
