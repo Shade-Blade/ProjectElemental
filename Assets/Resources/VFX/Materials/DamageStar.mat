@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GUISprite
-  m_Shader: {fileID: 4800000, guid: 3a61b58235ff1c6489915eb685b536ea, type: 3}
+  m_Name: DamageStar
+  m_Shader: {fileID: 4800000, guid: 3e0fefa6ac25ac541b763793614c0a7e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -74,7 +74,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _PointCount: 6
+    - _PointCount: 3
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

@@ -101,7 +101,10 @@ public class Item_GenericConsumable : ItemMove
         Vector3 targetPos = Vector3.zero;
         foreach (BattleEntity be in targets)
         {
-            targetPos += be.ApplyScaledOffset(be.stompOffset);
+            if (be != null)
+            {
+                targetPos += be.ApplyScaledOffset(be.stompOffset);
+            }
         }
         targetPos /= targets.Count;
         if (targets.Count > 1)
@@ -2191,7 +2194,10 @@ public class Item_GenericThrowable : ItemMove
 
         Vector3 targetPos = Vector3.zero;
         foreach (BattleEntity be in targets) {
-            targetPos += be.ApplyScaledOffset(be.stompOffset);
+            if (be != null)
+            {
+                targetPos += be.ApplyScaledOffset(be.stompOffset);
+            }
         }
         targetPos /= targets.Count;
         if (targets.Count > 1)
@@ -2984,7 +2990,10 @@ public class Item_AutoConsumable : Item_GenericConsumable
         Vector3 targetPos = Vector3.zero;
         foreach (BattleEntity be in targets)
         {
-            targetPos += be.ApplyScaledOffset(be.stompOffset);
+            if (be != null)
+            {
+                targetPos += be.ApplyScaledOffset(be.stompOffset);
+            }
         }
         targetPos /= targets.Count;
         if (targets.Count > 1)
@@ -3258,9 +3267,19 @@ public class Item_AutoThrowable : Item_GenericThrowable
         Vector3 targetPos = Vector3.zero;
         foreach (BattleEntity be in targets)
         {
-            targetPos += be.ApplyScaledOffset(be.stompOffset);
+            if (be != null)
+            {
+                targetPos += be.ApplyScaledOffset(be.stompOffset);
+            }
         }
         targetPos /= targets.Count;
+
+        bool skipAnim = false;
+        if (targetPos == Vector3.zero)
+        {
+            skipAnim = true;
+        }
+
         if (targets.Count > 1)
         {
             targetPos.y = 0;
@@ -3419,20 +3438,23 @@ public class Item_AutoThrowable : Item_GenericThrowable
         }
 
         //caller.SetAnimation("itemthrow");
-        yield return new WaitForSeconds(0.1f);
-        switch (ide.useAnim)
+        if (!skipAnim)
         {
-            case ItemUseAnim.ThrowNeedle:
-                StartCoroutine(ItemThrowNeedle(targetPos, targets.Count > 1));
-                break;
-            case ItemUseAnim.ThrowSpin:
-            default:
-                StartCoroutine(ItemThrowSpin(targetPos, targets.Count > 1));
-                break;
+            yield return new WaitForSeconds(0.1f);
+            switch (ide.useAnim)
+            {
+                case ItemUseAnim.ThrowNeedle:
+                    StartCoroutine(ItemThrowNeedle(targetPos, targets.Count > 1));
+                    break;
+                case ItemUseAnim.ThrowSpin:
+                default:
+                    StartCoroutine(ItemThrowSpin(targetPos, targets.Count > 1));
+                    break;
+            }
+            yield return new WaitForSeconds(0.2f);
+            //caller.SetIdleAnimation();
+            yield return new WaitForSeconds(targets.Count > 1 ? 0.6f : 0.3f);
         }
-        yield return new WaitForSeconds(0.2f);
-        //caller.SetIdleAnimation();
-        yield return new WaitForSeconds(targets.Count > 1 ? 0.6f : 0.3f);
 
 
         //hacky fix

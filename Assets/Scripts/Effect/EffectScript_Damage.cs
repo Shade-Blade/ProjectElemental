@@ -58,7 +58,11 @@ public class EffectScript_Damage : MonoBehaviour
     public SpriteRenderer backSpriteA;
     public SpriteRenderer backSpriteB;
 
+    public Material starMaterial;
     public Material ministarMaterial;
+    private MaterialPropertyBlock propertyBlock;
+    public Sprite square;
+    public Sprite[] ministarSprites;
 
     public GameObject proxy;
 
@@ -94,6 +98,8 @@ public class EffectScript_Damage : MonoBehaviour
 
     public void Setup(BattleHelper.DamageEffect b, int number, string bonus = null, string reduction = null, BattleHelper.DamageType type = BattleHelper.DamageType.Default, ulong properties = 0)
     {
+        propertyBlock = new MaterialPropertyBlock();
+
         if (bonus != null)
         {
             textBonus.text = bonus;
@@ -186,6 +192,7 @@ public class EffectScript_Damage : MonoBehaviour
 
         bool advanced = BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AdvancedElementCalc);
 
+        text.transform.localPosition = Vector3.up * 0.005f;
         //set up mini stars
         switch (b)
         {
@@ -198,31 +205,30 @@ public class EffectScript_Damage : MonoBehaviour
             case BattleHelper.DamageEffect.SoftDamage:
             case BattleHelper.DamageEffect.CritDamage:
             case BattleHelper.DamageEffect.Damage:
+                text.transform.localPosition = Vector3.zero;
+                backSpriteA.transform.localPosition = Vector3.zero;
+                backSpriteB.transform.localPosition = Vector3.zero;
+                propertyBlock.SetFloat("_PointCount", number < 3 ? 3 : (number > 16 ? 16 : number));
+                backSpriteA.material = starMaterial;
+                backSpriteB.material = starMaterial;
+                backSpriteA.SetPropertyBlock(propertyBlock);
+                backSpriteB.SetPropertyBlock(propertyBlock);
+                backSpriteA.sprite = square;
+                backSpriteB.sprite = square;
                 if (type != BattleHelper.DamageType.Normal && type != BattleHelper.DamageType.Default)
                 {
-                    List<Color> colorList = new List<Color>();
-                    List<Color> advancedColorList = null;
-
-                    if (advanced)
-                    {
-                        advancedColorList = new List<Color>();
-                    }
+                    List<int> indexList = new List<int>();
 
                     for (int j = 0; j < 8; j++)
                     {
                         if (((int)type & (1 << (j))) != 0)
                         {
-                            colorList.Add(damageTypeColors[j]);
-
-                            if (advanced)
-                            {
-                                advancedColorList.Add(damageTypeAdvancedColors[j]);
-                            }
+                            indexList.Add(j);
                         }
                     }
 
                     //at least 1 star per damage type (so the mythical "all types" attack would get all the colors right)
-                    ministars = new GameObject[Mathf.Clamp(number, Mathf.Max(minStars, colorList.Count), maxStars)];
+                    ministars = new GameObject[Mathf.Clamp(number, Mathf.Max(minStars, indexList.Count), maxStars)];
 
                     for (int i = 0; i < ministars.Length; i++)
                     {
@@ -232,9 +238,11 @@ public class EffectScript_Damage : MonoBehaviour
                         ministars[i].transform.parent = transform;
                         ministars[i].transform.position = startPos;
                         SpriteRenderer tempsp = ministars[i].AddComponent<SpriteRenderer>();
-                        tempsp.sprite = BattleControl.Instance.damageEffectStar;
-                        tempsp.color = colorList[i % colorList.Count];
+                        tempsp.sprite = square; //BattleControl.Instance.damageEffectStar;
+                        tempsp.color = damageTypeColors[indexList[i % indexList.Count]];
+                        tempsp.sprite = ministarSprites[indexList[i % indexList.Count]];
                         tempsp.material = ministarMaterial;
+                        //tempsp.SetPropertyBlock(propertyBlock);
                         ministars[i].transform.localScale = Vector3.zero;
 
                         if (advanced)
@@ -243,9 +251,11 @@ public class EffectScript_Damage : MonoBehaviour
                             g.transform.parent = ministars[i].transform;
                             g.transform.localPosition = Vector3.zero;
                             SpriteRenderer tempspG = g.AddComponent<SpriteRenderer>();
-                            tempspG.sprite = BattleControl.Instance.damageEffectStar;
-                            tempspG.color = advancedColorList[i % advancedColorList.Count];
-                            tempsp.material = ministarMaterial;
+                            tempspG.sprite = square; //BattleControl.Instance.damageEffectStar;
+                            tempspG.color = damageTypeAdvancedColors[indexList[i % indexList.Count]];
+                            tempspG.sprite = ministarSprites[indexList[i % indexList.Count]];
+                            tempspG.material = ministarMaterial;
+                            //tempspG.SetPropertyBlock(propertyBlock);
                             g.transform.localScale = Vector3.one * 0.4f;
                         }
                     }
@@ -264,8 +274,8 @@ public class EffectScript_Damage : MonoBehaviour
             case BattleHelper.DamageEffect.SoftDamage:
             case BattleHelper.DamageEffect.CritDamage:
             case BattleHelper.DamageEffect.Damage:
-                backSpriteA.sprite = BattleControl.Instance.damageEffectStar;
-                backSpriteB.sprite = BattleControl.Instance.damageEffectStar;
+                backSpriteA.sprite = square; // BattleControl.Instance.damageEffectStar;
+                backSpriteB.sprite = square; // BattleControl.Instance.damageEffectStar;
                 //text.color = BattleControl.Instance.GetHPBarColors()[3];
                 backSpriteA.color = BattleControl.Instance.GetHPBarColors()[0];
                 backSpriteB.color = BattleControl.Instance.GetHPBarColors()[3];
@@ -275,8 +285,9 @@ public class EffectScript_Damage : MonoBehaviour
                     //wacky idea
                     GameObject backSpriteCOBJ = Instantiate(backSpriteB.gameObject, backSpriteA.transform);
                     backSpriteCOBJ.transform.localScale = Vector3.one * 1.25f;
-                    backSpriteCOBJ.transform.localPosition = Vector3.forward * 0.003f;
+                    backSpriteCOBJ.transform.localPosition = Vector3.forward * 0.003f;                    
                     backSpriteCOBJ.GetComponent<SpriteRenderer>().color = BattleControl.Instance.GetHPBarColors()[3];
+                    backSpriteCOBJ.GetComponent<SpriteRenderer>().SetPropertyBlock(propertyBlock);
                 }
                 break;
             case BattleHelper.DamageEffect.Heal:
@@ -469,6 +480,9 @@ public class EffectScript_Damage : MonoBehaviour
             }
         }
 
+        int numPoints = number < 3 ? 3 : (number > 16 ? 16 : number);
+
+        float valueB = (180f / numPoints);
         switch (be)
         {
             case BattleHelper.DamageEffect.SuperBlockedDamage:
@@ -476,19 +490,25 @@ public class EffectScript_Damage : MonoBehaviour
             case BattleHelper.DamageEffect.BlockedDamage:
             case BattleHelper.DamageEffect.CritBlockedDamage:
             case BattleHelper.DamageEffect.Damage:
-                backSpriteB.transform.eulerAngles = Vector3.forward * (144f + 36f * Mathf.Min(number,15)/15f);
-                backSpriteB.transform.localPosition = Vector3.up * 0.01f + Vector3.forward * 0.005f;
+                backSpriteB.transform.eulerAngles = Vector3.forward * (valueB * Mathf.Min(number,12)/12f);  //since 12 = crit normal it should result in max rotation
+                backSpriteB.transform.localPosition = Vector3.forward * 0.005f;
                 break;
             case BattleHelper.DamageEffect.UnblockableDamage:
-                backSpriteB.transform.eulerAngles = Vector3.forward * (180f + 144f * completion);
-                backSpriteB.transform.localPosition = Vector3.up * 0.01f + Vector3.forward * 0.005f;
+                backSpriteB.transform.eulerAngles = Vector3.forward * (180f + valueB * 4 * completion);
+                backSpriteB.transform.localPosition = Vector3.forward * 0.005f;
                 break;
             case BattleHelper.DamageEffect.CritDamage:
-                backSpriteB.transform.eulerAngles = Vector3.forward * (144f + 36f);
-                backSpriteB.transform.localPosition = Vector3.up * 0.01f + Vector3.forward * 0.005f;
+                backSpriteB.transform.eulerAngles = Vector3.forward * (valueB); //(valueA + valueB)
+                backSpriteB.transform.localPosition = Vector3.forward * 0.005f;
                 break;
             case BattleHelper.DamageEffect.MaxHPDamage:
                 break;
+        }
+
+        float bonusBackScale = 1;
+        if (be == BattleHelper.DamageEffect.CritDamage || be == BattleHelper.DamageEffect.CritBlockedDamage || be == BattleHelper.DamageEffect.CritSuperBlockedDamage)
+        {
+            bonusBackScale = 1.25f;
         }
 
         if (lifetime < maxScaleTime)
@@ -497,17 +517,17 @@ public class EffectScript_Damage : MonoBehaviour
             backSpriteA.transform.localScale = backSpriteScale * numScale;
             if (be == BattleHelper.DamageEffect.MaxHPDamage)
             {
-                backSpriteB.transform.localScale = backSpriteScale * numScale + Vector3.one * 0.05f;
+                backSpriteB.transform.localScale = backSpriteScale * numScale * bonusBackScale + Vector3.one * 0.05f;
             }
             else
             {
                 if (number < 0)
                 {
-                    backSpriteB.transform.localScale = backSpriteScale * numScale * (Mathf.Min(0.7f - 0.02f * number, 1f));
+                    backSpriteB.transform.localScale = backSpriteScale * numScale * bonusBackScale * (Mathf.Min(0.7f - 0.02f * number, 1f));
                 }
                 else
                 {
-                    backSpriteB.transform.localScale = backSpriteScale * numScale * (Mathf.Min(0.7f + 0.02f * number, 1f));
+                    backSpriteB.transform.localScale = backSpriteScale * numScale * bonusBackScale * (Mathf.Min(0.7f + 0.02f * number, 1f));
                 }
             }
         }
@@ -517,17 +537,17 @@ public class EffectScript_Damage : MonoBehaviour
             backSpriteA.transform.localScale = backSpriteScale * numScale * endscale;
             if (be == BattleHelper.DamageEffect.MaxHPDamage)
             {
-                backSpriteB.transform.localScale = backSpriteScale * numScale + Vector3.one * 0.05f * endscale;
+                backSpriteB.transform.localScale = backSpriteScale * numScale * bonusBackScale + Vector3.one * 0.05f * endscale;
             }
             else
             {
                 if (number < 0)
                 {
-                    backSpriteB.transform.localScale = backSpriteScale * numScale * (Mathf.Min(0.7f - 0.02f * number, 1f)) * endscale;
+                    backSpriteB.transform.localScale = backSpriteScale * numScale * bonusBackScale * (Mathf.Min(0.7f - 0.02f * number, 1f)) * endscale;
                 }
                 else
                 {
-                    backSpriteB.transform.localScale = backSpriteScale * numScale * (Mathf.Min(0.7f + 0.02f * number, 1f)) * endscale;
+                    backSpriteB.transform.localScale = backSpriteScale * numScale * bonusBackScale * (Mathf.Min(0.7f + 0.02f * number, 1f)) * endscale;
                 }
             }
         }

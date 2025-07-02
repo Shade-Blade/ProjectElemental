@@ -2204,7 +2204,10 @@ public class BattleControl : MonoBehaviour
         hpBarColors[0] = new Color[] { new Color(0.5f, 1f, 0.9f, 1), new Color(0.4f, 0.9f, 0.8f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0.25f, 0.65f, 0.7f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0, 0, 0, 1) };
 
         //"normal" (yellow/red)
-        hpBarColors[1] = new Color[] { new Color(1f, 1f, 0.5f, 1), new Color(0.9f, 0.9f, 0.4f, 1), new Color(1, 1, 1, 1), new Color(1f, 0.2f, 0.2f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
+        //hpBarColors[1] = new Color[] { new Color(1f, 1f, 0.5f, 1), new Color(0.9f, 0.9f, 0.4f, 1), new Color(1, 1, 1, 1), new Color(1f, 0.2f, 0.2f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
+    
+        //easy mode colors but with white numbers
+        hpBarColors[1] = new Color[] { new Color(0.5f, 1f, 0.9f, 1), new Color(0.4f, 0.9f, 0.8f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0.25f, 0.65f, 0.7f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
 
         //"hard / super curse" (red/dark pink)
         hpBarColors[2] = new Color[] { new Color(1f, 0.35f, 0.35f, 1), new Color(0.9f, 0.25f, 0.25f, 1), new Color(1, 0.8f, 0.8f, 1), new Color(0.6f, 0.2f, 0.4f, 1), new Color(1, 0.8f, 0.8f, 1), new Color(0, 0, 0, 1) };

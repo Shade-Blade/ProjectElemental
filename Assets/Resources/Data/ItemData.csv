@@ -218,8 +218,8 @@ RoyalDinner,50,50,,,53,AttackUp:2/5|DefenseUp:2/5,,,,FALSE,EatGood,Recipe,FALSE,
 CelestialMuffin,100,100,,,60,,,,TargetAll|NoBattle,FALSE,Eat,GoodRecipe,FALSE,,,,8,TRUE
 PolarCaramel,,60,,,47,EnergyRegen:15/3,AttackDefense,15,,FALSE,EatGood,SpecialtyRecipe,FALSE,,,,8,TRUE
 CelestialParfait,30,30,30,,98,Ethereal:1/1,,,TargetAll,FALSE,EatGood,SpecialtyRecipe,FALSE,,,,8,TRUE
-SupremeDessert,,100,,,104,Focus:3/X|Absorb:3/X|Hustle:1/1,AttackDefense,20,TargetAll,FALSE,EatGood,SupremeRecipe,FALSE,,,,8,TRUE
-SupremeDinner,40,40,40,,127,ItemBoost:3/X|Ethereal:1/1,,,TargetAll,FALSE,EatGood,SupremeRecipe,FALSE,,,,8,TRUE
+SupremeDessert,,100,,,104,Focus:3/X|Absorb:3/X|Hustle:1/1,AttackDefense,20,TargetAll|Limited,FALSE,EatGood,SupremeRecipe,FALSE,,,,8,TRUE
+SupremeDinner,40,40,40,,127,ItemBoost:3/X|Ethereal:1/1,,,TargetAll|Limited,FALSE,EatGood,SupremeRecipe,FALSE,,,,8,TRUE
 AetherCarrot,100,,,,67,AttackUp:3/3|DefenseDown:3/3,,,,FALSE,EatBad,Base,FALSE,,,,9,FALSE
 CrystalCarrot,100,,,,67,,,,Cure,FALSE,EatGood,Base,FALSE,,,,9,FALSE
 MiracleSyrup,,100,,,67,,,,Miracle|Limited,FALSE,DrinkGood,Base,FALSE,,,,9,FALSE

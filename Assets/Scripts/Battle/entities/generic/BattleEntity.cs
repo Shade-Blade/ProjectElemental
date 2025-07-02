@@ -6030,7 +6030,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     }
                     break;
                 default:
-                    //Debug.Log("Mode" + mode + " " + Status.GetEffectClass(se.effect) + " stack");
+                    Debug.Log("Mode" + mode + " " + Effect.GetEffectClass(se.effect) + " stack");
                     switch (Effect.GetEffectClass(se.effect))
                     {
                         case Effect.EffectClass.Static:
@@ -6106,7 +6106,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     }
                     break;
             }
-            //Debug.Log("Result: " + entry);
+            Debug.Log("Result: " + entry);
         }
         else
         {
@@ -8012,10 +8012,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         BattleControl.Instance.AddToDeathList(this);
         RemoveAllEffects();
         BattleControl.Instance.RemoveEntityAtId(posId); //create consistent death timing
-        yield return StartCoroutine(SpinHeavy(Vector3.up * 720, 0.8f, -1.5f));
+        yield return StartCoroutine(SpinHeavy(Vector3.up * 720, 0.5f, -1.5f));
+        //yield return new WaitForSeconds(0.4f);
+        yield return StartCoroutine(SmoothScale(0.3f, (e) => (MainManager.EasingIn(e)), Vector3.zero));
         BattleControl.Instance.CreateDeathSmoke(this);
         BattleControl.Instance.DropExperience(this);
-        yield return StartCoroutine(SpinHeavy(Vector3.left * 90, 0.2f, -2)); //may have to remove this for midair entities
+        //yield return StartCoroutine(SpinHeavy(Vector3.left * 90, 0.2f, -2)); //may have to remove this for midair entities
+        yield return new WaitForSeconds(0.4f);
         HideHPBar();
         BattleControl.Instance.RemoveFromDeathList(this);
 

@@ -309,12 +309,12 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
             }
 
             //stamina block
-            if (UseStamina() && staminaCost > caller.GetRealAgility())
+            if (UseStamina() && staminaCost > caller.GetRealAgility() && GetCurrency(caller) != BattleHelper.MoveCurrency.Stamina)
             {
                 pcaller.staminaBlock = true;
             }
 
-            if (UseStamina() && caller.stamina < staminaCost)
+            if (UseStamina() && caller.stamina < staminaCost && GetCurrency(caller) != BattleHelper.MoveCurrency.Stamina)
             {
                 pcaller.staminaBlock = true;
             }

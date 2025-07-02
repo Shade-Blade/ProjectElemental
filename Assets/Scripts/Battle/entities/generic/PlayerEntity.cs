@@ -3934,6 +3934,7 @@ public class PlayerEntity : BattleEntity
             //target gets defocus
             //note: inflict status
             sbyte drain = target.GetEffectEntry(Effect.EffectType.DrainSprout).potency;
+            Debug.Log(drain + " " + target);
             InflictEffect(target, new Effect(Effect.EffectType.Defocus, drain, Effect.INFINITE_DURATION));
             HealHealth(2 * drain);
         }
@@ -5517,6 +5518,11 @@ public class PlayerEntity : BattleEntity
                     }
                     //?
                     StartCoroutine(animReset());
+                } else
+                {
+                    //ouch
+                    yield return StartCoroutine(Squish(0.1f, 0.3f));
+                    yield return StartCoroutine(RevertScale(0.1f));
                 }
                 break;
             case BattleHelper.Event.StatusDeath:
@@ -5531,12 +5537,17 @@ public class PlayerEntity : BattleEntity
                 {
                     SetAnimation("hurt", true);
                     yield return StartCoroutine(SpinHeavy(Vector3.up * 720, 0.8f, -1.5f));
-                    yield return StartCoroutine(Move(homePos, 10,false)); //so you die from counters properly
-                    yield return StartCoroutine(SpinHeavy(Vector3.left * 90, 0.2f, -2));
+                    yield return StartCoroutine(Move(homePos, 10, false)); //so you die from counters properly
+                    //yield return StartCoroutine(SpinHeavy(Vector3.left * 90, 0.2f, -2));
                 }
                 SetRotation(Vector3.zero);
-                SetAnimation("dead",true);
-                yield return new WaitForSeconds(0.2f);
+                SetAnimation("dead", true);
+                if (!dead)
+                {
+                    yield return StartCoroutine(Squish(0.1f, 0.3f));
+                    yield return StartCoroutine(RevertScale(0.1f));
+                }
+                //yield return new WaitForSeconds(0.2f);
                 //on death stuff
                 if (!dead)
                 {

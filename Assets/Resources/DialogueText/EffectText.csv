@@ -62,8 +62,8 @@ HealthLoss,Health Loss,"Lose <var,1> HP every turn."
 EnergyLoss,Energy Loss,"Lose <var,1> EP every turn."
 SoulLoss,Soul Loss,"Lose <var,1> SE every turn."
 Sluggish,Sluggish,"Get Cooldown every turn except for 1 / <var,1> turns"
-DrainSprout,Drain Sprout,"When hit, get <var,1> Defocus and the attacker gets <var,2> HP."
-BoltSprout,Bolt Sprout,"When hit, get <var,1> Sunder at the end of turn and the attacker gets <var,2> EP."
+DrainSprout,Drain Sprout,"When hit, get <var,1> Defocus and the attacker gets <var,3> HP."
+BoltSprout,Bolt Sprout,"When hit, get <var,1> Sunder at the end of turn and the attacker gets <var,3> EP."
 Seal,Seal,Cannot receive most positive effects.
 Sticky,Sticky,Cannot use Items.
 DamageOverTime,Damage Over Time,"Take <var,1> damage per turn."

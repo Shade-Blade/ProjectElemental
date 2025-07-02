@@ -63,7 +63,18 @@ MonoBehaviour:
   dir: 0
   backSpriteA: {fileID: 7904584416197531706}
   backSpriteB: {fileID: 6996221116815834326}
+  starMaterial: {fileID: 2100000, guid: 9dbd65115e54069428c3ea05f9183f71, type: 2}
   ministarMaterial: {fileID: 2100000, guid: 23cb9b323995d8b49b4cab45d69ebb8b, type: 2}
+  square: {fileID: 7482667652216324306, guid: 8f9a297526949ec4086ad801649dd6c2, type: 3}
+  ministarSprites:
+  - {fileID: 21300000, guid: de4c1706653a25d4ea950cf9d54b7468, type: 3}
+  - {fileID: 21300000, guid: 32d4009efe527f84e9dacb8c122e7e0f, type: 3}
+  - {fileID: 21300000, guid: f3cd3735d44a8cb4c8d0d6b404633742, type: 3}
+  - {fileID: 21300000, guid: cca7a1ec1f4d30c46a5b9b6f902bcbb1, type: 3}
+  - {fileID: 21300000, guid: ef49dd0b0ded00c4a89e3dbb3e43335c, type: 3}
+  - {fileID: 21300000, guid: c6a39a6674deaab4b8d8d349b00e348d, type: 3}
+  - {fileID: 21300000, guid: 67adbf8f2750cb040a602991e7d51948, type: 3}
+  - {fileID: 21300000, guid: 94662dec1f7aeda44ba54e36b0ba5c80, type: 3}
   proxy: {fileID: 7293774675018137772}
 --- !u!1 &650819395739542872
 GameObject:
@@ -525,7 +536,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.005}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0.7, y: 0.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &6082223116412426638
