@@ -73,6 +73,16 @@ public class BattleFadeoutScript : MonoBehaviour
         image.color = new Color(color.r, color.g, color.b, 0);
     }
 
+    //doesn't set color: so only use 0 or 1 here to make that not matter
+    public void SnapFade(float f)
+    {
+        Color color = image.color;
+        FadeOutProgress = f;
+        Shader.SetGlobalFloat("_BattleFadeProgress", (1 - f));
+        //Shader.SetGlobalVector("_BattleFadeLocation", Vector2.zero);
+        image.color = new Color(color.r, color.g, color.b, FadeOutProgress);
+    }
+
     private void Update()
     {
         image.rectTransform.sizeDelta = Vector2.right * 800 + Vector2.up * 800 * (MainManager.Instance.SuperCanvas.GetComponent<RectTransform>().rect.height / (MainManager.Instance.SuperCanvas.GetComponent<RectTransform>().rect.width + 0f));

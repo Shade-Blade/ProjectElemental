@@ -51,6 +51,9 @@ public class TMPString
             case TagEntry.TextTag.ZeroSpace:
                 output = "\u200B";
                 break;
+            case TagEntry.TextTag.CArrow:
+                output = "\u21BB";
+                break;
             case TagEntry.TextTag.LArrow:
                 output = "\u2190";
                 break;
@@ -429,6 +432,7 @@ public class TMPString
                 //output = "z";
                 break;
             case TagEntry.TextTag.ZeroSpace:
+            case TagEntry.TextTag.CArrow:
             case TagEntry.TextTag.LArrow:
             case TagEntry.TextTag.RArrow:
             case TagEntry.TextTag.UArrow:
@@ -963,6 +967,7 @@ public class TagEntry
         ZeroSpace,  //zero width space
 
         //arrow characters
+        CArrow, //circle arrow
         LArrow,
         RArrow,
         UArrow,

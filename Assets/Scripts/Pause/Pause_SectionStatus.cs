@@ -100,12 +100,19 @@ public class Pause_SectionStatus : Pause_SectionShared
         EarthCore,
         Chapter7Thing,
         Chapter8Thing,
-        MotherCore
+        MotherCore,
+        EndOfTable
     }
 
     public string GetNodeDescription(MenuNodeType mnt)
     {
-        return mnt.ToString() + " desc";
+        if (GlobalInformationScript.Instance.statusText == null)
+        {
+            GlobalInformationScript.Instance.LoadStatusText();
+        }
+
+        return GlobalInformationScript.Instance.statusText[(int)mnt][1];
+        //return mnt.ToString() + " desc";
     }
 
     public override void ApplyUpdate(object state)

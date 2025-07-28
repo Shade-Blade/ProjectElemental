@@ -554,6 +554,16 @@ public class BattleStartArguments
             posId = p_posId;
             variable = p_variable;
         }
+
+        public override string ToString()
+        {
+            return "(" + posId + ": " + variable + ")";
+        }
+    }
+
+    public override string ToString()
+    {
+        return firstStrikePosId + " " + move + " " + MainManager.ListToString(variableList);
     }
 }
 
@@ -787,7 +797,7 @@ public class BattleControl : MonoBehaviour
     public static BattleControl StartBattleStatic(BattleStartArguments bsa)
     {
         Debug.Log("Battle Start");
-
+        MainManager.Instance.BattleSnapFade(1);
 
         BattleControl b = FindObjectOfType<BattleControl>();
         if (b == null)
@@ -795,12 +805,15 @@ public class BattleControl : MonoBehaviour
             GameObject newObj = new GameObject("BattleControl");
             BattleControl newBC = newObj.AddComponent<BattleControl>();
             newObj.AddComponent<PlayerTurnController>();
+            newBC.StartMusic(bsa);
             newBC.LoadBattleAssets();
             newBC.StartBattle(bsa);
+            newBC.StartCoroutine(BattleFadein());
             return newBC;
         }
         else
         {
+            b.StartMusic(bsa);
             if (!b.assetsLoaded)
             {
                 b.LoadBattleAssets();
@@ -810,8 +823,15 @@ public class BattleControl : MonoBehaviour
                 b.gameObject.AddComponent<PlayerTurnController>();
             }
             b.StartBattle(bsa);
+            b.StartCoroutine(BattleFadein());
             return b;
         }
+    }
+
+    static IEnumerator BattleFadein()
+    {
+        yield return new WaitForSeconds(0.7f);
+        yield return MainManager.Instance.StartCoroutine(MainManager.Instance.BattleUnfadeToBlack(Color.yellow, new Vector2(0.5f, 0.5f)));
     }
 
     public static int GetOverkillLevel(EncounterData ed)
@@ -2236,6 +2256,9 @@ public class BattleControl : MonoBehaviour
     //Battle control
     public void StartBattle(BattleStartArguments bsa = null)
     {
+        //moved to startbattlestatic
+        //StartMusic(bsa);
+
         if (SettingsManager.Instance.GetSetting(SettingsManager.Setting.AlwaysRetry) != 0)
         {
             SetProperty(BattleProperties.CanRetry, true);
@@ -2253,12 +2276,13 @@ public class BattleControl : MonoBehaviour
 
         //borrow references from MainManager
         playerData = MainManager.Instance.playerData.Copy();
-        if (MainManager.Instance.gameOverPlayerData != null)
+        if (MainManager.Instance.gameOverPlayerDataExists)// != null)
         {
             //Debug.Log("set");
             MainManager.Instance.playerData = MainManager.Instance.gameOverPlayerData.Copy();
         }
         MainManager.Instance.gameOverPlayerData = null;
+        MainManager.Instance.gameOverPlayerDataExists = false;
         encounterData = MainManager.Instance.nextBattle;
 
 
@@ -2310,8 +2334,6 @@ public class BattleControl : MonoBehaviour
         //spectralEnergy = 0;
         //astralEnergy = 0;
         //aetherEnergy = 0;
-
-        StartMusic(bsa);
 
         //get enemy party
         SummonEntities(encounterData);
@@ -2524,7 +2546,11 @@ public class BattleControl : MonoBehaviour
         if (battleMapScript != null)
             battleMapScript.OnBattleEnd();
 
-        StopMusic();
+        //game over script uses replacemusic, so keep the battle music around here
+        if ((outcome != BattleOutcome.Death && outcome != BattleOutcome.Tie) || MainManager.Instance.CanHandleBattleLoss())
+        {
+            StopMusic();
+        }
 
         //Try to start coroutine from mainmanager to avoid problems with this script being destroyed
         MainManager.Instance.StartCoroutine(MainManager.Instance.ReturnFromBattle(outcome, GetProperty(BattleHelper.BattleProperties.CanRetry)));

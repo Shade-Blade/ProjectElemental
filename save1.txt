@@ -1,10 +1,10 @@
 sus
-d_rh_v0.16
+d_rh_v0.17
 
 GV_PitAltar:10
 ForsakenMountains,Test_LandscapeC9,8.491777|0.8749999|-9.014341
 955.4398
-25,0,60,60,60,60,60,39,0,0,0,0,10,32,6,6,6,0,2,3,0,0,0,0,3,0,3,15
+25,0,60,60,60,60,60,39,0,0,0,0,10,32,6,6,6,0,2,3,0,0,0,0,3,0,3,2
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP
 
 PeachPie|None|Overworld,PolarCaramel|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,SupremeDinner|None|Overworld,GoldenSalad|None|Overworld,GoldenSalad|None|Overworld,MiracleNeedle|None|Overworld,MiracleShroom|None|Overworld

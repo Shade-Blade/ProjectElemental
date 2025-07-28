@@ -306,7 +306,7 @@ public class LevelUpMenuScript : MonoBehaviour
                 }
                 descBox.SetText(descriptions[selectIndex], true, true);
                 pointer.transform.localPosition = MainManager.EasingQuadraticTime(pointer.transform.localPosition, options[selectIndex].transform.localPosition + Vector3.up * 120, 5000);
-                if (usages[selectIndex] && InputManager.GetButtonDown(InputManager.Button.A))
+                if (usages[selectIndex] && ((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButtonDown(InputManager.Button.A))))
                 {
                     //Select
                     state = 2;

@@ -331,13 +331,13 @@ public class BadgeMenuEntry : BoxMenuEntry
     }
 
 
-    public BadgeMenuEntry(Badge p_b, EquipType p_et = EquipType.None, bool p_canUse = true)
+    public BadgeMenuEntry(Badge p_b, EquipType p_et = EquipType.None, bool p_canUse = true, bool stacking = false)
     {
         b = p_b;
         et = p_et;
         rightText = "" + Badge.GetSPCost(b) + "<sp>";
         name = Badge.GetSpriteString(b) + " " + Badge.GetName(b);
-        description = Badge.GetDescription(b);
+        description = Badge.GetDescription(b, stacking);
         canUse = p_canUse;
     }
 }

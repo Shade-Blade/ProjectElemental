@@ -107,7 +107,7 @@ public class LevelUpEffectScript : MonoBehaviour
                 }
                 break;
             case 4: //awaiting A press
-                if (InputManager.GetButtonDown(InputManager.Button.A))
+                if ((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButtonDown(InputManager.Button.A)))
                 {
                     state = 5;
                     stateWait = 0;

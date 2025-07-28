@@ -137,15 +137,6 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
                 //the actual cost check was earlier in this case so this check doesn't really matter
                 staminaCost = 0;
             }
-
-            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand)
-            {
-                staminaCost /= 2;
-            }
-            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfHaste)
-            {
-                staminaCost = 0;
-            }
         }
 
         if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.SacredGrove)
@@ -232,15 +223,6 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
                 //the actual cost check was earlier in this case so this check doesn't really matter
                 staminaCost = 0;
             }
-
-            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand)
-            {
-                staminaCost /= 2;
-            }
-            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfHaste)
-            {
-                staminaCost = 0;
-            }
         }
 
         if (UseStamina() && (caller.stamina < staminaCost - caller.GetEffectHasteBonus()))
@@ -295,16 +277,6 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
             if (GetCurrency(caller) == BattleHelper.MoveCurrency.Stamina && pcaller.BadgeEquipped(Badge.BadgeType.StaminaEnergy))
             {
                 //the actual cost check was earlier in this case so this check doesn't really matter
-                staminaCost = 0;
-            }
-
-
-            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand)
-            {
-                staminaCost /= 2;
-            }
-            if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfHaste)
-            {
                 staminaCost = 0;
             }
 

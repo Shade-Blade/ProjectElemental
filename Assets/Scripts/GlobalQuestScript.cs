@@ -87,6 +87,23 @@ public class GlobalQuestScript : MonoBehaviour
         }
     }
 
+    //likely will be unnecessary
+    //text is not very memory intensive?
+    //would likely need the garbage collector to do stuff though (this likely won't help that much?)
+    public void Unload()
+    {
+        UnloadAchievementText();
+        UnloadQuestText();
+    }
+    public void UnloadAchievementText()
+    {
+        achievementText = null;
+    }
+    public void UnloadQuestText()
+    {
+        questText = null;
+    }
+
     public QuestFlags GetQuestFlags(Quest.QuestType qt)
     {
         if (questFlags == null)

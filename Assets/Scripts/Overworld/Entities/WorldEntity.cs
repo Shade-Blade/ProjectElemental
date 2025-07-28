@@ -441,7 +441,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
             rb.velocity = MainManager.EasingExponentialTime(rb.velocity, conveyerVector - conveyerVector.y * Vector3.up, 1 / movementDamping);
         }
 
-        if (rb != null)
+        if (rb != null && !rb.isKinematic)
         {
             lastFrameVel = rb.velocity;
             rb.velocity += conveyerVector;
@@ -1053,6 +1053,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
         this.ac = ac;
         subObject = ac.gameObject;
+        ac.transform.localPosition = Vector3.down * height / 2;
     }
     //Also corrects the height and width values to the animation controller's values
     public void SetColliderInformationWithAnimationController()
@@ -1065,6 +1066,8 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
         height = ac.height;
         width = ac.width;
+        ac.transform.localPosition = Vector3.down * height / 2;
+
         //Debug.Log(height + " " + width);
         if (characterCollider != null)
         {
@@ -1149,11 +1152,11 @@ public class WorldEntity : WorldObject, ITextSpeaker
         SetAnimation("idle", true);   //note: no way to check for what the real last anim was at this point
     }
 
-    public virtual void SetAnimation(string name, bool force = false)
+    public virtual void SetAnimation(string name, bool force = false, float time = -1)
     {
         if (ac != null)
         {
-            ac.SetAnimation(name, force);
+            ac.SetAnimation(name, force, time);
         }
     }
     public virtual void SendAnimationData(string data)

@@ -688,6 +688,11 @@ public class DefenseTableEntry
         this.type = type;
         this.amount = amount;
     }
+
+    public override string ToString()
+    {
+        return type + ": " + amount;
+    }
 }
 
 [System.Serializable]
@@ -1358,9 +1363,11 @@ public static class BattleHelper
         Honeybud,
         BurrowTrap,
         Sundew,
+        Brambleling,
+        GiantVine,
+        Solardew,
         VinePlatform,
         Sycamore,
-        GiantVine,
         VineThrone,
         MasterOfAutumn,
         Bandit,
@@ -1368,6 +1375,11 @@ public static class BattleHelper
         Sentry,
         Cactupole,
         Sandswimmer,
+        SpireGuard,
+        EliteGuard,
+        Shockworm,
+        Brightpole,
+        Stormswimmer,
         DesertMinibossA,
         DesertMinibossB,
         DesertMinibossC,
@@ -1391,6 +1403,10 @@ public static class BattleHelper
         Slimeworm,
         Slimebloom,
         SirenFish,
+        ElementalSlime,
+        NormalSlime,
+        SoftSlime,
+        RigidSlime,
         FalseDragonArm,
         FalseDragon,
         AmalgamLeftArm,
@@ -1402,6 +1418,9 @@ public static class BattleHelper
         Flametongue,
         Heatwing,
         Lavaswimmer,
+        Infernoling,
+        Magmaswimmer,
+        Wyverlet,
         LavaWyvern,
         MetalWyvern,
         EyeSpore,
@@ -1409,6 +1428,9 @@ public static class BattleHelper
         Shrouder,
         HoarderFly,
         Mosquito,
+        MawSpore,
+        CaveSpider,
+        Obscurer,
         SporeSpider,
         MoonSpider,
         Shieldwing,
@@ -1417,6 +1439,9 @@ public static class BattleHelper
         LumistarVanguard,
         LumistarSoldier,
         LumistarStriker,
+        Beaconwing,
+        Harmonywing,
+        Mirrorwing,
         KingIlum,
         TyrantBlade,
         Plateshell,

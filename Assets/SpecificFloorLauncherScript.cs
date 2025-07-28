@@ -128,7 +128,7 @@ public class SpecificFloorLauncherScript : WorldObject, ITextSpeaker, ISignalRec
     {
     }
 
-    public void SetAnimation(string animationID, bool force = false)
+    public void SetAnimation(string animationID, bool force = false, float time = -1)
     {
     }
 

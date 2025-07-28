@@ -411,7 +411,7 @@ public class PickupUnion
             case PickupType.KeyItem:
                 return KeyItem.GetDescription(pu.keyItem);
             case PickupType.Badge:
-                return Badge.GetDescription(pu.badge);
+                return Badge.GetDescription(pu.badge, false);
             case PickupType.Ribbon:
                 return Ribbon.GetDescription(pu.ribbon);
             case PickupType.Misc:

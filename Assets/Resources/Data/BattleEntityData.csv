@@ -12,9 +12,11 @@ Rockling,2,8,0,FALSE,1,RockNut,6,Default:0.9/1,Default:1,,0.55,0.32,0|0|0,0|0|0,
 Honeybud,3,8,0,FALSE,1,FlowerSyrup,6,Default:0.9/1|Dizzy:1/1.5,Default:0|Fire:-2|Light:-2,Airborne,0.5,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 BurrowTrap,3,8,0,TRUE,1,FlowerSyrup,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1,Default:1|Fire:-2|Light:-2,StateCounter,1.1,1.25,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Sundew,2,8,0,TRUE,1,FlowerSyrup,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1|Poison:0/1,Default:0|Fire:-2|Light:-2,StateCounter,0.75,1.25,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Brambleling,25,4,0,FALSE,1,GoldenApple,6,Default:0.3/1||Berserk:0/1||Sleep:1/1,Default:1|Fire:-2|Light:-2,,0.55,0.32,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+GiantVine,20,30,0,TRUE,1,GoldenApple,6,Default:0.4/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:2|Fire:-1|Light:-1,,1,2.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Solardew,16,8,0,TRUE,1,GoldenApple,6,Default:0.4/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:0|Fire:-2|Light:-2,StateCounter,0.75,1.25,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 VinePlatform,10,0,0,TRUE,1,FlowerSyrup,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:0|Fire:-1|Light:-1,NoCount,0.25,1.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Sycamore,30,11,24,FALSE,1,FlowerSyrup,2,Default:0.7/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:0|Fire:-2|Light:-2,,0.5,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-GiantVine,14,0,0,TRUE,1,GoldenApple,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:1|Fire:-1|Light:-1,NoCount,1,2.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 VineThrone,20,0,0,TRUE,1,GoldenApple,6,Default:0.9/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:1|Fire:-1|Light:-1,NoCount,1,1.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 MasterOfAutumn,80,16,49,FALSE,1,GoldenApple,2,Default:0.5/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:1,,0.5,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Bandit,3,9,0,FALSE,1,Lemon,5,Default:0.8/1,Default:0,,0.25,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
@@ -22,6 +24,11 @@ Renegade,4,10,0,TRUE,1.25,Dragonfruit,5,Default:0.8/1,Default:2,StateContactHaza
 Sentry,3,9,0,FALSE,1,StaticThorn,5,Default:0.8/1|Paralyze:0/1|Dizzy:1/1.5,Default:0|Air:N|Earth:-2,StateCounter|Airborne,0.25,0.65,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Cactupole,2,9,0,FALSE,1,StaticThorn,5,Default:0.8/1|Paralyze:0/1|Dizzy:1/1.5,Default:2|Light:-3,Airborne|StateContactHazard,0.3,0.3,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Sandswimmer,5,10,0,TRUE,1.25,Flour,5,Default:0.8/0.75|Poison:1/1,Default:1|Light:0|Air:N,StateContactHazard,1.35,0.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+SpireGuard,3,9,0,FALSE,1,Lemon,5,Default:0.8/1,Default:0,,0.25,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+EliteGuard,3,9,0,FALSE,1,Lemon,5,Default:0.8/1,Default:0,,0.25,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Shockworm,5,13,0,FALSE,1,SleepDart,5,Default:0.7/1|Berserk:0/1|Sleep:0/1|Dizzy:0.9/1.5,Default:0,Airborne,0.85,0.95,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Brightpole,2,9,0,FALSE,1,StaticThorn,5,Default:0.8/1|Paralyze:0/1|Dizzy:1/1.5,Default:2|Light:-3,Airborne|StateContactHazard,0.3,0.3,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Stormswimmer,5,10,0,TRUE,1.25,Flour,5,Default:0.8/0.75|Poison:1/1,Default:1|Light:0|Air:N,StateContactHazard,1.35,0.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 DesertMinibossA,10,12,0,FALSE,1.25,StaticThorn,3,Default:0.6/1|Paralyze:0/1,Default:0,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 DesertMinibossB,8,12,0,FALSE,1.25,Thorn Bundle,3,Default:0.6/1|Paralyze:0/1,Default:2,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 DesertMinibossC,12,12,0,TRUE,1.25,WarpedLeaf,3,Default:0.6/1|Paralyze:0/1,Default:0,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
@@ -42,9 +49,13 @@ TournamentKing,120,25,55,TRUE,2,EmeraldLime,2,Default:0/1|Dizzy:0.34/1,Default:4
 TournamentChampion,150,31,69,TRUE,2,EmeraldLime,2,Default:0/1|Dizzy:0.34/1,Default:4,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Slime,5,11,0,FALSE,1,MelonSlice,5,Default:0.7/1|Berserk:0/1|Paralyze:1/1.5|Poison:1/1,Default:0|Air:-2|Light:-2,,0.7,0.6,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Slimewalker,7,13,0,FALSE,1,SleepDart,5,Default:0.7/1|Berserk:0.5/0.5|Sleep:0/1|Poison:1/1,Default:0|Air:-2|Light:-2,,0.7,0.9,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Slimeworm,4,14,0,TRUE,1,Coconut,5,Default:0.7/1|Berserk:0/1|Sleep:0/1|Paralyze:0.3/1|Poison:1/1,Default:2|Earth:0|Light:2,,0.5,2.75,0|0|0,0|-0.6|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Slimeworm,4,14,0,TRUE,1,Coconut,5,Default:0.7/1|Berserk:0/1|Sleep:0/1|Paralyze:0.3/1|Poison:1/1,Default:2|Earth:0|Light:2,,0.5,2.5,0|0|0,0|-0.6|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Slimebloom,6,13,0,TRUE,1,Watermelon,5,Default:0.7/1|Berserk:0/1|Sleep:0/1|Paralyze:1/1.5|Poison:1/1.5,Default:0|Air:N|Light:-1|Water:N,StateContactHazard,0.9,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 SirenFish,5,13,0,FALSE,1,SleepDart,5,Default:0.7/1|Berserk:0/1|Sleep:0/1|Dizzy:0.9/1.5,Default:0,Airborne,0.85,0.95,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+ElementalSlime,5,11,0,FALSE,1,MelonSlice,5,Default:1/1.5,Default:0|Normal:N,,0.7,0.6,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+NormalSlime,5,11,0,FALSE,1,MelonSlice,5,Default:0/0,Default:0|Light:N|Water:N|Air:N|Dark:N|Earth:N|Fire:N,DebuffImmune,0.7,0.6,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+SoftSlime,5,11,0,FALSE,1,MelonSlice,5,Default:0.7/1|Berserk:0/1|Paralyze:1/1.5|Poison:1/1,Default:0,Hardened,0.7,0.6,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+RigidSlime,5,11,0,FALSE,1,MelonSlice,5,Default:0.7/1|Berserk:0/1|Paralyze:1/1.5|Poison:1/1,Default:0,Resistant,0.7,0.6,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 FalseDragonArm,12,0,0,TRUE,1,SleepyTea,2,Default:0/1,Default:0|Light:-1|Fire:-1|Earth:-3,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 FalseDragon,50,16,29,TRUE,1,SleepyTea,2,Default:0.5/1|Dizzy:0/1|Sleep:0/1|Berserk:0/1,Default:2|Light:-1|Fire:-1|Air:-1,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 AmalgamLeftArm,24,0,0,TRUE,1,RubyFruit,2,Default:0/1,Default:1|Light:-1|Fire:-1|Earth:-3,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
@@ -56,6 +67,9 @@ Ashcrest,7,15,0,FALSE,1,BasaltNut,4,Default:0.6/1|Berserk:0/1|Paralyze:1/1.5,Def
 Flametongue,6,16,0,FALSE,1,BombFruit,4,Default:0.6/1|Paralyze:0.8/1,Default:3|Fire:6,,0.45,0.55,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Heatwing,7,15,0,FALSE,1,LavaPepper,4,Default:0.6/1|Dizzy:0.9/1.5,Default:1|Water:-2|Light:-2,Airborne,0.3,0.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Lavaswimmer,14,16,0,TRUE,1,ScaleSteak,4,Default:0.6/1|Freeze:0/1|Paralyze:1/1.5,Default:1|Air:-1|Fire:N,StateContactHazard,1.05,0.55,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Infernoling,14,16,0,TRUE,1,ScaleSteak,4,Default:0.6/1|Freeze:0/1|Paralyze:1/1.5,Default:1|Air:-1|Fire:N,StateContactHazard,1.05,0.55,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Magmaswimmer,14,16,0,TRUE,1,ScaleSteak,4,Default:0.6/1|Freeze:0/1|Paralyze:1/1.5,Default:1|Air:-1|Fire:N,StateContactHazard,1.05,0.55,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Wyverlet,7,15,0,FALSE,1,LavaPepper,4,Default:0.6/1|Dizzy:0.9/1.5,Default:1|Water:-2|Light:-2,Airborne,0.3,0.5,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 LavaWyvern,60,19,31,TRUE,1,BombJuice,2,Default:0.4/1|Freeze:0/1|Berserk:1/1.5,Default:3|Water:-2|Light:-2,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 MetalWyvern,120,24,56,TRUE,1,AzureRose,1,Default:0.2/1|Freeze:0/1|Berserk:0.6/1,Default:5|Water:-1|Light:-1|Air:N|Fire:A,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 EyeSpore,8,18,0,FALSE,1,StickySpore,4,Default:0.5/1|Sleep:0/1|Freeze:1/1.5|Poison:0/1|Paralyze:0.8/1,Default:0|Dark:2|Fire:-2|Earth:-2|Light:-2,,0.8,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
@@ -63,6 +77,9 @@ SpikeShroom,7,19,0,FALSE,1,DarkNeedle,4,Default:0.5/1|Sleep:0/1|Freeze:1/1.5|Poi
 Shrouder,11,19,0,FALSE,1,MoonlightBerry,4,Default:0.5/1|Sleep:0/1|Freeze:1/1.5|Poison:0/1|Paralyze:0.8/1,Default:0|Dark:2|Light:-4|Earth:-2,Airborne,1.25,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 HoarderFly,8,18,0,FALSE,1.25,HoneySyrup,4,Default:0.5/1|Sleep:0.8/1|Freeze:1/1.5|Poison:0/1|Dizzy:0.8/1.5,Default:1|Water:-2|Light:N,Airborne,0.6,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Mosquito,12,19,0,FALSE,1.5,MosquitoNeedle,4,Default:0.5/1|Freeze:1/1|Poison:0.5/0.5|Berserk:1/1.5,Default:1,,0.25,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+MawSpore,8,18,0,FALSE,1,StickySpore,4,Default:0.5/1|Sleep:0/1|Freeze:1/1.5|Poison:0/1|Paralyze:0.8/1,Default:0|Dark:2|Fire:-2|Earth:-2|Light:-2,,0.8,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+CaveSpider,8,18,0,FALSE,1,StickySpore,4,Default:0.5/1|Sleep:0/1|Freeze:1/1.5|Poison:0/1|Paralyze:0.8/1,Default:0|Dark:2|Fire:-2|Earth:-2|Light:-2,,0.8,0.75,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Obscurer,11,19,0,FALSE,1,MoonlightBerry,4,Default:0.5/1|Sleep:0/1|Freeze:1/1.5|Poison:0/1|Paralyze:0.8/1,Default:0|Dark:2|Light:-4|Earth:-2,Airborne,1.25,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 SporeSpider,70,21,34,TRUE,1,RoastedMushroom,2,Default:0.3/1|Freeze:0.5/1|Sleep:0/1,Default:3|Earth:0,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 MoonSpider,140,26,59,TRUE,1,DiamondMushroom,1,Default:0.1/1|Freeze:0.5/0.5|Sleep:0/1,Default:3|Earth:0|Dark:A,,1,1,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Shieldwing,12,22,0,TRUE,1,IcePumpkin,5,Default:0.4/0.75|Poison:1/1.5,Default:4|Light:4|Dark:-2|Fire:-2,,0.65,1.35,0|0|0,0|0|0,0|0|0,0|0|0,0|0.55|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
@@ -71,6 +88,9 @@ Shimmerwing,10,20,0,FALSE,1,CrystalLeaf,3,Default:0.4/1|Dizzy:0.8/1.5,Default:0|
 LumistarVanguard,9,22,0,FALSE,1.5,SnowTuft,3,Default:0.4/1|Berserk:0/1|Sleep:0/1|Dizzy:0.8/1,Default:0|Water:-2|Dark:N,,0.25,0.7,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 LumistarSoldier,14,23,0,TRUE,1.5,IcePotato,3,Default:0.4/1|Freeze:0/1|Berserk:0.25/1|Poison:0.8/1.5|Sleep:0.8/1,Default:4|Dark:-2|Fire:-2,,0.5,1.12,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 LumistarStriker,10,22,0,FALSE,1,MintIcicle,3,Default:0.4/1|Freeze:0/1|Berserk:0.8/1.5,Default:2|Light:4,,0.4,0.9,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Beaconwing,12,22,0,TRUE,1,IcePumpkin,5,Default:0.4/0.75|Poison:1/1.5,Default:4|Light:4|Dark:-2|Fire:-2,,0.65,1.35,0|0|0,0|0|0,0|0|0,0|0|0,0|0.55|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Harmonywing,8,21,0,FALSE,1.25,IceNectar,3,Default:0.4/1|Dizzy:0.8/1.5|Paralyze:0.8/1,Default:0|Light:3|Dark:-2,Airborne,0.3,0.3,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Mirrorwing,10,20,0,FALSE,1,CrystalLeaf,3,Default:0.4/1|Dizzy:0.8/1.5,Default:0|Light:3|Dark:-2,Airborne,0.4,0.65,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 KingIlum,80,25,35,TRUE,1,MintSalad,1,Default:0.2/1|Sleep:0/1|Freeze:0/1,Default:4|Dark:0,,0.4,0.9,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 TyrantBlade,160,30,60,TRUE,1,VoidIcicle,1,Default:0/1,Default:4|Dark:2|Light:A,,0.4,0.9,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Plateshell,9,25,0,TRUE,1.5,GoldenLeaf,3,Default:0.3/0.5|Paralyze:0/1|Freeze:0/1|Berserk:0.8/1,Default:8|Air:N|Water:4|Earth:4,,0.5,0.85,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
@@ -93,5 +113,5 @@ FinalSuperboss,210,36,84,TRUE,1,CrystalCarrot,1,Default:0/1,Default:4,,0.25,0.8,
 Plaguebud,22,36,4,TRUE,1.5,StellarSyrup,2,Default:0.1/0.5,Default:1|Fire:-1|Light:-1|Water:A,,0.6,0.95,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Starfish,2,28,4,FALSE,1,PlagueRoot,2,Default:0.1/0.5|Paralyze:0.5/1,Default:0|Air:-2|Earth:A,Resistant,0.4,0.65,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 CursedEye,16,32,4,FALSE,1,StellarSyrup,2,Default:0/0,Default:0|Earth:-2|Light:-4|Dark:A,StateCounter|DebuffImmune|Airborne,0.6,0.6,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-StrangeTendril,11,34,4,TRUE,1,PlagueRoot,6,Default:1/1.5,Default:7|Air:7,,0.5,2.75,0|0|0,0|-0.6|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+StrangeTendril,11,34,4,TRUE,1,PlagueRoot,6,Default:1/1.5,Default:7|Air:7,,0.5,2.5,0|0|0,0|-0.6|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 DrainBud,12,33,4,FALSE,1.5,DrainSeed,6,Default:1/1.5,Default:A|Light:0|Fire:0|Air:0,,0.75,0.8,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8

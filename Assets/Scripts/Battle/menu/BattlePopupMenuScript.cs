@@ -60,7 +60,7 @@ public class BattlePopupMenuScript : MenuHandler
     {
         time += Time.deltaTime;
 
-        if (time > MIN_LIFETIME && ((InputManager.GetButtonDown(InputManager.Button.A) || InputManager.GetButtonDown(InputManager.Button.B)))) //Press B to go back
+        if (time > MIN_LIFETIME && ((InputManager.GetButtonDown(InputManager.Button.Start) || (InputManager.GetButtonDown(InputManager.Button.A) || InputManager.GetButtonDown(InputManager.Button.B))))) //Press B to go back
         {
             exit = true;
             PopSelf();

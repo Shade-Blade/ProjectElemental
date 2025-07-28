@@ -180,7 +180,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 {
                     et = BadgeMenuEntry.EquipType.Luna;
                 }
-                menuEntries[selectedIndex] = new BadgeMenuEntry(b, et);
+                menuEntries[selectedIndex] = new BadgeMenuEntry(b, et, MainManager.Instance.playerData.badgeInventory.FindAll((e) => (e.type == b.type)).Count > 1);
 
                 //do an update
 
@@ -515,7 +515,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                         canUse = (pd.CalculateUsedSP() + Badge.GetSPCost(inv[i]) <= pd.sp);
                     }
                         
-                    menuEntries[i] = new BadgeMenuEntry(inv[i], et, canUse);
+                    menuEntries[i] = new BadgeMenuEntry(inv[i], et, canUse, MainManager.Instance.playerData.badgeInventory.FindAll((e) => (e.type == inv[i].type)).Count > 1);
                 }
                 emptyString = "No Badges";
                 break;
@@ -568,7 +568,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                     {
                         canUse = (pd.CalculateUsedSP() + Badge.GetSPCost(einv[i]) <= pd.sp);
                     }
-                    menuEntries[i] = new BadgeMenuEntry(einv[i], et, canUse);
+                    menuEntries[i] = new BadgeMenuEntry(einv[i], et, canUse, MainManager.Instance.playerData.badgeInventory.FindAll((e) => (e.type == einv[i].type)).Count > 1);
                 }
                 emptyString = "No Equipped Badges";
                 break;
@@ -602,7 +602,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                     {
                         canUse = pd.CalculateUsedSP() + Badge.GetSPCost(sinv[i]) <= pd.sp;
                     }
-                    menuEntries[i] = new BadgeMenuEntry(sinv[i], etB, canUse);
+                    menuEntries[i] = new BadgeMenuEntry(sinv[i], etB, canUse, MainManager.Instance.playerData.badgeInventory.FindAll((e) => (e.type == sinv[i].type)).Count > 1);
                 }
                 emptyString = "No Equipped Badges";
                 break;

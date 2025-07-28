@@ -1319,7 +1319,7 @@ public class PlayerData
 
     public Badge.BadgeType[] Cheat_AlmostAllBadgesBlacklist()
     {
-        return new Badge.BadgeType[] { Badge.BadgeType.SuperCurse, Badge.BadgeType.UltraCurse, Badge.BadgeType.MegaCurse, Badge.BadgeType.RagesPower, Badge.BadgeType.VoraciousEater, Badge.BadgeType.DarkEndurance, Badge.BadgeType.SoftPower, Badge.BadgeType.MetalPower, Badge.BadgeType.RiskyStart };
+        return new Badge.BadgeType[] { Badge.BadgeType.SuperCurse, Badge.BadgeType.UltraCurse, Badge.BadgeType.MegaCurse, Badge.BadgeType.RagesPower, Badge.BadgeType.Overexert, Badge.BadgeType.QuickNap, Badge.BadgeType.WeakStomach, Badge.BadgeType.Supercooled, Badge.BadgeType.UnsteadyStance, Badge.BadgeType.VoraciousEater, Badge.BadgeType.DarkEndurance, Badge.BadgeType.SoftPower, Badge.BadgeType.MetalPower, Badge.BadgeType.RiskyStart };
     }
 
 
@@ -2294,6 +2294,8 @@ public class MainManager : MonoBehaviour
 
     public PlayerData playerData;
     public PlayerData gameOverPlayerData;   //Special thing for making the game over pause menu work properly (Need to be able to reset your state to before you changed stuff 
+    public bool gameOverPlayerDataExists;   //unity is being sus
+
     public EncounterData nextBattle;
     public BattleStartArguments battleStartArguments;
     public int coinDrops;
@@ -2381,6 +2383,7 @@ public class MainManager : MonoBehaviour
     public GameObject promptMenuEntryBase;
     public GameObject numberMenu;
     public GameObject textEntryMenu;
+    public GameObject text_WorldButtonSprite;
     public GameObject text_ButtonSprite;
     public GameObject text_ItemSprite;
     public GameObject text_KeyItemSprite;
@@ -2517,6 +2520,10 @@ public class MainManager : MonoBehaviour
 
         GF_QuestStart_Prologue_Test,
         GF_QuestComplete_Prologue_Test,
+
+        GF_TutorialExplain_Item,
+        GF_TutorialExplain_Badge,   //in the final game you are forced to get super curse and such in a cutscene
+        GF_TutorialExplain_Ribbon,
 
         //All of them are here
         //This will definitely not lower the performance of global flag operations :P
@@ -3155,6 +3162,8 @@ public class MainManager : MonoBehaviour
         Music_Battle_Chaos,
         Music_Battle_Cutle,
 
+        Music_Battle_GameOver,
+
         Music_Area_Generic,     //currently used for out of battle
 
         //music for every area?
@@ -3330,6 +3339,7 @@ public class MainManager : MonoBehaviour
         Nowhere = 0,
         SolarGrove,
         Dawnhold,
+        SolarShrine,
         CrystalHills,
         CrystalCity,
         CrystalCitadel,
@@ -3337,8 +3347,10 @@ public class MainManager : MonoBehaviour
         EdgeOfPossibility,
         VerdantForest,
         Swamproot,
+        StonewoodTemple,
         SacredGrove,
         TrialOfSimplicity,
+        StonewoodBridge,
         TempestDesert,
         Windspire,
         BanditCaverns,
@@ -3358,9 +3370,12 @@ public class MainManager : MonoBehaviour
         TrialOfAmbition,
         RadiantPlateau,
         Lumistar,
+        LumistarPalace,
         RadiantPeak,
         TrialOfResolve,
         AetherTrench,
+        AetherTrenchNorth,
+        AetherTrenchSouth,
         Metalmaw,
         MoltenTitan,
         GoldenPort,
@@ -3368,6 +3383,7 @@ public class MainManager : MonoBehaviour
         ForsakenPass,
         HiddenVillage,
         ForsakenPeak,
+        EndOfTable,
     }
     public enum MapID
     {
@@ -3489,6 +3505,9 @@ public class MainManager : MonoBehaviour
         C1_Sundew,
         C1_Rockling,
         C1_Honeybud,
+        C1_GiantVine,
+        C1_Solardew,
+        C1_Brambleling,
 
         C2_FrogNormal_FemaleBandit,
         C2_FrogNormal_FemaleCitizen,
@@ -3522,6 +3541,9 @@ public class MainManager : MonoBehaviour
 
         C2_Cactupole,
         C2_Sandswimmer,
+        C2_Brightpole,
+        C2_Stormswimmer,
+        C2_Shockworm,
 
         C3_Jellyfish_FemaleCommoner,
         C3_Jellyfish_FemaleNoble,
@@ -3556,6 +3578,9 @@ public class MainManager : MonoBehaviour
 
         C4_Lavaswimmer,
         C4_Heatwing,
+        C4_Magmaswimmer,
+        C4_Infernoling,
+        C4_Wyverlet,
 
         C5_Mosquito_Cyano,
         C5_Mosquito_Male,
@@ -3565,6 +3590,9 @@ public class MainManager : MonoBehaviour
         C5_SpikeShroom,
         C5_Shrouder,
         C5_HoarderFly,
+        C5_CaveSpider,
+        C5_MawSpore,
+        C5_Obscurer,
 
         C6_Crow_FemaleCommoner,
         C6_Crow_FemaleNoble,
@@ -3602,6 +3630,9 @@ public class MainManager : MonoBehaviour
         C6_Shimmerwing,
         C6_Shieldwing,
         C6_Honeywing,
+        C6_Beaconwing,
+        C6_Harmonywing,
+        C6_Mirrorwing,
 
         C7_Chaintail_Alumi,
         C7_Chaintail_Female,
@@ -5519,7 +5550,14 @@ public class MainManager : MonoBehaviour
     }
     public static string GetAreaName(WorldLocation worldLocation)
     {
-        return worldLocation.ToString();
+        if (GlobalInformationScript.Instance.areaText == null)
+        {
+            GlobalInformationScript.Instance.LoadAreaText();
+        }
+
+        return GlobalInformationScript.Instance.areaText[(int)worldLocation][1];
+
+        //return worldLocation.ToString();
     }
     public static string GetAreaDesc(string worldLocation)
     {
@@ -5528,7 +5566,14 @@ public class MainManager : MonoBehaviour
     }
     public static string GetAreaDesc(WorldLocation worldLocation)
     {
-        return worldLocation.ToString() + " desc";
+        if (GlobalInformationScript.Instance.areaText == null)
+        {
+            GlobalInformationScript.Instance.LoadAreaText();
+        }
+
+        return GlobalInformationScript.Instance.areaText[(int)worldLocation][2];
+
+        //return worldLocation.ToString() + " desc";
     }
     public static string GetMapName(MapID mapName)
     {
@@ -6164,11 +6209,12 @@ public class MainManager : MonoBehaviour
             frameTime = 0;
         }
 
-        if (gameOverPlayerData != null)
+        if (gameOverPlayerData != null || gameOverPlayerDataExists)
         {
             if (worldMode == WorldMode.Overworld)
             {
                 gameOverPlayerData = null;
+                gameOverPlayerDataExists = false;
             }
         }
 
@@ -6347,6 +6393,14 @@ public class MainManager : MonoBehaviour
         fileCodeText[7] = new string[1];
         fileCodeText[7][0] = "<system>File Code Randomizer: Randomizes the locations of badges and ribbons.";
 
+        string[][] tutorialText = new string[3][];
+        tutorialText[0] = new string[1];
+        tutorialText[0][0] = "<system>Items can be used in battle or in the overworld. You can use items in the overworld in the pause menu (<button,start>)";
+        tutorialText[1] = new string[1];
+        tutorialText[1][0] = "<system>Badges can be equipped in the Equip section of the pause menu (<button,start>)";
+        tutorialText[2] = new string[1];
+        tutorialText[2][0] = "<system>Ribbons can be equipped in the Equip section of the pause menu (<button,start>)";
+
         if (GetGlobalFlag(GlobalFlag.GF_FileCode_Greed) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Greed))
         {
             StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 0));
@@ -6400,6 +6454,27 @@ public class MainManager : MonoBehaviour
         {
             StartCoroutine(DisplayTextBoxBlocking(fileCodeText, 7));
             SetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Randomizer);
+            return true;
+        }
+
+        if (!GetGlobalFlag(GlobalFlag.GF_TutorialExplain_Item) && playerData.itemInventory.Count > 0)
+        {
+            StartCoroutine(DisplayTextBoxBlocking(tutorialText, 0));
+            SetGlobalFlag(GlobalFlag.GF_TutorialExplain_Item);
+            return true;
+        }
+
+        if (!GetGlobalFlag(GlobalFlag.GF_TutorialExplain_Badge) && playerData.badgeInventory.Count > 3)
+        {
+            StartCoroutine(DisplayTextBoxBlocking(tutorialText, 1));
+            SetGlobalFlag(GlobalFlag.GF_TutorialExplain_Badge);
+            return true;
+        }
+
+        if (!GetGlobalFlag(GlobalFlag.GF_TutorialExplain_Ribbon) && playerData.ribbonInventory.Count > 2)
+        {
+            StartCoroutine(DisplayTextBoxBlocking(tutorialText, 2));
+            SetGlobalFlag(GlobalFlag.GF_TutorialExplain_Ribbon);
             return true;
         }
 
@@ -6604,6 +6679,7 @@ public class MainManager : MonoBehaviour
         numberMenu = numberMenu ? numberMenu : (GameObject)Resources.Load("Menu/NumberMenu");
         textEntryMenu = textEntryMenu ? textEntryMenu : (GameObject)Resources.Load("Menu/TextEntryMenu");
         text_ButtonSprite = text_ButtonSprite ? text_ButtonSprite : (GameObject)Resources.Load("Menu/ButtonSprite");
+        text_WorldButtonSprite = text_WorldButtonSprite ? text_WorldButtonSprite : (GameObject)Resources.Load("Menu/WorldButtonSprite");
         text_ItemSprite = text_ItemSprite ? text_ItemSprite : (GameObject)Resources.Load("Menu/ItemSprite");
         text_KeyItemSprite = text_KeyItemSprite ? text_KeyItemSprite : (GameObject)Resources.Load("Menu/KeyItemSprite");
         text_BadgeSprite = text_BadgeSprite ? text_BadgeSprite : (GameObject)Resources.Load("Menu/BadgeSprite");
@@ -6758,6 +6834,7 @@ public class MainManager : MonoBehaviour
             BattleControl.Instance.Destroy();
         }
         ClearInteractTriggers();
+        ResetSoundSystem();
         if (curOverworldHUD != null)
         {
             Destroy(curOverworldHUD.gameObject);
@@ -6883,6 +6960,8 @@ public class MainManager : MonoBehaviour
     }
     public bool LoadSave(int index)
     {
+        //to avoid old save sounds crossing over in any way
+        ResetSoundSystem();
         try
         {
             string data = File.ReadAllText("save" + index + ".txt");
@@ -7204,7 +7283,7 @@ public class MainManager : MonoBehaviour
         output += ",";
         output += MapID.RabbitHole_Lobby;
         output += ",";
-        output += Vector3ToString(Vector3.up * 15 + Vector3.forward * 1.5f);
+        output += Vector3ToString(new Vector3(-27.46f, 5, -1.5f));
         output += "\n";
         output += 0;
         output += "\n";
@@ -7556,6 +7635,10 @@ public class MainManager : MonoBehaviour
     {
         yield return StartCoroutine(fadeOutScript.UnfadeToWhite());
     }
+    public void BattleSnapFade(float f)
+    {
+        battleFadeOutScript.SnapFade(f);
+    }
     public IEnumerator BattleFadeToBlack(Color color, Vector2 position)
     {
         yield return StartCoroutine(battleFadeOutScript.FadeToBlack(color, position));
@@ -7636,13 +7719,15 @@ public class MainManager : MonoBehaviour
         //Camera.SetManual(new Vector3(0, 2, -6.5f), new Vector3(0, 0, 0));
         BattleControl.StartBattleStatic(bsa); //note that currently, BattleControl takes references from this script directly
         DestroyAreaPopup();
-        yield return new WaitForSeconds(0.7f);
-        yield return StartCoroutine(BattleUnfadeToBlack(firstStrikeColor, new Vector2(0.5f, 0.5f)));
     }
     public IEnumerator EnterBattle(EncounterData e, BattleStartArguments bsa = null)
     {
         nextBattle = e;
         yield return StartCoroutine(EnterBattle(bsa));
+    }
+    public bool CanHandleBattleLoss()
+    {
+        return mapScript.CanHandleBattleLoss();
     }
     public IEnumerator ReturnFromBattle(BattleHelper.BattleOutcome outcome, bool canRetry)
     {
@@ -7716,6 +7801,7 @@ public class MainManager : MonoBehaviour
     }
     public IEnumerator ReturnFromBattleGameOver(BattleHelper.BattleOutcome outcome, bool canRetry)
     {
+        MainManager.Instance.MuteMusic();
         yield return StartCoroutine(FadeToBlack());
         BattleControl.Destroy();
         Destroy(BattleControl.gameObject);
@@ -8700,6 +8786,37 @@ public class MainManager : MonoBehaviour
             audio_music[audio_music.Count - 1].Value.mute = false;
         }
     }
+    public void MuteMusic()
+    {
+        audio_music[audio_music.Count - 1].Value.mute = true;
+    }
+    public void ResetMusic()
+    {
+        while (audio_music.Count > 0)
+        {
+            PopMusic();
+        }
+    }
+    public void ResetSoundSystem()
+    {
+        ResetMusic();
+
+        while (audio_menu.Count > 0)
+        {
+            Destroy(audio_menu[0].Value);
+            audio_menu.RemoveAt(0);
+        }
+        while (audio_sfx.Count > 0)
+        {
+            Destroy(audio_sfx[0].Value);
+            audio_sfx.RemoveAt(0);
+        }
+        while (audio_text.Count > 0)
+        {
+            Destroy(audio_text[0].Value);
+            audio_text.RemoveAt(0);
+        }
+    }
     public void PlayMusic(Sound s, float fadeIn)
     {
         StartCoroutine(PlayMusicCoroutine(s, fadeIn));
@@ -8935,6 +9052,12 @@ public class MainManager : MonoBehaviour
     public static float Percent(float input)
     {
         return Percent(input, 0);
+    }
+    //approximate the derivative
+    //too small h = cancellation error
+    public static float Derivative(Func<float, float> easing, float x, float h = 1e-4f)
+    {
+        return (easing(x + h) - easing(x - h)) / (2 * h);
     }
     public static float Percent(float input, int precision)
     {
@@ -9205,6 +9328,21 @@ public class MainManager : MonoBehaviour
             {
                 output.Add(a, b);
             }
+        }
+
+        return output;
+    }
+    public static string ListToString<T>(List<T> list)
+    {
+        string output = "";
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (i > 0)
+            {
+                output += "|";
+            }
+            output += list[i];
         }
 
         return output;

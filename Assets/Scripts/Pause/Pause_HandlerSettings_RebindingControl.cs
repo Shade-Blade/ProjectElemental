@@ -210,12 +210,18 @@ public class Pause_HandlerSettings_RebindingControl : Pause_HandlerShared_BoxMen
 
                     if (inputDir > 0)
                     {
-                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
+                        if (index < oc - 1 && (holdValue - pastHoldValue) > 0)
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
+                        }
                         index += (holdValue - pastHoldValue);
                     }
                     else
                     {
-                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
+                        if (index > 0 && (holdValue - pastHoldValue) > 0)
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
+                        }
                         index -= (holdValue - pastHoldValue);
                     }
 

@@ -158,7 +158,7 @@ public class LivelyBudScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
     {
     }
 
-    public void SetAnimation(string animationID, bool force = false)
+    public void SetAnimation(string animationID, bool force = false, float time = -1)
     {
     }
 

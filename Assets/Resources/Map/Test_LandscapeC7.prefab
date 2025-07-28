@@ -956,16 +956,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Chaintail
       posid: 1
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Sawcrest
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: active
+      multiplier: 0
     battleMapName: TestBattle_AetherTrench
   frameTimer: -1
   firstStrikeTimer: -1
@@ -1846,7 +1849,7 @@ MonoBehaviour:
   spriteID: 
   wed:
     inactive: 0
-    spriteID: C7_Sawcrest
+    spriteID: C7_Coiler
     speed: 3
     wandering: 1
     wanderRadius: 2
@@ -1906,21 +1909,24 @@ MonoBehaviour:
   touchEncounter: 1
   encounter:
     encounterList:
-    - entid: Sawcrest
+    - entid: Coiler
       posid: 0
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Drillbeak
       posid: 11
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Plateshell
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: TestBattle_AetherTrench
   frameTimer: -1
   firstStrikeTimer: -1
@@ -2105,16 +2111,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Drillbeak
       posid: 11
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Speartongue
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: TestBattle_AetherTrench
   frameTimer: -1
   firstStrikeTimer: -1

@@ -88,6 +88,7 @@ Shader "UI/Default_Luna"
             fixed4 _TextureSampleAdd;
             float4 _ClipRect;
             float4 _MainTex_ST;
+	    	float4 _MainTex_TexelSize;
 
 		    fixed _RibbonCutoffA;
 		    fixed _RibbonCutoffB;
@@ -120,27 +121,9 @@ Shader "UI/Default_Luna"
 
                 return output;
             }
-
-
-            v2f vert(appdata_t v)
-            {
-                v2f OUT;
-                UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-                OUT.worldPosition = v.vertex;
-                OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
-
-                OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
-
-                OUT.color = v.color * _Color;
-                return OUT;
-            }
-
-            fixed4 frag(v2f IN) : SV_Target
-            {
-                half4 c = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
-
-                //calculate weapon mask stuff early so that blue ribbons don't trigger this
+            
+            half4 colorchange(half4 c, half x) {
+			    //calculate weapon mask stuff early so that blue ribbons don't trigger this
 			    half b = c.b;
 			    half bdelta = c.b - max(c.r, c.g);
 
@@ -164,7 +147,7 @@ Shader "UI/Default_Luna"
 				    if (_LRibbonRainbow == 1) {
 					    //reinterpret c
 					    //new color = (r channel * rainbow + g channel * gray)
-					    c = half4(c.r * color_ramp(_Time.x * 2 + 4 * IN.texcoord.x) + c.g * half3(1,1,1), 1);
+					    c = half4(c.r * color_ramp(_Time.x * 2 + 4 * x) + c.g * half3(1,1,1), 1);
 					    //c *= fixed4(color_ramp(_Time.x * 2 + 4 * IN.uv_MainTex.x), 1);
 				    }
 			    }
@@ -181,6 +164,42 @@ Shader "UI/Default_Luna"
 					    c = _LWeaponColorD;
 				    }
 			    }
+
+			    return c;
+		    }
+
+            v2f vert(appdata_t v)
+            {
+                v2f OUT;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+                OUT.worldPosition = v.vertex;
+                OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
+
+                OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
+
+                OUT.color = v.color * _Color;
+                return OUT;
+            }
+
+            fixed4 frag(v2f IN) : SV_Target
+            {
+                float2 halfTexel = _MainTex_TexelSize.xy * 0.5;
+
+			    half4 c_ul = tex2D(_MainTex, IN.texcoord + float2(-halfTexel.x, halfTexel.y));
+			    c_ul = colorchange(c_ul, IN.texcoord.x);
+			    half4 c_ur = tex2D(_MainTex, IN.texcoord + float2(halfTexel.x, halfTexel.y));
+			    c_ur = colorchange(c_ur, IN.texcoord.x);
+			    half4 c_dl = tex2D(_MainTex, IN.texcoord + float2(-halfTexel.x, -halfTexel.y));
+			    c_dl = colorchange(c_dl, IN.texcoord.x);
+			    half4 c_dr = tex2D(_MainTex, IN.texcoord + float2(halfTexel.x, -halfTexel.y));
+			    c_dr = colorchange(c_dr, IN.texcoord.x);
+
+                float2 uv_blend = frac(IN.texcoord * _MainTex_TexelSize.zw + 0.5);
+			    half4 c = lerp(
+				    lerp(c_dl, c_dr, uv_blend.x),
+				    lerp(c_ul, c_ur, uv_blend.x),
+				    uv_blend.y);
 
                 c *= IN.color;
 

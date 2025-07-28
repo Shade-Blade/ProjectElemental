@@ -60,7 +60,7 @@ public class StartMenu_Base : MenuHandler
             menuEntries[i].gameObject.SetActive(true);
         }
         controlHint.gameObject.SetActive(true);
-        controlHint.SetText("Select <buttonsprite,A> - Go Back <buttonsprite,B> - Up <buttonsprite,Up> - Down <buttonsprite,Down>", true, true);
+        controlHint.SetText("Select <buttonsprite,A> or <buttonsprite,start> - Go Back <buttonsprite,B> - Up <buttonsprite,Up> - Down <buttonsprite,Down>", true, true);
 
         versionString.SetText("Version: " + MainManager.GetVersionString(), true, true);
 

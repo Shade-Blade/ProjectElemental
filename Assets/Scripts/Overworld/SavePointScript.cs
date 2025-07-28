@@ -6,7 +6,9 @@ using UnityEngine.UIElements;
 public class SavePointScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlashTrigger, ISmashTrigger, IStompTrigger, IHeadHitTrigger
 {
     public MeshRenderer sphere;
+    public MeshRenderer sphereB;
     private MaterialPropertyBlock propertyBlockA;
+    private MaterialPropertyBlock propertyBlockB;
 
     public float hitAnimTime = 0;
     public float saveCooldown = 0;
@@ -19,6 +21,10 @@ public class SavePointScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
         if (sphere != null)
         {
             propertyBlockA = new MaterialPropertyBlock();
+        }
+        if (sphereB != null)
+        {
+            propertyBlockB = new MaterialPropertyBlock();
         }
     }
 
@@ -40,10 +46,12 @@ public class SavePointScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
         lifetime += Time.deltaTime;
         if (sphere != null)
         {
-            float rotationDuration = 3;
+            float rotationDuration = 8;
             float time = (lifetime % rotationDuration) / rotationDuration;
-            propertyBlockA.SetFloat("_AngleDelta", time);
+            propertyBlockA.SetFloat("_AngleDelta", (time * 2) % 1);
+            propertyBlockB.SetFloat("_AngleDelta", time);
             sphere.SetPropertyBlock(propertyBlockA);
+            sphereB.SetPropertyBlock(propertyBlockB);
 
             if (hitAnimTime > 0)
             {
@@ -54,6 +62,7 @@ public class SavePointScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
             }
 
             sphere.transform.localScale = Vector3.one * Mathf.Max(1.25f * hitAnimTime + 0.75f, 1 + Mathf.Sin(lifetime) * 0.125f);
+            sphereB.transform.localScale = Vector3.one * Mathf.Max(1f * hitAnimTime + 0.5f, 0.75f + Mathf.Sin(lifetime) * 0.075f);
         }
 
         if (saveCooldown > 0)
@@ -174,7 +183,7 @@ public class SavePointScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
     {
     }
 
-    public void SetAnimation(string animationID, bool force = false)
+    public void SetAnimation(string animationID, bool force = false, float time = -1)
     {
     }
 

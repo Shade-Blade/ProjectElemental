@@ -74,7 +74,7 @@ public class GlobalBadgeScript : MonoBehaviour
         return badgeText[(int)(i)][1];
     }
 
-    public string GetBadgeDescription(BadgeType i)
+    public string GetBadgeDescription(BadgeType i, bool stacking)
     {
         if (badgeText == null)
         {
@@ -90,7 +90,7 @@ public class GlobalBadgeScript : MonoBehaviour
             output += " <descriptionnoticecolor>(" + badgeText[(int)(i)][3] + ")</descriptionnoticecolor>";
         }
 
-        if (MainManager.Instance.Cheat_TooManyBadges)
+        if (MainManager.Instance.Cheat_TooManyBadges || stacking)
         {
             if (length > 4 && badgeText[(int)(i)][4].Length > 0)
             {
@@ -483,13 +483,13 @@ public struct Badge
             return GetName(b.type);
         }
     }
-    public static string GetDescription(BadgeType b)
+    public static string GetDescription(BadgeType b, bool stacking)
     {
-        return GlobalBadgeScript.Instance.GetBadgeDescription(b); //b.ToString() + " description";
+        return GlobalBadgeScript.Instance.GetBadgeDescription(b, stacking); //b.ToString() + " description";
     }
-    public static string GetDescription(Badge b)
+    public static string GetDescription(Badge b, bool stacking)
     {
-        return GetDescription(b.type);
+        return GetDescription(b.type, stacking);
     }
     public static string GetSpriteString(BadgeType i)
     {

@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: luna_weaponholdwalk
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,21 +18,23 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
-      value: {fileID: 21300000, guid: 687667b1f28a64f4fa43e85b9f1b2346, type: 3}
-    - time: 0.21666667
       value: {fileID: 21300000, guid: 8f97738738f0e4f4289cc9db8de4239e, type: 3}
-    - time: 0.43333334
+    - time: 0.21666667
       value: {fileID: 21300000, guid: 687667b1f28a64f4fa43e85b9f1b2346, type: 3}
-    - time: 0.65
+    - time: 0.43333334
       value: {fileID: 21300000, guid: b854d3032326819429afdea20f85f750, type: 3}
+    - time: 0.65
+      value: {fileID: 21300000, guid: 687667b1f28a64f4fa43e85b9f1b2346, type: 3}
     - time: 0.8666667
       value: {fileID: 21300000, guid: 687667b1f28a64f4fa43e85b9f1b2346, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -47,11 +49,13 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 687667b1f28a64f4fa43e85b9f1b2346, type: 3}
     - {fileID: 21300000, guid: 8f97738738f0e4f4289cc9db8de4239e, type: 3}
     - {fileID: 21300000, guid: 687667b1f28a64f4fa43e85b9f1b2346, type: 3}
     - {fileID: 21300000, guid: b854d3032326819429afdea20f85f750, type: 3}
+    - {fileID: 21300000, guid: 687667b1f28a64f4fa43e85b9f1b2346, type: 3}
     - {fileID: 21300000, guid: 687667b1f28a64f4fa43e85b9f1b2346, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2

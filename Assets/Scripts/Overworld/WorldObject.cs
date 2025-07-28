@@ -28,7 +28,7 @@ public class WorldObject : MonoBehaviour
 
     public virtual void Update()
     {
-        if (rb != null)
+        if (rb != null && MainManager.Instance.worldMode == MainManager.WorldMode.Overworld)
         {
             bool nextKinematic = mapScript.GetHalted() || forceKinematic;
             if (!rb.isKinematic && nextKinematic)
@@ -42,7 +42,7 @@ public class WorldObject : MonoBehaviour
             }
             rb.isKinematic = nextKinematic;
         }
-        if (!mapScript.GetHalted())
+        if (MainManager.Instance.worldMode != MainManager.WorldMode.Overworld || !mapScript.GetHalted())
         {
             WorldUpdate();
         }
@@ -55,7 +55,7 @@ public class WorldObject : MonoBehaviour
 
     public virtual void FixedUpdate()
     {
-        if (!mapScript.GetHalted())
+        if (MainManager.Instance.worldMode != MainManager.WorldMode.Overworld || !mapScript.GetHalted())
         {
             WorldFixedUpdate();
         }

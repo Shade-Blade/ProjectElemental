@@ -121,7 +121,7 @@ public class InputManager : MonoBehaviour
         Debug.Log("Reset controls");
         //Space, slash, period, comma, e, esc
         //keyCodes = new KeyCode[] {(KeyCode)32, (KeyCode)42, (KeyCode)46, (KeyCode)44, (KeyCode)101, (KeyCode)27};
-        keyCodes = new KeyCode[] { KeyCode.Space, KeyCode.Slash, KeyCode.Period, KeyCode.Comma, KeyCode.Q, KeyCode.E, KeyCode.Escape };
+        keyCodes = new KeyCode[] { KeyCode.Space, KeyCode.C, KeyCode.X, KeyCode.Z, KeyCode.Q, KeyCode.E, KeyCode.KeypadEnter };
         //keyCodes = new KeyCode[] { KeyCode.Space, KeyCode.LeftShift, KeyCode.Period, KeyCode.Comma, KeyCode.E, KeyCode.Escape };
 
         //W, S, D, A

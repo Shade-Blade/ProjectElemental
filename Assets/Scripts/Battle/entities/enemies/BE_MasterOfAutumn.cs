@@ -785,7 +785,9 @@ public class BM_MasterOfAutumn_Overgrowth : EnemyMove
 
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
-            BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);         
+            BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
+            //No level grinding from the superboss here
+            a.level = caller.level;
             vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
@@ -795,6 +797,8 @@ public class BM_MasterOfAutumn_Overgrowth : EnemyMove
         if (BattleControl.Instance.GetEntityByID(3) == null)
         {
             BattleEntity b = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
+            //No level grinding from the superboss here
+            b.level = caller.level;
             vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             if (BattleControl.Instance.GetCurseLevel() > 0)
             {
@@ -920,6 +924,9 @@ public class BM_MasterOfAutumn_Resummon : EnemyMove
             if (vb.lastSummonPos == 1)
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
+                //No level grinding from the superboss here
+                a.level = caller.level;
+                //a.SetEntityProperty(BattleHelper.EntityProperties.NoCount);
                 vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
@@ -929,6 +936,8 @@ public class BM_MasterOfAutumn_Resummon : EnemyMove
             else
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
+                //No level grinding from the superboss here
+                a.level = caller.level;
                 vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
@@ -948,11 +957,15 @@ public class BM_MasterOfAutumn_Resummon : EnemyMove
             if (vb.lastSummonPos == 1)
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
+                //No level grinding from the superboss here
+                a.level = caller.level;
                 vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
             else
             {
                 BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
+                //No level grinding from the superboss here
+                a.level = caller.level;
                 vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
         }
@@ -981,6 +994,8 @@ public class BM_MasterOfAutumn_Fall : EnemyMove
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
             BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
+            //No level grinding from the superboss here
+            a.level = caller.level;
             vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
         if (BattleControl.Instance.GetCurseLevel() > 0)
@@ -988,6 +1003,8 @@ public class BM_MasterOfAutumn_Fall : EnemyMove
             if (BattleControl.Instance.GetEntityByID(3) == null)
             {
                 BattleEntity b = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
+                //No level grinding from the superboss here
+                b.level = caller.level;
                 vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
         }
@@ -1010,6 +1027,8 @@ public class BM_MasterOfAutumn_Fall : EnemyMove
         if (BattleControl.Instance.GetEntityByID(1) == null)
         {
             BattleEntity a = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 1);
+            //No level grinding from the superboss here
+            a.level = caller.level;
             vb.InflictEffectForce(a, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
         }
         if (BattleControl.Instance.GetCurseLevel() > 0)
@@ -1017,6 +1036,8 @@ public class BM_MasterOfAutumn_Fall : EnemyMove
             if (BattleControl.Instance.GetEntityByID(3) == null)
             {
                 BattleEntity b = BattleControl.Instance.SummonEntity(BattleHelper.EntityID.GiantVine, 3);
+                //No level grinding from the superboss here
+                b.level = caller.level;
                 vb.InflictEffectForce(b, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
             }
         }

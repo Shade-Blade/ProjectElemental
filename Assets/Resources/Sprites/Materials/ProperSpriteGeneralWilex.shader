@@ -198,10 +198,7 @@ Shader "Custom/ProperSpriteGeneralWilex" {
 			float4 color : COLOR;
 		};
 
-		void surf(Input IN, inout SurfaceOutput o) {
-
-			half4 c = tex2D(_MainTex, IN.uv_MainTex);
-
+		half4 colorchange(half4 c, half x) {
 			//calculate weapon mask stuff early so that blue ribbons don't trigger this
 			half bl = c.b;
 			half bdelta = c.b - max(c.r, c.g);
@@ -226,7 +223,7 @@ Shader "Custom/ProperSpriteGeneralWilex" {
 				if (_WRibbonRainbow == 1) {
 					//reinterpret c
 					//new color = (r channel * rainbow + g channel * gray)
-					c = half4(c.r * color_ramp(_Time.x * 2 + 4 * IN.uv_MainTex.x) + c.g * half3(1,1,1), 1);
+					c = half4(c.r * color_ramp(_Time.x * 2 + 4 * x) + c.g * half3(1,1,1), 1);
 					//c *= fixed4(color_ramp(_Time.x * 2 + 4 * IN.uv_MainTex.x), 1);
 				}
 			}
@@ -244,6 +241,27 @@ Shader "Custom/ProperSpriteGeneralWilex" {
 				}
 			}
 
+			return c;
+		}
+
+		void surf(Input IN, inout SurfaceOutput o) {
+			float2 halfTexel = _MainTex_TexelSize.xy * 0.5;
+
+			half4 c_ul = tex2D(_MainTex, IN.uv_MainTex + float2(-halfTexel.x, halfTexel.y));
+			c_ul = colorchange(c_ul, -IN.uv_MainTex.x + IN.uv_MainTex.y);
+			half4 c_ur = tex2D(_MainTex, IN.uv_MainTex + float2(halfTexel.x, halfTexel.y));
+			c_ur = colorchange(c_ur, -IN.uv_MainTex.x + IN.uv_MainTex.y);
+			half4 c_dl = tex2D(_MainTex, IN.uv_MainTex + float2(-halfTexel.x, -halfTexel.y));
+			c_dl = colorchange(c_dl, -IN.uv_MainTex.x + IN.uv_MainTex.y);
+			half4 c_dr = tex2D(_MainTex, IN.uv_MainTex + float2(halfTexel.x, -halfTexel.y));
+			c_dr = colorchange(c_dr, -IN.uv_MainTex.x + IN.uv_MainTex.y);
+
+			float2 uv_blend = frac(IN.uv_MainTex * _MainTex_TexelSize.zw + 0.5);
+			half4 c = lerp(
+				lerp(c_dl, c_dr, uv_blend.x),
+				lerp(c_ul, c_ur, uv_blend.x),
+				uv_blend.y);
+				
 			c *= IN.color;
 
 			//get scale (only X but sprites should be uniformly scaled in x and y so this should be fine)

@@ -78,7 +78,7 @@ public class SignScript : WorldObject, ITextSpeaker
     {
     }
 
-    public void SetAnimation(string animationID, bool force = false)
+    public void SetAnimation(string animationID, bool force = false, float time = -1)
     {
     }
 

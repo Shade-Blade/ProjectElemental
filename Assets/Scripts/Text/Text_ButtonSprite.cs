@@ -20,6 +20,7 @@ public class Text_SpecialSprite : MonoBehaviour
     public int index;
 
     public Image baseBox;
+    public bool worldspace;
 
     protected Vector3 targetPos;
     protected float relativeSize;
@@ -451,7 +452,7 @@ public class Text_SpecialSprite : MonoBehaviour
 
         baseBox.rectTransform.localPosition = newpos;
         baseBox.rectTransform.localRotation = newrot;
-        baseBox.rectTransform.localScale = newscale;
+        baseBox.rectTransform.localScale = newscale * (worldspace ? 0.1f : 1);
     }
 }
 
@@ -502,6 +503,35 @@ public class Text_ButtonSprite : Text_SpecialSprite
         {
             bs.text.text = "";
         }
+
+        bs.RecalculateBoxSize();
+
+        return obj;
+    }
+
+    //world version comes with a worldspace canvas per button sprite
+    //This is catastrophically bad but I have no better solution
+    public static GameObject CreateWorld(string[] args, int index, float relativeSize)
+    {
+        GameObject obj = Instantiate(MainManager.Instance.text_WorldButtonSprite);
+        Text_ButtonSprite bs = obj.GetComponent<Text_ButtonSprite>();
+        bs.args = args;
+        bs.index = index;
+        bs.relativeSize = relativeSize;
+
+        if (args != null && args.Length > 0)
+        {
+            InputManager.Button b;
+            Enum.TryParse(args[0], true, out b);
+            bs.text.text = MainManager.GetButtonString(b); //args[0];
+        }
+        else
+        {
+            bs.text.text = "";
+        }
+
+        bs.worldspace = true;
+        bs.text.rectTransform.anchoredPosition = Vector2.down * 3.25f;
 
         bs.RecalculateBoxSize();
 

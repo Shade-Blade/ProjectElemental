@@ -256,7 +256,7 @@ public class BM_BurrowTrap_PollenBite : EnemyMove
         }
 
         Vector3 bpos = caller.homePos + caller.curTarget.height * 2 * Vector3.down;
-        yield return StartCoroutine(caller.MoveEasing(bpos, 6, (e) => MainManager.EasingIn(e)));
+        yield return StartCoroutine(caller.MoveEasing(bpos, 6, (e) => MainManager.EasingIn(e), "burrow"));
 
         if (caller.curTarget != null)
         {
@@ -264,7 +264,7 @@ public class BM_BurrowTrap_PollenBite : EnemyMove
             caller.transform.position = spos;
             Vector3 tpos2 = caller.curTarget.transform.position - caller.curTarget.transform.position.y * Vector3.up + caller.curTarget.width * 0.5f * Vector3.right;
 
-            yield return StartCoroutine(caller.MoveEasing(tpos2, 6, (e) => MainManager.EasingIn(e)));
+            yield return StartCoroutine(caller.MoveEasing(tpos2, 6, (e) => MainManager.EasingIn(e), "unburrow"));
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
@@ -281,11 +281,11 @@ public class BM_BurrowTrap_PollenBite : EnemyMove
                 caller.InvokeMissEvents(caller.curTarget);
             }
 
-            yield return StartCoroutine(caller.MoveEasing(spos, 6, (e) => MainManager.EasingIn(e)));
+            yield return StartCoroutine(caller.MoveEasing(spos, 6, (e) => MainManager.EasingIn(e), "burrow"));
         }
 
         caller.transform.position = bpos;
-        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingIn(e)));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingIn(e), "unburrow"));
     }
 }
 
@@ -304,7 +304,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
         }
 
         Vector3 bpos = caller.homePos + caller.curTarget.height * 2 * Vector3.down;
-        yield return StartCoroutine(caller.MoveEasing(bpos, 6, (e) => MainManager.EasingIn(e)));
+        yield return StartCoroutine(caller.MoveEasing(bpos, 6, (e) => MainManager.EasingIn(e), "burrow"));
 
         if (caller.curTarget != null)
         {
@@ -312,7 +312,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
             caller.transform.position = spos;
             Vector3 tpos2 = caller.curTarget.transform.position - caller.curTarget.transform.position.y * Vector3.up + caller.curTarget.width * 0.5f * Vector3.right;
 
-            yield return StartCoroutine(caller.MoveEasing(tpos2, 6, (e) => MainManager.EasingIn(e)));
+            yield return StartCoroutine(caller.MoveEasing(tpos2, 6, (e) => MainManager.EasingIn(e), "unburrow"));
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
@@ -335,7 +335,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
                 yield return StartCoroutine(caller.DefaultDeathEvent());
                 yield break;
             }
-            yield return StartCoroutine(caller.MoveEasing(spos, 6, (e) => MainManager.EasingIn(e)));
+            yield return StartCoroutine(caller.MoveEasing(spos, 6, (e) => MainManager.EasingIn(e), "burrow"));
         }
 
         if (caller.hp == 0)
@@ -346,7 +346,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
         }
 
         caller.transform.position = bpos;
-        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => (MainManager.EasingIn(e))));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => (MainManager.EasingIn(e)), "unburrow"));
     }
 }
 

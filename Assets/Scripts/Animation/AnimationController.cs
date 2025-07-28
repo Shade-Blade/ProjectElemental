@@ -56,20 +56,20 @@ public class AnimationController : MonoBehaviour
     public float height = 0.75f;
     public float width = 0.5f;
 
-    public void OnDrawGizmos()
+    public virtual void OnDrawGizmos()
     {
         Gizmos.color = new Color(1f, 1f, 1f, 0.5f);
         Vector3 down = transform.up * -1 * height / 2;
         Vector3 left = transform.right * -1 * width / 2;
 
-        Gizmos.DrawLine(transform.position + down + left, transform.position + down - left);
-        Gizmos.DrawLine(transform.position + down - left, transform.position - down - left);
-        Gizmos.DrawLine(transform.position - down - left, transform.position - down + left);
-        Gizmos.DrawLine(transform.position - down + left, transform.position + down + left);
+        Gizmos.DrawLine(transform.position + left, transform.position - left);
+        Gizmos.DrawLine(transform.position - left, transform.position - 2 * down - left);
+        Gizmos.DrawLine(transform.position - 2 * down - left, transform.position - 2 * down + left);
+        Gizmos.DrawLine(transform.position - 2 * down + left, transform.position + left);
     }
 
 
-    public virtual void SetAnimation(string name, bool force = false)
+    public virtual void SetAnimation(string name, bool force = false, float time = -1)
     {
         timeSinceLastAnimChange = 0;
         bool update = !(animator.GetCurrentAnimatorStateInfo(0).IsName(name)) || force;
@@ -83,9 +83,27 @@ public class AnimationController : MonoBehaviour
             }
             else
             {
-                animator.Play(name);
+                if (time != -1)
+                {
+                    animator.Play(name, -1, time);
+                }
+                else
+                {
+                    animator.Play(name);
+                }
             }
         }
+    }
+
+    public virtual void ReplaceAnimation(string name = null, bool force = false)
+    {
+        if (name == null)
+        {
+            SetAnimation(currentAnim, force, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            return;
+        }
+
+        SetAnimation(name, force, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
     }
 
     public virtual void SendAnimationData(string data)
@@ -136,6 +154,14 @@ public class AnimationController : MonoBehaviour
 
         Material targetMaterial = null;
         materialIndex = id;
+
+        //usage
+        //0 = no effect
+        //1 = color change (opaque)
+        //2 = color change (transparent)
+        //3 = buff/debuff
+        //4 = buff/debuff + color change (opaque)
+        //5 = buff/debuff + color change (transparent)
         switch (materialIndex)
         {
             case 0:
@@ -397,6 +423,16 @@ public class AnimationController : MonoBehaviour
         targetAnimationSpeed = 1;
     }
 
+    //note: standard practice to reset should be to use this
+    public float GetAnimationSpeed()
+    {
+        return targetAnimationSpeed;
+    }
+    //More useful
+    public void MultiplyAnimationSpeed(float set)
+    {
+        targetAnimationSpeed *= set;
+    }
     public void SetAnimationSpeed(float set)
     {
         targetAnimationSpeed = set;

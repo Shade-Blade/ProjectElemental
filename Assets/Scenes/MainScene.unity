@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0, g: 0.40625, b: 1, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: b82863fc6a8eb23449c55392586054e8, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 801711a8a7861ec4ab679a00089d6e0c, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -1005,6 +1005,7 @@ MonoBehaviour:
     bonusFollowers: 
     party: []
     hiddenParty: []
+  gameOverPlayerDataExists: 0
   nextBattle:
     encounterList: []
     battleMapName: 
@@ -1042,6 +1043,7 @@ MonoBehaviour:
   promptMenuEntryBase: {fileID: 0}
   numberMenu: {fileID: 0}
   textEntryMenu: {fileID: 0}
+  text_WorldButtonSprite: {fileID: 0}
   text_ButtonSprite: {fileID: 0}
   text_ItemSprite: {fileID: 0}
   text_KeyItemSprite: {fileID: 0}

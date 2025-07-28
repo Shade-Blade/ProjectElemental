@@ -1211,24 +1211,54 @@ public class CheatMenu : MenuHandler
                 cs.log.SetText("Overworld only cheat!", true, true);
             } else
             {
-                Enum.TryParse(input[1], out MainManager.MapID mapID);
-                int exit = 0;
-                if (input.Length > 2)
+                if (input[1].Contains("+") || input[1].Contains("-"))
                 {
-                    int.TryParse(input[2], out exit);
+                    Enum.TryParse(MainManager.Instance.mapScript.mapName, out MainManager.MapID mapID);
+
+                    //does int parse allow "+"?
+                    int.TryParse(input[1], out int delta);
+
+                    mapID += delta;
+
+                    int exit = 0;
+                    if (input.Length > 2)
+                    {
+                        int.TryParse(input[2], out exit);
+                    }
+                    Vector3 warpPos = Vector3.zero;
+                    if (input.Length > 3)
+                    {
+                        MainManager.ParseVector3(input[3]);
+                    }
+                    float yawOffset = 0;
+                    if (input.Length > 4)
+                    {
+                        float.TryParse(input[4], out yawOffset);
+                    }
+                    MainManager.Instance.fadeOutScript.SnapFade(1);
+                    MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(mapID, exit, warpPos, yawOffset));
                 }
-                Vector3 warpPos = Vector3.zero;
-                if (input.Length > 3)
+                else
                 {
-                    MainManager.ParseVector3(input[3]);
+                    Enum.TryParse(input[1], out MainManager.MapID mapID);
+                    int exit = 0;
+                    if (input.Length > 2)
+                    {
+                        int.TryParse(input[2], out exit);
+                    }
+                    Vector3 warpPos = Vector3.zero;
+                    if (input.Length > 3)
+                    {
+                        MainManager.ParseVector3(input[3]);
+                    }
+                    float yawOffset = 0;
+                    if (input.Length > 4)
+                    {
+                        float.TryParse(input[4], out yawOffset);
+                    }
+                    MainManager.Instance.fadeOutScript.SnapFade(1);
+                    MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(mapID, exit, warpPos, yawOffset));
                 }
-                float yawOffset = 0;
-                if (input.Length > 4)
-                {
-                    float.TryParse(input[4], out yawOffset);
-                }
-                MainManager.Instance.fadeOutScript.SnapFade(1);
-                MainManager.Instance.StartCoroutine(MainManager.Instance.ChangeMap(mapID, exit, warpPos, yawOffset));
             }
         }
 

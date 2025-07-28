@@ -612,7 +612,7 @@ public class GenericBoxMenu : BoxMenu
         for (int i = 0; i < list.Count; i++)
         {
             names.Add(Badge.GetSpriteString(list[i]) + " " + Badge.GetName(list[i]));
-            descriptions.Add(Badge.GetDescription(list[i]));
+            descriptions.Add(Badge.GetDescription(list[i], false));
         }
 
         return PackMenuString(levelDescriptor, descriptor, names, rightTextList, usageList, descriptions, maxLevelList, colorList);
@@ -1142,12 +1142,18 @@ public class PromptBoxMenu : BoxMenu
 
                 if (inputDir > 0)
                 {
-                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
+                    if (menuIndex > 0 && (holdValue - pastHoldValue) > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
+                    }
                     menuIndex -= (holdValue - pastHoldValue);
                 }
                 else
                 {
-                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
+                    if (menuIndex < menuEntries.Length - 1 && (holdValue - pastHoldValue) > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
+                    }
                     menuIndex += (holdValue - pastHoldValue);
                 }
 
@@ -1207,7 +1213,7 @@ public class PromptBoxMenu : BoxMenu
             //bm.selectorArrow.transform.localPosition = Vector3.left * 150f + menuEntriesO[menuIndex].transform.localPosition + Vector3.up * 2.5f;
         }
 
-        if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries[menuIndex].canUse && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME) //Press A to select stuff
+        if (((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButtonDown(InputManager.Button.A))) && menuEntries[menuIndex].canUse && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME) //Press A to select stuff
         {
             MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             SelectOption();

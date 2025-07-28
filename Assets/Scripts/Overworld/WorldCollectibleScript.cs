@@ -223,19 +223,10 @@ public class WorldCollectibleScript : WorldObject
             }*/
         }
 
-        if (transform.position.y < -50)
+        if (transform.position.y < WorldPlayer.WARP_BARRIER_Y_COORD)
         {
             Debug.LogWarning("Collectible fell into the void: " + gameObject.name + " at " + transform.position);
-            transform.position = startPos;
-            startPos = startPos + Vector3.up * 0.1f;   //if it falls in again, offset the position upward until it works (Note: may keep going if it clips through the ground after some point)
-            rb.velocity = Vector3.zero;
-
-            //Idea
-            RaycastHit rc;
-            if (Physics.Raycast(startPos, Vector3.down, out rc, 100, 311))
-            {
-                transform.position = rc.point + Vector3.up * 0.25f;
-            }
+            WarpBack();
         }
 
         if (touchingObject)
@@ -244,6 +235,22 @@ public class WorldCollectibleScript : WorldObject
         }
 
         touchingObject = false;
+    }
+
+    //Hazard zones warp back them also (because they become unobtainable)
+    //(but not if they are stuck in place because in that case it only happens if I make it be te case)
+    public void WarpBack()
+    {
+        transform.position = startPos;
+        startPos = startPos + Vector3.up * 0.1f;   //if it falls in again, offset the position upward until it works (Note: may keep going if it clips through the ground after some point)
+        rb.velocity = Vector3.zero;
+
+        //Idea
+        RaycastHit rc;
+        if (Physics.Raycast(startPos, Vector3.down, out rc, 100, 311))
+        {
+            transform.position = rc.point + Vector3.up * 0.25f;
+        }
     }
 
     public void OnTriggerEnter(Collider other)

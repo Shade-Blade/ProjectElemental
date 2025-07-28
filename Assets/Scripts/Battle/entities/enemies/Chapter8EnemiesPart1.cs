@@ -272,17 +272,28 @@ public class BE_CloudJelly : BattleEntity
             case CloudJellyForm.Ice:
                 //s.color = new Color(0.4f, 1, 1);
                 ac = AnimationControllerSetup(this, subObject, MainManager.SpriteID.C8_IceJelly);
+                ResetDefenseTable();
+                SetDefense(BattleHelper.DamageType.Default, 6);
+                SetDefense(BattleHelper.DamageType.Light, DefenseTableEntry.IMMUNITY_CONSTANT);
+                SetDefense(BattleHelper.DamageType.Dark, -2);
                 break;
             case CloudJellyForm.Water:
                 //s.color = new Color(0.2f, 0.5f, 0.7f);
                 ac = AnimationControllerSetup(this, subObject, MainManager.SpriteID.C8_WaterJelly);
+                ResetDefenseTable();
+                SetDefense(BattleHelper.DamageType.Default, 3);
+                SetDefense(BattleHelper.DamageType.Water, DefenseTableEntry.IMMUNITY_CONSTANT);
+                SetDefense(BattleHelper.DamageType.Fire, -4);
                 break;
             case CloudJellyForm.Cloud:
                 //s.color = new Color(0.8f, 0.9f, 1);
                 ac = AnimationControllerSetup(this, subObject, MainManager.SpriteID.C8_CloudJelly);
+                ResetDefenseTable();
+                SetDefense(BattleHelper.DamageType.Air, DefenseTableEntry.IMMUNITY_CONSTANT);
+                SetDefense(BattleHelper.DamageType.Earth, -6);
                 break;
         }
-        ac.transform.localPosition = offset + Vector3.up * (height / 2);
+        ac.transform.localPosition = offset;// + Vector3.up * (height / 2);
         this.ac = ac.GetComponent<AnimationController>();
         EffectSpriteUpdate();
         if (flipDefault && this.ac != null)
@@ -366,10 +377,12 @@ public class BE_CloudJelly : BattleEntity
     }
     public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
     {
+        /*
         if (BattleControl.Instance.GetCurseLevel() <= 0)
         {
             return false;
         }
+        */
 
         if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
         {
@@ -1071,13 +1084,15 @@ public class BM_CrystalClam_HealingBreath : EnemyMove
 
         List<BattleEntity> healTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
 
-        yield return new WaitForSeconds(0.5f);
+        caller.SetAnimation("mouthopen");
+        yield return new WaitForSeconds(0.25f);
         for (int i = 0; i < healTargets.Count; i++)
         {
             healTargets[i].CureEffects(false);
             healTargets[i].HealHealth(multiHealAmount);
         }
-        yield return new WaitForSeconds(0.5f);
+        caller.SetAnimation("mouthclose");
+        yield return new WaitForSeconds(0.25f);
     }
 }
 
@@ -1094,6 +1109,8 @@ public class BM_CrystalClam_CleansingBreath : EnemyMove
             caller.curTarget = null;
         }
 
+        caller.SetAnimation("mouthopen");
+        yield return new WaitForSeconds(0.25f);
         yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
@@ -1112,6 +1129,8 @@ public class BM_CrystalClam_CleansingBreath : EnemyMove
                 caller.InvokeMissEvents(t);
             }
         }
+        caller.SetAnimation("mouthclose");
+        yield return new WaitForSeconds(0.25f);
     }
 }
 
@@ -1128,6 +1147,8 @@ public class BM_CrystalClam_Explode : EnemyMove
             caller.curTarget = null;
         }
 
+        caller.SetAnimation("mouthopen");
+        yield return new WaitForSeconds(0.25f);
         yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 1f));
 
         List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());

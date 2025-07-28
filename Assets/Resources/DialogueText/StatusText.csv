@@ -1,0 +1,36 @@
+Index,Description
+Level,"Getting 100 XP lets you level up, allowing you to increase Max HP, Max EP or Max SP. Enemy XP is determined by your level, so you get less XP from lower level enemies."
+AstralTokens,Astral Tokens can be exchanged for max stat increases (Each one is equivalent to one stat increase from a level up.)
+XP,Defeating enemies gives you XP. You need 100 XP to level up.
+HPA,Health determines how long you will survive. You will be knocked out if you lose all your HP. You can heal HP using Items or by staying at an inn
+AgilityA,"Agility is a stat that is based on max EP. Wilex usually has higher Agility than Luna. Agility determines how fast your Stamina regenerates. Stamina is another resource that is required to pay for skills. You will also lose stamina regeneration if you use a skill that costs more than your Agility, so it can be important to increase your Agility."
+Slash,"Press <button,b> to slash with your sword. You retain a small amount of movement while slashing."
+Aetherize,"Hold <button,b> to become Ethereal, which can open certain obstacles and make you invisible from enemies. In battle, Ethereal is an effect that makes enemy attacks against you miss except for Light damage."
+DoubleJump,"Press <button,a> after jumping to do a Double Jump. In battle, you can use Electro Stomp to deal Air/Electric damage to enemies, piercing their defense and ignoring contact hazards."
+SuperJump,"Spin in place quickly and press <button,a> to do a Super Jump. In battle, you can use Flame Stomp to deal Fire damage to enemies."
+Smash,"Press <button,b> to smash with your hammer."
+Illuminate,"Hold <button,b> to become Illuminated, which can open certain obstacles. In battle, Illuminate is an effect that increases your Attack with the effect getting stronger if you deal damage on your turn."
+DashHop,"Tap a direction and press <button,a> to do a Dash Hop. You can chain Dash Hops by pressing <button,a> right as you land while holding a direction. In battle, you can use Dash Through to target all grounded enemies."
+Dig,"Spin in place quickly and hold <button,a> to Dig. While digging, most enemies can't see you. In battle, you can use Under Strike to hit enemies from below with Dark damage."
+HPB,Health determines how long you will survive. You will be knocked out if you lose all your HP. You can heal HP using Items or by staying at an inn
+AgilityB,"Agility is a stat that is based on max EP. Wilex usually has higher Agility than Luna. Agility determines how fast your Stamina regenerates. Stamina is another resource that is required to pay for skills. You will also lose stamina regeneration if you use a skill that costs more than your Agility, so it can be important to increase your Agility."
+EP,Energy is a resource used to pay for skills. Your Max EP determines how much Agility you have as well.
+SE,"Soul Energy is a resource used to pay for Soul Moves. You slowly regenerate Soul Energy every turn, but you can Rest to regenerate more Soul Energy. Max SE is based on your Max SP."
+SP,Soul Points is a stat that determines how many badges you can wear as well as how high your Max Soul Energy is.
+CurrentLocation,This is where you currently are.
+LastSave,This is where your last save was made.
+Coins,"Coins can be used to buy items, badges, and other useful things."
+PrismaShards,Prisma shards can be exchanged for badges.
+Items,Items can be used in the overworld or in battle.
+Playtime,Playtime is the time you have played on this file.
+CharmEffect,Charm effects are effects that persist between battles.
+RestEffect,Rest effects are effects that activate at the start of battle for a certain number of future battles.
+LightCore,The soul core of Lumion
+WaterCore,The soul core of Aquaria
+AirCore,The soul core of Electrion
+DarkCore,The soul core of Umbria
+FireCore,The soul core of Infernion
+EarthCore,The soul core of Arboria
+Chapter7Thing,Something you get in chapter 7?
+Chapter8Thing,Something you get in chapter 8?
+MotherCore,The soul core of the Mother Dragon

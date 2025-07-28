@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3708101264875496809}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.125, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -95,7 +95,7 @@ Animator:
   m_GameObject: {fileID: 3708101264875496809}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c01d5dc2614661c43964e90cc48e75b7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -147,7 +147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 538110768454335176}
-  - component: {fileID: 6197429060858156313}
+  - component: {fileID: 8350210456290714639}
   m_Layer: 0
   m_Name: AnimCont_C1_Sundew
   m_TagString: Untagged
@@ -171,7 +171,7 @@ Transform:
   - {fileID: 4939146674735055669}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6197429060858156313
+--- !u!114 &8350210456290714639
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8631650266227609169}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a0f00b35cdf4654596945377f4a9432, type: 3}
+  m_Script: {fileID: 11500000, guid: ccc39337c6aeea24cb178792e3412a15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7091985871941047424}
@@ -206,6 +206,3 @@ MonoBehaviour:
   timeSinceLastAnimChange: 0
   height: 1.25
   width: 0.75
-  showBack: 0
-  spriteIdle: {fileID: 21300000, guid: 42c1ef329a6f14b42a2f3f2f6838ac24, type: 3}
-  spriteIdleBack: {fileID: 21300000, guid: ca1ae663d654a954ca31b92a642da820, type: 3}

@@ -2183,10 +2183,13 @@ public class WM_Slash : WilexMove
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
         target += Vector3.left * 0.5f * caller.width + 0.5f * Vector3.left;
         target.y = caller.homePos.y;
-        yield return StartCoroutine(caller.MoveEasing(target, (e) => MainManager.EasingOutIn(e)));
+        caller.ac.MultiplyAnimationSpeed(1/0.65f);
+        yield return StartCoroutine(caller.MoveEasing(target, (e) => MainManager.EasingOutIn(e), "weaponholdwalk"));
+        caller.ac.MultiplyAnimationSpeed(0.65f);
 
         if (caller.curTarget != null)
         {
+            caller.SetAnimation("idleweapon");
             int sd = 2;
             int sl = 0;
 
@@ -2364,10 +2367,15 @@ public class WM_MultiSlash : WM_Slash
 
         Vector3 target = caller.curTarget.ApplyScaledOffset(caller.curTarget.hammerOffset);
         target += Vector3.left * 0.5f * caller.width + 0.5f * Vector3.left;
-        yield return StartCoroutine(caller.MoveEasing(target, (e) => MainManager.EasingOutIn(e)));
+
+
+        caller.ac.MultiplyAnimationSpeed(1 / 0.65f);
+        yield return StartCoroutine(caller.MoveEasing(target, (e) => MainManager.EasingOutIn(e), "weaponholdwalk"));
+        caller.ac.MultiplyAnimationSpeed(0.65f);
 
         if (caller.curTarget != null)
         {
+            caller.SetAnimation("idleweapon");
             int sd = 2;
             int sl = 0;
 
@@ -3338,10 +3346,12 @@ public class WM_SwordDance : WilexMove
 
             yield return new WaitUntil(() => actionCommand.IsStarted());
 
-            yield return StartCoroutine(caller.MoveEasing(midpoint, caller.entitySpeed * 1.5f, (e) => MainManager.EasingOut(e)));
-            //doing multiple things at once
 
-            yield return StartCoroutine(caller.MoveEasing(target, caller.entitySpeed * 1.5f, (e) => MainManager.EasingIn(e)));
+            caller.ac.MultiplyAnimationSpeed(1 / 0.65f);
+            yield return StartCoroutine(caller.MoveEasing(midpoint, caller.entitySpeed * 1.5f, (e) => MainManager.EasingOut(e), "weaponholdwalk"));
+
+            yield return StartCoroutine(caller.MoveEasing(target, caller.entitySpeed * 1.5f, (e) => MainManager.EasingIn(e), "weaponholdwalk"));
+            caller.ac.MultiplyAnimationSpeed(0.65f);
 
             caller.SetAnimation("slash_prepare");
             yield return new WaitUntil(() => actionCommand.IsComplete());

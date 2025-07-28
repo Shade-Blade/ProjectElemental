@@ -27,5 +27,11 @@ public class HazardZoneScript : WorldZone
         {
             wp.lastFloorUnstable = true;
         }
+
+        WorldCollectibleScript wcs = other.transform.GetComponent<WorldCollectibleScript>();
+        if (wcs != null && !wcs.antigravity && !wcs.intangible)
+        {
+            wcs.WarpBack();
+        }
     }
 }

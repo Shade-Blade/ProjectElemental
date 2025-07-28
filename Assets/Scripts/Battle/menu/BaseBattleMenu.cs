@@ -211,7 +211,7 @@ public class BaseBattleMenu : MenuHandler
         }
 
 
-        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && ((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButtonDown(InputManager.Button.A)))) //Press A to select stuff
         {
             if (baseMenuOptions[baseMenuIndex].canSelect)
             {
@@ -574,20 +574,28 @@ public class BaseBattleMenu : MenuHandler
 
         o = Instantiate(BattleControl.Instance.baseMenuBSwap, MainManager.Instance.Canvas.transform);
         baseMenuBSwap = o.GetComponent<TextDisplayer>();
+        string btext = "";
         if (BUsable())
         {
             //which way is the other character?
             if (caller.posId < -1)
             {
-                baseMenuBSwap.SetText("<button,b><rarrow>", true, true);
+                btext += "<button,b><rarrow>";
             } else
             {
-                baseMenuBSwap.SetText("<larrow><button,b>", true, true);
+                btext += "<larrow><button,b>";
             }
-        } else
-        {
-            baseMenuBSwap.SetText("", true, true);
         }
+        if (ZUsable())
+        {
+            if (btext.Length > 0)
+            {
+                btext += ", ";
+            }
+            btext += "<carrow><button,z>";
+        }
+        baseMenuBSwap.SetText(btext, true, true);
+
         baseMenuBSwap.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.down * 225;
 
         Sort();

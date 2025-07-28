@@ -5281,6 +5281,10 @@ public class PlayerEntity : BattleEntity
             case EnvironmentalEffect.SacredGrove:
                 break;
             case EnvironmentalEffect.IonizedSand:
+                if (BattleControl.Instance.turnCount % 2 == 0)
+                {
+                    ReceiveEffect(new Effect(Effect.EffectType.BonusTurns, 1, 127));
+                }
                 break;
             case EnvironmentalEffect.WhiteoutBlizzard:
                 break;
@@ -5293,6 +5297,7 @@ public class PlayerEntity : BattleEntity
             case EnvironmentalEffect.TrialOfSimplicity:
                 break;
             case EnvironmentalEffect.TrialOfHaste:
+                ReceiveEffect(new Effect(Effect.EffectType.BonusTurns, 1, 127));
                 break;
             case EnvironmentalEffect.TrialOfResolve:
                 break;
@@ -5521,12 +5526,13 @@ public class PlayerEntity : BattleEntity
                 } else
                 {
                     //ouch
-                    yield return StartCoroutine(Squish(0.1f, 0.3f));
-                    yield return StartCoroutine(RevertScale(0.1f));
+                    //yield return StartCoroutine(Squish(0.1f, 0.3f));
+                    //yield return StartCoroutine(RevertScale(0.1f));
                 }
                 break;
             case BattleHelper.Event.StatusDeath:
             case BattleHelper.Event.Death:
+                bool prealive = alive;
                 alive = false;
                 //BattleControl.Instance.RemoveEntity(BattleControl.Instance.GetIndexFromID(id)); //create consistent death timing
                 if (!GetEntityProperty(EntityProperties.KeepEffectsAtNoHP))
@@ -5542,8 +5548,9 @@ public class PlayerEntity : BattleEntity
                 }
                 SetRotation(Vector3.zero);
                 SetAnimation("dead", true);
-                if (!dead)
+                if (prealive)
                 {
+                    Debug.Log("dead");
                     yield return StartCoroutine(Squish(0.1f, 0.3f));
                     yield return StartCoroutine(RevertScale(0.1f));
                 }

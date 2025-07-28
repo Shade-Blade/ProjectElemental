@@ -54,7 +54,7 @@ public class Pause_HandlerMap : Pause_HandlerShared
             pointerPos = uo.position;
             worldLocation = uo.location;
             dots = ((Pause_SectionMap)section).GetDots();
-            selectedDot = dots.Find((e) => (uo.location == e.worldLocation));
+            selectedDot = dots.Find((e) => (uo.location == e.GetWorldLocation()));
         }
 
         base.Init();
@@ -174,7 +174,7 @@ public class Pause_HandlerMap : Pause_HandlerShared
                 if ((pointerPos - dots[i].transform.localPosition).magnitude < 12.5f)
                 {
                     selectedDot = dots[i];
-                    worldLocation = dots[i].worldLocation;
+                    worldLocation = dots[i].GetWorldLocation();
                 }
             }
         }

@@ -171,7 +171,7 @@ public class BattleSelectionMenu : MenuHandler
 
         //Note: This code basically makes it so that if the range is none, the selection menu appears for up to 1 frame before getting closed instantly
         //this also happens before the B button is checked so you can't somehow back out in that 1 frame window
-        if (lifetime > MIN_SELECT_TIME && ((InputManager.GetButtonDown(InputManager.Button.A) && possibleEntities.Count != 0) || targetArea.range == TargetArea.TargetAreaType.None)) //Time to move!
+        if (lifetime > MIN_SELECT_TIME && ((((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButtonDown(InputManager.Button.A))) && possibleEntities.Count != 0) || targetArea.range == TargetArea.TargetAreaType.None)) //Time to move!
         {
             if (targetArea.range != TargetArea.TargetAreaType.None)
             {

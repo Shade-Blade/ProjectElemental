@@ -18,29 +18,6 @@ public class EffectEnviroFollower : WorldObject
         }
     }
 
-
-    public override void Update()
-    {
-        if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
-        {
-            WorldUpdate();
-            return;
-        }
-
-        base.Update();
-    }
-
-    public override void FixedUpdate()
-    {
-        if (MainManager.Instance.worldMode == MainManager.WorldMode.Battle)
-        {
-            WorldFixedUpdate();
-            return;
-        }
-
-        base.FixedUpdate();
-    }
-
     public override void WorldUpdate()
     {
         if (!disableMovement && WorldPlayer.Instance != null)

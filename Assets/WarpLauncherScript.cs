@@ -257,7 +257,7 @@ public class WarpLauncherScript : WorldObject, ITextSpeaker, ISignalReceiver
     {
     }
 
-    public void SetAnimation(string animationID, bool force = false)
+    public void SetAnimation(string animationID, bool force = false, float time = -1)
     {
     }
 

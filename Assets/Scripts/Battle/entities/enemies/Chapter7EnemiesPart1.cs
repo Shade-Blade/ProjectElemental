@@ -502,11 +502,13 @@ public class BE_Sawcrest : BattleEntity
 
         if (sawActive)
         {
-            s.color = new Color(1f, 1f, 1f);
+            //s.color = new Color(1f, 1f, 1f);
+            ac.SendAnimationData("sawon");
             SetEntityProperty(BattleHelper.EntityProperties.StateContactHazard, true);
         } else
         {
-            s.color = new Color(0.5f, 0.5f, 0.5f);
+            //s.color = new Color(0.5f, 0.5f, 0.5f);
+            ac.SendAnimationData("sawoff");
             SetEntityProperty(BattleHelper.EntityProperties.StateContactHazard, false);
         }
     }
@@ -830,14 +832,27 @@ public class BE_Coiler : BattleEntity
             SetEntityProperty(BattleHelper.EntityProperties.StateCharge, false);
             SetEntityProperty(BattleHelper.EntityProperties.StateContactHazardHeavy, false);
             ResetDefenseTable();
+            height = 0.7f;
             currMove = moveset[2];
         }
         else
         {
+            height = 0.55f;
             currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
         }
 
         BasicTargetChooser();
+    }
+
+    public override void SetIdleAnimation(bool force = false)
+    {
+        if (GetEntityProperty(BattleHelper.EntityProperties.StateCharge))
+        {
+            SetAnimation("idleshell");
+            return;
+        }
+
+        base.SetIdleAnimation(force);
     }
 
     public override void TryContactHazard(BattleEntity target, BattleHelper.ContactLevel contact, BattleHelper.DamageType type, int damage)
@@ -969,7 +984,7 @@ public class BM_Coiler_Charge : EnemyMove
         yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateContactHazardHeavy);
-        caller.SetDefense(BattleHelper.DamageType.Normal, 8);
+        caller.SetDefense(BattleHelper.DamageType.Default, 8);
     }
 }
 
@@ -1039,12 +1054,12 @@ public class BM_Coiler_Hard_CounterRollerShell : EnemyMove
 
             if (backflag)
             {
-                yield return StartCoroutine(caller.MoveEasing(itpos, caller.entitySpeed * 2, (e) => MainManager.EasingOut(e)));
-                yield return StartCoroutine(caller.MoveEasing(tpos, caller.entitySpeed * 2, (e) => MainManager.EasingIn(e)));
+                yield return StartCoroutine(caller.MoveEasing(itpos, caller.entitySpeed * 2, (e) => MainManager.EasingOut(e), "idleshell"));
+                yield return StartCoroutine(caller.MoveEasing(tpos, caller.entitySpeed * 2, (e) => MainManager.EasingIn(e), "idleshell"));
             }
             else
             {
-                yield return StartCoroutine(caller.MoveEasing(tpos, caller.entitySpeed * 2, (e) => MainManager.EasingOutIn(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, caller.entitySpeed * 2, (e) => MainManager.EasingOutIn(e), "idleshell"));
             }
 
             if (caller.GetAttackHit(caller.curTarget, 0))
@@ -1060,7 +1075,7 @@ public class BM_Coiler_Hard_CounterRollerShell : EnemyMove
             }
         }
 
-        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e), "idleshell"));
     }
 }
 

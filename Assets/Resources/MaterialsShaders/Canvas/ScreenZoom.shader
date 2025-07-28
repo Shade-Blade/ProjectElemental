@@ -12,6 +12,7 @@ Shader "Unlit/BattleZoom"
          _ZoomRatio("Zoom Ratio", float) = 0.75
          _ZoomLevel("Zoom Level", float) = 0
          _Rotate("Rotate", float) = 0
+         _PointCount ("PointCount", float) = 5            //note: fractional numbers lead to broken stars
          [HDR]
          _ColorMult("Color Mult", Color) = (1,1,1,1)
     }
@@ -49,6 +50,8 @@ Shader "Unlit/BattleZoom"
 
             float _BattleFadeProgress;
             float2 _BattleFadeLocation;
+
+            float _PointCount;
 
             v2f vert (appdata_full v)
             {
@@ -100,11 +103,42 @@ Shader "Unlit/BattleZoom"
 
                 newUV = saturate(newUV);
 
+                /*
                 half4 col = tex2D(_MainTex, newUV) * _ColorMult;
 				col.rgb *= col.a;
 				col.r *= i.color.r;
 				col.g *= i.color.g;
 				col.b *= i.color.b;
+                */
+
+                fixed4 col = fixed4(1,1,1,1);   //tex2D(_MainTex, i.uv);
+				col.rgb *= col.a;
+				col.r *= i.color.r;
+				col.g *= i.color.g;
+				col.b *= i.color.b;
+                //col.a *= i.color.a;
+
+                fixed radius = 0.25;
+                fixed inradius = lerp(0.175,radius, _BattleFadeProgress);
+
+                half angle = 0.75 + (atan2(newUV.y - 0.5, newUV.x - 0.5) / 6.283185307179586);
+                half b = frac(angle * _PointCount);
+                half c = 2 * abs(b - 0.5);
+                half d = lerp(inradius,radius,pow(c,2));
+                half dB = lerp(inradius,radius,pow(c,4));
+
+                if (length(newUV - half2(0.5,0.5)) > dB * 1.6) {
+                    col.rgb *= 0;
+                }
+
+                if (length(newUV - half2(0.5,0.5)) > d * 1.3) {
+                    col.rgb *= 0.5;
+                }
+
+                if (length(newUV - half2(0.5,0.5)) < d) {
+                    col.a = 0;
+                }
+
                 return col;
             }
             ENDCG

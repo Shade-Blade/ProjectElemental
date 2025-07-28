@@ -2007,12 +2007,12 @@ public class WorldPlayer : WorldEntity
                 //Undig special thing
                 if (actionState == ActionState.Neutral && undigTimer > 0)
                 {
-                    subObject.transform.localPosition = Vector3.down * 0.325f * ((undigTimer / DIG_TIME));
+                    subObject.transform.localPosition = Vector3.down * 0.325f * ((undigTimer / DIG_TIME)) + Vector3.down * height / 2;
                 }
                 if (actionState != ActionState.Neutral)
                 {
                     undigTimer = 0;
-                    subObject.transform.localPosition = Vector3.zero;
+                    subObject.transform.localPosition = Vector3.zero + Vector3.down * height / 2;
                 }
 
                 coyoteBool = false;
@@ -2722,7 +2722,10 @@ public class WorldPlayer : WorldEntity
         }
 
         //Note: slippery conveyers are a bit weird
-        rb.velocity += conveyerVector;
+        if (!rb.isKinematic)    //shuts up annoying warnings
+        {
+            rb.velocity += conveyerVector;
+        }
 
         lastConveyerVector = conveyerVector;
         conveyerVector = Vector3.zero;
@@ -3348,12 +3351,12 @@ public class WorldPlayer : WorldEntity
     {
         if (digTimer != 0)
         {
-            subObject.transform.localPosition = Vector3.down * 0.325f * (1 - (digTimer / DIG_TIME));
+            subObject.transform.localPosition = Vector3.down * 0.325f * (1 - (digTimer / DIG_TIME)) + Vector3.down * height / 2;
         }
         else
         {
             subObject.transform.localScale = Vector3.one * 0.001f;
-            subObject.transform.localPosition = Vector3.down * 0.325f;
+            subObject.transform.localPosition = Vector3.down * 0.325f + Vector3.down * height / 2;
         }
         if (lastFloorDigThrough)
         {
@@ -3384,7 +3387,7 @@ public class WorldPlayer : WorldEntity
         }
 
         subObject.transform.localScale = Vector3.one;
-        subObject.transform.localPosition = Vector3.zero;
+        subObject.transform.localPosition = Vector3.zero + Vector3.down * height / 2;
 
         if (characterCollider is CapsuleCollider cc) {
             cc.center = Vector3.zero;

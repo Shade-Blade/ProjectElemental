@@ -6,7 +6,7 @@ public class AnimationController_Wilex : AnimationController_Player
 {
     public GameObject offsetter;
 
-    public override void SetAnimation(string name, bool force = false)
+    public override void SetAnimation(string name, bool force = false, float time = -1)
     {
         timeSinceLastAnimChange = 0;
         string modifiedName = name;
@@ -37,17 +37,16 @@ public class AnimationController_Wilex : AnimationController_Player
             }
             else
             {
-                animator.Play(modifiedName);
+                if (time != -1)
+                {
+                    animator.Play(modifiedName, -1, time);
+                }
+                else
+                {
+                    animator.Play(modifiedName);
+                }
             }
         }
-    }
-
-    public void OnDisable()
-    {
-        //Unity is being stupid
-        //Hacky fix
-        sprite.transform.localPosition = Vector3.zero;
-        sprite.transform.localRotation = Quaternion.identity;
     }
 
     public override void SetMaterial(int id)

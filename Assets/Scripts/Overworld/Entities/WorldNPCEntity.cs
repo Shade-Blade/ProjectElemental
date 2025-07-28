@@ -469,7 +469,7 @@ public class WorldNPCEntity : WorldEntity, ITattleable, IStompTrigger, IInteract
                     float lerpVal = Mathf.Min(2 * (time / duration), 2 - 2 * (time / duration));
                     ac.transform.localScale = Vector3.Lerp(Vector3.one, (Vector3.up) * (1 - stompscale) + (Vector3.right + Vector3.forward) * (1 + stompscale), lerpVal);
                     //need to position things lower to make it look correct
-                    ac.transform.localPosition = Vector3.down * 0.5f * (height * (lerpVal * stompscale));
+                    //ac.transform.localPosition = Vector3.down * 0.5f * (height * (lerpVal * stompscale));
                     yield return null;
                 }
 

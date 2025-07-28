@@ -6,7 +6,7 @@ public class AnimationController_BackSprite : AnimationController
 {
     public bool showBack;
 
-    public override void SetAnimation(string name, bool force = false)
+    public override void SetAnimation(string name, bool force = false, float time = -1)
     {
         timeSinceLastAnimChange = 0;
         string modifiedName = name;
@@ -37,9 +37,27 @@ public class AnimationController_BackSprite : AnimationController
             }
             else
             {
-                animator.Play(modifiedName);
+                if (time != -1)
+                {
+                    animator.Play(modifiedName, -1, time);
+                }
+                else
+                {
+                    animator.Play(modifiedName);
+                }
             }
         }
+    }
+    public override void ReplaceAnimation(string name = null, bool force = false)
+    {
+        if (name == null)
+        {
+            string newanim = currentAnim.Replace("_back", "");
+            SetAnimation(newanim, force, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            return;
+        }
+
+        SetAnimation(name, force, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
     }
 
     public override void SendAnimationData(string data)

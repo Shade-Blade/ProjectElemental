@@ -161,7 +161,7 @@ public class NumberMenu : MenuHandler
             }
         }
 
-        if (lifetime > MIN_SELECT_TIME && InputManager.GetButton(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && ((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButton(InputManager.Button.A)))) //Press A to select stuff
         {
             SelectOption();
         }

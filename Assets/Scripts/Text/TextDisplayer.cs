@@ -611,7 +611,15 @@ public class TextDisplayer : MonoBehaviour
                         float Bsize;
                         (Bsize, Bposition) = SpritePosition(textInfo, j + offset, Text_SpecialSprite.MULTIPLIER);
 
-                        GameObject bbs = Text_ButtonSprite.Create(tags[i].args, j + offset, Bsize);
+                        //hacky
+                        GameObject bbs;
+                        if (GetComponent<MeshRenderer>() != null)
+                        {
+                            bbs = Text_ButtonSprite.CreateWorld(tags[i].args, j + offset, Bsize);
+                        } else
+                        {
+                            bbs = Text_ButtonSprite.Create(tags[i].args, j + offset, Bsize);
+                        }
                         SpriteSetup(bbs, Bposition, BuildTextEffectSet(j + offset));
 
                         specialSprites.Add(bbs);

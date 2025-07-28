@@ -513,7 +513,11 @@ public class EffectScript_Damage : MonoBehaviour
 
         if (lifetime < maxScaleTime)
         {
-            proxy.transform.localScale = Vector3.one * maxScale * (scalecompletion);            
+            proxy.transform.localScale = Vector3.one * maxScale * (scalecompletion);
+            if (text != null)
+            {
+                text.transform.localScale = Vector3.one * (scalecompletion);
+            }
             backSpriteA.transform.localScale = backSpriteScale * numScale;
             if (be == BattleHelper.DamageEffect.MaxHPDamage)
             {

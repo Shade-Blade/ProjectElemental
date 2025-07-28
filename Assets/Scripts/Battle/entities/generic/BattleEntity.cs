@@ -1649,6 +1649,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         ApplyBufferedEffects();
 
+        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand && BattleControl.Instance.turnCount % 2 == 0)
+        {
+            ReceiveEffect(new Effect(Effect.EffectType.BonusTurns, 1, 127));
+        }
+
+        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfHaste)
+        {
+            ReceiveEffect(new Effect(Effect.EffectType.BonusTurns, 1, 127));
+        }
+
+
         //wait on the events
         while (inEvent)
         {
@@ -3642,7 +3653,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
 
         //The true damage number, accounting for all attack bonuses and modifiers
-        int inputDamage = damage + badgeDamage;
+        int inputDamage = damage + badgeDamage + effectDamage;
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
@@ -3778,9 +3789,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 airbonus = 0;
             }
 
-            if (airbonus > inputDamage + effectDamage)
+            if (airbonus > inputDamage)
             {
-                airbonus = inputDamage + effectDamage;
+                airbonus = inputDamage;
             }
         }
         else
@@ -3865,7 +3876,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //nothing
             airbonus = 0;
         }
-        inputDamage += effectDamage;
+        //inputDamage += effectDamage;
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.PlusOneOnBuff) && effectDamage > 0)
         {
@@ -5013,8 +5024,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //Property methods
     public virtual bool GetEntityProperty(BattleHelper.EntityProperties property, bool b = true)
     {
-        //hard code stuff implying flags
-        
+        //hard code stuff implying flags        
         if ((property & BattleHelper.EntityProperties.Airborne) != 0 && homePos.y > AIRBORNE_CUTOFFHEIGHT)
         {
             //Debug.Log("high");
@@ -5150,8 +5160,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (dt == defenseTable[i].type)
             {
                 defenseTable[i].amount = set;
+                return;
             }
-            return;
         }
 
         //add new entry
@@ -5612,6 +5622,16 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             realAgility += half;
         }
 
+        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.IonizedSand)
+        {
+            return (int)(realAgility * 1.5f);
+        }
+
+        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfHaste)
+        {
+            return (int)(realAgility * 2);
+        }
+
         return realAgility;
     }
 
@@ -6030,7 +6050,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     }
                     break;
                 default:
-                    Debug.Log("Mode" + mode + " " + Effect.GetEffectClass(se.effect) + " stack");
+                    //Debug.Log("Mode" + mode + " " + Effect.GetEffectClass(se.effect) + " stack");
                     switch (Effect.GetEffectClass(se.effect))
                     {
                         case Effect.EffectClass.Static:
@@ -6106,7 +6126,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     }
                     break;
             }
-            Debug.Log("Result: " + entry);
+            //Debug.Log("Result: " + entry);
         }
         else
         {
@@ -7729,17 +7749,37 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual IEnumerator Idle()
     {
         idleTime = 0;
-        SetIdleAnimation();
+        yield return new WaitForSeconds(0.1f * RandomGenerator.Get());
+        SetIdleAnimation(true);
         //Note: hopefully this will work in all cases (there shouldn't be a persistent thing that causes the animation to be wrong)
         while (true)
         {
             idleTime += Time.deltaTime;
             if (GetEntityProperty(EntityProperties.Airborne))
             {
-                subObject.transform.localPosition = Vector3.up * 0.02f * Mathf.Sin(idleTime * 5f + posId);
+                float heightfactor = 2 - height;
+                if (heightfactor < 1) {
+                    heightfactor = 1;
+                }
+                heightfactor *= 2;
+                heightfactor -= 1;
+                subObject.transform.localPosition = Vector3.up * 0.02f * (1 / heightfactor) * Mathf.Sin(idleTime * heightfactor * (6f + 2 * Mathf.Sin(posId)) + posId);
+
+                bool dir = Mathf.Cos(idleTime * heightfactor * (6f + 2 * Mathf.Sin(posId)) + posId) >= 0;
+                if (dir)
+                {
+                    SetAnimation("jumpflying");
+                } else
+                {
+                    SetAnimation("fallflying");
+                }
             } else
             {
-                yield break;
+                //this is approximately a poisson distribution?
+                if (RandomGenerator.Get() < (Time.deltaTime / 1.5f))
+                {
+                    SetIdleAnimation(true);
+                }
             }
             yield return null;
         }
@@ -7914,6 +7954,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         StartIdle();
     }
 
+    public void SpriteBoundUpdate()
+    {
+        height = ac.height;
+        width = ac.width;
+    }
+
     public IEnumerator FlyingFlyBackUp()
     {
         //fly back up        
@@ -7923,7 +7969,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             yPos = BattleHelper.GetDefaultPosition(posId + 10).y;
         }
         homePos.y = yPos;
-        yield return StartCoroutine(Move(homePos));
+        ac.SetAnimation("idleflying");  //trigger height width update in animationcontroller_flying
+        SpriteBoundUpdate();
+
+        yield return StartCoroutine(Move(homePos, entitySpeed, "idleflying"));
+        ac.SetAnimation("idleflying");  //trigger height width update in animationcontroller_flying
+        SpriteBoundUpdate();
         SetEntityProperty(BattleHelper.EntityProperties.Grounded, false);
     }
 
@@ -7934,7 +7985,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //Fall down
             float dist = homePos.y;
             homePos.y = 0;
-            yield return StartCoroutine(Jump(homePos, 0, dist / 8, true, true, MainManager.Sound.None));
+            yield return StartCoroutine(Jump(homePos, 0, dist / 8, "jumpflying", "fallflying", true, true, MainManager.Sound.None));
+            ac.SetAnimation("idle");    //trigger height width update in animationcontroller_flying
+            SpriteBoundUpdate();
+
             SetEntityProperty(BattleHelper.EntityProperties.Grounded, true);
         }
     }
@@ -8173,11 +8227,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public IEnumerator Move(Vector3 position, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
-        yield return StartCoroutine(Move(position, entitySpeed, "walk", animate, animateEnd));
+        yield return StartCoroutine(Move(position, entitySpeed, GetEntityProperty(EntityProperties.Grounded) ? "walk" : "idleflying", animate, animateEnd));
     }
     public IEnumerator Move(Vector3 position, float speed, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
-        yield return StartCoroutine(Move(position, speed, "walk", animate, animateEnd));
+        yield return StartCoroutine(Move(position, speed, GetEntityProperty(EntityProperties.Grounded) ? "walk" : "idleflying", animate, animateEnd));
     }
     public IEnumerator Move(Vector3 position, float speed, string anim, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
@@ -8188,8 +8242,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         bool frameOne = false;
 
+        float baseAnimSpeed = ac.GetAnimationSpeed();
         if (animate)
         {
+            ac.SetAnimationSpeed(baseAnimSpeed * (speed / 3f));
             yield return null;
             if (flipDefault)
             {
@@ -8239,6 +8295,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             yield return null;
         }
 
+        if (animate)
+        {
+            ac.SetAnimationSpeed(baseAnimSpeed);
+        }
         if (animate && animateEnd)
         {
             if (flipDefault)
@@ -8255,11 +8315,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public IEnumerator MoveEasing(Vector3 position, Func<float, float> easing, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
-        yield return StartCoroutine(MoveEasing(position, entitySpeed, easing, "walk", animate, animateEnd));
+        yield return StartCoroutine(MoveEasing(position, entitySpeed, easing, GetEntityProperty(EntityProperties.Grounded) ? "walk" : "idleflying", animate, animateEnd));
     }
     public IEnumerator MoveEasing(Vector3 position, float speed, Func<float, float> easing, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
-        yield return StartCoroutine(MoveEasing(position, speed, easing, "walk", animate, animateEnd));
+        yield return StartCoroutine(MoveEasing(position, speed, easing, GetEntityProperty(EntityProperties.Grounded) ? "walk" : "idleflying", animate, animateEnd));
+    }
+    public IEnumerator MoveEasing(Vector3 position, Func<float, float> easing, string anim, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    {
+        yield return StartCoroutine(MoveEasing(position, entitySpeed, easing, anim, animate, animateEnd));
     }
     public IEnumerator MoveEasing(Vector3 position, float speed, Func<float, float> easing, string anim, bool animate = true, bool animateEnd = true)
     {
@@ -8273,6 +8337,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             yield break;
         }
 
+        float baseAnimSpeed = ac.GetAnimationSpeed();
         if (animate)
         {
             yield return null;
@@ -8290,6 +8355,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     SendAnimationData("xflip");
                 }
             }
+            //Debug.Log("move easing anim: " + anim);
             SetAnimation(anim);
         }
 
@@ -8300,12 +8366,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //try moving
             transform.position = Vector3.Lerp(startPos, endPos, easing(completion));
 
+            //Easing function should have average derivative = 1 (because the default easing = derivative of 1)
+            ac.SetAnimationSpeed(baseAnimSpeed * (MainManager.Derivative(easing, completion)) * (speed / 3f));
+
             completion = (Time.time - initialTime) / duration;
             yield return null;
         }
 
         transform.position = endPos;
 
+        if (animate)
+        {
+            ac.SetAnimationSpeed(baseAnimSpeed);
+        }
         if (animate && animateEnd)
         {
             if (flipDefault)
@@ -8767,8 +8840,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             if (animate)
             {
                 float newangle = (initialAngle + angle * completion).y;
+
                 if ((newangle > 90 || newangle < -90) && (newangle < 270 && newangle > -270))
                 {
+                    SendAnimationData("showback");
                     if (flipDefault)
                     {
                         SendAnimationData("xunflip");
@@ -8781,6 +8856,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 else
                 {
+                    SendAnimationData("unshowback");
                     if (flipDefault)
                     {
                         SendAnimationData("xflip");
@@ -8806,6 +8882,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             SendAnimationData("xunflip");
         }
+        SendAnimationData("unshowback");
         //force position = endpoint (prevent lag glitches)
         //Debug.Log("end");
         subObject.transform.eulerAngles = initialAngle + angle;
@@ -8835,6 +8912,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 float newangle = (initialAngle + angle * amount).y;
                 if ((newangle > 90 || newangle < -90) && (newangle < 270 && newangle > -270))
                 {
+                    SendAnimationData("showback");
                     if (flipDefault)
                     {
                         SendAnimationData("xunflip");
@@ -8847,6 +8925,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 else
                 {
+                    SendAnimationData("unshowback");
                     if (flipDefault)
                     {
                         SendAnimationData("xflip");
@@ -8865,6 +8944,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             completion = (Time.time - initialTime) / duration;
             yield return null;
         }
+        SendAnimationData("unshowback");
         if (flipDefault)
         {
             SendAnimationData("xflip");
@@ -8962,47 +9042,68 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public virtual void SetIdleAnimation(bool force = false)
     {
+        ac.SendAnimationData("unshowback");
+        ac.ResetAnimationSpeed();
         if (!alive)
         {
-            SetAnimation("dead", true);
+            SetAnimation("dead", force);
             return;
         }
+
+        string idleanimation = "";
         if (HasEffect(Effect.EffectType.Freeze) || HasEffect(Effect.EffectType.TimeStop))
         {
-            SetAnimation("idlefrozen", true);
+            idleanimation = "idlefrozen";
         }
         else if (HasEffect(Effect.EffectType.Sleep))
         {
-            SetAnimation("idlesleep", true);
+            idleanimation = "idlesleep";
         }
         else if (HasEffect(Effect.EffectType.Dizzy) || HasEffect(Effect.EffectType.Dread))
         {
-            SetAnimation("idledizzy", true);
+            idleanimation = "idledizzy";
         }
         else if (HasEffect(Effect.EffectType.Berserk) || HasEffect(Effect.EffectType.Sunflame))
         {
-            SetAnimation("idleangry", true);
+            idleanimation = "idleangry";
         }
         else if (HasEffect(Effect.EffectType.Poison) || HasEffect(Effect.EffectType.Paralyze) || HasEffect(Effect.EffectType.Soulbleed) || HasEffect(Effect.EffectType.Exhausted))
         {
-            SetAnimation("idleweak", true);
+            idleanimation = "idleweak";
         }
         else
         {
-            SetAnimation("idle", true);
+            idleanimation = "idle";
         }
+
+        //All airborne enemies should have airborne animations properly set up
+        if (GetEntityProperty(EntityProperties.Airborne) || !GetEntityProperty(EntityProperties.Grounded))
+        {
+            idleanimation += "flying";
+        }
+
+        //Random offset
+        //Note: broken?
+        SetAnimation(idleanimation, force, RandomGenerator.Get());
     }
 
-    public virtual void SetAnimation(string name, bool force = false)
+    public virtual void ReplaceAnimation(string name = null, bool force = false)
     {
         if (ac != null)
         {
-            ac.SetAnimation(name, force);
+            ac.ReplaceAnimation(name = null, force);
+        }
+    }
+    public virtual void SetAnimation(string name, bool force = false, float time = -1)
+    {
+        if (ac != null)
+        {
+            ac.SetAnimation(name, force, time);
         }
     }
     public virtual void SendAnimationData(string data)
     {
-        //Debug.Log(name + " animation data " + data);
+        Debug.Log(name + " animation data " + data);
         if (ac != null)
         {
             ac.SendAnimationData(data);

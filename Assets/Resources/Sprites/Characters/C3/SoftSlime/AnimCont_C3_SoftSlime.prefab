@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3708101264875496809}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: bdae91c8a2b4eaa41bfe505ff4e10a11, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5343498a3a867d64cae8477914f6a94a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,7 +95,7 @@ Animator:
   m_GameObject: {fileID: 3708101264875496809}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 39fee547f54b385408435eb0257928d5, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -147,7 +147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 538110768454335176}
-  - component: {fileID: 6197429060858156313}
+  - component: {fileID: 873407681232973257}
   m_Layer: 0
   m_Name: AnimCont_C3_SoftSlime
   m_TagString: Untagged
@@ -171,7 +171,7 @@ Transform:
   - {fileID: 4939146674735055669}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6197429060858156313
+--- !u!114 &873407681232973257
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,14 +180,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8631650266227609169}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a0f00b35cdf4654596945377f4a9432, type: 3}
+  m_Script: {fileID: 11500000, guid: 10531703570c33044b32edd2d29897ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7091985871941047424}
   currentAnim: 
   currentEffect: 
   sprite: {fileID: 8510939000944800811}
-  leftFacing: 1
+  leftFacing: 0
   subobject: {fileID: 4012585618382714007}
   materialIndex: 0
   bigradientMap: 0
@@ -207,5 +207,3 @@ MonoBehaviour:
   height: 0.6
   width: 0.7
   showBack: 0
-  spriteIdle: {fileID: 21300000, guid: bdae91c8a2b4eaa41bfe505ff4e10a11, type: 3}
-  spriteIdleBack: {fileID: 21300000, guid: 62856997987a17e4496ac65bb3551de1, type: 3}

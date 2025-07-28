@@ -509,7 +509,9 @@ public class BM_Honeybud_SwoopHeal : EnemyMove
         int singularHeal = 0;
         int spreadHeal = 0;
 
-        BattleEntity singleHealTarget = null; //note: if all targets have 0 missing hp then this will stay null (and so no heal)
+        //change: hardcoded to heal self if no other target exists :)
+        BattleEntity singleHealTarget = caller; //note: if all targets have 0 missing hp then this will stay null (and so no heal)
+
         List<BattleEntity> healTargets = BattleControl.Instance.GetEntitiesSorted(caller, new TargetArea(TargetArea.TargetAreaType.LiveAlly));
 
         int tempHeal = 0;

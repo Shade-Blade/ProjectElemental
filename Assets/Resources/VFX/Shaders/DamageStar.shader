@@ -1,9 +1,4 @@
-﻿//shader that makes stuff appear in front
-//normal shader doesn't let me do that
-
-//Note: used for things existing in the world, not canvas sprites
-
-Shader "Unlit/DamageStar"
+﻿Shader "Unlit/DamageStar"
 {
     Properties
     {
@@ -22,6 +17,8 @@ Shader "Unlit/DamageStar"
 		Blend SrcAlpha OneMinusSrcAlpha
 		ZWrite Off
 		ZTest Off
+
+        //https://www.desmos.com/calculator/s39ghiljog
 
         Pass
         {
@@ -56,7 +53,7 @@ Shader "Unlit/DamageStar"
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
+                fixed4 col = fixed4(1,1,1,1);   //tex2D(_MainTex, i.uv);
 				col.rgb *= col.a;
 				col.r *= i.color.r;
 				col.g *= i.color.g;

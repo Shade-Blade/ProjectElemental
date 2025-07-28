@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3708101264875496809}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -53,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c55e866d1dd215044b3e0d9023b40e18, type: 2}
+  - {fileID: 2100000, guid: 0aa3cfb0e88d5474794b986020f2d759, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ed6e2362494766b4f9773393ae879042, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 995102ca96cd91048991f974b80269d6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,7 +95,7 @@ Animator:
   m_GameObject: {fileID: 3708101264875496809}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e633ac64bd1943849b51d23d9550733c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -147,7 +147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 538110768454335176}
-  - component: {fileID: 6197429060858156313}
+  - component: {fileID: 1734862005713209002}
   m_Layer: 0
   m_Name: AnimCont_C3_ElementalSlime
   m_TagString: Untagged
@@ -171,7 +171,7 @@ Transform:
   - {fileID: 4939146674735055669}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6197429060858156313
+--- !u!114 &1734862005713209002
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,14 +180,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8631650266227609169}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a0f00b35cdf4654596945377f4a9432, type: 3}
+  m_Script: {fileID: 11500000, guid: 2cbd210099a64fb429b42911073ef507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7091985871941047424}
   currentAnim: 
   currentEffect: 
   sprite: {fileID: 8510939000944800811}
-  leftFacing: 1
+  leftFacing: 0
   subobject: {fileID: 4012585618382714007}
   materialIndex: 0
   bigradientMap: 0
@@ -207,5 +207,3 @@ MonoBehaviour:
   height: 0.6
   width: 0.7
   showBack: 0
-  spriteIdle: {fileID: 21300000, guid: ed6e2362494766b4f9773393ae879042, type: 3}
-  spriteIdleBack: {fileID: 21300000, guid: 38bbe958d981afe4f826299741a5a0a3, type: 3}

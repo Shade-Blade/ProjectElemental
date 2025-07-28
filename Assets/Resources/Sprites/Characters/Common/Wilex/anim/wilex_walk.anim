@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: wilex_walk
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,21 +18,23 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
-      value: {fileID: 21300000, guid: 1a522998cb9dd854d90a220f222d3c37, type: 3}
-    - time: 0.15
       value: {fileID: 21300000, guid: 44e1054a57ef60c4fa7974a353a76f3d, type: 3}
-    - time: 0.3
+    - time: 0.15
       value: {fileID: 21300000, guid: 1a522998cb9dd854d90a220f222d3c37, type: 3}
-    - time: 0.45
+    - time: 0.3
       value: {fileID: 21300000, guid: 4dba21bb5e66d724c8b9772ac9aa15e1, type: 3}
+    - time: 0.45
+      value: {fileID: 21300000, guid: 1a522998cb9dd854d90a220f222d3c37, type: 3}
     - time: 0.6
       value: {fileID: 21300000, guid: 1a522998cb9dd854d90a220f222d3c37, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -47,11 +49,13 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 1a522998cb9dd854d90a220f222d3c37, type: 3}
     - {fileID: 21300000, guid: 44e1054a57ef60c4fa7974a353a76f3d, type: 3}
     - {fileID: 21300000, guid: 1a522998cb9dd854d90a220f222d3c37, type: 3}
     - {fileID: 21300000, guid: 4dba21bb5e66d724c8b9772ac9aa15e1, type: 3}
+    - {fileID: 21300000, guid: 1a522998cb9dd854d90a220f222d3c37, type: 3}
     - {fileID: 21300000, guid: 1a522998cb9dd854d90a220f222d3c37, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2

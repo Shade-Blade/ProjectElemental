@@ -1156,7 +1156,7 @@ PrefabInstance:
     - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: worldLocation
-      value: 29
+      value: RadiantPlateau
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
@@ -1285,7 +1285,7 @@ PrefabInstance:
     - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: worldLocation
-      value: 12
+      value: TempestDesert
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
@@ -1414,7 +1414,7 @@ PrefabInstance:
     - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: worldLocation
-      value: 17
+      value: GemstoneIslands
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
@@ -1543,7 +1543,7 @@ PrefabInstance:
     - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: worldLocation
-      value: 33
+      value: AetherTrench
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
@@ -1672,7 +1672,7 @@ PrefabInstance:
     - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: worldLocation
-      value: 8
+      value: VerdantForest
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
@@ -1801,7 +1801,7 @@ PrefabInstance:
     - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: worldLocation
-      value: 25
+      value: ShroudedValley
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
@@ -1927,6 +1927,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 996272750487539220}
     m_Modifications:
+    - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
+        type: 3}
+      propertyPath: worldLocation
+      value: SolarGrove
+      objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1966,6 +1971,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
@@ -2054,7 +2064,7 @@ PrefabInstance:
     - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: worldLocation
-      value: 21
+      value: InfernalCaldera
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
@@ -2183,7 +2193,7 @@ PrefabInstance:
     - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: worldLocation
-      value: 3
+      value: CrystalHills
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
@@ -2312,7 +2322,7 @@ PrefabInstance:
     - target: {fileID: 2353011447085478946, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}
       propertyPath: worldLocation
-      value: 37
+      value: ForsakenMountains
       objectReference: {fileID: 0}
     - target: {fileID: 3708318665054548886, guid: 70c202f181ab4984aa8dadfcadc2f442,
         type: 3}

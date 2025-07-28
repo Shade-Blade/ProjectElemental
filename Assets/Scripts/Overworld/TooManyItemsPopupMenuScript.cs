@@ -72,7 +72,7 @@ public class TooManyItemsPopupMenuScript : MenuHandler
     {
         time += Time.deltaTime;
 
-        if (time > MIN_LIFETIME && ((InputManager.GetButtonDown(InputManager.Button.A) || InputManager.GetButtonDown(InputManager.Button.B)))) //Press B to go back
+        if (time > MIN_LIFETIME && ((InputManager.GetButtonDown(InputManager.Button.Start) || (InputManager.GetButtonDown(InputManager.Button.A) || InputManager.GetButtonDown(InputManager.Button.B))))) //Press B to go back
         {
             //Selecting a move takes you to a selection menu
             List<Item> inv = new List<Item>(); //MainManager.Instance.playerData.itemInventory;

@@ -271,12 +271,18 @@ public class BoxMenu : MenuHandler
 
                 if (inputDir > 0)
                 {
-                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
+                    if (menuIndex > 0 && (holdValue - pastHoldValue) > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
+                    }
                     menuIndex -= (holdValue - pastHoldValue);
                 }
                 else
                 {
-                    MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
+                    if (menuIndex < menuEntries.Length - 1 && (holdValue - pastHoldValue) > 0)
+                    {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
+                    }
                     menuIndex += (holdValue - pastHoldValue);
                 }
 
@@ -384,10 +390,10 @@ public class BoxMenu : MenuHandler
             }
         }
 
-        if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries.Length > 0 && (menuEntries[menuIndex].canUse || canUseDisabled) && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME) //Press A to select stuff
+        if ((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButtonDown(InputManager.Button.A)) && menuEntries.Length > 0 && (menuEntries[menuIndex].canUse || canUseDisabled) && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME) //Press A to select stuff
         {
             SelectOption();
-        } else if (InputManager.GetButtonDown(InputManager.Button.A) && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME)
+        } else if (((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButtonDown(InputManager.Button.A))) && menuEntries.Length > 0 && lifetime > MIN_SELECT_TIME)
         {
             SelectDisabled();
         }

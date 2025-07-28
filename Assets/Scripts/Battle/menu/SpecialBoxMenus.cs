@@ -888,7 +888,7 @@ public class BadgeSwapBoxMenu : BoxMenu
             }
 
             //menuEntries[i] = new TacticsMenuEntry(caller, tactics[i]);
-            menuEntries[i] = new BadgeMenuEntry(badges[i], et, canUse);
+            menuEntries[i] = new BadgeMenuEntry(badges[i], et, canUse, badges.FindAll((e) => (e.type == badges[i].type)).Count > 1);
 
             switch (et)
             {

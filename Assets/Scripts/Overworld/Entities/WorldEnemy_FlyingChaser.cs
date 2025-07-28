@@ -22,6 +22,8 @@ public class WorldEnemy_FlyingChaser : WorldEnemyEntity
     [SerializeField]
     protected Vector3 idlePos;
 
+    private Vector3 lastPosition;
+
     //protected float ignoreTime;
 
     public void OnDrawGizmosSelected()
@@ -120,6 +122,14 @@ public class WorldEnemy_FlyingChaser : WorldEnemyEntity
 
     public override void WorldUpdate()
     {
+        if (rb.velocity.y >= 0)
+        {
+            SetAnimation("jumpflying");
+        } else
+        {
+            SetAnimation("fallflying");
+        }
+
         Vector3 newVelocity = Vector3.zero;
 
         //wandering logic

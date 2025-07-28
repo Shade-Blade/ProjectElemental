@@ -901,7 +901,10 @@ public class WorldFollower : WorldEntity
             rb.velocity = MainManager.EasingExponentialTime(rb.velocity, conveyerVector - conveyerVector.y * Vector3.up, 1 / movementDamping);
         }
 
-        rb.velocity += conveyerVector;
+        if (!rb.isKinematic)    //shuts up annoying warnings
+        {
+            rb.velocity += conveyerVector;
+        }
 
         lastConveyerVector = conveyerVector;
         conveyerVector = Vector3.zero;

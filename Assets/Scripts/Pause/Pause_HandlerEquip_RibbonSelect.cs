@@ -136,7 +136,7 @@ public class Pause_HandlerEquip_RibbonSelect : Pause_HandlerShared_BoxMenu
     }
     public override void Select()
     {
-        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
+        //MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
         //even more submenus (but we are getting close to the end)
         Debug.Log(ribbonList[index] + " select");
 

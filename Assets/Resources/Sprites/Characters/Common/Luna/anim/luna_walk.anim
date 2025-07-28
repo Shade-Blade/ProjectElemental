@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: luna_walk
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,21 +18,23 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
-      value: {fileID: 21300000, guid: ed4b112a53670fa4282a92c957ee07a6, type: 3}
-    - time: 0.15
       value: {fileID: 21300000, guid: 3f2fdf2613078794e85d6568d5fe2d5b, type: 3}
-    - time: 0.3
+    - time: 0.15
       value: {fileID: 21300000, guid: ed4b112a53670fa4282a92c957ee07a6, type: 3}
-    - time: 0.45
+    - time: 0.3
       value: {fileID: 21300000, guid: 405a429eb92206040bb3e5b00f5946f6, type: 3}
+    - time: 0.45
+      value: {fileID: 21300000, guid: ed4b112a53670fa4282a92c957ee07a6, type: 3}
     - time: 0.6
       value: {fileID: 21300000, guid: ed4b112a53670fa4282a92c957ee07a6, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -47,11 +49,13 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: ed4b112a53670fa4282a92c957ee07a6, type: 3}
     - {fileID: 21300000, guid: 3f2fdf2613078794e85d6568d5fe2d5b, type: 3}
     - {fileID: 21300000, guid: ed4b112a53670fa4282a92c957ee07a6, type: 3}
     - {fileID: 21300000, guid: 405a429eb92206040bb3e5b00f5946f6, type: 3}
+    - {fileID: 21300000, guid: ed4b112a53670fa4282a92c957ee07a6, type: 3}
     - {fileID: 21300000, guid: ed4b112a53670fa4282a92c957ee07a6, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2

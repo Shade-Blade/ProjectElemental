@@ -33,7 +33,7 @@ public class Pause_SectionMap : Pause_SectionShared
 
         ApplyBounds();
 
-        selectedDot = dots.Find((e) => (uo.location == e.worldLocation));
+        selectedDot = dots.Find((e) => (uo.location == e.GetWorldLocation()));
 
         if (selectedDot != null)
         {
@@ -95,7 +95,7 @@ public class Pause_SectionMap : Pause_SectionShared
 
     public override object GetState()
     {
-        return new Pause_HandlerMap.UpdateObject(pointer.transform.localPosition, selectedDot == null ? MainManager.WorldLocation.Nowhere : selectedDot.worldLocation);
+        return new Pause_HandlerMap.UpdateObject(pointer.transform.localPosition, selectedDot == null ? MainManager.WorldLocation.Nowhere : selectedDot.GetWorldLocation());
     }
 
     public override void Init()
@@ -111,13 +111,13 @@ public class Pause_SectionMap : Pause_SectionShared
         }
 
         //move pointer to right place
-        selectedDot = dots.Find((e) => (curLocation == e.worldLocation));
+        selectedDot = dots.Find((e) => (curLocation == e.GetWorldLocation()));
 
         //TO DO: enable or disable dots based on story progress
 
         if (selectedDot != null)
         {
-            if (!selectedDot.isActiveAndEnabled && selectedDot.worldLocation == MainManager.WorldLocation.Nowhere)
+            if (!selectedDot.isActiveAndEnabled && selectedDot.GetWorldLocation() == MainManager.WorldLocation.Nowhere)
             {
                 nameBox.SetText("", true, true);
                 textbox.SetText("", true, true);

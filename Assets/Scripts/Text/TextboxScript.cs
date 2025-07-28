@@ -2080,7 +2080,7 @@ public class TextboxScript : MonoBehaviour
                 menuHandler = null;
             }
 
-            if (InputManager.GetButtonDown(InputManager.Button.A))
+            if ((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButtonDown(InputManager.Button.A)))
             {
                 text.aPressTime = TextDisplayer.aPressBoostTime;
             }
@@ -2168,7 +2168,7 @@ public class TextboxScript : MonoBehaviour
                         TryScrollForwards();
                     }
                 } else 
-                if ((InputManager.GetButtonDown(InputManager.Button.A) || (InputManager.GetButton(InputManager.Button.B) && currLine >= latestLine)) && scrollBufferTime <= 0)
+                if ((InputManager.GetButtonDown(InputManager.Button.Start) || InputManager.GetButtonDown(InputManager.Button.A) || (InputManager.GetButton(InputManager.Button.B) && currLine >= latestLine)) && scrollBufferTime <= 0)
                 {
                     TryScrollForwards();
                 } else

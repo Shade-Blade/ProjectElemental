@@ -101,6 +101,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                 {
                     if (inputDir > 0)
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
                         index++;
                         if (NudgeNecessary())
                         {
@@ -109,6 +110,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                     }
                     else
                     {
+                        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                         index--;
                         if (NudgeNecessary())
                         {
@@ -141,6 +143,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
 
             if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Z))
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BigScrollDown);
                 if (index == oc - 1)
                 {
                     index = 0;
@@ -166,6 +169,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
 
             if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Y))
             {
+                MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_BigScrollUp);
                 if (index == 0)
                 {
                     index = oc - 1;
@@ -204,6 +208,10 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
 
                     if (inputDir > 0)
                     {
+                        if (index < oc - 1 && (holdValue - pastHoldValue) > 0)
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
+                        }
                         index += (holdValue - pastHoldValue);
                         if (NudgeNecessary())
                         {
@@ -212,6 +220,10 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
                     }
                     else
                     {
+                        if (index > 0 && (holdValue - pastHoldValue) > 0)
+                        {
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
+                        }
                         index -= (holdValue - pastHoldValue);
                         if (NudgeNecessary())
                         {

@@ -12,9 +12,11 @@ Rockling,Bite|Hard_CounterHarden
 Honeybud,Honeybud_SwoopHeal|BiteThenFly|Hard_CounterRush
 BurrowTrap,BurrowTrap_PollenBite|BurrowTrap_CounterPollenBite|BurrowTrap_Hard_SunBloom
 Sundew,Sundew_PoisonToss|Sundew_CounterPoisonToss|Sundew_Hard_ExhaustBall
+Brambleling,
+GiantVine,GiantVine_Slam|GiantVine_BigSlam|GiantVine_Telegraph|GiantVine_Grab|GiantVine_Constrict|GiantVine_Throw|GiantVine_Hard_LashOut
+Solardew,
 VinePlatform,Hard_CounterHarden
 Sycamore,Sycamore_ThornToss|Sycamore_Pollenate|Sycamore_FlowerShuriken|Sycamore_Overgrowth|Sycamore_VineStab|Sycamore_FullBloom|Sycamore_VineField|Sycamore_Fall|Sycamore_Hard_RootShake|Sycamore_Hard_RootGrasp
-GiantVine,GiantVine_Slam|GiantVine_BigSlam|GiantVine_Telegraph|GiantVine_Grab|GiantVine_Constrict|GiantVine_Throw|GiantVine_Hard_LashOut
 VineThrone,VinePlatform_Hard_CounterSoften
 MasterOfAutumn,MasterOfAutumn_ThornToss|MasterOfAutumn_PollenStorm|MasterOfAutumn_FlowerShuriken|MasterOfAutumn_Overgrowth|MasterOfAutumn_VineStab|MasterOfAutumn_FullBloom|MasterOfAutumn_VineField|MasterOfAutumn_Resummon|MasterOfAutumn_Fall
 Bandit,Bandit_Slash|Bandit_Hard_TeamCounter
@@ -22,6 +24,11 @@ Renegade,Slash|DualSlash|Renegade_Hard_HeatWave
 Sentry,Sentry_Fling|Sentry_CounterFling
 Cactupole,BiteThenFly|Cactupole_ThornShock|Cactupole_Hard_StormFortify
 Sandswimmer,Sandswimmer_Bite|Sandswimmer_Hard_FlashDischarge
+SpireGuard,
+EliteGuard,
+Shockworm,
+Brightpole,
+Stormswimmer,
 DesertMinibossA,
 DesertMinibossB,
 DesertMinibossC,
@@ -45,6 +52,10 @@ Slimewalker,Slash|Slimewalker_WaterCannon|Slimewalker_Hard_SoftSplash
 Slimeworm,Slimeworm_Charge|Slimeworm_Mortar|Slimeworm_Hard_DeepMortar
 Slimebloom,Slimebloom_Zap|Slimebloom_Lob|Slimebloom_Hard_Flash
 SirenFish,Sirenfish_BubbleSong|Sirenfish_PowerSong|Sirenfish_Hard_NightmareBite
+ElementalSlime,
+NormalSlime,
+SoftSlime,
+RigidSlime,
 FalseDragonArm,
 FalseDragon,
 AmalgamLeftArm,
@@ -56,6 +67,9 @@ Ashcrest,Ashcrest_ThornBomb|Ashcrest_SplashBomb|Hard_CounterHide
 Flametongue,Flametongue_FlameLick|Flametongue_Hard_HustleLick
 Heatwing,Heatwing_FlameSpread|DoubleSwoop|Heatwing_Hard_DreadScreech
 Lavaswimmer,Bite|Embercrest_Fireball|Hard_CounterRoar
+Infernoling,
+Magmaswimmer,
+Wyverlet,
 LavaWyvern,
 MetalWyvern,
 EyeSpore,EyeSpore_SporeBeam|EyeSpore_Hard_CounterSpiteBeam
@@ -63,6 +77,9 @@ SpikeShroom,SpikeSpore_PoisonSpikes|SpikeSpore_Hard_SpikeBomb
 Shrouder,Shrouder_SporeCloud|Shrouder_SporeCloak|Hard_CounterHide
 HoarderFly,HoarderFly_PoisonHeal|TripleSwoop|HoarderFly_Hard_DustWind|HoarderFly_Hard_FinalHeal
 Mosquito,Mosquito_ShockNeedle|Mosquito_DrainBite|Mosquito_Hard_Shroud
+MawSpore,
+CaveSpider,
+Obscurer,
 SporeSpider,
 MoonSpider,
 Shieldwing,Shieldwing_DualPeck|Shieldwing_ChillingScreech|Shieldwing_FeatherWall
@@ -71,6 +88,9 @@ Shimmerwing,Shimmerwing_DazzlingScreech|Shimmerwing_RallySong|Shimmerwing_Hard_S
 LumistarVanguard,LumistarVanguard_HornBlast|LumistarVanguard_LanternRally|LumistarVanguard_Hard_SoftGlow
 LumistarSoldier,Slash|LumistarSoldier_Charge|LumistarSoldier_ChargeSlash|Hard_CounterMarshall
 LumistarStriker,DualSlash|LumistarStriker_Charge|LumistarStriker_QuadSlash
+Beaconwing,
+Harmonywing,
+Mirrorwing,
 KingIlum,
 TyrantBlade,
 Plateshell,Plateshell_Slam|Plateshell_RageFireball

@@ -49,10 +49,12 @@ public class GameOverControl : MonoBehaviour
         if (allowBattleRetry)
         {
             MainManager.Instance.gameOverPlayerData = MainManager.Instance.playerData.Copy();
+            MainManager.Instance.gameOverPlayerDataExists = true;
         }
         chosePause = false;
 
         MainManager.Instance.SaveBattleLossCount();
+        MainManager.Instance.ReplaceMusic(MainManager.Sound.Music_Battle_GameOver);
     }
 
     // Update is called once per frame
@@ -87,9 +89,12 @@ public class GameOverControl : MonoBehaviour
 
                 //You selected something, what now?
                 int result = int.Parse(menuResult.ToString());
+                MainManager.Instance.PopMusic();
+                MainManager.Instance.MuteMusic();
                 switch (result)
                 {
                     case 0:
+                        MainManager.Instance.BattleSnapFade(1);
                         BattleControl.StartBattleStatic(MainManager.Instance.battleStartArguments);
                         Destroy(gameObject);
                         return;
@@ -126,6 +131,7 @@ public class GameOverControl : MonoBehaviour
         {
             //isPaused = false;
             //MainManager.Instance.pauseMenuScript.Unpause();
+            MainManager.Instance.BattleSnapFade(1);
             BattleControl.StartBattleStatic(MainManager.Instance.battleStartArguments);
             Destroy(gameObject);
             return;

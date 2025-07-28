@@ -9,7 +9,7 @@ public class AnimationController_Stub : AnimationController_BackSprite
     public Sprite spriteIdle;
     public Sprite spriteIdleBack;
 
-    public override void SetAnimation(string name, bool force = false)
+    public override void SetAnimation(string name, bool force = false, float time = -1)
     {
         timeSinceLastAnimChange = 0;
         name = "idle";

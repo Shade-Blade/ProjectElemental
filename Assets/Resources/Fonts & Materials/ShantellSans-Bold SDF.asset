@@ -1205,6 +1205,36 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
+  - m_Index: 718
+    m_Metrics:
+      m_Width: 35.828125
+      m_Height: 97.90625
+      m_HorizontalBearingX: 7.109375
+      m_HorizontalBearingY: 73.703125
+      m_HorizontalAdvance: 45.09375
+    m_GlyphRect:
+      m_X: 798
+      m_Y: 483
+      m_Width: 36
+      m_Height: 99
+    m_Scale: 1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+  - m_Index: 719
+    m_Metrics:
+      m_Width: 36.359375
+      m_Height: 97.28125
+      m_HorizontalBearingX: 1.984375
+      m_HorizontalBearingY: 73.078125
+      m_HorizontalAdvance: 45.09375
+    m_GlyphRect:
+      m_X: 741
+      m_Y: 411
+      m_Width: 38
+      m_Height: 99
+    m_Scale: 1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
   - m_Index: 724
     m_Metrics:
       m_Width: 82.984375
@@ -1322,6 +1352,21 @@ MonoBehaviour:
       m_Y: 133
       m_Width: 20
       m_Height: 49
+    m_Scale: 1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+  - m_Index: 745
+    m_Metrics:
+      m_Width: 20.078125
+      m_Height: 63
+      m_HorizontalBearingX: 3.6875
+      m_HorizontalBearingY: 46.984375
+      m_HorizontalAdvance: 27.71875
+    m_GlyphRect:
+      m_X: 447
+      m_Y: 505
+      m_Width: 21
+      m_Height: 64
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
@@ -1565,51 +1610,6 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
-  - m_Index: 745
-    m_Metrics:
-      m_Width: 20.078125
-      m_Height: 63
-      m_HorizontalBearingX: 3.6875
-      m_HorizontalBearingY: 46.984375
-      m_HorizontalAdvance: 27.71875
-    m_GlyphRect:
-      m_X: 447
-      m_Y: 505
-      m_Width: 21
-      m_Height: 64
-    m_Scale: 1
-    m_AtlasIndex: 0
-    m_ClassDefinitionType: 0
-  - m_Index: 719
-    m_Metrics:
-      m_Width: 36.359375
-      m_Height: 97.28125
-      m_HorizontalBearingX: 1.984375
-      m_HorizontalBearingY: 73.078125
-      m_HorizontalAdvance: 45.09375
-    m_GlyphRect:
-      m_X: 741
-      m_Y: 411
-      m_Width: 38
-      m_Height: 99
-    m_Scale: 1
-    m_AtlasIndex: 0
-    m_ClassDefinitionType: 0
-  - m_Index: 718
-    m_Metrics:
-      m_Width: 35.828125
-      m_Height: 97.90625
-      m_HorizontalBearingX: 7.109375
-      m_HorizontalBearingY: 73.703125
-      m_HorizontalAdvance: 45.09375
-    m_GlyphRect:
-      m_X: 798
-      m_Y: 483
-      m_Width: 36
-      m_Height: 99
-    m_Scale: 1
-    m_AtlasIndex: 0
-    m_ClassDefinitionType: 0
   m_CharacterTable:
   - m_ElementType: 1
     m_Unicode: 32
@@ -1710,6 +1710,10 @@ MonoBehaviour:
   - m_ElementType: 1
     m_Unicode: 58
     m_GlyphIndex: 744
+    m_Scale: 1
+  - m_ElementType: 1
+    m_Unicode: 59
+    m_GlyphIndex: 745
     m_Scale: 1
   - m_ElementType: 1
     m_Unicode: 60
@@ -1830,6 +1834,14 @@ MonoBehaviour:
   - m_ElementType: 1
     m_Unicode: 90
     m_GlyphIndex: 180
+    m_Scale: 1
+  - m_ElementType: 1
+    m_Unicode: 91
+    m_GlyphIndex: 718
+    m_Scale: 1
+  - m_ElementType: 1
+    m_Unicode: 93
+    m_GlyphIndex: 719
     m_Scale: 1
   - m_ElementType: 1
     m_Unicode: 95
@@ -1974,18 +1986,6 @@ MonoBehaviour:
   - m_ElementType: 1
     m_Unicode: 9829
     m_GlyphIndex: 881
-    m_Scale: 1
-  - m_ElementType: 1
-    m_Unicode: 59
-    m_GlyphIndex: 745
-    m_Scale: 1
-  - m_ElementType: 1
-    m_Unicode: 93
-    m_GlyphIndex: 719
-    m_Scale: 1
-  - m_ElementType: 1
-    m_Unicode: 91
-    m_GlyphIndex: 718
     m_Scale: 1
   m_AtlasTextures:
   - {fileID: -2014817160836928152}
@@ -2735,7 +2735,13 @@ MonoBehaviour:
   m_FontFeatureTable:
     m_GlyphPairAdjustmentRecords: []
   fallbackFontAssets: []
-  m_FallbackFontAssetTable: []
+  m_FallbackFontAssetTable:
+  - {fileID: 11400000, guid: c1d7e9c508e2805459d647c0592b0767, type: 2}
+  - {fileID: 11400000, guid: 24b213de787316c4cb823f8833ac97e6, type: 2}
+  - {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  - {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
+  - {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  - {fileID: 11400000, guid: 887d2d438578a3f419093c957ca4dabf, type: 2}
   m_CreationSettings:
     sourceFontFileName: 
     sourceFontFileGUID: 2c3ab3f45a8ebe945902e7748d0371f8

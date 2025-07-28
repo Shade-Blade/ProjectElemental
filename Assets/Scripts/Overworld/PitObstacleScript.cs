@@ -147,7 +147,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
             int effectiveFloor = Mathf.Max(cost / 2, (int)(floor * 0.75f));
             if (effectiveFloor > floor + 30)    //really high level floor enemies are hard
             {
-                effectiveFloor = effectiveFloor / 2 + 15;
+                effectiveFloor = (effectiveFloor - floor - 30) / 2 + floor + 30;
             }
             wee.encounter = EncounterData.GeneratePitEncounter(effectiveFloor, 5);
             wee.spriteID = EnemyBuilder.EntityIDToSpriteID(Enum.Parse<BattleHelper.EntityID>(wee.encounter.encounterList[0].entid, true)).ToString();
@@ -217,7 +217,10 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
             subobject.transform.localPosition = Vector3.up * 0.375f;
         }
 
-        collectible.Setup(pu);
+        if (collectible != null)
+        {
+            collectible.Setup(pu);
+        }
     }
 
     //Called after determining the reward (and the reward's cost)
@@ -341,6 +344,16 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
                 resultLegal = false;
             }
             if (type == PitObstacleType.DoubleJump && cost >= 225)
+            {
+                resultLegal = false;
+            }
+
+            int effectiveFloor = Mathf.Max(cost / 2, (int)(floor * 0.75f));
+            if (effectiveFloor > floor + 30)    //really high level floor enemies are hard
+            {
+                effectiveFloor = (effectiveFloor - floor - 30) / 2 + floor + 30;
+            }
+            if (type == PitObstacleType.EnemyLock && effectiveFloor > floor * 2 && floor < 10)
             {
                 resultLegal = false;
             }
@@ -1331,8 +1344,11 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
         {
             Destroy(wee.gameObject);
         }
-        collectible.intangible = false;
-        collectible.antigravity = false;
+        if (collectible != null)
+        {
+            collectible.intangible = false;
+            collectible.antigravity = false;
+        }
     }
 
     public void Interact()
@@ -1383,7 +1399,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
         int enemyFloor = Mathf.Max(cost / 2, floor - 10);
         if (enemyFloor > floor + 30)    //really high level floor enemies are hard
         {
-            enemyFloor = enemyFloor / 2 + 15;
+            enemyFloor = (enemyFloor - floor - 30) / 2 + floor + 15;
         }
 
         string[] vars = new string[4] { enemyFloor + "", cost + "", GetTypeCostString(), crystalKeyCount + ""};
@@ -1529,7 +1545,7 @@ public class PitObstacleScript : WorldObject, IInteractable, ITextSpeaker
     {
     }
 
-    public void SetAnimation(string animationID, bool force = false)
+    public void SetAnimation(string animationID, bool force = false, float time = -1)
     {
     }
 

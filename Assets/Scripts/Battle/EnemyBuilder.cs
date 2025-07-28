@@ -589,7 +589,7 @@ public class EnemyBuilder// : MonoBehaviour
         {
             s.transform.localScale = new Vector3(b.width, b.height, 1);
         }
-        so.transform.localPosition = b.offset + Vector3.up * (b.height / 2);
+        so.transform.localPosition = b.offset;// + Vector3.up * (b.height / 2);
         return g;
     }
 
