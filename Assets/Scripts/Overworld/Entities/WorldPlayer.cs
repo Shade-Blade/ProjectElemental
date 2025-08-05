@@ -345,7 +345,7 @@ public class WorldPlayer : WorldEntity
     const float FOLLOWER_DISTANCE = 1f;
     const float REDUCED_FOLLOWER_DISTANCE = 0.25f;
 
-    public const float JUMP_DELAY = 0.35f;  //followers jump after you jump
+    public const float JUMP_DELAY = 0.33f;  //followers jump after you jump
 
     //sword / hammer info
     public const float SWORD_ANIM_TIME = 0.3f;

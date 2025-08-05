@@ -171,7 +171,7 @@ public class Pause_HandlerShared_BoxMenu : Pause_HandlerShared
                     {
                         if (index > 0 && (holdValue - pastHoldValue) > 0)
                         {
-                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollDown);
+                            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_ScrollUp);
                         }
                         index -= (holdValue - pastHoldValue);
                     }

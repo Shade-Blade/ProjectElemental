@@ -15,7 +15,7 @@ public abstract class LunaMove : PlayerMove
         FlipKick,
         FluffHeal,
         SleepStomp,
-        MeteorStomp,
+        LeafyStomp,
         UnderStrike,
         IronStomp,
         ElementalStomp,
@@ -25,8 +25,8 @@ public abstract class LunaMove : PlayerMove
         PowerSmash,
         DazzleSmash,
         HammerThrow,
-        BreakerSmash,
         FlameSmash,
+        FloraSmash,
         MomentumSmash,
         QuakeSmash,
         LightSmash,
@@ -978,9 +978,9 @@ public class LM_SleepStomp : LM_HeavyStomp
     }
 }
 
-public class LM_MeteorStomp : LunaMove
+public class LM_LeafyStomp : LunaMove
 {
-    public LM_MeteorStomp()
+    public LM_LeafyStomp()
     {
     }
 
@@ -1089,7 +1089,7 @@ public class LM_MeteorStomp : LunaMove
     }
     public virtual void StompEffects(BattleEntity caller, bool result)
     {
-        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_MeteorShockwave"), BattleControl.Instance.transform);
+        GameObject effect = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_LeafyShockwave"), BattleControl.Instance.transform);
         effect.transform.position = caller.transform.position + Vector3.down * (0.05f);
     }
     public bool GetOutcome(BattleEntity caller, int sd)
@@ -1104,16 +1104,16 @@ public class LM_MeteorStomp : LunaMove
         {
             case 2:
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                caller.DealDamage(caller.curTarget, sd + 2, BattleHelper.DamageType.Fire, propertyBlockB, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, sd + 2, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackDown, 2, 3), caller.posId);
                 break;
             case 1:
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                caller.DealDamage(caller.curTarget, sd + 2, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, sd + 2, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Contact);
                 break;
             default:
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                caller.DealDamage(caller.curTarget, sd - 2 + level * 2, BattleHelper.DamageType.Fire, propertyBlockB, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, sd - 2 + level * 2, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackDown, (sbyte)(level * 2 - 4), 3), caller.posId);
                 break;
         }
@@ -1125,16 +1125,16 @@ public class LM_MeteorStomp : LunaMove
         {
             case 2:
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackDown, 2, 3), caller.posId);
                 break;
             case 1:
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Contact);
                 break;
             default:
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 + level * 2, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Contact);
+                caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) - 2 + level * 2, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Contact);
                 caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.AttackDown, (sbyte)(level * 2 - 4), 3), caller.posId);
                 break;
         }
@@ -1163,13 +1163,13 @@ public class LM_MeteorStomp : LunaMove
         switch (level)
         {
             case 1:
-                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.AC_Success);
+                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Earth, (ulong)BattleHelper.DamageProperties.AC_Success);
                 break;
             case 2:
-                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Fire, propertyBlock);
+                val = caller.DealDamageCalculation(target, sd + 2, BattleHelper.DamageType.Earth, propertyBlock);
                 break;
             default:
-                val = caller.DealDamageCalculation(target, sd - 2 + level * 2, BattleHelper.DamageType.Fire, propertyBlock);
+                val = caller.DealDamageCalculation(target, sd - 2 + level * 2, BattleHelper.DamageType.Earth, propertyBlock);
                 break;
         }
 
@@ -3285,9 +3285,9 @@ public class LM_HammerThrow : LunaMove
     }
 }
 
-public class LM_BreakerSmash : LM_Smash
+public class LM_FlameSmash : LM_Smash
 {
-    public LM_BreakerSmash()
+    public LM_FlameSmash()
     {
     }
 
@@ -3300,150 +3300,6 @@ public class LM_BreakerSmash : LM_Smash
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
     //public override float GetBasePower() => 1.5f;
     public override int GetBaseCost(int level = 1) => BaseCostCalculation(7, level, 3);
-
-    public override int GetCost(BattleEntity caller, int level = 1)
-    {
-        return CostCalculation(caller, level, 3);
-    }
-
-    /*
-    public override int GetMaxLevel(BattleEntity caller)
-    {
-        return 2;
-    }
-    */
-
-    public override float ActionCommandTime()
-    {
-        return 0.5f;
-    }
-    public override bool GetOutcome(BattleEntity caller)
-    {
-        return caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Earth);
-    }
-    public override void DealDamage(BattleEntity caller, int sd, bool result)
-    {
-        ulong propertyBlockB = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc);
-        if (result)
-        {
-            ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
-            propertyBlockB |= (ulong)BattleHelper.DamageProperties.AC_Success;
-            switch (level)
-            {
-                case 1:
-                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                    caller.DealDamage(caller.curTarget, sd + 3, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Weapon);
-                    break;
-                case 2:
-                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                    caller.DealDamage(caller.curTarget, sd + 5, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
-                    break;
-                default:
-                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                    caller.DealDamage(caller.curTarget, sd + 1 + level * 2, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
-                    break;
-            }
-        }
-        else
-        {
-            switch (level)
-            {
-                case 1:
-                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Weapon);
-                    break;
-                case 2:
-                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 5, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
-                    break;
-                default:
-                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-                    caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 1 + level * 2, BattleHelper.DamageType.Earth, propertyBlockB, BattleHelper.ContactLevel.Weapon);
-                    break;
-            }
-        }
-    }
-
-    public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
-    {
-        GameObject eoS = null;
-        eoS = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_BreakerSmash"), BattleControl.Instance.transform);
-        eoS.transform.position = transform.position + Vector3.up * 0.26f;
-
-        yield return new WaitForSeconds(0.2f);
-        //Impact effect
-        GameObject eoShockwave;
-        eoShockwave = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_BreakerShockwave"), BattleControl.Instance.transform);
-        eoShockwave.transform.position = transform.position + Vector3.right * 0.56f;
-    }
-
-    public override void PreMove(BattleEntity caller, int level = 1)
-    {
-
-    }
-    public override void PostMove(BattleEntity caller, int level = 1)
-    {
-    }
-
-    public override string GetHighlightText(BattleEntity caller, BattleEntity target, int level = 1)
-    {
-        if (caller is PlayerEntity pcallerA)
-        {
-            if (!pcallerA.BadgeEquipped(Badge.BadgeType.PowerSight))
-            {
-                return "";
-            }
-        }
-
-        int sd = 2;
-
-        if (caller is PlayerEntity pcaller)
-        {
-            sd = pcaller.GetWeaponDamage();
-        }
-
-        //ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff;
-
-        int val = 0;
-
-        ulong propertyBlock = (ulong)(BattleHelper.DamageProperties.AdvancedElementCalc) + (ulong)BattleHelper.DamageProperties.AC_Success;
-        switch (level)
-        {
-            case 1:
-                val = caller.DealDamageCalculation(target, sd + 3, BattleHelper.DamageType.Earth, (ulong)BattleHelper.DamageProperties.AC_Success);
-                break;
-            case 2:
-                val = caller.DealDamageCalculation(target, sd + 5, BattleHelper.DamageType.Earth, propertyBlock);
-                break;
-            default:
-                val = caller.DealDamageCalculation(target, sd + 1 + level * 2, BattleHelper.DamageType.Earth, propertyBlock);
-                break;
-        }
-
-        return val + "";
-    }
-
-    public override string GetActionCommandDesc(int level = 1)
-    {
-        return AC_HoldLeft.GetACDesc();
-    }
-}
-
-public class LM_FlameSmash : LM_Smash
-{
-    public LM_FlameSmash()
-    {
-    }
-
-    public override int GetTextIndex()
-    {
-        return 17;
-    }
-
-
-    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
-    //public override float GetBasePower() => 1.5f;
-    public override int GetBaseCost(int level = 1) => BaseCostCalculation(9, level, 3);
     public override int GetCost(BattleEntity caller, int level = 1)
     {
         return CostCalculation(caller, level, 3);
@@ -3462,13 +3318,15 @@ public class LM_FlameSmash : LM_Smash
         if (result)
         {
             ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+            ulong propertyBlockB = propertyBlock | (ulong)BattleHelper.DamageProperties.AdvancedElementCalc;
+
             caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-            caller.DealDamage(caller.curTarget, sd + 2 + 3 * level, BattleHelper.DamageType.Fire, propertyBlock, BattleHelper.ContactLevel.Weapon);
+            caller.DealDamage(caller.curTarget, sd + 2 + 3 * level, BattleHelper.DamageType.Fire, level > 1 ? propertyBlockB : propertyBlock, BattleHelper.ContactLevel.Weapon);
         }
         else
         {
             caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
-            caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2 + 3 * level, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Weapon);
+            caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2 + 3 * level, BattleHelper.DamageType.Fire, level > 1 ? (ulong)BattleHelper.DamageProperties.AdvancedElementCalc : 0, BattleHelper.ContactLevel.Weapon);
         }
     }
 
@@ -3513,7 +3371,112 @@ public class LM_FlameSmash : LM_Smash
 
         int val = 0;
 
-        val = caller.DealDamageCalculation(target, sd + 2 + 3 * level, BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.AC_Success);
+        val = caller.DealDamageCalculation(target, sd + 1 + 3 * level, BattleHelper.DamageType.Fire, (ulong)BattleHelper.DamageProperties.AC_Success);
+
+        return val + "";
+    }
+
+    public override string GetActionCommandDesc(int level = 1)
+    {
+        return AC_HoldLeft.GetACDesc();
+    }
+}
+
+public class LM_FloraSmash : LM_Smash
+{
+    public LM_FloraSmash()
+    {
+    }
+
+    public override int GetTextIndex()
+    {
+        return 17;
+    }
+
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost, false);
+    //public override float GetBasePower() => 1.5f;
+    public override int GetBaseCost(int level = 1) => BaseCostCalculation(9, level, 3);
+
+    public override int GetCost(BattleEntity caller, int level = 1)
+    {
+        return CostCalculation(caller, level, 3);
+    }
+
+    /*
+    public override int GetMaxLevel(BattleEntity caller)
+    {
+        return 2;
+    }
+    */
+
+    public override float ActionCommandTime()
+    {
+        return 0.5f;
+    }
+    public override bool GetOutcome(BattleEntity caller)
+    {
+        return caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Earth);
+    }
+    public override void DealDamage(BattleEntity caller, int sd, bool result)
+    {
+        if (result)
+        {
+            ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
+            caller.DealDamage(caller.curTarget, sd + 2 + level * 3, BattleHelper.DamageType.Earth, propertyBlock, BattleHelper.ContactLevel.Weapon);
+        }
+        else
+        {
+            caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
+            caller.DealDamage(caller.curTarget, Mathf.CeilToInt(sd / 2f) + 2 + level * 3, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Weapon);
+        }
+    }
+
+    public override IEnumerator SwingAnimations(BattleEntity caller, int sl, int level = 1)
+    {
+        GameObject eoS = null;
+        eoS = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_FloraSmash"), BattleControl.Instance.transform);
+        eoS.transform.position = transform.position + Vector3.up * 0.26f;
+
+        yield return new WaitForSeconds(0.2f);
+        //Impact effect
+        GameObject eoShockwave;
+        eoShockwave = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_FloraShockwave"), BattleControl.Instance.transform);
+        eoShockwave.transform.position = transform.position + Vector3.right * 0.56f;
+    }
+
+    public override void PreMove(BattleEntity caller, int level = 1)
+    {
+
+    }
+    public override void PostMove(BattleEntity caller, int level = 1)
+    {
+    }
+
+    public override string GetHighlightText(BattleEntity caller, BattleEntity target, int level = 1)
+    {
+        if (caller is PlayerEntity pcallerA)
+        {
+            if (!pcallerA.BadgeEquipped(Badge.BadgeType.PowerSight))
+            {
+                return "";
+            }
+        }
+
+        int sd = 2;
+
+        if (caller is PlayerEntity pcaller)
+        {
+            sd = pcaller.GetWeaponDamage();
+        }
+
+        //ulong propertyBlock = (ulong)BattleHelper.DamageProperties.PlusOneOnBuff;
+
+        int val = 0;
+
+        ulong propertyBlock = (ulong)BattleHelper.DamageProperties.AC_Success;
+        val = caller.DealDamageCalculation(target, sd + 2 + level * 3, BattleHelper.DamageType.Earth, propertyBlock);
 
         return val + "";
     }

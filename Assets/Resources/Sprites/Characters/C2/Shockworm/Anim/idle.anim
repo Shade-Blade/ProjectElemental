@@ -22,9 +22,13 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: 21300000, guid: 06df50e61735bed4ca0a0244f5bf6d97, type: 3}
-    - time: 0.33333334
+    - time: 0.26666668
+      value: {fileID: 21300000, guid: 76db339c426edce43962531e9ccb06b0, type: 3}
+    - time: 0.5
       value: {fileID: 21300000, guid: 0fcc0aff24cb6214eb6e8387ff2aa824, type: 3}
-    - time: 0.6666667
+    - time: 0.65
+      value: {fileID: 21300000, guid: 76db339c426edce43962531e9ccb06b0, type: 3}
+    - time: 0.76666665
       value: {fileID: 21300000, guid: 06df50e61735bed4ca0a0244f5bf6d97, type: 3}
     attribute: m_Sprite
     path: 
@@ -49,14 +53,16 @@ AnimationClip:
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: 21300000, guid: 06df50e61735bed4ca0a0244f5bf6d97, type: 3}
+    - {fileID: 21300000, guid: 76db339c426edce43962531e9ccb06b0, type: 3}
     - {fileID: 21300000, guid: 0fcc0aff24cb6214eb6e8387ff2aa824, type: 3}
+    - {fileID: 21300000, guid: 76db339c426edce43962531e9ccb06b0, type: 3}
     - {fileID: 21300000, guid: 06df50e61735bed4ca0a0244f5bf6d97, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.68333334
+    m_StopTime: 0.7833333
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

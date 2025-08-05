@@ -139,21 +139,6 @@ public abstract class BattleAction : MonoBehaviour, IEntityHighlighter
             }
         }
 
-        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.SacredGrove)
-        {
-            if (UseStamina() && (staminaCost - caller.GetEffectHasteBonus() >= 8))
-            {
-                return false;
-            }
-        }
-        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfSimplicity)
-        {
-            if (UseStamina() && (staminaCost - caller.GetEffectHasteBonus() >= 5))
-            {
-                return false;
-            }
-        }
-
         if (!MainManager.Instance.Cheat_StaminaAnarchy && (UseStamina() && (caller.stamina < staminaCost - caller.GetEffectHasteBonus())))
         {
             return false;

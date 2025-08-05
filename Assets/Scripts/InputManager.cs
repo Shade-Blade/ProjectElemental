@@ -121,7 +121,7 @@ public class InputManager : MonoBehaviour
         Debug.Log("Reset controls");
         //Space, slash, period, comma, e, esc
         //keyCodes = new KeyCode[] {(KeyCode)32, (KeyCode)42, (KeyCode)46, (KeyCode)44, (KeyCode)101, (KeyCode)27};
-        keyCodes = new KeyCode[] { KeyCode.Space, KeyCode.C, KeyCode.X, KeyCode.Z, KeyCode.Q, KeyCode.E, KeyCode.KeypadEnter };
+        keyCodes = new KeyCode[] { KeyCode.Space, KeyCode.C, KeyCode.X, KeyCode.Z, KeyCode.Q, KeyCode.E, KeyCode.Return };
         //keyCodes = new KeyCode[] { KeyCode.Space, KeyCode.LeftShift, KeyCode.Period, KeyCode.Comma, KeyCode.E, KeyCode.Escape };
 
         //W, S, D, A
@@ -492,6 +492,11 @@ public class InputManager : MonoBehaviour
         if ((int)k >= 303 && (int)k <= 312)
         {
             return (KeyCode)((int)(k) % 2 == 0 ? (int)(k) - 1 : (int)(k) + 1);
+        }
+
+        if (k == KeyCode.KeypadEnter)
+        {
+            return KeyCode.Return;
         }
 
         return KeyCode.None;

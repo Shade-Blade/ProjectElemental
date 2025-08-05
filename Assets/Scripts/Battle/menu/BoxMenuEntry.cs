@@ -382,6 +382,13 @@ public class MoveMenuEntry : BoxMenuEntry
 
     public BattleHelper.MoveCurrency currency;
 
+    public enum StaminaState
+    {
+        None,
+        Exhaust,
+        Debt
+    }
+
     /*
     public enum StatDisplay
     {
@@ -392,7 +399,7 @@ public class MoveMenuEntry : BoxMenuEntry
 
     //This will become the standard one
     //It will retrieve the correct data from other files to set everything up
-    public MoveMenuEntry(PlayerMove move)
+    public MoveMenuEntry(PlayerMove move, StaminaState ss = StaminaState.None)
     {
         name = move.GetName();
         description = move.GetDescription();
@@ -404,21 +411,31 @@ public class MoveMenuEntry : BoxMenuEntry
         rightText = cost > 0 ? cost.ToString() : null;
         spriteString = cost > 0 ? " " + BattleHelper.GetCurrencyIcon(currency) : null;
 
+        string colorChange = null;
+        if (ss == StaminaState.Exhaust)
+        {
+            colorChange = "#ffb0ff";
+        }
+        if (ss == StaminaState.Debt)
+        {
+            colorChange = "#ff00c0";
+        }
+
         if (staminaCost != 0)
         {
             if (cost == staminaCost)
             {
-                spriteString += BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina);
+                spriteString += BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina, Text_CommonSprite.CommonSpriteShader.LowSaturation, colorChange);
             }
             else
             {
-                spriteString += "<size,50%>" + staminaCost + " " + BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina) + "</size>";
+                spriteString += "<size,50%>" + staminaCost + " " + BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina, Text_CommonSprite.CommonSpriteShader.LowSaturation, colorChange) + "</size>";
             }
         }        
     }
 
     //calculates costs too
-    public MoveMenuEntry(BattleEntity caller, PlayerMove move)
+    public MoveMenuEntry(BattleEntity caller, PlayerMove move, StaminaState ss = StaminaState.None)
     {
         level = move.level;
         name = move.GetName();
@@ -444,15 +461,25 @@ public class MoveMenuEntry : BoxMenuEntry
 
         spriteString = GetSpriteString(currency);
 
+        string colorChange = null;
+        if (ss == StaminaState.Exhaust)
+        {
+            colorChange = "#ffb0ff";
+        }
+        if (ss == StaminaState.Debt)
+        {
+            colorChange = "#ff00c0";
+        }
+
         if (staminaCost != 0)
         {
             if (cost == staminaCost)
             {
-                spriteString += BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina);
+                spriteString += BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina, Text_CommonSprite.CommonSpriteShader.LowSaturation, colorChange);
             }
             else
             {
-                spriteString += "<size,50%>" + staminaCost + " " + BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina) + "</size>";
+                spriteString += "<size,50%>" + staminaCost + " " + BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina, Text_CommonSprite.CommonSpriteShader.LowSaturation, colorChange) + "</size>";
             }
         }
     }
@@ -486,13 +513,23 @@ public class MoveMenuEntry : BoxMenuEntry
 
         if (staminaCost != 0)
         {
+            string colorChange = null;
+            if (staminaCost > caller.stamina)
+            {
+                colorChange = "#ff00c0";
+            }
+            else if (staminaCost > caller.GetRealAgility())
+            {
+                colorChange = "#ffb0ff";
+            }
+
             if (cost == staminaCost)
             {
-                spriteString += BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina);
+                spriteString += BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina, Text_CommonSprite.CommonSpriteShader.LowSaturation, colorChange);
             }
             else
             {
-                spriteString += "<size,50%>" + staminaCost + " " + BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina) + "</size>";
+                spriteString += "<size,50%>" + staminaCost + " " + BattleHelper.GetCurrencyIcon(BattleHelper.MoveCurrency.Stamina, Text_CommonSprite.CommonSpriteShader.LowSaturation, colorChange) + "</size>";
             }
         }
     }

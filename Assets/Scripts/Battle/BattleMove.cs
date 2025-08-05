@@ -515,21 +515,6 @@ public abstract class PlayerMove : Move, IEntityHighlighter
             }
         }
 
-        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.SacredGrove)
-        {
-            if (UseStamina() && (staminaCost - caller.GetEffectHasteBonus() >= 8))
-            {
-                return CantMoveReason.BlockSkillEnvironment;
-            }
-        }
-        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfSimplicity)
-        {
-            if (UseStamina() && (staminaCost - caller.GetEffectHasteBonus() >= 5))
-            {
-                return CantMoveReason.BlockSkillEnvironment;
-            }
-        }
-
         if (UseStamina() && (caller.stamina < staminaCost - caller.GetEffectHasteBonus()))
         {
             return CantMoveReason.NotEnoughStamina;
@@ -805,22 +790,6 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                 staminaCost = 0;
             }
         }
-
-        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.SacredGrove)
-        {
-            if (UseStamina() && (staminaCost - caller.GetEffectHasteBonus() >= 8))
-            {
-                return false;
-            }
-        }
-        if (BattleControl.Instance.enviroEffect == BattleHelper.EnvironmentalEffect.TrialOfSimplicity)
-        {
-            if (UseStamina() && (staminaCost - caller.GetEffectHasteBonus() >= 5))
-            {
-                return false;
-            }
-        }
-
         //new: allow for stamina debt
         /*
         if (!MainManager.Instance.Cheat_StaminaAnarchy && (UseStamina() && (caller.stamina < staminaCost - caller.GetEffectHasteBonus())))

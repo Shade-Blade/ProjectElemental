@@ -45,6 +45,12 @@ public class Text_CommonSprite : Text_SpecialSprite
         Info,
     }
 
+    public enum CommonSpriteShader
+    {
+        None,
+        LowSaturation
+    }
+
     //build an item sprite with given args
     //position is handled by the thing that makes the item sprites
     //(note for later: may need to check font size and stuff like that)
@@ -60,6 +66,17 @@ public class Text_CommonSprite : Text_SpecialSprite
         {
             its.sprite = GetSprite(args[0]);
             its.baseBox.sprite = its.sprite;
+
+            if (args.Length > 1)
+            {
+                Enum.TryParse(args[1], out CommonSpriteShader shader);
+                its.baseBox.material = GetShaderGUI(shader);
+
+                if (args.Length > 2)
+                {
+                    its.baseBox.color = MainManager.ParseColor(args[2]).Value;
+                }
+            }
         }
         else
         {
@@ -94,5 +111,27 @@ public class Text_CommonSprite : Text_SpecialSprite
         //Debug.Log(stype + " " + input);
 
         return MainManager.Instance.commonSprites[(int)(stype)];
+    }
+
+    public static Material GetShader(CommonSpriteShader css)
+    {
+        switch (css)
+        {
+            case CommonSpriteShader.LowSaturation:
+                return Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteLowSaturation");
+        }
+
+        return MainManager.Instance.defaultSpriteMaterial;
+    }
+
+    public static Material GetShaderGUI(CommonSpriteShader css)
+    {
+        switch (css)
+        {
+            case CommonSpriteShader.LowSaturation:
+                return Resources.Load<Material>("Sprites/Materials/Canvas/Canvas_LowSaturation");
+        }
+
+        return MainManager.Instance.defaultGUISpriteMaterial;
     }
 }

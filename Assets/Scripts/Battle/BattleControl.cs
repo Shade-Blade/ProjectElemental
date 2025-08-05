@@ -2221,13 +2221,22 @@ public class BattleControl : MonoBehaviour
         */
 
         //"easy" (green/blue) (blue numbers though)
-        hpBarColors[0] = new Color[] { new Color(0.5f, 1f, 0.9f, 1), new Color(0.4f, 0.9f, 0.8f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0.25f, 0.65f, 0.7f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0, 0, 0, 1) };
+        //hpBarColors[0] = new Color[] { new Color(0.5f, 1f, 0.9f, 1), new Color(0.4f, 0.9f, 0.8f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0.25f, 0.65f, 0.7f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0, 0, 0, 1) };
 
         //"normal" (yellow/red)
+
+        //minty + teal ish green
+        hpBarColors[1] = new Color[] { new Color(0.35f, 1f, 0.55f, 1), new Color(0.3f, 0.9f, 0.5f, 1), new Color(1, 1, 1, 1), new Color(0.15f, 0.75f, 0.45f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
+
+        //lime ish
+        //looks bad
+        //hpBarColors[1] = new Color[] { new Color(0.8f, 1f, 0.5f, 1), new Color(0.7f, 0.9f, 0.4f, 1), new Color(1, 1, 1, 1), new Color(0.15f, 0.75f, 0.2f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
+
+        //real normal (yellow/red)
         //hpBarColors[1] = new Color[] { new Color(1f, 1f, 0.5f, 1), new Color(0.9f, 0.9f, 0.4f, 1), new Color(1, 1, 1, 1), new Color(1f, 0.2f, 0.2f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
-    
+
         //easy mode colors but with white numbers
-        hpBarColors[1] = new Color[] { new Color(0.5f, 1f, 0.9f, 1), new Color(0.4f, 0.9f, 0.8f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0.25f, 0.65f, 0.7f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
+        //hpBarColors[1] = new Color[] { new Color(0.5f, 1f, 0.9f, 1), new Color(0.4f, 0.9f, 0.8f, 1), new Color(0.7f, 0.95f, 1f, 1), new Color(0.25f, 0.65f, 0.7f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
 
         //"hard / super curse" (red/dark pink)
         hpBarColors[2] = new Color[] { new Color(1f, 0.35f, 0.35f, 1), new Color(0.9f, 0.25f, 0.25f, 1), new Color(1, 0.8f, 0.8f, 1), new Color(0.6f, 0.2f, 0.4f, 1), new Color(1, 0.8f, 0.8f, 1), new Color(0, 0, 0, 1) };
@@ -2296,6 +2305,12 @@ public class BattleControl : MonoBehaviour
             Debug.LogWarning("Battle map name was not parsed correctly " + bmapName + " vs text " + encounterData.battleMapName);
         }
 
+
+        if (bmapName == MainManager.BattleMapID.Test_BattleMapTutorial)
+        {
+            //no first strikes
+            bsa = new BattleStartArguments();
+        }
 
         battleMapScript = MainManager.Instance.CreateMap(bmapName);
         if (battleMapScript.HasSkybox())
@@ -4802,6 +4817,11 @@ public class BattleControl : MonoBehaviour
         //create some delay between each turn I guess
         yield return new WaitForSeconds(0.25f);
 
+        if (battleMapScript != null)
+        {
+            yield return StartCoroutine(battleMapScript.OnOutOfTurn());
+        }
+
         //Debug.Log("RunOutOfTurnEvents " + reactionMoveList.Count);
         //wait until animations done
         yield return new WaitUntil(() => CheckEntitiesStationary());
@@ -5313,6 +5333,8 @@ public class BattleControl : MonoBehaviour
                 }
             }
         }
+
+        battleMapScript.React(battleEntity, eventID);
     }
 
     public IEnumerator DoTurns()
@@ -5385,7 +5407,7 @@ public class BattleControl : MonoBehaviour
         playerData.GetPlayerDataEntry(GetFrontmostAlly(-1).entityID).turnsInFront++;
         if (battleMapScript != null)
         {
-            battleMapScript.OnPreTurn();
+            yield return StartCoroutine(battleMapScript.OnPreTurn());
         }
 
         yield return StartCoroutine(RunOutOfTurnEvents());
@@ -5802,7 +5824,7 @@ public class BattleControl : MonoBehaviour
 
         if (battleMapScript != null)
         {
-            battleMapScript.OnPostTurn();
+            yield return StartCoroutine(battleMapScript.OnPostTurn());
         }
         yield return new WaitForSeconds(0.7f);
 

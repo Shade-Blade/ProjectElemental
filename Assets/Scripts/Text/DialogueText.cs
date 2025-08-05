@@ -152,7 +152,7 @@ public class TMPString
                 output = FormattedString.ParseNonlocalVars(tag.ToString());
                 break;
             case TagEntry.TextTag.System:
-                output = "<color=#ffffff>";
+                output = "<font=\"ShantellSans-Bold SDF\" material=\"ShantellSans-Bold ColorMatchDark Outline\"><color=#ffffff>";
                 break;
             case TagEntry.TextTag.Outline:
                 if (!tag.open)
@@ -496,7 +496,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<color=#e02060>";
+                    output = "<color=#e01000>";
                 }
                 break;
             case TagEntry.TextTag.DescriptionCautionColor:
@@ -516,7 +516,7 @@ public class TMPString
                 }
                 else
                 {
-                    output = "<color=#0000e8>";
+                    output = "<color=#2D48CF>";
                 }
                 break;
             case TagEntry.TextTag.DescriptionFluffColor:
@@ -527,6 +527,26 @@ public class TMPString
                 else
                 {
                     output = "<color=#808080>";
+                }
+                break;
+            case TagEntry.TextTag.ExhaustColor:
+                if (!tag.open)
+                {
+                    output = "</color>";
+                }
+                else
+                {
+                    output = "<color=" + MoveBoxMenu.ExhaustColor() + ">";
+                }
+                break;
+            case TagEntry.TextTag.DebtColor:
+                if (!tag.open)
+                {
+                    output = "</color>";
+                }
+                else
+                {
+                    output = "<color=" + MoveBoxMenu.DebtColor() + ">";
                 }
                 break;
             case TagEntry.TextTag.HighlightHPColor:
@@ -1019,6 +1039,8 @@ public class TagEntry
         DescriptionCautionColor,   //yellow
         DescriptionNoticeColor, //blue
         DescriptionFluffColor,  //gray
+        ExhaustColor,   //dark orange
+        DebtColor,   //bright orange
         HighlightHPColor,
         HighlightEPColor,
         HighlightSEColor,

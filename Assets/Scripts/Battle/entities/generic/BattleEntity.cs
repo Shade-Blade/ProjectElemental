@@ -2678,7 +2678,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual void PerTurnStaminaHeal()
     {
         int realAgility = GetRealAgility();
-        stamina += realAgility;
+        if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.SacredGrove)
+        {
+            stamina += Mathf.CeilToInt(realAgility / 2f);
+        }
+        else if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.TrialOfSimplicity)
+        {
+
+        } else
+        {
+            stamina += realAgility;
+        }
         if (stamina >= BattleControl.Instance.GetMaxStamina(this))
         {
             stamina = BattleControl.Instance.GetMaxStamina(this);
@@ -7743,18 +7753,20 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //for specific cleanup stuff
     public virtual void StopIdleSpecific()
     {
-
+        ac.ResetAnimationSpeed();
     }
 
     public virtual IEnumerator Idle()
     {
         idleTime = 0;
         yield return new WaitForSeconds(0.1f * RandomGenerator.Get());
+        ac.ResetAnimationSpeed();
         SetIdleAnimation(true);
         //Note: hopefully this will work in all cases (there shouldn't be a persistent thing that causes the animation to be wrong)
         while (true)
         {
             idleTime += Time.deltaTime;
+            /*
             if (GetEntityProperty(EntityProperties.Airborne))
             {
                 float heightfactor = 2 - height;
@@ -7763,9 +7775,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
                 heightfactor *= 2;
                 heightfactor -= 1;
-                subObject.transform.localPosition = Vector3.up * 0.02f * (1 / heightfactor) * Mathf.Sin(idleTime * heightfactor * (6f + 2 * Mathf.Sin(posId)) + posId);
+                float sinfactor = Mathf.Sin(idleTime * heightfactor * (6f + 2 * Mathf.Sin(posId)) + posId) > 0 ? 1 : -1;
+                subObject.transform.localPosition = Vector3.up * 0.02f * (1 / heightfactor) * sinfactor;
 
-                bool dir = Mathf.Cos(idleTime * heightfactor * (6f + 2 * Mathf.Sin(posId)) + posId) >= 0;
+                bool dir = sinfactor > 0;
                 if (dir)
                 {
                     SetAnimation("jumpflying");
@@ -7776,10 +7789,20 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             } else
             {
                 //this is approximately a poisson distribution?
-                if (RandomGenerator.Get() < (Time.deltaTime / 1.5f))
+                //if (RandomGenerator.Get() < (Time.deltaTime / 1.5f))
+                //{
+                //    SetIdleAnimation(true);
+                //}
+                //better idea
+                if (RandomGenerator.Get() < (Time.deltaTime / 1))
                 {
-                    SetIdleAnimation(true);
+                    ac.SetAnimationSpeed(1 + (0.2f * RandomGenerator.Get()));
                 }
+            }
+            */
+            if (RandomGenerator.Get() < (Time.deltaTime / 1))
+            {
+                ac.SetAnimationSpeed(1 + (0.1f * RandomGenerator.Get()));
             }
             yield return null;
         }
@@ -8844,6 +8867,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 if ((newangle > 90 || newangle < -90) && (newangle < 270 && newangle > -270))
                 {
                     SendAnimationData("showback");
+                    ReplaceAnimation();
                     if (flipDefault)
                     {
                         SendAnimationData("xunflip");
@@ -8857,6 +8881,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 else
                 {
                     SendAnimationData("unshowback");
+                    ReplaceAnimation();
                     if (flipDefault)
                     {
                         SendAnimationData("xflip");
@@ -8883,6 +8908,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             SendAnimationData("xunflip");
         }
         SendAnimationData("unshowback");
+        ReplaceAnimation();
         //force position = endpoint (prevent lag glitches)
         //Debug.Log("end");
         subObject.transform.eulerAngles = initialAngle + angle;
@@ -9091,7 +9117,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         if (ac != null)
         {
-            ac.ReplaceAnimation(name = null, force);
+            ac.ReplaceAnimation(name, force);
         }
     }
     public virtual void SetAnimation(string name, bool force = false, float time = -1)

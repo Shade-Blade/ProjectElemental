@@ -152,7 +152,7 @@ public class GameOverControl : MonoBehaviour
 
         if (MainManager.Instance.lastSaveTimestamp == 0)
         {
-            time = "N/A";
+            time = "New Game";
         }
 
         if (allowBattleRetry)

@@ -45,7 +45,7 @@ public class OWHPDisplayerScript : MonoBehaviour
                 case BattleHelper.EntityID.Luna:
                     //barImage.color = new Color(0.95f, 1f, 0.95f, 0.9f);
                     //backImage.color = new Color(0.4f, 0.7f, 0.4f, 0.9f);
-                    iconBackImage.color = new Color(0.75f, 1f, 0.75f, 1f);
+                    iconBackImage.color = new Color(1f, 1f, 0.75f, 1f);
                     characterImage.sprite = lunaSprite;
                     break;
                 default:

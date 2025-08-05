@@ -147,7 +147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 538110768454335176}
-  - component: {fileID: 1653013888375093916}
+  - component: {fileID: 3502344923104369889}
   m_Layer: 0
   m_Name: AnimCont_C2_Stormswimmer
   m_TagString: Untagged
@@ -171,7 +171,7 @@ Transform:
   - {fileID: 4939146674735055669}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1653013888375093916
+--- !u!114 &3502344923104369889
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,14 +180,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8631650266227609169}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10531703570c33044b32edd2d29897ca, type: 3}
+  m_Script: {fileID: 11500000, guid: bab61a65c8c56db44a6168ecd9aa982e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7091985871941047424}
   currentAnim: 
   currentEffect: 
   sprite: {fileID: 8510939000944800811}
-  leftFacing: 1
+  leftFacing: 0
   subobject: {fileID: 4012585618382714007}
   materialIndex: 0
   bigradientMap: 0
@@ -204,6 +204,12 @@ MonoBehaviour:
   debuffIndex: 0
   lifetime: 0
   timeSinceLastAnimChange: 0
-  height: 0.4
-  width: 1
+  height: 0.75
+  width: 0.5
   showBack: 0
+  offsetFlying: {x: 0, y: 0, z: 0}
+  heightFlying: 0.95
+  widthFlying: 0.55
+  offsetGrounded: {x: 0, y: 0, z: 0}
+  heightGrounded: 0.4
+  widthGrounded: 1

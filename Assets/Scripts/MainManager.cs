@@ -3408,6 +3408,7 @@ public class MainManager : MonoBehaviour
     public enum BattleMapID
     {
         Test_BattleMap,
+        Test_BattleMapTutorial,
         TestBattle_SolarGrove,
         TestBattle_VerdantForest,
         TestBattle_TempestDesert,
@@ -7557,7 +7558,7 @@ public class MainManager : MonoBehaviour
                 output.name = (index + 1) + ". " + saveName;
                 output.worldLocation = GetAreaName(wl);
                 output.worldMap = GetMapName(mid);
-                output.playtime = playTime == 0 ? "<color,blue>New File</color>" : ParseTime(playTime);
+                output.playtime = playTime == 0 ? "<color," + MoveBoxMenu.DebtColor() + ">New File</color>" : ParseTime(playTime);
                 output.specialSprites = GetSpecialString(new_globalFlags, new_globalVars);
                 output.progressSprites = GetProgressString(new_globalFlags, new_globalVars);
                 Color? col = GetSaveColor(new_globalFlags, new_globalVars);

@@ -298,9 +298,9 @@ public class PlayerEntity : BattleEntity
             moveset.Add(sls);
             jumpMoves.Add(sls);
         }
-        if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.MeteorStomp) > 0)
+        if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.LeafyStomp) > 0)
         {
-            LM_MeteorStomp mes = gameObject.AddComponent<LM_MeteorStomp>();
+            LM_LeafyStomp mes = gameObject.AddComponent<LM_LeafyStomp>();
             moveset.Add(mes);
             jumpMoves.Add(mes);
         }
@@ -359,17 +359,17 @@ public class PlayerEntity : BattleEntity
             moveset.Add(ht);
             weaponMoves.Add(ht);
         }
-        if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.BreakerSmash) > 0)
-        {
-            LM_BreakerSmash brs = gameObject.AddComponent<LM_BreakerSmash>();
-            moveset.Add(brs);
-            weaponMoves.Add(brs);
-        }
         if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.FlameSmash) > 0)
         {
             LM_FlameSmash fls = gameObject.AddComponent<LM_FlameSmash>();
             moveset.Add(fls);
             weaponMoves.Add(fls);
+        }
+        if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.FloraSmash) > 0)
+        {
+            LM_FloraSmash brs = gameObject.AddComponent<LM_FloraSmash>();
+            moveset.Add(brs);
+            weaponMoves.Add(brs);
         }
         if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.MomentumSmash) > 0)
         {
@@ -757,7 +757,7 @@ public class PlayerEntity : BattleEntity
             case 5:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.SleepStomp), maxLevel);
             case 6:
-                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.MeteorStomp), maxLevel);
+                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.LeafyStomp), maxLevel);
             case 7:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.UnderStrike), maxLevel);
             case 8:
@@ -777,9 +777,9 @@ public class PlayerEntity : BattleEntity
             case 15:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.HammerThrow), maxLevel);
             case 16:
-                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.BreakerSmash), maxLevel);
-            case 17:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.FlameSmash), maxLevel);
+            case 17:
+                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.FloraSmash), maxLevel);
             case 18:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.MomentumSmash), maxLevel);
             case 19:
@@ -1018,7 +1018,7 @@ public class PlayerEntity : BattleEntity
                         bmove = GetOrAddComponent<WM_FlameStomp>();
                         break;
                     case EntityID.Luna:
-                        bmove = GetOrAddComponent<LM_MeteorStomp>();
+                        bmove = GetOrAddComponent<LM_LeafyStomp>();
                         break;
                 }
                 break;
@@ -2972,7 +2972,20 @@ public class PlayerEntity : BattleEntity
         }
         */
 
-        staminaIncrease += realAgility;
+        if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.SacredGrove)
+        {
+            staminaIncrease = Mathf.CeilToInt(realAgility / 2f);
+            //stamina += Mathf.CeilToInt(realAgility / 2f);
+        }
+        else if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.TrialOfSimplicity)
+        {
+
+        }
+        else
+        {
+            staminaIncrease = realAgility;
+            //stamina += realAgility;
+        }
 
         if (staminaBlock)
         {
@@ -5740,6 +5753,7 @@ public class PlayerEntity : BattleEntity
 
     public override void SetIdleAnimation(bool force = false)
     {
+        ac.ResetAnimationSpeed();
         //?        
         if ((ac.GetCurrentAnim().Equals("hurt") || ac.GetCurrentAnim().Equals("block"))) {
             if (!force)

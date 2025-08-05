@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: FireballSide
   m_Shader: {fileID: 4800000, guid: 2f320c1aa41e4d44b8d92f6ecfe52206, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -85,10 +88,10 @@ Material:
     - _WidthB2: 0.3
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 2, g: 0.4, b: 0, a: 1}
-    - _BaseColorB: {r: 2, g: 0.7, b: 0, a: 1}
+    - _BaseColor: {r: 2.5155873, g: 0.72714704, b: 0.2800369, a: 1}
+    - _BaseColorB: {r: 2.0782526, g: 0.92929053, b: 0.29409206, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _InnerColor: {r: 2, g: 0.2, b: 0, a: 1}
-    - _InnerColorB: {r: 2, g: 0.4, b: 0, a: 1}
+    - _InnerColor: {r: 1.7349452, g: 0.18555562, b: 0, a: 1}
+    - _InnerColorB: {r: 1.9140631, g: 0.5667677, b: 0.22752061, a: 1}
   m_BuildTextureStacks: []

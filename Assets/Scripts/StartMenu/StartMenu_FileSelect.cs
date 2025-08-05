@@ -302,7 +302,7 @@ public class StartMenu_FileSelect : MenuHandler
             copyselector.gameObject.SetActive(false);
         }
 
-        if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.A)) //Press A to select stuff
+        if (lifetime > MIN_SELECT_TIME && (InputManager.GetButtonDown(InputManager.Button.A) || InputManager.GetButtonDown(InputManager.Button.Start))) //Press A to select stuff
         {
             SelectOption();
         }

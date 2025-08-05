@@ -180,7 +180,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 {
                     et = BadgeMenuEntry.EquipType.Luna;
                 }
-                menuEntries[selectedIndex] = new BadgeMenuEntry(b, et, MainManager.Instance.playerData.badgeInventory.FindAll((e) => (e.type == b.type)).Count > 1);
+                menuEntries[selectedIndex] = new BadgeMenuEntry(b, et, true, MainManager.Instance.playerData.badgeInventory.FindAll((e) => (e.type == b.type)).Count > 1);
 
                 //do an update
 

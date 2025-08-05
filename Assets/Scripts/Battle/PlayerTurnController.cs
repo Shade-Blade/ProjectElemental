@@ -51,6 +51,8 @@ public class PlayerTurnController : MonoBehaviour
     public MetaItem_Multi MultiSupply;
     public bool MultiSupplyCancel;
 
+    public TutorialBattleMapScript tutorial;
+
 
     public const bool DEBUG_PRINTING = true;
 
@@ -642,8 +644,17 @@ public class PlayerTurnController : MonoBehaviour
             switch (mexitType)
             {
                 case MenuExitType.MoveExecute:
+                    exit = true;
+                    break;
                 case MenuExitType.Null:
                     exit = true;
+                    if (menu != null)
+                    {
+                        menu.ActiveClear(); //make sure everything related to the current menu is gone
+                        Destroy(menu.gameObject);
+                    }
+                    BattleControl.Instance.HideHPBars();
+                    BattleControl.Instance.HideEffectIcons();
                     break;
                 case MenuExitType.ActionExecute:
                     //use menu details to set stuff
@@ -1204,9 +1215,11 @@ public class PlayerTurnController : MonoBehaviour
             case MenuExitType.MoveExecute:
             case MenuExitType.ActionExecute:
             case MenuExitType.TurnRelay:
-            case MenuExitType.Null:
                 mresult = menu.GetFullResult();
                 menu.ActiveClear();
+                break;
+            case MenuExitType.Null:
+                mresult = null;
                 break;
             case MenuExitType.Switch:
                 break;
@@ -1222,10 +1235,20 @@ public class PlayerTurnController : MonoBehaviour
     //  (This is mainly for tutorials where you are scripted to use certain moves)
     public bool CanChoose(Move pm, BattleEntity b)
     {
+        if (tutorial != null)
+        {
+            return tutorial.CanChoose(pm, b);
+        }
+
         return true;
     }
     public bool CanChoose(BattleAction pm, BattleEntity b)
     {
+        if (tutorial != null)
+        {
+            return tutorial.CanChoose(pm, b);
+        }
+
         return true;
     }
 }

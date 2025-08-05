@@ -1660,6 +1660,30 @@ public static class BattleHelper
 
         return "";
     }
+
+    public static string GetCurrencyIcon(MoveCurrency cost, Text_CommonSprite.CommonSpriteShader shader, string color)
+    {
+        if (color == null)
+        {
+            return GetCurrencyIcon(cost);
+        }
+
+        switch (cost)
+        {
+            case MoveCurrency.Energy:
+                return "<ep," + shader + "," + color + ">";
+            case MoveCurrency.Soul:
+                return "<se," + shader + "," + color + ">";
+            case MoveCurrency.Health:
+                return "<hp," + shader + "," + color + ">";
+            case MoveCurrency.Stamina:
+                return "<stamina," + shader + "," + color + ">";
+            case MoveCurrency.Coins:
+                return "<coin," + shader + "," + color + ">";
+        }
+
+        return "";
+    }
 }
 
 [System.Serializable]

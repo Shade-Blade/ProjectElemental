@@ -22,7 +22,7 @@ public class PromptMenuEntryScript : MonoBehaviour
     public void SetTextWavy()
     {
         //Debug.Log(p.text);
-        string newString = "<descriptionnoticecolor><wavy>" + p.text + "</wavy></color>";
+        string newString = "<descriptionwarncolor><wavy>" + p.text + "</wavy></color>";
         tdisplayer.SetText(newString, true);
         wavy = true;
     }

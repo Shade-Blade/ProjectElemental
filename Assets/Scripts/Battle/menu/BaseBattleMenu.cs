@@ -111,6 +111,24 @@ public class BaseBattleMenu : MenuHandler
 
     void MenuUpdate()
     {
+        /*
+        //failsafe check
+        bool anyUsable = false;
+        for (int i = 0; i < baseMenuOptions.Count; i++)
+        {
+            if (baseMenuOptions[i].canSelect)
+            {
+                anyUsable = true;
+            }
+        }
+
+        if (!anyUsable)
+        {
+            menuExit?.Invoke(this, new MenuExitEventArgs(GetFullResult()));
+            PlayerTurnController.Instance.ExitMenu(PlayerTurnController.MenuExitType.Null);
+        }
+        */
+
         float lastAppearScale = appearScale;
         appearScale = MainManager.EasingQuadraticTime(appearScale, 1, 100);
 
@@ -510,8 +528,23 @@ public class BaseBattleMenu : MenuHandler
                     temp.cantMoveReason = PlayerMove.CantMoveReason.BlockSoul;
                     break;
                 case BaseMenuName.Tactics:
-                    //you can always select the tactics menu, since you can always select "Rest"
                     temp = new BaseMenuOption(BaseMenuName.Tactics);
+                    //you can always select the tactics menu, since you can always select "Rest"
+                    //actually no
+                    temp.canSelect = caller.tactics.Count > 0;
+                    if (temp.canSelect)
+                    {
+                        temp.canSelect = false;
+                        foreach (BattleAction ba in caller.tactics)
+                        {
+                            temp.canSelect |= ba.CanChoose(caller);
+                            if (temp.canSelect)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    temp.cantMoveReason = PlayerMove.CantMoveReason.Unknown;
                     break;
                 case BaseMenuName.BadgeSwap:
                     //logically impossible to not be able to use this?
@@ -599,24 +632,7 @@ public class BaseBattleMenu : MenuHandler
         baseMenuBSwap.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.right * (-(MainManager.Instance.Canvas.GetComponent<RectTransform>().rect.width / 2) + xCoord) + Vector3.down * 225;
 
         Sort();
-        Canvas.ForceUpdateCanvases();
-
-
-        //failsafe check
-        bool anyUsable = false;
-        for (int i = 0; i < baseMenuOptions.Count; i++)
-        {
-            if (baseMenuOptions[i].canSelect)
-            {
-                anyUsable = true;
-            }
-        }
-
-        if (!anyUsable)
-        {
-            menuExit?.Invoke(this, new MenuExitEventArgs(GetFullResult()));
-            PlayerTurnController.Instance.ExitMenu(PlayerTurnController.MenuExitType.Null);
-        }
+        Canvas.ForceUpdateCanvases();        
     }
     public override void Clear()
     {

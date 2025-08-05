@@ -208,8 +208,8 @@ MonoBehaviour:
   width: 0.5
   showBack: 0
   offsetFlying: {x: 0, y: 0, z: 0}
-  heightFlying: 0
-  widthFlying: 0
+  heightFlying: 0.75
+  widthFlying: 0.5
   offsetGrounded: {x: 0, y: 0, z: 0}
   heightGrounded: 0.32
   widthGrounded: 0.55

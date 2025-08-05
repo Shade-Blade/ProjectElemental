@@ -253,7 +253,7 @@ public struct Badge
         FlipKick,
         FluffHeal,
         SleepStomp,
-        MeteorStomp,
+        LeafyStomp,
         UnderStrike,
         IronStomp,
         ElementalStomp,
@@ -262,8 +262,8 @@ public struct Badge
         PowerSmashB,
         DazzleSmash,
         HammerThrow,
-        BreakerSmash,
         FlameSmash,
+        FloraSmash,
         MomentumSmash,
         QuakeSmash,
         Illuminate,
@@ -531,6 +531,16 @@ public struct Badge
             Enum.TryParse(split[0], true, out output.type);
 
             //hardcoded for backwards compatibility
+
+            if (split[0].Equals("MeteorStomp"))
+            {
+                output.type = BadgeType.LeafyStomp;
+            }
+            if (split[0].Equals("BreakerSmash"))
+            {
+                output.type = BadgeType.FloraSmash;
+            }
+
             if (split[0].Equals("Refund"))
             {
                 output.type = BadgeType.ItemRebate;

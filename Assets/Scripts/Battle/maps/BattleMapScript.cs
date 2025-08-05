@@ -17,12 +17,22 @@ public class BattleMapScript : MonoBehaviour
         
     }
 
-    public virtual void OnPreTurn() //after turn increment
+    //Now you can do stuff in the pre and post turn
+    public virtual IEnumerator OnPreTurn() //after turn increment
     {
-
+        yield break;
     }
 
-    public virtual void OnPostTurn()
+    public virtual IEnumerator OnPostTurn()
+    {
+        yield break;
+    }
+    public virtual IEnumerator OnOutOfTurn()
+    {
+        yield break;
+    }
+
+    public virtual void React(BattleEntity b, BattleHelper.Event eventID)
     {
 
     }

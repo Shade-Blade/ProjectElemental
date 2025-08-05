@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: MeteorStompA
   m_Shader: {fileID: 4800000, guid: c51911399fdecd54ca78ea41be7b4b8f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -89,9 +92,9 @@ Material:
     - _YFactor: -3
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.1812165, b: 0.16470587, a: 1}
+    - _Color: {r: 0.2373698, g: 0.4716981, b: 0.23050907, a: 1}
     - _ColorB: {r: 0.5283019, g: 0.4427493, b: 0.32096833, a: 0}
-    - _Emission: {r: 2.5, g: 0.61679864, b: 0, a: 1}
+    - _Emission: {r: 0.42793176, g: 1.5706869, b: 0.115578674, a: 1}
     - _EmissionB: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}

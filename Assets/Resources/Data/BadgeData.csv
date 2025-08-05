@@ -32,7 +32,7 @@ DashThrough,1,TRUE,DashThrough,TRUE,1,3
 FlipKick,1,TRUE,FlipKick,TRUE,1,2
 FluffHeal,2,TRUE,FluffHeal,TRUE,1,2
 SleepStomp,1,TRUE,SleepStomp,TRUE,1,3
-MeteorStomp,2,TRUE,MeteorStomp,TRUE,1,6
+LeafyStomp,2,TRUE,LeafyStomp,TRUE,1,6
 UnderStrike,4,TRUE,UnderStrike,TRUE,1,7
 IronStomp,4,TRUE,IronStomp,TRUE,1,5
 ElementalStomp,3,TRUE,ElementalStomp,TRUE,1,6
@@ -41,8 +41,8 @@ PowerSmash,2,TRUE,PowerSmash,TRUE,2,1
 PowerSmashB,2,TRUE,PowerSmash,TRUE,2,5
 DazzleSmash,2,TRUE,DazzleSmash,TRUE,1,1
 HammerThrow,3,TRUE,HammerThrow,TRUE,1,4
-BreakerSmash,3,TRUE,BreakerSmash,TRUE,1,5
 FlameSmash,2,TRUE,FlameSmash,TRUE,1,4
+FloraSmash,3,TRUE,FloraSmash,TRUE,1,5
 MomentumSmash,3,TRUE,MomentumSmash,TRUE,1,5
 QuakeSmash,3,TRUE,QuakeSmash,TRUE,1,5
 Illuminate,3,TRUE,Illuminate,TRUE,1,8

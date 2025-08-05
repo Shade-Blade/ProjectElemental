@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: BreakerShockwaveA
   m_Shader: {fileID: 4800000, guid: c51911399fdecd54ca78ea41be7b4b8f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -91,7 +94,7 @@ Material:
     m_Colors:
     - _Color: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
     - _ColorB: {r: 1, g: 1, b: 1, a: 1}
-    - _Emission: {r: 0.27450982, g: 0.7529412, b: 0.26666668, a: 1}
+    - _Emission: {r: 0.720229, g: 0.79607844, b: 0.654902, a: 1}
     - _EmissionB: {r: 0.2, g: 1.8, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}

@@ -297,6 +297,16 @@ public class WorldFollower : WorldEntity
                 dir = diff.normalized * 0.75f;
                 timeWalking += Time.deltaTime;
             }
+            else if (dist < WorldPlayer.Instance.GetWidth())    //Too close = walk away
+            {
+                dir = -diff.normalized * 0.75f;
+                if (dir == Vector2.zero)
+                {
+                    //Walk opposite of the player
+                    dir = -MainManager.XZProject(WorldPlayer.Instance.FacingVector());
+                }
+                timeWalking += Time.deltaTime;
+            }
             else
             {
                 timeWalking = 0;
@@ -392,6 +402,11 @@ public class WorldFollower : WorldEntity
         else
         {
             farTime = 0;
+        }
+
+        //note: if follower and you fall into the pit then don't warp immediately (will look wrong)
+        if ((transform.position - followTarget.position).magnitude > MAX_DISTANCE * 2 || transform.position.y < WorldPlayer.WARP_BARRIER_Y_COORD - 3) {
+            SelfWarp();
         }
 
         if (stuckTime > STUCK_MAX_TIME && (transform.position - followTarget.position).magnitude > MAX_DISTANCE)

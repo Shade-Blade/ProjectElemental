@@ -56,7 +56,7 @@ public class HPStaminaDisplayerScript : MonoBehaviour
                 case BattleHelper.EntityID.Luna:
                     //barImage.color = new Color(0.95f, 1f, 0.95f, 0.9f);
                     //backImage.color = new Color(0.4f, 0.7f, 0.4f, 0.9f);
-                    iconBackImage.color = new Color(0.75f, 1f, 0.75f, 1f);
+                    iconBackImage.color = new Color(1f, 1f, 0.75f, 1f);
                     characterImage.sprite = lunaSprite;
                     break;
                 default:
@@ -122,14 +122,33 @@ public class HPStaminaDisplayerScript : MonoBehaviour
                 staminaText = "<colordarkoutline><descriptionwarncolor>" + Mathf.RoundToInt(displayStamina) + "</color> ";
             }
 
-            if (entity.staminaBlock)
+            if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.TrialOfSimplicity)
             {
-                staminaText += "<descriptionwarncolor><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor></outline>";
+                staminaText += "<color,#00ff00><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor></outline>";
+            }
+            else if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.SacredGrove)
+            {
+                if (entity.staminaBlock)
+                {
+                    staminaText += "<descriptionwarncolor><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor></outline>";
+                }
+                else
+                {
+                    staminaText += "<color,#00ff00><strikethrough><size,60%>(+" + entity.GetRealAgility() + "</strikethrough> <size,36%>(" + Mathf.CeilToInt(entity.GetRealAgility() / 2f) + ")</size>)</size></outline>";
+                }
             }
             else
             {
-                staminaText += "<size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></outline>";
+                if (entity.staminaBlock)
+                {
+                    staminaText += "<descriptionwarncolor><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor></outline>";
+                }
+                else
+                {
+                    staminaText += "<size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></outline>";
+                }
             }
+
             textNumber2.SetText(staminaText, true, true);
         }
 
@@ -255,14 +274,34 @@ public class HPStaminaDisplayerScript : MonoBehaviour
                 staminaText = "<colordarkoutline>" + Mathf.RoundToInt(displayStamina) + " ";
             }
         }
-        if (entity.staminaBlock)
+
+        if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.TrialOfSimplicity)
         {
-            staminaText += "<descriptionwarncolor><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor>";
+            staminaText += "<color,#00ff00><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor></outline>";
+        }
+        else if (BattleControl.Instance.enviroEffect == EnvironmentalEffect.SacredGrove)
+        {
+            if (entity.staminaBlock)
+            {
+                staminaText += "<descriptionwarncolor><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor></outline>";
+            }
+            else
+            {
+                staminaText += "<color,#00ff00><strikethrough><size,60%>(+" + entity.GetRealAgility() + "</strikethrough> <size,36%>(" + Mathf.CeilToInt(entity.GetRealAgility() / 2f) + ")</size>)</size></outline>";
+            }
         }
         else
         {
-            staminaText += "<size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough>";
+            if (entity.staminaBlock)
+            {
+                staminaText += "<descriptionwarncolor><strikethrough><size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></descriptionwarncolor></outline>";
+            }
+            else
+            {
+                staminaText += "<size,60%>(+" + entity.GetRealAgility() + ")</size></strikethrough></outline>";
+            }
         }
+
         textNumber2.SetText(staminaText, true, true);
 
         if (entity.maxHP == 0)

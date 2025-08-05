@@ -9,6 +9,17 @@ public class MoveBoxMenu : BoxMenu
     //MoveMenuEntry.StatDisplay displayMode;
     //public bool hasZero = false;            //set this before initialization to be correct
 
+    public static string DebtColor()
+    {
+        return "#a07030";
+    }
+
+    public static string ExhaustColor()
+    {
+        return "#705030";
+    }
+
+
     public override void Init()
     {
         base.Init();
@@ -19,20 +30,29 @@ public class MoveBoxMenu : BoxMenu
                 menuEntries = new BoxMenuEntry[caller.jumpMoves.Count];
                 for (int i = 0; i < caller.jumpMoves.Count; i++)
                 {
-                    menuEntries[i] = new MoveMenuEntry(caller, caller.jumpMoves[i]);
+                    MoveMenuEntry.StaminaState ss = MoveMenuEntry.StaminaState.None;
+                    if (caller.stamina < caller.jumpMoves[i].GetStaminaCost(caller, caller.jumpMoves[i].level))
+                    {
+                        ss = MoveMenuEntry.StaminaState.Debt;
+                    } else if (caller.GetRealAgility() < caller.jumpMoves[i].GetStaminaCost(caller, caller.jumpMoves[i].level))
+                    {
+                        ss = MoveMenuEntry.StaminaState.Exhaust;
+                    }
+
+                    menuEntries[i] = new MoveMenuEntry(caller, caller.jumpMoves[i], ss);
                     GameObject g = Instantiate(MainManager.Instance.menuEntryBase, bm.mask.transform);
                     g.transform.localPosition = BoxMenuScript.GetRelativePosition(i);
                     menuEntriesO.Add(g);
                     BoxMenuEntryScript b = menuEntriesO[i].GetComponent<BoxMenuEntryScript>();
-                    if (caller.stamina < caller.jumpMoves[i].GetStaminaCost(caller, caller.jumpMoves[i].level))
+                    if (ss == MoveMenuEntry.StaminaState.Debt)
                     {
-                        b.Setup(menuEntries[i], true, null, "#a04070", null);
+                        b.Setup(menuEntries[i], true, null, DebtColor(), null);
                     }
                     else
                     {
-                        if (caller.GetRealAgility() < caller.jumpMoves[i].GetStaminaCost(caller, caller.jumpMoves[i].level))
+                        if (ss == MoveMenuEntry.StaminaState.Exhaust)
                         {
-                            b.Setup(menuEntries[i], true, null, "#703040", null);
+                            b.Setup(menuEntries[i], true, null, ExhaustColor(), null);
                         }
                         else
                         {
@@ -56,20 +76,30 @@ public class MoveBoxMenu : BoxMenu
                 menuEntries = new BoxMenuEntry[caller.weaponMoves.Count];
                 for (int i = 0; i < caller.weaponMoves.Count; i++)
                 {
-                    menuEntries[i] = new MoveMenuEntry(caller, caller.weaponMoves[i]);
+                    MoveMenuEntry.StaminaState ss = MoveMenuEntry.StaminaState.None;
+                    if (caller.stamina < caller.weaponMoves[i].GetStaminaCost(caller, caller.weaponMoves[i].level))
+                    {
+                        ss = MoveMenuEntry.StaminaState.Debt;
+                    }
+                    else if (caller.GetRealAgility() < caller.weaponMoves[i].GetStaminaCost(caller, caller.weaponMoves[i].level))
+                    {
+                        ss = MoveMenuEntry.StaminaState.Exhaust;
+                    }
+
+                    menuEntries[i] = new MoveMenuEntry(caller, caller.weaponMoves[i], ss);
                     GameObject g = Instantiate(MainManager.Instance.menuEntryBase, bm.mask.transform);
                     g.transform.localPosition = BoxMenuScript.GetRelativePosition(i);
                     menuEntriesO.Add(g);
                     BoxMenuEntryScript b = menuEntriesO[i].GetComponent<BoxMenuEntryScript>();
-                    if (caller.stamina < caller.weaponMoves[i].GetStaminaCost(caller, caller.weaponMoves[i].level))
+                    if (ss == MoveMenuEntry.StaminaState.Debt)
                     {
-                        b.Setup(menuEntries[i], true, null, "#a04070", null);
+                        b.Setup(menuEntries[i], true, null, DebtColor(), null);
                     }
                     else
                     {
-                        if (caller.GetRealAgility() < caller.weaponMoves[i].GetStaminaCost(caller, caller.weaponMoves[i].level))
+                        if (ss == MoveMenuEntry.StaminaState.Exhaust)
                         {
-                            b.Setup(menuEntries[i], true, null, "#703040", null);
+                            b.Setup(menuEntries[i], true, null, ExhaustColor(), null);
                         }
                         else
                         {
@@ -227,13 +257,13 @@ public class MoveBoxMenu : BoxMenu
 
         if (caller.stamina < ((MoveMenuEntry)menuEntries[menuIndex]).staminaCost)
         {
-            b.Setup(menuEntries[menuIndex], true, null, "#a03060", null);
+            b.Setup(menuEntries[menuIndex], true, null, DebtColor(), null);
         }
         else
         {
             if (caller.GetRealAgility() < ((MoveMenuEntry)menuEntries[menuIndex]).staminaCost)
             {
-                b.Setup(menuEntries[menuIndex], true, null, "#703040", null);
+                b.Setup(menuEntries[menuIndex], true, null, ExhaustColor(), null);
             } else
             {
                 b.Setup(menuEntries[menuIndex]);

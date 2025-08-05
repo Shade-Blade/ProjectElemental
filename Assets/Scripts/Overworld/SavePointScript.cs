@@ -9,6 +9,7 @@ public class SavePointScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
     public MeshRenderer sphereB;
     private MaterialPropertyBlock propertyBlockA;
     private MaterialPropertyBlock propertyBlockB;
+    public TextDisplayer hint;
 
     public float hitAnimTime = 0;
     public float saveCooldown = 0;
@@ -25,6 +26,11 @@ public class SavePointScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
         if (sphereB != null)
         {
             propertyBlockB = new MaterialPropertyBlock();
+        }
+
+        if (MainManager.Instance.lastSaveTimestamp != 0)
+        {
+            Destroy(hint.gameObject);
         }
     }
 

@@ -25,7 +25,7 @@ public class AnimationController_Rainbow : AnimationController_BackSprite
         switch (materialIndex)
         {
             case 0:
-                targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteGeneral_Rainbow");
+                targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSprite_Rainbow");
                 break;
             case 1:
                 targetMaterial = Resources.Load<Material>("Sprites/Materials/Special/ProperSpriteEffect1_Rainbow");
