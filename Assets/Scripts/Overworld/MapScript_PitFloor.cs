@@ -34,7 +34,7 @@ public class MapScript_PitFloor : MapScript
         floorNumberText.SetText(floorNo, true);
         if (floor == 1)
         {
-            MainManager.Instance.PitReset();
+            //MainManager.Instance.PitReset();
         }
 
         if (floor % 10 == 3 || floor % 10 == 5 || floor % 10 == 8)

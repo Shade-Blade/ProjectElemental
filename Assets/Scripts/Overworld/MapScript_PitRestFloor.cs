@@ -25,7 +25,7 @@ public class MapScript_PitRestFloor : MapScript
         floorNumberText.SetText(floorNo, true);
         if (floor == 1)
         {
-            MainManager.Instance.PitReset();
+            //MainManager.Instance.PitReset();
         }
 
         if (floor == 50)

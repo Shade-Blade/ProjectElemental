@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static BattleHelper;
+using static TextDisplayer.TextEffectSet.TextEffectPiece;
 using static UnityEngine.GraphicsBuffer;
 
 //Data structure for enemy specific data (read from the data table)
@@ -26,8 +27,6 @@ public class BattleEntityData
     public List<StatusTableEntry> statusTable;
     public List<DefenseTableEntry> defenseTable;
     public ulong entityProperties;
-    public float width;
-    public float height;
     public Vector3 offset;
     public Vector3 statusOffset;
     public Vector3 healthBarOffset;
@@ -134,6 +133,7 @@ public class BattleEntityData
             ed.entityProperties = entityProperties;
         }
 
+        /*
         if (entry.Length > 11)
         {
             //width
@@ -147,70 +147,71 @@ public class BattleEntityData
             float.TryParse(entry[12], NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out tempfloat);
             ed.height = tempfloat;
         }
+        */
 
         Vector3 tempvector = Vector3.zero;
-        if (entry.Length > 13)
+        if (entry.Length > 11)
         {
             //offset
-            tempvector = ParseVector3(entry[13]);
+            tempvector = ParseVector3(entry[11]);
             //Debug.Log(eid + " " + tempvector);
             ed.offset = tempvector;
         }
 
-        if (entry.Length > 14)
+        if (entry.Length > 12)
         {
             //status offset
-            tempvector = ParseVector3(entry[14]);
+            tempvector = ParseVector3(entry[12]);
             ed.statusOffset = tempvector;
+        }
+
+        if (entry.Length > 13)
+        {
+            //health bar offset
+            tempvector = ParseVector3(entry[13]);
+            ed.healthBarOffset = tempvector;
+        }
+
+        if (entry.Length > 14)
+        {
+            //selection offset
+            tempvector = ParseVector3(entry[14]);
+            ed.selectionOffset = tempvector;
         }
 
         if (entry.Length > 15)
         {
-            //health bar offset
+            //stomp offset
             tempvector = ParseVector3(entry[15]);
-            ed.healthBarOffset = tempvector;
+            ed.stompOffset = tempvector;
         }
 
         if (entry.Length > 16)
         {
-            //selection offset
+            //kick offset
             tempvector = ParseVector3(entry[16]);
-            ed.selectionOffset = tempvector;
+            ed.kickOffset = tempvector;
         }
 
         if (entry.Length > 17)
         {
-            //stomp offset
+            //hammer offset
             tempvector = ParseVector3(entry[17]);
-            ed.stompOffset = tempvector;
+            ed.hammerOffset = tempvector;
         }
 
         if (entry.Length > 18)
         {
-            //kick offset
-            tempvector = ParseVector3(entry[18]);
-            ed.kickOffset = tempvector;
-        }
-
-        if (entry.Length > 19)
-        {
-            //hammer offset
-            tempvector = ParseVector3(entry[19]);
-            ed.hammerOffset = tempvector;
-        }
-
-        if (entry.Length > 20)
-        {
             //under offset
-            tempvector = ParseVector3(entry[20]);
+            tempvector = ParseVector3(entry[18]);
             ed.underOffset = tempvector;
         }
 
 
-        if (entry.Length > 21)
+        if (entry.Length > 19)
         {
             //entity speed
-            float.TryParse(entry[21], NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out tempfloat);
+            float.TryParse(entry[19], NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out tempfloat);
             ed.entitySpeed = tempfloat;
         }
 
@@ -657,6 +658,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public const bool DAMAGE_DEBUG = false;
 
     public int sameFrameHealEffects;
+    public int sameFrameEffectsAdded;
+    public int sameFrameEffectsRemoved;
+    public int sameFrameRibbonBadgeActivations; //should go in PlayerEntity but to keep these similar things together I guess not
 
 
     public bool inCombo //Set by ComboHit, reset by Hit (if it stays true after an attack then that is a sign of an incorrectly coded attack)
@@ -946,8 +950,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         statusTable = bed.statusTable;
         defenseTable = bed.defenseTable;
         entityProperties = bed.entityProperties;
-        width = bed.width;
-        height = bed.height;
         offset = bed.offset;
         statusOffset = bed.statusOffset;
         healthBarOffset = bed.healthBarOffset;
@@ -957,6 +959,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         hammerOffset = bed.hammerOffset;
         underOffset = bed.underOffset;
         entitySpeed = bed.entitySpeed;
+
+        SpriteBoundUpdate();
 
         //Future thing
         /*
@@ -1293,7 +1297,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
         }
     }
-    public virtual void BasicOffsetTargetChooser(int offsetA, int offsetB)
+    public virtual void BasicTargetChooser(int offsetA, int offsetB)
     {
         if (currMove == null)
         {
@@ -1310,7 +1314,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //Not a normal attack because there are only 2 player entities
             if (bl.Count > 2)
             {
-                curTarget = bl[BattleControl.Instance.GetPsuedoRandom(bl.Count, posId + offsetA + offsetB)];
+                curTarget = bl[BattleControl.Instance.GetPsuedoRandom(bl.Count, posId * offsetA + offsetB)];
             }
             else if (bl.Count > 1)
             {
@@ -1336,6 +1340,82 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 {
                     curTarget = GetBerserkTarget();
                 }
+            }
+        }
+    }
+    public virtual void BasicTargetChooser(TargetArea ta, TargetStrategy.TargetStrategyType tst = TargetStrategy.TargetStrategyType.FrontMost)
+    {
+        List<BattleEntity> bl = BattleControl.Instance.GetEntities(this, ta);
+
+        TargetStrategy strategy = new TargetStrategy(TargetStrategy.TargetStrategyType.FrontMost);
+
+        bl.Sort((a, b) => strategy.selectorFunction(a, b));
+
+        //Not a normal attack because there are only 2 player entities
+        if (bl.Count > 2)
+        {
+            curTarget = bl[BattleControl.Instance.GetPsuedoRandom(bl.Count, posId)];
+        }
+        else if (bl.Count > 1)
+        {
+            //Debug.Log(bl[0]);
+            curTarget = bl[BattleControl.Instance.GetTargetFromDoublePool() ? 0 : 1];
+        }
+        else if (bl.Count > 0)
+        {
+            curTarget = bl[0];
+        }
+        else
+        {
+            //note: real enemies should probably have something to actually handle this
+            //(i.e. choose a special move or just do nothing)
+            Debug.Log("No targets found");
+            curTarget = null;
+        }
+
+        if (GetBerserkTarget() != null)
+        {
+            if (bl.Contains(curTarget))
+            {
+                curTarget = GetBerserkTarget();
+            }
+        }
+    }
+    public virtual void BasicTargetChooser(TargetArea ta, int offsetA, int offsetB, TargetStrategy.TargetStrategyType tst = TargetStrategy.TargetStrategyType.FrontMost)
+    {
+        List<BattleEntity> bl = BattleControl.Instance.GetEntities(this, ta);
+
+        TargetStrategy strategy = new TargetStrategy(TargetStrategy.TargetStrategyType.FrontMost);
+
+        bl.Sort((a, b) => strategy.selectorFunction(a, b));
+
+        //Not a normal attack because there are only 2 player entities
+        if (bl.Count > 2)
+        {
+            curTarget = bl[BattleControl.Instance.GetPsuedoRandom(bl.Count, posId * offsetA + offsetB)];
+        }
+        else if (bl.Count > 1)
+        {
+            //Debug.Log(bl[0]);
+            curTarget = bl[BattleControl.Instance.GetTargetFromDoublePool() ? 0 : 1];
+        }
+        else if (bl.Count > 0)
+        {
+            curTarget = bl[0];
+        }
+        else
+        {
+            //note: real enemies should probably have something to actually handle this
+            //(i.e. choose a special move or just do nothing)
+            Debug.Log("No targets found");
+            curTarget = null;
+        }
+
+        if (GetBerserkTarget() != null)
+        {
+            if (bl.Contains(curTarget))
+            {
+                curTarget = GetBerserkTarget();
             }
         }
     }
@@ -1536,6 +1616,24 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             TakeDamageStatus((int)(sfDamage * powermult * 0.5f));
             yield return new WaitForSeconds(0.5f);
         }
+
+        if (HasEffect(Effect.EffectType.Branded))
+        {
+            //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
+            HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency / 2f));
+            yield return new WaitForSeconds(0.5f);
+        }
+        if (HasEffect(Effect.EffectType.Cursed))
+        {
+            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency);
+            yield return new WaitForSeconds(0.5f);
+        }
+        if (HasEffect(Effect.EffectType.Burned))
+        {
+            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency + Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Burned).potency / 2f));
+            yield return new WaitForSeconds(0.5f);
+        }
+
         if (HasEffect(Effect.EffectType.DamageOverTime))
         {
             TakeDamageStatus(GetEffectEntry(Effect.EffectType.DamageOverTime).potency);
@@ -1615,6 +1713,25 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (slowPower > 1 && BattleControl.Instance.turnCount % (slowPower) != 0)
         {
             InflictEffectForce(this, new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+        }
+
+        if (HasEffect(Effect.EffectType.Illuminate) && attackHitCount > 0)
+        {
+            Effect ee = GetEffectEntry(Effect.EffectType.Illuminate);
+            ee.potency++;
+            if (ee.potency >= Effect.ILLUMINATE_CAP)
+            {
+                ee.potency = Effect.ILLUMINATE_CAP;
+            }
+        }
+        if (HasEffect(Effect.EffectType.Sunflame))
+        {
+            Effect ee = GetEffectEntry(Effect.EffectType.Sunflame);
+            ee.potency++;
+            if (ee.potency >= Effect.ILLUMINATE_CAP)
+            {
+                ee.potency = Effect.ILLUMINATE_CAP;
+            }
         }
 
         if (HasEffect(Effect.EffectType.AstralWall) && astralWallTrackedDamage >= GetEffectEntry(Effect.EffectType.AstralWall).potency)
@@ -1799,10 +1916,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual int TakeDamage(int damage, BattleHelper.DamageType type, ulong properties) //default type damage
     {
         lastDamageTakenInput = damage;
-        float localBonusDamageElemental = bonusDamageElemental;
-        bonusDamageElemental = 0;
+        //float localBonusDamageElemental = bonusDamageElemental;
+        //bonusDamageElemental = 0;
 
         //Bonus damage string set by deal damage stuff and reset by takedamage  (Hacky setup to avoid adding more parameters to TakeDamage)
+        /*
         string boostString = null;
         if (localBonusDamageElemental != 0)
         {
@@ -1816,7 +1934,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
         }
         string localBonusDamageString = boostString;
-
+        */
+        //removing those boosts
+        //string boostString = null;
+        string localBonusDamageString = null;
 
 
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.ContactHazard) && ShouldShowHPBar())
@@ -1974,7 +2095,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         bool crit = false;
 
-        Debug.Log("Boost = " + localBonusDamageElemental);
+        //Debug.Log("Boost = " + localBonusDamageElemental);
+
+        if ((GetDefense(DamageType.Normal) - GetDefense(type)) > 0 || (type == DamageType.Normal && damage >= BattleHelper.CRIT_THRESHOLD))
+        {
+            crit = true;
+        }
 
 
         //Sound effects
@@ -1991,9 +2117,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             if (damage > 0)
             {
-                if (localBonusDamageElemental > 0.4444f)
+                if (crit) //if (localBonusDamageElemental > 0.4444f)
                 {
-                    crit = true;
                     MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_LightCrit, 1, 0.05f);
                 }
             }
@@ -2005,9 +2130,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             if (damage > 0)
             {
-                if (localBonusDamageElemental > 0.6666f)
+                if (crit) //if (localBonusDamageElemental > 0.6666f)
                 {
-                    crit = true;
                     MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_DarkCrit, 1, 0.05f);
                 }
             }
@@ -2019,9 +2143,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             if (damage > 0)
             {
-                if (localBonusDamageElemental > 0.6666f)
+                if (crit) //if (localBonusDamageElemental > 0.6666f)
                 {
-                    crit = true;
                     MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_FireCrit, 1, 0.05f);
                 }
             }
@@ -2033,9 +2156,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             if (damage > 0)
             {
-                if (localBonusDamageElemental > 0.4444f)
+                if (crit) //if (localBonusDamageElemental > 0.4444f)
                 {
-                    crit = true;
                     MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_WaterCrit, 1, 0.05f);
                 }
             }
@@ -2047,9 +2169,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             if (damage > 0)
             {
-                if (localBonusDamageElemental > 0.3333f || damage <= Mathf.CeilToInt((GetDefense(DamageType.Normal) - GetDefense(DamageType.Air))))
+                if (crit) //if (localBonusDamageElemental > 0.3333f || damage <= Mathf.CeilToInt((GetDefense(DamageType.Normal) - GetDefense(DamageType.Air))))
                 {
-                    crit = true;
                     MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_AirCrit, 1, 0.05f);
                 }
             }
@@ -2061,9 +2182,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             if (damage > 0)
             {
-                if (localBonusDamageElemental  > 0.4444f)
+                if (crit) //if (localBonusDamageElemental  > 0.4444f)
                 {
-                    crit = true;
                     MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_EarthCrit, 1, 0.05f);
                 }
             }
@@ -2881,13 +3001,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (GetEntityProperty(BattleHelper.EntityProperties.Resistant))
         {
-            MakeStateIcon(output, BattleHelper.EntityState.Limiter);
+            MakeStateIcon(output, BattleHelper.EntityState.Resistant);
             output++;
         }
 
         if (GetEntityProperty(BattleHelper.EntityProperties.Hardened))
         {
-            MakeStateIcon(output, BattleHelper.EntityState.Critical);
+            MakeStateIcon(output, BattleHelper.EntityState.Hardened);
             output++;
         }
 
@@ -2908,6 +3028,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             MakeStateIcon(output, BattleHelper.EntityState.ExactDamageKill);
             output++;
         }
+        if (GetEntityProperty(BattleHelper.EntityProperties.Elusive))
+        {
+            MakeStateIcon(output, BattleHelper.EntityState.Elusive);
+            output++;
+        }
+
 
         if (GetEntityProperty(BattleHelper.EntityProperties.NoMiracle))
         {
@@ -2970,6 +3096,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (GetEntityProperty(BattleHelper.EntityProperties.StateContactHazardHeavy))
         {
             MakeStateIcon(output, BattleHelper.EntityState.StateContactHazardHeavy);
+            output++;
+        }
+        if (GetEntityProperty(BattleHelper.EntityProperties.StateQuick))
+        {
+            MakeStateIcon(output, BattleHelper.EntityState.StateQuick);
             output++;
         }
 
@@ -3544,9 +3675,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
 
             //instinct
-            if (HasEffect(Effect.EffectType.Dizzy) && BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.HitsWhileDizzyWeak))
+            if (!BattleHelper.GetDamageProperty(properties, DamageProperties.HitsWhileDizzy))
             {
-                output /= 2;
+                if (HasEffect(Effect.EffectType.Dizzy) && BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.HitsWhileDizzyWeak))
+                {
+                    output /= 2;
+                }
             }
 
             //sleepwalk
@@ -3561,9 +3695,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
 
             //status exploit
-            if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.StatusExploit))
+            if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AilmentExploit))
             {
-                if (target.HasStatus())
+                if (target.HasAilment())
                 {
                     bool doBoost = false;
 
@@ -3688,7 +3822,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
 
         float shppro = 0.5f;
-        float phppro = 0.5f;
+        //float phppro = 0.5f;
 
         int lightbonus = 0;
         int darkbonus = 0;
@@ -3701,110 +3835,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         bool waterfire = false;
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AdvancedElementCalc))
-        {
-            float delta = hppro - shppro;
-            if (delta < 0)
-            {
-                delta = -delta;
-            }
-            //somehow
-            if (delta > 1)
-            {
-                delta = 1;
-            }
-
-            //float shppro = ((1.0f * caller.hp) / caller.maxHP);
-            //if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.LightDarkAbsolute))
-            //{
-            //    shppro = ((1.0f * caller.hp) / 60);
-            //}
-
-            if (((uint)type & (uint)BattleHelper.DamageType.Light) != 0)
-            {
-                if (((uint)type & (uint)BattleHelper.DamageType.Dark) != 0)
-                {
-                    //Special formula (more extreme at low and high hp)
-                    //If I used the normal formula, then light + dark attacks would just have an unconditional 2x multiplier
-                    //(since the bonuses would exactly cancel each other out, not counting rounding error)
-                    lightmultiplier = Mathf.Max((4 * delta) - 2, 2 - (4 * delta));
-                    lightdark = true;
-                }
-                else
-                {
-                    lightmultiplier = (1 - delta);
-                }
-            }
-
-            if (!lightdark && ((uint)type & (uint)BattleHelper.DamageType.Dark) != 0)
-            {
-                darkmultiplier = delta;
-            }
-
-            lightbonus = (int)(lightmultiplier * inputDamage);
-            if (lightmultiplier > 0 && lightbonus < 1)
-            {
-                lightbonus = 1;
-            }
-            darkbonus = (int)(darkmultiplier * inputDamage);
-            if (darkmultiplier > 0 && darkbonus < 1)
-            {
-                darkbonus = 1;
-            }
-
-            if (((uint)type & (uint)BattleHelper.DamageType.Fire) != 0)
-            {
-                if (((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
-                {
-                    //Special formula (more extreme at low and high hp)
-                    firemultiplier = Mathf.Max((4 * phppro) - 2, 2 - (4 * phppro));
-                    waterfire = true;
-                }
-                else
-                {
-                    firemultiplier = 1 - phppro;
-                }
-            }
-            firebonus = (int)(firemultiplier * inputDamage);
-            if (firemultiplier > 0 && firebonus < 1)
-            {
-                firebonus = 1;
-            }
-
-            if (!waterfire && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
-            {
-                waterbonus = (int)((2.00001f / 3f) * (phppro) * (inputDamage));
-
-                if (waterbonus < 1)
-                {
-                    waterbonus = 1;
-                }
-            }
-
-            if (((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
-            {
-                float earthcap = (int)((inputDamage));
-
-                if (earthcap < 1 && inputDamage > 0)
-                {
-                    earthcap = 1;
-                }
-
-                earthbonus = (int)Mathf.Min(earthcap, target.damageTakenLastTurn + target.damageTakenThisTurn);
-            }
-
-            airbonus = target.GetDefense();
-            if (airbonus >= DefenseTableEntry.IMMUNITY_CONSTANT)
-            {
-                //don't deal 10000000 damage to things
-                airbonus = 0;
-            }
-
-            if (airbonus > inputDamage)
-            {
-                airbonus = inputDamage;
-            }
-        }
-        else
         {
             if (((uint)type & (uint)BattleHelper.DamageType.Light) != 0)
             {
@@ -3883,8 +3913,21 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
             }
 
-            //nothing
-            airbonus = 0;
+            //super pierce up to 2x boost
+            if (((uint)type & (uint)BattleHelper.DamageType.Air) != 0)
+            {
+                airbonus = target.GetDefense();
+                if (airbonus >= DefenseTableEntry.IMMUNITY_CONSTANT)
+                {
+                    //don't deal 10000000 damage to things
+                    airbonus = 0;
+                }
+
+                if (airbonus > inputDamage * 2)
+                {
+                    airbonus = inputDamage * 2;
+                }
+            }
         }
         //inputDamage += effectDamage;
 
@@ -4118,112 +4161,6 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.AdvancedElementCalc))
         {
-            bool attackLastTurn = caller.attackLastTurn;
-
-            float delta = hppro - shppro;
-            if (delta < 0)
-            {
-                delta = -delta;
-            }
-            //somehow
-            if (delta > 1)
-            {
-                delta = 1;
-            }
-
-            //float shppro = ((1.0f * caller.hp) / caller.maxHP);
-            //if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.LightDarkAbsolute))
-            //{
-            //    shppro = ((1.0f * caller.hp) / 60);
-            //}
-
-            if (((uint)type & (uint)BattleHelper.DamageType.Light) != 0)
-            {
-                if (((uint)type & (uint)BattleHelper.DamageType.Dark) != 0)
-                {
-                    //Special formula (more extreme at low and high hp)
-                    //If I used the normal formula, then light + dark attacks would just have an unconditional 2x multiplier
-                    //(since the bonuses would exactly cancel each other out, not counting rounding error)
-                    lightmultiplier = Mathf.Max((4 * delta) - 2, 2 - (4 * delta));
-                    lightdark = true;
-                }
-                else
-                {
-                    lightmultiplier = (1 - delta);
-                }
-            }
-
-            if (!lightdark && ((uint)type & (uint)BattleHelper.DamageType.Dark) != 0)
-            {
-                darkmultiplier = delta;
-            }
-
-            lightbonus = (int)(lightmultiplier * inputDamage);
-            if (lightmultiplier > 0 && lightbonus < 1)
-            {
-                lightbonus = 1;
-            }
-            darkbonus = (int)(darkmultiplier * inputDamage);
-            if (darkmultiplier > 0 && darkbonus < 1)
-            {
-                darkbonus = 1;
-            }
-
-            if (((uint)type & (uint)BattleHelper.DamageType.Fire) != 0)
-            {
-                if (((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
-                {
-                    //Special formula (more extreme at low and high hp)
-                    firemultiplier = Mathf.Max((4 * phppro) - 2, 2 - (4 * phppro));
-                    waterfire = true;
-                }
-                else
-                {
-                    firemultiplier = 1 - phppro;
-                }
-            }
-            firebonus = (int)(firemultiplier * inputDamage);
-            if (firemultiplier > 0 && firebonus < 1)
-            {
-                firebonus = 1;
-            }
-
-            if (!waterfire && ((uint)type & (uint)BattleHelper.DamageType.Water) != 0)
-            {
-                waterbonus = (int)((2.00001f / 3f) * (phppro) * (inputDamage));
-
-                if (waterbonus < 1)
-                {
-                    waterbonus = 1;
-                }
-            }
-
-            if (((uint)type & (uint)BattleHelper.DamageType.Earth) != 0)
-            {
-                float earthcap = (int)((inputDamage));
-
-                if (earthcap < 1 && inputDamage > 0)
-                {
-                    earthcap = 1;
-                }
-
-                earthbonus = (int)Mathf.Min(earthcap, caller.damageTakenThisTurn + caller.damageTakenLastTurn + target.damageTakenLastTurn + target.damageTakenThisTurn);
-            }
-
-            airbonus = target.GetDefense();
-            if (airbonus >= DefenseTableEntry.IMMUNITY_CONSTANT)
-            {
-                //don't deal 10000000 damage to things
-                airbonus = 0;
-            }
-
-            if (airbonus > inputDamage + effectDamage)
-            {
-                airbonus = inputDamage + effectDamage;
-            }
-        }
-        else
-        {
             if (((uint)type & (uint)BattleHelper.DamageType.Light) != 0)
             {
                 if (((uint)type & (uint)BattleHelper.DamageType.Dark) != 0)
@@ -4297,9 +4234,23 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 earthbonus = (int)Mathf.Min(earthcap, caller.damageTakenThisTurn + caller.damageTakenLastTurn);
             }
 
-            //nothing
-            airbonus = 0;
+            //super pierce up to 2x boost
+            if (((uint)type & (uint)BattleHelper.DamageType.Air) != 0)
+            {
+                airbonus = target.GetDefense();
+                if (airbonus >= DefenseTableEntry.IMMUNITY_CONSTANT)
+                {
+                    //don't deal 10000000 damage to things
+                    airbonus = 0;
+                }
+
+                if (airbonus > inputDamage * 2)
+                {
+                    airbonus = inputDamage * 2;
+                }
+            }
         }
+
 
         inputDamage += effectDamage;
 
@@ -4723,6 +4674,37 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_Brittle, 1, 0.01f);
         }
+
+        if ((type & (DamageType.Light)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Branded, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            RemoveEffect(Effect.EffectType.Cursed);
+        }
+        if ((type & (DamageType.Dark)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Cursed, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            RemoveEffect(Effect.EffectType.Branded);
+        }
+        if ((type & (DamageType.Water)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Soaked, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            RemoveEffect(Effect.EffectType.Burned);
+        }
+        if ((type & (DamageType.Fire)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Burned, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            RemoveEffect(Effect.EffectType.Soaked);
+        }
+        if ((type & (DamageType.Earth)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Entangled, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            RemoveEffect(Effect.EffectType.Shocked);
+        }
+        if ((type & (DamageType.Air)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Shocked, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            RemoveEffect(Effect.EffectType.Entangled);
+        }
     }
 
 
@@ -4790,6 +4772,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 if (!GetEntityProperty(EntityProperties.DeepSleep) && HasEffect(Effect.EffectType.Sleep))
                 {
                     Effect s = GetEffectEntry(Effect.EffectType.Sleep);
+                    BattleControl.Instance.CreateEffectRemovedParticles(s, this);
                     s.potency--;
                     if (s.potency <= 0)
                     {
@@ -4801,6 +4784,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 if (!GetEntityProperty(EntityProperties.Glacier) && HasEffect(Effect.EffectType.Freeze))
                 {
                     Effect s = GetEffectEntry(Effect.EffectType.Freeze);
+                    BattleControl.Instance.CreateEffectRemovedParticles(s, this);
                     s.potency--;
                     if (s.potency <= 0)
                     {
@@ -4816,66 +4800,67 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
         }
 
+
         bool bol = MainManager.Instance.GetGlobalFlag(MainManager.GlobalFlag.GF_FileCode_Lust);
         if (bol)
         {
             if ((type & (DamageType.Aether)) == DamageType.Aether)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Soulbleed, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Soulbleed, 3));
             }
             else if ((type & (DamageType.Solar)) == DamageType.Solar)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Sunflame, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Sunflame, 3));
             }
             else if ((type & (DamageType.Spectral)) == DamageType.Spectral)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Brittle, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Brittle, 3));
             }
             else if ((type & (DamageType.Astral)) == DamageType.Astral)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Inverted, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Inverted, 3));
             }
             else if ((type & (DamageType.Phlox)) == DamageType.Phlox)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Dread, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Dread, 3));
             }
             else if ((type & (DamageType.Plasma)) == DamageType.Plasma)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.ArcDischarge, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.ArcDischarge, 3));
             }
             else if ((type & (DamageType.Quantum)) == DamageType.Quantum)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.TimeStop, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.TimeStop, 3));
             }
             else if ((type & (DamageType.Vitrum)) == DamageType.Vitrum)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Exhausted, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Exhausted, 3));
             }
 
 
             else if ((type & (DamageType.Light)) != 0)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Freeze, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Freeze, 3));
             }
             else if ((type & (DamageType.Dark)) != 0)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Poison, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Poison, 3));
             }
             else if ((type & (DamageType.Water)) != 0)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Sleep, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Sleep, 3));
             }
             else if ((type & (DamageType.Fire)) != 0)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Berserk, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Berserk, 3));
             }
             else if ((type & (DamageType.Earth)) != 0)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Dizzy, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Dizzy, 3));
             }
             else if ((type & (DamageType.Air)) != 0)
             {
-                InflictEffect(this, new Effect(Effect.EffectType.Paralyze, 3), Effect.INFINITE_DURATION);
+                InflictEffect(this, new Effect(Effect.EffectType.Paralyze, 3));
             }
         }
     }
@@ -5015,6 +5000,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             return false;
         }
+
+        //elusive does not count nocount
+        //elusive counts allies only
+        if (GetEntityProperty(EntityProperties.Elusive) && (BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly)).FindAll((e) => (e.hp > hp && !e.GetEntityProperty(EntityProperties.NoCount))).Count != 0))
+        {
+            return false;
+        }
+
         return true;
     }
     public virtual bool GetAttackHitNoSideEffects(BattleHelper.DamageType type, ulong properties = 0)
@@ -5028,6 +5021,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             return false;
         }
+
+        //elusive does not count nocount
+        //elusive counts allies only
+        if (GetEntityProperty(EntityProperties.Elusive) && (BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly)).FindAll((e) => (e.hp > hp && !e.GetEntityProperty(EntityProperties.NoCount))).Count != 0))
+        {
+            return false;
+        }
+
         return true;
     }
 
@@ -5260,10 +5261,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             {
                 return GetDefense(DamageType.Everything);
             }
+            /*
             if (type == BattleHelper.DamageType.Air)
             {
                 return 0;
             }
+            */
             return GetDefense();
         } else
         {
@@ -5323,6 +5326,22 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (temp != null)
         {
             output += temp.potency * 1;
+        }
+
+        temp = GetEffectEntry(Effect.EffectType.Burned);
+        if (temp != null)
+        {
+            output += (Mathf.CeilToInt(temp.potency / 2f));
+        }
+        temp = GetEffectEntry(Effect.EffectType.Entangled);
+        if (temp != null)
+        {
+            output += (temp.potency + Mathf.CeilToInt(temp.potency / 2f)) * negative;
+        }
+        temp = GetEffectEntry(Effect.EffectType.Soaked);
+        if (temp != null)
+        {
+            output += (temp.potency) * negative;
         }
 
         temp = GetEffectEntry(Effect.EffectType.AttackUp);
@@ -5398,6 +5417,22 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (temp != null)
         {
             output += temp.potency * 2 * negative;
+        }
+
+        temp = GetEffectEntry(Effect.EffectType.Branded);
+        if (temp != null)
+        {
+            output += (temp.potency + Mathf.CeilToInt(temp.potency / 2f)) * negative;
+        }
+        temp = GetEffectEntry(Effect.EffectType.Shocked);
+        if (temp != null)
+        {
+            output += (temp.potency) * negative;
+        }
+        temp = GetEffectEntry(Effect.EffectType.Entangled);
+        if (temp != null)
+        {
+            output += (Mathf.CeilToInt(temp.potency / 2f));
         }
 
         temp = GetEffectEntry(Effect.EffectType.DefenseUp);
@@ -5740,7 +5775,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         return output;
     }
-    public int CountDebuffPotency()
+    public int CountDebuffPotency(bool ailmentCount = true)
     {
         int output = 0;
         for (int i = 0; i < effects.Count; i++)
@@ -5751,7 +5786,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 output += effects[i].potency;
             }
         }
-        if (HasStatus())
+        if (HasAilment() && ailmentCount)
         {
             output += 2;
         }
@@ -5830,7 +5865,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             bool statusWorks = true;
 
-            if (target.HasEffect(Effect.EffectType.Immunity) || target.HasEffect(Effect.EffectType.TimeStop))
+            if (target.HasEffect(Effect.EffectType.Immunity) || target.HasEffect(Effect.EffectType.TimeStop) || target.GetEntityProperty(BattleHelper.EntityProperties.DebuffImmune))
             {
                 if (Effect.IsCurable(se.effect))
                 {
@@ -5900,6 +5935,25 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 }
             }
         }
+    }
+
+    //this only really makes sense for AdditivePot (the other modes don't increase potency usually)
+    public virtual void InflictEffectCapped(BattleEntity target, Effect se, int potencyCap, int casterID = Effect.NULL_CASTERID, Effect.EffectStackMode mode = Effect.EffectStackMode.AdditivePot)
+    {
+        Effect e2 = se.Copy();
+
+        //already capped
+        if (target.GetEffectPotency(se.effect) >= potencyCap)
+        {
+            return;
+        }
+
+        if (target.GetEffectPotency(se.effect) + e2.potency > potencyCap)
+        {
+            e2.potency = (sbyte)(potencyCap - target.GetEffectPotency(se.effect));
+        }
+
+        InflictEffect(target, e2, casterID, mode);
     }
 
     //Only use it when absolutely necessary (or if it should bypass anti-effect stuff for some reason)
@@ -6078,6 +6132,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                                 entry.duration = se.duration;
                             }
                             break;
+                        case Effect.EffectClass.Mark:
                         case Effect.EffectClass.BuffDebuff:
                             //KeepPotAddDur
                             if (entry.duration == Effect.INFINITE_DURATION || se.duration == Effect.INFINITE_DURATION)
@@ -6168,6 +6223,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 {
                     statusMaxTurns = baseStatusMaxTurns;
                 }
+                BattleControl.Instance.CreateEffectRemovedParticles(effects[i], this);
                 effects.RemoveAt(i);
                 i--;                        //remove things properly!
             }
@@ -6184,6 +6240,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     {
                         statusMaxTurns = baseStatusMaxTurns;
                     }
+                    BattleControl.Instance.CreateEffectRemovedParticles(effects[i], this);
                     effects.RemoveAt(i);
                     i--;                        //remove things properly!
                 }
@@ -6217,6 +6274,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             Effect.EffectType.MaxSEBoost,
             Effect.EffectType.MaxSEReduction,
+
+            Effect.EffectType.Branded,
+            Effect.EffectType.Cursed,
+
+            Effect.EffectType.Burned,
+            Effect.EffectType.Soaked,
+
+            Effect.EffectType.Entangled,
+            Effect.EffectType.Shocked,
 
             Effect.EffectType.AttackUp,
             Effect.EffectType.AttackDown,
@@ -6436,6 +6502,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //Debug.Log(effects[i]);
             if (effects.Count > 0 && effects[i].potency <= 0) //potency 0 is not allowed
             {
+                BattleControl.Instance.CreateEffectRemovedParticles(effects[i], this);
                 effects.Remove(effects[i]);
                 if (i > 0)
                 {
@@ -6445,6 +6512,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             if (effects.Count > 0 && effects[i].duration <= 0)
             {
+                BattleControl.Instance.CreateEffectRemovedParticles(effects[i], this);
                 effects.Remove(effects[i]);
                 if (i > 0)
                 {
@@ -6539,7 +6607,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         return val;
     }
 
-    public bool HasStatus()
+    public bool HasAilment()
     {
         for (int i = 0; i < effects.Count; i++)
         {
@@ -6565,6 +6633,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public void RemoveAllEffects()
     {
+        BattleControl.Instance.CreateEffectRemovedParticles((e) => true, this);
         effects.RemoveAll((e) => true);
         ValidateEffects();
     }
@@ -6572,6 +6641,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         //(note: 1 + count because I want the effect to be noticeable even if you have nothing)
         int power = 1 + effects.FindAll((e) => Effect.IsCleanseable(e.effect, curePermanents)).Count;
+        BattleControl.Instance.CreateEffectRemovedParticles((e) => Effect.IsCleanseable(e.effect, curePermanents), this);
         effects.RemoveAll((e) => Effect.IsCleanseable(e.effect, curePermanents));
 
         if (power > 4)
@@ -6586,10 +6656,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
         ValidateEffects();
     }
-    public int CureEffects(bool curePermanents = true)
+    public int CureEffects(bool curePermanents = false)
     {
         //(note: 1 + count because I want the effect to be noticeable even if you have nothing)
         int power = 1 + effects.FindAll((e) => Effect.IsCurable(e.effect, curePermanents)).Count;
+        BattleControl.Instance.CreateEffectRemovedParticles((e) => Effect.IsCurable(e.effect, curePermanents), this);
         effects.RemoveAll((e) => Effect.IsCurable(e.effect, curePermanents));
 
         int powerB = power - 1;
@@ -6609,21 +6680,29 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public void CureDeathCurableEffects()
     {
+        BattleControl.Instance.CreateEffectRemovedParticles((e) => Effect.IsDeathCurable(e.effect), this);
         effects.RemoveAll((e) => Effect.IsDeathCurable(e.effect));
         ValidateEffects();
     }
     public void RemoveEffect(Effect.EffectType i)
     {
-        effects.RemoveAll((Effect s) => s.effect == i);
+        BattleControl.Instance.CreateEffectRemovedParticles((e) => e.effect == i, this);
+        int removed = effects.RemoveAll((Effect s) => s.effect == i);
+        //if (removed > 0)
+        //{
+        //    BattleControl.Instance.CreateEffectRemovedParticles(new Effect(i), this);
+        //}
         ValidateEffects();
     }
     public void RemoveEffectsFromCaster(int casterID) //cure statuses from a certain ID
     {
+        BattleControl.Instance.CreateEffectRemovedParticles((e) => e.casterID == casterID, this);
         effects.RemoveAll((Effect s) => s.casterID == casterID);
         ValidateEffects();
     }
     public void RemoveEffectsFromCaster(int casterID, Effect.EffectType e) //cure statuses from a certain ID
     {
+        BattleControl.Instance.CreateEffectRemovedParticles((f) => f.casterID == casterID && f.effect == e, this);
         effects.RemoveAll((Effect s) => s.casterID == casterID && s.effect == e);
         ValidateEffects();
     }
@@ -6684,6 +6763,24 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         return potency;
     }
+    public int CountPartyCumulativeBuffPotency()
+    {
+        int output = 0;
+        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly)))
+        {
+            output += b.CountBuffPotency();
+        }
+        return output;
+    }
+    public int CountPartyCumulativeDebuffPotency()
+    {
+        int output = 0;
+        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly)))
+        {
+            output += b.CountDebuffPotency();
+        }
+        return output;
+    }
     public virtual void ValidateEffects()
     {
         /*
@@ -6736,22 +6833,24 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             if (effects.Count > 0 && effects[i].potency <= 0) //potency 0 is not allowed
             {
+                BattleControl.Instance.CreateEffectRemovedParticles(effects[i], this);
                 effects.Remove(effects[i]);
                 if (i > 0)
                 {
                     i--;
                 }
-                QueueEvent(BattleHelper.Event.CureStatus);
+                QueueEventIfUnqueued(BattleHelper.Event.CureStatus);
             }
             if (effects.Count > 0 && effects[i].duration <= 0)
             {
+                BattleControl.Instance.CreateEffectRemovedParticles(effects[i], this);
                 effects.Remove(effects[i]);
                 if (i > 0)
                 {
                     i--;
                 }
                 //do status curing code
-                QueueEvent(BattleHelper.Event.CureStatus);
+                QueueEventIfUnqueued(BattleHelper.Event.CureStatus);
             }
         }
 
@@ -6905,6 +7004,31 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             return "ArcDischarge";
         }
+
+        else if (HasEffect(Effect.EffectType.Branded))
+        {
+            return "Branded";
+        }
+        else if (HasEffect(Effect.EffectType.Cursed))
+        {
+            return "Cursed";
+        }
+        else if (HasEffect(Effect.EffectType.Shocked))
+        {
+            return "Shocked";
+        }
+        else if (HasEffect(Effect.EffectType.Entangled))
+        {
+            return "Entangled";
+        }
+        else if (HasEffect(Effect.EffectType.Soaked))
+        {
+            return "Soaked";
+        }
+        else if (HasEffect(Effect.EffectType.Burned))
+        {
+            return "Burned";
+        }
         return "?";
     }
     public GameObject CreateEffectParticle()
@@ -6980,6 +7104,32 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_ArcDischarge"), subObject.transform);
         }
+
+        else if (HasEffect(Effect.EffectType.Branded))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Branded"), subObject.transform);
+        }
+        else if (HasEffect(Effect.EffectType.Cursed))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Cursed"), subObject.transform);
+        }
+        else if (HasEffect(Effect.EffectType.Shocked))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Shocked"), subObject.transform);
+        }
+        else if (HasEffect(Effect.EffectType.Entangled))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Entangled"), subObject.transform);
+        }
+        else if (HasEffect(Effect.EffectType.Soaked))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Soaked"), subObject.transform);
+        }
+        else if (HasEffect(Effect.EffectType.Burned))
+        {
+            eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect/Effect_Perpetual_Burned"), subObject.transform);
+        }
+
 
         if (eo != null)
         {
@@ -7259,6 +7409,72 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 statusColorString += "|" + MainManager.ColorToString(new Color(0.3f, 0.6f, 0f, 1f));
                 statusColorString += "|" + MainManager.ColorToString(new Color(0.6f, 0.55f, 0.6f, 1f));
                 statusColorString += "|" + 0.5f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Branded))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.3f, 0.6f, 0.65f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.6f, 0.9f, 0.95f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 1f, 1f, 1f));
+                statusColorString += "|" + 0.1f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Cursed))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.15f, 0.15f, 0.2f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.25f, 0.15f, 0.3f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.35f, 0.25f, 0.45f, 1f));
+                statusColorString += "|" + 0.2f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Shocked))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.4f, 0.4f, 0.05f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.6f, 0.6f, 0.2f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 1f, 0.5f, 1f));
+                statusColorString += "|" + 0.2f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Entangled))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.1f, 0.4f, 0.1f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.25f, 0.6f, 0.2f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 1f, 0.7f, 1f));
+                statusColorString += "|" + 0.2f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Soaked))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.1f, 0.2f, 0.4f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.3f, 0.45f, 0.9f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(0.7f, 0.9f, 1f, 1f));
+                statusColorString += "|" + 0.2f;
+            }
+            statusColorString += "_X_";
+        }
+        else if (HasEffect(Effect.EffectType.Burned))
+        {
+            if (statusColorString.Equals("X"))
+            {
+                statusColorString = MainManager.ColorToString(new Color(0.35f, 0.05f, 0f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 0.25f, 0.05f, 1f));
+                statusColorString += "|" + MainManager.ColorToString(new Color(1f, 0.8f, 0.45f, 1f));
+                statusColorString += "|" + 0.2f;
             }
             statusColorString += "_X_";
         }
@@ -7753,14 +7969,21 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //for specific cleanup stuff
     public virtual void StopIdleSpecific()
     {
-        ac.ResetAnimationSpeed();
+        if (ac != null)
+        {
+            ac.ResetAnimationSpeed();
+        }
     }
 
     public virtual IEnumerator Idle()
     {
         idleTime = 0;
         yield return new WaitForSeconds(0.1f * RandomGenerator.Get());
-        ac.ResetAnimationSpeed();
+        if (ac != null)
+        {
+            ac.ResetAnimationSpeed();
+            ac.SetAnimationSpeed(1 + (0.05f * RandomGenerator.Get()));
+        }
         SetIdleAnimation(true);
         //Note: hopefully this will work in all cases (there shouldn't be a persistent thing that causes the animation to be wrong)
         while (true)
@@ -7802,7 +8025,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             */
             if (RandomGenerator.Get() < (Time.deltaTime / 1))
             {
-                ac.SetAnimationSpeed(1 + (0.1f * RandomGenerator.Get()));
+                if (ac != null)
+                {
+                    ac.SetAnimationSpeed(1 + (0.1f * RandomGenerator.Get()));
+                }
             }
             yield return null;
         }
@@ -7823,6 +8049,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             StartCoroutine(DoEvent(eventID));
             eventQueue.RemoveAt(0);
+        }
+    }
+    public void QueueEventIfUnqueued(BattleHelper.Event eventID)
+    {
+        if (!eventQueue.Contains(eventID))
+        {
+            QueueEvent(eventID);
         }
     }
     //  execute event (called in Update when event queue exists)
@@ -7979,8 +8212,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public void SpriteBoundUpdate()
     {
-        height = ac.height;
-        width = ac.width;
+        if (ac == null)
+        {
+            height = 1;
+            width = 1;
+            return;
+        }
+
+        //note: squish animations touch localscale of ac
+        //so use normal localscale to avoid that?
+        height = ac.height * transform.localScale.y;
+        width = ac.width * transform.localScale.x;
     }
 
     public IEnumerator FlyingFlyBackUp()
@@ -8035,6 +8277,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public virtual void LateUpdate()
     {
         sameFrameHealEffects = 0;
+        sameFrameEffectsAdded = 0;
+        sameFrameEffectsRemoved = 0;
+        sameFrameRibbonBadgeActivations = 0;
     }
 
     public virtual void ResetSubobjectTransform()
@@ -8248,15 +8493,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         return (position - transform.position).magnitude / speed;
     }
 
-    public IEnumerator Move(Vector3 position, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    public virtual IEnumerator Move(Vector3 position, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
         yield return StartCoroutine(Move(position, entitySpeed, GetEntityProperty(EntityProperties.Grounded) ? "walk" : "idleflying", animate, animateEnd));
     }
-    public IEnumerator Move(Vector3 position, float speed, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    public virtual IEnumerator Move(Vector3 position, float speed, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
         yield return StartCoroutine(Move(position, speed, GetEntityProperty(EntityProperties.Grounded) ? "walk" : "idleflying", animate, animateEnd));
     }
-    public IEnumerator Move(Vector3 position, float speed, string anim, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    public virtual IEnumerator Move(Vector3 position, float speed, string anim, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
         if (transform.position == position)
         {
@@ -8265,10 +8510,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         bool frameOne = false;
 
-        float baseAnimSpeed = ac.GetAnimationSpeed();
+        float baseAnimSpeed = 1;
+        if (ac != null)
+        {
+            baseAnimSpeed = ac.GetAnimationSpeed();
+        }
         if (animate)
         {
-            ac.SetAnimationSpeed(baseAnimSpeed * (speed / 3f));
+            if (ac != null)
+            {
+                ac.SetAnimationSpeed(baseAnimSpeed * (speed / 3f));
+            }
             yield return null;
             if (flipDefault)
             {
@@ -8318,7 +8570,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             yield return null;
         }
 
-        if (animate)
+        if (animate && ac != null)
         {
             ac.SetAnimationSpeed(baseAnimSpeed);
         }
@@ -8336,19 +8588,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
     }
 
-    public IEnumerator MoveEasing(Vector3 position, Func<float, float> easing, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    public virtual IEnumerator MoveEasing(Vector3 position, Func<float, float> easing, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
         yield return StartCoroutine(MoveEasing(position, entitySpeed, easing, GetEntityProperty(EntityProperties.Grounded) ? "walk" : "idleflying", animate, animateEnd));
     }
-    public IEnumerator MoveEasing(Vector3 position, float speed, Func<float, float> easing, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    public virtual IEnumerator MoveEasing(Vector3 position, float speed, Func<float, float> easing, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
         yield return StartCoroutine(MoveEasing(position, speed, easing, GetEntityProperty(EntityProperties.Grounded) ? "walk" : "idleflying", animate, animateEnd));
     }
-    public IEnumerator MoveEasing(Vector3 position, Func<float, float> easing, string anim, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
+    public virtual IEnumerator MoveEasing(Vector3 position, Func<float, float> easing, string anim, bool animate = true, bool animateEnd = true) //Move position based on speed (per frame).
     {
         yield return StartCoroutine(MoveEasing(position, entitySpeed, easing, anim, animate, animateEnd));
     }
-    public IEnumerator MoveEasing(Vector3 position, float speed, Func<float, float> easing, string anim, bool animate = true, bool animateEnd = true)
+    public virtual IEnumerator MoveEasing(Vector3 position, float speed, Func<float, float> easing, string anim, bool animate = true, bool animateEnd = true)
     {
         Vector3 startPos = transform.position;
         Vector3 endPos = position;
@@ -8360,7 +8612,17 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             yield break;
         }
 
-        float baseAnimSpeed = ac.GetAnimationSpeed();
+        if (ac == null)
+        {
+            animate = false;
+            animateEnd = false;
+        }
+
+        float baseAnimSpeed = 1;
+        if (ac != null)
+        {
+            baseAnimSpeed = ac.GetAnimationSpeed();
+        }
         if (animate)
         {
             yield return null;
@@ -8390,7 +8652,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             transform.position = Vector3.Lerp(startPos, endPos, easing(completion));
 
             //Easing function should have average derivative = 1 (because the default easing = derivative of 1)
-            ac.SetAnimationSpeed(baseAnimSpeed * (MainManager.Derivative(easing, completion)) * (speed / 3f));
+            if (ac != null)
+            {
+                ac.SetAnimationSpeed(baseAnimSpeed * (MainManager.Derivative(easing, completion)) * (speed / 3f));
+            }
 
             completion = (Time.time - initialTime) / duration;
             yield return null;
@@ -8477,6 +8742,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             SetIdleAnimation();
         }
+
+        //squish on landing
+        //not putting anti squish on start up because some stuff is just falling down
+        StartCoroutine(SquishFull(0.05f, Mathf.Min(0.8f, 0.35f / height)));
     }
     public IEnumerator Jump(Vector3 targetPos, float height, float duration, bool animate = true, bool animateEnd = true, MainManager.Sound sound = MainManager.Sound.SFX_Overworld_JumpGeneric)
     {
@@ -8541,6 +8810,8 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             SetIdleAnimation();
         }
+
+        StartCoroutine(SquishFull(0.05f, Mathf.Min(0.8f, 0.35f / height)));
     }
     public IEnumerator JumpHeavy(Vector3 targetPos, float height, float duration, float heaviness, bool animate = true, bool animateEnd = true, MainManager.Sound sound = MainManager.Sound.SFX_Overworld_JumpGeneric)  //-1.0 - 1.0, negative = slow start, heavy end, positive = heavy start, slow end. Values outside the -1.0 to 1.0 range create overshooting
     {
@@ -8614,10 +8885,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     }
                     SetIdleAnimation();
                 }
+                StartCoroutine(SquishFull(0.05f, Mathf.Min(0.8f, 0.35f / height)));
                 yield break;
             }
             yield return null;
-        }
+        }        
     }
     public IEnumerator ExtrapolateJumpHeavy(Vector3 startPos, Vector3 targetPos, float height, float duration, float heaviness, bool animate = true, bool animateEnd = true)
     {
@@ -8689,6 +8961,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                     }
                     SetIdleAnimation();
                 }
+                StartCoroutine(SquishFull(0.05f, Mathf.Min(0.8f, 0.35f / height)));
                 yield break;
             }
             yield return null;
@@ -8850,6 +9123,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public IEnumerator RevertScale(float duration)
     {
         yield return StartCoroutine(SmoothScale(duration, Vector3.one));
+    }
+    public IEnumerator SquishFull(float duration, float deltaScale)
+    {
+        yield return StartCoroutine(Squish(duration, deltaScale));
+        yield return StartCoroutine(RevertScale(duration));
     }
 
     public IEnumerator Spin(Vector3 angle, float duration, bool animate = true) //euler angle rotation
@@ -9068,6 +9346,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
     public virtual void SetIdleAnimation(bool force = false)
     {
+        if (ac == null)
+        {
+            return;
+        }
         ac.SendAnimationData("unshowback");
         ac.ResetAnimationSpeed();
         if (!alive)
@@ -9129,7 +9411,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
     public virtual void SendAnimationData(string data)
     {
-        Debug.Log(name + " animation data " + data);
+        //Debug.Log(name + " animation data " + data);
         if (ac != null)
         {
             ac.SendAnimationData(data);

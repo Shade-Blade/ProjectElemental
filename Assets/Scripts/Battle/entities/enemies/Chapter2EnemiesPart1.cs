@@ -301,6 +301,7 @@ public class BE_Sentry : BattleEntity
     }
     public override IEnumerator PostMove()
     {
+        counterCount = 0;
         yield return StartCoroutine(base.PostMove());
 
         if (GetEntityProperty(BattleHelper.EntityProperties.Airborne, true))
@@ -446,7 +447,7 @@ public class BM_Sentry_CounterFling : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
@@ -467,9 +468,6 @@ public class BM_Sentry_CounterFling : EnemyMove
 
 public class BE_Cactupole : BattleEntity
 {
-    //public bool grounded = false;
-    public int counterCount = 0;
-
     public override void Initialize()
     {
         moveset = new List<Move> { gameObject.AddComponent<BM_Shared_BiteThenFly>(), gameObject.AddComponent<BM_Cactupole_ThornShock>(), gameObject.AddComponent<BM_Cactupole_Hard_StormFortify>() };
@@ -479,7 +477,6 @@ public class BE_Cactupole : BattleEntity
 
     public override void ChooseMoveInternal()
     {
-        counterCount = 0;
         if (moveset.Count == 0)
         {
             currMove = null;
@@ -586,7 +583,7 @@ public class BM_Cactupole_ThornShock : EnemyMove
 
                 //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
@@ -725,7 +722,7 @@ public class BM_Sandswimmer_Bite : EnemyMove
             {
                 yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)

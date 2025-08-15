@@ -65,7 +65,7 @@ MonoBehaviour:
   backSpriteB: {fileID: 6996221116815834326}
   starMaterial: {fileID: 2100000, guid: 9dbd65115e54069428c3ea05f9183f71, type: 2}
   ministarMaterial: {fileID: 2100000, guid: 23cb9b323995d8b49b4cab45d69ebb8b, type: 2}
-  square: {fileID: 7482667652216324306, guid: 8f9a297526949ec4086ad801649dd6c2, type: 3}
+  square: {fileID: 21300000, guid: 8f9a297526949ec4086ad801649dd6c2, type: 3}
   ministarSprites:
   - {fileID: 21300000, guid: de4c1706653a25d4ea950cf9d54b7468, type: 3}
   - {fileID: 21300000, guid: 32d4009efe527f84e9dacb8c122e7e0f, type: 3}

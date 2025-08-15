@@ -113,10 +113,7 @@ public class BM_EyeSpore_Hard_CounterSpiteBeam : EnemyMove
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Infinite);
-                if (BattleControl.Instance.GetCurseLevel() > 0)
-                {
-                    caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 1, Effect.INFINITE_DURATION));
-                }
+                caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Defocus, 2, Effect.INFINITE_DURATION));
             }
             else
             {
@@ -230,7 +227,7 @@ public class BM_SpikeSpore_PoisonSpikes : EnemyMove
             yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
@@ -600,7 +597,7 @@ public class BM_HoarderFly_PoisonHeal : EnemyMove
 
                 //this order is so that it doesn't trigger the revive code thing
                 caller.curTarget.HealHealth(3);
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 0, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
@@ -677,7 +674,18 @@ public class BM_HoarderFly_Hard_FinalHeal : EnemyMove
         {
             if (be != caller)
             {
-                be.HealHealth(4);
+                switch (caller.entityID)
+                {
+                    case BattleHelper.EntityID.Solardew:
+                        be.HealHealth(8);
+                        break;
+                    case BattleHelper.EntityID.HoarderFly:
+                        be.HealHealth(4);
+                        break;
+                    default:
+                        be.HealHealth(4);
+                        break;
+                }
             }
         }
 
@@ -780,7 +788,7 @@ public class BM_Mosquito_ShockNeedle : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Weapon);
                 if (!hasStatus)
                 {

@@ -10,6 +10,7 @@ public class EnemyBuilder// : MonoBehaviour
     {
         AnimationController ac = MainManager.CreateAnimationController(sid, sub);
         be.ac = ac;
+        be.SpriteBoundUpdate();
         ac.gameObject.transform.parent = sub.transform;
         return ac.gameObject;
     }
@@ -32,6 +33,8 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.P_Sunflower;
             case BattleHelper.EntityID.Sunnybud:
                 return MainManager.SpriteID.P_Sunnybud;
+            case BattleHelper.EntityID.Goldbush:
+                return MainManager.SpriteID.P_Goldbush;
             case BattleHelper.EntityID.MiracleBloom:
                 return MainManager.SpriteID.P_MiracleBloom;
             case BattleHelper.EntityID.Rockling:
@@ -42,6 +45,14 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.C1_BurrowTrap;
             case BattleHelper.EntityID.Sundew:
                 return MainManager.SpriteID.C1_Sundew;
+            case BattleHelper.EntityID.Leafswimmer:
+                return MainManager.SpriteID.C1_Leafswimmer;
+            case BattleHelper.EntityID.Brambleling:
+                return MainManager.SpriteID.C1_Brambleling;
+            case BattleHelper.EntityID.GiantVine:
+                return MainManager.SpriteID.C1_GiantVine;
+            case BattleHelper.EntityID.Solardew:
+                return MainManager.SpriteID.C1_Solardew;
             case BattleHelper.EntityID.Sycamore:
                 return MainManager.SpriteID.C1_Rabbit_Sycamore;
             case BattleHelper.EntityID.Bandit:
@@ -54,6 +65,19 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.C2_Cactupole;
             case BattleHelper.EntityID.Sandswimmer:
                 return MainManager.SpriteID.C2_Sandswimmer;
+            case BattleHelper.EntityID.SpireGuard:
+            case BattleHelper.EntityID.EliteGuard:
+                break;
+            case BattleHelper.EntityID.DesertBloom:
+                return MainManager.SpriteID.C2_DesertBloom;
+            case BattleHelper.EntityID.Goldpole:
+                return MainManager.SpriteID.C2_Goldpole;
+            case BattleHelper.EntityID.Shockworm:
+                return MainManager.SpriteID.C2_Shockworm;
+            case BattleHelper.EntityID.Brightpole:
+                return MainManager.SpriteID.C2_Brightpole;
+            case BattleHelper.EntityID.Stormswimmer:
+                return MainManager.SpriteID.C2_Stormswimmer;
             case BattleHelper.EntityID.TournamentPawn:
                 return MainManager.SpriteID.C2_FrogNormal_MaleFoxBandit;
             case BattleHelper.EntityID.TournamentKnight:
@@ -78,6 +102,18 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.C3_Slimebloom;
             case BattleHelper.EntityID.SirenFish:
                 return MainManager.SpriteID.C3_Sirenfish;
+            case BattleHelper.EntityID.Urchiling:
+                return MainManager.SpriteID.C3_Urchiling;
+            case BattleHelper.EntityID.GoldenSlime:
+                return MainManager.SpriteID.C3_GoldenSlime;
+            case BattleHelper.EntityID.ElementalSlime:
+                return MainManager.SpriteID.C3_ElementalSlime;
+            case BattleHelper.EntityID.NormalSlime:
+                return MainManager.SpriteID.C3_NormalSlime;
+            case BattleHelper.EntityID.SoftSlime:
+                return MainManager.SpriteID.C3_SoftSlime;
+            case BattleHelper.EntityID.RigidSlime:
+                return MainManager.SpriteID.C3_RigidSlime;
             case BattleHelper.EntityID.Blazecrest:
                 return MainManager.SpriteID.C4_Flamecrest_BlazecrestMale;
             case BattleHelper.EntityID.Embercrest:
@@ -90,6 +126,16 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.C4_Heatwing;
             case BattleHelper.EntityID.Lavaswimmer:
                 return MainManager.SpriteID.C4_Lavaswimmer;
+            case BattleHelper.EntityID.Pyrenfish:
+                return MainManager.SpriteID.C4_Pyrenfish;
+            case BattleHelper.EntityID.GoldScreecher:
+                return MainManager.SpriteID.C4_GoldScreecher;
+            case BattleHelper.EntityID.Infernoling:
+                return MainManager.SpriteID.C4_Infernoling;
+            case BattleHelper.EntityID.Magmaswimmer:
+                return MainManager.SpriteID.C4_Magmaswimmer;
+            case BattleHelper.EntityID.Wyverlet:
+                return MainManager.SpriteID.C4_Wyverlet;
             case BattleHelper.EntityID.EyeSpore:
                 return MainManager.SpriteID.C5_EyeSpore;
             case BattleHelper.EntityID.SpikeShroom:
@@ -100,6 +146,16 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.C5_HoarderFly;
             case BattleHelper.EntityID.Mosquito:
                 return MainManager.SpriteID.C5_Mosquito_Female;
+            case BattleHelper.EntityID.Toxiwing:
+                return MainManager.SpriteID.C5_Toxiwing;
+            case BattleHelper.EntityID.GoldFly:
+                return MainManager.SpriteID.C5_GoldFly;
+            case BattleHelper.EntityID.MawSpore:
+                return MainManager.SpriteID.C5_MawSpore;
+            case BattleHelper.EntityID.CaveSpider:
+                return MainManager.SpriteID.C5_CaveSpider;
+            case BattleHelper.EntityID.Obscurer:
+                return MainManager.SpriteID.C5_Obscurer;
             case BattleHelper.EntityID.Shieldwing:
                 return MainManager.SpriteID.C6_Shieldwing;
             case BattleHelper.EntityID.Honeywing:
@@ -112,6 +168,14 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.C6_Hawk_FemaleSoldier;
             case BattleHelper.EntityID.LumistarStriker:
                 return MainManager.SpriteID.C6_Hawk_MaleStriker;
+            case BattleHelper.EntityID.Spikeflake:
+                return MainManager.SpriteID.C6_Spikeflake;
+            case BattleHelper.EntityID.Mirrorwing:
+                return MainManager.SpriteID.C6_Mirrorwing;
+            case BattleHelper.EntityID.Beaconwing:
+                return MainManager.SpriteID.C6_Beaconwing;
+            case BattleHelper.EntityID.Harmonywing:
+                return MainManager.SpriteID.C6_Harmonywing;
             case BattleHelper.EntityID.KingIlum:
             case BattleHelper.EntityID.TyrantBlade:
                 return MainManager.SpriteID.C6_Hawk_Ilum;
@@ -127,6 +191,8 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.C7_Coiler;
             case BattleHelper.EntityID.Drillbeak:
                 return MainManager.SpriteID.C7_Drillbeak;
+            case BattleHelper.EntityID.Quickworm:
+                return MainManager.SpriteID.C7_Quickworm;
             case BattleHelper.EntityID.AetherBoss:
             case BattleHelper.EntityID.AetherSuperboss:
                 return MainManager.SpriteID.C7_Plateshell_Cutle;
@@ -134,6 +200,7 @@ public class EnemyBuilder// : MonoBehaviour
                 return MainManager.SpriteID.C8_PuffJelly;
             case BattleHelper.EntityID.Fluffling:
                 return MainManager.SpriteID.C8_Fluffling;
+            case BattleHelper.EntityID.Floppole:
             case BattleHelper.EntityID.CloudJelly:
                 return MainManager.SpriteID.C8_CloudJelly;
             case BattleHelper.EntityID.CrystalCrab:
@@ -147,6 +214,14 @@ public class EnemyBuilder// : MonoBehaviour
             case BattleHelper.EntityID.FinalBoss:
             case BattleHelper.EntityID.FinalSuperboss:
                 return MainManager.SpriteID.C8_Hydromander_Cyclus;
+            case BattleHelper.EntityID.DarkBurrower:
+                return MainManager.SpriteID.E_DarkBurrower;
+            case BattleHelper.EntityID.Shadew:
+                return MainManager.SpriteID.E_Shadew;
+            case BattleHelper.EntityID.VileBloom:
+                return MainManager.SpriteID.E_Vilebloom;
+            case BattleHelper.EntityID.Thornweed:
+                return MainManager.SpriteID.E_Thornweed;
             case BattleHelper.EntityID.Plaguebud:
                 return MainManager.SpriteID.E_Plaguebud_Male;
             case BattleHelper.EntityID.Starfish:
@@ -181,6 +256,7 @@ public class EnemyBuilder// : MonoBehaviour
         s.material = MainManager.Instance.defaultSpriteMaterial;
         BattleEntity b = null;
         bool debugSprite = true;
+
         switch (id)
         {
             case BattleHelper.EntityID.Wilex:
@@ -227,6 +303,11 @@ public class EnemyBuilder// : MonoBehaviour
                 //s.color = new Color(1, 0.75f, 0.4f);
                 debugSprite = false;
                 break;
+            case BattleHelper.EntityID.Goldbush:
+                b = g.AddComponent<BE_Goldbush>();
+                //s.color = new Color(1, 0.4f, 0.75f);
+                debugSprite = false;
+                break;
             case BattleHelper.EntityID.MiracleBloom:
                 b = g.AddComponent<BE_MiracleBloom>();
                 //s.color = new Color(1, 0.4f, 0.75f);
@@ -256,6 +337,22 @@ public class EnemyBuilder// : MonoBehaviour
                 //s.color = new Color(0.7f, 0.7f, 0.2f);
                 debugSprite = false;
                 break;
+            case BattleHelper.EntityID.Leafswimmer:
+                b = g.AddComponent<BE_Leafswimmer>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Brambleling:
+                b = g.AddComponent<BE_Brambleling>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.GiantVine:
+                b = g.AddComponent<BE_GiantVine>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Solardew:
+                b = g.AddComponent<BE_Solardew>();
+                debugSprite = false;
+                break;
             case BattleHelper.EntityID.VinePlatform:
                 b = g.AddComponent<BE_VinePlatform>();
                 s.color = new Color(0.25f, 0.6f, 0.25f);
@@ -264,10 +361,6 @@ public class EnemyBuilder// : MonoBehaviour
                 b = g.AddComponent<BE_Sycamore>();
                 //s.color = new Color(0.65f, 1, 0.65f);
                 debugSprite = false;
-                break;
-            case BattleHelper.EntityID.GiantVine:
-                b = g.AddComponent<BE_GiantVine>();
-                s.color = new Color(1, 0.9f, 0.8f);
                 break;
             case BattleHelper.EntityID.VineThrone:
                 b = g.AddComponent<BE_VineThrone>();
@@ -300,6 +393,32 @@ public class EnemyBuilder// : MonoBehaviour
             case BattleHelper.EntityID.Sandswimmer:
                 b = g.AddComponent<BE_Sandswimmer>();
                 //s.color = new Color(0.7f, 0.7f, 0.45f);
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.SpireGuard:
+                b = g.AddComponent<BE_SpireGuard>();
+                break;
+            case BattleHelper.EntityID.EliteGuard:
+                b = g.AddComponent<BE_EliteGuard>();
+                break;
+            case BattleHelper.EntityID.DesertBloom:
+                b = g.AddComponent<BE_DesertBloom>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Goldpole:
+                b = g.AddComponent<BE_Goldpole>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Shockworm:
+                b = g.AddComponent<BE_Shockworm>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Brightpole:
+                b = g.AddComponent<BE_Brightpole>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Stormswimmer:
+                b = g.AddComponent<BE_Stormswimmer>();
                 debugSprite = false;
                 break;
             case BattleHelper.EntityID.DesertMinibossA:
@@ -576,6 +695,10 @@ public class EnemyBuilder// : MonoBehaviour
         {
             GameObject.Destroy(so);
             so = AnimationControllerSetup(b, h, EntityIDToSpriteID(id));
+        } else
+        {
+            b.height = 1;
+            b.width = 1;
         }
 
         // = GetScript(id)

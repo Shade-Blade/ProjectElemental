@@ -77,7 +77,7 @@ public class BM_Plateshell_RageFireball : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Fire))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
@@ -204,7 +204,7 @@ public class BM_Speartongue_TongueStab : EnemyMove
 
         if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Dark))
         {
-            bool hasStatus = caller.curTarget.HasStatus();
+            bool hasStatus = caller.curTarget.HasAilment();
             caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
             caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Contact);
             if (!hasStatus)
@@ -350,7 +350,7 @@ public class BM_Chaintail_ShockClaw : EnemyMove
             yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 if (BattleControl.Instance.GetCurseLevel() > 0)
                 {
@@ -491,6 +491,11 @@ public class BE_Sawcrest : BattleEntity
         moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Bite>(), gameObject.AddComponent<BM_Sawcrest_SawRush>(), gameObject.AddComponent<BM_Sawcrest_CounterSawToggle>(), gameObject.AddComponent<BM_Sawcrest_Hard_DeepCut>(), gameObject.AddComponent<BM_Sawcrest_Hard_CounterRevUp>() };
 
         base.Initialize();
+    }
+
+    public override string GetName()
+    {
+        return base.GetName() + (sawActive ? " (Active)" : " (Inactive)");
     }
 
     public void SetSawState(bool state)
@@ -830,6 +835,7 @@ public class BE_Coiler : BattleEntity
         if (GetEntityProperty(BattleHelper.EntityProperties.StateCharge))
         {
             SetEntityProperty(BattleHelper.EntityProperties.StateCharge, false);
+            SetEntityProperty(BattleHelper.EntityProperties.StateDefensive, false);
             SetEntityProperty(BattleHelper.EntityProperties.StateContactHazardHeavy, false);
             ResetDefenseTable();
             height = 0.7f;
@@ -983,6 +989,7 @@ public class BM_Coiler_Charge : EnemyMove
     {
         yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateCharge);
+        caller.SetEntityProperty(BattleHelper.EntityProperties.StateDefensive);
         caller.SetEntityProperty(BattleHelper.EntityProperties.StateContactHazardHeavy);
         caller.SetDefense(BattleHelper.DamageType.Default, 8);
     }

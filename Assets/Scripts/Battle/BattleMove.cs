@@ -20,6 +20,10 @@ public class TargetArea
         LiveAlly,
         LiveAllyNotSelf,
         LiveAllyNotSelfMovable,
+        LiveAllyWeak,  //1/2 hp or ailed
+        LiveAllyWeakLow,
+        LiveAllyWeakLowNotSameType,
+        LiveAllyShiftable,
         DeadAlly,
         Anyone,
         LiveAnyone,
@@ -114,6 +118,14 @@ public class TargetArea
                     return ((c, e) => e.posId != c.posId && (e.hp > 0 && !(e.posId >= 0 ^ c.posId >= 0)));
                 case TargetAreaType.LiveAllyNotSelfMovable:
                     return ((c, e) => e.posId != c.posId && (e.CanMove() || e.AutoMove()) && (e.hp > 0 && !(e.posId >= 0 ^ c.posId >= 0)));
+                case TargetAreaType.LiveAllyWeak:
+                    return ((c, e) => e.posId != c.posId && (e.hp > 0 && !(e.posId >= 0 ^ c.posId >= 0)) && (e.HasAilment() || (e.hp * 2 <= e.maxHP)) && c.level + c.bonusLevel + 4 > e.level + e.bonusLevel);
+                case TargetAreaType.LiveAllyWeakLow:
+                    return ((c, e) => (GetChecker(TargetAreaType.LiveAllyWeak).Invoke(c,e) && e.GetEntityProperty(BattleHelper.EntityProperties.Airborne, false)));
+                case TargetAreaType.LiveAllyWeakLowNotSameType:
+                    return ((c, e) => (GetChecker(TargetAreaType.LiveAllyWeakLow).Invoke(c, e) && c.entityID != e.entityID));
+                case TargetAreaType.LiveAllyShiftable:
+                    return ((c, e) => (GetChecker(TargetAreaType.LiveAlly).Invoke(c, e) && ((c.homePos.x > e.homePos.x) ^ (c.hp < e.hp))));
                 case TargetAreaType.DeadAlly:
                     return ((c, e) => (e.hp <= 0 && !(e.posId >= 0 ^ c.posId >= 0)));
                 case TargetAreaType.Anyone:
@@ -125,19 +137,19 @@ public class TargetArea
                 case TargetAreaType.LiveAnyoneNotSelf:
                     return ((c, e) => (e.posId != c.posId && e.hp > 0));
                 case TargetAreaType.LiveEnemyLow:
-                    return ((c, e) => (e.GetEntityProperty(BattleHelper.EntityProperties.Airborne, false) && (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0))));
+                    return ((c, e) => (e.GetEntityProperty(BattleHelper.EntityProperties.Airborne, false) && GetChecker(TargetAreaType.LiveEnemy).Invoke(c, e)));
                 case TargetAreaType.LiveEnemyLowBottommost:
-                    return ((c, e) => (BattleControl.Instance.IsBottommost(e) && e.GetEntityProperty(BattleHelper.EntityProperties.Airborne, false) && (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0))));
+                    return ((c, e) => (BattleControl.Instance.IsBottommost(e) && e.GetEntityProperty(BattleHelper.EntityProperties.Airborne, false) && GetChecker(TargetAreaType.LiveEnemy).Invoke(c, e)));
                 case TargetAreaType.LiveEnemyGrounded:
-                    return ((c, e) => (e.GetEntityProperty(BattleHelper.EntityProperties.Grounded) && (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0))));
+                    return ((c, e) => (e.GetEntityProperty(BattleHelper.EntityProperties.Grounded) && GetChecker(TargetAreaType.LiveEnemy).Invoke(c, e)));
                 case TargetAreaType.LiveEnemyTopmost:
-                    return ((c, e) => (BattleControl.Instance.IsTopmost(e) && (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0))));
+                    return ((c, e) => (BattleControl.Instance.IsTopmost(e) && GetChecker(TargetAreaType.LiveEnemy).Invoke(c, e)));
                 case TargetAreaType.LiveEnemyLowStompable:
-                    return ((c, e) => (BattleControl.Instance.IsTopmost(e) && (e.hp > 0 && (e.posId >= 0 ^ c.posId >= 0)) && e.GetEntityProperty(BattleHelper.EntityProperties.LowStompable, true)));
+                    return ((c, e) => (BattleControl.Instance.IsTopmost(e) && GetChecker(TargetAreaType.LiveEnemy).Invoke(c, e) && e.GetEntityProperty(BattleHelper.EntityProperties.LowStompable, true)));
                 case TargetAreaType.LiveEnemyLowFrontmost:
-                    return ((c, e) => (BattleControl.Instance.IsFrontmostLow(c, e)));
+                    return ((c, e) => (BattleControl.Instance.IsFrontmostLow(c, e) && GetChecker(TargetAreaType.LiveEnemy).Invoke(c, e)));
                 case TargetAreaType.Scan:
-                    return ((c, e) => ((e.posId >= 0 ^ c.posId >= 0) && !e.GetEntityProperty(BattleHelper.EntityProperties.NoTattle)));
+                    return ((c, e) => (GetChecker(TargetAreaType.Enemy).Invoke(c, e) && !e.GetEntityProperty(BattleHelper.EntityProperties.NoTattle)));
             }
             return (c, e) => false;
         }
@@ -928,6 +940,9 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                         if (e.potency == 0)
                         {
                             caller.RemoveEffect(Effect.EffectType.Burst);
+                        } else
+                        {
+                            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.BurstRecycling, caller);
                         }
                     }
                 }
@@ -994,6 +1009,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                     int healAmount = (int)(0.001f + (pB.agility * rebound) / (1f));
                     pB.HealStamina(healAmount);
                     healEffects++;
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.StaminaRebound, caller);
                 }
 
                 //stamina recycling
@@ -1011,6 +1027,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                         pB.HealStamina(healAmount);
                         healEffects++;
                     }
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.StaminaRecycling, caller);
                 }
 
                 //depletion burst
@@ -1018,6 +1035,7 @@ public abstract class PlayerMove : Move, IEntityHighlighter
                 {
                     pB.HealEnergy(5 * pB.BadgeEquippedCount(Badge.BadgeType.DepletionBurst));
                     healEffects++;
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.DepletionBurst, caller);
                 }
             }
         }
@@ -1222,13 +1240,18 @@ public abstract class EnemyMove : Move
     {
         Unknown = 0,
         Bite,
+        DoubleBite,
         Swoop,      
         FrontBite,
         BiteThenFly,
         Slash,
         DualSlash,
+        Stab,
+        DoubleStab,
         DoubleSwoop,
         TripleSwoop,
+        QuadrupleSwoop,
+        QuintupleSwoop,
         Hard_CounterEnrage,
         Hard_CounterRush,
         Hard_CounterHarden,
@@ -1240,11 +1263,12 @@ public abstract class EnemyMove : Move
         Hard_CounterProtect,
         Hard_CounterShield,
         Hard_CounterMarshall,
-        Leafling_Hard_TailWhip,
+        Leafling_TailWhip,
         Flowerling_Hard_SwoopBloom,
         Sunflower_Hard_SolarBite,
         Sunnybud_BiteFlyHeal,
         Sunnybud_BiteFlyHealIlluminate,
+        Goldbush_PowerRoar,
         Sunnybud_BiteFlyHealMiracle,
         Rootling_FrontSlam,
         Rootling_DoubleSlam,
@@ -1263,6 +1287,19 @@ public abstract class EnemyMove : Move
         Sundew_PoisonToss,
         Sundew_CounterPoisonToss,
         Sundew_Hard_ExhaustBall,
+        Leafswimmer_LightBlast,
+        Leafswimmer_Abide,
+        Brambleling_ProtectiveRoar,
+        Solardew_SunToss,
+        Solardew_LuminousHeal,
+        Solardew_CounterSunFlash,
+        GiantVine_Slam,
+        GiantVine_BigSlam,
+        GiantVine_Telegraph,
+        GiantVine_Grab,
+        GiantVine_Constrict,
+        GiantVine_Throw,
+        GiantVine_Hard_LashOut,
         VinePlatform_Hard_CounterSoften,
         Sycamore_ThornToss,
         Sycamore_Pollenate,
@@ -1274,13 +1311,6 @@ public abstract class EnemyMove : Move
         Sycamore_Hard_RootShake,
         Sycamore_Hard_RootGrasp,
         Sycamore_Fall,
-        GiantVine_Slam,
-        GiantVine_BigSlam,
-        GiantVine_Telegraph,
-        GiantVine_Grab,
-        GiantVine_Constrict,
-        GiantVine_Throw,
-        GiantVine_Hard_LashOut,
         MasterOfAutumn_ThornToss,
         MasterOfAutumn_PollenStorm,
         MasterOfAutumn_FlowerShuriken,
@@ -1301,9 +1331,24 @@ public abstract class EnemyMove : Move
         Cactupole_Hard_StormFortify,
         Sandswimmer_Bite,
         Sandswimmer_Hard_FlashDischarge,
+        SpireGuard_PowerRally,
+        EliteGuard_SpearWave,
+        EliteGuard_GuardRally,
+        DesertBloom_SwoopHealHustle,
+        DesertBloom_ShiftyBiteHustle,
+        Goldpole_QuickZap,
+        Goldpole_GatherCharge,
+        Shockworm_ArcBite,
+        Shockworm_MatchFocus,
+        Brightpole_FlashDarkness,
+        Brightpole_ElectroWave,
+        Stormswimmer_TripleBolt,
+        Stormswimmer_MistWave,
+        Stormswimmer_ShiftySwoop,
+        Stormswimmer_Hard_MistRain,
         Slime_Stomp,
         Slime_SplashStomp,
-        Slime_Hard_CounterMistWall,
+        Slime_CounterSplit,
         Slimewalker_WaterCannon,
         Slimewalker_Hard_SoftSplash,
         Slimeworm_Charge,
@@ -1315,6 +1360,27 @@ public abstract class EnemyMove : Move
         Sirenfish_BubbleSong,
         Sirenfish_PowerSong,
         Sirenfish_Hard_NightmareBite,
+        Urchiling_Charge,
+        Urchiling_WaterBlast,
+        Urchiling_Hard_DeepCharge,
+        Urchiling_Hard_SpikeStorm,
+        GoldenSlime_CopyStomp,
+        GoldenSlime_InversionSplash,
+        GoldenSlime_GoldenWave,
+        GoldenSlime_CopyForm,
+        ElementalSlime_FlameSplash,
+        ElementalSlime_AirSplash,
+        ElementalSlime_LightSplash,
+        ElementalSlime_Infusion,
+        NormalSlime_NormalStomp,
+        NormalSlime_NeutralizingGas,
+        SoftSlime_HealingStomp,
+        SoftSlime_SoftStomp,
+        SoftSlime_SoftSplash,
+        RigidSlime_DoubleStomp,
+        RigidSlime_Charge,
+        RigidSlime_SuperStomp,
+        RigidSlime_Cleave,
         Blazecrest_FlameBreath,
         Blazecrest_Roar,
         Blazecrest_Hard_CounterRageFlare,
@@ -1325,6 +1391,19 @@ public abstract class EnemyMove : Move
         Flametongue_Hard_HustleLick,
         Heatwing_FlameSpread,
         Heatwing_Hard_DreadScreech,
+        Pyrenfish_SplotchBubble,
+        Pyrenfish_DoubleFireBreath,
+        Pyrenfish_FlareSong,
+        Pyrenfish_Hard_FinalFlareBurst,
+        GoldScreecher_TripleFlameWind,
+        Infernoling_TripleFlameBreath,
+        Infernoling_LuminousRoar,
+        Magmaswimmer_Charge,
+        Magmaswimmer_Fireball,
+        Magmaswimmer_Hard_RushBite,
+        Wyverlet_DoubleFlameWind,
+        Wyverlet_WrathScreech,
+        Wyverlet_CounterPowerScreech,
         EyeSpore_SporeBeam,
         EyeSpore_Hard_CounterSpiteBeam,
         SpikeSpore_PoisonSpikes,
@@ -1337,6 +1416,21 @@ public abstract class EnemyMove : Move
         Mosquito_ShockNeedle,
         Mosquito_DrainBite,
         Mosquito_Hard_Shroud,
+        Toxiwing_TripleDrainBite,
+        Toxiwing_CruelSwoop,
+        GoldFly_SunderingBite,
+        GoldFly_GoldWind,
+        GoldFly_MorbidGoldBoost,
+        GoldFly_Hard_FinalMassObscure,
+        MawSpore_EnviousBite,
+        MawSpore_EnervatingLick,
+        MawSpore_CounterSporeBlast,
+        MawSpore_Devour,
+        MawSpore_Hard_SwiftDevour,
+        CaveSpider_SporeBall,
+        CaveSpider_ShieldWeave,
+        CaveSpider_WeaveCopy,
+        Obscurer_SinisterFog,
         Shieldwing_DualPeck,
         Shieldwing_ChillingScreech,
         Shieldwing_FeatherWall,
@@ -1353,6 +1447,17 @@ public abstract class EnemyMove : Move
         LumistarStriker_DualSlash,
         LumistarStriker_Charge,
         LumistarStriker_QuadSlash,
+        Spikeflake_SnowflakeStatic,
+        Spikeflake_IceSpikes,
+        Spikeflake_Hard_IceWind,
+        Mirrorwing_LuminousSong,
+        Mirrorwing_CounterBlast,
+        Beaconwing_SoftCharge,
+        Beaconwing_LightBlast,
+        Beaconwing_CounterProtect,
+        Harmonywing_HealingSong,
+        Harmonywing_Encore,
+        Harmonywing_Hard_FinalMistRain,
         Plateshell_Slam,
         Plateshell_RageFireball,
         Speartongue_TongueStab,
@@ -1371,10 +1476,17 @@ public abstract class EnemyMove : Move
         Coiler_Hard_CounterRollerShell,
         Drillbeak_Drill,
         Drillbeak_Hard_DreadStab,
+        Quickworm_QuickBite,
+        Quickworm_TurnRelay,
+        Quickworm_SwoopThrough,
+        Quickworm_Hard_FinalHustleBlast,
         PuffJelly_Slam,
         PuffJelly_Hard_BlinkSlam,
         Fluffling_Bash,
         Fluffling_Hard_WaterTorpedo,
+        Floppole_FlopStomp,
+        Floppole_ElectroFlop,
+        Floppole_MultiFlop,
         CloudJelly_IceSwing,
         CloudJelly_FrostFortify,
         CloudJelly_BubbleToss,
@@ -1384,6 +1496,7 @@ public abstract class EnemyMove : Move
         CloudJelly_CounterFormChange,
         CrystalCrab_TripleClaw,
         CrystalCrab_DarkClaw,
+        CrystalCrab_Carcinization,
         CrystalCrab_Hard_CounterClearClaw,
         CrystalSlug_Slap,
         CrystalSlug_ChillingStare,
@@ -1393,11 +1506,24 @@ public abstract class EnemyMove : Move
         AuroraWing_RubyDust,
         AuroraWing_SapphireDust,
         AuroraWing_EmeraldDust,
+        DarkBurrower_SleepBite,
+        DarkBurrower_CounterSleepBite,
+        DarkBurrower_Hard_AstralBloom,
+        Shadew_PoisonSplash,
+        Shadew_CounterPoisonSplash,
+        Shadew_Hard_DreadBall,
+        Vilebloom_DustWind,
+        Vilebloom_DoubleLob,
+        Vilebloom_MorbidRecovery,
+        Vilebloom_Hard_DarkLob,
+        Thornweed_ThornShots,
+        Thornweed_ThornSpin,
         Plaguebud_HeadSprout,
         Plaguebud_TailSprout,
         Starfish_FeebleWave,
         Starfish_FatigueFog,
         Starfish_LeafStorm,
+        Starfish_CounterBifurcate,
         CursedEye_UnnervingStare,
         CursedEye_MaliciousStare,
         CursedEye_CounterSpitefulStare,
@@ -1405,7 +1531,8 @@ public abstract class EnemyMove : Move
         StrangeTendril_StrangeCoil,
         StrangeTendril_Slam,
         DrainBud_PowerDrain,
-        DrainBud_Hard_DrainBloom,
+        DrainBud_DrainBloom,
+        DrainBud_Hard_MorbidBloomBoost,
     }
 
     public abstract MoveIndex GetMoveIndex();

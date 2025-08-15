@@ -224,7 +224,7 @@ AetherCarrot,Aether Carrot,an,A hardy carrot with a spicy yet invigorating taste
 CrystalCarrot,Crystal Carrot,a,A rare carrot that is hard to eat but very refreshing.,"Restores 100 hp to one ally, and cures all negative effects on one ally.",,
 MiracleSyrup,Miracle Syrup,a,Miraculous syrup that makes you feel ready to take on the world.,Restores 100 ep to one ally. This is a Miracle item.,Miracle items can revive dead allies or allow an ally to survive 1 lethal hit per battle.,1/battle
 StellarSyrup,Stellar Syrup,a,Sparkling syrup that has an intense calming effect.,"Restores 100 ep to one ally, and gives them Defense Up 3 for 3 turns, but Attack Down 3 for 3 turns.",,
-PlagueRoot,Plague Root,a,A strange root that worsens ailments.,Negative effects of the target last one turn longer.,This is still affected by the status turn limit.,
+PlagueRoot,Plague Root,a,A strange root that worsens ailments.,Negative effects of the target last two turns longer.,This is still affected by the status turn limit.,
 GoldenApple,Golden Apple,a,Shiny golden apple from the tallest tree in the Verdant Forest. Very few people are worthy of eating one.,Restores 100 hp to one ally and increases their Max HP by 5.,Max HP boost lasts until the end of battle.,1/battle
 EmeraldLime,Emerald Lime,an,"A rare, shiny fruit that grows only in the Oasis.","Restores 100 ep to one ally, gives them Absorb 6 and increases their max EP by 5.",Max EP boost lasts until the end of battle.,1/battle
 AzureRose,Azure Rose,an,"An special rose that burns eternally with a blue flame. Massively increases your attack for a short time, but also gives you a permanent boost.",Gives one ally Attack Boost 1 and Focus 6.,Attack Boost 1 lasts until the end of battle.,1/battle

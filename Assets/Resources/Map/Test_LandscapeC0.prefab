@@ -1662,6 +1662,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  landAnimation: 0
   noShadow: 0
   initialFacingAngle: 0
   usedFirstBounce: 0
@@ -1692,21 +1693,25 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Flowerling
       posid: 11
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Shrublet
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Shrublet
       posid: 3
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: TestBattle_SolarGrove
   frameTimer: -1
   firstStrikeTimer: -1
@@ -3155,12 +3160,27 @@ PrefabInstance:
     - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
         type: 3}
       propertyPath: encounter.encounterList.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
         type: 3}
       propertyPath: encounter.encounterList.Array.data[0].entid
       value: MiracleBloom
+      objectReference: {fileID: 0}
+    - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[0].posid
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[1].entid
+      value: Goldbush
+      objectReference: {fileID: 0}
+    - target: {fileID: 523257832921037770, guid: 10fd124b792c9be419865c07f8a24688,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[1].posid
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4188132789149607737, guid: 10fd124b792c9be419865c07f8a24688,
         type: 3}
@@ -6680,6 +6700,41 @@ PrefabInstance:
         type: 3}
       propertyPath: encounter.battleMapName
       value: TestBattle_SolarGrove
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[0].entid
+      value: Sunnybud
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[0].posid
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[1].entid
+      value: Sunnybud
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[1].posid
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[2].entid
+      value: Sunflower
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192590138802430299, guid: 453de82eec53d64479e0ce262eafa944,
+        type: 3}
+      propertyPath: encounter.encounterList.Array.data[2].posid
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6213000682675710652, guid: 453de82eec53d64479e0ce262eafa944,
         type: 3}

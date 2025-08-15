@@ -1187,6 +1187,7 @@ public class Item_GenericConsumable : ItemMove
             {
                 if (ptarget.BadgeEquipped(Badge.BadgeType.WeakStomach))
                 {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.WeakStomach, ptarget);
                     //Poison
                     caller.InflictEffect(targets[i], new Effect(Effect.EffectType.Poison, 1, (sbyte)(2 * ptarget.BadgeEquippedCount(Badge.BadgeType.WeakStomach))));
 
@@ -2616,7 +2617,7 @@ public class Item_GenericThrowable : ItemMove
                                 continue;
                             }
 
-                            int bonus = (int)(1 * (boost));
+                            int bonus = (int)(2 * (boost));
                             if (bonus < 1)
                             {
                                 bonus = 1;

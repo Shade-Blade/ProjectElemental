@@ -6,6 +6,8 @@ public class StateIconScript : MonoBehaviour
 {
     public BattleHelper.EntityState state;
     public SpriteRenderer sprite;
+    public int potency;
+    public int duration;
     public TMPro.TMP_Text potencyText;
     public TMPro.TMP_Text durationText;
     public const float VOFFSET = 0.3f;
@@ -13,7 +15,10 @@ public class StateIconScript : MonoBehaviour
     public void Setup(BattleHelper.EntityState p_state, int potency = int.MinValue, int duration = int.MinValue)
     {
         state = p_state;
-        sprite.sprite = MainManager.Instance.stateSprites[(int)state];
+        sprite.sprite = MainManager.Instance.stateSprites[(int)state - 1];
+
+        this.potency = potency;
+        this.duration = duration;
 
         if (potency != int.MinValue)
         {
@@ -31,5 +36,10 @@ public class StateIconScript : MonoBehaviour
         {
             durationText.text = "";
         }
+    }
+
+    public void OnMouseOver()
+    {
+        HoverTextMasterScript.Instance.SetHoverText(BattlePopup.GetStatePopup(state, potency, duration));
     }
 }

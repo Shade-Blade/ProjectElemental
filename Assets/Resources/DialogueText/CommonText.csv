@@ -1,7 +1,13 @@
 Menu Text,
-ExplainLight,"Light damage boosted against high HP enemies, up to +0.66x."
-ExplainDark,"Dark damage boosted against low HP enemies, up to +1.0x."
-ExplainWater,"Water damage boosted when user HP is high, up to +0.66x."
-ExplainFire,"Fire damage boosted when user HP is low, up to +1.0x."
-ExplainEarth,"Earth damage boosted based on user damage taken this turn and last turn, up to +0.66x."
-ExplainAir,Air/Electric damage pierces normal defense.
+ExplainLight,"Light damage inflicts Branded, reducing Defense but giving healing over time"
+ExplainDark,"Dark damage inflicts Cursed, dealing damage over time"
+ExplainWater,"Water damage inflicts Soaked, reducing Attack."
+ExplainFire,"Fire damage inflicts Burned, dealing damage over time but increasing Attack"
+ExplainEarth,"Earth damage inflicts Entangled, reducing Attack but increasing Defense"
+ExplainAir,"Air/Electric damage inflicts Shocked, reducing Defense."
+ExplainLightAdvanced,"Light damage boosted against high HP enemies, up to +0.66x."
+ExplainDarkAdvanced,"Dark damage boosted against low HP enemies, up to +1.0x."
+ExplainWaterAdvanced,"Water damage boosted when user HP is high, up to +0.66x."
+ExplainFireAdvanced,"Fire damage boosted when user HP is low, up to +1.0x."
+ExplainEarthAdvanced,"Earth damage boosted based on user damage taken this turn and last turn, up to +0.66x."
+ExplainAirAdvanced,Air/Electric damage does bonus damage equal to twice the target's defense. (bonus capped at 2x unboosted damage)

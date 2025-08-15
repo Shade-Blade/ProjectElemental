@@ -1,0 +1,58 @@
+Index,Name,Description
+Toughness,Toughness,Ignores attacks that deal 3 damage or less.
+Sturdy,Sturdy,Cannot die in one hit.
+Hardened,Hardened,Can only take damage from lethal hits.
+Resistant,Resistant,Can only take 1 damage at a time.
+Unpiercable,Unpiercable,Defense can't be pierced.
+ExactDamageKill,Perfect Kill,Can only die to perfect damage (will heal if overkill)
+Elusive,Elusive,Can only be hit if it is the lowest HP enemy (ties allowed)
+NoMiracle,No Miracle,Can't receive Miracle for the rest of battle.
+NoStatus,No Ailment,Can't receive any Ailments.
+NoDebuff,No Debuff,Can't receive any negative effect.
+StateStunned,Stunned,Will likely waste their next action.
+StateCharge,Charged,Will likely do a charge attack soon.
+StateDefensive,Defensive,More defensive than normal.
+StateRage,Rage,More aggressive than normal
+StateCounter,Counter,This enemy will counterattack if you attack them.
+StateCounterHeavy,Team Counter,This enemy will counterattack if you attack any of their allies.
+StateContactHazard,Contact Hazard,Contact attacks will hurt you.
+StateContactHazardHeavy,Far Contact Hazard,Contact or close weapon moves will hurt you.
+StateQuick,Quick,Will act after each of your actions.
+CharacterMark,Character Mark,Character will be targetted by an enemy soon.
+PositionMark,Position Mark,Position will be targetted by an enemy soon.
+CharmAttack,Attack Charm,
+CharmDefense,Defense Charm,
+CharmFortune,Fortune Charm,
+HealthRest,Health Rest,"Heal 20% of max HP at the start of the next <var,2> battles."
+EnergyRest,EnergyRest,"Heal 20% of max EP at the start of the next <var,2> battles."
+AbsorbRest,AbsorbRest,"Get 3 Absorb at the start of the next <var,2> battles."
+StaminaRest,StaminaRest,"Get 20% of your max Stamina at the start of the next <var,2> battles."
+BurstRest,BurstRest,"Get 3 Burst at the start of the next <var,2> battles."
+FocusRest,FocusRest,"Get 3 Focus at the start of the next <var,2> battles."
+EtherealRest,EtherealRest,"Get 1 turn of Ethereal at the start of the next <var,2> battles."
+ImmunityRest,ImmunityRest,"Get 3 turns of Immunity at the start of the next <var,2> battles."
+BonusTurnRest,BonusTurnRest,"Get a bonus action at the start of the next <var,2> battles."
+ItemBoostRest,ItemBoostRest,"Get Item Boost at the start of the next <var,2> battles."
+IlluminateRest,IlluminateRest,"Get 3 turns of Illuminate at the start of the next <var,2> battles."
+SoulRest,SoulRest,"Heal 20% of max SE at the start of the next <var,2> battles."
+FreebieRest,FreebieRest,"Get Freebie at the start of the next <var,2> battles."
+ElectricWind,ElectricWind,
+SeasideAir,SeasideAir,
+ScaldingHeat,ScaldingHeat,
+DarkFog,DarkFog,
+FrigidBreeze,FrigidBreeze,
+AetherHunger,AetherHunger,
+DigestiveAcid,DigestiveAcid,
+AcidFlow,AcidFlow,
+SacredGrove,SacredGrove,
+IonizedSand,IonizedSand,
+WhiteoutBlizzard,WhiteoutBlizzard,
+VoidShadow,VoidShadow,
+CounterWave,CounterWave,
+ScaldingMagma,ScaldingMagma,
+TrialOfSimplicity,TrialOfSimplicity,
+TrialOfHaste,TrialOfHaste,
+TrialOfResolve,TrialOfResolve,
+TrialOfCunning,TrialOfCunning,
+TrialOfPatience,TrialOfPatience,
+TrialOfStrength,TrialOfStrength,

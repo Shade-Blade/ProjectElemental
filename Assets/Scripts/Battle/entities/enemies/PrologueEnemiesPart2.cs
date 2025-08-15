@@ -585,6 +585,7 @@ public class BM_Honeybud_SwoopHealIlluminate : BM_Honeybud_SwoopHeal
 
     public override void ApplyHealEffect(BattleEntity caller, BattleEntity target)
     {
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Illuminate, 1, 3));
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
             caller.InflictEffect(target, new Effect(Effect.EffectType.Illuminate, 1, 3));
@@ -598,9 +599,58 @@ public class BM_Honeybud_SwoopHealMiracle : BM_Honeybud_SwoopHeal
 
     public override void ApplyHealEffect(BattleEntity caller, BattleEntity target)
     {
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Miracle, 1, Effect.INFINITE_DURATION));
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
             caller.InflictEffect(target, new Effect(Effect.EffectType.Miracle, 1, Effect.INFINITE_DURATION));
+        }
+    }
+}
+
+public class BE_Goldbush : BattleEntity
+{
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_DoubleBite>(), gameObject.AddComponent<BM_Goldbush_PowerRoar>() };
+
+        base.Initialize();
+        InflictEffect(this, new Effect(Effect.EffectType.HealthRegen, 3, Effect.INFINITE_DURATION));
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        //also reset here in case something weird happens
+        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % (moveset.Count)];
+
+        BasicTargetChooser();
+    }
+
+    public override IEnumerator PostMove()
+    {
+        InflictEffect(this, new Effect(Effect.EffectType.HealthRegen, 3, Effect.INFINITE_DURATION));
+        yield return StartCoroutine(base.PostMove());
+    }
+}
+
+public class BM_Goldbush_PowerRoar : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Goldbush_PowerRoar;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
+
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Illuminate, 1, 3));
+        List<BattleEntity> battleEntityList = BattleControl.Instance.GetEntitiesSorted(caller, GetBaseTarget());
+        foreach (BattleEntity entity in battleEntityList)
+        {
+            caller.InflictEffect(entity, new Effect(Effect.EffectType.AttackUp, 2, 3));
+        }
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffectCapped(caller, new Effect(Effect.EffectType.AttackBoost, 2, Effect.INFINITE_DURATION), 8, caller.posId, Effect.EffectStackMode.KeepDurAddPot);
         }
     }
 }

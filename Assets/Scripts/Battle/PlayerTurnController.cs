@@ -555,6 +555,7 @@ public class PlayerTurnController : MonoBehaviour
             //force rest
             BA_Rest br = GetOrAddComponent<BA_Rest>();
             yield return br.Execute(caller);
+            BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.PostAction);
 
             //reset
             //but I made Rest just give you enough anyway so this shouldn't do anything
@@ -676,7 +677,7 @@ public class PlayerTurnController : MonoBehaviour
 
                     caller.SetIdleAnimation();
                     yield return b.Execute(caller);
-                    //BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.Tactic);
+                    BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.PostAction);
 
                     if (b.ForfeitTurn()) //this skips rebuilding the menu
                     {
@@ -1023,6 +1024,7 @@ public class PlayerTurnController : MonoBehaviour
                 //BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.Skill);
                 yield return new WaitUntil(() => caller == null || !caller.moveActive);
                 //yield return caller.currMove.Execute(caller);
+                BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.PostAction);
             }
         }
 
@@ -1189,6 +1191,7 @@ public class PlayerTurnController : MonoBehaviour
             caller.moveActive = true;
             StartCoroutine(caller.ExecuteMoveCoroutine());
             yield return new WaitUntil(() => caller == null || !caller.moveActive);
+            BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.PostAction);
             //BattleControl.Instance.BroadcastEvent(caller, BattleHelper.Event.Skill);
             //yield return caller.currMove.Execute(caller);
         }

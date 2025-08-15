@@ -235,12 +235,12 @@ public struct Badge
         Overstomp,
         SmartStomp,
         TeamQuake,
-        MultiSlash,
-        MultiSlashB,
+        ElectroSlash,
+        ElectroSlashB,
         SlipSlash,
         PoisonSlash,
         PreciseStab,
-        SwordDischarge,
+        SwordBolt,
         SwordDance,
         BoomerangSlash,
         Aetherize,
@@ -258,12 +258,12 @@ public struct Badge
         IronStomp,
         ElementalStomp,
         TeamThrow,
-        PowerSmash,
-        PowerSmashB,
+        LeafySmash,
+        LeafySmashB,
         DazzleSmash,
         HammerThrow,
         FlameSmash,
-        FloraSmash,
+        FlashThrow,
         MomentumSmash,
         QuakeSmash,
         Illuminate,
@@ -532,13 +532,38 @@ public struct Badge
 
             //hardcoded for backwards compatibility
 
+            if (split[0].Equals("MultiSlash"))
+            {
+                output.type = BadgeType.ElectroSlash;
+            }
+            if (split[0].Equals("MultiSlashB"))
+            {
+                output.type = BadgeType.ElectroSlashB;
+            }
+            if (split[0].Equals("SwordDischarge"))
+            {
+                output.type = BadgeType.SwordBolt;
+            }
+
+            if (split[0].Equals("PowerSmash"))
+            {
+                output.type = BadgeType.LeafySmash;
+            }
+            if (split[0].Equals("PowerSmashB"))
+            {
+                output.type = BadgeType.LeafySmashB;
+            }
             if (split[0].Equals("MeteorStomp"))
             {
                 output.type = BadgeType.LeafyStomp;
             }
             if (split[0].Equals("BreakerSmash"))
             {
-                output.type = BadgeType.FloraSmash;
+                output.type = BadgeType.FlashThrow;
+            }
+            if (split[0].Equals("FloraSmash"))
+            {
+                output.type = BadgeType.FlashThrow;
             }
 
             if (split[0].Equals("Refund"))

@@ -1549,12 +1549,14 @@ public class WorldPlayer : WorldEntity
             TryHeadHit(collision);
         }
 
-        if (!AntiGravity() && !HazardState() && accumulatedGroundedCount > 0)
+        bool landed = false;
+        if (!AntiGravity() && !HazardState() && accumulatedGroundedCount > 0 && Vector3.Dot(rb.velocity.normalized, accumulatedFloorNormal.normalized) < 0.2f)
         {
             lastGroundedHeight = accumulatedGroundedHeight / accumulatedGroundedCount;
             lastHighestHeight = lastGroundedHeight;
             floorNormal = accumulatedFloorNormal.normalized;
             attached = collision.rigidbody;
+            landed = true;
             DoLanding(collision);
         }
 
@@ -1564,7 +1566,7 @@ public class WorldPlayer : WorldEntity
         {
             accumulatedNonGrounded = accumulatedNonGrounded.normalized;
             bool legalStomp = false;
-            if (!AntiGravity() && !HazardState() && accumulatedNonGrounded.y > MinGroundNormal() && LegalGround(collision))
+            if (!AntiGravity() && !HazardState() && accumulatedNonGrounded.y > MinGroundNormal() && LegalGround(collision) && Vector3.Dot(rb.velocity.normalized, accumulatedNonGrounded.normalized) < 0.2f)
             {
                 legalStomp = true;
                 lastGroundedHeight = accumulatedNonGroundedHeight / accumulatedNonGroundedCount;
@@ -1572,6 +1574,7 @@ public class WorldPlayer : WorldEntity
                 floorNormal = accumulatedNonGrounded;
                 attached = collision.rigidbody;
 
+                landed = true;
                 DoLanding(collision);
             }
 
@@ -1623,6 +1626,36 @@ public class WorldPlayer : WorldEntity
         {
             SetActionState(ActionState.HazardTouch);
             //Debug.Log("Hazard");
+        }
+
+        if (landed && groundedTime <= 0)
+        {
+            //landing animation
+            IEnumerator StompAnimation()
+            {
+                if (landAnimation)
+                {
+                    yield break;
+                }
+
+                landAnimation = true;
+                float time = 0;
+                float duration = 0.10f;
+                float stompscale = 0.35f / height; // 0.25f;
+                while (time < duration)
+                {
+                    time += Time.deltaTime;
+                    float lerpVal = Mathf.Min(2 * (time / duration), 2 - 2 * (time / duration));
+                    ac.transform.localScale = Vector3.Lerp(Vector3.one, (Vector3.up) * (1 - stompscale) + (Vector3.right + Vector3.forward) * (1 + stompscale), lerpVal);
+                    //need to position things lower to make it look correct
+                    //ac.transform.localPosition = Vector3.down * 0.5f * (height * (lerpVal * stompscale));
+                    yield return null;
+                }
+
+                ac.transform.localScale = Vector3.one;
+                landAnimation = false;
+            }
+            StartCoroutine(StompAnimation());
         }
     }
 

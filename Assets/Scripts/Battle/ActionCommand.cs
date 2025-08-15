@@ -538,7 +538,7 @@ public class AC_HoldLeft : ActionCommand
         switch (state)
         {
             case AC_State.Idle:
-                Debug.Log(((InputManager.GetAxisHorizontal() < 0) + " " + (lifetime >= FADE_IN_TIME)) + " " + state);
+                //Debug.Log(((InputManager.GetAxisHorizontal() < 0) + " " + (lifetime >= FADE_IN_TIME)) + " " + state);
                 if (autoComplete || (InputManager.GetAxisHorizontal() < 0 && lifetime >= FADE_IN_TIME))
                 {
                     state = AC_State.Active;

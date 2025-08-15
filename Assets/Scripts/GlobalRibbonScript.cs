@@ -67,7 +67,7 @@ public class GlobalRibbonScript : MonoBehaviour
 
         //Note: some of these use "illegal" colors
 
-        ribbonColors[0] = new Color[] { new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0) , new Color(0f, 0f, 0f, 0) };    //note: displays weirdly (silhouette shows up?)
+        ribbonColors[0] = new Color[] { new Color(0f, 0f, 0f, 1), new Color(0f, 0f, 0f, 0) , new Color(0f, 0f, 0f, 0) };    //note: displays weirdly (silhouette shows up?)
         ribbonColors[(int)RibbonType.SafetyRibbon] = new Color[] { new Color(0f, 0.4f, 0f, 1), new Color(0f, 0.75f, 0f, 1), new Color(0f, 1f, 0f, 1) };
         ribbonColors[(int)RibbonType.SharpRibbon] = new Color[] { new Color(0.4f, 0f, 0f, 1), new Color(0.75f, 0f, 0f, 1), new Color(1f, 0f, 0f, 1) };
         ribbonColors[(int)RibbonType.BeginnerRibbon] = new Color[] { new Color(0.4f, 0.25f, 0.1f, 1), new Color(0.6f, 0.36f, 0.2f, 1), new Color(0.776f, 0.533f, 0.349f, 1) };
@@ -216,6 +216,22 @@ public class GlobalRibbonScript : MonoBehaviour
         //{
         pastWRibbonType = currentW;
         Color[] wc = GetRibbonColors(currentW);
+
+        if (currentW == 0)
+        {
+            wc = GetRibbonColors(RibbonType.SharpRibbon);
+            Color[] newwc = new Color[wc.Length];
+            for (int i = 0; i < wc.Length; i++)
+            {
+                newwc[i] = wc[i];
+                newwc[i].r *= 0.75f;
+                newwc[i].g *= 0.75f;
+                newwc[i].b *= 0.75f;
+            }
+            newwc[0] = new Color(0, 0, 0, 1);
+            wc = newwc;
+        }
+
         Shader.SetGlobalVector("_WRibbonColorA", wc[0]);
         Shader.SetGlobalVector("_WRibbonColorB", wc[1]);
         Shader.SetGlobalVector("_WRibbonColorC", wc[2]);
@@ -226,6 +242,22 @@ public class GlobalRibbonScript : MonoBehaviour
         //{
         pastLRibbonType = currentL;
         Color[] lc = GetRibbonColors(currentL);
+
+        if (currentL == 0)
+        {
+            lc = GetRibbonColors(RibbonType.SafetyRibbon);
+            Color[] newlc = new Color[lc.Length];
+            for (int i = 0; i < lc.Length; i++)
+            {
+                newlc[i] = lc[i];
+                newlc[i].r *= 0.75f;
+                newlc[i].g *= 0.75f;
+                newlc[i].b *= 0.75f;
+            }
+            newlc[0] = new Color(0, 0, 0, 1);
+            lc = newlc;
+        }
+
         //Shader.SetGlobalVector("_LRibbonColorA", GetRibbonColor(currentL));
         Shader.SetGlobalVector("_LRibbonColorA", lc[0]);
         Shader.SetGlobalVector("_LRibbonColorB", lc[1]);

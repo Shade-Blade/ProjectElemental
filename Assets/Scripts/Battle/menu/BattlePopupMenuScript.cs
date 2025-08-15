@@ -9,7 +9,7 @@ public class BattlePopupMenuScript : MenuHandler
     BattlePopupScript popupBoxScript;
 
     string text;
-    string[] vars;
+    //string[] vars;
 
     //bool normalPopup;   //I forgot what this is used for lol
     public bool exit;
@@ -33,14 +33,14 @@ public class BattlePopupMenuScript : MenuHandler
         return newMenu;
     }
 
-    public static BattlePopupMenuScript buildMenu(string popupText, string[] vars)//, bool normalPopup = false)
+    public static BattlePopupMenuScript buildMenu(string popupText)//, string[] vars)//, bool normalPopup = false)
     {
         GameObject newObj = new GameObject("Popup");
         BattlePopupMenuScript newMenu = newObj.AddComponent<BattlePopupMenuScript>();
 
         newMenu.text = popupText;
         //newMenu.normalPopup = normalPopup;
-        newMenu.vars = vars;
+        //newMenu.vars = vars;
         newMenu.exit = false;
         newMenu.Init();
 
@@ -77,7 +77,7 @@ public class BattlePopupMenuScript : MenuHandler
             popupBox = Instantiate(BattleControl.Instance.popupBoxBase, MainManager.Instance.Canvas.transform);
             popupBoxScript = popupBox.GetComponent<BattlePopupScript>();
         }
-        popupBoxScript.SetText(text, vars, true, true);
+        popupBoxScript.SetText(text, true, true);
     }
     public override void Clear()
     {

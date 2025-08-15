@@ -42,6 +42,7 @@ public class Effect
     {
         Static,
         Ailment,
+        Mark,
         BuffDebuff,
         Token
     }
@@ -84,6 +85,13 @@ public class Effect
         TimeStop,        
         Exhausted,
         Splotch,
+
+        Branded,
+        Soaked,
+        Shocked,
+        Cursed,
+        Burned,
+        Entangled,
 
         AttackUp,
         DefenseUp,
@@ -152,6 +160,8 @@ public class Effect
         ExactDamageKill,
         NoMiracle,
         */
+
+        EndOfTable, //illegal effect (used to loop through stuff)
     }
 
     //public byte duration; //Effect.INFINITE_DURATION = infinite
@@ -167,6 +177,7 @@ public class Effect
 
     //first static effect ID is 0, no need to make that a constant though
     public const int FIRST_STATUS_ID = (int)EffectType.Berserk;
+    public const int FIRST_MARK_ID = (int)EffectType.Branded;
     public const int FIRST_BUFF_ID = (int)EffectType.AttackUp;
     public const int FIRST_TOKEN_ID = (int)EffectType.Focus;
 
@@ -361,9 +372,13 @@ public class Effect
         {
             return EffectClass.Static;
         }
-        else if ((int)se < FIRST_BUFF_ID)
+        else if ((int)se < FIRST_MARK_ID)
         {
             return EffectClass.Ailment;
+        }
+        else if ((int)se < FIRST_BUFF_ID)
+        {
+            return EffectClass.Mark;
         }
         else if ((int)se < FIRST_TOKEN_ID)
         {
@@ -398,7 +413,7 @@ public class Effect
     }
 
 
-    public static bool IsCleanseable(EffectType se, bool curePermanents = true)
+    public static bool IsCleanseable(EffectType se, bool curePermanents = false)
     {
         if ((int)se < FIRST_STATUS_ID)
         {
@@ -411,14 +426,19 @@ public class Effect
             //ehh, getting rid of escalating buffs will be a thing?
             return ((int)se <= (int)EffectType.MaxSEBoost && (int)se >= (int)EffectType.AttackBoost);
         }
-        else if ((int)se < FIRST_BUFF_ID)
+        else if ((int)se < FIRST_MARK_ID)
         {
             //statuses
             return false;
         }
+        else if ((int)se < FIRST_BUFF_ID)
+        {
+            //marks
+            return false;
+        }
         else if ((int)se < FIRST_TOKEN_ID)
         {
-            return ((int)se <= (int)EffectType.AstralWall && (int)se >= (int)EffectType.AttackUp);
+            return ((int)se < (int)EffectType.AttackDown && (int)se >= (int)EffectType.AttackUp);
         }
         else
         {
@@ -431,7 +451,7 @@ public class Effect
             return ((int)se < (int)EffectType.Miracle && (int)se >= (int)EffectType.Focus);
         }
     }
-    public static bool IsCurable(EffectType se, bool curePermanents = true)
+    public static bool IsCurable(EffectType se, bool curePermanents = false)
     {
         if ((int)se < FIRST_STATUS_ID)
         {
@@ -443,13 +463,17 @@ public class Effect
 
             return (int)se <= (int)EffectType.MaxSEReduction && (int)se >= (int)EffectType.AttackReduction;
         }
+        else if ((int)se < FIRST_MARK_ID)
+        {
+            return true;
+        }
         else if ((int)se < FIRST_BUFF_ID)
         {
             return true;
         }
         else if ((int)se < FIRST_TOKEN_ID)
         {
-            return (int)se <= (int)EffectType.BoltSprout && (int)se >= (int)EffectType.AttackDown;
+            return (int)se < (int)EffectType.Seal && (int)se >= (int)EffectType.AttackDown;
         }
         else
         {
@@ -467,6 +491,10 @@ public class Effect
         {
             return false;   //Permanents are permanent (I am going to be extremely stringent with anti-permanent things, even on enemies)
             //return (int)se <= (int)EffectType.MaxSEReduction && (int)se >= (int)EffectType.AttackReduction;
+        }
+        else if ((int)se < FIRST_MARK_ID)
+        {
+            return true;
         }
         else if ((int)se < FIRST_BUFF_ID)
         {
@@ -533,6 +561,15 @@ public class Effect
 
             EffectType.Exhausted,
             EffectType.Soften,
+
+            EffectType.Branded,
+            EffectType.Cursed,
+
+            EffectType.Burned,
+            EffectType.Soaked,
+
+            EffectType.Entangled,
+            EffectType.Shocked,
 
             EffectType.AttackUp,
             EffectType.AttackDown,
@@ -746,6 +783,22 @@ public class CharmEffect
     public static string GetName(CharmType c)
     {
         return c.ToString();
+    }
+    public static string GetPopupString(CharmType charmType, int potency, int duration)
+    {
+        int charges = potency;
+
+        if (charmType == CharmType.Fortune)
+        {
+            float fPower = GetFortunePower(charges);
+            int intPower = (int)fPower;
+            string powerText = "x" + (intPower == fPower ? intPower : fPower);
+            return "(" + duration + ") " + charmType.ToString() + " " + powerText;
+        }
+        else
+        {
+            return "(" + charges + ") " + charmType.ToString() + " in " + duration + " turn" + (duration != 1 ? "s" : "");
+        }
     }
     public string GetMenuString()
     {
@@ -1077,7 +1130,7 @@ public static class BattleHelper
 
         Item =                  1L << 42,   //Item damage
         TrueMinOne =            1L << 43,   //No matter what, deals minimum of 1 damage
-        StatusExploit =         1L << 44,   //status exploit (certain damage types are stronger on certain statuses)
+        AilmentExploit =         1L << 44,   //status exploit (certain damage types are stronger on certain statuses)
         SoftTouch =             1L << 45,   //does not wake up sleep or break ice
         NightmareStrike =       1L << 46,   //+2 damage to sleeping targets that will wake up
         Aggravate =             1L << 47,   //+2 damage to berserk
@@ -1115,13 +1168,15 @@ public static class BattleHelper
     //Tied to the state sprite sheet
     public enum EntityState
     {
+        None = 0,
         /* Entity properties (things that end up in entityProperties, usually set immediately and never changed) */
-        Toughness = 0,
-        Limiter,
-        Critical,
+        Toughness,
         Sturdy,
+        Hardened,
+        Resistant,
         Unpiercable,
         ExactDamageKill,
+        Elusive,
 
         /* Dynamic entity properties (things that end up in entityProperties, more likely to change) */
         NoMiracle,
@@ -1135,11 +1190,12 @@ public static class BattleHelper
         StateCounterHeavy,
         StateContactHazard,
         StateContactHazardHeavy,
+        StateQuick,
         CharacterMark,
         PositionMark,
 
-        Charge,
-        Countdown,
+        //Charge,
+        //Countdown,
 
         /* Charms (handled globally) */
         CharmAttack,
@@ -1251,35 +1307,37 @@ public static class BattleHelper
         Ceiling =       1uL << 10, //fails the topmost check (so you can't target them with jumps)
         NoVoidCrush =   1uL << 11, //Not void crushable, even if the formula says so
         Toughness =     1uL << 12, //3 damage or less is negated
-        Resistant =       1uL << 13, //1 damage max
+        Sturdy =        1uL << 13, //at max hp, damage capped at max hp - 1
         Hardened =      1uL << 14, //can only take lethal damage (damage below max hp is negated)
-        Sturdy =        1uL << 15, //at max hp, damage capped at max hp - 1
+        Resistant =     1uL << 15, //1 damage max
         ExactDamageKill =   1uL << 16, //will heal if not exact damage killed
-        NoMiracle =     1uL << 17, //can't get miracle effect (flag set when Miracle activates)
-        GetEffectsAtNoHP = 1uL << 18, //can you receive effects at 0 hp? (only set for special enemies that don't die at 0 hp)
-        KeepEffectsAtNoHP = 1uL << 19, //Death will cure curable stuff normally
-        NoTattle =      1uL << 20,   //Can't tattle
-        ScanHideMoves = 1uL << 21,   //Scan does not reveal moveset
-        ScanMovesetMismatch = 1uL << 22, //For enemies whose movesets dont match the data table (The three of these quiet the warning message for the data table not having the right moveset)
+        Elusive         = 1uL << 17,
+        NoMiracle =     1uL << 18, //can't get miracle effect (flag set when Miracle activates)
+        GetEffectsAtNoHP = 1uL << 19, //can you receive effects at 0 hp? (only set for special enemies that don't die at 0 hp)
+        KeepEffectsAtNoHP = 1uL << 20, //Death will cure curable stuff normally
+        NoTattle =      1uL << 21,   //Can't tattle
+        ScanHideMoves = 1uL << 22,   //Scan does not reveal moveset
+        ScanMovesetMismatch = 1uL << 23, //For enemies whose movesets dont match the data table (The three of these quiet the warning message for the data table not having the right moveset)
 
-        SoftTouch =     1uL << 23,
-        DeepSleep =     1uL << 24,
-        Glacier =       1uL << 25,
+        SoftTouch =     1uL << 24,
+        DeepSleep =     1uL << 25,
+        Glacier =       1uL << 26,
 
-        StateStunned =  1uL << 26,
-        StateCharge =   1uL << 27,
-        StateDefensive = 1uL << 28,
-        StateRage =     1uL << 29,
-        StateCounter = 1uL << 30,
-        StateCounterHeavy = 1uL << 31,
-        StateContactHazard = 1uL << 32,
-        StateContactHazardHeavy = 1uL << 33,
-        CharacterMark = 1uL << 34,
-        PositionMark =  1uL << 35,
+        StateStunned =  1uL << 27,
+        StateCharge =   1uL << 28,
+        StateDefensive = 1uL << 29,
+        StateRage =     1uL << 30,
+        StateCounter = 1uL << 31,
+        StateCounterHeavy = 1uL << 32,
+        StateContactHazard = 1uL << 33,
+        StateContactHazardHeavy = 1uL << 34,
+        StateQuick = 1uL << 35,
+        CharacterMark = 1uL << 36,
+        PositionMark =  1uL << 37,
 
-        HideHP = 1uL << 36,  //Replaces the hp number with a ?, also replaces the hp bar with an ambiguous thing
+        HideHP = 1uL << 38,  //Replaces the hp number with a ?, also replaces the hp bar with an ambiguous thing
 
-        NoShadow = 1uL << 37,
+        NoShadow = 1uL << 39,
 
         SuppressMovesetWarning = NoTattle | ScanHideMoves | ScanMovesetMismatch
     }
@@ -1324,6 +1382,7 @@ public static class BattleHelper
         SoulMove,
         UseItem,
         Tactic,
+        PostAction,
 
         PayEnergy,
         Rest,
@@ -1357,12 +1416,18 @@ public static class BattleHelper
         Rootling,
         Sunflower,
         Sunnybud,
+
+        Goldbush,
+
         MiracleBloom,
         SunSapling,
         Rockling,
         Honeybud,
         BurrowTrap,
         Sundew,
+
+        Leafswimmer,
+
         Brambleling,
         GiantVine,
         Solardew,
@@ -1377,6 +1442,10 @@ public static class BattleHelper
         Sandswimmer,
         SpireGuard,
         EliteGuard,
+
+        DesertBloom,
+        Goldpole,
+
         Shockworm,
         Brightpole,
         Stormswimmer,
@@ -1403,6 +1472,10 @@ public static class BattleHelper
         Slimeworm,
         Slimebloom,
         SirenFish,
+
+        Urchiling,
+        GoldenSlime,
+
         ElementalSlime,
         NormalSlime,
         SoftSlime,
@@ -1418,6 +1491,10 @@ public static class BattleHelper
         Flametongue,
         Heatwing,
         Lavaswimmer,
+
+        Pyrenfish,
+        GoldScreecher,
+
         Infernoling,
         Magmaswimmer,
         Wyverlet,
@@ -1428,6 +1505,10 @@ public static class BattleHelper
         Shrouder,
         HoarderFly,
         Mosquito,
+
+        Toxiwing,
+        GoldFly,
+
         MawSpore,
         CaveSpider,
         Obscurer,
@@ -1439,9 +1520,12 @@ public static class BattleHelper
         LumistarVanguard,
         LumistarSoldier,
         LumistarStriker,
+
+        Spikeflake,
+
+        Mirrorwing,
         Beaconwing,
         Harmonywing,
-        Mirrorwing,
         KingIlum,
         TyrantBlade,
         Plateshell,
@@ -1450,10 +1534,16 @@ public static class BattleHelper
         Sawcrest,
         Coiler,
         Drillbeak,
+
+        Quickworm,
+
         AetherBoss,
         AetherSuperboss,
         PuffJelly,
         Fluffling,
+
+        Floppole,
+
         CloudJelly,
         CrystalCrab,
         CrystalSlug,
@@ -1461,6 +1551,12 @@ public static class BattleHelper
         AuroraWing,
         FinalBoss,
         FinalSuperboss,
+
+        DarkBurrower,
+        Shadew,
+        VileBloom,
+        Thornweed,
+
         Plaguebud,
         Starfish,
         CursedEye,

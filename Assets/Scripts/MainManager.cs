@@ -3464,8 +3464,11 @@ public class MainManager : MonoBehaviour
         P_Leafling,
         P_Flowerling,
         P_Shrublet,
+
         P_Sunnybud,
         P_Sunflower,
+
+        P_Goldbush,
         P_MiracleBloom,
 
         C1_GrizzlyBear_ChildFemaleTown,
@@ -3506,6 +3509,8 @@ public class MainManager : MonoBehaviour
         C1_Sundew,
         C1_Rockling,
         C1_Honeybud,
+
+        C1_Leafswimmer,
         C1_GiantVine,
         C1_Solardew,
         C1_Brambleling,
@@ -3542,6 +3547,9 @@ public class MainManager : MonoBehaviour
 
         C2_Cactupole,
         C2_Sandswimmer,
+
+        C2_DesertBloom,
+        C2_Goldpole,
         C2_Brightpole,
         C2_Stormswimmer,
         C2_Shockworm,
@@ -3553,14 +3561,17 @@ public class MainManager : MonoBehaviour
         C3_Jellyfish_Muthi,
 
         C3_Slime,
-        C3_RigidSlime,
-        C3_SoftSlime,
-        C3_ElementalSlime,
-        C3_NormalSlime,
         C3_Slimeworm,
         C3_Slimewalker,
         C3_Slimebloom,
         C3_Sirenfish,
+
+        C3_Urchiling,
+        C3_GoldenSlime,
+        C3_RigidSlime,
+        C3_SoftSlime,
+        C3_ElementalSlime,
+        C3_NormalSlime,
 
         C4_Flamecrest_AshcrestFemale,
         C4_Flamecrest_AshcrestMale,
@@ -3579,6 +3590,9 @@ public class MainManager : MonoBehaviour
 
         C4_Lavaswimmer,
         C4_Heatwing,
+
+        C4_Pyrenfish,
+        C4_GoldScreecher,
         C4_Magmaswimmer,
         C4_Infernoling,
         C4_Wyverlet,
@@ -3591,6 +3605,9 @@ public class MainManager : MonoBehaviour
         C5_SpikeShroom,
         C5_Shrouder,
         C5_HoarderFly,
+
+        C5_GoldFly,
+        C5_Toxiwing,
         C5_CaveSpider,
         C5_MawSpore,
         C5_Obscurer,
@@ -3631,9 +3648,11 @@ public class MainManager : MonoBehaviour
         C6_Shimmerwing,
         C6_Shieldwing,
         C6_Honeywing,
+
+        C6_Spikeflake,
+        C6_Mirrorwing,
         C6_Beaconwing,
         C6_Harmonywing,
-        C6_Mirrorwing,
 
         C7_Chaintail_Alumi,
         C7_Chaintail_Female,
@@ -3655,6 +3674,7 @@ public class MainManager : MonoBehaviour
         C7_Sawcrest,
         C7_Drillbeak,
         C7_Coiler,
+        C7_Quickworm,
 
         C8_Hydromander_Cloudmander,
         C8_Hydromander_Watermander,
@@ -3666,6 +3686,7 @@ public class MainManager : MonoBehaviour
 
         C8_PuffJelly,
         C8_Fluffling,
+        C8_Floppole,
 
         C8_CloudJelly,
         C8_WaterJelly,
@@ -3679,6 +3700,11 @@ public class MainManager : MonoBehaviour
         E_Plaguebud_Male,
         E_Plaguebud_Pestel,
         E_Plaguebud_Vali,
+
+        E_DarkBurrower,
+        E_Shadew,
+        E_Vilebloom,
+        E_Thornweed,
 
         E_CursedEye,
         E_StrangeTendril,
@@ -3715,6 +3741,12 @@ public class MainManager : MonoBehaviour
         ExplainFire,
         ExplainEarth,
         ExplainAir,
+        ExplainLightAdvanced,
+        ExplainDarkAdvanced,
+        ExplainWaterAdvanced,
+        ExplainFireAdvanced,
+        ExplainEarthAdvanced,
+        ExplainAirAdvanced,
     }
 
     //Nonstatic methods
@@ -3771,12 +3803,17 @@ public class MainManager : MonoBehaviour
         }
 
         GameObject aco;
+        GameObject g = Resources.Load<GameObject>(path);
+        if (g == null)
+        {
+            Debug.LogError("Can't load " + spriteID + " animation controller");
+        }
         if (parent == null)
         {
-            aco = Instantiate(Resources.Load<GameObject>(path));
+            aco = Instantiate(g);
         } else
         {
-            aco = Instantiate(Resources.Load<GameObject>(path), parent.transform);
+            aco = Instantiate(g, parent.transform);
         }
 
         AnimationController ac = aco.GetComponent<AnimationController>();
@@ -5407,6 +5444,14 @@ public class MainManager : MonoBehaviour
         //actually: probably because it is just WorldToScreenPoint since the multiplication and division cancel out
         return WorldPosToCanvasPosProportion(wpos) * new Vector2(Screen.width, Screen.height);
     }
+    public Vector2 RealMousePos()
+    {
+        Vector2 mousePos = (Vector2)Input.mousePosition;
+
+        mousePos.x = (mousePos.x) * (CanvasWidth() / Screen.width);
+        mousePos.y = (mousePos.y) * (CanvasHeight() / Screen.height);
+        return mousePos;
+    }
     public Vector2 WorldPosToCanvasPosC(Vector3 wpos)
     {
         return WorldPosToCanvasPosProportion(wpos) * new Vector2(CanvasWidth(), CanvasHeight());
@@ -5539,6 +5584,10 @@ public class MainManager : MonoBehaviour
 
         string[][] parse = CSVParse(s);
         return parse;
+    }
+    public static string GetCommonText(CommonTextLine ctl)
+    {
+        return Instance.commonText[(int)ctl][1];
     }
     public static string[][] GetMapText(MapID mapName)
     {
@@ -5763,6 +5812,8 @@ public class MainManager : MonoBehaviour
         {
             playerData.AddBadge(new Badge(Badge.BadgeType.RagesPower));
         }
+
+        playerData.AddKeyItem(new KeyItem(KeyItem.KeyItemType.PearlEye, 0));
 
         playerData.UpdateMaxStats();
     }
@@ -6712,8 +6763,8 @@ public class MainManager : MonoBehaviour
         commonSprites = Resources.LoadAll<Sprite>("Sprites/CommonSpritesV3");
         miscSprites = Resources.LoadAll<Sprite>("Sprites/Misc/MiscSpritesV2");
 
-        effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV11");
-        stateSprites = Resources.LoadAll<Sprite>("Sprites/Battle/StateIconsV5");
+        effectSprites = Resources.LoadAll<Sprite>("Sprites/Battle/EffectIconsV12");
+        stateSprites = Resources.LoadAll<Sprite>("Sprites/Battle/StateIconsV6");
 
         noFrictionMaterial = Resources.Load<PhysicMaterial>("Physics Materials/NoFriction");
         allFrictionMaterial = Resources.Load<PhysicMaterial>("Physics Materials/AllFriction");

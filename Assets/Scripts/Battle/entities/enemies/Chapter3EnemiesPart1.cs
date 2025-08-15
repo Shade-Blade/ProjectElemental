@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class BE_Slime : BattleEntity
 {
+    public bool didSplit = false;
     int counterCount;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Slime_Stomp>(), gameObject.AddComponent<BM_Slime_SplashStomp>(), gameObject.AddComponent<BM_Slime_Hard_CounterMistWall>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Slime_Stomp>(), gameObject.AddComponent<BM_Slime_SplashStomp>(), gameObject.AddComponent<BM_Slime_CounterSplit>() };
 
         base.Initialize();
     }
@@ -17,14 +18,7 @@ public class BE_Slime : BattleEntity
         //also reset here in case something weird happens
         counterCount = 0;
 
-        if (BattleControl.Instance.GetCurseLevel() > 0)
-        {
-            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
-        }
-        else
-        {
-            currMove = moveset[0];
-        }
+        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
 
         BasicTargetChooser();
     }
@@ -47,11 +41,6 @@ public class BE_Slime : BattleEntity
     }
     public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
     {
-        if (BattleControl.Instance.GetCurseLevel() <= 0)
-        {
-            return false;
-        }
-
         if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
         {
             counterCount++;
@@ -143,15 +132,57 @@ public class BM_Slime_SplashStomp : EnemyMove
     }
 }
 
-public class BM_Slime_Hard_CounterMistWall : EnemyMove
+public class BM_Slime_CounterSplit : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Slime_Hard_CounterMistWall;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Slime_CounterSplit;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.MistWall, 1, 2));
+        //fizzle
+        if (BattleControl.Instance.FindUnoccupiedID(false, true) >= 4)
+        {
+            yield return new WaitForSeconds(0.5f);
+            yield break;
+        }
+
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            caller.InflictEffect(caller, new Effect(Effect.EffectType.MistWall, 1, 2));
+        }
+
+        BE_Slime sl = (BE_Slime)caller;
+
+        BE_Slime ns = (BE_Slime)(BattleControl.Instance.SummonEntity(BattleHelper.EntityID.Slime));
+
+        if (sl != null)
+        {
+            sl.didSplit = true;
+        }
+        if (ns != null)
+        {
+            ns.transform.localScale = Vector3.one * 0.75f;
+            ns.didSplit = true;
+            ns.hp = caller.hp / 2;
+            ns.statMultiplier = sl.statMultiplier;
+            //ns.maxHP = caller.maxHP / 2;
+            if (ns.hp == 0)
+            {
+                ns.hp = 1;
+            }
+            foreach (Effect e in caller.effects)
+            {
+                ns.ReceiveEffectForce(e);
+            }
+
+            ns.transform.position = caller.transform.position + Vector3.forward * -0.05f;
+            yield return StartCoroutine(ns.JumpHeavy(ns.homePos, 0.6f, 0.2f, 1));
+            yield return new WaitForSeconds(0.1f);
+            ns.SetIdleAnimation(true);
+            ns.StartIdle();
+        }
+
         yield return new WaitForSeconds(0.5f);
     }
 }
@@ -484,7 +515,7 @@ public class BM_Slimebloom_Zap : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
@@ -522,7 +553,7 @@ public class BM_Slimebloom_Lob : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
@@ -561,7 +592,7 @@ public class BM_Slimebloom_Hard_Flash : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Light))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
@@ -599,9 +630,7 @@ public class BE_Sirenfish : BattleEntity
         bool nightmare = false;        
         if (BattleControl.Instance.GetCurseLevel() > 0)
         {
-            List<BattleEntity> bl = BattleControl.Instance.GetEntities(this, new TargetArea(TargetArea.TargetAreaType.LiveEnemy));
-            TargetStrategy strategy = new TargetStrategy(TargetStrategy.TargetStrategyType.FrontMost);
-            bl.Sort((a, b) => strategy.selectorFunction(a, b));
+            List<BattleEntity> bl = BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveEnemy));
 
             for (int i = 0; i < bl.Count; i++)
             {
@@ -649,7 +678,7 @@ public class BM_Sirenfish_BubbleSong : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)

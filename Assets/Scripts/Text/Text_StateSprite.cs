@@ -76,7 +76,7 @@ public class Text_StateSprite : Text_SpecialSprite
             return MainManager.Instance.stateSprites[MainManager.Instance.stateSprites.Length - 1];
         }
 
-        return MainManager.Instance.stateSprites[(int)(stateType)];
+        return MainManager.Instance.stateSprites[(int)(stateType) - 1];
     }
 }
 

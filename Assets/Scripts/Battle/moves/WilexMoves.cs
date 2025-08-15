@@ -24,7 +24,7 @@ public abstract class WilexMove : PlayerMove
         TeamQuake,
         EggToss,
         Slash,
-        MultiSlash,
+        ElectroSlash,
         SlipSlash,
         PoisonSlash,
         PreciseStab,
@@ -2321,9 +2321,9 @@ public class WM_Slash : WilexMove
     }
 }
 
-public class WM_MultiSlash : WM_Slash
+public class WM_ElectroSlash : WM_Slash
 {
-    public WM_MultiSlash()
+    public WM_ElectroSlash()
     {
     }
 
@@ -2358,7 +2358,7 @@ public class WM_MultiSlash : WM_Slash
             caller.curTarget = null;
         }
 
-        int hits = level * 2;
+        int hits = level;
         float delay = 0.5f / hits;
         if (delay < 0.15f)
         {
@@ -2563,12 +2563,12 @@ public class WM_MultiSlash : WM_Slash
         if (result)
         {
             caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.SpinFast);
-            caller.DealDamageMultihit(caller.curTarget, sd + 1, BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
+            caller.DealDamageMultihit(caller.curTarget, sd, BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
         }
         else
         {
             caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.SpinFast);
-            caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt((sd / 2f) + 1), BattleHelper.DamageType.Normal, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
+            caller.DealDamageMultihit(caller.curTarget, Mathf.CeilToInt((sd / 2f)), BattleHelper.DamageType.Air, propertyBlock, BattleHelper.ContactLevel.Weapon, index, BattleHelper.MultihitReductionFormula.ReduceHalf);
         }
     }
 
@@ -2599,13 +2599,13 @@ public class WM_MultiSlash : WM_Slash
 
         string outstring = "";
 
-        int hits = level * 2;
+        int hits = level;
 
         int val = 0; // caller.DealDamageMultihitCalculation(target, sd + 1, 0, 0, 0, BattleHelper.MultihitReductionFormula.ReduceHalf);
 
         for (int i = 0; i < hits; i++)
         {
-            val = caller.DealDamageMultihitCalculation(target, sd + 1, 0, 0, i, BattleHelper.MultihitReductionFormula.ReduceHalf);
+            val = caller.DealDamageMultihitCalculation(target, sd, BattleHelper.DamageType.Air, 0, i, BattleHelper.MultihitReductionFormula.ReduceHalf);
             outstring += val;
             if (i > 0)
             {

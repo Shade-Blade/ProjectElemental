@@ -122,6 +122,7 @@ public class WorldEnemy_FlyingChaser : WorldEnemyEntity
 
     public override void WorldUpdate()
     {
+        /*
         if (rb.velocity.y >= 0)
         {
             SetAnimation("jumpflying");
@@ -129,6 +130,8 @@ public class WorldEnemy_FlyingChaser : WorldEnemyEntity
         {
             SetAnimation("fallflying");
         }
+        */
+        SetAnimation("idleflying");
 
         Vector3 newVelocity = Vector3.zero;
 
@@ -168,7 +171,7 @@ public class WorldEnemy_FlyingChaser : WorldEnemyEntity
                     }
                 }
 
-                float yMove = (Mathf.Sin(Time.time * 5f) * 0.1f + startPosition.y - transform.position.y) * (1 / 0.2f);
+                float yMove = (Mathf.Sin(Time.time * 5f) * 0.01f + startPosition.y - transform.position.y) * (1 / 0.2f);
                 if (yMove > 1)
                 {
                     yMove = 1;

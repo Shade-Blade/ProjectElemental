@@ -28,7 +28,7 @@ public class BE_PuffJelly : BattleEntity
             }
         }
 
-        BasicOffsetTargetChooser(2, 3);
+        BasicTargetChooser(2, 3);
     }
 
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
@@ -154,7 +154,7 @@ public class BE_Fluffling : BattleEntity
             }
         }
 
-        BasicOffsetTargetChooser(2, 3);
+        BasicTargetChooser(2, 3);
     }
 
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
@@ -253,6 +253,21 @@ public class BE_CloudJelly : BattleEntity
 
     int counterCount;
 
+    //Todo: find some file based solution to this
+    public override string GetName()
+    {
+        switch (form)
+        {
+            case CloudJellyForm.Ice:
+                return "Ice Jelly" + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
+            case CloudJellyForm.Water:
+                return "Water Jelly" + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
+            case CloudJellyForm.Cloud:
+                return "Cloud Jelly" + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
+        }
+        return GetNameStatic(entityID) + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
+    }
+
     public override void Initialize()
     {
         moveset = new List<Move> { gameObject.AddComponent<BM_CloudJelly_IceSwing>(), gameObject.AddComponent<BM_CloudJelly_FrostFortify>(), gameObject.AddComponent<BM_CloudJelly_BubbleToss>(), gameObject.AddComponent<BM_CloudJelly_BubbleBlast>(), gameObject.AddComponent<BM_CloudJelly_PowerBolt>(), gameObject.AddComponent<BM_CloudJelly_PowerCharge>(), gameObject.AddComponent<BM_CloudJelly_CounterFormChange>() };
@@ -261,8 +276,10 @@ public class BE_CloudJelly : BattleEntity
     }
     public void SetForm(CloudJellyForm cjf)
     {
+        Color oldColor = this.ac.GetComponentInChildren<SpriteRenderer>().color;
+
         //delete old one
-        AnimationController oac = GetComponentInChildren<AnimationController>();
+        AnimationController oac = this.ac;
         Destroy(oac.gameObject);
 
         GameObject ac = null;
@@ -293,6 +310,7 @@ public class BE_CloudJelly : BattleEntity
                 SetDefense(BattleHelper.DamageType.Earth, -6);
                 break;
         }
+        ac.GetComponentInChildren<SpriteRenderer>().color = oldColor;
         ac.transform.localPosition = offset;// + Vector3.up * (height / 2);
         this.ac = ac.GetComponent<AnimationController>();
         EffectSpriteUpdate();
@@ -352,7 +370,7 @@ public class BE_CloudJelly : BattleEntity
             }
         }
 
-        BasicOffsetTargetChooser(2, 3);
+        BasicTargetChooser(2, 3);
     }
 
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
@@ -656,7 +674,7 @@ public class BE_CrystalCrab : BattleEntity
     int counterCount;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_CrystalCrab_TripleClaw>(), gameObject.AddComponent<BM_CrystalCrab_DarkClaw>(), gameObject.AddComponent<BM_CrystalCrab_Hard_CounterClearClaw>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_CrystalCrab_TripleClaw>(), gameObject.AddComponent<BM_CrystalCrab_DarkClaw>(), gameObject.AddComponent<BM_CrystalCrab_Carcinization>(), gameObject.AddComponent<BM_CrystalCrab_Hard_CounterClearClaw>() };
 
         base.Initialize();
 
@@ -671,7 +689,20 @@ public class BE_CrystalCrab : BattleEntity
         //also reset here in case something weird happens
         counterCount = 0;
 
-        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+
+        if (currMove == moveset[2])
+        {
+            //Success
+            bool canTarget = BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAllyWeakLowNotSameType)).Count > 0;
+            canTarget &= (hp * 2 >= maxHP);
+
+            if (!canTarget)
+            {
+                //Fail
+                currMove = moveset[0];
+            }
+        }
         BasicTargetChooser();
     }
 
@@ -702,7 +733,7 @@ public class BE_CrystalCrab : BattleEntity
         if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
         {
             counterCount++;
-            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
+            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[3]);
             return true;
         }
 
@@ -787,7 +818,7 @@ public class BM_CrystalCrab_DarkClaw : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Dark))
             {
-                bool hasStatus = t.HasStatus();
+                bool hasStatus = t.HasAilment();
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Dark, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
                 {
@@ -801,6 +832,71 @@ public class BM_CrystalCrab_DarkClaw : EnemyMove
                 caller.InvokeMissEvents(t);
             }
         }
+    }
+}
+
+public class BM_CrystalCrab_Carcinization : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.CrystalCrab_Carcinization;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAllyWeakLowNotSameType);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 itpos = Vector3.negativeInfinity;
+            bool backflag = false;
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                backflag = true;
+            }
+
+            //Debug.Log(itpos);
+
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * (Vector3.right * (caller.curTarget.transform.position.x > caller.transform.position.x ? -1 : 1));
+
+            if (backflag)
+            {
+                itpos = ((transform.position + tpos) / 2) + Vector3.forward * 1;
+
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
+            }
+            else
+            {
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
+            }
+
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
+            //Bonk the enemy
+
+            BattleEntity target = caller.curTarget;
+
+
+            BE_CrystalCrab newCrab = (BE_CrystalCrab)(BattleControl.Instance.SummonEntity(BattleHelper.EntityID.CrystalCrab, caller.curTarget.posId));
+            newCrab.statMultiplier = target.statMultiplier;
+            newCrab.hp = caller.hp;
+            newCrab.ReceiveEffectForce(new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+            BattleControl.Instance.RemoveEntity(target);
+            foreach (Effect e in target.effects)
+            {
+                newCrab.ReceiveEffectForce(e);
+            }
+            if (newCrab.hp > newCrab.maxHP)
+            {
+                newCrab.hp = newCrab.maxHP;
+            }
+            yield return StartCoroutine(newCrab.SpinHeavy(Vector3.up * 360, 0.25f));
+            newCrab.StartIdle();
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
     }
 }
 
@@ -954,7 +1050,7 @@ public class BM_CrystalSlug_Slap : EnemyMove
             {
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 if (!hasStatus && BattleControl.Instance.GetCurseLevel() > 0)
                 {
                     caller.InflictEffect(caller.curTarget, new Effect(Effect.EffectType.Brittle, 1, 3));
@@ -991,7 +1087,7 @@ public class BM_CrystalSlug_ChillingStare : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
-                bool hasStatus = t.HasStatus();
+                bool hasStatus = t.HasAilment();
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {

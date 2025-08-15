@@ -90,6 +90,80 @@ public class BM_Shared_Bite : EnemyMove
     }
 }
 
+public class BM_Shared_DoubleBite : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.DoubleBite;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 itpos = Vector3.negativeInfinity;
+            bool backflag = false;
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                itpos = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.back * 0.5f;
+                backflag = true;
+            }
+
+            //Debug.Log(itpos);
+
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right;
+
+            if (backflag)
+            {
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
+            }
+            else
+            {
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
+            }
+
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
+
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
+                    switch (caller.entityID)
+                    {
+                        case BattleHelper.EntityID.Brambleling:
+                            caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                            break;
+                        case BattleHelper.EntityID.Goldbush:
+                            caller.DealDamage(caller.curTarget, 6, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                            break;
+                        default:
+                            caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                            break;
+                    }
+                    StartCoroutine(caller.RevertScale(0.1f));
+                    if (i < 1)
+                    {
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                }
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+}
+
+
 public class BM_Shared_FrontBite : BM_Shared_Bite
 {
     public override MoveIndex GetMoveIndex() => MoveIndex.FrontBite;
@@ -390,6 +464,139 @@ public class BM_Shared_DualSlash : EnemyMove
     }
 }
 
+public class BM_Shared_Stab : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Stab;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 itpos = Vector3.negativeInfinity;
+            bool backflag = false;
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                itpos = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.back * 0.5f;
+                backflag = true;
+            }
+
+            //Debug.Log(itpos);
+
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right;
+
+            if (backflag)
+            {
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
+            }
+            else
+            {
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
+            }
+
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
+
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
+                switch (caller.entityID)
+                {
+                    case BattleHelper.EntityID.SpireGuard:
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        break;
+                    default:
+                        caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        break;
+                }
+                StartCoroutine(caller.RevertScale(0.1f));
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+}
+
+public class BM_Shared_DoubleStab : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.DoubleStab;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 itpos = Vector3.negativeInfinity;
+            bool backflag = false;
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                itpos = BattleControl.Instance.GetFrontmostLow(caller).transform.position + Vector3.back * 0.5f;
+                backflag = true;
+            }
+
+            //Debug.Log(itpos);
+
+            Vector3 tpos = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right;
+
+            if (backflag)
+            {
+                yield return StartCoroutine(caller.MoveEasing(itpos, (e) => MainManager.EasingOut(e)));
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingIn(e)));
+            }
+            else
+            {
+                yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
+            }
+
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
+
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
+                    switch (caller.entityID)
+                    {
+                        case BattleHelper.EntityID.EliteGuard:
+                            caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                            break;
+                        default:
+                            caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                            break;
+                    }
+                    StartCoroutine(caller.RevertScale(0.1f));
+                    if (i < 1)
+                    {
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                }
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+}
+
 public class BM_Shared_DoubleSwoop : EnemyMove
 {
     public override MoveIndex GetMoveIndex() => MoveIndex.DoubleSwoop;
@@ -604,6 +811,9 @@ public class BM_Shared_Hard_CounterRush : EnemyMove
                         break;
                     case BattleHelper.EntityID.MiracleBloom:
                         caller.DealDamage(caller.curTarget, 8, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        break;
+                    case BattleHelper.EntityID.DesertBloom:
+                        caller.DealDamage(caller.curTarget, 9, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         break;
                     default:
                         caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);

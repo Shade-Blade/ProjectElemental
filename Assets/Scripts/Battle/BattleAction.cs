@@ -372,14 +372,25 @@ public class BA_Rest : BattleAction
             {
                 value = 3 + 3 * pcaller.BadgeEquippedCount(Badge.BadgeType.DarkConcentration);
             }
+            if (pcaller.BadgeEquipped(Badge.BadgeType.DarkConcentration))
+            {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.DarkConcentration, caller);
+            }
 
 
             rt = pcaller.GetVisualRibbon().type;
             ribbonPower = pcaller.BadgeEquipped(Badge.BadgeType.RibbonPower);
+
+            if (ribbonPower)
+            {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.RibbonPower, caller);
+            }
+
             ribbonMult = pcaller.BadgeEquippedCount(Badge.BadgeType.RibbonPower);
             if (pcaller.BadgeEquipped(Badge.BadgeType.LongRest) && pcaller.lastRestTurn >= BattleControl.Instance.turnCount - 1)
             {
                 restBoost *= 1 + 0.5f * pcaller.BadgeEquippedCount(Badge.BadgeType.LongRest);
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.LongRest, caller);
             }
             pcaller.lastRestTurn = BattleControl.Instance.turnCount;
         }
@@ -407,6 +418,7 @@ public class BA_Rest : BattleAction
                     caller.HealStamina(Mathf.Max((int)(restBoost * (caller.GetRealAgility() / 2)) + caller.GetRealAgility(), -caller.stamina));
                 }
                 RibbonEffect(caller, new Color(0.7f, 0.3f, 0), ribbonPower);
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.BeginnerRibbon, caller);
                 break;
             case Ribbon.RibbonType.ExpertRibbon:
                 if (ribbonPower)
@@ -425,6 +437,7 @@ public class BA_Rest : BattleAction
                     }
                 }
                 RibbonEffect(caller, new Color(0.7f, 0.8f, 1f), ribbonPower);
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.ExpertRibbon, caller);
                 break;
             case Ribbon.RibbonType.ChampionRibbon:
                 bool alone = true;
@@ -449,6 +462,7 @@ public class BA_Rest : BattleAction
                     }
                 }
                 RibbonEffect(caller, new Color(1f, 0.7f, 0), ribbonPower);
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.ChampionRibbon, caller);
                 break;
             case Ribbon.RibbonType.StaticRibbon:
                 if (ribbonPower) 
@@ -460,6 +474,7 @@ public class BA_Rest : BattleAction
                     caller.HealEnergy((int)(restBoost * 2));
                 }
                 RibbonEffect(caller, new Color(1f, 1f, 0.2f), ribbonPower);
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.StaticRibbon, caller);
                 break;
             case Ribbon.RibbonType.SlimyRibbon:
                 if (ribbonPower)
@@ -472,6 +487,7 @@ public class BA_Rest : BattleAction
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackUp, 1, (sbyte)(restBoost * 3)));
                 }
                 RibbonEffectDark(caller, new Color(1f, 0.3f, 1f), ribbonPower);
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SlimyRibbon, caller);
                 break;
             case Ribbon.RibbonType.FlashyRibbon:
                 if (ribbonPower)
@@ -484,6 +500,7 @@ public class BA_Rest : BattleAction
                     caller.InflictEffect(caller, new Effect(Effect.EffectType.DefenseUp, 1, (sbyte)(restBoost * 3)));
                 }
                 RibbonEffect(caller, new Color(0.5f, 1f, 0.5f), ribbonPower);
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.FlashyRibbon, caller);
                 break;
             case Ribbon.RibbonType.SoftRibbon:
                 if (ribbonPower)
@@ -496,6 +513,7 @@ public class BA_Rest : BattleAction
                     caller.HealHealth((int)(restBoost * 2));
                 }
                 RibbonEffect(caller, new Color(0.2f, 0.2f, 1f), ribbonPower);
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SoftRibbon, caller);
                 break;
             case Ribbon.RibbonType.ThornyRibbon:
                 if (ribbonPower)
@@ -508,6 +526,7 @@ public class BA_Rest : BattleAction
                     caller.TakeDamageStatus(1);
                 }
                 RibbonEffect(caller, new Color(1f, 0.2f, 1f), ribbonPower);
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.ThornyRibbon, caller);
                 break;
             case Ribbon.RibbonType.DiamondRibbon:
                 if (ribbonPower)
@@ -519,6 +538,7 @@ public class BA_Rest : BattleAction
                     caller.HealCoins((int)(restBoost * 15));
                 }
                 RibbonEffectDiamond(caller, new Color(0.6f, 1f, 1f), ribbonPower);
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.DiamondRibbon, caller);
                 break;
         }
 
@@ -629,6 +649,35 @@ public class BA_Scan : BattleAction
 
     public override IEnumerator Execute(BattleEntity caller)
     {
+        KeyItem.KeyItemType kit = KeyItem.KeyItemType.PearlEye;
+
+        caller.SetAnimation("itemuse");
+        MainManager.Instance.PlaySound(caller.gameObject, MainManager.Sound.SFX_Item_Use);
+
+        //spawn a sprite
+        Sprite isp = GlobalItemScript.GetKeyItemSprite(kit);
+
+        Vector3 position = caller.transform.position + caller.height * Vector3.up + Vector3.up * 0.6f;
+
+        GameObject so = new GameObject("Item Use Sprite");
+        so.transform.parent = BattleControl.Instance.transform;
+        SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+        s.sprite = isp;
+        s.material = GlobalItemScript.GetItemModifierMaterial(0);
+        so.transform.position = position;
+
+        GameObject eo = Instantiate(Resources.Load<GameObject>("VFX/Battle/Effect_Item_UseFireworks"), gameObject.transform);
+        eo.transform.position = position + Vector3.forward * 0.01f;
+        EffectScript_Generic es_g = eo.GetComponent<EffectScript_Generic>();
+        es_g.Setup(1, 1);
+
+        yield return new WaitForSeconds(1f);
+
+        //Destroy(so);
+
+        yield return null;
+
+
         BattleEntity target = caller.curTarget;
         string tattle = "<tail,k>" + target.GetTattle(BattleHelper.EntityID.Keru);
 
@@ -693,6 +742,9 @@ public class BA_Scan : BattleAction
         }
         BattleControl.Instance.BroadcastEvent(target, BattleHelper.Event.Check);
         bcs.Fadeout();
+
+        Destroy(so);
+        caller.SetIdleAnimation();
     }
 }
 
@@ -1052,7 +1104,7 @@ public class BA_Flee : BattleAction
 public class BA_EasyFlee : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.None, false);
-    public override string GetName() => "Easy Flee";
+    public override string GetName() => "Easy Flee<badge,dodgestep>";
     public override string GetDescription() => "Run from the current battle. Drains up to 5 energy from you but is otherwise free. Some battles may forbid you from fleeing, while others may allow you to flee for free.";
     public override bool ForfeitTurn() => false;
 
@@ -1170,6 +1222,7 @@ public class BA_TurnRelay : BattleAction
         {
             if (pcaller.BadgeEquipped(Badge.BadgeType.UnsteadyStance))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.UnsteadyStance, caller);
                 caller.InflictEffect(caller, new Effect(Effect.EffectType.Dizzy, 1, (sbyte)(2 * pcaller.BadgeEquippedCount(Badge.BadgeType.UnsteadyStance))));
                 target.HealStamina(pcaller.BadgeEquippedCount(Badge.BadgeType.UnsteadyStance) * (target.GetRealAgility() + target.GetEffectHasteBonus() + target.GetBadgeAgilityBonus()));
             }
@@ -1180,7 +1233,7 @@ public class BA_TurnRelay : BattleAction
 public class BA_EffectRelay : BattleAction
 {
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.AllyNotSelf, false);
-    public override string GetName() => "Effect Relay";
+    public override string GetName() => "Effect Relay<badge,effectrelay>";
     public override string GetDescription() => "(0 turns) Pass most effects to the other character. Effects immune to effect removal won't be passed over.";
     public override bool ForfeitTurn() => false;
 

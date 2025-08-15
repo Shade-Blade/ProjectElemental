@@ -97,7 +97,7 @@ public class BM_Shieldwing_ChillingScreech : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
-                bool hasStatus = t.HasStatus();
+                bool hasStatus = t.HasAilment();
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {
@@ -180,7 +180,7 @@ public class BE_Honeywing : BattleEntity
             }
         }
 
-        BasicOffsetTargetChooser(2, 3);
+        BasicTargetChooser(2, 3);
     }
 
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
@@ -351,7 +351,8 @@ public class BM_Honeywing_SwoopHealSoften : BM_Honeybud_SwoopHeal
 
     public override void ApplyHealEffect(BattleEntity caller, BattleEntity target)
     {
-        if (BattleControl.Instance.GetCurseLevel() > 0)
+        caller.InflictEffect(caller, new Effect(Effect.EffectType.Soften, 1, 3));
+        if (BattleControl.Instance.GetCurseLevel() > 0 && caller != target)
         {
             caller.InflictEffect(target, new Effect(Effect.EffectType.Soften, 1, 3));
         }
@@ -398,7 +399,7 @@ public class BE_Shimmerwing : BattleEntity
             }
         }
 
-        BasicOffsetTargetChooser(2, 3);
+        BasicTargetChooser(2, 3);
     }
 
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
@@ -431,7 +432,7 @@ public class BM_Shimmerwing_DazzlingScreech : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Light))
             {
-                bool hasStatus = t.HasStatus();
+                bool hasStatus = t.HasAilment();
                 t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 2, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
@@ -500,7 +501,7 @@ public class BM_Shimmerwing_Hard_StaticFlurry : EnemyMove
         {
             if (caller.GetAttackHit(t, BattleHelper.DamageType.Air))
             {
-                bool hasStatus = t.HasStatus();
+                bool hasStatus = t.HasAilment();
                 t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(t, 3, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)

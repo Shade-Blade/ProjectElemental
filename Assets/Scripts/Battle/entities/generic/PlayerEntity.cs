@@ -193,9 +193,9 @@ public class PlayerEntity : BattleEntity
             moveset.Add(s);
             weaponMoves.Add(s);
         }
-        if (GetWilexMoveMaxLevel((int)WilexMove.MoveType.MultiSlash) > 0)
+        if (GetWilexMoveMaxLevel((int)WilexMove.MoveType.ElectroSlash) > 0)
         {
-            WM_MultiSlash ps = gameObject.AddComponent<WM_MultiSlash>();
+            WM_ElectroSlash ps = gameObject.AddComponent<WM_ElectroSlash>();
             moveset.Add(ps);
             weaponMoves.Add(ps);
         }
@@ -341,9 +341,9 @@ public class PlayerEntity : BattleEntity
             moveset.Add(s2);
             weaponMoves.Add(s2);
         }
-        if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.PowerSmash) > 0)
+        if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.LeafySmash) > 0)
         {
-            LM_PowerSmash ps2 = gameObject.AddComponent<LM_PowerSmash>();
+            LM_LeafySmash ps2 = gameObject.AddComponent<LM_LeafySmash>();
             moveset.Add(ps2);
             weaponMoves.Add(ps2);
         }
@@ -365,9 +365,9 @@ public class PlayerEntity : BattleEntity
             moveset.Add(fls);
             weaponMoves.Add(fls);
         }
-        if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.FloraSmash) > 0)
+        if (GetLunaMoveMaxLevel((int)LunaMove.MoveType.FlashThrow) > 0)
         {
-            LM_FloraSmash brs = gameObject.AddComponent<LM_FloraSmash>();
+            LM_FlashThrow brs = gameObject.AddComponent<LM_FlashThrow>();
             moveset.Add(brs);
             weaponMoves.Add(brs);
         }
@@ -562,7 +562,7 @@ public class PlayerEntity : BattleEntity
             case 12:
                 return Mathf.Min(baseLevel, maxLevel);
             case 13:
-                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.MultiSlash), maxLevel);
+                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.ElectroSlash), maxLevel);
             case 14:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.SlipSlash), maxLevel);
             case 15:
@@ -570,7 +570,7 @@ public class PlayerEntity : BattleEntity
             case 16:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.PreciseStab), maxLevel);
             case 17:
-                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.SwordDischarge), maxLevel);
+                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.SwordBolt), maxLevel);
             case 18:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.SwordDance), maxLevel);
             case 19:
@@ -771,7 +771,7 @@ public class PlayerEntity : BattleEntity
             case 12:
                 return Mathf.Min(baseLevel, maxLevel);
             case 13:
-                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.PowerSmash), maxLevel);
+                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.LeafySmash), maxLevel);
             case 14:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.DazzleSmash), maxLevel);
             case 15:
@@ -779,7 +779,7 @@ public class PlayerEntity : BattleEntity
             case 16:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.FlameSmash), maxLevel);
             case 17:
-                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.FloraSmash), maxLevel);
+                return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.FlashThrow), maxLevel);
             case 18:
                 return Mathf.Min(baseLevel + BadgeEquippedCount(Badge.BadgeType.MomentumSmash), maxLevel);
             case 19:
@@ -1158,9 +1158,13 @@ public class PlayerEntity : BattleEntity
             statusMultiplier = 0;
         }
 
-        if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Ailment || Effect.IsBlockableDebuff(se.effect))
+        if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Ailment || Effect.IsBlockableDebuff(se.effect) || Effect.GetEffectClass(se.effect) == Effect.EffectClass.Mark)
         {
-            if (se.duration != Effect.INFINITE_DURATION)
+            if (Effect.GetEffectClass(se.effect) == Effect.EffectClass.Mark)
+            {
+                statusTurnReduction = 0;
+            }
+            if (se.duration != Effect.INFINITE_DURATION && Effect.GetEffectClass(se.effect) != Effect.EffectClass.Mark)
             {
                 int olddur = se.duration;
                 se.duration = (sbyte)(Mathf.CeilToInt(se.duration * statusMultiplier));
@@ -1426,12 +1430,62 @@ public class PlayerEntity : BattleEntity
 
             if (BadgeEquipped(Badge.BadgeType.AilmentExploit))
             {
-                outProperties |= (ulong)BattleHelper.DamageProperties.StatusExploit;
+                outProperties |= (ulong)BattleHelper.DamageProperties.AilmentExploit;
+
+                //precalculate the trigger to show the badge icon?
+                if (target.HasAilment())
+                {
+                    bool doBoost = false;
+
+                    if (!doBoost && target.HasEffect(Effect.EffectType.Berserk) && ((type & BattleHelper.DamageType.Fire) != 0))
+                    {
+                        doBoost = true;
+                    }
+                    if (!doBoost && target.HasEffect(Effect.EffectType.Sleep) && ((type & BattleHelper.DamageType.Dark) != 0))
+                    {
+                        doBoost = true;
+                    }
+                    if (!doBoost && target.HasEffect(Effect.EffectType.Paralyze) && ((type & BattleHelper.DamageType.Water) != 0))
+                    {
+                        doBoost = true;
+                    }
+                    if (!doBoost && target.HasEffect(Effect.EffectType.Dizzy) && ((type & BattleHelper.DamageType.Light) != 0))
+                    {
+                        doBoost = true;
+                    }
+                    if (!doBoost && target.HasEffect(Effect.EffectType.Freeze) && ((type & BattleHelper.DamageType.Earth) != 0))
+                    {
+                        doBoost = true;
+                    }
+                    if (!doBoost && target.HasEffect(Effect.EffectType.Poison) && ((type & BattleHelper.DamageType.Air) != 0))
+                    {
+                        doBoost = true;
+                    }
+
+                    if (doBoost)
+                    {
+                        BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.AilmentExploit, this);
+                    }
+                }
+            }
+
+            if (BadgeEquipped(Badge.BadgeType.Instinct))
+            {
+                outProperties |= (ulong)BattleHelper.DamageProperties.HitsWhileDizzyWeak;
+                if (HasEffect(Effect.EffectType.Dizzy))
+                {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Instinct, this);
+                }
             }
 
             if (BadgeEquipped(Badge.BadgeType.SoftTouch))
             {
                 outProperties |= (ulong)BattleHelper.DamageProperties.SoftTouch;
+                //the contact hazard reduction is handled elsewhere
+                if (target.HasEffect(Effect.EffectType.Sleep) || target.HasEffect(Effect.EffectType.Freeze))
+                {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.SoftTouch, this);
+                }
             }
 
             if (BadgeEquipped(Badge.BadgeType.NightmareStrike))
@@ -1447,6 +1501,10 @@ public class PlayerEntity : BattleEntity
             if (BadgeEquipped(Badge.BadgeType.Icebreaker))
             {
                 outProperties |= (ulong)BattleHelper.DamageProperties.Icebreaker;
+                if (target.HasEffect(Effect.EffectType.Freeze))
+                {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Icebreaker, this);
+                }
             }
         }
 
@@ -1508,6 +1566,7 @@ public class PlayerEntity : BattleEntity
             //comes after the TakeDamage call so this will always only trigger when you die (no misfire)
             if (BadgeEquipped(Badge.BadgeType.LastCounter) && hp <= 0)
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.LastCounter, this);
                 DealDamage(target, lastTrueDamageTaken * BadgeEquippedCount(Badge.BadgeType.LastCounter), DamageType.Normal, (ulong)DamageProperties.StandardContactHazard, ContactLevel.Contact);
                 return;
             }
@@ -1530,6 +1589,7 @@ public class PlayerEntity : BattleEntity
 
                 if (HasEffect(Effect.EffectType.Paralyze) && BadgeEquipped(Badge.BadgeType.Inductor))
                 {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Inductor, this);
                     DealDamage(target, 3 * BadgeEquippedCount(Badge.BadgeType.Inductor), DamageType.Air, (ulong)DamageProperties.StandardContactHazard, ContactLevel.Contact);
                     target.contactImmunityList.Add(posId);
                     return;
@@ -1537,6 +1597,7 @@ public class PlayerEntity : BattleEntity
 
                 if (HasEffect(Effect.EffectType.Freeze) && BadgeEquipped(Badge.BadgeType.FrostEdge))
                 {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.FrostEdge, this);
                     DealDamage(target, 3 * BadgeEquippedCount(Badge.BadgeType.FrostEdge), DamageType.Light, (ulong)DamageProperties.StandardContactHazard, ContactLevel.Contact);
                     target.contactImmunityList.Add(posId);
                     return;
@@ -1801,22 +1862,24 @@ public class PlayerEntity : BattleEntity
 
             if (effects.Count > 0 && effects[i].potency <= 0) //potency 0 is not allowed
             {
+                BattleControl.Instance.CreateEffectRemovedParticles(effects[i], this);
                 effects.Remove(effects[i]);
                 if (i > 0)
                 {
                     i--;
                 }
-                QueueEvent(BattleHelper.Event.CureStatus);
+                QueueEventIfUnqueued(BattleHelper.Event.CureStatus);
             }
             if (effects.Count > 0 && effects[i].duration <= 0)
             {
+                BattleControl.Instance.CreateEffectRemovedParticles(effects[i], this);
                 effects.Remove(effects[i]);
                 if (i > 0)
                 {
                     i--;
                 }
                 //do status curing code
-                QueueEvent(BattleHelper.Event.CureStatus);
+                QueueEventIfUnqueued(BattleHelper.Event.CureStatus);
             }
         }
 
@@ -1969,6 +2032,12 @@ public class PlayerEntity : BattleEntity
         bool b = IsBlocking() || ((AutoMove() || (HasEffect(Effect.EffectType.Sleep) && BadgeEquipped(Badge.BadgeType.LightSleep))) && hp > 0 && !RibbonEquipped(Ribbon.RibbonType.ThornyRibbon, false));
         bool safetyBlock = GetSafetyBlock() && BattleControl.Instance.playerData.ep >= 2;
         bool sharpBlock = GetSharpBlock();
+
+        if (b && (HasEffect(Effect.EffectType.Sleep) && BadgeEquipped(Badge.BadgeType.LightSleep)))
+        {
+            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.LightSleep, this);
+        }
+
         if (!BattleHelper.GetDamageProperty(properties, DamageProperties.Hardcode))
         {
             bool noSpecial = false;
@@ -2072,41 +2141,49 @@ public class PlayerEntity : BattleEntity
             if (safetyBlock)    //note: does not have a rest effect so there is no corresponding effect call for SafetyRibbon in the rest script
             {
                 RibbonEffect(new Color(0f, 0.7f, 0f));
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SafetyRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (sharpBlock)     //likewise
             {
                 RibbonEffect(new Color(0.7f, 0.0f, 0f));
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SharpRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (sb)
             {
                 RibbonEffect(new Color(1f, 0.7f, 0));
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.ChampionRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetAbsorbBlock())
             {
                 RibbonEffect(new Color(1f, 1f, 0.3f));
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.StaticRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetSlimyBlock())
             {
                 RibbonEffectDark(new Color(1f, 0.3f, 1f));
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SlimyRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetClearBlock())
             {
                 RibbonEffect(new Color(0.5f, 1f, 0.5f));
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.FlashyRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetSoftBlock())
             {
                 RibbonEffect(new Color(0.3f, 0.3f, 1f));
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SoftRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetDiamondBlock())
             {
                 RibbonEffectDiamond(new Color(0.6f, 1f, 1f));
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.DiamondRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
 
@@ -2121,11 +2198,13 @@ public class PlayerEntity : BattleEntity
             if (BattleHelper.GetDamageProperty(properties, DamageProperties.ContactHazard) && HasEffect(Effect.EffectType.Berserk) && BadgeEquipped(Badge.BadgeType.RageShield))
             {
                 bonusResistance += 2 * BadgeEquippedCount(Badge.BadgeType.RageShield);
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.RageShield, this);
             }
 
             if (BattleHelper.GetDamageProperty(properties, DamageProperties.ContactHazard) && BadgeEquipped(Badge.BadgeType.SoftTouch))
             {
                 bonusResistance += 2 * BadgeEquippedCount(Badge.BadgeType.SoftTouch);
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.SoftTouch, this);
             }
 
             if (!sb && !b)
@@ -2161,6 +2240,7 @@ public class PlayerEntity : BattleEntity
                 int value = Mathf.CeilToInt((damageReduction * 2 * shields) / (GetResistance() + bonusResistance + 0.0f));
                 HealEnergy(-value);
                 shieldCount++;
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.EnergyShield, this);
             }
             if (BadgeEquipped(Badge.BadgeType.SpiritShield) && BattleControl.Instance.GetSE(this) > 0)
             {
@@ -2168,6 +2248,7 @@ public class PlayerEntity : BattleEntity
                 int value = Mathf.CeilToInt((damageReduction * 2 * shields) / (GetResistance() + bonusResistance + 0.0f));
                 HealSoulEnergy(-value);
                 shieldCount++;
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.SpiritShield, this);
             }
             if (BadgeEquipped(Badge.BadgeType.GoldenShield) && BattleControl.Instance.GetCoins(this) > 0)
             {
@@ -2176,11 +2257,13 @@ public class PlayerEntity : BattleEntity
                 HealCoins(-value);
                 //BattleControl.Instance.AddCoins(this, -value);
                 shieldCount++;
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.GoldenShield, this);
             }
 
             if (HasEffect(Effect.EffectType.Poison) && BadgeEquipped(Badge.BadgeType.ToxicShield))
             {
                 InflictEffect(this, new Effect(Effect.EffectType.Defocus, (sbyte)(1 * BadgeEquippedCount(Badge.BadgeType.ToxicShield)), Effect.INFINITE_DURATION));
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.ToxicShield, this);
             }
 
             //Supercooled
@@ -2189,6 +2272,7 @@ public class PlayerEntity : BattleEntity
                 if (!HasEffect(Effect.EffectType.Freeze))
                 {
                     InflictEffectBuffered(this, new Effect(Effect.EffectType.Freeze, (sbyte)(BadgeEquippedCount(Badge.BadgeType.Supercooled)), 2));
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Supercooled, this);
                 }
             }
 
@@ -2198,6 +2282,7 @@ public class PlayerEntity : BattleEntity
                 {
                     other.protectiveRushPerTurn = true;
                     InflictEffect(other, new Effect(Effect.EffectType.Focus, (sbyte)(other.BadgeEquippedCount(Badge.BadgeType.ProtectiveRush)), Effect.INFINITE_DURATION));
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.ProtectiveRush, other);
                 }
             }
 
@@ -2283,6 +2368,7 @@ public class PlayerEntity : BattleEntity
             {
                 damage = 0;
                 lastChance++;
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.LastChance, this);
             }
         }
 
@@ -2292,6 +2378,7 @@ public class PlayerEntity : BattleEntity
             {
                 damage = 0;
                 undyingRage++;
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.UndyingRage, this);
             }
         }
 
@@ -2302,6 +2389,7 @@ public class PlayerEntity : BattleEntity
             {
                 damage = hp - 1;
                 other.TakeDamage(other.hp, DamageType.Normal, (ulong)BattleHelper.DamageProperties.Hardcode);
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.DeathSwap, this);
             }
         }
 
@@ -2499,6 +2587,7 @@ public class PlayerEntity : BattleEntity
             if (BadgeEquipped(Badge.BadgeType.RiskyRush))
             {
                 InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.RiskyRush)), Effect.INFINITE_DURATION));
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.RiskyRush, this);
             }
         }
 
@@ -2512,6 +2601,7 @@ public class PlayerEntity : BattleEntity
                 BattleControl.Instance.CreateReviveParticles(this, 4);
                 InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(6 * BadgeEquippedCount(Badge.BadgeType.RevivalFlame)), Effect.INFINITE_DURATION));
                 revivalFlame++;
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.RevivalFlame, this);
             }
         }
         revivalFlameHPCheck = false;
@@ -2933,6 +3023,7 @@ public class PlayerEntity : BattleEntity
 
         if (BadgeEquipped(Badge.BadgeType.PerfectFocus) && !atFull && (hp >= maxHP))
         {
+            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.PerfectFocus, this);
             InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.PerfectFocus)), Effect.INFINITE_DURATION));
         }
     }
@@ -2949,6 +3040,7 @@ public class PlayerEntity : BattleEntity
 
         if (BadgeEquipped(Badge.BadgeType.PerfectFocus) && !atFull && (hp >= maxHP))
         {
+            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.PerfectFocus, this);
             InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.PerfectFocus)), Effect.INFINITE_DURATION));
         }
 
@@ -3011,6 +3103,7 @@ public class PlayerEntity : BattleEntity
 
         if (agilityRush < BadgeEquippedCount(Badge.BadgeType.AgilityRush) && stamina >= BattleControl.Instance.GetMaxStamina(this))
         {
+            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.AgilityRush, this);
             agilityRush++;
             InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (sbyte)(BadgeEquippedCount(Badge.BadgeType.AgilityRush)), Effect.INFINITE_DURATION));
         }
@@ -3020,6 +3113,7 @@ public class PlayerEntity : BattleEntity
         base.HealStamina(st);
         if (agilityRush < BadgeEquippedCount(Badge.BadgeType.AgilityRush) && stamina >= BattleControl.Instance.GetMaxStamina(this))
         {
+            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.AgilityRush, this);
             agilityRush++;
             InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (sbyte)(BadgeEquippedCount(Badge.BadgeType.AgilityRush)), Effect.INFINITE_DURATION));
         }
@@ -3029,6 +3123,7 @@ public class PlayerEntity : BattleEntity
         int output = base.HealStaminaTrackOverhealPay(st);
         if (agilityRush < BadgeEquippedCount(Badge.BadgeType.AgilityRush) && stamina >= BattleControl.Instance.GetMaxStamina(this))
         {
+            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.AgilityRush, this);
             agilityRush++;
             InflictEffect(this, new Effect(Effect.EffectType.BonusTurns, (sbyte)(BadgeEquippedCount(Badge.BadgeType.AgilityRush)), Effect.INFINITE_DURATION));
         }
@@ -3057,6 +3152,9 @@ public class PlayerEntity : BattleEntity
                     if (e.potency == 0)
                     {
                         RemoveEffect(Effect.EffectType.Absorb);
+                    } else
+                    {
+                        BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.AbsorbRecycling, this);
                     }
                 }
             }
@@ -3147,6 +3245,9 @@ public class PlayerEntity : BattleEntity
                         if (e.potency == 0)
                         {
                             RemoveEffect(Effect.EffectType.Focus);
+                        } else
+                        {
+                            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.FocusRecycling, this);
                         }
                     }
                 }
@@ -3190,6 +3291,9 @@ public class PlayerEntity : BattleEntity
                         if (e.potency == 0)
                         {
                             RemoveEffect(Effect.EffectType.Focus);
+                        } else
+                        {
+                            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.FocusRecycling, this);
                         }
                     }
                 }
@@ -3828,19 +3932,20 @@ public class PlayerEntity : BattleEntity
             //Pay for power stuff
             if (BadgeEquipped(Badge.BadgeType.SpiritPower))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.SpiritPower, this);
                 HealSoulEnergy(-3 * BadgeEquippedCount(Badge.BadgeType.SpiritPower));
             }
 
             if (BadgeEquipped(Badge.BadgeType.GoldenPower))
             {
-                //To do: Coin effects
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.GoldenPower, this);
                 HealCoins(-10 * BadgeEquippedCount(Badge.BadgeType.GoldenPower));
             }
 
             //Status Catalyst
             if (!target.statusCatalyst)
             {
-                if (target.HasStatus() && target.statusMaxTurns > 0 && BadgeEquipped(Badge.BadgeType.AilmentCatalyst))
+                if (target.HasAilment() && target.statusMaxTurns > 0 && BadgeEquipped(Badge.BadgeType.AilmentCatalyst))
                 {
                     //Enforce type check
                     bool check = false;
@@ -3872,6 +3977,7 @@ public class PlayerEntity : BattleEntity
 
                     if (check)
                     {
+                        BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.AilmentCatalyst, this);
                         Effect status = null;
                         for (int i = 0; i < target.effects.Count; i++)
                         {
@@ -3895,16 +4001,19 @@ public class PlayerEntity : BattleEntity
             //the various effect inflicting things
             if (target.HasEffect(Effect.EffectType.Dizzy) && BadgeEquipped(Badge.BadgeType.HypnoStrike))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.HypnoStrike, this);
                 InflictEffect(target, new Effect(Effect.EffectType.Defocus, (sbyte)(BadgeEquippedCount(Badge.BadgeType.HypnoStrike)), Effect.INFINITE_DURATION));
             }
 
             if (target.HasEffect(Effect.EffectType.Paralyze) && BadgeEquipped(Badge.BadgeType.Conductor))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Conductor, this);
                 InflictEffectBuffered(this, new Effect(Effect.EffectType.Focus, (sbyte)(BadgeEquippedCount(Badge.BadgeType.Conductor)), Effect.INFINITE_DURATION));
             }
 
             if (BadgeEquipped(Badge.BadgeType.Overexert))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Overexert, this);
                 InflictEffect(this, new Effect(Effect.EffectType.Paralyze, 1, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.Overexert))));
                 if (!HasEffect(Effect.EffectType.Paralyze))
                 {
@@ -3914,27 +4023,32 @@ public class PlayerEntity : BattleEntity
 
             if (target.wakeUp && BadgeEquipped(Badge.BadgeType.NightmareStrike))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.NightmareStrike, this);
                 InflictEffect(target, new Effect(Effect.EffectType.Defocus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.NightmareStrike)), Effect.INFINITE_DURATION));
             }
 
             if (target.HasEffect(Effect.EffectType.Berserk) && BadgeEquipped(Badge.BadgeType.Aggravate))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Aggravate, this);
                 InflictEffect(target, new Effect(Effect.EffectType.Focus, (sbyte)(BadgeEquippedCount(Badge.BadgeType.Aggravate)), Effect.INFINITE_DURATION));
             }
 
             if (target.HasEffect(Effect.EffectType.Poison) && BadgeEquipped(Badge.BadgeType.NerveStrike))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.NerveStrike, this);
                 InflictEffectBuffered(target, new Effect(Effect.EffectType.Sunder, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.NerveStrike)), Effect.INFINITE_DURATION));
             }
 
             if (BadgeEquipped(Badge.BadgeType.HealthSteal))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.HealthSteal, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_HPDrain, 1, 0.01f);
                 HealHealth(BadgeEquippedCount(Badge.BadgeType.HealthSteal));
             }
 
             if (BadgeEquipped(Badge.BadgeType.EnergySteal))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.EnergySteal, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EPDrain, 1, 0.01f);
                 HealEnergy(BadgeEquippedCount(Badge.BadgeType.EnergySteal));
             }
@@ -4010,6 +4124,37 @@ public class PlayerEntity : BattleEntity
         {
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_Brittle, 1, 0.01f);
         }
+
+        if ((type & (DamageType.Light)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Branded, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
+            RemoveEffect(Effect.EffectType.Cursed);
+        }
+        if ((type & (DamageType.Dark)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Cursed, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
+            RemoveEffect(Effect.EffectType.Branded);
+        }
+        if ((type & (DamageType.Water)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Soaked, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
+            RemoveEffect(Effect.EffectType.Burned);
+        }
+        if ((type & (DamageType.Fire)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Burned, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
+            RemoveEffect(Effect.EffectType.Soaked);
+        }
+        if ((type & (DamageType.Earth)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Entangled, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
+            RemoveEffect(Effect.EffectType.Shocked);
+        }
+        if ((type & (DamageType.Air)) != 0)
+        {
+            InflictEffect(target, new Effect(Effect.EffectType.Shocked, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
+            RemoveEffect(Effect.EffectType.Entangled);
+        }
     }
 
     public override void InvokeHurtEvents(DamageType type, ulong properties)
@@ -4074,6 +4219,7 @@ public class PlayerEntity : BattleEntity
                     }
                     if (BadgeEquipped(Badge.BadgeType.Icebreaker))
                     {
+                        BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Icebreaker, this);
                         InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.Icebreaker)), Effect.INFINITE_DURATION));
                     }
                 }
@@ -4157,7 +4303,7 @@ public class PlayerEntity : BattleEntity
         {
             statusBoost += 0.5f * BadgeEquippedCount(Badge.BadgeType.AilmentBoost);
         }
-        if (target.HasStatus() && BadgeEquipped(Badge.BadgeType.AilmentConversion))
+        if (target.HasAilment() && BadgeEquipped(Badge.BadgeType.AilmentConversion))
         {
             statusBoost += 0.5f * BadgeEquippedCount(Badge.BadgeType.AilmentConversion);
         }
@@ -4223,7 +4369,7 @@ public class PlayerEntity : BattleEntity
         {
             bool statusWorks = true;
 
-            if (target.HasEffect(Effect.EffectType.Immunity) || target.HasEffect(Effect.EffectType.TimeStop))
+            if (target.HasEffect(Effect.EffectType.Immunity) || target.HasEffect(Effect.EffectType.TimeStop) || target.GetEntityProperty(BattleHelper.EntityProperties.DebuffImmune))
             {
                 if (Effect.IsCurable(se.effect))
                 {
@@ -4475,9 +4621,15 @@ public class PlayerEntity : BattleEntity
             if (BadgeEquippedCount(Badge.BadgeType.RiskyStart) > 1)
             {
                 hp = 1;
-            } else
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.RiskyStart, this);
+            }
+            else
             {
-                hp = DangerHP();
+                if (hp > DangerHP())
+                {
+                    hp = DangerHP();
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.RiskyStart, this);
+                }
             }
         }
 
@@ -4545,9 +4697,14 @@ public class PlayerEntity : BattleEntity
         absorbDamageEvents = 0;
         //Debug.Log(name + " reset");
 
+        if (BadgeEquipped(Badge.BadgeType.HeavyGear) && BattleControl.Instance.turnCount > 5)
+        {
+            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.HeavyGear, this);
+        }
+
         if (BadgeEquipped(Badge.BadgeType.RagesPower) || (BattleControl.Instance.GetEntitiesSorted((e) => (e.posId < 0))[0] == this && MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Wrath)))
         {
-            InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)(BadgeEquippedCount(Badge.BadgeType.RagesPower)), Effect.INFINITE_DURATION));
+            InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)Mathf.Min((BadgeEquippedCount(Badge.BadgeType.RagesPower)), 1), Effect.INFINITE_DURATION));
         }
 
         if (currMove != null)
@@ -4678,6 +4835,7 @@ public class PlayerEntity : BattleEntity
                         poisonDamage = 10 + 5 * tecount;
                     }
                     HealEnergy(3 * tecount);
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.ToxicEnergy, this);
                     yield return new WaitForSeconds(0.5f);
                 }
                 else
@@ -4697,6 +4855,7 @@ public class PlayerEntity : BattleEntity
                 {
                     if (BattleControl.Instance.GetEP(this) > 0)
                     {
+                        BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.ToxicEnergy, this);
                         HealEnergy(-poisonDamage * GetEffectEntry(Effect.EffectType.Poison).potency);
                     }
                     else
@@ -4730,6 +4889,24 @@ public class PlayerEntity : BattleEntity
                 TakeDamageStatus((int)(sfDamage * powermult * 0.5f));
                 yield return new WaitForSeconds(0.5f);
             }
+
+            if (HasEffect(Effect.EffectType.Branded))
+            {
+                //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
+                HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency / 2f));
+                yield return new WaitForSeconds(0.5f);
+            }
+            if (HasEffect(Effect.EffectType.Cursed))
+            {
+                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency);
+                yield return new WaitForSeconds(0.5f);
+            }
+            if (HasEffect(Effect.EffectType.Burned))
+            {
+                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency + Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Burned).potency / 2f));
+                yield return new WaitForSeconds(0.5f);
+            }
+
             if (HasEffect(Effect.EffectType.DamageOverTime))
             {
                 TakeDamageStatus(GetEffectEntry(Effect.EffectType.DamageOverTime).potency);
@@ -4746,11 +4923,13 @@ public class PlayerEntity : BattleEntity
             }
             if (RibbonEquipped(Ribbon.RibbonType.ThornyRibbon, false))
             {
+                BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.ThornyRibbon, this);
                 TakeDamageStatus(1);
             }
             if (HasEffect(Effect.EffectType.HealthRegen))
             {
                 HealHealth(GetEffectEntry(Effect.EffectType.HealthRegen).potency);
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.HealthRegen, this);
                 yield return new WaitForSeconds(0.5f);
             }
             if (HasEffect(Effect.EffectType.Sleep))
@@ -4760,6 +4939,7 @@ public class PlayerEntity : BattleEntity
                 
                 if (BadgeEquipped(Badge.BadgeType.DeepSleep))
                 {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.DeepSleep, this);
                     sleepHeal = Mathf.CeilToInt(maxHP / (10f / (1 + 0.5f * dscount)));
                     if (sleepHeal < 4)
                     {
@@ -4786,6 +4966,7 @@ public class PlayerEntity : BattleEntity
 
                 if (BadgeEquipped(Badge.BadgeType.SweetDreams))
                 {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.SweetDreams, this);
                     HealEnergy(sleepHeal * GetEffectEntry(Effect.EffectType.Sleep).potency);
                 }
                 else
@@ -4891,6 +5072,7 @@ public class PlayerEntity : BattleEntity
 
             if (BadgeEquipped(Badge.BadgeType.SoftPower) && BadgeEquipped(Badge.BadgeType.MetalPower))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.SoftPower, this);
                 hpregen += 2 * BadgeEquippedCount(Badge.BadgeType.SoftPower);
             }
 
@@ -4907,13 +5089,22 @@ public class PlayerEntity : BattleEntity
             */
             if (hpregen != 0)
             {
+                if (BadgeEquippedCount(Badge.BadgeType.HealthRegen) > 0)
+                {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.HealthRegen, this);
+                }
                 HealHealth(hpregen);
                 yield return new WaitForSeconds(0.5f);
+            }
+            if (BadgeEquippedCount(Badge.BadgeType.EnergyRegen) > 0)
+            {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.EnergyRegen, this);
             }
             epregen += BadgeEquippedCount(Badge.BadgeType.EnergyRegen);
 
             if (HasEffect(Effect.EffectType.Paralyze) && BadgeEquipped(Badge.BadgeType.Generator))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Generator, this);
                 epregen += Mathf.CeilToInt(BattleControl.Instance.GetMaxEP(this) / 20.0f) * BadgeEquippedCount(Badge.BadgeType.Generator);
                 if ((BattleControl.Instance.GetMaxEP(this) / 20) < 1)
                 {
@@ -4938,6 +5129,7 @@ public class PlayerEntity : BattleEntity
             }
             if (BadgeEquipped(Badge.BadgeType.SoulRegen))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.SoulRegen, this);
                 seregen += 2 * BadgeEquippedCount(Badge.BadgeType.SoulRegen);
                 //HealSoulEnergy(1);
                 //yield return new WaitForSeconds(0.5f);
@@ -4945,6 +5137,7 @@ public class PlayerEntity : BattleEntity
 
             if (HasEffect(Effect.EffectType.Dizzy) && BadgeEquipped(Badge.BadgeType.Trance))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Trance, this);
                 int soulHeal = Mathf.CeilToInt(-0.001f + (BattleControl.Instance.GetSE(this) / (20.0f / BadgeEquippedCount(Badge.BadgeType.Trance))));
                 if (soulHeal < 1)
                 {
@@ -4963,24 +5156,28 @@ public class PlayerEntity : BattleEntity
 
             if (BadgeEquipped(Badge.BadgeType.FocusGear))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.FocusGear, this);
                 InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(1 * BadgeEquippedCount(Badge.BadgeType.FocusGear)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
 
             if (HasEffect(Effect.EffectType.Poison) && BadgeEquipped(Badge.BadgeType.ToxicStrength))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.ToxicStrength, this);
                 InflictEffect(this, new Effect(Effect.EffectType.Sunder, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.ToxicStrength)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
 
             if (HasEffect(Effect.EffectType.Paralyze) && BadgeEquipped(Badge.BadgeType.Capacitor))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Capacitor, this);
                 InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.Capacitor)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
 
             if (HasEffect(Effect.EffectType.Freeze) && BadgeEquipped(Badge.BadgeType.Glacier))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Glacier, this);
                 InflictEffect(this, new Effect(Effect.EffectType.Focus, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.Glacier)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
@@ -4989,11 +5186,13 @@ public class PlayerEntity : BattleEntity
             //moved this down here so you can get more benefit from regen
             if (hp >= maxHP && BadgeEquipped(Badge.BadgeType.HealthGrowth))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.HealthGrowth, this);
                 InflictEffect(this, new Effect(Effect.EffectType.Absorb, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.HealthGrowth)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
             if (BattleControl.Instance.GetEP(this) >= BattleControl.Instance.GetMaxEP(this) && BadgeEquipped(Badge.BadgeType.EnergyGrowth))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.EnergyGrowth, this);
                 InflictEffect(this, new Effect(Effect.EffectType.Burst, (sbyte)(2 * BadgeEquippedCount(Badge.BadgeType.EnergyGrowth)), Effect.INFINITE_DURATION));
                 yield return new WaitForSeconds(0.5f);
             }
@@ -5042,6 +5241,7 @@ public class PlayerEntity : BattleEntity
                     }
                     if (healthBalance != 0)
                     {
+                        BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.HealthBalance, this);
                         HealHealth(healthBalance);
                         other.HealHealth(-healthBalance);
                     }
@@ -5091,6 +5291,9 @@ public class PlayerEntity : BattleEntity
                 if (!applyStasis)
                 {
                     effects[i].duration--;
+                } else if (preservative)
+                {
+                    BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.Preservative, this);
                 }
             }
         }
@@ -5353,6 +5556,9 @@ public class PlayerEntity : BattleEntity
                         if (e.potency == 0)
                         {
                             RemoveEffect(Effect.EffectType.Focus);
+                        } else
+                        {
+                            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.FocusRecycling, this);
                         }
                     }
                 } else
@@ -5392,12 +5598,14 @@ public class PlayerEntity : BattleEntity
         {
             if (BadgeEquipped(Badge.BadgeType.VictoryHeal))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.VictoryHeal, this);
                 HealHealth(3 * BadgeEquippedCount(Badge.BadgeType.VictoryHeal));
                 yield return new WaitForSeconds(0.5f);
             }
 
             if (BadgeEquipped(Badge.BadgeType.VictorySurge))
             {
+                BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.VictorySurge, this);
                 HealEnergy(3 * BadgeEquippedCount(Badge.BadgeType.VictorySurge));
                 yield return new WaitForSeconds(0.5f);
             }
@@ -5590,14 +5798,14 @@ public class PlayerEntity : BattleEntity
                 //force rage's power to give you the effect
                 if (BadgeEquipped(Badge.BadgeType.RagesPower) || (BattleControl.Instance.GetEntitiesSorted((e) => (e.posId < 0))[0] == this && MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Wrath)))
                 {
-                    InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)(BadgeEquippedCount(Badge.BadgeType.RagesPower)), Effect.INFINITE_DURATION));
+                    InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)Mathf.Min((BadgeEquippedCount(Badge.BadgeType.RagesPower)), 1), Effect.INFINITE_DURATION));
                 }
                 break;
             case BattleHelper.Event.CureStatus:
                 //No
                 if (BadgeEquipped(Badge.BadgeType.RagesPower) || (BattleControl.Instance.GetEntitiesSorted((e) => (e.posId < 0))[0] == this && MainManager.Instance.GetGlobalFlag(GlobalFlag.GF_FileCode_Wrath)))
                 {
-                    InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)(BadgeEquippedCount(Badge.BadgeType.RagesPower)), Effect.INFINITE_DURATION));
+                    InflictEffectForce(this, new Effect(Effect.EffectType.Berserk, (sbyte)Mathf.Min((BadgeEquippedCount(Badge.BadgeType.RagesPower)),1), Effect.INFINITE_DURATION));
                 }
                 break;
         }
@@ -5626,12 +5834,14 @@ public class PlayerEntity : BattleEntity
 
         if (other != null && other.alive && other.BadgeEquipped(Badge.BadgeType.VengefulRage))
         {
+            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.VengefulRage, other);
             InflictEffect(other, new Effect(Effect.EffectType.Berserk, 1, 2));
             InflictEffect(other, new Effect(Effect.EffectType.Focus, (sbyte)(3 * BadgeEquippedCount(Badge.BadgeType.VengefulRage)), Effect.INFINITE_DURATION));
         }
 
         if (BadgeEquipped(Badge.BadgeType.LastBurst))
         {
+            BattleControl.Instance.CreateBadgeActivationParticles(Badge.BadgeType.LastBurst, this);
             int heal = Mathf.CeilToInt((BadgeEquippedCount(Badge.BadgeType.LastBurst) * BattleControl.Instance.GetMaxEP(this)) / 2.0f);
             HealEnergy(heal);
         }

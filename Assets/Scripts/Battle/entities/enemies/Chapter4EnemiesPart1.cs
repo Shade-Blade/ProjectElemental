@@ -148,7 +148,7 @@ public class BM_Blazecrest_Roar : EnemyMove
         {
             if (caller.GetAttackHit(t, 0))
             {
-                bool hasStatus = t.HasStatus();
+                bool hasStatus = t.HasAilment();
                 caller.DealDamage(t, 2, 0, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
                 {

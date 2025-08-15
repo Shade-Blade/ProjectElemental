@@ -95,7 +95,7 @@ Animator:
   m_GameObject: {fileID: 3708101264875496809}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8e834533f5ad3cb4d91c99a1c90143e1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -187,7 +187,7 @@ MonoBehaviour:
   currentAnim: 
   currentEffect: 
   sprite: {fileID: 8510939000944800811}
-  leftFacing: 0
+  leftFacing: 1
   subobject: {fileID: 4012585618382714007}
   materialIndex: 0
   bigradientMap: 0

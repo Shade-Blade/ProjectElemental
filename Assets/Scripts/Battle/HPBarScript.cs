@@ -340,4 +340,9 @@ public class HPBarScript : MonoBehaviour
             }
         }
     }
+
+    public void OnMouseOver()
+    {
+        HoverTextMasterScript.Instance.SetHoverText(entity.hp + " / " + entity.maxHP + "<hp>");
+    }
 }

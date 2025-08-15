@@ -7,7 +7,7 @@ public class BE_Rockling : BattleEntity
     int counterCount;
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Bite>(), gameObject.AddComponent<BM_Shared_Hard_CounterHarden>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Bite>(), gameObject.AddComponent<BM_Leafling_TailWhip>(), gameObject.AddComponent<BM_Shared_Hard_CounterHarden>() };
 
         base.Initialize();
     }
@@ -16,7 +16,7 @@ public class BE_Rockling : BattleEntity
     {
         //also reset here in case something weird happens
         counterCount = 0;
-        currMove = moveset[0];
+        currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % (moveset.Count - 1)];
 
         BasicTargetChooser();
     }
@@ -47,7 +47,7 @@ public class BE_Rockling : BattleEntity
         if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
         {
             counterCount++;
-            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[1]);
+            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
             return true;
         }
 
@@ -99,7 +99,7 @@ public class BE_Honeybud : BattleEntity
             }
         }
 
-        BasicOffsetTargetChooser(2,3);
+        BasicTargetChooser(2,3);
     }
 
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
@@ -268,7 +268,7 @@ public class BM_BurrowTrap_PollenBite : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
@@ -316,7 +316,7 @@ public class BM_BurrowTrap_CounterPollenBite : EnemyMove
 
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                 if (!hasStatus)
@@ -385,7 +385,7 @@ public class BE_Sundew : BattleEntity
             currMove = moveset[0];
         }
 
-        BasicOffsetTargetChooser(1,2);
+        BasicTargetChooser(1,2);
     }
 
     public override IEnumerator DoEvent(BattleHelper.Event eventID)
@@ -485,7 +485,7 @@ public class BM_Sundew_PoisonToss : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Earth))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
@@ -521,7 +521,7 @@ public class BM_Sundew_CounterPoisonToss : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, 0))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)
@@ -563,7 +563,7 @@ public class BM_Sundew_Hard_ExhaustBall : EnemyMove
         {
             if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Water))
             {
-                bool hasStatus = caller.curTarget.HasStatus();
+                bool hasStatus = caller.curTarget.HasAilment();
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
                 caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Infinite);
                 if (!hasStatus)

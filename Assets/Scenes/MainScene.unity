@@ -893,6 +893,7 @@ GameObject:
   - component: {fileID: 1216657705}
   - component: {fileID: 1216657706}
   - component: {fileID: 1216657707}
+  - component: {fileID: 1216657708}
   m_Layer: 0
   m_Name: MainManager
   m_TagString: Untagged
@@ -1028,8 +1029,7 @@ MonoBehaviour:
   overworldHUD: {fileID: 0}
   areaNamePopup: {fileID: 0}
   achievementPopup: {fileID: 0}
-  defaultSprite: {fileID: 7482667652216324306, guid: 8f9a297526949ec4086ad801649dd6c2,
-    type: 3}
+  defaultSprite: {fileID: 21300000, guid: 8f9a297526949ec4086ad801649dd6c2, type: 3}
   defaultTextbox: {fileID: 0}
   defaultMinibubble: {fileID: 0}
   getItemPopup: {fileID: 0}
@@ -1192,6 +1192,23 @@ MonoBehaviour:
   settingsValues: 
   settingsMaxValues: 
   settingsDefaultValues: 
+--- !u!114 &1216657708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216657702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f24b9c7fb32a6f4cae13b482dbeec30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverPopupPrototype: {fileID: 3197174316178361434, guid: 162221291a6b1694a932941c0ce8360d,
+    type: 3}
+  hoverPopup: {fileID: 0}
+  hoverText: 
+  pastHoverText: 
 --- !u!1 &1954599960
 GameObject:
   m_ObjectHideFlags: 0

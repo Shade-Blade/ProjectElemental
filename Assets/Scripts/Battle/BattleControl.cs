@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 using static BattleHelper;
 using static UnityEngine.GraphicsBuffer;
 
@@ -348,23 +349,24 @@ public class BattlePopup
 {
     public BattleEntity target;
     public string text;
-    public string[] vars;
+    //public string[] vars;
 
     //public Status status;
 
     public BattlePopup(BattleEntity p_target, string p_text, string[] p_vars = null)
     {
         target = p_target;
-        text = p_text;
-        vars = p_vars;
+        text = FormattedString.ParseVars(p_text, p_vars);
+        //vars = p_vars;
     }
 
-    public BattlePopup(BattleEntity p_target, Effect status)
+    public static string GetEffectPopup(Effect status)
     {
         //the status popups
+        string text;
+        string[] vars;
 
-
-        vars = new string[12];
+        vars = new string[14];
 
         //vars[0] = (int)status.effect + "";
 
@@ -383,6 +385,11 @@ public class BattlePopup
         vars[9] = (1 + (1 * status.potency)) + "";    //Sunflame low end
         vars[10] = (5 + (5 * status.potency)) + "";   //Sunflame high end
 
+        //vars[11] is used for boost percent
+
+        vars[12] = (Mathf.CeilToInt(0.5f * status.potency)) + "";   //Mark negative
+        vars[13] = ((1 * status.potency + Mathf.CeilToInt(0.5f * status.potency))) + "";   //Stronger mark strength
+
         float boost = 1;
         switch (status.potency)
         {
@@ -400,7 +407,7 @@ public class BattlePopup
                 break;
         }
 
-        vars[11] = MainManager.Percent(boost - 1,1) + "";
+        vars[11] = MainManager.Percent(boost - 1, 1) + "";
 
         string[] entry = BattleControl.Instance.effectText[(int)(status.effect + 1)];
 
@@ -422,7 +429,8 @@ public class BattlePopup
         if (status.duration == Effect.INFINITE_DURATION)
         {
             //text += " (Indefinite)";
-        } else
+        }
+        else
         {
             if (status.duration == 1)
             {
@@ -441,15 +449,14 @@ public class BattlePopup
         string output = FormattedString.ParseVars(effectTextDesc, vars);
 
         text += output;
-    }
 
-    public BattlePopup(PlayerMove.CantMoveReason cantmove)
-    {
-        text = BattleControl.Instance.cantMoveText[(int)(cantmove + 1)][1];
+        return text;
     }
-
-    public BattlePopup(BattleHelper.EnvironmentalEffect ee, float power, bool hard)
+    public static string GetEnvironmentalEffectPopup(EnvironmentalEffect ee, float power, bool hard)
     {
+        string text;
+        string[] vars;
+
         string[] entry = BattleControl.Instance.enviroEffectText[(int)ee];
 
 
@@ -494,7 +501,6 @@ public class BattlePopup
 
         //state enum has all the enviro effects in it so this works
         text = "<statesprite," + ee + "> " + entry[1];
-
         text += ": ";
 
         string effectTextDesc = hard ? entry[3] : entry[2];
@@ -502,6 +508,54 @@ public class BattlePopup
         string output = FormattedString.ParseVars(effectTextDesc, vars);
 
         text += output;
+        return text;
+    }
+    public static string GetStatePopup(BattleHelper.EntityState es, int potency, int duration)
+    {
+        string[] entry = BattleControl.Instance.stateText[(int)es];
+
+        //try parsing as other things
+        BattleHelper.EnvironmentalEffect ee = EnvironmentalEffect.None;
+        Enum.TryParse(es.ToString(), out ee);
+        if (ee != EnvironmentalEffect.None)
+        {
+            return GetEnvironmentalEffectPopup(ee, BattleControl.Instance.EnviroEffectPower(), BattleControl.Instance.HarderEnviroEffects());
+        }
+
+        if (es == EntityState.CharmAttack)
+        {
+            return CharmEffect.GetPopupString(CharmEffect.CharmType.Attack, potency, duration);
+        }
+        if (es == EntityState.CharmDefense)
+        {
+            return CharmEffect.GetPopupString(CharmEffect.CharmType.Defense, potency, duration);
+        }
+        if (es == EntityState.CharmFortune)
+        {
+            return CharmEffect.GetPopupString(CharmEffect.CharmType.Fortune, potency, duration);
+        }
+
+        string[] vars = new string[3];
+        vars[0] = "";
+        vars[1] = potency.ToString();
+        vars[2] = duration.ToString();
+
+        return "<statesprite," + es + "> " + entry[1] + ": " + FormattedString.ParseVars(entry[2], vars);
+    }
+
+    public BattlePopup(BattleEntity p_target, Effect status)
+    {
+        text = GetEffectPopup(status);
+    }
+
+    public BattlePopup(PlayerMove.CantMoveReason cantmove)
+    {
+        text = BattleControl.Instance.cantMoveText[(int)(cantmove + 1)][1];
+    }
+
+    public BattlePopup(BattleHelper.EnvironmentalEffect ee, float power, bool hard)
+    {
+        text = GetEnvironmentalEffectPopup(ee, power, hard);
     }
 }
 
@@ -680,6 +734,7 @@ public class BattleControl : MonoBehaviour
     public Sprite staminaEffect;
     public Sprite coinEffect;
 
+    public string[][] stateText;
     public string[][] effectText;
     public string[][] cantMoveText;
     public string[][] enviroEffectText;
@@ -984,12 +1039,13 @@ public class BattleControl : MonoBehaviour
 
     public BattleEntity SummonEntity(BattleHelper.EntityID eid, bool negativeID = false)
     {
-        return SummonEntity(eid, FindUnoccupiedID(negativeID));
+        return SummonEntity(eid, FindUnoccupiedID(negativeID, true));
     } //finds a positional ID that is available
     public BattleEntity SummonEntity(BattleHelper.EntityID eid, int posid, string bonusData = null, float multiplier = 1)
     {
         GameObject g = EnemyBuilder.BuildEnemy(eid, BattleHelper.GetDefaultPosition(posid), multiplier);
         BattleEntity b = g.GetComponent<BattleEntity>();
+        b.alive = true;
         b.posId = posid;
         b.homePos = BattleHelper.GetDefaultPosition(posid);
         AddEntity(b);
@@ -1001,6 +1057,7 @@ public class BattleControl : MonoBehaviour
     {
         GameObject g = EnemyBuilder.BuildEnemy(eid, vpos, multiplier);
         BattleEntity b = g.GetComponent<BattleEntity>();
+        b.alive = true;
         b.posId = posid;
         b.homePos = vpos;
         AddEntity(b);
@@ -1011,6 +1068,7 @@ public class BattleControl : MonoBehaviour
     public BattleEntity SummonEntity(PlayerData.PlayerDataEntry pdataentry, int posid, Vector3 vpos)
     {
         BattleEntity b = SummonEntity(pdataentry.entityID, posid, vpos);
+        b.alive = true;
         b.maxHP = pdataentry.maxHP;
         b.statMultiplier = 1;
         b.applyCurseAttack = MainManager.Instance.Cheat_PlayerCurseAttack;
@@ -1075,9 +1133,20 @@ public class BattleControl : MonoBehaviour
         //Sort by id
         entities.Sort(Comparer<BattleEntity>.Create((a, b) => (a.posId - b.posId)));
     }
-    public int FindUnoccupiedID(bool negative)
+    public int FindUnoccupiedID(bool negative, bool airclear)
     {
         entities.Sort(Comparer<BattleEntity>.Create((a, b) => (a.posId - b.posId)));
+
+        List<BattleEntity> newlist = new List<BattleEntity>();
+        for (int i = 0; i < entities.Count; i++)
+        {
+            newlist.Add(entities[i]);
+        }
+
+        if (airclear)
+        {
+            newlist.Sort(Comparer<BattleEntity>.Create((a, b) => ((a.posId % 10) - (b.posId % 10))));
+        }
         int output = 0;
 
         if (negative)
@@ -1087,17 +1156,28 @@ public class BattleControl : MonoBehaviour
             while (true)
             {
                 check = true; //if you get through without finding a collision, return output
-                for (int i = 0; i < entities.Count; i++)
+                for (int i = 0; i < newlist.Count; i++)
                 {
-                    if (output == entities[i].posId)
+                    if (output == newlist[i].posId || (airclear && newlist[i].posId % 10 == output % 10))
                     {
                         //bad
                         break;
                     }
-                    if (entities[i].posId > output)
+                    if (airclear)
                     {
-                        //found a blank id?
-                        return output;
+                        if (newlist[i].posId % 10 > output)
+                        {
+                            //found a blank id?
+                            return output;
+                        }
+                    }
+                    else
+                    {
+                        if (newlist[i].posId > output)
+                        {
+                            //found a blank id?
+                            return output;
+                        }
                     }
                 }
                 if (check)
@@ -1112,18 +1192,29 @@ public class BattleControl : MonoBehaviour
             while (true)
             {
                 check = true;
-                for (int i = 0; i < entities.Count; i++)
+                for (int i = 0; i < newlist.Count; i++)
                 {
-                    if (output == entities[i].posId)
+                    if (output == newlist[i].posId || (airclear && newlist[i].posId % 10 == output % 10))
                     {
                         //bad
                         check = false;
                         break;
                     }
-                    if (entities[i].posId > output)
+                    if (airclear)
                     {
-                        //found a blank id?
-                        return output;
+                        if (newlist[i].posId % 10 > output)
+                        {
+                            //found a blank id?
+                            return output;
+                        }
+                    }
+                    else
+                    {
+                        if (newlist[i].posId > output)
+                        {
+                            //found a blank id?
+                            return output;
+                        }
                     }
                 }
                 if (check)
@@ -1153,11 +1244,13 @@ public class BattleControl : MonoBehaviour
     }
     private void RemoveEntity(int index)
     {
+        Destroy(entities[index].gameObject);
         entities.RemoveAt(index);
     }
     public void RemoveEntity(BattleEntity b)
     {
         entities.Remove(b);
+        Destroy(b.gameObject);
     }
 
     public BattleEntity GetEntityByID(int id)
@@ -1242,6 +1335,13 @@ public class BattleControl : MonoBehaviour
     public List<BattleEntity> GetEntitiesSorted(BattleEntity caller, Move move, int level = 1, bool ignoreNoTarget = false)
     {
         return GetEntitiesSorted(caller, move.GetTargetArea(caller, level), ignoreNoTarget);
+    }
+    public List<BattleEntity> GetEntitiesSorted(BattleEntity caller, TargetArea t, TargetStrategy ts, bool ignoreNoTarget = false)
+    {
+        List<BattleEntity> list = GetEntities(caller, t, ignoreNoTarget);
+
+        list.Sort((a, b) => ts.selectorFunction(a, b));
+        return list;
     }
 
     public List<BattleAction> GetTactics(BattleEntity caller)
@@ -2178,6 +2278,7 @@ public class BattleControl : MonoBehaviour
         staminaEffect = MainManager.Instance.staminaEffect;
         coinEffect = MainManager.Instance.coinEffect;
 
+        stateText = MainManager.CSVParse(Resources.Load<TextAsset>("DialogueText/StateText").text);
         effectText = MainManager.CSVParse(Resources.Load<TextAsset>("DialogueText/EffectText").text);
         cantMoveText = MainManager.CSVParse(Resources.Load<TextAsset>("DialogueText/CantMoveText").text);
         enviroEffectText = MainManager.CSVParse(Resources.Load<TextAsset>("DialogueText/EnviroEffectText").text);
@@ -2610,6 +2711,10 @@ public class BattleControl : MonoBehaviour
         bool perfect = false;
         if (playerData.BadgeEquipped(Badge.BadgeType.DecisiveVictory))
         {
+            for (int i = 0; i < pel.Count; i++)
+            {
+                CreateBadgeActivationParticles(Badge.BadgeType.DecisiveVictory, pel[i]);
+            }
             if (turnCount <= 1)
             {
                 decisive = true;
@@ -2617,6 +2722,10 @@ public class BattleControl : MonoBehaviour
         }
         if (playerData.BadgeEquipped(Badge.BadgeType.PerfectVictory))
         {
+            for (int i = 0; i < pel.Count; i++)
+            {
+                CreateBadgeActivationParticles(Badge.BadgeType.PerfectVictory, pel[i]);
+            }
             if (perfectKillSatisfied)
             {
                 perfect = true;
@@ -2698,6 +2807,14 @@ public class BattleControl : MonoBehaviour
         if (forceDropItem && dropItemCount <= 0)
         {
             dropItemCount = 1;
+        }
+
+        if (dropItemCount > 0 && playerData.BadgeEquippedCount(Badge.BadgeType.ItemFinder) > 0)
+        {
+            foreach (PlayerEntity pe in GetPlayerEntities())
+            {
+                CreateBadgeActivationParticles(Badge.BadgeType.ItemFinder, pe);
+            }
         }
 
         //Debug.Log("Item drop determiners: " + itemFinder + " " + checkDropItem + " " + shouldDropItem + " " + battleXP + " " + playerData.totalBattles);
@@ -3974,8 +4091,12 @@ public class BattleControl : MonoBehaviour
         //the effect icon spawn
         Sprite isp = Text_EffectSprite.GetEffectSprite(e.effect.ToString());
 
-        Vector2 startPosition = be.transform.position + be.height * Vector3.up;
+        Vector3 startPosition = be.transform.position + be.height * Vector3.up;
         Vector3 endPosition = be.transform.position + be.height * Vector3.up + Vector3.up * 0.4f;
+
+        float distance = 0.35f * Mathf.CeilToInt(be.sameFrameEffectsAdded / 8f);
+        endPosition += distance * (Vector3.right * Mathf.Cos(2 * Mathf.PI * ((be.sameFrameEffectsAdded - 1) / 8f)) + Vector3.up * Mathf.Sin(2 * Mathf.PI * ((be.sameFrameEffectsAdded - 1) / 8f)));
+        be.sameFrameEffectsAdded++;
 
         GameObject so = new GameObject("Effect Spawn Sprite");
         so.transform.parent = gameObject.transform;
@@ -4013,7 +4134,7 @@ public class BattleControl : MonoBehaviour
             Destroy(s.gameObject);
         }
 
-        StartCoroutine(PosLerp(s, 0.4f, startPosition, endPosition));
+        StartCoroutine(PosLerp(s, 0.6f, startPosition, endPosition));
     }
     public void CreateStatusNotYetParticles(Effect e, BattleEntity be) //status would work if the entity was lower hp
     {
@@ -4083,6 +4204,165 @@ public class BattleControl : MonoBehaviour
             es_g.Setup(newScale, 1);
         }
     }
+    public void CreateEffectRemovedParticles(Effect e, BattleEntity be)
+    {
+        float dir = be.posId < 0 ? -1 : 1;
+
+        //the effect icon spawn
+        Sprite isp = Text_EffectSprite.GetEffectSprite(e.effect.ToString());
+
+        Vector2 startPosition = be.transform.position + be.height * Vector3.up;
+        Vector3 endPosition = be.transform.position + be.height * Vector3.up + Vector3.up * 0.3f + Vector3.right * dir;
+
+        float distance = 0.5f * Mathf.CeilToInt(be.sameFrameEffectsRemoved / 8f);
+
+        endPosition += distance * (Vector3.right * Mathf.Sin(2 * Mathf.PI * (be.sameFrameEffectsRemoved / 8f)) + Vector3.up * Mathf.Cos(2 * Mathf.PI * (be.sameFrameEffectsRemoved / 8f)));
+
+
+        GameObject so = new GameObject("Effect Spawn Sprite");
+        so.transform.parent = gameObject.transform;
+        SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+        s.sprite = isp;
+        so.transform.position = startPosition;
+        s.material = MainManager.Instance.defaultGUISpriteMaterial;
+
+        IEnumerator PosLerp(SpriteRenderer s, float duration, Vector3 posA, Vector3 posB)
+        {
+            float time = 0;
+
+            s.color = new Color(1, 1, 1, 0f);
+
+            Vector3 mid = (posA + posB) / 2 + Vector3.up * 0.3f;
+
+            while (time < 1)
+            {
+                time += Time.deltaTime / duration;
+                s.gameObject.transform.position = MainManager.BezierCurve(time, posA, mid, posB);   // posA + (posB - posA) * (1 - (1 - time) * (1 - time));
+
+                s.gameObject.transform.localScale = Vector3.one * 1.5f * (Mathf.Clamp01(time * 2));
+                s.gameObject.transform.localEulerAngles = Vector3.forward * time * 360 * 1;
+                s.color = new Color(1, 1, 1, 1 - time);
+                yield return null;
+            }
+
+            s.gameObject.transform.position = posB;
+
+            time = 0;
+            while (time < 1)
+            {
+                time += Time.deltaTime / (duration / 6);
+                s.gameObject.transform.localScale = Vector3.one * 1.5f * (1 - time);
+                yield return null;
+            }
+
+            Destroy(s.gameObject);
+        }
+
+        StartCoroutine(PosLerp(s, 0.8f, startPosition, endPosition));
+
+        be.sameFrameEffectsRemoved++;
+    }
+    public void CreateEffectRemovedParticles(Predicate<Effect> p, BattleEntity be)
+    {
+        foreach (Effect e in be.effects.FindAll(p))
+        {
+            CreateEffectRemovedParticles(e, be);
+        }
+    }
+    public void CreateBadgeActivationParticles(Badge.BadgeType b, BattleEntity be)
+    {
+        Debug.Log(b);
+        Sprite sp = Text_BadgeSprite.GetBadgeSprite(b.ToString());
+
+        GameObject so = new GameObject("Badge Spawn Sprite");
+        so.transform.parent = gameObject.transform;
+        SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+        s.sprite = sp;
+        Vector3 startPosition = be.ApplyScaledOffset(Vector3.up * 0.5f) + Vector3.forward * -0.1f;
+
+        float distance = 0.5f * Mathf.CeilToInt(be.sameFrameRibbonBadgeActivations / 8f);
+        startPosition += distance * (Vector3.right * Mathf.Cos(2 * Mathf.PI * ((be.sameFrameRibbonBadgeActivations - 1) / 8f)) + Vector3.up * Mathf.Sin(2 * Mathf.PI * ((be.sameFrameRibbonBadgeActivations - 1) / 8f)));
+        be.sameFrameRibbonBadgeActivations++;
+
+        so.transform.position = startPosition;
+        s.material = MainManager.Instance.defaultGUISpriteMaterial;
+
+        IEnumerator Lerp(SpriteRenderer s, float duration)
+        {
+            float time = 0;
+
+            s.color = new Color(1, 1, 1, 0f);
+
+            while (time < 1)
+            {
+                time += Time.deltaTime / (duration / 4);
+
+                s.gameObject.transform.localScale = Vector3.one * 1f * (Mathf.Clamp01(time * 2));
+                s.color = new Color(1, 1, 1, time);
+                yield return null;
+            }
+
+            time = 0;
+            while (time < 1)
+            {
+                time += Time.deltaTime / (duration);
+                //s.gameObject.transform.localScale = Vector3.one * 1f * (1 - time);
+                s.color = new Color(1, 1, 1, 1 - time);
+                yield return null;
+            }
+
+            Destroy(s.gameObject);
+        }
+
+        StartCoroutine(Lerp(s, 0.4f));
+    }
+    public void CreateRibbonActivationParticles(Ribbon.RibbonType r, BattleEntity be)
+    {
+        Sprite sp = Text_RibbonSprite.GetRibbonSprite(r.ToString());
+
+        GameObject so = new GameObject("Ribbon Spawn Sprite");
+        so.transform.parent = gameObject.transform;
+        SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+        s.sprite = sp;
+        Vector3 startPosition = be.ApplyScaledOffset(Vector3.up * 0.5f) + Vector3.forward * -0.1f;
+
+        float distance = 0.5f * Mathf.CeilToInt(be.sameFrameRibbonBadgeActivations / 8f);
+        startPosition += distance * (Vector3.right * Mathf.Cos(2 * Mathf.PI * ((be.sameFrameRibbonBadgeActivations - 1) / 8f)) + Vector3.up * Mathf.Sin(2 * Mathf.PI * ((be.sameFrameRibbonBadgeActivations - 1) / 8f)));
+        be.sameFrameRibbonBadgeActivations++;
+
+        so.transform.position = startPosition;
+        s.material = MainManager.Instance.defaultGUISpriteMaterial;
+
+        IEnumerator Lerp(SpriteRenderer s, float duration)
+        {
+            float time = 0;
+
+            s.color = new Color(1, 1, 1, 0f);
+
+            while (time < 1)
+            {
+                time += Time.deltaTime / (duration / 4);
+
+                s.gameObject.transform.localScale = Vector3.one * 1f * (Mathf.Clamp01(time * 2));
+                s.color = new Color(1, 1, 1, time);
+                yield return null;
+            }
+
+            time = 0;
+            while (time < 1)
+            {
+                time += Time.deltaTime / (duration);
+                //s.gameObject.transform.localScale = Vector3.one * 1f * (1 - time);
+                s.color = new Color(1, 1, 1, 1 - time);
+                yield return null;
+            }
+
+            Destroy(s.gameObject);
+        }
+
+        StartCoroutine(Lerp(s, 0.4f));
+    }
+
     public void CreateDeathSmoke(BattleEntity be)
     {
         //note: might look weird if giant enemies use this
@@ -4456,7 +4736,7 @@ public class BattleControl : MonoBehaviour
     {
         //Special case so I can make player characters get devoured so they aren't targettable
         //though in that specific case both of these will be set active
-        if ((checkNoCount && (b.GetEntityProperty(BattleHelper.EntityProperties.NoCount)) || b.GetEntityProperty(BattleHelper.EntityProperties.NoTarget)))
+        if ((checkNoCount && (b.GetEntityProperty(BattleHelper.EntityProperties.NoCount) || b.GetEntityProperty(BattleHelper.EntityProperties.NoTarget))))
         {
             return false;
         }
@@ -4678,11 +4958,22 @@ public class BattleControl : MonoBehaviour
 
         if (autoStrike && firstStrikePosId < 0)  //includes null ID
         {
+            if (firstStrikePosId != BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY)
+            {
+                for (int i = 0; i < party.Count; i++)
+                {
+                    CreateBadgeActivationParticles(Badge.BadgeType.DodgeStep, party[i]);
+                }
+            }
             firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_FRONTMOST_ALLY;
         }
 
         if (dodgeStep && firstStrikePosId >= 0)
         {
+            for (int i = 0; i < party.Count; i++)
+            {
+                CreateBadgeActivationParticles(Badge.BadgeType.DodgeStep, party[i]);
+            }
             firstStrikePosId = BattleStartArguments.FIRSTSTRIKE_NULL_ENTITY;
         }
 
@@ -4692,12 +4983,14 @@ public class BattleControl : MonoBehaviour
             {
                 for (int i = 0; i < party.Count; i++)
                 {
+                    CreateBadgeActivationParticles(Badge.BadgeType.InviteDanger, party[i]);
                     party[i].InflictEffect(party[i], new Effect(Effect.EffectType.Focus, Effect.INFINITE_DURATION, (sbyte)(4 * playerData.BadgeEquippedCount(Badge.BadgeType.InviteDanger))));
                 }
             } else
             {
                 for (int i = 0; i < party.Count; i++)
                 {
+                    CreateBadgeActivationParticles(Badge.BadgeType.InviteDanger, party[i]);
                     party[i].InflictEffect(party[i], new Effect(Effect.EffectType.Focus, Effect.INFINITE_DURATION, (sbyte)(2 * playerData.BadgeEquippedCount(Badge.BadgeType.InviteDanger))));
                 }
             }            
@@ -4709,6 +5002,7 @@ public class BattleControl : MonoBehaviour
             if (firstStrikePosId != BattleStartArguments.FIRSTSTRIKE_NULL_ENTITY && firstStrikePosId < 0)
             {
                 BattleEntity firstStriker = GetEntitiesSorted((e) => (e.posId < 0))[0];
+                CreateBadgeActivationParticles(Badge.BadgeType.SmartAmbush, firstStriker);
                 firstStriker.InflictEffect(firstStriker, new Effect(Effect.EffectType.BonusTurns, (sbyte)(playerData.BadgeEquippedCount(Badge.BadgeType.SmartAmbush)), Effect.INFINITE_DURATION));
             }
         }
@@ -4717,6 +5011,7 @@ public class BattleControl : MonoBehaviour
         {
             for (int i = 0; i < party.Count; i++)
             {
+                CreateBadgeActivationParticles(Badge.BadgeType.HeadStart, party[i]);
                 party[i].InflictEffect(party[i], new Effect(Effect.EffectType.BonusTurns, (sbyte)(playerData.BadgeEquippedCount(Badge.BadgeType.HeadStart)), Effect.INFINITE_DURATION));
             }
         }
@@ -4798,6 +5093,7 @@ public class BattleControl : MonoBehaviour
         {
             if (playerEntities[i].BadgeEquipped(Badge.BadgeType.QuickNap))
             {
+                CreateBadgeActivationParticles(Badge.BadgeType.QuickNap, playerEntities[i]);
                 //possible higher potency status!
                 playerEntities[i].InflictEffect(playerEntities[i], new Effect(Effect.EffectType.Sleep, (sbyte)(playerEntities[i].BadgeEquippedCount(Badge.BadgeType.QuickNap)), 2));
             }
@@ -5129,7 +5425,7 @@ public class BattleControl : MonoBehaviour
 
             float timestamp = Time.time;
 
-            BattlePopupMenuScript popup = BattlePopupMenuScript.buildMenu(battlePopupList[0].text, battlePopupList[0].vars);
+            BattlePopupMenuScript popup = BattlePopupMenuScript.buildMenu(battlePopupList[0].text);//, battlePopupList[0].vars);
             popup.transform.parent = transform;
 
             yield return new WaitUntil(() => popup.exit);
@@ -5606,7 +5902,10 @@ public class BattleControl : MonoBehaviour
                 //Debug.Log(current + " b");
                 current.ChooseMove();
 
-                if (current.currMove != null)
+                //I didn't have the CanChoose check here before
+                //TODO: research if this causes problems
+                //It really shouldn't because the basic CanChoose is just a check to see if there are valid targets (and if there weren't any valid targets curTarget would be null and the move wouldn't work properly anyway)
+                if (current.currMove != null && current.currMove.CanChoose(current))
                 {
                     ShowRibbonHelpers();
                     current.moveExecuting = true;
@@ -5617,15 +5916,24 @@ public class BattleControl : MonoBehaviour
                     }
                     yield return new WaitForSeconds(0.6f); //note: not in reactions because they have their own standard particle effect
                     StartCoroutine(current.ExecuteMoveCoroutine(current.currMove));
+                    BroadcastEvent(current, BattleHelper.Event.PostAction);
                     yield return new WaitUntil(() => current == null || !current.moveActive);
                     DestroyMovePopup();
                     HideRibbonHelpers();
+                } else
+                {
+                    //TODO: figure out what to do if enemies lose their turn in this rare case
+                    //Enemy logic is set up to avoid these scenarios so I probably don't need anything here?
+                    //But if someone encounters it it will look like a bug
                 }
 
                 //try to use bonus moves
                 if (current.HasEffect(Effect.EffectType.BonusTurns))
                 {
                     current.TokenRemoveOne(Effect.EffectType.BonusTurns);
+                    HideHPBars();
+                    HideEffectIcons();
+                    yield return StartCoroutine(RunOutOfTurnEvents());
                 } else
                 {
                     keepMoving = false;
@@ -5761,8 +6069,14 @@ public class BattleControl : MonoBehaviour
         while (entities.hasNext())
         {
             BattleEntity current = entities.next();
-            //Debug.Log(current.id + " post");
-            yield return StartCoroutine(current.PostMove());
+            bool postmovedone = false;
+            IEnumerator DoPostMove()
+            {
+                yield return StartCoroutine(current.PostMove());
+                postmovedone = true;
+            }
+            StartCoroutine(DoPostMove());
+            yield return postmovedone || current == null;
         }
 
         /*

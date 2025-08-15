@@ -46,4 +46,10 @@ public class StatusIconScript : MonoBehaviour
             }
         }
     }
+
+    public void OnMouseOver()
+    {
+        HoverTextMasterScript.Instance.SetHoverText(BattlePopup.GetEffectPopup(status));
+        //Debug.Log(status.effect);
+    }
 }

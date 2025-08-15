@@ -8,7 +8,7 @@ public class BE_Leafling : BattleEntity
     public override void Initialize()
     {
         //This is pretty sus
-        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Bite>(), gameObject.AddComponent<BM_Leafling_Hard_TailWhip>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_Bite>(), gameObject.AddComponent<BM_Leafling_TailWhip>() };
         base.Initialize();
     }
 
@@ -20,24 +20,16 @@ public class BE_Leafling : BattleEntity
         }
         else
         {
-            //note: posId >= 0 for enemies
-            if (BattleControl.Instance.GetCurseLevel() > 0)
-            {
-                currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % moveset.Count];
-            }
-            else
-            {
-                currMove = moveset[0];
-            }
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % moveset.Count];
         }
 
         BasicTargetChooser();
     }
 }
 
-public class BM_Leafling_Hard_TailWhip : EnemyMove
+public class BM_Leafling_TailWhip : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.Leafling_Hard_TailWhip;
+    public override MoveIndex GetMoveIndex() => MoveIndex.Leafling_TailWhip;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 
@@ -72,16 +64,41 @@ public class BM_Leafling_Hard_TailWhip : EnemyMove
                 yield return StartCoroutine(caller.MoveEasing(tpos, (e) => MainManager.EasingOutIn(e)));
             }
 
-            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
-            if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Earth))
+            if (BattleControl.Instance.GetCurseLevel() > 0)
             {
-                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
-                caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Contact);
-                StartCoroutine(caller.RevertScale(0.1f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
+                if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Earth))
+                {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                    caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Contact);
+                }
+                else
+                {
+                    caller.InvokeMissEvents(caller.curTarget);
+                }
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
+                if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Earth))
+                {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                    caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Contact);
+                }
+                else
+                {
+                    caller.InvokeMissEvents(caller.curTarget);
+                }
             }
             else
             {
-                caller.InvokeMissEvents(caller.curTarget);
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
+                if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Earth))
+                {
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                    caller.DealDamage(caller.curTarget, 1, BattleHelper.DamageType.Earth, 0, BattleHelper.ContactLevel.Contact);
+                }
+                else
+                {
+                    caller.InvokeMissEvents(caller.curTarget);
+                }
             }
         }
 
@@ -257,7 +274,7 @@ public class BM_Sunflower_Hard_SolarBite : EnemyMove
                 switch (caller.entityID)
                 {
                     case BattleHelper.EntityID.Sunflower:
-                        bool hasStatus = caller.curTarget.HasStatus();
+                        bool hasStatus = caller.curTarget.HasAilment();
                         caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
                         caller.DealDamage(caller.curTarget, 6, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         if (!hasStatus)

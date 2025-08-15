@@ -103,6 +103,7 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
     [HideInInspector]
     public float timeSinceLaunch = 0;
+    public bool landAnimation = false;
 
     [HideInInspector]
     public bool noShadow = false;
@@ -827,6 +828,16 @@ public class WorldEntity : WorldObject, ITextSpeaker
         return inputVel;
     }
 
+    //Fix squish glitch?
+    public void OnDisable()
+    {
+        if (ac != null)
+        {
+            ac.transform.localScale = Vector3.one;
+        }
+        landAnimation = false;
+    }
+
     public override void ProcessCollision(Collision collision)
     {
         float accumulatedGroundHeight = 0;
@@ -889,11 +900,13 @@ public class WorldEntity : WorldObject, ITextSpeaker
             //Debug.Log(rb.velocity + " pushed by " + accumulatedNPC + " force " + (NPC_ANTI_STACK_VELOCITY * Time.fixedDeltaTime * push * 10));
         }
 
-        if (!AntiGravity() && accumulatedGround > 0)
+        bool landed = false;
+        if (!AntiGravity() && accumulatedGround > 0 && Vector3.Dot(rb.velocity.normalized, accumulatedFloorNormal.normalized) < 0.2f)
         {
             lastGroundedHeight = accumulatedGroundHeight / accumulatedGround;
             lastHighestHeight = lastGroundedHeight;
             isGrounded = true;
+            landed = true;
             usedFirstBounce = false;
             floorNormal = accumulatedFloorNormal.normalized;
             attached = collision.rigidbody;
@@ -901,15 +914,46 @@ public class WorldEntity : WorldObject, ITextSpeaker
 
         if (!AntiGravity() && accumulatedNonGround > 0)
         {
-            if (accumulatedNonGroundNormal.normalized.y > MIN_GROUND_NORMAL && LegalGround(collision))
+            if (accumulatedNonGroundNormal.normalized.y > MIN_GROUND_NORMAL && LegalGround(collision) && Vector3.Dot(rb.velocity.normalized, accumulatedNonGroundNormal.normalized) < 0.2f)
             {
                 lastGroundedHeight = accumulatedNonGroundHeight / accumulatedNonGround;
                 lastHighestHeight = lastGroundedHeight;
                 isGrounded = true;
+                landed = true;
                 usedFirstBounce = false;
                 floorNormal = accumulatedNonGroundNormal;
                 attached = collision.rigidbody;
             }
+        }
+
+        if (landed && groundedTime <= 0)
+        {
+            //landing animation
+            IEnumerator StompAnimation()
+            {
+                if (landAnimation)
+                {
+                    yield break;
+                }
+
+                landAnimation = true;
+                float time = 0;
+                float duration = 0.10f;
+                float stompscale = 0.35f / height; // 0.25f;
+                while (time < duration)
+                {
+                    time += Time.deltaTime;
+                    float lerpVal = Mathf.Min(2 * (time / duration), 2 - 2 * (time / duration));
+                    ac.transform.localScale = Vector3.Lerp(Vector3.one, (Vector3.up) * (1 - stompscale) + (Vector3.right + Vector3.forward) * (1 + stompscale), lerpVal);
+                    //need to position things lower to make it look correct
+                    //ac.transform.localPosition = Vector3.down * 0.5f * (height * (lerpVal * stompscale));
+                    yield return null;
+                }
+
+                ac.transform.localScale = Vector3.one;
+                landAnimation = false;
+            }
+            StartCoroutine(StompAnimation());
         }
     }
 
