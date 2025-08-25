@@ -62,6 +62,7 @@ public class BattlePopupMenuScript : MenuHandler
 
         if (time > MIN_LIFETIME && ((InputManager.GetButtonDown(InputManager.Button.Start) || (InputManager.GetButtonDown(InputManager.Button.A) || InputManager.GetButtonDown(InputManager.Button.B))))) //Press B to go back
         {
+            MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
             exit = true;
             PopSelf();
         }

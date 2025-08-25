@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ProperSpriteRainbow
+  m_Name: ProperSprite_Rainbow
   m_Shader: {fileID: 4800000, guid: 3c93cdc462928c240b7a37e559865e9b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

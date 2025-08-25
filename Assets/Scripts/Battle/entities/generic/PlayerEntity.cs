@@ -217,9 +217,9 @@ public class PlayerEntity : BattleEntity
             moveset.Add(prs);
             weaponMoves.Add(prs);
         }
-        if (GetWilexMoveMaxLevel((int)WilexMove.MoveType.SwordDischarge) > 0)
+        if (GetWilexMoveMaxLevel((int)WilexMove.MoveType.SwordBolt) > 0)
         {
-            WM_SwordDischarge sd = gameObject.AddComponent<WM_SwordDischarge>();
+            WM_SwordBolt sd = gameObject.AddComponent<WM_SwordBolt>();
             moveset.Add(sd);
             weaponMoves.Add(sd);
         }
@@ -2293,6 +2293,7 @@ public class PlayerEntity : BattleEntity
             //Quantum Shield
             if (TokenRemoveOne(Effect.EffectType.QuantumShield))
             {
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.QuantumShield, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_QuantumShield, 1, 0.01f);
                 damage = 0;
                 ValidateEffects();
@@ -2314,16 +2315,19 @@ public class PlayerEntity : BattleEntity
         damageTakenThisTurn += damage;
         if (HasEffect(Effect.EffectType.CounterFlare))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.CounterFlare, this);
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_CounterFlare, 1, 0.01f);
             counterFlareTrackedDamage += damage;
         }
         if (HasEffect(Effect.EffectType.ArcDischarge))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.ArcDischarge, this);
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_ArcDischarge, 1, 0.01f);
             arcDischargeTrackedDamage += damage;
         }
         if (HasEffect(Effect.EffectType.Splotch))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Splotch, this);
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_Splotch, 1, 0.01f);
             splotchTrackedDamage += damage;
         }
@@ -2334,6 +2338,7 @@ public class PlayerEntity : BattleEntity
             if (astralWallTrackedDamage > GetEffectEntry(Effect.EffectType.AstralWall).potency)
             {
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_AstralWall, 1, 0.01f);
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.AstralWall, this);
                 int diff = astralWallTrackedDamage - GetEffectEntry(Effect.EffectType.AstralWall).potency;
 
                 damageTakenThisTurn -= diff;
@@ -2415,6 +2420,7 @@ public class PlayerEntity : BattleEntity
             }
             if (bleedDamage > 0)
             {
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Soulbleed, this);
                 ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, bleedDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
             }
         }
@@ -2424,6 +2430,7 @@ public class PlayerEntity : BattleEntity
             sbyte softDamage = (sbyte)(damage / (sbyte)(GetEffectEntry(Effect.EffectType.Soften).potency + 1));
             if (softDamage > 0)
             {
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Soften, this);
                 ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, (sbyte)(GetEffectEntry(Effect.EffectType.Soften).potency + 1)), posId, Effect.EffectStackMode.KeepDurAddPot);
             }
         }
@@ -3923,6 +3930,7 @@ public class PlayerEntity : BattleEntity
         //Astral recovery
         if (target.HasEffect(Effect.EffectType.AstralRecovery) && target.hp > 0 && !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.AstralRecovery, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_AstralRecovery, 1, 0.01f);
             target.HealHealth(startDamage / 5);
         }
@@ -4057,6 +4065,7 @@ public class PlayerEntity : BattleEntity
         //Apply sprout
         if (target.HasEffect(Effect.EffectType.DrainSprout))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.DrainSprout, this);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_DrainSprout, 1, 0.01f);
             //target gets defocus
             //note: inflict status
@@ -4068,6 +4077,7 @@ public class PlayerEntity : BattleEntity
 
         if (target.HasEffect(Effect.EffectType.BoltSprout))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.BoltSprout, this);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_BoltSprout, 1, 0.01f);
             //target gets sunder (buffered)
             //note: inflict status
@@ -4101,27 +4111,32 @@ public class PlayerEntity : BattleEntity
 
         if (target.HasEffect(Effect.EffectType.ParryAura))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.ParryAura, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_ParryAura, 1, 0.01f);
             InflictEffect(target, new Effect(Effect.EffectType.Focus, target.GetEffectEntry(Effect.EffectType.ParryAura).potency, Effect.INFINITE_DURATION));
         }
         if (target.HasEffect(Effect.EffectType.BolsterAura))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.BolsterAura, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_BolsterAura, 1, 0.01f);
             InflictEffectBuffered(target, new Effect(Effect.EffectType.Absorb, target.GetEffectEntry(Effect.EffectType.BolsterAura).potency, Effect.INFINITE_DURATION));
         }
 
         if (target.HasEffect(Effect.EffectType.Elusive))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Elusive, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_Elusive, 1, 0.01f);
             InflictEffectBuffered(target, new Effect(Effect.EffectType.Ethereal, 1, target.GetEffectEntry(Effect.EffectType.Elusive).potency));
         }
 
         if (HasEffect(Effect.EffectType.Illuminate))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Illuminate, this);
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_Illuminate, 1, 0.01f);
         }
         if (target.HasEffect(Effect.EffectType.Brittle))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Brittle, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_Brittle, 1, 0.01f);
         }
 
@@ -4893,17 +4908,23 @@ public class PlayerEntity : BattleEntity
             if (HasEffect(Effect.EffectType.Branded))
             {
                 //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
-                HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency / 2f));
+                HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency));
+                yield return new WaitForSeconds(0.5f);
+            }
+            if (HasEffect(Effect.EffectType.Soaked))
+            {
+                //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
+                HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Soaked).potency));
                 yield return new WaitForSeconds(0.5f);
             }
             if (HasEffect(Effect.EffectType.Cursed))
             {
-                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency);
+                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency * 3);
                 yield return new WaitForSeconds(0.5f);
             }
             if (HasEffect(Effect.EffectType.Burned))
             {
-                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency + Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Burned).potency / 2f));
+                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency * 3);
                 yield return new WaitForSeconds(0.5f);
             }
 

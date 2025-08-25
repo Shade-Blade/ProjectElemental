@@ -1,23 +1,23 @@
-Envy
-d_rh_v0.5
-GF_FileCode_Envy:True,GF_FileCodeExplain_Envy:True,GF_RandomItemModifiers:True,GF_Bestiary_Sentry:True,GF_Bestiary_Sandswimmer:True,GF_Recipe_BerryCarrot:True,GF_Bestiary_SirenFish:True,GF_Bestiary_LumistarSoldier:True,GF_Bestiary_Shrouder:True,GF_Bestiary_Shimmerwing:True,GF_ACH_Halfway:True
-GV_PitFloor:50,GV_PitAltar:5
-InfernalCaldera,RabbitHole_RestFloor,1.03912|0.375|-2.578611
-3205.918
-14,0,18,18,12,12,12,12,89,30,0,0,10,32,6,6,6,26,21,136,1210,391,26,14,62,62,0,0
-SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP,SP
+a'
+d_rh_v0.20
+GF_TutorialExplain_Badge:True,GF_TutorialExplain_Item:True,GF_TutorialExplain_Ribbon:True,GF_Bestiary_Renegade:True,GF_Recipe_RoastedNut:True,GF_Recipe_AppleJuice:True
+GV_PitFloor:30,GV_PitAltar:3
+TempestDesert,RabbitHole_RestFloor,1.034861|0.375|-2.717974
+2844.56626189256
+8,0,11,24,18,24,24,18,8,242,0,0,10,32,6,6,6,17,9,114,412,224,12,8,35,33,2,6
+EP,HP,SP,HP,EP,SP,HP
 
-SilverPudding|Glistening|Overworld,PowerSteak|Echo|Overworld,MoonlightBerry|Void|EnemyDrop|0|26,SpicyCherry|Void|EnemyDrop|0|25,SilverPudding|Spread|Overworld|0|24,FriedEgg|Spread|Overworld,SnowCone|Quick|Overworld|0|23,DeliciousMeal|Glistening|Overworld|0|22,ScaleSteak|Void|EnemyDrop|0|21,Coconut|Void|EnemyDrop|0|19,Flour|Glistening|EnemyDrop,FlowerSyrup|Glistening|EnemyDrop|0|16,CarrotSalad|Spread|Overworld|0|12,RabbitBun|Glistening|Overworld|0|11,LightSeed|Void|Overworld|0|8,BerryBronze|Void|Overworld|0|6,Lemon|Void|Overworld|0|4,ClearStrawberry|Void|EnemyDrop|0|2
+BerrySilver|None|Overworld|0|17,RockNut|None|EnemyDrop,Dragonfruit|None|EnemyDrop|0|16,SleepDart|None|Overworld,StaticThorn|None|EnemyDrop|0|15,AppleJuice|None|CookTorstrum|0|14,RoastedNut|None|CookTorstrum|0|13,HoneyCaramel|None|Overworld|0|11,Lemonade|None|Overworld|0|10,FlowerSyrup|None|EnemyDrop|0|7
 
-AppleCandle
-SuperCurse|1,UltraCurse|2,MegaCurse|3,MultiStomp|21,MultiSlash|24,PoisonSlash|17,PreciseStab|44,SwordDance|51,FluffHeal|26,BreakerSmash|33,HPPlus|13,HPPlusB|23,EPPlus|8,EPPlusB|49,SEPlus|41,RiskyPower|34,RiskyShield|48,RiskyEndurance|14,ProtectivePower|42,ProtectiveShield|28,ProtectiveEndurance|9,SpiritPower|27,GoldenPower|46,NullPower|7,SoulfulEnergy|30,SoftPower|22,MetalPower|20,HealthRegen|5,HealthRegen|6,HealthRegenB|36,EnergyRegen|12,EnergyRegenB|43,Trance|19,UnsteadyStance|15,RagesPower|11,RageRally|32,ToxicStrength|29,Supercooled|40,HealthSight|39,DefenseSight|16,StatusSight|31,PowerSight|10,BattleSight|4,PerfectVictory|18,StatusResistB|45,RibbonSwap|35,EnergySteal|50,ProtectiveRush|38,MoneyBoost|47,Overkill|25,HasteStep|37
-HPPlus|13,HPPlusB|23,EPPlus|8,RiskyPower|34,MetalPower|20,HealthRegen|6,HealthRegen|5,HealthRegenB|36,EnergyRegen|12,RagesPower|11,RageRally|32,HealthSight|39,DefenseSight|16,StatusSight|31,PowerSight|10,BattleSight|4,RibbonSwap|35,ProtectiveRush|38,MoneyBoost|47,Overkill|25,HasteStep|37
-EPPlus|8,HealthSight|39,DefenseSight|16,StatusSight|31,PowerSight|10,BattleSight|4,RibbonSwap|35,MoneyBoost|47,Overkill|25,HasteStep|37
-SharpRibbon|1,SafetyRibbon|2,SafetyRibbon|6,ExpertRibbon|5,SoftRibbon|4,ThornyRibbon|3
-Defense|3|5|6
+PearlEye,StrawberryCandle
+SuperCurse|1,UltraCurse|2,MegaCurse|3,ElectroSlash|20,LeafySmash|18,DazzleSmash|14,HPPlus|9,EPPlus|13,RiskyPower|22,RiskyEndurance|16,ProtectiveEndurance|7,NullPower|6,SoftPower|26,HealthRegen|11,EnergyRegen|10,AilmentBoost|17,DizzyMomentum|15,Trance|27,HypnoStrike|24,SweetDreams|23,RagesPower|12,HealthSight|4,DefenseSight|25,BattleSight|8,PerfectVictory|28,DecisiveVictory|21,Overkill|5,InviteDanger|19
+ElectroSlash|20,LeafySmash|18,RiskyPower|22,EnergyRegen|10,HealthSight|4,DefenseSight|25,BattleSight|8,DecisiveVictory|21
+ElectroSlash|20,LeafySmash|18,HealthSight|4,DefenseSight|25,BattleSight|8,DecisiveVictory|21
+SharpRibbon|1,SafetyRibbon|2,ExpertRibbon|4,SoftRibbon|3
+
 
 2,0
-Luna,9,18,1,1,SafetyRibbon|2,12,819,267,25,12,104,2495.126
-HPPlusB|23,RiskyPower|34,MetalPower|20,HealthRegen|5,HealthRegen|6,HealthRegenB|36,RagesPower|11,RageRally|32,ProtectiveRush|38
-Wilex,5,12,2,1,SoftRibbon|4,9,391,124,18,14,32,634.0859
-HPPlus|13,EnergyRegen|12
+Luna,30,30,1,0,SoftRibbon|3,3,211,86,6,6,60,1269.505
+
+Wilex,20,20,1,0,ExpertRibbon|4,6,201,138,12,8,54,1339.463
+RiskyPower|22,EnergyRegen|10

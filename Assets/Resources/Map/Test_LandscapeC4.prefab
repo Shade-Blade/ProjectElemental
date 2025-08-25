@@ -425,6 +425,8 @@ Transform:
   - {fileID: 2553940524907166865}
   - {fileID: 4897489689082565724}
   - {fileID: 1157247742774416812}
+  - {fileID: 6701632840224128505}
+  - {fileID: 7249115079485632463}
   m_Father: {fileID: 75118966043251284}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &75118966795296875
@@ -862,6 +864,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  landAnimation: 0
   noShadow: 0
   initialFacingAngle: 0
   usedFirstBounce: 0
@@ -892,16 +895,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Heatwing
       posid: 11
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Lavaswimmer
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: TestBattle_InfernalCaldera
   frameTimer: -1
   firstStrikeTimer: -1
@@ -1067,6 +1073,210 @@ Transform:
   - {fileID: 1508096036791325221}
   m_Father: {fileID: 75118965855283202}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2808298913407651536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7249115079485632463}
+  - component: {fileID: 1016584182866173744}
+  - component: {fileID: 1482916822120984820}
+  - component: {fileID: 9097034231535932871}
+  m_Layer: 8
+  m_Name: TestChaserEnemy (4)
+  m_TagString: NPC
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7249115079485632463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2808298913407651536}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.29, y: 0.875, z: -2.88}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 75118966791715817}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1016584182866173744
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2808298913407651536}
+  m_Material: {fileID: 13400000, guid: f989dffb8cf36914e9d2465f7f50eca3, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Height: 0.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1482916822120984820
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2808298913407651536}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &9097034231535932871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2808298913407651536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d192337de3c3a46a98a4386214438d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapScript: {fileID: 0}
+  rb: {fileID: 1482916822120984820}
+  bufferVelocity: {x: 0, y: 0, z: 0}
+  forceKinematic: 0
+  meid: 2
+  spriteID: 
+  wed:
+    inactive: 0
+    spriteID: C4_Infernoling
+    speed: 3
+    wandering: 1
+    wanderRadius: 2
+    idleDuration: 3
+    wanderDuration: 1
+    durationVariance: 0.75
+    height: 0
+    width: 0
+    interactRadius: 0
+    stompBoostable: 0
+    stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: 
+    talkStrings: []
+  subObject: {fileID: 0}
+  ac: {fileID: 0}
+  dropShadow: {fileID: 0}
+  noShadowUpdate: 0
+  speed: 3
+  targetFacingRotation: 0
+  facingRotation: 0
+  trueFacingRotation: 0
+  midFacingRotation: 0
+  lastFrameVel: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundedTime: 0
+  airTime: 0
+  airFrames: 0
+  floorNormal: {x: 0, y: 0, z: 0}
+  lastGroundedHeight: 0
+  lastHighestHeight: 0
+  touchingNonGround: 0
+  timeSinceLaunch: 0
+  landAnimation: 0
+  noShadow: 0
+  initialFacingAngle: 0
+  usedFirstBounce: 0
+  applyDefaultJumpLift: 0
+  defaultJumpLift: 0
+  intendedMovement: {x: 0, y: 0, z: 0}
+  lastIntendedMovement: {x: 0, y: 0, z: 0}
+  useIntended: 1
+  useAllFriction: 0
+  movementRotationDisabled: 0
+  oneWayVector: {x: 0, y: 0, z: 0}
+  oneWayMinAllowable: 0
+  conveyerVector: {x: 0, y: 0, z: 0}
+  lastConveyerVector: {x: 0, y: 0, z: 0}
+  movementDamping: 0
+  lastMovementDamping: 0
+  semisolidFloorNormal: {x: 0, y: 0, z: 0}
+  semisolidFloorPosition: {x: 0, y: 0, z: 0}
+  semisolidFloorActive: 0
+  lastSemiSolidFloorActive: 0
+  semisolidSnapBelow: 0
+  areaFlag: 
+  touchEncounter: 1
+  encounter:
+    encounterList:
+    - entid: Infernoling
+      posid: 0
+      usePos: 0
+      pos: {x: 0, y: 0, z: 0}
+      bonusdata: 
+      multiplier: 0
+    - entid: Magmaswimmer
+      posid: 1
+      usePos: 0
+      pos: {x: 0, y: 0, z: 0}
+      bonusdata: 
+      multiplier: 0
+    - entid: Wyverlet
+      posid: 12
+      usePos: 0
+      pos: {x: 0, y: 0, z: 0}
+      bonusdata: 
+      multiplier: 0
+    - entid: Pyrenfish
+      posid: 13
+      usePos: 0
+      pos: {x: 0, y: 0, z: 0}
+      bonusdata: 
+      multiplier: 0
+    battleMapName: TestBattle_InfernalCaldera
+  frameTimer: -1
+  firstStrikeTimer: -1
+  state: 0
+  stateTime: 0
+  startPosition: {x: 0, y: 0, z: 0}
+  timeSinceInteractActive: 0
+  wanderRadius: 3
+  idleDuration: 3
+  wanderDuration: 1
+  durationVariance: 0.75
+  wanderDir: {x: 0, y: 0}
+  idleTime: 0
+  wanderTime: 0
+  idlePos: {x: 0, y: 0, z: 0}
 --- !u!1 &2819162837652721471
 GameObject:
   m_ObjectHideFlags: 0
@@ -1231,6 +1441,204 @@ MonoBehaviour:
     pointA: {x: -5, y: 2.65, z: 8.75}
     pointB: {x: -9, y: 2.65, z: 8.75}
     priority: 0
+--- !u!1 &3054425008231404638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6701632840224128505}
+  - component: {fileID: 652648312790943861}
+  - component: {fileID: 7291258101891330229}
+  - component: {fileID: 1475032622494193280}
+  m_Layer: 8
+  m_Name: TestChaserEnemy (3)
+  m_TagString: NPC
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6701632840224128505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3054425008231404638}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6.54, y: 0.875, z: -2.88}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 75118966791715817}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &652648312790943861
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3054425008231404638}
+  m_Material: {fileID: 13400000, guid: f989dffb8cf36914e9d2465f7f50eca3, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Height: 0.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &7291258101891330229
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3054425008231404638}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &1475032622494193280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3054425008231404638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d192337de3c3a46a98a4386214438d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapScript: {fileID: 0}
+  rb: {fileID: 7291258101891330229}
+  bufferVelocity: {x: 0, y: 0, z: 0}
+  forceKinematic: 0
+  meid: 2
+  spriteID: 
+  wed:
+    inactive: 0
+    spriteID: C4_Pyrenfish
+    speed: 3
+    wandering: 1
+    wanderRadius: 2
+    idleDuration: 3
+    wanderDuration: 1
+    durationVariance: 0.75
+    height: 0
+    width: 0
+    interactRadius: 0
+    stompBoostable: 0
+    stompLaunch: 0
+    noShadow: 0
+    initialFacingAngle: 0
+    tattleString: 
+    talkStrings: []
+  subObject: {fileID: 0}
+  ac: {fileID: 0}
+  dropShadow: {fileID: 0}
+  noShadowUpdate: 0
+  speed: 3
+  targetFacingRotation: 0
+  facingRotation: 0
+  trueFacingRotation: 0
+  midFacingRotation: 0
+  lastFrameVel: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundedTime: 0
+  airTime: 0
+  airFrames: 0
+  floorNormal: {x: 0, y: 0, z: 0}
+  lastGroundedHeight: 0
+  lastHighestHeight: 0
+  touchingNonGround: 0
+  timeSinceLaunch: 0
+  landAnimation: 0
+  noShadow: 0
+  initialFacingAngle: 0
+  usedFirstBounce: 0
+  applyDefaultJumpLift: 0
+  defaultJumpLift: 0
+  intendedMovement: {x: 0, y: 0, z: 0}
+  lastIntendedMovement: {x: 0, y: 0, z: 0}
+  useIntended: 1
+  useAllFriction: 0
+  movementRotationDisabled: 0
+  oneWayVector: {x: 0, y: 0, z: 0}
+  oneWayMinAllowable: 0
+  conveyerVector: {x: 0, y: 0, z: 0}
+  lastConveyerVector: {x: 0, y: 0, z: 0}
+  movementDamping: 0
+  lastMovementDamping: 0
+  semisolidFloorNormal: {x: 0, y: 0, z: 0}
+  semisolidFloorPosition: {x: 0, y: 0, z: 0}
+  semisolidFloorActive: 0
+  lastSemiSolidFloorActive: 0
+  semisolidSnapBelow: 0
+  areaFlag: 
+  touchEncounter: 1
+  encounter:
+    encounterList:
+    - entid: Pyrenfish
+      posid: 10
+      usePos: 0
+      pos: {x: 0, y: 0, z: 0}
+      bonusdata: 
+      multiplier: 0
+    - entid: GoldScreecher
+      posid: 11
+      usePos: 0
+      pos: {x: 0, y: 0, z: 0}
+      bonusdata: 
+      multiplier: 0
+    - entid: Flametongue
+      posid: 2
+      usePos: 0
+      pos: {x: 0, y: 0, z: 0}
+      bonusdata: 
+      multiplier: 0
+    battleMapName: TestBattle_InfernalCaldera
+  frameTimer: -1
+  firstStrikeTimer: -1
+  state: 0
+  stateTime: 0
+  startPosition: {x: 0, y: 0, z: 0}
+  timeSinceInteractActive: 0
+  wanderRadius: 3
+  idleDuration: 3
+  wanderDuration: 1
+  durationVariance: 0.75
+  wanderDir: {x: 0, y: 0}
+  idleTime: 0
+  wanderTime: 0
+  idlePos: {x: 0, y: 0, z: 0}
 --- !u!1 &3358220169957371448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1780,6 +2188,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  landAnimation: 0
   noShadow: 0
   initialFacingAngle: 0
   usedFirstBounce: 0
@@ -1810,16 +2219,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Heatwing
       posid: 11
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Flametongue
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: TestBattle_InfernalCaldera
   frameTimer: -1
   firstStrikeTimer: -1
@@ -2324,6 +2736,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  landAnimation: 0
   noShadow: 0
   initialFacingAngle: 0
   usedFirstBounce: 0
@@ -2354,16 +2767,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Embercrest
       posid: 1
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: Ashcrest
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: TestBattle_InfernalCaldera
   frameTimer: -1
   firstStrikeTimer: -1

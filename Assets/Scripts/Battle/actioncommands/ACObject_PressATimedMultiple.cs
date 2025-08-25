@@ -40,7 +40,7 @@ public class ACObject_PressATimedMultiple : MonoBehaviour
 
         if (state == ActionCommand.AC_State.Complete)
         {
-            fullBar.color = (successes == completionAmounts.Length) ? new Color(0.75f, 1, 1) : new Color(0.5f, 0f, 0f);
+            fullBar.color = (successes == completionAmounts.Length) ? ActionCommand.COLOR_ON : ActionCommand.COLOR_OFF;
         }
     }
 }

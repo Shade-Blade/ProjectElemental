@@ -1202,6 +1202,44 @@ public class CheatMenu : MenuHandler
             }
         }
 
+        //map exit version of mw
+        //teleports you to map exit X
+        if (input[0].Equals("me"))
+        {
+            if (MainManager.Instance.worldMode != MainManager.WorldMode.Overworld)
+            {
+                doexit = false;
+                cs.log.SetText("Overworld only cheat!", true, true);
+            } else
+            {
+                MapExit[] me = FindObjectsOfType<MapExit>();
+                int exit = 0;
+                if (input.Length > 1)
+                {
+                    int.TryParse(input[1], out exit);
+                }
+
+                bool success = false;
+                for (int i = 0; i < me.Length; i++)
+                {
+                    if (me[i].exitID == exit)
+                    {
+                        //otherwise offset would be very off
+                        WorldPlayer.Instance.transform.position = me[i].gameObject.transform.position;
+                        StartCoroutine(me[i].DoExit());
+                        success = true;
+                        break;
+                    }
+                }
+                if (!success)
+                {
+                    cs.log.SetText("Can't find exit " + exit, true, true);
+                    doexit = false;
+                }
+            }
+
+        }
+
         //slightly buggy, since you are supposed to fade to black?
         if (input[0].Equals("mw"))
         {

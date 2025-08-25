@@ -626,7 +626,7 @@ public class BE_Lavaswimmer : BattleEntity
     {
         counterCount = 0;
 
-        Effect_ReactionDefend();
+        Effect_ReactionAttack();
 
         yield return new WaitForSeconds(0.5f);
     }

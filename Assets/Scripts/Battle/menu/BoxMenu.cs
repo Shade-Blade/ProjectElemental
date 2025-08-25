@@ -459,7 +459,7 @@ public class BoxMenu : MenuHandler
     }
     public virtual void Cancel()
     {
-        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
         PopSelf();
     }
     public virtual void SelectOption()

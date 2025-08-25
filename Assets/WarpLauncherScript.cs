@@ -96,6 +96,10 @@ public class WarpLauncherScript : WorldObject, ITextSpeaker, ISignalReceiver
         //give you stuff
         //level = 25 * (floor/90) capped at 25
 
+        MainManager.Instance.SetGlobalFlag(MainManager.GlobalFlag.GF_TutorialExplain_Badge, true);
+        MainManager.Instance.SetGlobalFlag(MainManager.GlobalFlag.GF_TutorialExplain_Ribbon, true);
+        MainManager.Instance.SetGlobalFlag(MainManager.GlobalFlag.GF_TutorialExplain_Item, true);
+
         int newLevel = Mathf.FloorToInt(25f * ((floor - 1) / 90f));
         if (newLevel < 1)
         {

@@ -1,10 +1,10 @@
 sus
-d_rh_v0.19
+d_rh_v0.20
 GF_TutorialExplain_Item:True,GF_TutorialExplain_Badge:True,GF_TutorialExplain_Ribbon:True
 GV_PitAltar:10
 ForsakenMountains,Test_LandscapeC9,9.116404|0.8749998|-9.488997
-1030.59470639843
-25,0,60,60,60,60,60,39,0,0,0,0,10,32,6,6,6,0,2,3,0,0,0,0,3,0,3,2
+1030.595
+25,0,60,60,60,60,60,39,0,0,0,0,10,32,6,6,6,0,2,3,0,0,0,0,3,0,3,3
 HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,EP,SP
 
 PeachPie|None|Overworld,PolarCaramel|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,RoyalGolden|None|Overworld,SupremeDinner|None|Overworld,GoldenSalad|None|Overworld,GoldenSalad|None|Overworld,MiracleNeedle|None|Overworld,MiracleShroom|None|Overworld

@@ -5,7 +5,8 @@ Hardened,Hardened,Can only take damage from lethal hits.
 Resistant,Resistant,Can only take 1 damage at a time.
 Unpiercable,Unpiercable,Defense can't be pierced.
 ExactDamageKill,Perfect Kill,Can only die to perfect damage (will heal if overkill)
-Elusive,Elusive,Can only be hit if it is the lowest HP enemy (ties allowed)
+Elusive,Elusive,Can only be hit if it is the highest HP enemy (ties allowed)
+Alpha,Alpha,"1.5x attack power, 5x health."
 NoMiracle,No Miracle,Can't receive Miracle for the rest of battle.
 NoStatus,No Ailment,Can't receive any Ailments.
 NoDebuff,No Debuff,Can't receive any negative effect.

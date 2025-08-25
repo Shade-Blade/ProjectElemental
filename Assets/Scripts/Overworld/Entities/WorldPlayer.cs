@@ -2798,7 +2798,7 @@ public class WorldPlayer : WorldEntity
     {
         RaycastHit hit = DownRaycast(STEP_DOWN_MAX_HEIGHT);
 
-        if (!AntiGravity() && !HazardState() && hit.collider != null)
+        if (!AntiGravity() && !HazardState() && hit.collider != null && Vector3.Dot(rb.velocity, hit.normal) < 0.2f)
         {
             if (hit.normal.y > MinGroundNormal() && LegalGround(hit.collider))
             {
@@ -2816,7 +2816,7 @@ public class WorldPlayer : WorldEntity
                 {
                     rb.velocity = (rb.velocity - hit.normal * dot).normalized * speed;
                 }
-                Debug.Log("snap " + hit.point);
+                Debug.Log("snap " + hit.point + rb.velocity);
             }
         }
     }

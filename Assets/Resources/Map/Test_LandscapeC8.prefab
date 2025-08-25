@@ -927,6 +927,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  landAnimation: 0
   noShadow: 0
   initialFacingAngle: 0
   usedFirstBounce: 0
@@ -952,21 +953,24 @@ MonoBehaviour:
   touchEncounter: 1
   encounter:
     encounterList:
-    - entid: CloudJelly
+    - entid: HydroJelly
       posid: 0
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: ice
-    - entid: CloudJelly
+      multiplier: 0
+    - entid: HydroJelly
       posid: 11
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: cloud
-    - entid: CloudJelly
+      multiplier: 0
+    - entid: HydroJelly
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: water
+      multiplier: 0
     battleMapName: TestBattle_CrystalHills
   frameTimer: -1
   firstStrikeTimer: -1
@@ -1881,6 +1885,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  landAnimation: 0
   noShadow: 0
   initialFacingAngle: 0
   usedFirstBounce: 0
@@ -1911,21 +1916,25 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: AuroraWing
       posid: 11
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: CrystalSlug
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
-    - entid: CloudJelly
+      multiplier: 0
+    - entid: HydroJelly
       posid: 3
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: water
+      multiplier: 0
     battleMapName: TestBattle_CrystalHills
   frameTimer: -1
   firstStrikeTimer: -1
@@ -2080,6 +2089,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  landAnimation: 0
   noShadow: 0
   initialFacingAngle: 0
   usedFirstBounce: 0
@@ -2110,11 +2120,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: PuffJelly
       posid: 11
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
+    - entid: Floppole
+      posid: 2
+      usePos: 0
+      pos: {x: 0, y: 0, z: 0}
+      bonusdata: 
+      multiplier: 0
     battleMapName: TestBattle_CrystalHills
   frameTimer: -1
   firstStrikeTimer: -1
@@ -2269,6 +2287,7 @@ MonoBehaviour:
   lastHighestHeight: 0
   touchingNonGround: 0
   timeSinceLaunch: 0
+  landAnimation: 0
   noShadow: 0
   initialFacingAngle: 0
   usedFirstBounce: 0
@@ -2299,16 +2318,19 @@ MonoBehaviour:
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: CrystalClam
       posid: 1
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     - entid: CrystalClam
       posid: 2
       usePos: 0
       pos: {x: 0, y: 0, z: 0}
       bonusdata: 
+      multiplier: 0
     battleMapName: 0
   frameTimer: -1
   firstStrikeTimer: -1

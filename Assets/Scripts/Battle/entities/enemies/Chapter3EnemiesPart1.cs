@@ -41,8 +41,20 @@ public class BE_Slime : BattleEntity
     }
     public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
     {
-        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0)
+        if (e == BattleHelper.Event.Hurt && target == this && counterCount <= 0 && (!didSplit || BattleControl.Instance.GetCurseLevel() > 0))
         {
+            //Can't because no space
+            if (BattleControl.Instance.FindUnoccupiedID(false, true) >= 4)
+            {
+                return false;
+            }
+
+            //I am a split, so no
+            if (transform.localScale.x < 1)
+            {
+                return false;
+            }
+
             counterCount++;
             BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[2]);
             return true;
@@ -159,6 +171,7 @@ public class BM_Slime_CounterSplit : EnemyMove
         if (sl != null)
         {
             sl.didSplit = true;
+            ns.didSplit = true;
         }
         if (ns != null)
         {

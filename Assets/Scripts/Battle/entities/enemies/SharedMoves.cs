@@ -68,6 +68,9 @@ public class BM_Shared_Bite : EnemyMove
                     case BattleHelper.EntityID.Lavaswimmer:
                         caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         break;
+                    case BattleHelper.EntityID.CaveSpider:
+                        caller.DealDamage(caller.curTarget, 8, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                        break;
                     case BattleHelper.EntityID.Sawcrest:
                         caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                         break;
@@ -141,6 +144,9 @@ public class BM_Shared_DoubleBite : EnemyMove
                             break;
                         case BattleHelper.EntityID.Goldbush:
                             caller.DealDamage(caller.curTarget, 6, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                            break;
+                        case BattleHelper.EntityID.Infernoling:
+                            caller.DealDamage(caller.curTarget, 7, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                             break;
                         default:
                             caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
@@ -639,7 +645,7 @@ public class BM_Shared_DoubleSwoop : EnemyMove
             {
                 for (int k = 0; k < 2; k++)
                 {
-                    yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.4f : 0.3f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
+                    yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.3f : 0.25f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
 
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
@@ -648,6 +654,9 @@ public class BM_Shared_DoubleSwoop : EnemyMove
                     {
                         case BattleHelper.EntityID.Heatwing:
                             caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                            break;
+                        case BattleHelper.EntityID.Quickworm:
+                            caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
                             break;
                         default:
                             caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
@@ -661,7 +670,7 @@ public class BM_Shared_DoubleSwoop : EnemyMove
             else
             {
                 positions[2] = tposend + Vector3.left * 0.5f;
-                yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.4f : 0.3f, (float a) => MainManager.EasingQuadratic(a, -0.2f), 1.25f, positions));
+                yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.3f : 0.25f, (float a) => MainManager.EasingQuadratic(a, -0.2f), 1.25f, positions));
                 caller.InvokeMissEvents(caller.curTarget);
             }
         }
@@ -712,7 +721,7 @@ public class BM_Shared_TripleSwoop : EnemyMove
             {
                 for (int k = 0; k < 3; k++)
                 {
-                    yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.4f : 0.3f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
+                    yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.3f : 0.25f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
 
                     //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
 
@@ -727,13 +736,85 @@ public class BM_Shared_TripleSwoop : EnemyMove
                             break;
                     }
 
-                    yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.4f : 0.3f, (float a) => MainManager.EasingQuadratic(a, 0.2f), invpositions));
+                    yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.2f : 0.15f, (float a) => MainManager.EasingQuadratic(a, 0.2f), invpositions));
                 }
             }
             else
             {
                 positions[2] = tposend + Vector3.left * 0.5f;
-                yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.4f : 0.3f, (float a) => MainManager.EasingQuadratic(a, -0.2f), 1.25f, positions));
+                yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.3f : 0.25f, (float a) => MainManager.EasingQuadratic(a, -0.2f), 1.25f, positions));
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+}
+
+public class BM_Shared_QuintupleSwoop : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.QuintupleSwoop;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //Debug.Log(caller.id + " jump");
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 offset = Vector3.right * 3f + Vector3.up * 2f;
+            Vector3 tposA = caller.curTarget.transform.position + offset;
+            Vector3 tposend = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right + (caller.curTarget.height / 2) * Vector3.up;
+
+
+            bool backFlag = false;
+
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                tposA = BattleControl.Instance.GetFrontmostLow(caller).transform.position + offset + Vector3.back * 0.5f;
+                backFlag = true;
+            }
+
+            Vector3 tposmid = (tposA + tposend) / 2 + Vector3.down * 0.5f;
+
+            float dist = tposA.x - tposend.x - 0.25f;
+
+            yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
+
+            Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
+            Vector3[] invpositions = new Vector3[] { tposend, tposmid, tposA };
+
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                for (int k = 0; k < 5; k++)
+                {
+                    yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.175f : 0.15f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
+
+                    //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
+
+                    caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
+                    switch (caller.entityID)
+                    {
+                        case BattleHelper.EntityID.GoldScreecher:
+                            caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                            break;
+                        default:
+                            caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                            break;
+                    }
+
+                    yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.125f : 0.1f, (float a) => MainManager.EasingQuadratic(a, 0.2f), invpositions));
+                }
+            }
+            else
+            {
+                positions[2] = tposend + Vector3.left * 0.5f;
+                yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.3f : 0.25f, (float a) => MainManager.EasingQuadratic(a, -0.2f), 1.25f, positions));
                 caller.InvokeMissEvents(caller.curTarget);
             }
         }

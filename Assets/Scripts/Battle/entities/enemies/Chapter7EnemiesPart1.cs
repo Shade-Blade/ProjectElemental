@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class BE_Plateshell : BattleEntity
 {
@@ -520,6 +521,8 @@ public class BE_Sawcrest : BattleEntity
 
     public override void SetEncounterVariables(string variable)
     {
+        base.SetEncounterVariables(variable);
+
         if (variable != null && variable.Contains("active"))
         {
             sawActive = true;
@@ -886,7 +889,7 @@ public class BE_Coiler : BattleEntity
             //Weapon range contact hazard :)
             if (contact <= BattleHelper.ContactLevel.Weapon)
             {
-                DealDamage(target, 4, BattleHelper.DamageType.Air, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Contact);
+                DealDamage(target, 4, BattleHelper.DamageType.Air, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Weapon);
                 target.contactImmunityList.Add(posId);
             }
         }
@@ -1260,5 +1263,319 @@ public class BM_Drillbeak_Hard_DreadStab : EnemyMove
         }
 
         yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+}
+
+public class BE_Quickworm : BattleEntity
+{
+    int counterCount;
+
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_Quickworm_QuickBite>(), gameObject.AddComponent<BM_Shared_DoubleSwoop>(), gameObject.AddComponent<BM_Quickworm_SwoopThrough>(), gameObject.AddComponent<BM_Quickworm_TurnRelay>(), gameObject.AddComponent<BM_Quickworm_Hard_FinalHustleBlast>() };
+
+        base.Initialize();
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        counterCount = 0;
+        if (moveset.Count == 0)
+        {
+            currMove = null;
+        }
+        else
+        {
+            if (GetEntityProperty(BattleHelper.EntityProperties.Grounded))
+            {
+                currMove = moveset[3];
+            }
+            else
+            {
+                currMove = moveset[((posId + BattleControl.Instance.turnCount - 1) % 3) + 1];
+            }
+        }
+
+        BasicTargetChooser();
+
+        //can't turn relay: do something else
+        if (!GetEntityProperty(BattleHelper.EntityProperties.Grounded) && currMove == moveset[3] && curTarget == null)
+        {
+            currMove = moveset[2];
+        }
+    }
+
+    public override IEnumerator DoEvent(BattleHelper.Event eventID)
+    {
+        yield return StartCoroutine(DefaultEventHandler_Flying(eventID));
+    }
+
+    public override bool CanMove()
+    {
+        ValidateEffects();
+
+        Effect.EffectType[] effectList =
+            new Effect.EffectType[] {
+                Effect.EffectType.Freeze,
+                Effect.EffectType.Sleep,
+                Effect.EffectType.TimeStop,
+            };
+
+        foreach (Effect.EffectType e in effectList)
+        {
+            if (GetEffectEntry(e) != null)
+            {
+                return false;
+            }
+        }
+        /*
+        if (HasStatus(Status.StatusEffect.Slow))
+        {
+            return BattleControl.Instance.turnCount % (GetStatusEntry(Status.StatusEffect.Slow).potency + 1) == 1; //slow enemies can move on turn 1
+        }
+        */
+        if (hp <= 0)
+        {
+            if (counterCount > 0)
+            {
+                return true;
+            }
+            DeathCheck();   //may break stuff later but it shouldn't?
+            return false;
+        }
+        return true;
+    }
+
+    public override IEnumerator PostMove()
+    {
+        //also reset here in case something weird happens
+        counterCount = 0;
+        yield return StartCoroutine(base.PostMove());
+    }
+
+    public override IEnumerator PreReact(Move move, BattleEntity target)
+    {
+        counterCount = 0;
+
+        if (move == moveset[0])
+        {
+            Effect_ReactionAttack();
+        }
+
+        if (move == moveset[4])
+        {
+            Effect_ReactionDefend();
+        }
+
+        yield return new WaitForSeconds(0.5f);
+    }
+    public override IEnumerator DefaultDeathEvent()
+    {
+        if (counterCount > 0)
+        {
+            yield break;
+        }
+
+        yield return StartCoroutine(base.DefaultDeathEvent());
+    }
+    public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
+    {
+        if (BattleControl.Instance.GetCurseLevel() <= 0)
+        {
+            return false;
+        }
+
+        //Final action
+        if (e == BattleHelper.Event.Death && target == this && counterCount <= 0)
+        {
+            counterCount++;
+            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[4]);
+            return true;
+        }
+
+        //Quick action
+        if ((e == BattleHelper.Event.PostAction) && BattleControl.IsPlayerControlled(target, false) && counterCount <= 0)
+        {
+            counterCount++;
+            BattleControl.Instance.AddReactionMoveEvent(this, target.lastAttacker, moveset[0]);
+            return true;
+        }
+
+        return false;
+    }
+}
+
+public class BM_Quickworm_QuickBite : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Quickworm_QuickBite;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        //Debug.Log(caller.id + " jump");
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 offset = Vector3.right * 3f + Vector3.up * 2f;
+            Vector3 tposA = caller.curTarget.transform.position + offset;
+            Vector3 tposend = caller.curTarget.transform.position + ((caller.width / 2) + (caller.curTarget.width / 2)) * Vector3.right + (caller.curTarget.height / 2) * Vector3.up;
+
+
+            bool backFlag = false;
+
+            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            {
+                tposA = BattleControl.Instance.GetFrontmostLow(caller).transform.position + offset + Vector3.back * 0.5f;
+                backFlag = true;
+            }
+
+            Vector3 tposmid = (tposA + tposend) / 2 + Vector3.down * 0.5f;
+
+            float dist = tposA.x - tposend.x - 0.25f;
+
+            yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
+
+            Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
+
+            if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
+            {
+                yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.4f : 0.3f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
+
+                if (caller.GetEntityProperty(BattleHelper.EntityProperties.Airborne))
+                {
+                    caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                }
+                else
+                {
+                    caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                }
+            }
+            else
+            {
+                yield return StartCoroutine(caller.FollowBezierCurve(0.15f * dist, (float a) => MainManager.EasingQuadratic(a, -0.2f), 1.25f, positions));
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+
+    public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
+    {
+        //"Improper" to do this but ehh (proper = code it out instead of running Execute)
+        caller.BasicTargetChooser(GetTargetArea(caller), 7, 5 + caller.actionCounter * 2);
+        yield return StartCoroutine(Execute(caller, level));
+    }
+}
+
+public class BM_Quickworm_SwoopThrough : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Quickworm_SwoopThrough;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        Vector3 offset = Vector3.right * 3f + Vector3.up * 2f;
+        Vector3 tposA = BattleControl.Instance.GetFrontmostLow(caller).transform.position + offset;
+        Vector3 tposend = BattleControl.Instance.GetBackmostLow(caller).transform.position + Vector3.left * 1;
+
+        Vector3 tposmid = (tposA + tposend) / 2 + Vector3.down * 0.5f;
+
+        float dist = tposA.x - tposend.x - 0.25f;
+
+        yield return StartCoroutine(caller.MoveEasing(tposA, (e) => MainManager.EasingOutIn(e)));
+
+        Vector3[] positions = new Vector3[] { tposA, tposmid, tposend };
+
+        List<BattleEntity> targets = BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller));
+
+        bool moveDone = false;
+        IEnumerator MoveTracked()
+        {
+            yield return StartCoroutine(caller.FollowBezierCurve(0.5f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
+            moveDone = true;
+        }
+
+        StartCoroutine(MoveTracked());
+
+        while (!moveDone)
+        {
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i].homePos.x > caller.transform.position.x + targets[i].width / 2)
+                {
+                    //Debug.Log(targets[i]);
+                    if (caller.GetAttackHit(targets[i], 0))
+                    {
+                        targets[i].SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
+                        caller.DealDamage(targets[i], 4, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Weapon);
+                    }
+                    else
+                    {
+                        caller.InvokeMissEvents(targets[i]);
+                    }
+                    targets.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            yield return null;
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+}
+
+public class BM_Quickworm_TurnRelay : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Quickworm_TurnRelay;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAllyNotSameTypeMovable);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        yield return StartCoroutine(caller.FlyingFlyBackUp());
+
+        if (caller.curTarget != null)
+        {
+            StartCoroutine(caller.curTarget.SpinHeavy(Vector3.up * 360, 0.3f));
+            yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.3f));
+            //apply boost
+            caller.InflictEffectForce(caller.curTarget, new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
+        }
+    }
+}
+
+public class BM_Quickworm_Hard_FinalHustleBlast : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Quickworm_Hard_FinalHustleBlast;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveAlly);
+
+    public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
+    {
+        yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
+
+        foreach (BattleEntity be in BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller)))
+        {
+            if (be != caller)
+            {
+                caller.DealDamage(be, 4, BattleHelper.DamageType.Fire, (ulong)(BattleHelper.DamageProperties.Static | BattleHelper.DamageProperties.HitsWhileDizzy));
+                caller.InflictEffect(be, new Effect(Effect.EffectType.Hustle, 1, 1));
+            }
+        }
+
+        if (caller.hp == 0)
+        {
+            caller.SetAnimation("dead");
+            yield return StartCoroutine(caller.DefaultDeathEvent());
+            yield break;
+        }
     }
 }

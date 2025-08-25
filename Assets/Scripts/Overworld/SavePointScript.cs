@@ -54,8 +54,8 @@ public class SavePointScript : WorldObject, ITextSpeaker, IDashHopTrigger, ISlas
         {
             float rotationDuration = 8;
             float time = (lifetime % rotationDuration) / rotationDuration;
-            propertyBlockA.SetFloat("_AngleDelta", (time * 2) % 1);
-            propertyBlockB.SetFloat("_AngleDelta", time);
+            propertyBlockA.SetFloat("_AngleDelta", -(time * 2) % 1);
+            propertyBlockB.SetFloat("_AngleDelta", time * 2);
             sphere.SetPropertyBlock(propertyBlockA);
             sphereB.SetPropertyBlock(propertyBlockB);
 

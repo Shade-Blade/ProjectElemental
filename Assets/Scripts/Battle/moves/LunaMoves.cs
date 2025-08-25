@@ -72,7 +72,7 @@ public abstract class LunaMove : PlayerMove
 
     public override bool ShowNamePopup()
     {
-        return false;
+        return true;
     }
 
     public override string GetName() => GetNameWithIndex(GetTextIndex());
@@ -632,6 +632,11 @@ public class LM_FlipKick : LunaMove
 
             Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.kickOffset) + ((caller.width) / 2) * Vector3.left;
             Vector3 spos = transform.position;
+
+            if (caller.posId >= 0)
+            {
+                tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.kickOffset - 2 * caller.curTarget.kickOffset.x * Vector3.right) + ((caller.width) / 2) * Vector3.right;
+            }
 
             //yield return StartCoroutine(caller.Squish(0.067f, 0.2f));
             //StartCoroutine(caller.RevertScale(0.1f));

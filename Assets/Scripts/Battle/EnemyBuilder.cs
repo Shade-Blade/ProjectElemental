@@ -201,7 +201,8 @@ public class EnemyBuilder// : MonoBehaviour
             case BattleHelper.EntityID.Fluffling:
                 return MainManager.SpriteID.C8_Fluffling;
             case BattleHelper.EntityID.Floppole:
-            case BattleHelper.EntityID.CloudJelly:
+                return MainManager.SpriteID.C8_Floppole;
+            case BattleHelper.EntityID.HydroJelly:
                 return MainManager.SpriteID.C8_CloudJelly;
             case BattleHelper.EntityID.CrystalCrab:
                 return MainManager.SpriteID.C8_CrystalCrab;
@@ -484,6 +485,30 @@ public class EnemyBuilder// : MonoBehaviour
                 //s.color = new Color(0.7f, 0.8f, 1f);
                 debugSprite = false;
                 break;
+            case BattleHelper.EntityID.Urchiling:
+                b = g.AddComponent<BE_Urchiling>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.GoldenSlime:
+                b = g.AddComponent<BE_GoldenSlime>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.ElementalSlime:
+                b = g.AddComponent<BE_ElementalSlime>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.NormalSlime:
+                b = g.AddComponent<BE_NormalSlime>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.SoftSlime:
+                b = g.AddComponent<BE_SoftSlime>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.RigidSlime:
+                b = g.AddComponent<BE_RigidSlime>();
+                debugSprite = false;
+                break;
             case BattleHelper.EntityID.FalseDragon:
             case BattleHelper.EntityID.FalseDragonArm:
             case BattleHelper.EntityID.AmalgamLeftArm:
@@ -521,6 +546,26 @@ public class EnemyBuilder// : MonoBehaviour
                 //s.color = new Color(0.4f, 0.2f, 0.2f);
                 debugSprite = false;
                 break;
+            case BattleHelper.EntityID.Pyrenfish:
+                b = g.AddComponent<BE_Pyrenfish>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.GoldScreecher:
+                b = g.AddComponent<BE_GoldScreecher>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Infernoling:
+                b = g.AddComponent<BE_Infernoling>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Magmaswimmer:
+                b = g.AddComponent<BE_Magmaswimmer>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Wyverlet:
+                b = g.AddComponent<BE_Wyverlet>();
+                debugSprite = false;
+                break;
             case BattleHelper.EntityID.LavaWyvern:
             case BattleHelper.EntityID.MetalWyvern:
                 s.color = new Color(1, 0.5f, 0.5f);
@@ -548,6 +593,26 @@ public class EnemyBuilder// : MonoBehaviour
             case BattleHelper.EntityID.Mosquito:
                 b = g.AddComponent<BE_Mosquito>();
                 //s.color = new Color(0.1f, 0.1f, 0.1f);
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Toxiwing:
+                b = g.AddComponent<BE_Toxiwing>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.GoldFly:
+                b = g.AddComponent<BE_GoldFly>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.MawSpore:
+                b = g.AddComponent<BE_MawSpore>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.CaveSpider:
+                b = g.AddComponent<BE_CaveSpider>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Obscurer:
+                b = g.AddComponent<BE_Obscurer>();
                 debugSprite = false;
                 break;
             case BattleHelper.EntityID.SporeSpider:
@@ -582,6 +647,22 @@ public class EnemyBuilder// : MonoBehaviour
             case BattleHelper.EntityID.LumistarStriker:
                 b = g.AddComponent<BE_LumistarStriker>();
                 //s.color = new Color(0.7f, 0.8f, 0.8f);
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Spikeflake:
+                b = g.AddComponent<BE_Spikeflake>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Mirrorwing:
+                b = g.AddComponent<BE_Mirrorwing>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Beaconwing:
+                b = g.AddComponent<BE_Beaconwing>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Harmonywing:
+                b = g.AddComponent<BE_Harmonywing>();
                 debugSprite = false;
                 break;
             case BattleHelper.EntityID.KingIlum:
@@ -619,6 +700,10 @@ public class EnemyBuilder// : MonoBehaviour
                 //s.color = new Color(1, 0.85f, 0.7f);
                 debugSprite = false;
                 break;
+            case BattleHelper.EntityID.Quickworm:
+                b = g.AddComponent<BE_Quickworm>();
+                debugSprite = false;
+                break;
             case BattleHelper.EntityID.AetherBoss:
             case BattleHelper.EntityID.AetherSuperboss:
                 //s.color = new Color(1, 0.85f, 0.7f);
@@ -634,7 +719,11 @@ public class EnemyBuilder// : MonoBehaviour
                 //s.color = new Color(0.5f, 1, 1);
                 debugSprite = false;
                 break;
-            case BattleHelper.EntityID.CloudJelly:
+            case BattleHelper.EntityID.Floppole:
+                b = g.AddComponent<BE_Floppole>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.HydroJelly:
                 b = g.AddComponent<BE_CloudJelly>();
                 //s.color = new Color(0.4f, 1, 1);
                 debugSprite = false;
@@ -662,6 +751,22 @@ public class EnemyBuilder// : MonoBehaviour
             case BattleHelper.EntityID.FinalBoss:
             case BattleHelper.EntityID.FinalSuperboss:
                 //s.color = new Color(0.5f, 1, 1);
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.DarkBurrower:
+                b = g.AddComponent<BE_DarkBurrower>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Shadew:
+                b = g.AddComponent<BE_Shadew>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.VileBloom:
+                b = g.AddComponent<BE_Vilebloom>();
+                debugSprite = false;
+                break;
+            case BattleHelper.EntityID.Thornweed:
+                b = g.AddComponent<BE_Thornweed>();
                 debugSprite = false;
                 break;
             case BattleHelper.EntityID.Plaguebud:

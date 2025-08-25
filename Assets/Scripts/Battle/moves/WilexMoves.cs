@@ -28,7 +28,7 @@ public abstract class WilexMove : PlayerMove
         SlipSlash,
         PoisonSlash,
         PreciseStab,
-        SwordDischarge,
+        SwordBolt,
         SwordDance,
         BoomerangSlash,
         DarkSlash,
@@ -73,7 +73,7 @@ public abstract class WilexMove : PlayerMove
 
     public override bool ShowNamePopup()
     {
-        return false;
+        return true;
     }
 
 
@@ -2458,6 +2458,8 @@ public class WM_ElectroSlash : WM_Slash
         for (int i = 0; i < hits; i++)
         {
             eoS = null;
+            eoS = Instantiate(Resources.Load<GameObject>("VFX/Battle/Moves/Player/Effect_ElectroSlash"), BattleControl.Instance.transform);
+            /*
             switch (sl)
             {
                 default:
@@ -2471,6 +2473,7 @@ public class WM_ElectroSlash : WM_Slash
                     eoS = Instantiate(Resources.Load<GameObject>("VFX/Overworld/Player/Effect_SwordSlash2"), BattleControl.Instance.transform);
                     break;
             }
+            */
             eoS.transform.position = transform.position + Vector3.up * 0.325f;
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Overworld_Slash);
 
@@ -3179,9 +3182,9 @@ public class WM_PreciseStab : WM_Slash
     }
 }
 
-public class WM_SwordDischarge : WilexMove
+public class WM_SwordBolt : WilexMove
 {
-    public WM_SwordDischarge()
+    public WM_SwordBolt()
     {
     }
 
@@ -3222,7 +3225,7 @@ public class WM_SwordDischarge : WilexMove
                 sd = pcaller.GetWeaponDamage();
                 actionCommand = gameObject.AddComponent<AC_MashLeftRight>();
                 actionCommand.Init(pcaller);
-                actionCommand.Setup(0.5f);
+                actionCommand.Setup(1.5f, 8);
             }
 
             yield return new WaitUntil(() => actionCommand.IsStarted());

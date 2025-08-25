@@ -1177,6 +1177,7 @@ public static class BattleHelper
         Unpiercable,
         ExactDamageKill,
         Elusive,
+        Alpha,
 
         /* Dynamic entity properties (things that end up in entityProperties, more likely to change) */
         NoMiracle,
@@ -1338,6 +1339,8 @@ public static class BattleHelper
         HideHP = 1uL << 38,  //Replaces the hp number with a ?, also replaces the hp bar with an ambiguous thing
 
         NoShadow = 1uL << 39,
+
+        Alpha = 1uL << 40,
 
         SuppressMovesetWarning = NoTattle | ScanHideMoves | ScanMovesetMismatch
     }
@@ -1544,7 +1547,7 @@ public static class BattleHelper
 
         Floppole,
 
-        CloudJelly,
+        HydroJelly,
         CrystalCrab,
         CrystalSlug,
         CrystalClam,
@@ -1783,6 +1786,53 @@ public static class BattleHelper
 }
 
 [System.Serializable]
+public class PitEnemyDataEntry
+{
+    public BattleHelper.EntityID entityID;
+    public int level;
+    public int floor;
+    public int area;
+    public float multiplier;
+    public bool alpha;
+
+    public PitEnemyDataEntry(BattleHelper.EntityID p_entityID, int p_level, int p_floor, int p_area, bool p_alpha)
+    {
+        entityID = p_entityID;
+        level = p_level;
+        floor = p_floor;
+        area = p_area;
+        multiplier = 1;
+        alpha = p_alpha;
+    }
+
+    public static List<PitEnemyDataEntry> GetPitFloorData()
+    {
+        string[][] pitEnemyData = MainManager.CSVParse(Resources.Load<TextAsset>("Data/PitEnemyPool").text);
+
+        List<PitEnemyDataEntry> output = new List<PitEnemyDataEntry>();
+
+        for (int i = 1; i < pitEnemyData.Length - 1; i++)
+        {
+            output.Add(new PitEnemyDataEntry(Enum.Parse<BattleHelper.EntityID>(pitEnemyData[i][0], true), int.Parse(pitEnemyData[i][1]), int.Parse(pitEnemyData[i][2]), int.Parse(pitEnemyData[i][3]), false));
+        }
+
+        return output;
+    }
+
+    public int ScaleLevel()
+    {
+        return (int)((level - 1) * multiplier) + 1;
+    }
+
+    public PitEnemyDataEntry Copy()
+    {
+        PitEnemyDataEntry output = new PitEnemyDataEntry(entityID, level, floor, area, alpha);
+        output.multiplier = multiplier;
+        return output;
+    }
+}
+
+[System.Serializable]
 public class EncounterData
 {
     [System.Serializable]
@@ -1883,97 +1933,161 @@ public class EncounterData
         }
 
 
-        string[][] pitEnemyData = MainManager.CSVParse(Resources.Load<TextAsset>("Data/PitEnemyPool").text);
-
-
-        BattleHelper.EntityID[] idArray = new BattleHelper.EntityID[pitEnemyData.Length];
-        int[] levelArray = new int[pitEnemyData.Length - 1];
-        for (int i = 1; i < pitEnemyData.Length - 1; i++)
-        {
-            idArray[i - 1] = Enum.Parse<BattleHelper.EntityID>(pitEnemyData[i][0], true);
-            levelArray[i - 1] = int.Parse(pitEnemyData[i][1]);
-        }
+        List<PitEnemyDataEntry> data = PitEnemyDataEntry.GetPitFloorData();
 
         float levelNormal = 3 + (30f * floor / 100f); //5 + (25f * floor / 100f);
 
+        int area = ((floor - 1) / 10) % 10;
+
         //range = +-2
+
+        //Debug.Log(floor);
 
         //Debug.Log(levelNormal);
 
-        List<BattleHelper.EntityID> startEnemies = new List<BattleHelper.EntityID>();
-        List<int> startIndices = new List<int>();
-        for (int i = 0; i < levelArray.Length; i++)
+        List<PitEnemyDataEntry> candidateList = new List<PitEnemyDataEntry>();
+
+        foreach (PitEnemyDataEntry pfde in data)
         {
-            if (levelArray[i] < levelNormal + 2 && levelArray[i] > levelNormal - 2)
+            if (pfde.area == area && (pfde.level < levelNormal + 2 && pfde.level > levelNormal - 2))
             {
-                startIndices.Add(i);
+                candidateList.Add(pfde);
             }
         }
 
-        if (startIndices.Count == 0)
+        if (RandomGenerator.Get() < 0.3f)
         {
-            for (int i = 0; i < levelArray.Length; i++)
+            foreach (PitEnemyDataEntry pfde in data)
             {
-                if (levelArray[i] < levelNormal + 4 && levelArray[i] > levelNormal - 4)
+                if (pfde.floor == area && (pfde.area != area) && (pfde.level < levelNormal + 2 && pfde.level > levelNormal - 2))
                 {
-                    startIndices.Add(i);
+                    candidateList.Add(pfde);
                 }
             }
         }
 
-        //sus static syntax
-        int randomIndex = RandomTable<int>.ChooseRandom(startIndices);
+        if (candidateList.Count == 0 || (RandomGenerator.Get() < weirdnessFactor * 0.3f))
+        {
+            foreach (PitEnemyDataEntry pfde in data)
+            {
+                if (pfde.area == area && (pfde.level < levelNormal + 4 && pfde.level > levelNormal - 4))
+                {
+                    candidateList.Add(pfde);
+                }
+            }
+        }
+
+        if (candidateList.Count == 0 || (RandomGenerator.Get() < weirdnessFactor * 0.1f))
+        {
+            foreach (PitEnemyDataEntry pfde in data)
+            {
+                if ((pfde.level < levelNormal + 4 && pfde.level > levelNormal - 4))
+                {
+                    candidateList.Add(pfde);
+                }
+            }
+        }
+
+        //the old choose a later enemy condition below
+        //(RandomGenerator.Get() < 0.05f * weirdnessFactor)
+        if (candidateList.Count == 0 || (RandomGenerator.Get() < weirdnessFactor * 0.05f))
+        {
+            foreach (PitEnemyDataEntry pfde in data)
+            {
+                if ((pfde.level < levelNormal + 7 && pfde.level > levelNormal))
+                {
+                    candidateList.Add(pfde);
+                }
+            }
+        }
+
+        //add miniboss enemies
+        if (floor >= 40 && ((floor % 10 == 5) || RandomGenerator.Get() < 0.05f * weirdnessFactor))
+        {
+            foreach (PitEnemyDataEntry pfde in data)
+            {
+                if (pfde.area == area && pfde.level > 24)
+                {
+                    candidateList.Add(pfde);
+                }
+            }
+        }
+
 
         //Now add enemies to a new list
-        List<BattleHelper.EntityID> newEnemyList = new List<BattleHelper.EntityID>();
-        List<int> newLevelList = new List<int>();
+        List<PitEnemyDataEntry> newEnemyList = new List<PitEnemyDataEntry>();
 
-        int levelTotal = (int)(levelNormal * (2.7f + floor / 50f));        
+        int levelTotal = (int)(levelNormal * (2.7f + floor / 50f));
 
+        //Alpha enemies >:)
+        //Basically just a 2.5 multiplier to the enemy stats but they don't spawn alongside others with big multipliers like that
+        //That is roughly fair?
+        bool alphaEnemy = (floor % 10 == 9);
+
+        Debug.Log(floor + " " + alphaEnemy);
+        int attempts = 0;
         while (levelTotal > 0)
         {
-            int newRandomIndex = 0;
-            if (RandomGenerator.Get() < 0.05f * weirdnessFactor)
+            //lazy fix to if you keep choosing enemies that don't work
+            attempts++;
+            if (attempts > 5)
             {
-                //Choose a later enemy
-                //Range = +-4 from randomIndex + 16
-                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 12, randomIndex + 20);
-            } else if (RandomGenerator.Get() < 0.1f * weirdnessFactor)
-            {
-                //Choose from a bigger range
-                //Range = +-8 from randomIndex
-                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 8, randomIndex + 8);
-            }
-            else
-            {
-                //Choose normally
-                //Range = +-2 from randomIndex
-                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 2, randomIndex + 3);
+                break;
             }
 
-            //if out of bounds, choose again
-            //(Choose from the 5 enemies at the start of the table)
-            if (newRandomIndex < 0)
+            PitEnemyDataEntry dataEntry;
+
+            dataEntry = RandomTable<PitEnemyDataEntry>.ChooseRandom(candidateList);
+            dataEntry = dataEntry.Copy();
+
+            if (alphaEnemy)
             {
-                newRandomIndex = RandomGenerator.GetIntRange(0, 6);
+                //Hardcoded exception
+                //because doing 2.5x your normal damage numbers is not always possible
+                if ((BattleEntityData.GetBattleEntityData(dataEntry.entityID).entityProperties & (ulong)BattleHelper.EntityProperties.Hardened) != 0)
+                {
+                    continue;
+                }
+
+                if (levelTotal * 2 < dataEntry.level * 2.5f)
+                {
+                    continue;
+                }
+
+                levelTotal -= (int)(dataEntry.level * 2.5f);
+
+                //Now add
+                dataEntry.alpha = true;
+                newEnemyList.Add(dataEntry);
+                attempts = 0;
+                alphaEnemy = false;
+                continue;
             }
 
-            //(Choose from the 5 enemies at the end of the table)
-            if (newRandomIndex >= levelArray.Length)
-            {
-                newRandomIndex = RandomGenerator.GetIntRange(levelArray.Length - 5, levelArray.Length);
-            }
-
-            //no
-            if (idArray[newRandomIndex] == BattleHelper.EntityID.DebugEntity)
+            if (levelTotal * 2 < dataEntry.level)
             {
                 continue;
             }
 
+            levelTotal -= dataEntry.level;
+
             //Now add
-            newEnemyList.Add(idArray[newRandomIndex]);
-            newLevelList.Add(levelArray[newRandomIndex]);
-            levelTotal -= levelArray[newRandomIndex];
+            newEnemyList.Add(dataEntry);
+            attempts = 0;
+
+            //Low weirdness = higher chance of repeats
+            while (RandomGenerator.Get() < Mathf.Log(-weirdnessFactor))
+            {
+                levelTotal -= dataEntry.level;
+                //Now add
+                newEnemyList.Add(dataEntry);
+                attempts = 0;
+                if (newEnemyList.Count > 3)
+                {
+                    break;
+                }
+            }
+
 
             if (newEnemyList.Count > 3)
             {
@@ -1985,28 +2099,32 @@ public class EncounterData
         {
             for (int i = 0; i < newEnemyList.Count; i++)
             {
-                if (newLevelList[i] < -2 * levelTotal)
+                //Don't cut all enemies
+                if (newEnemyList.Count == 1)
                 {
-                    newLevelList.RemoveAt(i);
+                    break;
+                }
+
+                if (newEnemyList[i].level < -2 * levelTotal)
+                {
+                    //refund the lost levels
+                    levelTotal += newEnemyList[i].level;
                     newEnemyList.RemoveAt(i);
                 }
             }
         }
 
+        newEnemyList = MainManager.ShuffleList(newEnemyList);
+
         //swap indices such that the front enemy is the highest level one (with some small margin of error)
         //(Stops that situation where a low level enemy is on the field but a really high level enemy is in the battle behind it)
         for (int i = 1; i < newEnemyList.Count; i++)
         {
-            if (newLevelList[i] > newLevelList[0] + 4)
+            if (newEnemyList[i].ScaleLevel() > newEnemyList[0].ScaleLevel() + 4)
             {
-                int swaplevel = newLevelList[0];
-                BattleHelper.EntityID swapEID = newEnemyList[0];
-
-                newLevelList[0] = newLevelList[i];
+                PitEnemyDataEntry temp = newEnemyList[0];
                 newEnemyList[0] = newEnemyList[i];
-
-                newLevelList[i] = swaplevel;
-                newEnemyList[i] = swapEID;
+                newEnemyList[i] = temp;
             }
         }
 
@@ -2027,19 +2145,19 @@ public class EncounterData
         {
             bool airborne = false;
 
-            airborne = (BattleEntityData.GetBattleEntityData(newEnemyList[i]).entityProperties & (ulong)BattleHelper.EntityProperties.Airborne) != 0;
+            airborne = (BattleEntityData.GetBattleEntityData(newEnemyList[i].entityID).entityProperties & (ulong)BattleHelper.EntityProperties.Airborne) != 0;
 
             EncounterDataEntry ede = null;
-            if (newEnemyList[i] == BattleHelper.EntityID.Cactupole)
+            if (newEnemyList[i].entityID == BattleHelper.EntityID.Cactupole)
             {
                 //hardcoded exception
-                ede = new EncounterDataEntry(newEnemyList[i], airborne ? 20 + i + offset : i + offset);
+                ede = new EncounterDataEntry(newEnemyList[i].entityID, airborne ? 20 + i + offset : i + offset, newEnemyList[i].multiplier);
             } else
             {
-                ede = new EncounterDataEntry(newEnemyList[i], airborne ? 10 + i + offset : i + offset);
+                ede = new EncounterDataEntry(newEnemyList[i].entityID, airborne ? 10 + i + offset : i + offset, newEnemyList[i].multiplier);
             }
 
-            if (newEnemyList[i] == BattleHelper.EntityID.CloudJelly)
+            if (newEnemyList[i].entityID == BattleHelper.EntityID.HydroJelly)
             {
                 switch (RandomGenerator.GetIntRange(0, 3))
                 {
@@ -2055,7 +2173,7 @@ public class EncounterData
                 }
             }
 
-            if (newEnemyList[i] == BattleHelper.EntityID.Sawcrest)
+            if (newEnemyList[i].entityID == BattleHelper.EntityID.Sawcrest)
             {
                 if (RandomGenerator.Get() < 0.5f)
                 {
@@ -2063,11 +2181,16 @@ public class EncounterData
                 }
             }
 
+            if (newEnemyList[i].alpha)
+            {
+                ede.bonusdata = (ede.bonusdata == null) ? "alpha" : ede.bonusdata + "|alpha";
+            }
+
             ed.encounterList.Add(ede);
         }
 
         //Choose the map
-        switch ((floor - 1) / 10)
+        switch (area)
         {
             case 0:
                 ed.battleMapName = MainManager.BattleMapID.TestBattle_SolarGrove.ToString();
@@ -2115,147 +2238,201 @@ public class EncounterData
             return GeneratePitEncounterExtendedSpecial(floor, weirdnessFactor);
         }
 
-        string[][] pitEnemyData = MainManager.CSVParse(Resources.Load<TextAsset>("Data/PitEnemyPool").text);
+        List<PitEnemyDataEntry> data = PitEnemyDataEntry.GetPitFloorData();
 
+        float levelNormal = 3 + (30f * floor / 100f); //5 + (25f * floor / 100f);
 
-        BattleHelper.EntityID[] idArray = new BattleHelper.EntityID[pitEnemyData.Length];
-        int[] levelArray = new int[pitEnemyData.Length - 1];
-        for (int i = 1; i < pitEnemyData.Length - 1; i++)
-        {
-            idArray[i - 1] = Enum.Parse<BattleHelper.EntityID>(pitEnemyData[i][0], true);
-            levelArray[i - 1] = int.Parse(pitEnemyData[i][1]);
-        }
-        
-        float levelNormal = 3 + (30f * (floor)) / 100f; //5 + (25f * floor / 100f);
-
-        float factor = levelNormal / 36;
-
-        factor *= 2;
-        factor += (RandomGenerator.GetIntRange(1, floor)) / 20;
-        if (factor > 2 && factor < 3)
-        {
-            factor = 3;
-        }
-        factor = Mathf.FloorToInt(factor);
-        factor /= 2;
-
-        if (factor < 1)
-        {
-            factor = 1;
-        }
-
-        //levelNormal /= factor;
-
-        //adjusted calculation
-        //early enemies are 3 above they should be?
-        Debug.Log(levelNormal + " " + factor);
-        levelNormal /= factor;
-        levelNormal += 3 * Mathf.Clamp01(1 - (levelNormal / 36f));
-        Debug.Log(levelNormal + " after");
-
-
-
-
+        int area = ((floor - 1) / 10) % 10;
 
         //range = +-2
 
         //Debug.Log(levelNormal);
 
-        List<BattleHelper.EntityID> startEnemies = new List<BattleHelper.EntityID>();
-        List<int> startIndices = new List<int>();
-        for (int i = 0; i < levelArray.Length; i++)
+        List<PitEnemyDataEntry> candidateList = new List<PitEnemyDataEntry>();
+
+        foreach (PitEnemyDataEntry pfde in data)
         {
-            if (levelArray[i] < levelNormal + 2 && levelArray[i] > levelNormal - 2)
+            if (pfde.area == area)
             {
-                startIndices.Add(i);
+                //Calculate a multiplier to give
+
+                float factor = (levelNormal - 1) / (pfde.level - 1);
+                factor *= 2;
+                factor = Mathf.Round(factor);
+                factor /= 2;
+                if (factor < 1)
+                {
+                    factor = 1;
+                }
+                pfde.multiplier = factor;
+
+                candidateList.Add(pfde);
             }
         }
 
-        if (startIndices.Count == 0)
+        if (RandomGenerator.Get() < 0.6f && area != 9)
         {
-            for (int i = 0; i < levelArray.Length; i++)
+            foreach (PitEnemyDataEntry pfde in data)
             {
-                if (levelArray[i] < levelNormal + 4 && levelArray[i] > levelNormal - 4)
+                if (pfde.floor == area && (pfde.area != area) && (pfde.level < levelNormal + 3 && pfde.level > levelNormal - 3))
                 {
-                    startIndices.Add(i);
+                    //Calculate a multiplier to give
+
+                    float factor = (levelNormal - 1) / (pfde.level - 1);
+                    factor *= 2;
+                    factor = Mathf.Round(factor);
+                    factor /= 2;
+                    if (factor < 1)
+                    {
+                        factor = 1;
+                    }
+                    pfde.multiplier = factor;
+
+                    candidateList.Add(pfde);
+                }
+            }
+        }
+        if (RandomGenerator.Get() < 0.3f && area == 9)
+        {
+            foreach (PitEnemyDataEntry pfde in data)
+            {
+                if (pfde.floor == area && (pfde.area != area) && (pfde.level < levelNormal + 3 && pfde.level > levelNormal - 3))
+                {
+                    //Calculate a multiplier to give
+
+                    float factor = (levelNormal - 1) / (pfde.level - 1);
+                    factor *= 2;
+                    factor = Mathf.Round(factor);
+                    factor /= 2;
+                    if (factor < 1)
+                    {
+                        factor = 1;
+                    }
+                    pfde.multiplier = factor;
+
+                    candidateList.Add(pfde);
                 }
             }
         }
 
-        if (startIndices.Count == 0)
+        if (candidateList.Count == 0 || (RandomGenerator.Get() < weirdnessFactor * 0.1f))
         {
-            for (int i = 0; i < levelArray.Length; i++)
+            foreach (PitEnemyDataEntry pfde in data)
             {
-                if (levelArray[i] < levelNormal + 12 && levelArray[i] > levelNormal - 12)
+                if (pfde.area >= area - 1 && pfde.area <= area + 1)
                 {
-                    startIndices.Add(i);
+                    //Calculate a multiplier to give
+
+                    float factor = (levelNormal - 1) / (pfde.level - 1);
+                    factor *= 2;
+                    factor = Mathf.Round(factor);
+                    factor /= 2;
+                    if (factor < 1)
+                    {
+                        factor = 1;
+                    }
+                    pfde.multiplier = factor;
+
+                    candidateList.Add(pfde);
                 }
             }
         }
 
-        //Give up
-        if (startIndices.Count == 0)
+        //the old choose a later enemy condition below
+        //now just gives you anything unrestricted >:)
+        if (candidateList.Count == 0 || (RandomGenerator.Get() < weirdnessFactor * 0.05f))
         {
-            for (int i = 0; i < levelArray.Length; i++)
+            foreach (PitEnemyDataEntry pfde in data)
             {
-                startIndices.Add(i);
+                if (pfde.level < 24)
+                {
+                    continue;
+                }
+
+                float factor = (levelNormal - 1) / (pfde.level - 1);
+                factor *= 2;
+                factor = Mathf.Round(factor);
+                factor /= 2;
+                if (factor < 1)
+                {
+                    factor = 1;
+                }
+                pfde.multiplier = factor;
+                candidateList.Add(pfde);
             }
         }
 
-        //sus static syntax
-        int randomIndex = RandomTable<int>.ChooseRandom(startIndices);
 
         //Now add enemies to a new list
-        List<BattleHelper.EntityID> newEnemyList = new List<BattleHelper.EntityID>();
-        List<int> newLevelList = new List<int>();
+        List<PitEnemyDataEntry> newEnemyList = new List<PitEnemyDataEntry>();
 
         int levelTotal = (int)(levelNormal * (2.7f + floor / 50f));
 
+        bool alphaEnemy = (floor % 10 == 9);
+
+        int attempts = 0;
         while (levelTotal > 0)
         {
-            int newRandomIndex = 0;
-            if (RandomGenerator.Get() < 0.05f * weirdnessFactor)
+            //lazy fix to if you keep choosing enemies that don't work
+            attempts++;
+            if (attempts > 8)
             {
-                //Choose a later enemy
-                //Range = +-4 from randomIndex + 16
-                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 12, randomIndex + 20);
-            }
-            else if (RandomGenerator.Get() < 0.1f * weirdnessFactor)
-            {
-                //Choose from a bigger range
-                //Range = +-8 from randomIndex
-                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 8, randomIndex + 8);
-            }
-            else
-            {
-                //Choose normally
-                //Range = +-2 from randomIndex
-                newRandomIndex = RandomGenerator.GetIntRange(randomIndex - 2, randomIndex + 3);
+                break;
             }
 
-            //if out of bounds, choose again
-            //(Choose from the 5 enemies at the start of the table)
-            if (newRandomIndex < 0)
+            PitEnemyDataEntry dataEntry;
+
+            dataEntry = RandomTable<PitEnemyDataEntry>.ChooseRandom(candidateList);
+            dataEntry = dataEntry.Copy();
+
+            if (alphaEnemy)
             {
-                newRandomIndex = RandomGenerator.GetIntRange(0, 6);
+                //Hardcoded exception
+                //because doing 2.5x your normal damage numbers is not always possible
+                if ((BattleEntityData.GetBattleEntityData(dataEntry.entityID).entityProperties & (ulong)BattleHelper.EntityProperties.Hardened) != 0)
+                {
+                    continue;
+                }
+
+                if (levelTotal * 2 < dataEntry.ScaleLevel() * 2.5f)
+                {
+                    continue;
+                }
+
+                levelTotal -= (int)(dataEntry.ScaleLevel() * 2.5f);
+
+                //Now add
+                dataEntry.alpha = true;
+                newEnemyList.Add(dataEntry);
+                attempts = 0;
+                alphaEnemy = false;
+                continue;
             }
 
-            //(Choose from the 5 enemies at the end of the table)
-            if (newRandomIndex >= levelArray.Length)
-            {
-                newRandomIndex = RandomGenerator.GetIntRange(levelArray.Length - 5, levelArray.Length);
-            }
-
-            //no
-            if (idArray[newRandomIndex] == BattleHelper.EntityID.DebugEntity)
+            if (levelTotal * 2 < dataEntry.ScaleLevel())
             {
                 continue;
             }
 
+            levelTotal -= dataEntry.ScaleLevel();
+                
             //Now add
-            newEnemyList.Add(idArray[newRandomIndex]);
-            newLevelList.Add(levelArray[newRandomIndex]);
-            levelTotal -= levelArray[newRandomIndex];
+            newEnemyList.Add(dataEntry);
+            attempts = 0;
+
+            //Low weirdness = higher chance of repeats
+            while (RandomGenerator.Get() < Mathf.Log(-weirdnessFactor))
+            {
+                levelTotal -= dataEntry.ScaleLevel();
+                //Now add
+                newEnemyList.Add(dataEntry);
+                attempts = 0;
+                if (newEnemyList.Count > 3)
+                {
+                    break;
+                }
+            }
+
 
             if (newEnemyList.Count > 3)
             {
@@ -2267,28 +2444,32 @@ public class EncounterData
         {
             for (int i = 0; i < newEnemyList.Count; i++)
             {
-                if (newLevelList[i] < -2 * levelTotal)
+                //Don't cut all enemies
+                if (newEnemyList.Count == 1)
                 {
-                    newLevelList.RemoveAt(i);
+                    break;
+                }
+
+                if (newEnemyList[i].ScaleLevel() < -2 * levelTotal)
+                {
+                    //refund the lost levels
+                    levelTotal += newEnemyList[i].ScaleLevel();
                     newEnemyList.RemoveAt(i);
                 }
             }
         }
 
+        newEnemyList = MainManager.ShuffleList(newEnemyList);
+
         //swap indices such that the front enemy is the highest level one (with some small margin of error)
         //(Stops that situation where a low level enemy is on the field but a really high level enemy is in the battle behind it)
         for (int i = 1; i < newEnemyList.Count; i++)
         {
-            if (newLevelList[i] > newLevelList[0] + 4)
+            if (newEnemyList[i].ScaleLevel() > newEnemyList[0].ScaleLevel() + 4)
             {
-                int swaplevel = newLevelList[0];
-                BattleHelper.EntityID swapEID = newEnemyList[0];
-
-                newLevelList[0] = newLevelList[i];
+                PitEnemyDataEntry temp = newEnemyList[0];
                 newEnemyList[0] = newEnemyList[i];
-
-                newLevelList[i] = swaplevel;
-                newEnemyList[i] = swapEID;
+                newEnemyList[i] = temp;
             }
         }
 
@@ -2309,20 +2490,20 @@ public class EncounterData
         {
             bool airborne = false;
 
-            airborne = (BattleEntityData.GetBattleEntityData(newEnemyList[i]).entityProperties & (ulong)BattleHelper.EntityProperties.Airborne) != 0;
+            airborne = (BattleEntityData.GetBattleEntityData(newEnemyList[i].entityID).entityProperties & (ulong)BattleHelper.EntityProperties.Airborne) != 0;
 
             EncounterDataEntry ede = null;
-            if (newEnemyList[i] == BattleHelper.EntityID.Cactupole)
+            if (newEnemyList[i].entityID == BattleHelper.EntityID.Cactupole)
             {
                 //hardcoded exception
-                ede = new EncounterDataEntry(newEnemyList[i], airborne ? 20 + i + offset : i + offset, factor);
+                ede = new EncounterDataEntry(newEnemyList[i].entityID, airborne ? 20 + i + offset : i + offset);
             }
             else
             {
-                ede = new EncounterDataEntry(newEnemyList[i], airborne ? 10 + i + offset : i + offset, factor);
+                ede = new EncounterDataEntry(newEnemyList[i].entityID, airborne ? 10 + i + offset : i + offset);
             }
 
-            if (newEnemyList[i] == BattleHelper.EntityID.CloudJelly)
+            if (newEnemyList[i].entityID == BattleHelper.EntityID.HydroJelly)
             {
                 switch (RandomGenerator.GetIntRange(0, 3))
                 {
@@ -2338,7 +2519,7 @@ public class EncounterData
                 }
             }
 
-            if (newEnemyList[i] == BattleHelper.EntityID.Sawcrest)
+            if (newEnemyList[i].entityID == BattleHelper.EntityID.Sawcrest)
             {
                 if (RandomGenerator.Get() < 0.5f)
                 {
@@ -2346,11 +2527,17 @@ public class EncounterData
                 }
             }
 
+            if (newEnemyList[i].alpha)
+            {
+                ede.bonusdata = (ede.bonusdata == null) ? "alpha" : ede.bonusdata + "|alpha";
+            }
+
+            ede.multiplier = newEnemyList[i].multiplier;
             ed.encounterList.Add(ede);
         }
 
         //Choose the map
-        switch (((floor - 1) / 10) % 10)
+        switch (area)
         {
             case 0:
                 ed.battleMapName = MainManager.BattleMapID.TestBattle_SolarGrove.ToString();
@@ -2386,10 +2573,12 @@ public class EncounterData
 
         return ed;
     }
+
+    //Mixes 3 generations of GPEE
     public static EncounterData GeneratePitEncounterExtendedSpecial(int floor, float weirdnessFactor = 1)
     {
-        EncounterData a = GeneratePitEncounterExtended((int)(floor + RandomGenerator.GetRange(5, 15)), weirdnessFactor * 0.75f, false);
-        EncounterData b = GeneratePitEncounterExtended((int)(floor + RandomGenerator.GetRange(-20, -10)), weirdnessFactor * 2f, false);
+        EncounterData a = GeneratePitEncounterExtended((int)(floor * RandomGenerator.GetRange(1.1f, 1.3f)), weirdnessFactor * 0.75f, false);
+        EncounterData b = GeneratePitEncounterExtended((int)(floor * RandomGenerator.GetRange(0.7f, 0.9f)), weirdnessFactor * 2f, false);
         EncounterData c = GeneratePitEncounterExtended(floor, weirdnessFactor, false);
 
         //c.encounterList = new List<EncounterDataEntry>();
@@ -2431,7 +2620,19 @@ public class EncounterData
 
             airborne = (BattleEntityData.GetBattleEntityData(c.encounterList[i].GetEntityID()).entityProperties & (ulong)BattleHelper.EntityProperties.Airborne) != 0;
 
-            EncounterDataEntry ede = null;
+            EncounterDataEntry ede = c.encounterList[i];
+
+            if (c.encounterList[i].GetEntityID() == BattleHelper.EntityID.Cactupole)
+            {
+                //hardcoded exception
+                ede.posid = airborne ? 20 + i + offset : i + offset;
+            }
+            else
+            {
+                ede.posid = airborne ? 10 + i + offset : i + offset;
+            }
+
+            /*
             if (c.encounterList[i].GetEntityID() == BattleHelper.EntityID.Cactupole)
             {
                 //hardcoded exception
@@ -2442,7 +2643,7 @@ public class EncounterData
                 ede = new EncounterDataEntry(c.encounterList[i].GetEntityID(), airborne ? 10 + i + offset : i + offset, c.encounterList[i].multiplier);
             }
 
-            if (c.encounterList[i].GetEntityID() == BattleHelper.EntityID.CloudJelly)
+            if (c.encounterList[i].GetEntityID() == BattleHelper.EntityID.HydroJelly)
             {
                 switch (RandomGenerator.GetIntRange(0, 3))
                 {
@@ -2465,6 +2666,7 @@ public class EncounterData
                     ede.bonusdata = "active";
                 }
             }
+            */
 
             ed.encounterList.Add(ede);
         }
@@ -2514,6 +2716,11 @@ public class EncounterData
         foreach (var e in encounterList)
         {
             BattleEntityData bed = BattleEntityData.GetBattleEntityData(Enum.Parse<BattleHelper.EntityID>(encounterList[0].entid, true));
+            if (e.bonusdata != null && e.bonusdata.Contains("alpha"))
+            {
+                //No overkilling :)
+                return 99;
+            }
             if (bed.level * e.multiplier > level)
             {
                 level = (int)(bed.level * e.multiplier);

@@ -73,7 +73,7 @@ public class WorldNPC_CBRCook : WorldNPCEntity
         int text_tooPoor = 16;
         int text_cancelledLate = 17;
 
-        testTextFile[0][0] = "Have you come for some world-class cooking? Everything I make is a masterpiece, and you just have to provide the ingredients.<next>It also costs 10 coins. That's a steal compared to what my skills are really worth.<prompt,Cook 1 Ingredient,1,Cook 2 Ingredients,2,Cook By Result,3,Cancel,4,3>";
+        testTextFile[0][0] = "Have you come for some world-class cooking? Everything I make is a masterpiece, and you just have to provide the ingredients.<next>It also costs 10 <coin> coins. That's a steal compared to what my skills are really worth. You have <const,coins> <coin> coins. <prompt,Cook 1 Ingredient,1,Cook 2 Ingredients,2,Cook By Result,3,Cancel,4,3>";
         testTextFile[1][0] = "What do you want me to cook?<itemMenu,overworld>";
         testTextFile[2][0] = "What's your first ingredient?<itemMenu,overworld>";
         testTextFile[3][0] = "What's your second ingredient?<dataget,arg,3><itemMenu,arg,overworldhighlightedblock>";
@@ -157,6 +157,9 @@ public class WorldNPC_CBRCook : WorldNPCEntity
                 }
                 if (cookByResultList.Count < 1)
                 {
+                    //No refunds >:)
+                    //Note that right now not having ingredients for single or double does not result in losing money either
+                    pd.coins -= coinCost;
                     yield return StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(testTextFile, text_noNonMistakes, this));
                     yield break;
                 }

@@ -20,7 +20,14 @@ public class TargetArea
         LiveAlly,
         LiveAllyNotSelf,
         LiveAllyNotSelfMovable,
+        LiveAllyNotSameTypeMovable,
+        LiveAllyNotSameType,
+        LiveAllyLow,
+        LiveAllyLowNotSameType,
+        LiveAllyNotBoss,
+        LiveAllyNotBossNotWeird,
         LiveAllyWeak,  //1/2 hp or ailed
+        LiveAllyWeakNotSameType,  //1/2 hp or ailed
         LiveAllyWeakLow,
         LiveAllyWeakLowNotSameType,
         LiveAllyShiftable,
@@ -35,6 +42,7 @@ public class TargetArea
         LiveEnemyTopmost,
         LiveEnemyLowStompable,
         LiveEnemyLowFrontmost,
+        LiveEnemyLowBackmost,
         Scan,
     }
 
@@ -117,9 +125,23 @@ public class TargetArea
                 case TargetAreaType.LiveAllyNotSelf:
                     return ((c, e) => e.posId != c.posId && (e.hp > 0 && !(e.posId >= 0 ^ c.posId >= 0)));
                 case TargetAreaType.LiveAllyNotSelfMovable:
-                    return ((c, e) => e.posId != c.posId && (e.CanMove() || e.AutoMove()) && (e.hp > 0 && !(e.posId >= 0 ^ c.posId >= 0)));
+                    return ((c, e) => GetChecker(TargetAreaType.LiveAllyNotSelf).Invoke(c, e) && (e.CanMove() || e.AutoMove()));
+                case TargetAreaType.LiveAllyNotSameTypeMovable:
+                    return ((c, e) => GetChecker(TargetAreaType.LiveAllyNotSameType).Invoke(c, e) && (e.CanMove() || e.AutoMove()));
+                case TargetAreaType.LiveAllyNotSameType:
+                    return ((c, e) => (GetChecker(TargetAreaType.LiveAlly).Invoke(c, e) && e.entityID != c.entityID));
+                case TargetAreaType.LiveAllyLow:
+                    return ((c, e) => (GetChecker(TargetAreaType.LiveAlly).Invoke(c, e) && e.GetEntityProperty(BattleHelper.EntityProperties.Airborne, false)));
+                case TargetAreaType.LiveAllyLowNotSameType:
+                    return ((c, e) => (GetChecker(TargetAreaType.LiveAllyLow).Invoke(c, e) && e.entityID != c.entityID));
+                case TargetAreaType.LiveAllyNotBoss:
+                    return ((c, e) => GetChecker(TargetAreaType.LiveAllyNotSelf).Invoke(c, e) && c.level + c.bonusLevel + 4 > e.level + e.bonusLevel);
+                case TargetAreaType.LiveAllyNotBossNotWeird:
+                    return ((c, e) => GetChecker(TargetAreaType.LiveAllyNotBoss).Invoke(c, e) && (!e.GetEntityProperty(BattleHelper.EntityProperties.Resistant) && !e.GetEntityProperty(BattleHelper.EntityProperties.Hardened)));
                 case TargetAreaType.LiveAllyWeak:
-                    return ((c, e) => e.posId != c.posId && (e.hp > 0 && !(e.posId >= 0 ^ c.posId >= 0)) && (e.HasAilment() || (e.hp * 2 <= e.maxHP)) && c.level + c.bonusLevel + 4 > e.level + e.bonusLevel);
+                    return ((c, e) => GetChecker(TargetAreaType.LiveAllyNotSelf).Invoke(c, e) && (e.HasAilment() || (e.hp * 2 <= e.maxHP)) && c.level + c.bonusLevel + 4 > e.level + e.bonusLevel);
+                case TargetAreaType.LiveAllyWeakNotSameType:
+                    return ((c, e) => (GetChecker(TargetAreaType.LiveAllyWeak).Invoke(c, e) && c.entityID != e.entityID));
                 case TargetAreaType.LiveAllyWeakLow:
                     return ((c, e) => (GetChecker(TargetAreaType.LiveAllyWeak).Invoke(c,e) && e.GetEntityProperty(BattleHelper.EntityProperties.Airborne, false)));
                 case TargetAreaType.LiveAllyWeakLowNotSameType:
@@ -148,6 +170,8 @@ public class TargetArea
                     return ((c, e) => (BattleControl.Instance.IsTopmost(e) && GetChecker(TargetAreaType.LiveEnemy).Invoke(c, e) && e.GetEntityProperty(BattleHelper.EntityProperties.LowStompable, true)));
                 case TargetAreaType.LiveEnemyLowFrontmost:
                     return ((c, e) => (BattleControl.Instance.IsFrontmostLow(c, e) && GetChecker(TargetAreaType.LiveEnemy).Invoke(c, e)));
+                case TargetAreaType.LiveEnemyLowBackmost:
+                    return ((c, e) => (BattleControl.Instance.IsBackmostLow(c, e) && GetChecker(TargetAreaType.LiveEnemy).Invoke(c, e)));
                 case TargetAreaType.Scan:
                     return ((c, e) => (GetChecker(TargetAreaType.Enemy).Invoke(c, e) && !e.GetEntityProperty(BattleHelper.EntityProperties.NoTattle)));
             }
@@ -250,10 +274,13 @@ public class TargetStrategy
         Random, //bad
         HighHP,
         LowHP,
+        MissingHP,
         FrontMost,
         BackMost,
         XCenterMost, //closer to center of fight
         XLateralMost, //furthest from center of fight
+        MostBuffs,
+        MostNetBuffs,
     }
 
     public class TargetStrategyFunc
@@ -336,6 +363,8 @@ public class TargetStrategy
                     return (a, b) => (b.hp - a.hp);
                 case TargetStrategyType.LowHP:
                     return (a, b) => (a.hp - b.hp);
+                case TargetStrategyType.MissingHP:
+                    return (a, b) => ((a.maxHP - a.hp) - (b.maxHP - b.hp));
                 case TargetStrategyType.FrontMost:
                     return (a, b) => (MainManager.FloatCompare(b.transform.position[0], a.transform.position[0]));
                 case TargetStrategyType.BackMost:
@@ -344,6 +373,10 @@ public class TargetStrategy
                     return (a, b) => (MainManager.FloatCompare(Mathf.Abs(b.transform.position[0]), Mathf.Abs(a.transform.position[0])));
                 case TargetStrategyType.XLateralMost:
                     return (a, b) => (MainManager.FloatCompare(Mathf.Abs(a.transform.position[0]), Mathf.Abs(b.transform.position[0])));
+                case TargetStrategyType.MostBuffs:
+                    return (a, b) => (b.CountBuffPotency() - a.CountBuffPotency());
+                case TargetStrategyType.MostNetBuffs:
+                    return (a, b) => ((b.CountBuffPotency() - b.CountDebuffPotency()) - (a.CountBuffPotency() - a.CountDebuffPotency()));
             }
             return (c, i) => 0;
         }
@@ -1396,6 +1429,7 @@ public abstract class EnemyMove : Move
         Pyrenfish_FlareSong,
         Pyrenfish_Hard_FinalFlareBurst,
         GoldScreecher_TripleFlameWind,
+        GoldScreecher_Hard_FinalChargeWave,
         Infernoling_TripleFlameBreath,
         Infernoling_LuminousRoar,
         Magmaswimmer_Charge,
@@ -1486,14 +1520,14 @@ public abstract class EnemyMove : Move
         Fluffling_Hard_WaterTorpedo,
         Floppole_FlopStomp,
         Floppole_ElectroFlop,
-        Floppole_MultiFlop,
-        CloudJelly_IceSwing,
-        CloudJelly_FrostFortify,
-        CloudJelly_BubbleToss,
-        CloudJelly_BubbleBlast,
-        CloudJelly_PowerBolt,
-        CloudJelly_PowerCharge,
-        CloudJelly_CounterFormChange,
+        Floppole_HardMultiFlop,
+        HydroJelly_IceSwing,
+        HydroJelly_FrostFortify,
+        HydroJelly_BubbleToss,
+        HydroJelly_BubbleBlast,
+        HydroJelly_PowerBolt,
+        HydroJelly_PowerCharge,
+        HydroJelly_CounterFormChange,
         CrystalCrab_TripleClaw,
         CrystalCrab_DarkClaw,
         CrystalCrab_Carcinization,

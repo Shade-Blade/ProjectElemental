@@ -69,12 +69,12 @@ public class BM_Leafswimmer_LightBlast : EnemyMove
         {
             for (int i = 0; i < 2; i++)
             {
-                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.175f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
 
                 if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Light))
                 {
                     caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
-                    caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
+                    caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Light, 0, BattleHelper.ContactLevel.Contact);
                 }
                 else
                 {

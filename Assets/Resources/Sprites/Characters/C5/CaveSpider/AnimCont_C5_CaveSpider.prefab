@@ -204,8 +204,8 @@ MonoBehaviour:
   debuffIndex: 0
   lifetime: 0
   timeSinceLastAnimChange: 0
-  height: 0.75
-  width: 0.5
+  height: 1.7
+  width: 0.7
   showBack: 0
   offsetFlying: {x: 0, y: 0, z: 0}
   heightFlying: 1.7

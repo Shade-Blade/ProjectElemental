@@ -187,7 +187,7 @@ MonoBehaviour:
   currentAnim: 
   currentEffect: 
   sprite: {fileID: 8510939000944800811}
-  leftFacing: 0
+  leftFacing: 1
   subobject: {fileID: 4012585618382714007}
   materialIndex: 0
   bigradientMap: 0

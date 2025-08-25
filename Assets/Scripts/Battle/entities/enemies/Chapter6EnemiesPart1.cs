@@ -264,7 +264,18 @@ public class BM_Honeywing_SpitHeal : EnemyMove
             {
                 yield return StartCoroutine(caller.FollowBezierCurve(backFlag ? 0.4f : 0.3f, (float a) => MainManager.EasingQuadratic(a, -0.2f), positions));
                 caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
-                caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+                switch (caller.entityID)
+                {
+                    case BattleHelper.EntityID.Honeywing:
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+                        break;
+                    case BattleHelper.EntityID.Harmonywing:
+                        caller.DealDamage(caller.curTarget, 5, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+                        break;
+                    default:
+                        caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Water, 0, BattleHelper.ContactLevel.Contact);
+                        break;
+                }
             }
             else
             {
@@ -289,6 +300,10 @@ public class BM_Honeywing_SpitHeal : EnemyMove
             case BattleHelper.EntityID.Honeywing:
                 singleHealAmount = 3;
                 multiHealAmount = 1;
+                break;
+            case BattleHelper.EntityID.Harmonywing:
+                singleHealAmount = 5;
+                multiHealAmount = 2;
                 break;
         }
 

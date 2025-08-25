@@ -21,6 +21,9 @@ public abstract class ActionCommand : MonoBehaviour
         Complete
     }
 
+    public static Color COLOR_ON = new Color(1, 1, 0.75f);
+    public static Color COLOR_OFF = new Color(0.5f, 0.25f, 0);
+
 
     //how close to being done is the command? (may auto end at 100%)
     protected bool autoComplete;
@@ -430,13 +433,10 @@ public class AC_MashLeftRight : ActionCommand
                 if (InputManager.GetAxisHorizontal() * (rightLast ? 1 : -1) < -0.5f)
                 {
                     rightLast = !rightLast;
-                    if (!isHolding)
+                    mashCount++;
+                    if (mashCount > mashObjective)
                     {
-                        mashCount++;
-                        if (mashCount > mashObjective)
-                        {
-                            mashCount = mashObjective;
-                        }
+                        mashCount = mashObjective;
                     }
                     isHolding = true;
                 }

@@ -108,7 +108,11 @@ Shader "Custom/GlassRainbow"
 
 				// apply edgeFactor to Albedo color & EdgeColor
 				float oneMinusEdge = 1.0 - edgeFactor;
-				float3 rgb = (_Color.rgb * edgeFactor) + (_EdgeColor * color_ramp(angle) * oneMinusEdge);
+
+				float3 rampColor = color_ramp(angle);
+				rampColor = float3(0.2,0.2,0.2) + rampColor * 0.8;
+
+				float3 rgb = (_Color.rgb * edgeFactor) + (_EdgeColor * rampColor * oneMinusEdge);
 				rgb = min(float3(1, 1, 1), rgb); // clamp to real color vals
 				rgb = rgb * texColor.rgb;
 

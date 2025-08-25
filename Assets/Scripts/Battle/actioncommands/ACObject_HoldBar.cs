@@ -30,6 +30,6 @@ public class ACObject_HoldBar : MonoBehaviour
         fullBar.rectTransform.anchoredPosition = (width/2) * Vector2.right;
         fullBar.rectTransform.sizeDelta = Vector2.right * width + Vector2.up * 18;
 
-        fullBall.color = ball ? new Color(0.75f, 1, 1) : new Color(0f, 0f, 0.5f);
+        fullBall.color = ball ? ActionCommand.COLOR_ON : ActionCommand.COLOR_OFF;
     }
 }

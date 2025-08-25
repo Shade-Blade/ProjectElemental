@@ -241,6 +241,170 @@ public class BM_Fluffling_Hard_WaterTorpedo : EnemyMove
     }
 }
 
+public class BE_Floppole : BattleEntity
+{
+    public override void Initialize()
+    {
+        moveset = new List<Move> { gameObject.AddComponent<BM_Floppole_FlopStomp>(), gameObject.AddComponent<BM_Floppole_ElectroFlop>(), gameObject.AddComponent<BM_Floppole_HardMultiFlop>() };
+
+        base.Initialize();
+    }
+
+    public override void ChooseMoveInternal()
+    {
+        if (BattleControl.Instance.GetCurseLevel() > 0)
+        {
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 3];
+        } else
+        {
+            currMove = moveset[(posId + BattleControl.Instance.turnCount - 1) % 2];
+        }
+
+        BasicTargetChooser();
+    }
+
+    public override void TryContactHazard(BattleEntity target, BattleHelper.ContactLevel contact, BattleHelper.DamageType type, int damage)
+    {
+        EnvironmentalContactHazards(target, contact, type, damage);
+
+        if (target.CanTriggerContactHazard(contact, type, damage))
+        {
+            //do
+
+            //Check for contact hazard immunity list
+            //(prevents multihits on the same target from hurting multiple times)
+            //(does not prevent multitarget moves from doing the same!)
+
+            if (target.contactImmunityList.Contains(posId))
+            {
+                return;
+            }
+
+            if (contact <= BattleHelper.ContactLevel.Contact)
+            {
+                DealDamage(target, 2, BattleHelper.DamageType.Normal, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Contact);
+                target.contactImmunityList.Add(posId);
+            }
+        }
+    }
+}
+
+public class BM_Floppole_FlopStomp : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Floppole_FlopStomp;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemyLowFrontmost);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.stompOffset);
+            Vector3 spos = transform.position;
+
+            yield return StartCoroutine(caller.JumpHeavy(tpos, 2, 0.5f, -0.25f));
+
+            if (caller.GetAttackHit(caller.curTarget, 0))
+            {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
+                caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+                yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 2, 0.5f, 0.15f));
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+
+                //extrapolate the move curve
+                yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+            }
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+}
+
+public class BM_Floppole_ElectroFlop : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Floppole_ElectroFlop;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        if (caller.curTarget != null)
+        {
+            Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.stompOffset);
+            Vector3 spos = transform.position;
+
+            yield return StartCoroutine(caller.JumpHeavy(tpos, 5, 0.8f, -0.25f));
+
+            if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
+            {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
+                caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Contact);
+                yield return StartCoroutine(caller.JumpHeavy(caller.homePos, 2, 0.5f, 0.15f));
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+
+                //extrapolate the move curve
+                yield return StartCoroutine(caller.ExtrapolateJumpHeavy(spos, tpos, 2, 0.5f, -0.25f));
+                yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+            }
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+}
+
+public class BM_Floppole_HardMultiFlop : EnemyMove
+{
+    public override MoveIndex GetMoveIndex() => MoveIndex.Floppole_HardMultiFlop;
+
+    public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
+
+    public override IEnumerator Execute(BattleEntity caller, int level = 1)
+    {
+        if (!BattleControl.Instance.EntityValid(caller.curTarget))
+        {
+            caller.curTarget = null;
+        }
+
+        foreach (BattleEntity target in BattleControl.Instance.GetEntitiesSorted(caller, GetTargetArea(caller)))
+        {
+            caller.curTarget = target;
+            Vector3 tpos = caller.curTarget.ApplyScaledOffset(caller.curTarget.stompOffset);
+            Vector3 spos = transform.position;
+
+            yield return StartCoroutine(caller.JumpHeavy(tpos, 5, 0.8f, -0.25f));
+
+            if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Normal))
+            {
+                caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Squish);
+                caller.DealDamage(caller.curTarget, 2, BattleHelper.DamageType.Normal, 0, BattleHelper.ContactLevel.Contact);
+            }
+            else
+            {
+                caller.InvokeMissEvents(caller.curTarget);
+            }
+        }
+
+        yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+    }
+}
+
 public class BE_CloudJelly : BattleEntity
 {
     public enum CloudJellyForm
@@ -259,11 +423,11 @@ public class BE_CloudJelly : BattleEntity
         switch (form)
         {
             case CloudJellyForm.Ice:
-                return "Ice Jelly" + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
+                return "Hydro Jelly (Ice)" + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
             case CloudJellyForm.Water:
-                return "Water Jelly" + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
+                return "Hydro Jelly (Water)" + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
             case CloudJellyForm.Cloud:
-                return "Cloud Jelly" + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
+                return "Hydro Jelly (Cloud)" + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
         }
         return GetNameStatic(entityID) + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier) / 100));
     }
@@ -332,6 +496,8 @@ public class BE_CloudJelly : BattleEntity
 
     public override void SetEncounterVariables(string variable)
     {
+        base.SetEncounterVariables(variable);
+
         if (variable != null && variable.Contains("cloud"))
         {
             form = CloudJellyForm.Cloud;
@@ -435,7 +601,7 @@ public class BE_CloudJelly : BattleEntity
 
 public class BM_CloudJelly_IceSwing : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_IceSwing;
+    public override MoveIndex GetMoveIndex() => MoveIndex.HydroJelly_IceSwing;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 
@@ -488,7 +654,7 @@ public class BM_CloudJelly_IceSwing : EnemyMove
 
 public class BM_CloudJelly_FrostFortify : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_FrostFortify;
+    public override MoveIndex GetMoveIndex() => MoveIndex.HydroJelly_FrostFortify;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
@@ -506,7 +672,7 @@ public class BM_CloudJelly_FrostFortify : EnemyMove
 
 public class BM_CloudJelly_BubbleToss : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_BubbleToss;
+    public override MoveIndex GetMoveIndex() => MoveIndex.HydroJelly_BubbleToss;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 
@@ -534,7 +700,7 @@ public class BM_CloudJelly_BubbleToss : EnemyMove
 
 public class BM_CloudJelly_BubbleBlast : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_BubbleBlast;
+    public override MoveIndex GetMoveIndex() => MoveIndex.HydroJelly_BubbleBlast;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 
@@ -571,7 +737,7 @@ public class BM_CloudJelly_BubbleBlast : EnemyMove
 
 public class BM_CloudJelly_PowerBolt : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_PowerBolt;
+    public override MoveIndex GetMoveIndex() => MoveIndex.HydroJelly_PowerBolt;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.LiveEnemy);
 
@@ -602,7 +768,7 @@ public class BM_CloudJelly_PowerBolt : EnemyMove
 
 public class BM_CloudJelly_PowerCharge : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_PowerCharge;
+    public override MoveIndex GetMoveIndex() => MoveIndex.HydroJelly_PowerCharge;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
@@ -627,7 +793,7 @@ public class BM_CloudJelly_PowerCharge : EnemyMove
 
 public class BM_CloudJelly_CounterFormChange : EnemyMove
 {
-    public override MoveIndex GetMoveIndex() => MoveIndex.CloudJelly_CounterFormChange;
+    public override MoveIndex GetMoveIndex() => MoveIndex.HydroJelly_CounterFormChange;
 
     public override TargetArea GetBaseTarget() => new TargetArea(TargetArea.TargetAreaType.Self);
 
@@ -852,7 +1018,8 @@ public class BM_CrystalCrab_Carcinization : EnemyMove
         {
             Vector3 itpos = Vector3.negativeInfinity;
             bool backflag = false;
-            if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
+            //not completely correct but it shouldn't look wrong mostly
+            if (Mathf.Abs(caller.posId - caller.curTarget.posId) > 1)
             {
                 backflag = true;
             }

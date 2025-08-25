@@ -166,6 +166,17 @@ public class SafeList<T>
             }
         }
     }
+    public void SetBoolsConditional(Predicate<T> p, bool check = true, bool set = true)
+    {
+        bool p2(SafeListEntry a) => (a.b == check && p.Invoke(a.inner));
+        for (int i = 0; i < entryList.Count; i++)
+        {
+            if (p2(entryList[i]))
+            {
+                entryList[i].b = set;
+            }
+        }
+    }
     public T next() //find next false, set it to true
     {
         if (!hasNext())
@@ -366,7 +377,7 @@ public class BattlePopup
         string text;
         string[] vars;
 
-        vars = new string[14];
+        vars = new string[15];
 
         //vars[0] = (int)status.effect + "";
 
@@ -389,6 +400,7 @@ public class BattlePopup
 
         vars[12] = (Mathf.CeilToInt(0.5f * status.potency)) + "";   //Mark negative
         vars[13] = ((1 * status.potency + Mathf.CeilToInt(0.5f * status.potency))) + "";   //Stronger mark strength
+        vars[14] = (3 * status.potency) + "";      //sleep/poison low end
 
         float boost = 1;
         switch (status.potency)
@@ -1462,9 +1474,16 @@ public class BattleControl : MonoBehaviour
         return b.GetEntityProperty(BattleHelper.EntityProperties.Ceiling, false);
     }
 
+    //This is inefficient to use?
+    //basically calling GetFrontMostLow O(n) times when O(1) is optimal
+    //but my code is not architectured to do that kind of thing
     public bool IsFrontmostLow(BattleEntity caller, BattleEntity check, bool ignoreNoTarget = false)
     {
         return GetFrontmostLow(caller, ignoreNoTarget) == check;  //pointer match
+    }
+    public bool IsBackmostLow(BattleEntity caller, BattleEntity check, bool ignoreNoTarget = false)
+    {
+        return GetBackmostLow(caller, ignoreNoTarget) == check;  //pointer match
     }
 
     public BattleEntity GetFrontmostLow(BattleEntity caller, bool ignoreNoTarget = false)
@@ -1476,6 +1495,18 @@ public class BattleControl : MonoBehaviour
             return null;
         }
         bl.Sort((a, b) => ((caller.posId < 0 ? 1 : -1) * MainManager.FloatCompare(a.homePos.x, b.homePos.x)));
+
+        return bl[0];  //pointer match
+    }
+    public BattleEntity GetBackmostLow(BattleEntity caller, bool ignoreNoTarget = false)
+    {
+        List<BattleEntity> bl = GetEntities(caller, new TargetArea(TargetArea.TargetAreaType.LiveEnemyLow), ignoreNoTarget);
+
+        if (bl.Count == 0)
+        {
+            return null;
+        }
+        bl.Sort((a, b) => ((caller.posId >= 0 ? 1 : -1) * MainManager.FloatCompare(a.homePos.x, b.homePos.x)));
 
         return bl[0];  //pointer match
     }
@@ -1670,14 +1701,14 @@ public class BattleControl : MonoBehaviour
     }
     public void ShowRibbonHelpers()
     {
-        foreach (PlayerEntity p in GetPlayerEntities())
+        foreach (PlayerEntity p in GetPlayerEntities(false))
         {
             p.ShowRibbonHelper();
         }
     }
     public void HideRibbonHelpers()
     {
-        foreach (PlayerEntity p in GetPlayerEntities())
+        foreach (PlayerEntity p in GetPlayerEntities(false))
         {
             p.HideRibbonHelper();
         }
@@ -1854,7 +1885,8 @@ public class BattleControl : MonoBehaviour
             return ep;
         } else
         {
-            return 0;
+            //arbitrary
+            return 60;
         }
     }
     public int GetMaxEP(BattleEntity target)
@@ -1865,7 +1897,8 @@ public class BattleControl : MonoBehaviour
         }
         else
         {
-            return 0;
+            //arbitrary
+            return 60;
         }
     }
     public int GetMaxStamina(BattleEntity target)
@@ -2327,7 +2360,10 @@ public class BattleControl : MonoBehaviour
         //"normal" (yellow/red)
 
         //minty + teal ish green
-        hpBarColors[1] = new Color[] { new Color(0.35f, 1f, 0.55f, 1), new Color(0.3f, 0.9f, 0.5f, 1), new Color(1, 1, 1, 1), new Color(0.15f, 0.75f, 0.45f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
+        //hpBarColors[1] = new Color[] { new Color(0.35f, 1f, 0.55f, 1), new Color(0.3f, 0.9f, 0.5f, 1), new Color(1, 1, 1, 1), new Color(0.15f, 0.75f, 0.45f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
+
+        //orange
+        hpBarColors[1] = new Color[] { new Color(1f, 0.8f, 0.4f, 1), new Color(0.9f, 0.7f, 0.3f, 1), new Color(1, 1, 1, 1), new Color(0.8f, 0.4f, 0.2f, 1), new Color(1, 1, 1, 1), new Color(0, 0, 0, 1) };
 
         //lime ish
         //looks bad
@@ -2343,7 +2379,7 @@ public class BattleControl : MonoBehaviour
         hpBarColors[2] = new Color[] { new Color(1f, 0.35f, 0.35f, 1), new Color(0.9f, 0.25f, 0.25f, 1), new Color(1, 0.8f, 0.8f, 1), new Color(0.6f, 0.2f, 0.4f, 1), new Color(1, 0.8f, 0.8f, 1), new Color(0, 0, 0, 1) };
 
         //"ultra curse" (gold/brown)
-        hpBarColors[3] = new Color[] { new Color(1, 0.95f, 0.6f, 1), new Color(0.9f, 0.85f, 0.5f, 1), new Color(1, 1, 0.8f, 1), new Color(0.8f, 0.45f, 0.25f, 1), new Color(1, 1, 0.8f, 1), new Color(0, 0, 0, 1) };
+        hpBarColors[3] = new Color[] { new Color(1, 0.95f, 0.6f, 1), new Color(0.9f, 0.85f, 0.5f, 1), new Color(1, 1, 0.8f, 1), new Color(0.8f, 0.7f, 0.3f, 1), new Color(1, 1, 0.8f, 1), new Color(0, 0, 0, 1) };
 
         //"mega curse" (cyan/dark gray)
         hpBarColors[4] = new Color[] { new Color(0.5f, 1f, 1f, 1), new Color(0.4f, 0.9f, 0.9f, 1), new Color(0.8f, 1, 1, 1), new Color(0.65f, 0.65f, 0.8f, 1), new Color(0.8f, 1, 1, 1), new Color(0, 0, 0, 1) };
@@ -2711,23 +2747,23 @@ public class BattleControl : MonoBehaviour
         bool perfect = false;
         if (playerData.BadgeEquipped(Badge.BadgeType.DecisiveVictory))
         {
-            for (int i = 0; i < pel.Count; i++)
-            {
-                CreateBadgeActivationParticles(Badge.BadgeType.DecisiveVictory, pel[i]);
-            }
             if (turnCount <= 1)
             {
+                for (int i = 0; i < pel.Count; i++)
+                {
+                    CreateBadgeActivationParticles(Badge.BadgeType.DecisiveVictory, pel[i]);
+                }
                 decisive = true;
             }
         }
         if (playerData.BadgeEquipped(Badge.BadgeType.PerfectVictory))
         {
-            for (int i = 0; i < pel.Count; i++)
-            {
-                CreateBadgeActivationParticles(Badge.BadgeType.PerfectVictory, pel[i]);
-            }
             if (perfectKillSatisfied)
             {
+                for (int i = 0; i < pel.Count; i++)
+                {
+                    CreateBadgeActivationParticles(Badge.BadgeType.PerfectVictory, pel[i]);
+                }
                 perfect = true;
             }
         }
@@ -4269,6 +4305,52 @@ public class BattleControl : MonoBehaviour
             CreateEffectRemovedParticles(e, be);
         }
     }
+    public void CreateEffectActivationParticles(Effect.EffectType e, BattleEntity be)
+    {
+        Sprite sp = Text_EffectSprite.GetEffectSprite(e.ToString());
+
+        GameObject so = new GameObject("Effect Spawn Sprite");
+        so.transform.parent = gameObject.transform;
+        SpriteRenderer s = so.AddComponent<SpriteRenderer>();
+        s.sprite = sp;
+        Vector3 startPosition = be.ApplyScaledOffset(Vector3.up * 0.5f) + Vector3.forward * -0.1f;
+
+        float distance = 0.5f * Mathf.CeilToInt(be.sameFrameRibbonBadgeActivations / 8f);
+        startPosition += distance * (Vector3.right * Mathf.Cos(2 * Mathf.PI * ((be.sameFrameRibbonBadgeActivations - 1) / 8f)) + Vector3.up * Mathf.Sin(2 * Mathf.PI * ((be.sameFrameRibbonBadgeActivations - 1) / 8f)));
+        be.sameFrameRibbonBadgeActivations++;
+
+        so.transform.position = startPosition;
+        s.material = MainManager.Instance.defaultGUISpriteMaterial;
+
+        IEnumerator Lerp(SpriteRenderer s, float duration)
+        {
+            float time = 0;
+
+            s.color = new Color(1, 1, 1, 0f);
+
+            while (time < 1)
+            {
+                time += Time.deltaTime / (duration / 4);
+
+                s.gameObject.transform.localScale = Vector3.one * 1f * (Mathf.Clamp01(time * 2));
+                s.color = new Color(1, 1, 1, time);
+                yield return null;
+            }
+
+            time = 0;
+            while (time < 1)
+            {
+                time += Time.deltaTime / (duration);
+                //s.gameObject.transform.localScale = Vector3.one * 1f * (1 - time);
+                s.color = new Color(1, 1, 1, 1 - time);
+                yield return null;
+            }
+
+            Destroy(s.gameObject);
+        }
+
+        StartCoroutine(Lerp(s, 0.4f));
+    }
     public void CreateBadgeActivationParticles(Badge.BadgeType b, BattleEntity be)
     {
         Debug.Log(b);
@@ -5121,7 +5203,7 @@ public class BattleControl : MonoBehaviour
         //Debug.Log("RunOutOfTurnEvents " + reactionMoveList.Count);
         //wait until animations done
         yield return new WaitUntil(() => CheckEntitiesStationary());
-
+        HideHPBars();
 
         PlayerTurnController.Instance.ResetActionCommands();
         PlayerTurnController.Instance.ResetPlayerSprites();
@@ -5202,6 +5284,7 @@ public class BattleControl : MonoBehaviour
             }
 
             yield return new WaitUntil(() => CheckEntitiesStationary());
+            HideHPBars();
         }
 
         float timestamp = Time.time;
@@ -5211,6 +5294,7 @@ public class BattleControl : MonoBehaviour
 
         //wait until animations done (putting this after the popup check since the popups won't interfere with the events)
         yield return new WaitUntil(() => CheckEntitiesStationary());
+        HideHPBars();
 
         //Only check for battle completion once all the events are gone
         //(just in case stuff like revives are supposed to be queued up)
@@ -5541,17 +5625,20 @@ public class BattleControl : MonoBehaviour
                 //if ((lastEventID == BattleHelper.Event.Death || lastEventID == BattleHelper.Event.StatusDeath) && IsPlayerControlled(battleEntity))
                 //{
                 //Note: if a needle event exists, don't activate the shroom
-                if (!ItemReactionExists(Item.ItemType.MiracleNeedle) && !ItemReactionExists(Item.ItemType.MiracleShroom) && entities.FindAll(e => IsPlayerControlled(e, true) && e.IsAlive()).Count == 0)
+                if (IsPlayerControlled(battleEntity, false))
                 {
-                    miracleShroom = true;
-                    AddReactionMoveEvent(battleEntity, battleEntity, Item.GetItemMoveScript(playerData.itemInventory[i]), true, true);
-                }
-                //}
+                    if (!ItemReactionExists(Item.ItemType.MiracleNeedle) && !ItemReactionExists(Item.ItemType.MiracleShroom) && entities.FindAll(e => IsPlayerControlled(e, true) && e.IsAlive()).Count == 0)
+                    {
+                        miracleShroom = true;
+                        AddReactionMoveEvent(battleEntity, battleEntity, Item.GetItemMoveScript(playerData.itemInventory[i]), true, true);
+                    }
+                    //}
 
-                if (!miracleShroom && !ItemReactionExists(Item.ItemType.MiracleNeedle) && !ItemReactionExists(Item.ItemType.MiracleShroom) && entities.FindAll(e => e.hp > 0).Count == 0)
-                {
-                    miracleShroom = true;
-                    AddReactionMoveEvent(battleEntity, battleEntity, Item.GetItemMoveScript(playerData.itemInventory[i]), true, true);
+                    if (!miracleShroom && !ItemReactionExists(Item.ItemType.MiracleNeedle) && !ItemReactionExists(Item.ItemType.MiracleShroom) && entities.FindAll(e => e.hp > 0).Count == 0)
+                    {
+                        miracleShroom = true;
+                        AddReactionMoveEvent(battleEntity, battleEntity, Item.GetItemMoveScript(playerData.itemInventory[i]), true, true);
+                    }
                 }
             }
 
@@ -5890,11 +5977,9 @@ public class BattleControl : MonoBehaviour
             bool keepMoving = true;
 
             //Cooldown prevents the enemy from acting immediately
-            if (current.HasEffect(Effect.EffectType.Cooldown))
+            if (current.TokenRemoveOne(Effect.EffectType.Cooldown))
             {
-                //Debug.Log(current + " a");
                 keepMoving = false;
-                current.TokenRemoveOne(Effect.EffectType.Cooldown);
             }
 
             while (keepMoving)
@@ -5915,9 +6000,10 @@ public class BattleControl : MonoBehaviour
                         DisplayMovePopup(current.currMove.GetName());
                     }
                     yield return new WaitForSeconds(0.6f); //note: not in reactions because they have their own standard particle effect
-                    StartCoroutine(current.ExecuteMoveCoroutine(current.currMove));
+                    StartCoroutine(current.ExecuteMoveCoroutine(current.currMove));                    
                     BroadcastEvent(current, BattleHelper.Event.PostAction);
                     yield return new WaitUntil(() => current == null || !current.moveActive);
+                    yield return StartCoroutine(current.PostAction());
                     DestroyMovePopup();
                     HideRibbonHelpers();
                 } else
@@ -5927,6 +6013,7 @@ public class BattleControl : MonoBehaviour
                     //But if someone encounters it it will look like a bug
                 }
 
+                /*
                 //try to use bonus moves
                 if (current.HasEffect(Effect.EffectType.BonusTurns))
                 {
@@ -5938,6 +6025,8 @@ public class BattleControl : MonoBehaviour
                 {
                     keepMoving = false;
                 }
+                */
+                keepMoving = false;
             }
 
             //Note: These coroutines will have to wait for all moveExecuting values to complete if there is something to do
@@ -5947,6 +6036,9 @@ public class BattleControl : MonoBehaviour
             HideEffectIcons();
 
             yield return StartCoroutine(RunOutOfTurnEvents());
+
+            //alt logic: bonus turns are redeemed here
+            entities.SetBoolsConditional((e) => (e.TokenRemoveOne(Effect.EffectType.BonusTurns)), true, false);
         }
 
         //Counter Flare activates before the PostMove stuff since the damage taken this turn variable gets changed by postmove

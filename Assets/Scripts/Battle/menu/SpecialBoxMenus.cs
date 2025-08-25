@@ -494,7 +494,7 @@ public class ItemBoxMenu : BoxMenu
 
     public override void Cancel()
     {
-        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
+        MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
         PopSelf();
         if (parent == null) //special case for double bite
         {

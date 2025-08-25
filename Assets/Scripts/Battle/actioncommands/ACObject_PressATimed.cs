@@ -28,7 +28,7 @@ public class ACObject_PressATimed : MonoBehaviour
 
         if (state == ActionCommand.AC_State.Complete)
         {
-            fullBar.color = success ? new Color(0.75f, 1, 1) : new Color(0.5f, 0f, 0);
+            fullBar.color = success ? ActionCommand.COLOR_ON : ActionCommand.COLOR_OFF;
         }
     }
 }

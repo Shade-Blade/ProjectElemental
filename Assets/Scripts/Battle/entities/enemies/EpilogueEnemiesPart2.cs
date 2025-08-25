@@ -668,7 +668,7 @@ public class BE_DrainBud : BattleEntity
     }
     public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
     {
-        if ((e == BattleHelper.Event.Death) && (target.posId >= 0) && counterCount <= 0)
+        if ((e == BattleHelper.Event.Death) && target != this && (target.posId >= 0) && counterCount <= 0)
         {
             counterCount++;
             BattleControl.Instance.AddReactionMoveEvent(this, this, moveset[2]);
@@ -754,6 +754,6 @@ public class BM_DrainBud_Hard_MorbidBloomBoost : EnemyMove
     {
         yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.5f));
 
-        caller.InflictEffect(caller, new Effect(Effect.EffectType.AttackBoost, 2, Effect.INFINITE_DURATION));
+        caller.InflictEffectCapped(caller, new Effect(Effect.EffectType.AttackBoost, 1, Effect.INFINITE_DURATION), 8);
     }
 }

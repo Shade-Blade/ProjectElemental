@@ -48,8 +48,8 @@ BurrowTrap_Hard_SunBloom,(Hard) Sun Bloom,"<color,red>(Only on higher difficulti
 Sundew_PoisonToss,Poison Toss,(Targets Any Enemy) Fling a poison droplet at a single target to deal Earth damage and inflict Poison.,
 Sundew_CounterPoisonToss,Counter - Poison Toss,(Targets Attacker) Fling a poison droplet at a single target to deal Earth damage and inflict Poison. Counter still happens even if they are reduced to 0 hp.,
 Sundew_Hard_ExhaustBall,(Hard) Exhaust Ball,"(Targets Any Enemy) Fling a watery ball at a single target to deal Water damage and inflict Exhausted, which prevents Stamina from being used.",
-Leafswimmer_LightBlast,Light Blast,(Targets Any Enemy) Spawn a light pillar on the target to hit them twice with Light element.,
-Leafswimmer_Abide,Abide,(Targets Self) Apply Astral Wall to self.,(Higher Difficulties: Applies Attack Boost and Defense Boost as well. Boosts cap at +8.)
+Leafswimmer_LightBlast,Light Blast,"(Targets Any Enemy) Spawn a light pillar on the target to hit them twice with Light element. (Usable while grounded, will fly up before the move.)",
+Leafswimmer_Abide,Abide,"(Targets Self) Apply Astral Wall to self. (Usable while grounded, will fly up before the move.)",(Higher Difficulties: Applies Attack Boost and Defense Boost as well. Boosts cap at +8.)
 Brambleling_ProtectiveRoar,Protective Roar,"(Targets All Allies, Targets Self) Roar to apply Defense Up to all allies as well as applying Soften to self.","(Higher Difficulties: Also applies Defense Boost to self, up to +8)"
 Solardew_SunToss,Sun Toss,(Targets Any Enemy) Toss a light droplet to deal Light Damage.,
 Solardew_LuminousHeal,Luminous Heal,(Targets Any Ally) Toss a light droplet to heal a single target and apply Illuminate to them.,
@@ -98,18 +98,18 @@ EliteGuard_GuardRally,Guard Rally,(Targets All Allies) Apply Defense Up to all a
 DesertBloom_SwoopHealHustle,Hustle Swoop,(Targets Any Enemy) Swoop down and hit a single target and then heal a single ally or all allies for a smaller amount. Apply Huslte to self. Swap positions with a different enemy to put the higher health one in front and the lower health one in back.,(Higher Difficulties: Applies Hustle to the heal target if there is only one heal target)
 DesertBloom_ShiftyBiteHustle,Shifty Bite,"(Targets Any Enemy, Targets Any Ally) Bite a single target then start flying, then heal a single ally. Swap positions with a different enemy to put the higher health one in front and the lower health one in back.",(Higher Difficulties: Applies Hustle to the heal target)
 Goldpole_QuickZap,Quick - Zap,(Targets Any Enemy) (Quick: Acts after every action) Quickly zap an enemy. Weaker when grounded.,
-Goldpole_GatherCharge,Gather Charge,(Targets Self) Apply Supercharge and Focus to self.,(Higher Difficulties: Applies Attack Boost and Defense Boost as well. Boosts cap at +8.)
-Shockworm_ArcBite,Arc Bite,(Targets Any Enemy) Zap a single target to deal Electric damage. The other character gets a second bolt that is weaker.,(Higher Difficulties: Applies Arc Discharge to the primary target.)
-Shockworm_MatchFocus,Match Focus,(Targets Self) Give yourself Focus equal to the Focus of all other enemies combined (Max 10).,(Higher Difficulties: Copies all other positive effects from allies except for permanent effects.)
-Brightpole_FlashDarkness,Flash Darkness,"(Targets All Enemies, Targets Any Enemy) Create a flash that hits all enemies for Light damage, and then hit one enemy for Dark damage. Apply Quantum Shield to self.",
-Brightpole_ElectroWave,Electro Wave,(Targets All Enemies) Create a massive electrical wave to deal Air/Electric damage to all enemies.,
-Stormswimmer_TripleBolt,Triple Bolt,(Targets Any Enemy) Hit a single target with 3 electric bolts to deal Air/Electric damage.,
-Stormswimmer_MistWave,Mist Wave,(Targets All Enemies) Shoot a wave of water to deal Water damage to all enemies and apply Mist Wall to self.,
-Stormswimmer_ShiftySwoop,Shifty Swoop,(Targets Any Enemy) Swoop down and hit a single target. Swap positions with a different enemy to put the higher health one in front and the lower health one in back.,
-Stormswimmer_Hard_MistRain,(Hard) Mist Rain,(Targets All Allies) Apply Mist Wall to all allies.,
+Goldpole_GatherCharge,Gather Charge,"(Targets Self) Apply Supercharge and Focus to self. (Usable while grounded, will fly up before the move.)",(Higher Difficulties: Applies Attack Boost and Defense Boost as well. Boosts cap at +8.)
+Shockworm_ArcBite,Arc Bite,"(Targets Any Enemy) Zap a single target to deal Electric damage. The other character gets a second bolt that is weaker. (Usable while grounded, will fly up before the move.)",(Higher Difficulties: Applies Arc Discharge to the primary target.)
+Shockworm_MatchFocus,Match Focus,"(Targets Self) Give yourself Focus equal to the Focus of all other enemies combined (Max 10). (Usable while grounded, will fly up before the move.)",(Higher Difficulties: Copies all other positive effects from allies except for permanent effects.)
+Brightpole_FlashDarkness,Flash Darkness,"(Targets All Enemies, Targets Any Enemy) Create a flash that hits all enemies for Light damage, and then hit one enemy for Dark damage. Apply Quantum Shield to self. (Usable while grounded, will fly up before the move.)",
+Brightpole_ElectroWave,Electro Wave,"(Targets All Enemies) Create a massive electrical wave to deal Air/Electric damage to all enemies. (Usable while grounded, will fly up before the move.)",
+Stormswimmer_TripleBolt,Triple Bolt,"(Targets Any Enemy) Hit a single target with 3 electric bolts to deal Air/Electric damage. (Usable while grounded, will fly up before the move.)",
+Stormswimmer_MistWave,Mist Wave,"(Targets All Enemies) Shoot a wave of water to deal Water damage to all enemies and apply Mist Wall to self. (Usable while grounded, will fly up before the move.)",
+Stormswimmer_ShiftySwoop,Shifty Swoop,"(Targets Any Enemy) Swoop down and hit a single target. Swap positions with a different enemy to put the higher health one in front and the lower health one in back. (Usable while grounded, will fly up before the move.)",
+Stormswimmer_Hard_MistRain,(Hard) Mist Rain,"(Targets All Allies) Apply Mist Wall to all allies. (Usable while grounded, will fly up before the move.)",
 Slime_Stomp,Stomp,(Targets Any Enemy) Stomp a single target to deal normal damage.,
 Slime_SplashStomp,Splash Stomp,(Targets Any Enemy) Jump high and splash a single target to deal Water damage.,
-Slime_CounterSplit,Counter - Split,(Targets Self) Split off a smaller Slime that has half the HP of the original. Only possible if there is open space on the ground.,"(Higher difficulties: Get Mist Wall for 2 turns after being attacked, which reduces incoming damage by 33%.)"
+Slime_CounterSplit,Counter - Split,(Targets Self) Split off a smaller Slime that has half the HP of the original. Only possible if there is open space on the ground. Can only be done once per battle.,"(Higher difficulties: Get Mist Wall for 2 turns after being attacked, which reduces incoming damage by 33%. Can split off pieces infinitely but split pieces can't split more.)"
 Slimewalker_WaterCannon,Water Cannon,(Targets Any Enemy) Shoot a ball of water at a single target to deal Water damage. (This will prioritize the target that will take the most damage.),
 Slimewalker_Hard_SoftSplash,(Hard) Soft Splash,"<color,red>(Only on higher difficulties)</color> (Targets Any Enemy) Stomp on a single target to deal weak Water damage but inflict Defense Down 2 for 3 turns.",
 Slimeworm_Charge,Charge,(Targets Self) Get 2 Focus and 2 Absorb.,(Higher difficulties: Also heal for 2 HP.)
@@ -121,25 +121,25 @@ Slimebloom_Hard_Flash,(Hard) Flash,"(Targets Front Enemy) Shoot a beam of light 
 Sirenfish_BubbleSong,Bubble Song,"(Targets Any Enemy) Send a bubble towards the target to deal Water damage and inflict Sleep for 2 turns. (Usable while grounded, will fly up before the move.)",(Higher difficulties: Inflicts 3 turns of Sleep.)
 Sirenfish_PowerSong,Power Song,(Targets All Allies) Gives 1 Focus to all allies.,
 Sirenfish_Hard_NightmareBite,(Hard) Nightmare Bite,"<color,red>(Only on higher difficulties)</color> (Targets Any Sleeping Enemy) Bite a sleeping target to deal strong Dark damage.",
-Urchiling_Charge,Charge,(Targets Self) Get Focus and Astral Wall,
+Urchiling_Charge,Astral Charge,(Targets Self) Get Focus and Astral Wall,
 Urchiling_WaterBlast,Water Blast,(Targets All Enemies) Create a water ball that hits all enemies for Water damage.,
-Urchiling_Hard_DeepCharge,Deep Charge,"<color,red>(Only on higher difficulties)</color> (Targets Self) Get Attack Boost and Defense Boost. Boost is capped at +8.",
+Urchiling_Hard_DeepCharge,Deep Charge,"<color,red>(Only on higher difficulties)</color> (Targets Self) Get Focus, Attack Boost and Defense Boost. Boost is capped at +8.",
 Urchiling_Hard_SpikeStorm,Spike Storm,(Targets All Enemies) Attack all enemies with a storm of spikes 3 times for Normal damage.,
 GoldenSlime_CopyStomp,Copy Stomp,(Targets Anyone) Copy a move from the targetted individual to use for the rest of battle (Prioritizes allies to copy from),
-GoldenSlime_InversionSplash,Inversion Splash,(Targets All Enemies) Splash onto enemies to deal Water damage and invert all effects of the targets.,
+GoldenSlime_InversionSplash,Inversion Splash,(Targets All Enemies) Splash onto enemies to deal Air damage and invert all effects of the targets.,
 GoldenSlime_GoldenWave,Golden Wave,(Targets All Allies) Create a shower of gold dust that gives all allies regeneration and extending the duration of their effects.,
 GoldenSlime_CopyForm,Copy Form,(Targets Any Ally) Turn into a different ally (Won't copy other Golden Slimes),
 ElementalSlime_FlameSplash,Flame Splash,"(Targets All Enemies, Target All Allies, Target Any Enemy) Splash onto the ground to deal Fire Damage to all enemies and apply Focus to all allies and then jump onto one enemy to deal Water damage",(Higher Difficulties: Gives the allies Attack Up)
 ElementalSlime_AirSplash,Air Splash,"(Targets All Enemies, Target All Allies, Target Any Enemy) Splash onto the ground to deal Air Damage to all enemies and apply Astral Wall to all allies and then jump onto one enemy to deal Earth damage",
 ElementalSlime_LightSplash,Light Splash,"(Targets All Enemies, Target All Allies, Target Any Enemy) Splash onto the ground to deal Light Damage to all enemies and heal all allies and then jump onto one enemy to deal Dark damage",(Higher Difficulties: Gives the allies Defense Up)
-ElementalSlime_Infusion,Infusion,(Targets Any Ally) Infuse yourself into an ally to heal them and increasing their Max HP.,(Higher Difficulties: Gives the infused target Astral Wall)
+ElementalSlime_Infusion,Infusion,(Targets Any Ally) Infuse yourself into an ally to heal them and increasing their Max HP and give them Attack Boost,(Higher Difficulties: Gives the infused target Astral Wall and Defense Boost)
 NormalSlime_NormalStomp,Neutral Stomp,(Targets Front Enemy) Stomp sluggishly to deal normal damage and remove all positive effects from the target.,
 NormalSlime_NeutralizingGas,Neutralizing Gas,(Targets All Enemies) Blow gas to deal normal damage to all enemies and remove all positive effects from them and inflict Exhaust.,
-SoftSlime_HealingStomp,Healing Stomp,(Targets Any Ally) Stomp a single ally to heal them. (Can't target self or other Soft Slimes.),
+SoftSlime_HealingStomp,Healing Stomp,(Targets Any Ally) Stomp a single ally to heal them and remove their negative effects. (Can't target self or other Soft Slimes.),
 SoftSlime_SoftStomp,Soft Stomp,(Targets Any Ally) Stomp a single ally to apply Soften and Absorb (Can't target self or other Soft Slimes.),
 SoftSlime_SoftSplash,Soft Splash,(Targets Any Enemy) Stomp to create a water wave that deals Water damage and inflicts Defocus,
 RigidSlime_DoubleStomp,Double Stomp,(Target Any Enemy) Stomp on an enemy twice to deal Normal damage.,
-RigidSlime_Charge,Charge,(Targets Self) Get Focus and Quantum Shield,
+RigidSlime_Charge,Quantum Charge,(Targets Self) Get Focus and Quantum Shield,
 RigidSlime_SuperStomp,Super Stomp,(Targets Any Enemy) Jump high and hit a single target for strong Normal damage.,
 RigidSlime_Cleave,Cleave,(Targets Self) Split into two enemies.,
 Blazecrest_FlameBreath,Flame Breath,(Targets All Enemies) Breathe fire to deal Fire damage to all targets.,
@@ -152,18 +152,19 @@ Flametongue_FlameLick,Flame Lick,(Targets All Enemies) Lick with a long fiery to
 Flametongue_Hard_HustleLick,(Hard) Hustle Lick,"<color,red>(Only on higher difficulties)</color> (Targets Any Ally) Apply Hustle for 1 turn to one ally.",
 Heatwing_FlameSpread,Flame Spread,"(Targets All Enemies) Spread fire by flapping your wings to deal Fire damage to all targets. (Usable while grounded, will fly up before the move.)",
 Heatwing_Hard_DreadScreech,(Hard) Dread Screech,"<color,red>(Only on higher difficulties)</color> (Targets All Enemies) Screech to deal Dark damage and inflict Dread for 2 turns. Dread reduces damage dealt to 0 and prevents Soul Moves from being used.",
-Pyrenfish_SplotchBubble,Splotch Bubble,(Targets All Enemies) Blow a dark bubble to deal Dark damage to all enemies and apply Splotch,
-Pyrenfish_DoubleFireBreath,Double Fire Breath,(Targets All Enemies) Breathe fire to deal Fire damage to all targets 2 times.,
+Pyrenfish_SplotchBubble,Splotch Bubble,"(Targets All Enemies) Blow a dark bubble to deal Dark damage to all enemies and apply Splotch (Usable while grounded, will fly up before the move.)",
+Pyrenfish_DoubleFireBreath,Double Fire Breath,"(Targets All Enemies) Breathe fire to deal Fire damage to all targets 2 times. (Usable while grounded, will fly up before the move.)",
 Pyrenfish_FlareSong,Flare Song,(Targets All Allies) Apply Focus to all allies and Counter Flare to self.,
 Pyrenfish_Hard_FinalFlareBurst,(Hard) Final - Flare Burst,"<color,red>(Only on higher difficulties)</color> (Targets All Allies) Apply Counter Flare to all allies.",
 GoldScreecher_TripleFlameWind,Triple Flame Wind,"(Targets Any Enemy) Spread fire by flapping your wings to deal Fire damage to all targets 3 times. (Usable while grounded, will fly up before the move.)",
+GoldScreecher_Hard_FinalChargeWave,(Hard) Final - Charge Wave,"<color,red>(Only on higher difficulties)</color> (Targets All Allies) Apply Supercharge and Focus to all allies.",
 Infernoling_TripleFlameBreath,Triple Flame Breath,(Targets All Enemies) Breathe fire to deal Fire damage to all targets 3 times.,
 Infernoling_LuminousRoar,Luminous Roar,(Targets All Enemies) Roar powerfully to hit all targets to deal normal damage and inflict Defense Down and apply Illuminate to self.,(Higher Difficulties: Apply Dread to all enemies as well.)
-Magmaswimmer_Charge,Charge,(Targets Self) Apply Focus to self,
+Magmaswimmer_Charge,Ethereal Charge,(Targets Self) Apply Focus and Ethereal to self.,
 Magmaswimmer_Fireball,Mega Fireball,(Targets Any Enemy) Breathe a large fireball to deal Fire damage.,
 Magmaswimmer_Hard_RushBite,(Hard) Rush Bite,(Targets Any Enemy) Rush down an enemy to deal strong Normal damage and inflict Soulbleed,
 Wyverlet_DoubleFlameWind,Double Flame Wind,"(Targets Any Enemy) Spread fire by flapping your wings to deal Fire damage to all targets 2 times. (Usable while grounded, will fly up before the move.)",
-Wyverlet_WrathScreech,Wrath Screech,(Targets All Enemies) Screech loudly to do weak Normal damage and apply Attack Down and Defense Down and applies Counter Flare to self.,
+Wyverlet_WrathScreech,Wrath Screech,"(Targets All Enemies) Screech loudly to do weak Normal damage and apply Attack Down and Defense Down and applies Counter Flare to self. (Usable while grounded, will fly up before the move.)",
 Wyverlet_CounterPowerScreech,Counter - Power Screech,(Targets All Enemies) Screech to deal Dark damage and apply Attack Up and Counter Flare to self.,"(Higher Difficulties: Applies Attack Boost instead of Attack Up, up to +8 boost)"
 EyeSpore_SporeBeam,Spore Beam,(Targets Lowest Health Enemy) Shoot spores at the weakest target to deal Dark damage.,
 EyeSpore_Hard_CounterSpiteBeam,(Hard) Counter - Spite Beam,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) Shoot a cloud of spores at the attacker to deal Dark damage. Inflicts Defocus",
@@ -177,20 +178,20 @@ HoarderFly_Hard_FinalHeal,(Hard) Final - Heal,"<color,red>(Only on higher diffic
 Mosquito_ShockNeedle,Shock Needle,(Targets Any Enemy) Stab a target to deal Electric damage and inflict Paralyze and Sunder.,
 Mosquito_DrainBite,Drain Bite,(Targets Highest Health Enemy) Deal damage and drain health from the target.,
 Mosquito_Hard_Shroud,(Hard) Shroud,"<color,red>(Only on higher difficulties)</color> (Targets Self) Apply Ethereal to yourself for 2 turns.",
-Toxiwing_TripleDrainBite,Triple Drain Bite,(Targets Highest Health Enemy) Deal damage 3 times and drain health from the target.,
+Toxiwing_TripleDrainBite,Triple Drain Bite,"(Targets Highest Health Enemy) Deal damage 3 times and drain health from the target. (Usable while grounded, will fly up before the move.)",(Higher Difficulties: Apply Poison to the target with the final hit.)
 Toxiwing_CruelSwoop,Cruel Swoop,(Targets Lowest Health Enemy) Swoop down to deal Fire damage and apply Counter Flare to self.,
-GoldFly_SunderingBite,Sundering Bite,(Targets Any Enemy) Apply Defocus and Sunder to the target.,
+GoldFly_SunderingBite,Sundering Bite,"(Targets Any Enemy) Apply Defocus and Sunder to the target. (Usable while grounded, will fly up before the move.)",
 GoldFly_GoldWind,Gold Wind,(Targets All Enemies) Blow some golden wind to deal Air/Electric damage.,
 GoldFly_MorbidGoldBoost,Morbid - Gold Boost,"(Targets Self) When an ally dies, get Focus and Attack Up.",
 GoldFly_Hard_FinalMassObscure,(Hard) Final - Mass Obscure,"<color,red>(Only on higher difficulties)</color> (Targets All Enemies) Applies Ethereal to all allies upon death.",
-MawSpore_EnviousBite,Envious Bite,(Targets Any Enemy) Bite an enemy to steal their positive effects.,(Higher Difficulties: Inflicts Soulbleed)
+MawSpore_EnviousBite,Envious Bite,(Targets Any Enemy) Bite an enemy to steal their positive effects. (Prioritizes enemies with more positive effects),(Higher Difficulties: Inflicts Soulbleed)
 MawSpore_EnervatingLick,Enervating Lick,"(Targets Any Enemy) Lick an enemy to deal Water damage, drain Energy and apply Endurance Down.",
-MawSpore_CounterSporeBlast,Counter - Spore Blast,(Targets Attacker) Shoot a cloud of spores at the attacker to deal Dark damage.,
-MawSpore_Devour,Devour,(Targets Any Ally) Eat an ally to heal yourself. Prioritizes low HP allies but won't target other Maw Spores.,
-MawSpore_Hard_SwiftDevour,(Hard) Reaction - Swift Devour,"<color,red>(Only on higher difficulties)</color> (Targets Any Ally) (Reacts immediately when an ally becomes low health enough to eat) Eat an ally to heal yourself. Prioritizes low HP allies but won't target other Maw Spores.",
+MawSpore_CounterSporeBlast,Counter - Spore Blast,(Targets Attacker) Shoot a cloud of spores at the attacker to deal Dark damage and inflict Defocus.,
+MawSpore_Devour,Devour,(Targets Any Ally) Eat an ally to heal yourself and give yourself Attack Boost. Prioritizes low HP allies but won't target other Maw Spores.,
+MawSpore_Hard_SwiftDevour,(Hard) Reaction - Swift Devour,"<color,red>(Only on higher difficulties)</color> (Targets Any Ally) (Reacts immediately when an ally becomes low health enough to eat) Eat an ally to heal yourself and give yourself Attack Boost. Prioritizes low HP allies but won't target other Maw Spores.",
 CaveSpider_SporeBall,Spore Ball,(Targets Any Enemy) Shoot a spore ball to deal Dark damage.,
-CaveSpider_ShieldWeave,Shield Weave,(Targets Self) Apply Quantum Shield and Defense Up to self.,
-CaveSpider_WeaveCopy,Weave Copy,(Targets Any Ally) Create a copy of an enemy that has half the health of the original. Can only create one copy per battle.,(Higher Difficulties: The copies have Attack Boost and Defense Boost)
+CaveSpider_ShieldWeave,Shield Weave,"(Targets Self) Apply Quantum Shield and Defense Up to self. (Usable while grounded, will fly up before the move.)",
+CaveSpider_WeaveCopy,Weave Copy,"(Targets Any Ally) Create a copy of an enemy that has half the health of the original but has Attack Boost. Can only create one copy per battle. (Usable while grounded, will fly up before the move.)",(Higher Difficulties: The copies also have Defense Boost and Quantum Shield.)
 Obscurer_SinisterFog,Sinister Fog,"(Targets All Enemies) Shoot a dark fog cloud to deal dark damage to all targets and inflict Endurance Down. Applies Attack Boost to self. (Usable while grounded, will fly up before the move.)",
 Shieldwing_DualPeck,Dual Peck,(Targets Highest Health Enemy) Peck the target twice to deal normal damage.,
 Shieldwing_ChillingScreech,Chilling Screech,(Targets All Enemies) Screech loudly to deal weak Light damage to all targets and inflict Freeze.,(Higher difficulties: Inflicts 2 Defocus.)
@@ -211,13 +212,13 @@ LumistarStriker_QuadSlash,Quad Slash,(Targets Front) Hit the target with four sl
 Spikeflake_SnowflakeStatic,Snowflake Static,(Targets All Enemies) Blow wind that deals Air/Electric damage and applies Supercharge to self.,
 Spikeflake_IceSpikes,Ice Spikes,(Targets All Enemies) Shoot icy spikes at a single target to do Light damage 3 times.,
 Spikeflake_Hard_IceWind,(Hard) Ice Wind,(Targets All Enemies) Blow frigid wind to deal Light damage twice and inflict Freeze with the final hit.,
-Mirrorwing_LuminousSong,Luminous Song,(Targets Any Ally) Apply Illuminate to self and one ally.,
-Mirrorwing_CounterBlast,Team Counter - Blast,(Targets Attacker) Apply Illuminate to self and then strike down the attacker,
+Mirrorwing_LuminousSong,Luminous Song,"(Targets Any Ally) Apply Illuminate to self and one ally. (Usable while grounded, will fly up before the move.)",
+Mirrorwing_CounterBlast,Team Counter - Blast,(Targets Attacker) Apply Illuminate to the hurt ally and then strike down the attacker (Not possible if grounded),"(Higher Difficulties: Applies Attack Boost to self, up to +8 boost.)"
 Beaconwing_SoftCharge,Soft Charge,(Targets Self) Charge up for a bigger attack and apply Soften to self.,"(Higher Difficulties: Applies Defense Boost as well, up to +8)"
 Beaconwing_LightBlast,Light Blast,(Targets All Enemies) Blast all enemies with strong Light damage.,
-Beaconwing_CounterProtect,Team Counter - Protect,(Targets Damaged Ally) Apply Absorb to the damaged ally.,"(Higher Difficulties: Applies Defense Boost as well, up to +8)"
-Harmonywing_HealingSong,Healing Song,(Targets Any Ally) Heal a single ally and apply Mist Wall.,
-Harmonywing_Encore,Reaction - Encore,"(Targets All Allies) (Reacts to any Song move, i.e. any move with ""Song"" in the name) Heal all allies for a small amount.",
+Beaconwing_CounterProtect,Team Counter - Protect,(Targets Damaged Ally) Apply Defense Up to the damaged ally.,"(Higher Difficulties: Applies Defense Boost as well, up to +8)"
+Harmonywing_HealingSong,Healing Song,(Targets Lowest Health Ally) Heal a single ally and apply Mist Wall.,
+Harmonywing_Encore,Reaction - Encore,"(Targets All Allies) (Reacts to any Song move, i.e. any move with ""Song"" in the name) Heal all allies for a small amount. (Not possible if grounded)",
 Harmonywing_Hard_FinalMistRain,(Hard) Final - Mist Rain,(Targets All Allies) Apply Mist Wall to all allies on death.,
 Plateshell_Slam,Slam,(Targets Any Enemy) Slam down on the target to deal normal damage and inflict Sunder.,
 Plateshell_RageFireball,Rage Fireball,(Targets Any Enemy) Shoot a fireball at the target to deal Fire damage and inflict Berserk.,(Higher difficulties: Gives 2 Focus and 1 Sunder.)
@@ -237,8 +238,8 @@ Coiler_ElectroStorm,Electro Storm,(Targets All Enemies) Hit all targets for mass
 Coiler_Hard_CounterRollerShell,(Hard) Counter - Roller Shell,"<color,red>(Only on higher difficulties)</color> (Targets Attacker) While in your shell, counter attacks by rolling into the target for weak normal damage.",
 Drillbeak_Drill,Drill,(Targets Any Enemy) Drill into the target with your beak to quickly deal normal damage 4 times.,
 Drillbeak_Hard_DreadStab,(Hard) Dread Stab,(Targets Any Enemy) Stab the target hard to deal Dark damage and inflict Dread for 2 turns.,
-Quickworm_QuickBite,Quick Bite,(Targets Any Enemy) (Quick: Acts after every action) ,
-Quickworm_TurnRelay,Turn Relay,(Targets Any Ally) Give an ally a bonus turn. (Prefers not targetting other Quickworms),
+Quickworm_QuickBite,Quick Bite,(Targets Any Enemy) (Quick: Acts after every action) Quickly bite an enemy. Weaker when grounded.,
+Quickworm_TurnRelay,Turn Relay,"(Targets Any Non-Quickworm Ally) Give an ally a bonus turn. (Won't target other Quickworms) (Usable while grounded, will fly up before the move.)",
 Quickworm_SwoopThrough,Swoop Through,(Targets All Allies) Swoop down and go through all enemies.,
 Quickworm_Hard_FinalHustleBlast,(Hard) Final - Hustle Blast,"<color,red>(Only on higher difficulties)</color> (Targets All Enemies, Targets All Allies) Explode to hurt all enemies and allies with Air/Electric damage but all allies get Hustle.",
 PuffJelly_Slam,Slam,(Targets Any Enemy) Slam down on the target to deal normal damage.,
@@ -247,14 +248,14 @@ Fluffling_Bash,Bash,(Targets Any Enemy) Jump and ram into the target to deal nor
 Fluffling_Hard_WaterTorpedo,(Hard) Water Torpedo,"<color,red>(Only on higher difficulties)</color> (Targets Any Enemy) Jump into a target from afar to deal weak Water damage.",
 Floppole_FlopStomp,Flop Stomp,(Targets Front Enemy) Flop onto the front target.,
 Floppole_ElectroFlop,Electro Flop,(Targets Any Enemy) Flop from higher above to deal Air/Electric damage to the target.,
-Floppole_MultiFlop,Multi Flop,(Targets All Enemies) Flop onto each enemy in succession.,
-CloudJelly_IceSwing,Ice Swing,(Targets Any Enemy) Swing a tentacle into the target to deal weak Light damage.,
-CloudJelly_FrostFortify,Frost Fortify,(Targets Self) Fortify yourself to give yourself Absorb and Focus.,(Higher Difficulties: Gives Attack Up 1 indefinitely.)
-CloudJelly_BubbleToss,Bubble Toss,(Targets Any Enemy) Toss a bubble from a tentacle to deal moderate Water damage to one target.,
-CloudJelly_BubbleBlast,Bubble Blast,(Targets All Enemies) Toss a barrage of bubbles to deal moderate Water damage to all targets.,(Higher Difficulties: Gives Attack Up 1 indefinitely.)
-CloudJelly_PowerBolt,Power Bolt,(Targets Any Enemy) Summon a large lightning bolt to deal massive Electric damage to one target.,
-CloudJelly_PowerCharge,Power Charge,"(Targets Self) Give yourself Attack Up 2 indefinitely, 4 Focus and heal for 4 hp.",(Higher Difficulties: Gives Attack Up 3 instead of 2)
-CloudJelly_CounterFormChange,Counter - Form Change,"(Targets Self) Assume a more defensive form if hit by Light, Water or Air attacks, or a more offensive form if hit by other damage types. (The Ice form is the most defensive and the Cloud form is the most offensive.)",
+Floppole_HardMultiFlop,(Hard) Multi Flop,"<color,red>(Only on higher difficulties)</color> (Targets All Enemies) Flop onto each enemy in succession.",
+HydroJelly_IceSwing,Ice Swing,(Targets Any Enemy) Swing a tentacle into the target to deal weak Light damage.,
+HydroJelly_FrostFortify,Frost Fortify,(Targets Self) Fortify yourself to give yourself Absorb and Focus.,(Higher Difficulties: Gives Attack Up 1 indefinitely.)
+HydroJelly_BubbleToss,Bubble Toss,(Targets Any Enemy) Toss a bubble from a tentacle to deal moderate Water damage to one target.,
+HydroJelly_BubbleBlast,Bubble Blast,(Targets All Enemies) Toss a barrage of bubbles to deal moderate Water damage to all targets.,(Higher Difficulties: Gives Attack Up 1 indefinitely.)
+HydroJelly_PowerBolt,Power Bolt,(Targets Any Enemy) Summon a large lightning bolt to deal massive Electric damage to one target.,
+HydroJelly_PowerCharge,Power Charge,"(Targets Self) Give yourself Attack Up 2 indefinitely, 4 Focus and heal for 4 hp.",(Higher Difficulties: Gives Attack Up 3 instead of 2)
+HydroJelly_CounterFormChange,Counter - Form Change,"(Targets Self) Assume a more defensive form if hit by Light, Water or Air attacks, or a more offensive form if hit by other damage types. (The Ice form is the most defensive and the Cloud form is the most offensive.)",
 CrystalCrab_TripleClaw,Triple Claw,(Targets Any Enemy) Slash with your claw to deal normal damage to a single target 3 times. First hit is weaker but the second and third hits are stronger.,
 CrystalCrab_DarkClaw,Dark Claw,(Targets All Enemies) Create a blast from your claw to deal Dark damage and inflict Sleep and Attack Down to all targets.,
 CrystalCrab_Carcinization,Carcinization,(Targets Any Ally) Turn the target into a Crystal Crab with the same HP as the user. Will only target allies with 50% HP or less and also won't target allies that are a much higher level than it,
@@ -277,8 +278,8 @@ Vilebloom_DustWind,Dust Wind,(Targets All Enemies) Blow dusty wind to deal Earth
 Vilebloom_DoubleLob,Double Lob,(Targets Back Enemy) Lob two balls of water at a single target to deal Water damage and inflict Sleep.,
 Vilebloom_MorbidRecovery,Morbid - Recovery,"(Targets Self) When an ally dies, heal yourself.",
 Vilebloom_Hard_DarkLob,(Hard) Dark Lob,"(Targets Front Enemy) Shoot a beam of darkness to deal Dark damage and inflict Inverted, which inverts all effects applied by them.",
-Thornweed_ThornShots,Thorn Shots,(Targets All Enemies) Shoot thorns at all targets to deal Normal damage and inflict Sunder,
-Thornweed_ThornSpin,Thorn Spin,(Targets Any Enemy) Spin and hit the front enemy twice for Normal damage.,
+Thornweed_ThornShots,Thorn Shots,(Targets All Enemies) Shoot thorns at all targets to deal Normal damage and inflict Sunder,(Higher Difficulties: Also inflicts Defocus.)
+Thornweed_ThornSpin,Thorn Spin,(Targets Front Enemy) Spin and hit the front enemy twice for Normal damage.,(Higher Difficulties: Hits three times.)
 Plaguebud_HeadSprout,Head Sprout,(Targets Any Enemy) Throw a seed from your head flower to deal weak normal damage and inflict Drain Sprout.,(Higher Difficulties: Heal 4 HP when using this move.)
 Plaguebud_TailSprout,Tail Sprout,(Targets Any Enemy) Toss a seed from your tail flower to deal strong Electric damage and inflict Poison and Bolt Sprout.,(Higher Difficulties: Heal 4 HP when using this move.)
 Starfish_FeebleWave,Feeble Wave,(Targets All Enemies) Summon a massive wave to deal Water damage to all targets and inflict Attack Down.,

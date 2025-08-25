@@ -553,7 +553,7 @@ public class WorldFollower : WorldEntity
     {
         //snap to floor?
         RaycastHit hit = DownRaycast(0.3f);
-        if (!AntiGravity() && hit.collider != null)
+        if (!AntiGravity() && hit.collider != null && Vector3.Dot(rb.velocity, hit.normal) < 0.2f)
         {
             if (hit.normal.y > MIN_GROUND_NORMAL && LegalGround(hit.collider))
             {

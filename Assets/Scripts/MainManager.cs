@@ -2719,51 +2719,88 @@ public class MainManager : MonoBehaviour
         GF_Bestiary_Shrublet,
         GF_Bestiary_Sunflower,
         GF_Bestiary_Sunnybud,
+        GF_Bestiary_Goldbush,
         GF_Bestiary_MiracleBloom,
         GF_Bestiary_Rockling,
         GF_Bestiary_Honeybud,
         GF_Bestiary_BurrowTrap,
         GF_Bestiary_Sundew,
+        GF_Bestiary_Leafswimmer,
+        GF_Bestiary_Brambleling,
+        GF_Bestiary_GiantVine,
+        GF_Bestiary_Solardew,
         GF_Bestiary_Bandit,
         GF_Bestiary_Renegade,
         GF_Bestiary_Sentry,
         GF_Bestiary_Cactupole,
         GF_Bestiary_Sandswimmer,
+        GF_Bestiary_SpireGuard,
+        GF_Bestiary_EliteGuard,
+        GF_Bestiary_DesertBloom,
+        GF_Bestiary_Goldpole,
+        GF_Bestiary_Shockworm,
+        GF_Bestiary_Brightpole,
         GF_Bestiary_Slime,
         GF_Bestiary_Slimewalker,
         GF_Bestiary_Slimeworm,
         GF_Bestiary_Slimebloom,
         GF_Bestiary_SirenFish,
+        GF_Bestiary_Urchiling,
+        GF_Bestiary_GoldenSlime,
+        GF_Bestiary_ElementalSlime,
+        GF_Bestiary_NormalSlime,
+        GF_Bestiary_SoftSlime,
+        GF_Bestiary_RigidSlime,
         GF_Bestiary_Blazecrest,
         GF_Bestiary_Embercrest,
         GF_Bestiary_Ashcrest,
         GF_Bestiary_Flametongue,
         GF_Bestiary_Heatwing,
         GF_Bestiary_Lavaswimmer,
+        GF_Bestiary_Pyrenfish,
+        GF_Bestiary_GoldScreecher,
+        GF_Bestiary_Infernoling,
+        GF_Bestiary_Magmaswimmer,
+        GF_Bestiary_Wyverlet,
         GF_Bestiary_EyeSpore,
         GF_Bestiary_SpikeShroom,
         GF_Bestiary_Shrouder,
         GF_Bestiary_HoarderFly,
         GF_Bestiary_Mosquito,
+        GF_Bestiary_Toxiwing,
+        GF_Bestiary_GoldFly,
+        GF_Bestiary_MawSpore,
+        GF_Bestiary_CaveSpider,
+        GF_Bestiary_Obscurer,
         GF_Bestiary_Shieldwing,
         GF_Bestiary_Honeywing,
         GF_Bestiary_Shimmerwing,
         GF_Bestiary_LumistarVanguard,
         GF_Bestiary_LumistarSoldier,
         GF_Bestiary_LumistarStriker,
+        GF_Bestiary_Spikeflake,
+        GF_Bestiary_Mirrorwing,
+        GF_Bestiary_Beaconwing,
+        GF_Bestiary_Harmonywing,
         GF_Bestiary_Plateshell,
         GF_Bestiary_Speartongue,
         GF_Bestiary_Chaintail,
         GF_Bestiary_Sawcrest,
         GF_Bestiary_Coiler,
         GF_Bestiary_Drillbeak,
+        GF_Bestiary_Quickworm,
         GF_Bestiary_PuffJelly,
         GF_Bestiary_Fluffling,
+        GF_Bestiary_Floppole,
         GF_Bestiary_CloudJelly,
         GF_Bestiary_CrystalCrab,
         GF_Bestiary_CrystalSlug,
         GF_Bestiary_CrystalClam,
         GF_Bestiary_AuroraWing,
+        GF_Bestiary_DarkBurrower,
+        GF_Bestiary_Shadew,
+        GF_Bestiary_VileBloom,
+        GF_Bestiary_Thornweed,
         GF_Bestiary_Plaguebud,
         GF_Bestiary_Starfish,
         GF_Bestiary_CursedEye,
@@ -4353,16 +4390,16 @@ public class MainManager : MonoBehaviour
                         int rblc = 2;
                         switch (pu.misc)
                         {
-                            case MiscSprite.ItemBag2:
+                            case MiscSprite.RecipeBag2:
                                 rblc = 2;
                                 break;
-                            case MiscSprite.ItemBag4:
+                            case MiscSprite.RecipeBag4:
                                 rblc = 4;
                                 break;
-                            case MiscSprite.ItemBag8:
+                            case MiscSprite.RecipeBag8:
                                 rblc = 8;
                                 break;
-                            case MiscSprite.ItemBagX:
+                            case MiscSprite.RecipeBagX:
                                 rblc = (playerData.GetMaxInventorySize() - playerData.itemInventory.Count);
                                 break;
                         }
@@ -10536,6 +10573,31 @@ public class MainManager : MonoBehaviour
     public static Vector3 XZProjectReverse(Vector2 v)
     {
         return v.x * Vector3.right + v.y * Vector3.forward;
+    }
+
+    public static bool SplitEquals(string str, string split, string check)
+    {
+        string[] sp = str.Split(split);
+        for (int i = 0; i < sp.Length; i++)
+        {
+            if (sp[i].Equals(check))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static bool SplitContains(string str, string split, string check)
+    {
+        string[] sp = str.Split(split);
+        for (int i = 0; i < sp.Length; i++)
+        {
+            if (sp[i].Contains(check))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void ListPrint<T>(IList<T> list)

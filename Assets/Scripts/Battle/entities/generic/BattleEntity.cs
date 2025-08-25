@@ -770,7 +770,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //replace this with something that reads from file
     public virtual string GetName()
     {
-        return GetNameStatic(entityID) + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier)/100));
+        return GetNameStatic(entityID) + (statMultiplier == 1 ? "" : " x" + (MainManager.Percent(statMultiplier)/100)) + (GetEntityProperty(EntityProperties.Alpha) ? " (Alpha)" : "");
     }
     public static string GetNameStatic(BattleHelper.EntityID entityID)
     {
@@ -1117,6 +1117,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             SetEntityProperty(BattleHelper.EntityProperties.Grounded, true);
         }
         StartIdle();
+        SpriteBoundUpdate();
     }
 
     public int FlipDefaultMult()
@@ -1131,7 +1132,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     //Encounter data level variables
     public virtual void SetEncounterVariables(string variable)   //object would be more versatile but the way you would get these variables is probably from some string table 
     {
-
+        if (variable != null && variable.Contains("alpha"))
+        {
+            SetEntityProperty(EntityProperties.Alpha);
+            hp = (int)(maxHP * 5f);
+        }
     }
     public virtual void SetVariables(string variable)   //object would be more versatile but the way you would get these variables is probably from some string table 
     {
@@ -1620,17 +1625,23 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (HasEffect(Effect.EffectType.Branded))
         {
             //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
-            HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency / 2f));
+            HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency));
+            yield return new WaitForSeconds(0.5f);
+        }
+        if (HasEffect(Effect.EffectType.Soaked))
+        {
+            //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
+            HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Soaked).potency));
             yield return new WaitForSeconds(0.5f);
         }
         if (HasEffect(Effect.EffectType.Cursed))
         {
-            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency);
+            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency * 3);
             yield return new WaitForSeconds(0.5f);
         }
         if (HasEffect(Effect.EffectType.Burned))
         {
-            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency + Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Burned).potency / 2f));
+            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency * 3);
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -2000,6 +2011,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             //Quantum Shield
             if (TokenRemoveOne(Effect.EffectType.QuantumShield))
             {
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.QuantumShield, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_QuantumShield, 1, 0.01f);
                 damage = 0;
                 ValidateEffects();
@@ -2009,16 +2021,19 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             damageTakenThisTurn += damage;
             if (HasEffect(Effect.EffectType.CounterFlare))
             {
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.CounterFlare, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_CounterFlare, 1, 0.01f);
                 counterFlareTrackedDamage += damage;
             }
             if (HasEffect(Effect.EffectType.ArcDischarge))
             {
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.ArcDischarge, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_ArcDischarge, 1, 0.01f);
                 arcDischargeTrackedDamage += damage;
             }
             if (HasEffect(Effect.EffectType.Splotch))
             {
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Splotch, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_Splotch, 1, 0.01f);
                 splotchTrackedDamage += damage;
             }
@@ -2029,6 +2044,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 if (astralWallTrackedDamage > GetEffectEntry(Effect.EffectType.AstralWall).potency)
                 {
                     MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_AstralWall, 1, 0.01f);
+                    BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.AstralWall, this);
                     int diff = astralWallTrackedDamage - GetEffectEntry(Effect.EffectType.AstralWall).potency;
 
                     damageTakenThisTurn -= diff;
@@ -2077,6 +2093,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             if (bleedDamage > 0)
             {
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Soulbleed, this);
                 ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, bleedDamage, 3), posId, Effect.EffectStackMode.KeepDurAddPot);
             }
         }
@@ -2086,6 +2103,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             sbyte softDamage = (sbyte)(damage / (sbyte)(GetEffectEntry(Effect.EffectType.Soften).potency + 1));
             if (softDamage > 0)
             {
+                BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Soften, this);
                 ReceiveEffectForce(new Effect(Effect.EffectType.DamageOverTime, softDamage, (sbyte)(GetEffectEntry(Effect.EffectType.Soften).potency + 1)), posId, Effect.EffectStackMode.KeepDurAddPot);
             }
         } else
@@ -3033,6 +3051,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             MakeStateIcon(output, BattleHelper.EntityState.Elusive);
             output++;
         }
+        if (GetEntityProperty(BattleHelper.EntityProperties.Alpha))
+        {
+            MakeStateIcon(output, BattleHelper.EntityState.Alpha);
+            output++;
+        }
 
 
         if (GetEntityProperty(BattleHelper.EntityProperties.NoMiracle))
@@ -3236,6 +3259,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
             }
             damage = (int)(damage * statMultiplier + 0.001f);
+
+            if (GetEntityProperty(EntityProperties.Alpha))
+            {
+                damage = (int)(damage * 1.5f);
+            }
         }
 
         bool canCounterProperties = !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NoCounterProperties);
@@ -3336,6 +3364,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
             }
             damage = (int)(damage * statMultiplier + 0.001f);
+
+            if (GetEntityProperty(EntityProperties.Alpha))
+            {
+                damage = (int)(damage * 1.5f);
+            }
         }
 
         bool canCounterProperties = !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NoCounterProperties);
@@ -3451,6 +3484,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             damage = (int)(damage * statMultiplier + 0.001f);
             damageO = (int)(damageO * other.statMultiplier + 0.001f);
+
+            if (GetEntityProperty(EntityProperties.Alpha))
+            {
+                damage = (int)(damage * 1.5f);
+            }
+            if (other.GetEntityProperty(EntityProperties.Alpha))
+            {
+                damageO = (int)(damageO * 1.5f);
+            }
         }
 
         //Debug.Log(damage + " " + damageO);
@@ -3555,6 +3597,15 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
             damage = (int)(damage * statMultiplier + 0.001f);
             damageO = (int)(damageO * other.statMultiplier + 0.001f);
+
+            if (GetEntityProperty(EntityProperties.Alpha))
+            {
+                damage = (int)(damage * 1.5f);
+            }
+            if (other.GetEntityProperty(EntityProperties.Alpha))
+            {
+                damageO = (int)(damageO * 1.5f);
+            }
         }
 
         bool canCounterProperties = !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.NoCounterProperties);
@@ -4360,6 +4411,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
             }
             damage = (int)(damage * statMultiplier + 0.001f);
+            if (GetEntityProperty(EntityProperties.Alpha))
+            {
+                damage = (int)(damage * 1.5f);
+            }
         }
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -4393,6 +4448,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                 damage = BattleControl.Instance.CurseAttackCalculation(damage);
             }
             damage = (int)(damage * statMultiplier + 0.001f);
+            if (GetEntityProperty(EntityProperties.Alpha))
+            {
+                damage = (int)(damage * 1.5f);
+            }
         }
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -4433,6 +4492,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             damage = (int)(damage * statMultiplier + 0.001f);
             damageO = (int)(damageO * other.statMultiplier + 0.001f);
+            if (GetEntityProperty(EntityProperties.Alpha))
+            {
+                damage = (int)(damage * 1.5f);
+            }
+            if (other.GetEntityProperty(EntityProperties.Alpha))
+            {
+                damageO = (int)(damageO * 1.5f);
+            }
         }
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -4469,6 +4536,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             }
             damage = (int)(damage * statMultiplier + 0.001f);
             damageO = (int)(damageO * other.statMultiplier + 0.001f);
+            if (GetEntityProperty(EntityProperties.Alpha))
+            {
+                damage = (int)(damage * 1.5f);
+            }
+            if (other.GetEntityProperty(EntityProperties.Alpha))
+            {
+                damageO = (int)(damageO * 1.5f);
+            }
         }
 
         if (BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Hardcode))
@@ -4601,6 +4676,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //Astral recovery
         if (target.HasEffect(Effect.EffectType.AstralRecovery) && target.hp > 0 && !BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.Static))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.AstralRecovery, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_AstralRecovery, 1, 0.01f);
             target.HealHealth(startDamage / 5);
         }
@@ -4608,6 +4684,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //Apply sprout
         if (target.HasEffect(Effect.EffectType.DrainSprout))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.DrainSprout, this);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_DrainSprout, 1, 0.01f);
             //target gets defocus
             //note: inflict status
@@ -4618,6 +4695,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (target.HasEffect(Effect.EffectType.BoltSprout))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.BoltSprout, this);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_BoltSprout, 1, 0.01f);
             //target gets sunder (buffered)
             //note: inflict status
@@ -4651,27 +4729,32 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (target.HasEffect(Effect.EffectType.ParryAura))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.ParryAura, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_ParryAura, 1, 0.01f);
             InflictEffect(target, new Effect(Effect.EffectType.Focus, target.GetEffectEntry(Effect.EffectType.ParryAura).potency, Effect.INFINITE_DURATION));
         }
         if (target.HasEffect(Effect.EffectType.BolsterAura))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.BolsterAura, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_BolsterAura, 1, 0.01f);
             InflictEffectBuffered(target, new Effect(Effect.EffectType.Absorb, target.GetEffectEntry(Effect.EffectType.BolsterAura).potency, Effect.INFINITE_DURATION));
         }
 
         if (target.HasEffect(Effect.EffectType.Elusive))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Elusive, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_Elusive, 1, 0.01f);
             InflictEffectBuffered(target, new Effect(Effect.EffectType.Ethereal, 1, target.GetEffectEntry(Effect.EffectType.Elusive).potency));
         }
 
         if (HasEffect(Effect.EffectType.Illuminate))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Illuminate, this);
             MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_EffectActivate_Illuminate, 1, 0.01f);
         }
         if (target.HasEffect(Effect.EffectType.Brittle))
         {
+            BattleControl.Instance.CreateEffectActivationParticles(Effect.EffectType.Brittle, target);
             MainManager.Instance.PlaySound(target.gameObject, MainManager.Sound.SFX_EffectActivate_Brittle, 1, 0.01f);
         }
 
@@ -5333,6 +5416,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         {
             output += (Mathf.CeilToInt(temp.potency / 2f));
         }
+        temp = GetEffectEntry(Effect.EffectType.Shocked);
+        if (temp != null)
+        {
+            output += (Mathf.CeilToInt(temp.potency / 2f));
+        }
         temp = GetEffectEntry(Effect.EffectType.Entangled);
         if (temp != null)
         {
@@ -5341,7 +5429,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.Soaked);
         if (temp != null)
         {
-            output += (temp.potency) * negative;
+            output += (temp.potency + Mathf.CeilToInt(temp.potency / 2f)) * negative;
         }
 
         temp = GetEffectEntry(Effect.EffectType.AttackUp);
@@ -5427,9 +5515,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.Shocked);
         if (temp != null)
         {
-            output += (temp.potency) * negative;
+            output += (temp.potency + Mathf.CeilToInt(temp.potency / 2f)) * negative;
         }
         temp = GetEffectEntry(Effect.EffectType.Entangled);
+        if (temp != null)
+        {
+            output += (Mathf.CeilToInt(temp.potency / 2f));
+        }
+        temp = GetEffectEntry(Effect.EffectType.Cursed);
         if (temp != null)
         {
             output += (Mathf.CeilToInt(temp.potency / 2f));
@@ -5697,7 +5790,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         int hp = 0;
         int maxHP = target.maxHP;
-        int levDiff = (int)(target.level * target.statMultiplier) + target.bonusLevel - level;
+        float alphaBonus = 1;
+        if (target.GetEntityProperty(EntityProperties.Alpha))
+        {
+            alphaBonus = 2.5f;
+        }
+        int levDiff = (int)(target.level * target.statMultiplier * alphaBonus) + target.bonusLevel - level;
 
         bool hasStatus = false;
 
@@ -6637,7 +6735,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         effects.RemoveAll((e) => true);
         ValidateEffects();
     }
-    public void CleanseEffects(bool curePermanents = true)
+    public void CleanseEffects(bool curePermanents = false)
     {
         //(note: 1 + count because I want the effect to be noticeable even if you have nothing)
         int power = 1 + effects.FindAll((e) => Effect.IsCleanseable(e.effect, curePermanents)).Count;
@@ -6857,7 +6955,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         effects.Sort((a, b) => ((int)a.effect - (int)b.effect));
 
         //recalculate maxHP using max HP Boost
-        maxHP = Mathf.CeilToInt(BattleControl.Instance.CurseMultiply(BattleEntityData.GetBattleEntityData(entityID).maxHP) * statMultiplier) + GetEffectPotency(Effect.EffectType.MaxHPBoost) - GetEffectPotency(Effect.EffectType.MaxHPReduction);
+        float alphaBonus = 1;
+        if (GetEntityProperty(EntityProperties.Alpha))
+        {
+            alphaBonus = 5;
+            moneyMult *= 2.5f;
+        }
+        maxHP = Mathf.CeilToInt(BattleControl.Instance.CurseMultiply(BattleEntityData.GetBattleEntityData(entityID).maxHP) * statMultiplier * alphaBonus) + GetEffectPotency(Effect.EffectType.MaxHPBoost) - GetEffectPotency(Effect.EffectType.MaxHPReduction);
 
         if (maxHP < 0)
         {
@@ -6870,6 +6974,167 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         }
 
         EffectSpriteUpdate();
+    }
+    public void InvertEffects()
+    {
+        //store them as pairs (a-b, c-d...)
+        //some effects are off limits due to being problematic
+        //(infinite attack reduction -> boost is a bit too good)
+        //there are also a few "sproadic" effects
+        Effect.EffectType[] conflictingStatuses =
+        {
+            //Effect.EffectType.AttackBoost,
+            //Effect.EffectType.AttackReduction,
+
+            //Effect.EffectType.DefenseBoost,
+            //Effect.EffectType.DefenseReduction,
+
+            //Effect.EffectType.EnduranceBoost,
+            //Effect.EffectType.EnduranceReduction,
+
+            //Effect.EffectType.AgilityBoost,
+            //Effect.EffectType.AgilityReduction,
+
+            //Effect.EffectType.MaxHPBoost,
+            //Effect.EffectType.MaxHPReduction,
+
+            //Effect.EffectType.MaxEPBoost,
+            //Effect.EffectType.MaxEPReduction,
+
+            //Effect.EffectType.MaxSEBoost,
+            //Effect.EffectType.MaxSEReduction,
+
+            //advanced ailments
+            Effect.EffectType.Soulbleed,
+            Effect.EffectType.Ethereal,
+
+            Effect.EffectType.Sunflame,
+            Effect.EffectType.Illuminate,
+
+            Effect.EffectType.Brittle,
+            Effect.EffectType.MistWall,
+
+            Effect.EffectType.Inverted,
+            Effect.EffectType.AstralWall,
+
+            Effect.EffectType.Dread,
+            Effect.EffectType.CounterFlare,
+
+            Effect.EffectType.ArcDischarge,
+            Effect.EffectType.Supercharge,
+
+            Effect.EffectType.TimeStop,
+            Effect.EffectType.QuantumShield,
+
+            Effect.EffectType.Exhausted,
+            Effect.EffectType.Soften,
+
+            Effect.EffectType.AttackUp,
+            Effect.EffectType.AttackDown,
+
+            Effect.EffectType.DefenseUp,
+            Effect.EffectType.DefenseDown,
+
+            Effect.EffectType.EnduranceUp,
+            Effect.EffectType.EnduranceDown,
+
+            Effect.EffectType.AgilityUp,
+            Effect.EffectType.AgilityDown,
+
+            Effect.EffectType.FlowUp,
+            Effect.EffectType.FlowDown,
+
+            Effect.EffectType.HealthRegen,
+            Effect.EffectType.HealthLoss,
+
+            Effect.EffectType.EnergyRegen,
+            Effect.EffectType.EnergyLoss,
+
+            Effect.EffectType.SoulRegen,
+            Effect.EffectType.SoulLoss,
+
+            Effect.EffectType.Focus,
+            Effect.EffectType.Defocus,
+
+            Effect.EffectType.Absorb,
+            Effect.EffectType.Sunder,
+
+            Effect.EffectType.Burst,
+            Effect.EffectType.Enervate,
+
+            Effect.EffectType.Haste,
+            Effect.EffectType.Hamper,
+
+            Effect.EffectType.Awaken,
+            Effect.EffectType.Disorient,
+
+            //Effect.EffectType.BonusTurns,
+            //Effect.EffectType.Cooldown,
+
+            Effect.EffectType.Freeze,
+            Effect.EffectType.Poison,
+
+            Effect.EffectType.Dizzy,
+            Effect.EffectType.Paralyze,
+
+            Effect.EffectType.Sleep,
+            Effect.EffectType.Berserk,
+
+            Effect.EffectType.ParryAura,
+            Effect.EffectType.DrainSprout,
+
+            Effect.EffectType.BolsterAura,
+            Effect.EffectType.BoltSprout,
+        };
+
+        //better way? make a list of indices of the statuses above for future reference to avoid loop retreading
+        int[] conflictingStatusIndices = new int[conflictingStatuses.Length];
+        for (int i = 0; i < conflictingStatusIndices.Length; i++)
+        {
+            conflictingStatusIndices[i] = -1;
+        }
+        for (int i = 0; i < effects.Count; i++)
+        {
+            for (int j = 0; j < conflictingStatuses.Length; j++)
+            {
+                if (effects[i].effect == conflictingStatuses[j])
+                {
+                    conflictingStatusIndices[j] = i;
+                }
+            }
+        }
+
+        //Now do stuff
+
+        for (int i = 0; i < conflictingStatusIndices.Length; i++)
+        {
+            if (conflictingStatusIndices[i] != -1)
+            {
+                //this is funky looking but it works
+                //mult of 2 + (i + 1) % 2
+                int otherIndex = (i - (i % 2)) + ((i + 1) % 2);
+                effects[conflictingStatusIndices[i]].effect = conflictingStatuses[otherIndex];
+
+                //audit some specific cases
+                if (effects[conflictingStatusIndices[i]].effect == Effect.EffectType.MistWall)
+                {
+                    effects[conflictingStatusIndices[i]].potency = 1;
+                }
+                if (effects[conflictingStatusIndices[i]].effect == Effect.EffectType.AstralWall)
+                {
+                    sbyte min = (sbyte)Mathf.CeilToInt(maxHP / 4f);
+                    effects[conflictingStatusIndices[i]].potency = min;
+                }
+                if (effects[conflictingStatusIndices[i]].effect == Effect.EffectType.Inverted)
+                {
+                    effects[conflictingStatusIndices[i]].potency = 1;
+                }
+                if (effects[conflictingStatusIndices[i]].effect == Effect.EffectType.TimeStop)
+                {
+                    effects[conflictingStatusIndices[i]].potency = 1;
+                }
+            }
+        }
     }
     public void InvertEffect(Effect e)
     {
@@ -7783,6 +8048,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         if (GetEffectEntry(e) != null)
         {
+            BattleControl.Instance.CreateEffectRemovedParticles(GetEffectEntry(e), this);
             effects.Remove(GetEffectEntry(e));
             return true;
         }
@@ -7796,6 +8062,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             GetEffectEntry(e).potency--;
             if (GetEffectEntry(e).potency < 1)
             {
+                BattleControl.Instance.CreateEffectRemovedParticles(GetEffectEntry(e), this);
                 effects.Remove(GetEffectEntry(e));
             }
             return true;
@@ -7937,6 +8204,11 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         moveExecuting = false;
         moveActive = false;
     } //note that you can make entities do arbitrary moves due to how its coded
+
+    public virtual IEnumerator PostAction()
+    {
+        yield break;
+    }
 
     //Use this sparingly (Will cause problems if you have multiple turns, as your next turn is queued up while the first turn is active still)
     public void YieldMove()
@@ -9393,6 +9665,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         //Random offset
         //Note: broken?
         SetAnimation(idleanimation, force, RandomGenerator.Get());
+        SpriteBoundUpdate();
     }
 
     public virtual void ReplaceAnimation(string name = null, bool force = false)

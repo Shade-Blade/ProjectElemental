@@ -330,6 +330,11 @@ public class BM_DesertBloom_ShiftyBiteHustle : EnemyMove
         caller.posId = ((caller.posId / 10) * 10) + posA % 10;
         shiftTarget.posId = ((shiftTarget.posId / 10) * 10) + posB % 10;
 
+        if (caller.posId / 10 == 0)
+        {
+            caller.posId += 10;
+        }
+
         //shift
         shiftTarget.homePos = BattleHelper.GetDefaultPosition(shiftTarget.posId);
         caller.homePos = BattleHelper.GetDefaultPosition(caller.posId);
@@ -530,6 +535,11 @@ public class BM_DesertBloom_SwoopHealHustle : EnemyMove
         caller.posId = ((caller.posId / 10) * 10) + posA % 10;
         shiftTarget.posId = ((shiftTarget.posId / 10) * 10) + posB % 10;
 
+        if (caller.posId / 10 == 0)
+        {
+            caller.posId += 10;
+        }
+
         //shift
         shiftTarget.homePos = BattleHelper.GetDefaultPosition(shiftTarget.posId);
         caller.homePos = BattleHelper.GetDefaultPosition(caller.posId);
@@ -628,7 +638,7 @@ public class BE_Goldpole : BattleEntity
     {
         counterCount = 0;
 
-        Effect_ReactionCounter();
+        Effect_ReactionAttack();
 
         yield return new WaitForSeconds(0.5f);
     }
@@ -707,6 +717,7 @@ public class BM_Goldpole_QuickZap : EnemyMove
 
     public override IEnumerator ExecuteOutOfTurn(BattleEntity caller, BattleEntity target, int level = 1)
     {
+        //"Improper" to do this but ehh (proper = code it out instead of running Execute)
         caller.BasicTargetChooser(GetTargetArea(caller), 7, 5 + caller.actionCounter * 2);
         yield return StartCoroutine(Execute(caller, level));
     }
@@ -1009,6 +1020,13 @@ public class BM_Brightpole_FlashDarkness : EnemyMove
 
             if (!BattleControl.Instance.IsFrontmostLow(caller, caller.curTarget))
             {
+                if (BattleControl.Instance.GetFrontmostLow(caller) == null)
+                {
+                    //How
+                    //just skip the rest of the stuff?
+                    yield return StartCoroutine(caller.MoveEasing(caller.homePos, (e) => MainManager.EasingOutIn(e)));
+                    yield break;
+                }
                 tposA = BattleControl.Instance.GetFrontmostLow(caller).transform.position + offset + Vector3.back * 0.5f;
                 backFlag = true;
             }
@@ -1125,7 +1143,7 @@ public class BE_Stormswimmer : BattleEntity
 
             if (contact <= BattleHelper.ContactLevel.Contact)
             {
-                DealDamage(target, 2, BattleHelper.DamageType.Earth, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Contact);
+                DealDamage(target, 2, BattleHelper.DamageType.Air, (ulong)BattleHelper.DamageProperties.StandardContactHazard, BattleHelper.ContactLevel.Contact);
                 target.contactImmunityList.Add(posId);
             }
         }
@@ -1152,12 +1170,14 @@ public class BM_Stormswimmer_TripleBolt : EnemyMove
         {
             for (int i = 0; i < 3; i++)
             {
-                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.175f));
+                yield return StartCoroutine(caller.SpinHeavy(Vector3.up * 360, 0.25f));
 
                 if (caller.GetAttackHit(caller.curTarget, BattleHelper.DamageType.Air))
                 {
                     caller.curTarget.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.ReverseSquish);
-                    caller.DealDamage(caller.curTarget, 4, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Contact);
+                    //the minus defense from the first hit makes the following hits stronger
+                    //so the base is slightly lower than it "should" be?
+                    caller.DealDamage(caller.curTarget, 3, BattleHelper.DamageType.Air, 0, BattleHelper.ContactLevel.Contact);
                 }
                 else
                 {
@@ -1294,8 +1314,10 @@ public class BM_Stormswimmer_ShiftySwoop : EnemyMove
         caller.posId = ((caller.posId / 10) * 10) + posA % 10;
         shiftTarget.posId = ((shiftTarget.posId / 10) * 10) + posB % 10;
 
-        Debug.Log("caller " + caller.posId + " <- " + posB);
-        Debug.Log("shifter " + shiftTarget.posId + " <- " + posA);
+        if (caller.posId / 10 == 0)
+        {
+            caller.posId += 10;
+        }
 
         //shift
         shiftTarget.homePos = BattleHelper.GetDefaultPosition(shiftTarget.posId);
