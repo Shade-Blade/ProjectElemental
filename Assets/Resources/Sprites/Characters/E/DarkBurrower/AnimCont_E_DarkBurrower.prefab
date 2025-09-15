@@ -188,7 +188,7 @@ MonoBehaviour:
   currentEffect: 
   sprite: {fileID: 8510939000944800811}
   leftFacing: 1
-  subobject: {fileID: 0}
+  subobject: {fileID: 4012585618382714007}
   materialIndex: 0
   bigradientMap: 0
   blackColor: {r: 0, g: 0, b: 0, a: 0}

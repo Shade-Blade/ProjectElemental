@@ -4908,23 +4908,23 @@ public class PlayerEntity : BattleEntity
             if (HasEffect(Effect.EffectType.Branded))
             {
                 //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
-                HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency));
+                HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency * 1));
                 yield return new WaitForSeconds(0.5f);
             }
             if (HasEffect(Effect.EffectType.Soaked))
             {
                 //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
-                HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Soaked).potency));
+                HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Soaked).potency * 1));
                 yield return new WaitForSeconds(0.5f);
             }
             if (HasEffect(Effect.EffectType.Cursed))
             {
-                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency * 3);
+                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency * 2);
                 yield return new WaitForSeconds(0.5f);
             }
             if (HasEffect(Effect.EffectType.Burned))
             {
-                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency * 3);
+                TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency * 2);
                 yield return new WaitForSeconds(0.5f);
             }
 
@@ -5009,12 +5009,12 @@ public class PlayerEntity : BattleEntity
 
             if (HasEffect(Effect.EffectType.SoulRegen))
             {
-                HealEnergy(GetEffectEntry(Effect.EffectType.SoulRegen).potency);
+                HealSoulEnergy(GetEffectEntry(Effect.EffectType.SoulRegen).potency);
                 yield return new WaitForSeconds(0.5f);
             }
             if (HasEffect(Effect.EffectType.SoulLoss))
             {
-                RemoveEnergy(GetEffectEntry(Effect.EffectType.SoulLoss).potency);
+                RemoveSoulEnergy(GetEffectEntry(Effect.EffectType.SoulLoss).potency);
                 yield return new WaitForSeconds(0.5f);
             }
 

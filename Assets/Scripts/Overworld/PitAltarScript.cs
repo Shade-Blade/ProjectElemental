@@ -166,7 +166,7 @@ public class PitAltarScript : WorldObject, IInteractable, ITextSpeaker
                 testTextFile[0][0] = "<system>You can now use the Soul Move: Overheat! Overheat lets you reduce the Defense of all enemies for a short time.";
                 break;
             case 5:
-                testTextFile[0][0] = "<system>You can now use the Soul Move: Void Crush! Void Crush lets you instantly defeat low level enemies (or enemies with low health or affected by ailments.)";
+                testTextFile[0][0] = "<system>You can now use the Soul Move: Umbral Crush! Umbral Crush lets you instantly defeat low level enemies (or enemies with low health or affected by ailments.)";
                 break;
             case 6:
                 testTextFile[0][0] = "<system>You can now use the Soul Move: Flash Freeze! Flash Freeze lets you try to Freeze all enemies. (This can hit Ethereal targets.)";

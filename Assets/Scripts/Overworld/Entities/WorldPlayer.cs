@@ -272,6 +272,8 @@ public class WorldPlayer : WorldEntity
     public bool canHover;
     public float hoverTime;
 
+    public ITattleable zoneTattleTarget;
+
 
     //Debug
     //TODO: Set up real animation system
@@ -2792,6 +2794,7 @@ public class WorldPlayer : WorldEntity
         concealedZone = false;
         noAetherZone = false;
         timeSinceLaunch += Time.fixedDeltaTime;
+        zoneTattleTarget = null;
     }
 
     public void TrySnapToFloor()
@@ -5033,41 +5036,79 @@ public class WorldPlayer : WorldEntity
         }
         else
         {
-            //Map tattle
-            //StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.Instance.testTextFile, 3, this));
-
-            string tattle = mapScript.GetTattle(); //tattleTarget.GetTattle();
-
-            //use text shorthand?
-            string[][] file = null;
-            int index = -1;
-            (file, index) = FormattedString.GetTextFileFromShorthandFull(tattle);
-
-            //file is passed by reference so no chance of memory leak or using too much memory (?)
-
-            if (file == null)
+            if (zoneTattleTarget != null)
             {
-                if (FormattedString.IsStringCSV(tattle))
+                //Object tattle
+                //StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.Instance.testTextFile, 0, this));
+                string tattle = zoneTattleTarget.GetTattle();
+
+                //use text shorthand?
+                string[][] file = null;
+                int index = -1;
+                (file, index) = FormattedString.GetTextFileFromShorthandFull(tattle);
+
+                //file is passed by reference so no chance of memory leak or using too much memory (?)
+
+                if (file == null)
                 {
-                    //make a new file
-                    StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.CSVParse(tattle), index, this));
+                    if (FormattedString.IsStringCSV(tattle))
+                    {
+                        //make a new file
+                        StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.CSVParse(tattle), index, this));
+                    }
+                    else
+                    {
+                        //make a new 1 liner file
+                        string[][] oneliner = new string[1][];
+                        oneliner[0] = new string[1];
+                        oneliner[0][0] = tattle;
+                        StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(oneliner, 0, this));
+                    }
                 }
                 else
                 {
-                    //make a new 1 liner file
-                    string[][] oneliner = new string[1][];
-                    oneliner[0] = new string[1];
-                    oneliner[0][0] = tattle;
-                    StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(oneliner, 0, this));
+                    //Read that file
+                    StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(file, index, this));
                 }
-            }
-            else
+            } else
             {
-                //Read that file
-                StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(file, index, this));
-            }
+                //Map tattle
+                //StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.Instance.testTextFile, 3, this));
 
-            //StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.Instance.testTextFile, 3, this));
+                string tattle = mapScript.GetTattle(); //tattleTarget.GetTattle();
+
+                //use text shorthand?
+                string[][] file = null;
+                int index = -1;
+                (file, index) = FormattedString.GetTextFileFromShorthandFull(tattle);
+
+                //file is passed by reference so no chance of memory leak or using too much memory (?)
+
+                if (file == null)
+                {
+                    if (FormattedString.IsStringCSV(tattle))
+                    {
+                        //make a new file
+                        StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.CSVParse(tattle), index, this));
+                    }
+                    else
+                    {
+                        //make a new 1 liner file
+                        string[][] oneliner = new string[1][];
+                        oneliner[0] = new string[1];
+                        oneliner[0][0] = tattle;
+                        StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(oneliner, 0, this));
+                    }
+                }
+                else
+                {
+                    //Read that file
+                    StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(file, index, this));
+                }
+
+                //StartCoroutine(MainManager.Instance.DisplayTextBoxBlocking(MainManager.Instance.testTextFile, 3, this));
+
+            }
         }
     }
 

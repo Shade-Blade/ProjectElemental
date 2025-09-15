@@ -583,11 +583,6 @@ public class BE_Harmonywing : BattleEntity
 
     public override bool ReactToEvent(BattleEntity target, BattleHelper.Event e, int previousReactions)
     {
-        if (BattleControl.Instance.GetCurseLevel() <= 0)
-        {
-            return false;
-        }
-
         //final effect
         if (BattleControl.Instance.GetCurseLevel() > 0 && (e == BattleHelper.Event.Death && target == this && counterCount <= 0))
         {
@@ -602,6 +597,7 @@ public class BE_Harmonywing : BattleEntity
             //can't just do GetName().Contains if I ever add localization
             //but the internal index will not change in that case
             //Note 2: I can't make any enemy have "Song" in their real name (or for the move indices) or else things go off the rails
+            //I don't really have a reason to do that though? (the "song"birds are already named something different)
             if (target.currMove is EnemyMove em)
             {
                 if (em.GetMoveIndex().ToString().Contains("Song"))

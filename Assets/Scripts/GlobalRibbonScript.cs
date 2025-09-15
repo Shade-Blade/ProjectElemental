@@ -224,9 +224,9 @@ public class GlobalRibbonScript : MonoBehaviour
             for (int i = 0; i < wc.Length; i++)
             {
                 newwc[i] = wc[i];
-                newwc[i].r *= 0.75f;
-                newwc[i].g *= 0.75f;
-                newwc[i].b *= 0.75f;
+                newwc[i].r = newwc[i].r * 0.4f + 0.3f;
+                newwc[i].g = newwc[i].g * 0.4f + 0.3f;
+                newwc[i].b = newwc[i].b * 0.4f + 0.3f;
             }
             newwc[0] = new Color(0, 0, 0, 1);
             wc = newwc;
@@ -250,9 +250,9 @@ public class GlobalRibbonScript : MonoBehaviour
             for (int i = 0; i < lc.Length; i++)
             {
                 newlc[i] = lc[i];
-                newlc[i].r *= 0.75f;
-                newlc[i].g *= 0.75f;
-                newlc[i].b *= 0.75f;
+                newlc[i].r = newlc[i].r * 0.4f + 0.3f;
+                newlc[i].g = newlc[i].g * 0.4f + 0.3f;
+                newlc[i].b = newlc[i].b * 0.4f + 0.3f;
             }
             newlc[0] = new Color(0, 0, 0, 1);
             lc = newlc;

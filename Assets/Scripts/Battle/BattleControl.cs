@@ -377,14 +377,20 @@ public class BattlePopup
         string text;
         string[] vars;
 
-        vars = new string[15];
+        vars = new string[16];
 
         //vars[0] = (int)status.effect + "";
 
         string effect = (int)status.effect + "";
 
+
         vars[0] = status.duration + "";
         vars[1] = status.potency + "";
+
+        //Note: I have replaced most of these with the new special var formula tags
+        //  (All of them that are simple multipliers)
+        //but some are not really worth replacing
+        //(it would just be a single use tag)
 
         vars[2] = (10 * status.potency) + "";   //sleep/poison proportion
         vars[3] = (2 * status.potency) + "";      //sleep/poison low end
@@ -396,11 +402,12 @@ public class BattlePopup
         vars[9] = (1 + (1 * status.potency)) + "";    //Sunflame low end
         vars[10] = (5 + (5 * status.potency)) + "";   //Sunflame high end
 
-        //vars[11] is used for boost percent
+        //vars[11] is used for item boost percent
 
         vars[12] = (Mathf.CeilToInt(0.5f * status.potency)) + "";   //Mark negative
         vars[13] = ((1 * status.potency + Mathf.CeilToInt(0.5f * status.potency))) + "";   //Stronger mark strength
         vars[14] = (3 * status.potency) + "";      //sleep/poison low end
+        vars[15] = (Mathf.CeilToInt(status.potency / 3.001f)) + "";   //Defense positive
 
         float boost = 1;
         switch (status.potency)
@@ -5634,7 +5641,7 @@ public class BattleControl : MonoBehaviour
                     }
                     //}
 
-                    if (!miracleShroom && !ItemReactionExists(Item.ItemType.MiracleNeedle) && !ItemReactionExists(Item.ItemType.MiracleShroom) && entities.FindAll(e => e.hp > 0).Count == 0)
+                    if (!miracleShroom && !ItemReactionExists(Item.ItemType.MiracleNeedle) && !ItemReactionExists(Item.ItemType.MiracleShroom) && entities.FindAll(e => IsPlayerControlled(e, true) && e.hp > 0).Count == 0)
                     {
                         miracleShroom = true;
                         AddReactionMoveEvent(battleEntity, battleEntity, Item.GetItemMoveScript(playerData.itemInventory[i]), true, true);

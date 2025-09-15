@@ -1625,23 +1625,23 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (HasEffect(Effect.EffectType.Branded))
         {
             //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
-            HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency));
+            HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Branded).potency * 0.666f));
             yield return new WaitForSeconds(0.5f);
         }
         if (HasEffect(Effect.EffectType.Soaked))
         {
             //(temp.potency + Mathf.CeilToInt(temp.potency / 2f))
-            HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Soaked).potency));
+            HealHealth(Mathf.CeilToInt(GetEffectEntry(Effect.EffectType.Soaked).potency * 0.666f));
             yield return new WaitForSeconds(0.5f);
         }
         if (HasEffect(Effect.EffectType.Cursed))
         {
-            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency * 3);
+            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Cursed).potency * 2);
             yield return new WaitForSeconds(0.5f);
         }
         if (HasEffect(Effect.EffectType.Burned))
         {
-            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency * 3);
+            TakeDamageStatus(GetEffectEntry(Effect.EffectType.Burned).potency * 2);
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -1693,12 +1693,12 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if (HasEffect(Effect.EffectType.SoulRegen))
         {
-            HealEnergy(GetEffectEntry(Effect.EffectType.SoulRegen).potency);
+            HealSoulEnergy(GetEffectEntry(Effect.EffectType.SoulRegen).potency);
             yield return new WaitForSeconds(0.5f);
         }
         if (HasEffect(Effect.EffectType.SoulLoss))
         {
-            RemoveEnergy(GetEffectEntry(Effect.EffectType.SoulLoss).potency);
+            RemoveSoulEnergy(GetEffectEntry(Effect.EffectType.SoulLoss).potency);
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -2480,24 +2480,9 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
 
     //to do: move some of this to BattleControl since the ep count is there
-    public int RemoveEnergy(int amount, bool hide = false, Vector3? offset = null)
+    public int RemoveEnergy(int amount)
     {
-        int a = BattleControl.Instance.ep;
-        BattleControl.Instance.ep -= amount;
-        if (!hide)
-        {
-            BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainEnergy, amount, null, null, GetDamageEffectPosition() + offset.GetValueOrDefault(), this);
-        }
-
-        if (BattleControl.Instance.ep < 0)
-        {
-            BattleControl.Instance.ep = 0;
-            return a;
-        }
-        else
-        {
-            return amount;
-        }
+        return HealEnergyTrackOverhealPay(-amount);
     }
     public bool TryRemoveEnergy(int amount) //false = failed (did not remove), true = success (did remove energy)
     {
@@ -2785,6 +2770,10 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
             BattleControl.Instance.CreateDamageEffect(BattleHelper.DamageEffect.DrainSoulEnergy, se, null, null, GetDamageEffectPosition(), this);
             BattleControl.Instance.CreateNegativeSoulParticles(this, (int)(1 + 9 * Mathf.Log(se, 60)));
         }
+    }
+    public void RemoveSoulEnergy(int se)
+    {
+        HealSoulEnergy(-se);
     }
     public int HealSoulEnergyTrackOverhealPay(int se)
     {
@@ -4760,32 +4749,32 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         if ((type & (DamageType.Light)) != 0)
         {
-            InflictEffect(target, new Effect(Effect.EffectType.Branded, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            InflictEffect(target, new Effect(Effect.EffectType.Branded, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
             RemoveEffect(Effect.EffectType.Cursed);
         }
         if ((type & (DamageType.Dark)) != 0)
         {
-            InflictEffect(target, new Effect(Effect.EffectType.Cursed, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            InflictEffect(target, new Effect(Effect.EffectType.Cursed, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
             RemoveEffect(Effect.EffectType.Branded);
         }
         if ((type & (DamageType.Water)) != 0)
         {
-            InflictEffect(target, new Effect(Effect.EffectType.Soaked, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            InflictEffect(target, new Effect(Effect.EffectType.Soaked, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
             RemoveEffect(Effect.EffectType.Burned);
         }
         if ((type & (DamageType.Fire)) != 0)
         {
-            InflictEffect(target, new Effect(Effect.EffectType.Burned, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            InflictEffect(target, new Effect(Effect.EffectType.Burned, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
             RemoveEffect(Effect.EffectType.Soaked);
         }
         if ((type & (DamageType.Earth)) != 0)
         {
-            InflictEffect(target, new Effect(Effect.EffectType.Entangled, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            InflictEffect(target, new Effect(Effect.EffectType.Entangled, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
             RemoveEffect(Effect.EffectType.Shocked);
         }
         if ((type & (DamageType.Air)) != 0)
         {
-            InflictEffect(target, new Effect(Effect.EffectType.Shocked, (sbyte)(Mathf.CeilToInt(damage / 5f)), 2));
+            InflictEffect(target, new Effect(Effect.EffectType.Shocked, (sbyte)(Mathf.CeilToInt(damage / 4f)), 2));
             RemoveEffect(Effect.EffectType.Entangled);
         }
     }
@@ -5510,22 +5499,22 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         temp = GetEffectEntry(Effect.EffectType.Branded);
         if (temp != null)
         {
-            output += (temp.potency + Mathf.CeilToInt(temp.potency / 2f)) * negative;
+            output += (temp.potency) * negative;
         }
         temp = GetEffectEntry(Effect.EffectType.Shocked);
         if (temp != null)
         {
-            output += (temp.potency + Mathf.CeilToInt(temp.potency / 2f)) * negative;
+            output += (temp.potency) * negative;
         }
         temp = GetEffectEntry(Effect.EffectType.Entangled);
         if (temp != null)
         {
-            output += (Mathf.CeilToInt(temp.potency / 2f));
+            output += (Mathf.CeilToInt(temp.potency / 3.001f));
         }
         temp = GetEffectEntry(Effect.EffectType.Cursed);
         if (temp != null)
         {
-            output += (Mathf.CeilToInt(temp.potency / 2f));
+            output += (Mathf.CeilToInt(temp.potency / 3.001f));
         }
 
         temp = GetEffectEntry(Effect.EffectType.DefenseUp);
@@ -6252,12 +6241,14 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
                                 }
                                 else
                                 {
+                                    //Debug.Log("case C");
                                     int total = se.potency * se.duration;
                                     entry.duration += (sbyte)(total / entry.potency);
                                     if ((sbyte)(total / entry.potency) < 1)
                                     {
                                         entry.duration++;
                                     }
+                                    //Debug.Log(entry.duration);
                                 }
 
                                 //special case (to nerf stacking sticky then inverting it)
@@ -6839,7 +6830,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         int potency = 0;
 
-        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly)))
+        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.Ally), true))
         {
             int currPotency = b.GetEffectPotency(effect);
             if (potency < currPotency)
@@ -6854,7 +6845,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     {
         int potency = 0;
 
-        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly)))
+        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.Ally), true))
         {
             potency += b.GetEffectPotency(effect);
         }
@@ -6864,7 +6855,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int CountPartyCumulativeBuffPotency()
     {
         int output = 0;
-        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly)))
+        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.Ally), true))
         {
             output += b.CountBuffPotency();
         }
@@ -6873,7 +6864,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int CountPartyCumulativeDebuffPotency()
     {
         int output = 0;
-        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.LiveAlly)))
+        foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted(this, new TargetArea(TargetArea.TargetAreaType.Ally), true))
         {
             output += b.CountDebuffPotency();
         }
@@ -8044,25 +8035,31 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     }
 
     //return false if you do not have effect, true if you have effect (but effect is cured by this)
-    public bool TokenRemove(Effect.EffectType e)
+    public bool TokenRemove(Effect.EffectType e, bool hide = false)
     {
         if (GetEffectEntry(e) != null)
         {
-            BattleControl.Instance.CreateEffectRemovedParticles(GetEffectEntry(e), this);
+            if (!hide)
+            {
+                BattleControl.Instance.CreateEffectRemovedParticles(GetEffectEntry(e), this);
+            }
             effects.Remove(GetEffectEntry(e));
             return true;
         }
         return false;
     }
     //same as above but only removes 1 potency level at a time
-    public bool TokenRemoveOne(Effect.EffectType e)
+    public bool TokenRemoveOne(Effect.EffectType e, bool hide = false)
     {
         if (GetEffectEntry(e) != null)
         {
             GetEffectEntry(e).potency--;
             if (GetEffectEntry(e).potency < 1)
             {
-                BattleControl.Instance.CreateEffectRemovedParticles(GetEffectEntry(e), this);
+                if (!hide)
+                {
+                    BattleControl.Instance.CreateEffectRemovedParticles(GetEffectEntry(e), this);
+                }
                 effects.Remove(GetEffectEntry(e));
             }
             return true;

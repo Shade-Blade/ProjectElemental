@@ -854,6 +854,8 @@ public class TagEntry
 
         //Variable Tags (Note: variables values are set as soon as it's put into the text displayer, so having a set variable tag right before a variable might not work)
         Var,       //String var (This is used with specific strings where the var is known and is set right before string displayed)
+        VarA,       //Parse as number then add (integer)
+        VarM,       //Parse as number then multiply (integer)
         Arg,        //Slightly more useful than Var since menu result is easier to change and stuff (though this uses the global menu result thing, note that set and setvar change the local one but that also sets the global one)
         GlobalFlag,//Global flags
         GlobalVar, //Global vars
@@ -1752,7 +1754,7 @@ public class FormattedString
 
         for (int i = tags.Length - 1; i >= 0; i--)
         {
-            if (tags[i].tag == TagEntry.TextTag.Var)
+            if (tags[i].tag == TagEntry.TextTag.Var || tags[i].tag == TagEntry.TextTag.VarA || tags[i].tag == TagEntry.TextTag.VarM)
             {
                 int arg = 0;
                 if (tags[i].args.Length > 0)
@@ -1775,10 +1777,23 @@ public class FormattedString
                     //new special thing: offsets
                     if (tags[i].args.Length > 1 && vars.Length > arg)
                     {
-                        if (int.TryParse(vars[arg], out int number) && int.TryParse(tags[i].args[1], out int offset))
+                        switch (tags[i].tag)
                         {
-                            special = true;
-                            output = output.Insert(tags[i].trueStartIndex, (number + offset).ToString());
+                            case TagEntry.TextTag.Var:
+                            case TagEntry.TextTag.VarA:
+                                if (int.TryParse(vars[arg], out int number) && int.TryParse(tags[i].args[1], out int offset))
+                                {
+                                    special = true;
+                                    output = output.Insert(tags[i].trueStartIndex, (number + offset).ToString());
+                                }
+                                break;
+                            case TagEntry.TextTag.VarM:
+                                if (float.TryParse(vars[arg], out float mnumber) && float.TryParse(tags[i].args[1], out float moffset))
+                                {
+                                    special = true;
+                                    output = output.Insert(tags[i].trueStartIndex, (Mathf.CeilToInt(mnumber * moffset)).ToString());
+                                }
+                                break;
                         }
                     }
 
@@ -1794,38 +1809,6 @@ public class FormattedString
     } //has a failsafe for nonexistent vars
     //note that textboxes get passed through here with vars = null but that will not mess up unless there are vars in the text
 
-    public static string ParseVar(string s, string var, int value)  //selective version (e.g. if value = 5 then all the <var,5> tags get parsed)
-    {
-        FormattedString fs = new FormattedString(s);
-
-        //<var> = <var,0>
-        string output = s;
-        TagEntry[] tags = fs.tags;
-
-        for (int i = tags.Length - 1; i >= 0; i--)
-        {
-            if (tags[i].tag == TagEntry.TextTag.Var)
-            {
-                int arg = 0;
-                if (tags[i].args.Length > 0)
-                {
-                    if (int.TryParse(tags[i].args[0], out int result))
-                    {
-                        arg = result;
-                    }
-                }
-
-                if (arg == value)
-                {
-                    //get rid of tag
-                    output = output.Substring(0, tags[i].trueStartIndex) + output.Substring(tags[i].trueEndIndex + 1, output.Length - 1 - tags[i].trueEndIndex);
-                    output = output.Insert(tags[i].trueStartIndex, var);
-                }
-            }
-        }
-
-        return output;
-    }
     public static string ParseNonlocalVars(string s) //parses nonlocal vars and flags
     {
         FormattedString fs = new FormattedString(s);
@@ -2727,64 +2710,6 @@ public class FormattedString
         }
 
         MainManager.Instance.lastTextboxMenuResult = output.output.ToString();
-        return output;
-    }
-
-    public string ParseVars(string[] vars)
-    {
-        //<var> = <var,0>
-        string output = internalString;
-        TagEntry[] tags = this.tags;
-
-        for (int i = tags.Length - 1; i >= 0; i--)
-        {
-            if (tags[i].tag == TagEntry.TextTag.Var)
-            {
-                int arg = 0;
-                if (tags[i].args.Length > 0)
-                {
-                    if (int.TryParse(tags[i].args[0], out int result))
-                    {
-                        arg = result;
-                    }
-                }
-                //get rid of tag
-                output = output.Substring(0, tags[i].trueStartIndex) + output.Substring(tags[i].trueEndIndex + 1, output.Length - 1 - tags[i].trueEndIndex);
-                output = output.Insert(tags[i].trueStartIndex, vars[arg]);
-            }
-        }
-
-        return output;
-    } //Will throw exceptions if there is a var tag and there aren't enough vars in the array
-    public string ParseVar(string var, int value)
-    {
-        //<var> = <var,0>
-        //vars are 0 indexed
-        string output = internalString;
-        TagEntry[] tags = this.tags;
-
-        for (int i = tags.Length - 1; i >= 0; i--)
-        {
-            if (tags[i].tag == TagEntry.TextTag.Var)
-            {
-                int arg = 0;
-                if (tags[i].args.Length > 0)
-                {
-                    if (int.TryParse(tags[i].args[0], out int result))
-                    {
-                        arg = result;
-                    }
-                }
-
-                if (arg == value)
-                {
-                    //get rid of tag
-                    output = output.Substring(0, tags[i].trueStartIndex) + output.Substring(tags[i].trueEndIndex + 1, output.Length - 1 - tags[i].trueEndIndex);
-                    output = output.Insert(tags[i].trueStartIndex, var);
-                }
-            }
-        }
-
         return output;
     }
     public bool HasTag(TagEntry.TextTag tag)

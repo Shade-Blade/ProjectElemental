@@ -62,7 +62,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _BrightnessCutoffA: 0.05
-    - _BrightnessCutoffB: 0.55
+    - _BrightnessCutoffB: 0.7
     - _BrightnessHigh: 1
     - _BrightnessLow: 0.22
     - _BrightnessMid: 0.53

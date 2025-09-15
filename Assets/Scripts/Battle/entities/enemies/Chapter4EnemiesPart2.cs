@@ -372,7 +372,7 @@ public class BM_GoldScreecher_TripleFlameWind : EnemyMove
                 if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
                 {
                     t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
-                    caller.DealDamage(t, 4, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(t, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                 }
                 else
                 {
@@ -492,7 +492,7 @@ public class BM_Infernoling_TripleFlameBreath : EnemyMove
             {
                 if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
                 {
-                    caller.DealDamage(t, 4, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(t, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                 }
                 else
                 {
@@ -814,7 +814,7 @@ public class BM_Wyverlet_DoubleFlameWind : EnemyMove
                 if (caller.GetAttackHit(t, BattleHelper.DamageType.Fire))
                 {
                     t.SetSpecialHurtAnim(BattleHelper.SpecialHitAnim.Spin);
-                    caller.DealDamage(t, 4, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
+                    caller.DealDamage(t, 3, BattleHelper.DamageType.Fire, 0, BattleHelper.ContactLevel.Infinite);
                 }
                 else
                 {

@@ -3445,7 +3445,7 @@ public class MetaItem_Void : MetaItemMove
         //extremely hacky fix
         caller.ReceiveEffectForce(new Effect(Effect.EffectType.Freebie, 1, Effect.INFINITE_DURATION), caller.posId, Effect.EffectStackMode.AdditivePot, false);
         yield return StartCoroutine(itemMove.Execute(caller, level));
-        caller.TokenRemoveOne(Effect.EffectType.Freebie);
+        caller.TokenRemoveOne(Effect.EffectType.Freebie, true);
 
         BattleControl.Instance.playerData.GetPlayerDataEntry(caller.entityID).itemsUsed++;
         BattleControl.Instance.playerData.itemsUsed++;
