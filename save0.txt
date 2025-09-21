@@ -1,10 +1,10 @@
 a'
-d_rh_v0.20
+d_rh_v0.22
 GF_TutorialExplain_Badge:True,GF_TutorialExplain_Item:True,GF_TutorialExplain_Ribbon:True,GF_Bestiary_Renegade:True,GF_Recipe_RoastedNut:True,GF_Recipe_AppleJuice:True
 GV_PitFloor:40,GV_PitAltar:4
 GemstoneIslands,RabbitHole_RestFloor,-0.5602932|0.375|-2.826658
-3845.41346904368
-10,0,4,30,7,24,24,22,56,189,0,0,10,32,6,6,6,23,15,156,671,339,17,10,47,44,3,6
+3845.414
+10,0,4,30,7,24,24,22,56,189,0,0,10,32,6,6,6,23,15,156,671,339,17,10,47,44,3,7
 EP,HP,SP,HP,EP,SP,HP,EP,HP
 
 SleepDart|None|EnemyDrop|0|23,MetalSalad|None|Overworld|0|21,RoastedMushroom|None|Overworld|0|20,RoastedMushroom|None|Overworld|0|19,RoastedMushroom|None|Overworld|0|18,Watermelon|None|Overworld,BerrySilver|None|Overworld|0|17,SleepDart|None|Overworld,HoneyCaramel|None|Overworld|0|11

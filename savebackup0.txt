@@ -1,23 +1,23 @@
 a'
 d_rh_v0.20
 GF_TutorialExplain_Badge:True,GF_TutorialExplain_Item:True,GF_TutorialExplain_Ribbon:True,GF_Bestiary_Renegade:True,GF_Recipe_RoastedNut:True,GF_Recipe_AppleJuice:True
-GV_PitFloor:30,GV_PitAltar:3
-TempestDesert,RabbitHole_RestFloor,1.034861|0.375|-2.717974
-2844.56626189256
-8,0,11,24,18,24,24,18,8,242,0,0,10,32,6,6,6,17,9,114,412,224,12,8,35,33,2,6
-EP,HP,SP,HP,EP,SP,HP
+GV_PitFloor:40,GV_PitAltar:4
+GemstoneIslands,RabbitHole_RestFloor,-0.5602932|0.375|-2.826658
+3845.41346904368
+10,0,4,30,7,24,24,22,56,189,0,0,10,32,6,6,6,23,15,156,671,339,17,10,47,44,3,6
+EP,HP,SP,HP,EP,SP,HP,EP,HP
 
-BerrySilver|None|Overworld|0|17,RockNut|None|EnemyDrop,Dragonfruit|None|EnemyDrop|0|16,SleepDart|None|Overworld,StaticThorn|None|EnemyDrop|0|15,AppleJuice|None|CookTorstrum|0|14,RoastedNut|None|CookTorstrum|0|13,HoneyCaramel|None|Overworld|0|11,Lemonade|None|Overworld|0|10,FlowerSyrup|None|EnemyDrop|0|7
+SleepDart|None|EnemyDrop|0|23,MetalSalad|None|Overworld|0|21,RoastedMushroom|None|Overworld|0|20,RoastedMushroom|None|Overworld|0|19,RoastedMushroom|None|Overworld|0|18,Watermelon|None|Overworld,BerrySilver|None|Overworld|0|17,SleepDart|None|Overworld,HoneyCaramel|None|Overworld|0|11
 
 PearlEye,StrawberryCandle
-SuperCurse|1,UltraCurse|2,MegaCurse|3,ElectroSlash|20,LeafySmash|18,DazzleSmash|14,HPPlus|9,EPPlus|13,RiskyPower|22,RiskyEndurance|16,ProtectiveEndurance|7,NullPower|6,SoftPower|26,HealthRegen|11,EnergyRegen|10,AilmentBoost|17,DizzyMomentum|15,Trance|27,HypnoStrike|24,SweetDreams|23,RagesPower|12,HealthSight|4,DefenseSight|25,BattleSight|8,PerfectVictory|28,DecisiveVictory|21,Overkill|5,InviteDanger|19
-ElectroSlash|20,LeafySmash|18,RiskyPower|22,EnergyRegen|10,HealthSight|4,DefenseSight|25,BattleSight|8,DecisiveVictory|21
+SuperCurse|1,UltraCurse|2,MegaCurse|3,ElectroSlash|20,SwordDance|30,LeafySmash|18,DazzleSmash|14,HPPlus|9,EPPlus|13,RiskyPower|22,RiskyEndurance|16,ProtectiveEndurance|7,FirstShield|31,DarkShield|32,NullPower|6,SoftPower|26,HealthRegen|11,EnergyRegen|10,AilmentBoost|17,DizzyMomentum|15,Trance|27,HypnoStrike|24,Sleepwalk|34,SweetDreams|23,QuickNap|33,RagesPower|12,WeakStomach|29,HealthSight|4,DefenseSight|25,BattleSight|8,PerfectVictory|28,DecisiveVictory|21,Overkill|5,InviteDanger|19
+ElectroSlash|20,LeafySmash|18,RiskyPower|22,FirstShield|31,EnergyRegen|10,HealthSight|4,DefenseSight|25,BattleSight|8,DecisiveVictory|21
 ElectroSlash|20,LeafySmash|18,HealthSight|4,DefenseSight|25,BattleSight|8,DecisiveVictory|21
-SharpRibbon|1,SafetyRibbon|2,ExpertRibbon|4,SoftRibbon|3
+SharpRibbon|1,SafetyRibbon|2,ExpertRibbon|4,SlimyRibbon|6,FlashyRibbon|5,SoftRibbon|3
 
 
 2,0
-Luna,30,30,1,0,SoftRibbon|3,3,211,86,6,6,60,1269.505
-
-Wilex,20,20,1,0,ExpertRibbon|4,6,201,138,12,8,54,1339.463
+Luna,30,36,1,1,SoftRibbon|3,9,385,145,15,10,93,2095.625
+FirstShield|31
+Wilex,3,24,1,1,ExpertRibbon|4,6,286,194,17,8,63,1505.377
 RiskyPower|22,EnergyRegen|10

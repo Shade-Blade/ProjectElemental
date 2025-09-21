@@ -7,6 +7,7 @@ public class MapScript_PitFloor : MapScript
 {
     int floor;
     public TextDisplayer floorNumberText;
+    public TextDisplayer tipText;
 
     public PitObstacleScript[] pitObstacles;
 
@@ -36,6 +37,52 @@ public class MapScript_PitFloor : MapScript
         {
             //MainManager.Instance.PitReset();
         }
+
+        string tipTextString = "";
+        switch (floor)
+        {
+            case 1:
+                tipTextString = "Beat the enemy on the floor to unlock the center hole to move ahead.";
+                break;
+            case 2:
+                if (MainManager.Instance.playerData.equippedBadges.Count == 0)
+                {
+                    tipTextString = "Badges are useful pieces of equipment you can use to make yourself stronger. You can equip them in the Equip submenu of the pause menu (<button,start>)";
+                }
+                break;
+            case 3:
+                if (MainManager.Instance.playerData.itemsUsed == 0 && !MainManager.Instance.playerData.AtMaxStats())
+                {
+                    tipTextString = "Items can be used you heal your stats. Try using some to heal yourself.";
+                }
+                else if (!MainManager.Instance.playerData.BadgeEquipped(Badge.BadgeType.SuperCurse) && !MainManager.Instance.playerData.BadgeEquipped(Badge.BadgeType.UltraCurse) && !MainManager.Instance.playerData.BadgeEquipped(Badge.BadgeType.MegaCurse))
+                {
+                    tipTextString = "The Curse badges can be used to increase the difficulty and give enemies more interesting moves.";
+                }
+                break;
+            case 4:
+                tipTextString = "You can hover over status effect icons to see their exact effect.";
+                break;
+            case 6:
+                if (MainManager.Instance.playerData.itemsUsed == 0 && !MainManager.Instance.playerData.AtMaxStats())
+                {
+                    tipTextString = "Items can be used you heal your stats. Try using some to heal yourself.";
+                } else
+                {
+                    tipTextString = "The Advanced settings in the lobby can give you more ways to play or let you skip to a later floor with more interesting enemies.";
+                }
+                break;
+            case 9:
+                tipTextString = "Floors ending in 9 have stronger \"Alpha\" enemies (This also applies for boxes with enemies for a floor ending in 9). Floors ending in 0 are rest floors with helpful NPCs you can talk to. You also unlock a Soul Move every 10th floor.";
+                break;
+            case 11:
+                tipTextString = "Revitalize is useful for healing your Health and Energy. Soul moves can be used from the <se> soul move menu in battle if you have enough Soul Energy <se>";
+                break;
+            case 13:
+                tipTextString = "You can unlock new abilities (these usually show up on floors ending in 3, 5, or 7) that give you new overworld movement options and new moves in battle, as well as making your stomps and weapons stronger.";
+                break;
+        }
+        tipText.SetText(tipTextString, true);
 
         if (floor % 10 == 3 || floor % 10 == 5 || floor % 10 == 8)
         {

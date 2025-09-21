@@ -50,6 +50,7 @@ public class Pause_SectionItem : Pause_SectionShared_SideTabs
                 }
                 tabImages[i].color = new Color(0.75f, 0.75f, 0.75f, 1);
             }
+            characterStats.SetControlHints(false);
             return;
         }
         for (int i = 0; i < tabs.Length; i++)
@@ -64,6 +65,7 @@ public class Pause_SectionItem : Pause_SectionShared_SideTabs
             }
             tabImages[i].color = new Color(0.9f, 0.9f, 0.9f, 1);
         }
+        characterStats.SetControlHints(true);
 
         Pause_HandlerItem.UpdateObject uo = (Pause_HandlerItem.UpdateObject)state;
 
@@ -131,6 +133,8 @@ public class Pause_SectionItem : Pause_SectionShared_SideTabs
             characterStats.ApplyUpdate(pd.GetSortedParty()[0].entityID);
         }
         UpdateItemCount();
+
+        characterStats.SetControlHints(true);
 
         //Hacky
         textbox.transform.parent.transform.parent.gameObject.SetActive(false);

@@ -42,6 +42,7 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
                 tabImages[i].color = new Color(0.75f, 0.75f, 0.75f, 1);
             }
 
+            characterStats.SetControlHints(false);
             return;
         }
         for (int i = 0; i < tabs.Length; i++)
@@ -56,6 +57,7 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
             }
             tabImages[i].color = new Color(0.9f, 0.9f, 0.9f, 1);
         }
+        characterStats.SetControlHints(true);
 
         Pause_HandlerEquip.UpdateObject uo = (Pause_HandlerEquip.UpdateObject)state;
 
@@ -154,6 +156,8 @@ public class Pause_SectionEquip : Pause_SectionShared_SideTabs
             inventory.selectedPlayer = pd.GetSortedParty()[0].entityID;
             characterStats.ApplyUpdate(pd.GetSortedParty()[0].entityID);
         }
+
+        characterStats.SetControlHints(true);
 
         //Hacky
         textbox.transform.parent.transform.parent.gameObject.SetActive(false);

@@ -115,7 +115,7 @@ AetherBoss,90,28,37,FALSE,1,TwinCarrot,1,Default:0.2/1|Berserk:1/1.5,Default:3|A
 AetherSuperboss,180,30,65,FALSE,1,AetherCarrot,1,Default:0/1|Berserk:0.5/1,Default:3|Air:N|Water:2|Earth:2,,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 PuffJelly,3,5,0,FALSE,1,ClearStrawberry,2,Default:1/1|Dizzy:1/1.5,Default:0|Fire:-2,Airborne,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 Fluffling,2,5,0,FALSE,1,MistWater,2,Default:1/1,Default:0|Fire:-2,,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
-Floppole,2,5,0,FALSE,1,LightSeed,5,Default:1/1|Paralyze:0/1,Default:0|Earth:-2|Air:1,Airborne|StateContactHazard,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
+Floppole,2,5,0,FALSE,1,LightSeed,5,Default:1/1|Paralyze:0/1,Default:0|Earth:-2|Air:1,StateContactHazard,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 HydroJelly,18,27,0,FALSE,1,GoldenCarrot,2,Default:0.2/1|Dizzy:0.8/1,Default:0|Fire:-2,,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 CrystalCrab,12,28,0,TRUE,1.5,FlashBud,2,Default:0.2/0.5|Paralyze:0/1|Freeze:0.8/1,Default:4|Air:N|Light:0|Dark:N,,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8
 CrystalSlug,15,27,0,TRUE,1,FlashBud,2,Default:0.2/0.5|Paralyze:0/1|Poison:0.8/1,Default:2|Air:N|Dark:0|Light:N,,0|0|0,0|0|0,0|0|0,0|0|0,0|1|0,-0.5|0.5|0,-0.5|0|0,0|0|0,8

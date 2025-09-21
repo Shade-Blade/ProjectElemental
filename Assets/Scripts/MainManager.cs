@@ -6484,11 +6484,11 @@ public class MainManager : MonoBehaviour
 
         string[][] tutorialText = new string[3][];
         tutorialText[0] = new string[1];
-        tutorialText[0][0] = "<system>Items can be used in battle or in the overworld. You can use items in the overworld in the pause menu (<button,start>)";
+        tutorialText[0][0] = "<system>Items can be used in battle or in the overworld. You can use items in the overworld in the pause menu (<button,start> to pause)";
         tutorialText[1] = new string[1];
-        tutorialText[1][0] = "<system>Badges can be equipped in the Equip section of the pause menu (<button,start>)";
+        tutorialText[1][0] = "<system>Badges can be equipped in the Equip section of the pause menu (<button,start> to pause)";
         tutorialText[2] = new string[1];
-        tutorialText[2][0] = "<system>Ribbons can be equipped in the Equip section of the pause menu (<button,start>)";
+        tutorialText[2][0] = "<system>Ribbons can be equipped in the Equip section of the pause menu (<button,start> to pause) (Ribbons are in the bottom tab of the Equip menu). Ribbons give you effects for using the Rest action (even for missing turns due to Stamina debt) and also give you a special way to block (Read the ribbon descriptions for more information)";
 
         if (GetGlobalFlag(GlobalFlag.GF_FileCode_Greed) && !GetGlobalFlag(GlobalFlag.GF_FileCodeExplain_Greed))
         {

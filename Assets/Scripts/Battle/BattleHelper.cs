@@ -2233,7 +2233,7 @@ public class EncounterData
             return GeneratePitEncounterExtended(1, weirdnessFactor, allowSpecial);
         }
 
-        if (RandomGenerator.Get() < Mathf.Max(weirdnessFactor * 0.1f, 0.75f) && allowSpecial)
+        if (RandomGenerator.Get() < Mathf.Max(weirdnessFactor * 0.1f, 0.4f) && allowSpecial)
         {
             return GeneratePitEncounterExtendedSpecial(floor, weirdnessFactor);
         }
