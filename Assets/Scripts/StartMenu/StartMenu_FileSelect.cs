@@ -125,7 +125,7 @@ public class StartMenu_FileSelect : MenuHandler
     {
         if (menuIndex == menuEntries.Length)
         {
-            selector.anchoredPosition = MainManager.EasingQuadraticTime(selector.anchoredPosition, Vector2.left * (125 + ((bottomIndex - 1) * -250)) + Vector2.up * (-260), 2000);
+            selector.anchoredPosition = MainManager.EasingQuadraticTime(selector.anchoredPosition, Vector2.left * (125 + ((bottomIndex - 1) * -250)) + Vector2.up * (-240), 2000);
         }
         else
         {

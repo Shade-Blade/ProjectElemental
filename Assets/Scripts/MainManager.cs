@@ -3445,7 +3445,9 @@ public class MainManager : MonoBehaviour
     public enum BattleMapID
     {
         Test_BattleMap,
-        Test_BattleMapTutorial,
+        Test_BattleMapTutorialA,
+        Test_BattleMapTutorialB,
+        Test_BattleMapTutorialC,
         TestBattle_SolarGrove,
         TestBattle_VerdantForest,
         TestBattle_TempestDesert,

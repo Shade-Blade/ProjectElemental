@@ -110,8 +110,13 @@ public class Pause_SectionBase : Pause_SectionShared
 
     public override void ApplyUpdate(object state)
     {
+        Pause_SectionShared_TabSection[] ts = GetComponentsInChildren<Pause_SectionShared_TabSection>();
         if (state == null)
         {
+            foreach (Pause_SectionShared_TabSection tsc in ts)
+            {
+                tsc.SetCloseText();
+            }
             return;
         }
 
@@ -119,6 +124,11 @@ public class Pause_SectionBase : Pause_SectionShared
         baseIndex = index;
         //Debug.Log((PauseMenuPage)index);
         targetOffset = baseIndex * GetPerPageOffset();
+
+        foreach (Pause_SectionShared_TabSection tsc in ts)
+        {
+            tsc.SetSelectText();
+        }
     }
     public override object GetState()
     {
@@ -265,47 +275,31 @@ public class Pause_SectionBase : Pause_SectionShared
             {
                 case PauseMenuPage.Status:
                     a = Instantiate(pauseStatusMenu, transform);
-                    topTabs = a.GetComponentInChildren<Pause_SectionShared_TabSection>();
-                    topTabs.ApplyUpdate(disabledTabs);
-                    subsections.Add(a.GetComponent<Pause_SectionShared>());
                     break;
                 case PauseMenuPage.Items:
                     a = Instantiate(pauseItemMenu, transform);
-                    topTabs = a.GetComponentInChildren<Pause_SectionShared_TabSection>();
-                    topTabs.ApplyUpdate(disabledTabs);
-                    subsections.Add(a.GetComponent<Pause_SectionShared>());
                     break;
                 case PauseMenuPage.Equip:
                     a = Instantiate(pauseEquipMenu, transform);
-                    topTabs = a.GetComponentInChildren<Pause_SectionShared_TabSection>();
-                    topTabs.ApplyUpdate(disabledTabs);
-                    subsections.Add(a.GetComponent<Pause_SectionShared>());
                     break;
                 case PauseMenuPage.Quests:
                     a = Instantiate(pauseQuestMenu, transform);
-                    topTabs = a.GetComponentInChildren<Pause_SectionShared_TabSection>();
-                    topTabs.ApplyUpdate(disabledTabs);
-                    subsections.Add(a.GetComponent<Pause_SectionShared>());
                     break;
                 case PauseMenuPage.Journal:
                     a = Instantiate(pauseJournalMenu, transform);
-                    topTabs = a.GetComponentInChildren<Pause_SectionShared_TabSection>();
-                    topTabs.ApplyUpdate(disabledTabs);
-                    subsections.Add(a.GetComponent<Pause_SectionShared>());
                     break;
                 case PauseMenuPage.Map:
                     a = Instantiate(pauseMapMenu, transform);
-                    topTabs = a.GetComponentInChildren<Pause_SectionShared_TabSection>();
-                    topTabs.ApplyUpdate(disabledTabs);
-                    subsections.Add(a.GetComponent<Pause_SectionShared>());
                     break;
                 case PauseMenuPage.Settings:
                     a = Instantiate(pauseSettingsMenu, transform);
-                    topTabs = a.GetComponentInChildren<Pause_SectionShared_TabSection>();
-                    topTabs.ApplyUpdate(disabledTabs);
-                    subsections.Add(a.GetComponent<Pause_SectionShared>());
                     break;
             }
+
+            topTabs = a.GetComponentInChildren<Pause_SectionShared_TabSection>();
+            topTabs.ApplyUpdate(disabledTabs);
+            topTabs.SetSelectText();
+            subsections.Add(a.GetComponent<Pause_SectionShared>());
         }
 
         /*

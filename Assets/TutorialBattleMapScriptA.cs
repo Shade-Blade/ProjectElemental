@@ -2,7 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialBattleMapScript : BattleMapScript
+public abstract class TutorialBattleMapScript : BattleMapScript
+{
+    public abstract bool CanChoose(Move pm, BattleEntity b);
+    public abstract bool CanChoose(BattleAction pm, BattleEntity b);
+    public abstract bool CanTarget(BattleEntity user, TargetArea targetArea, BattleEntity target);
+}
+
+public class TutorialBattleMapScriptA : TutorialBattleMapScript
 {
     public enum TutorialState
     {
@@ -36,28 +43,33 @@ public class TutorialBattleMapScript : BattleMapScript
 
         testTextFile[0][0] = "<system>Welcome to Project Elemental! Battles are turn based. Use <button,start> or <button,A> to open menus and use <button,left> and <button,right> to scroll through them (scroll up and down with <button,up> and <button,down>).";
         testTextFile[0][0] += "<next><system>You'll need to understand how enemies work in order to know how to deal with them. Try using the Check action in the Tactics menu with Luna. (Use <button,b> to switch to her).";
-        testTextFile[0][0] += "<next><system>You can also switch positions with <button,z> but this is only available when both of you can move or one of you is dead. The character in the front is targetted more often but gets 33% more Agility (stamina regeneration).";
+        testTextFile[0][0] += "<next><system>You can also switch positions with <button,z> but this is only available when both of you can move or one of you is dead.";
+        testTextFile[0][0] +=  "<next><system>The character in the front is targetted more often but gets 33% more Agility (stamina regeneration).";
 
-        testTextFile[1][0] = "<system>You can see that Checking the enemy has revealed their health bar below them. Any other enemies of the same type will also have their health bars shown below them. You can read the entire bestiary text in the Bestiary section of the Journal section of the Pause Menu in the overworld.";
-        testTextFile[1][0] += "<next><system>Keru has the ability to scan enemies from afar and tell you about them remotely. There is a seperate action called Scan which is similar to the Check action but it gives you the entire moveset of the target enemy. Try using it with Wilex now (Use <button,b> to switch to him).";
+        testTextFile[1][0] = "<system>You can see that Checking the enemy has revealed their health bar below them. Any other enemies of the same type will also have their health bars shown below them.";
+        testTextFile[1][0] += "<next><system>You can read the entire bestiary text in the Bestiary section of the Journal section of the Pause Menu in the overworld.";
+        testTextFile[1][0] += "<next><system>Keru has the ability to scan enemies from afar and tell you about them remotely. There is a seperate action called Scan which is similar to the Check action but it gives you the entire moveset of the target enemy.";
+        testTextFile[1][0] += "<next><system>While normal enemies have very small movesets, later enemies will have a variety of moves and reactions so knowing the entire moveset is more important then.";
+        testTextFile[1][0] += "<next><system>Try using it with Wilex now (Use <button,b> to switch to him).";
 
         testTextFile[2][0] = "<system>You can see that the Check action did not use Luna's turn, while the Scan action used up Wilex's turn. However, the Scan action gave you more information.";               
-        testTextFile[2][0] += "<next><system>Try using the Turn Relay action to give Wilex another turn. Note that skills become 25% more expensive for each additional action after the first.";
+        testTextFile[2][0] += "<next><system>Try using the Turn Relay action to give Wilex another turn. Note that skills become 25% more expensive for each additional action after the first so only using one character to act is inefficient.";
 
         testTextFile[3][0] = "<system>Normally you would not be able to use Turn Relay right now because of the stamina cost but for the purposes of this tutorial you have been given more.";
 
-        testTextFile[4][0] = "<system>Normal skills cost Stamina and Energy. Try using Electro Slash with Wilex now. You can see that it is in <debtcolor>light orange</color> and it has an icon to designate what effect it has.";
-        testTextFile[4][0] += "<next><system><exhaustcolor>Darker orange</color> means that the move will cause you to lose stamina regeneration next turn. <debtcolor>Lighter orange</color> represents a move that puts you in stamina debt that makes you lose your next turn. Lost turns are equivalent to taking the Rest action in the tactics menu.";
-        testTextFile[4][0] += "<next><system>Skills in red are not usable (this tutorial disables many skills).";
+        testTextFile[4][0] = "<system>Try using Slash with Wilex now to attack the enemy.";
+        testTextFile[4][0] += "<next><system>Skills in red are not usable (this tutorial disables most skills).";
         testTextFile[4][0] += "<next><system>Make sure to read the action command description after selecting the move to know what to do to perform it correctly.";
 
-        testTextFile[5][0] = "<system>You should see that the enemy is now Shocked because you used an Air/Electric type attack, which reduces its defense but increases its attack. Making proper use of these Elemental Marks is the key to winning battles.<next><system>The potency of the mark is equal to the damage dealt divided by 4, rounded up. Marks can stack as well (although only the duration will increase, higher potencies are only possible with larger sources of damage.)<next><system>One thing not shown here is that Elemental Marks can also be removed by taking damage of the other type (i.e. Earth damage) or by dealing damage of that type (so Shocked is removed by dealing or taking Earth damage).<next><system>Now it is the enemy side's turn to attack. Block attacks using <button,a> right before taking damage. This reduces damage taken by 1. The ribbons you are wearing also provide other ways to block but you should block normally for now. (To read more on Ribbons, look at them in the Equip section of the Pause Menu)";
+        testTextFile[5][0] = "<system>Now it is the enemy side's turn to attack. Block attacks using <button,a> right before taking damage. This reduces damage taken by 1. Ignore the text that appears below you for now.";
 
         testTextFile[6][0] = "<system>It looks like you didn't block that attack. Let's try again. Use <button,a> right before taking damage to block.";
 
-        testTextFile[7][0] = "<system>Now that the enemies have all acted, it is your turn again. You should see that Wilex's turn was lost because the move put him in stamina debt. You can also see the Shocked<effect,shocked> icon above the enemy. You can hover over it to reread the description of the effect.<next><system>Now try using an Item in the Item menu to heal yourself. Items can heal HP and EP, or provide any variety of other effects. Make sure to pay attention to the description of each item.";
+        testTextFile[7][0] = "<system>Now that the enemies have all acted, it is your turn again.<next><system>Now try using an Item in the Item menu to heal yourself.";
+        testTextFile[7][0] += "<next><system>Items can heal HP and EP, or provide any variety of other effects. Make sure to pay attention to the description of each item to know what it does.";
 
-        testTextFile[8][0] = "<system>Defeating enemies gives you XP, and 100 is required for each level up. Each level up lets you increase max HP, max EP or max SP (SP is the stat used to equip badges but it also controls max Soul Energy). You can learn more about battles by reading the descriptions of moves you get and reading the Journal section of the Pause Menu.";
+        testTextFile[8][0] = "<system>Defeating enemies gives you XP, and 100 is required for each level up. Each level up lets you increase max HP, max EP or max SP (SP is the stat used to equip badges but it also controls max Soul Energy).";
+        testTextFile[8][0] += "<next><system>You can learn more about battles by reading the descriptions of moves you get and reading the Journal section of the Pause Menu.";
 
 
         PlayerEntity wilex = null;
@@ -100,10 +112,6 @@ public class TutorialBattleMapScript : BattleMapScript
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[4][0], null));
                 break;
             case TutorialState.ChooseExpensive:
-                if (BattleControl.Instance.GetEntityByID(0) != null)
-                {
-                    BattleControl.Instance.GetEntityByID(0).hp = 0;
-                }                
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[5][0], null));
                 break;
             case TutorialState.DoBlock:
@@ -112,7 +120,12 @@ public class TutorialBattleMapScript : BattleMapScript
                 break;
             case TutorialState.UseItem:
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[8][0], null));
-                yield return BattleControl.Instance.EndBattle(BattleHelper.BattleOutcome.Win);
+                foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted((e) => (e.posId >= 0)))
+                {
+                    b.TakeDamage(b.hp, BattleHelper.DamageType.Normal, (ulong)(BattleHelper.DamageProperties.Hardcode));
+                }
+                //force a RunOutOfTurnEvents call so the enemy dies
+                PlayerTurnController.Instance.interruptQueued = true;
                 break;
         }
         state++;
@@ -209,7 +222,7 @@ public class TutorialBattleMapScript : BattleMapScript
         yield break;
     }
 
-    public bool CanChoose(Move pm, BattleEntity b)
+    public override bool CanChoose(Move pm, BattleEntity b)
     {
         switch (state)
         {
@@ -222,7 +235,7 @@ public class TutorialBattleMapScript : BattleMapScript
             case TutorialState.ChooseTurnRelay:
                 return false;
             case TutorialState.ChooseExpensive:
-                return (pm is WM_ElectroSlash);
+                return (pm is WM_Slash);
             case TutorialState.DoBlock:
                 return false;
             case TutorialState.UseItem:
@@ -231,7 +244,7 @@ public class TutorialBattleMapScript : BattleMapScript
 
         return true;
     }
-    public bool CanChoose(BattleAction pm, BattleEntity b)
+    public override bool CanChoose(BattleAction pm, BattleEntity b)
     {
         switch (state)
         {
@@ -251,6 +264,10 @@ public class TutorialBattleMapScript : BattleMapScript
                 return false;
         }
 
+        return true;
+    }
+    public override bool CanTarget(BattleEntity user, TargetArea targetArea, BattleEntity target)
+    {
         return true;
     }
 }

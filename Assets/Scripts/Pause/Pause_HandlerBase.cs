@@ -83,6 +83,7 @@ public class Pause_HandlerBase : Pause_HandlerShared
     void Select()
     {
         Pause_SectionShared newSection = section.GetSubsection(baseIndex);
+        section.ApplyUpdate(null);
         //build the menu
         MenuHandler b = null;
         switch (page)
@@ -138,7 +139,7 @@ public class Pause_HandlerBase : Pause_HandlerShared
         {
             disabledTabs[i] = disabledList[i];
         }
-
+        section.ApplyUpdate(baseIndex);
         base.Init();
     }
 
@@ -146,9 +147,33 @@ public class Pause_HandlerBase : Pause_HandlerShared
     //To do: Make the main manager method (Should poll global flags, playerdata stuff to check which things should appear at that point of the game)
     public static PauseMenuPage[] GetAvailablePages()
     {
+        List<PauseMenuPage> pages = new List<PauseMenuPage>();
+        pages.Add(PauseMenuPage.Status);
+
+        if (MainManager.Instance.playerData.itemCounter > 0)
+        {
+            pages.Add(PauseMenuPage.Items);
+        }
+        if (MainManager.Instance.playerData.badgeInventory.Count > 3)
+        {
+            pages.Add(PauseMenuPage.Equip);
+        }
+
+        string floorNo = MainManager.Instance.GetGlobalVar(MainManager.GlobalVar.GV_PitFloor);
+        if (floorNo != null)
+        {
+            pages.Add(PauseMenuPage.Quests);
+        }
+        pages.Add(PauseMenuPage.Journal);
+        if (floorNo != null)
+        {
+            pages.Add(PauseMenuPage.Map);
+        }
+        pages.Add(PauseMenuPage.Settings);
+
         PauseMenuPage[] output = new PauseMenuPage[] { PauseMenuPage.Status, PauseMenuPage.Items, PauseMenuPage.Equip, PauseMenuPage.Quests, PauseMenuPage.Journal, PauseMenuPage.Map, PauseMenuPage.Settings };
         //PauseMenuPage[] output = new PauseMenuPage[] { PauseMenuPage.Status, PauseMenuPage.Items, PauseMenuPage.Equip, PauseMenuPage.Settings };
-        return output;
+        return pages.ToArray();
     }
 
     public void InvokeExit(object sender, MenuExitEventArgs meea)

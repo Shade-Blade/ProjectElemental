@@ -103,9 +103,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6577646528529042120}
-  - component: {fileID: 5840514194014242729}
+  - component: {fileID: 946599200738166927}
   m_Layer: 0
-  m_Name: Test_BattleMapTutorial
+  m_Name: Test_BattleMapTutorialC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -128,7 +128,7 @@ Transform:
   - {fileID: 3539803775180244192}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5840514194014242729
+--- !u!114 &946599200738166927
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,9 +137,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6045066236784930448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2923a1112d6673b4696bda82f1c2f58c, type: 3}
+  m_Script: {fileID: 11500000, guid: 70276cee0e9c4874b94c2c92cc469faa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skyboxID: SolarGrove
+  ambientLight: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  state: 0
+  cueStateChange: 0
+  blockFail: 0
 --- !u!1001 &8290536654719180826
 PrefabInstance:
   m_ObjectHideFlags: 0

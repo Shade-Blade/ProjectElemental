@@ -222,6 +222,8 @@ public class BattleSelectionMenu : MenuHandler
 
         possibleEntities = BattleControl.Instance.GetEntities(caller, targetArea);
 
+        possibleEntities = possibleEntities.FindAll((e) => (PlayerTurnController.Instance.CanTarget(caller, targetArea, e)));
+
         possibleEntities.Sort((a, b) => (MainManager.FloatCompare(a.transform.position.x, b.transform.position.x)));
         
         if (possibleEntities.Contains(caller))

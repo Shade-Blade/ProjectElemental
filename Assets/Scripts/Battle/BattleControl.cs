@@ -2450,7 +2450,7 @@ public class BattleControl : MonoBehaviour
         }
 
 
-        if (bmapName == MainManager.BattleMapID.Test_BattleMapTutorial)
+        if (bmapName.ToString().Contains("BattleMapTutorial"))
         {
             //no first strikes
             bsa = new BattleStartArguments();
@@ -2861,6 +2861,11 @@ public class BattleControl : MonoBehaviour
         }
 
         //Debug.Log("Item drop determiners: " + itemFinder + " " + checkDropItem + " " + shouldDropItem + " " + battleXP + " " + playerData.totalBattles);
+
+        if (battleMapScript is TutorialBattleMapScript)
+        {
+            dropItemCount = 0;
+        }
 
         Debug.Log((perfect ? "Perfect: " : "") + (decisive ? "Decisive: " : "") + "Win battle " + playerData.totalBattles + " with " + battleXP + " xp gained. Drop item? " + dropItemCount);
 
@@ -4670,8 +4675,14 @@ public class BattleControl : MonoBehaviour
         }
         eds.highlightEP = false;
         sds.highlightSE = false;
-        cds.highlightCoins = false;
-        ids.highlightItems = false;
+        if (cds != null)
+        {
+            cds.highlightCoins = false;
+        }
+        if (ids != null)
+        {
+            ids.highlightItems = false;
+        }
     }
 
     public void Start()

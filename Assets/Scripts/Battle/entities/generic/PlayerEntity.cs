@@ -34,6 +34,7 @@ public class PlayerEntity : BattleEntity
     public int movesUsed;
 
     public bool lastHitWasBlocked;
+    public bool lastHitWasSpecialBlocked;
 
     public int perTurnDamageDealt;
     public int perTurnDamageTaken;
@@ -2140,48 +2141,56 @@ public class PlayerEntity : BattleEntity
             //Particles
             if (safetyBlock)    //note: does not have a rest effect so there is no corresponding effect call for SafetyRibbon in the rest script
             {
+                lastHitWasSpecialBlocked = true;
                 RibbonEffect(new Color(0f, 0.7f, 0f));
                 BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SafetyRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (sharpBlock)     //likewise
             {
+                lastHitWasSpecialBlocked = true;
                 RibbonEffect(new Color(0.7f, 0.0f, 0f));
                 BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SharpRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (sb)
             {
+                lastHitWasSpecialBlocked = true;
                 RibbonEffect(new Color(1f, 0.7f, 0));
                 BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.ChampionRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetAbsorbBlock())
             {
+                lastHitWasSpecialBlocked = true;
                 RibbonEffect(new Color(1f, 1f, 0.3f));
                 BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.StaticRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetSlimyBlock())
             {
+                lastHitWasSpecialBlocked = true;
                 RibbonEffectDark(new Color(1f, 0.3f, 1f));
                 BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SlimyRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetClearBlock())
             {
+                lastHitWasSpecialBlocked = true;
                 RibbonEffect(new Color(0.5f, 1f, 0.5f));
                 BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.FlashyRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetSoftBlock())
             {
+                lastHitWasSpecialBlocked = true;
                 RibbonEffect(new Color(0.3f, 0.3f, 1f));
                 BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.SoftRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
             }
             if (GetDiamondBlock())
             {
+                lastHitWasSpecialBlocked = true;
                 RibbonEffectDiamond(new Color(0.6f, 1f, 1f));
                 BattleControl.Instance.CreateRibbonActivationParticles(Ribbon.RibbonType.DiamondRibbon, this);
                 MainManager.Instance.PlaySound(gameObject, MainManager.Sound.SFX_Hit_BlockSpecial);
@@ -2654,7 +2663,7 @@ public class PlayerEntity : BattleEntity
                 {
                     if (sb)
                     {
-                        lastHitWasBlocked = true;
+                        lastHitWasSpecialBlocked = true;
                         if (crit)
                         {
                             BattleControl.Instance.CreateDamageEffect(DamageEffect.CritSuperBlockedDamage, damage, localBonusDamageString, damageReductionString, GetDamageEffectPosition(), this, type, properties);

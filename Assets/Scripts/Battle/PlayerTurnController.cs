@@ -1254,4 +1254,13 @@ public class PlayerTurnController : MonoBehaviour
 
         return true;
     }
+    public bool CanTarget(BattleEntity user, TargetArea targetArea, BattleEntity target)
+    {
+        if (tutorial != null)
+        {
+            return tutorial.CanTarget(user, targetArea, target);
+        }
+
+        return true;
+    }
 }
