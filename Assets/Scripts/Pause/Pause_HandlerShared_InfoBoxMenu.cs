@@ -93,6 +93,7 @@ public class Pause_HandlerShared_InfoBoxMenu : Pause_HandlerShared_BoxMenu
         if (section != null)
         {
             section.ApplyUpdate(index);
+            section.OnActive();
         }
     }
 

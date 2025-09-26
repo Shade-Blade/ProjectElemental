@@ -91,6 +91,7 @@ public class Pause_HandlerQuest : Pause_HandlerShared_SideTabs
         }
 
         b.transform.parent = transform;
+        section.OnInactive();
         PushState(b);
         b.menuExit += InvokeExit;
     }

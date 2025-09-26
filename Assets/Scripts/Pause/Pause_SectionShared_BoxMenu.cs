@@ -77,6 +77,15 @@ public class Pause_SectionShared_BoxMenu : Pause_SectionShared
         return;
     }
 
+    public override void OnActive()
+    {
+        menuBox.color = new Color(0.9f, 0.9f, 0.9f, 1);
+    }
+    public override void OnInactive()
+    {
+        menuBox.color = new Color(0.75f, 0.75f, 0.75f, 1);
+    }
+
     public override object GetState()
     {
         return new int[] {menuIndex, menuTopIndex};

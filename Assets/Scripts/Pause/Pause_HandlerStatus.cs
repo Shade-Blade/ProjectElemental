@@ -124,6 +124,7 @@ public class Pause_HandlerStatus : Pause_HandlerShared
         {
             MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
             section.ApplyUpdate(null);
+            section.OnInactive();
             PopSelf();
         }
     }
@@ -154,6 +155,8 @@ public class Pause_HandlerStatus : Pause_HandlerShared
             selectedNode = (Pause_SectionStatus_MenuNode)section.GetState();
             section.ApplyUpdate(selectedNode);
         }
+
+        section.OnActive();
 
         base.Init();
     }

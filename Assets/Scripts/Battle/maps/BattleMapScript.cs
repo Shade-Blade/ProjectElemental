@@ -10,6 +10,7 @@ public class BattleMapScript : MonoBehaviour
     //public MainManager.SkyboxID skyboxID;
     public string skyboxID;
     public Color ambientLight = new Color(0.5f, 0.5f, 0.5f);    //Should be roughly (5/7) the light's color? (with light intensity = 1)
+    public bool useDefaultLight;
 
     // Start is called before the first frame update
     public virtual void Start()
@@ -39,8 +40,6 @@ public class BattleMapScript : MonoBehaviour
 
     public virtual void OnBattleStart()
     {
-        RenderSettings.ambientLight = ambientLight;
-
         //Default enviro effect thing
 
         BattleHelper.EnvironmentalEffect effect = BattleHelper.EnvironmentalEffect.None;
@@ -50,6 +49,18 @@ public class BattleMapScript : MonoBehaviour
         WorldCamera.CameraEffect camEffect = WorldCamera.CameraEffect.None;
 
         Enum.TryParse(MainManager.Instance.mapScript.worldLocation, out MainManager.WorldLocation wl);
+        if (useDefaultLight)
+        {
+            RenderSettings.ambientLight = MainManager.GetDefaultAmbientColor(wl);
+            Light l = GetComponentInChildren<Light>();
+            if (l != null)
+            {
+                l.color = MainManager.GetDefaultLightColor(wl);
+            }
+        } else
+        {
+            RenderSettings.ambientLight = ambientLight;
+        }
         switch (wl)
         {
             case MainManager.WorldLocation.SacredGrove:

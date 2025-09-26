@@ -350,7 +350,7 @@ MonoBehaviour:
   skyboxID: TempestDesert
   ambientLight: {r: 0.6, g: 0.6, b: 0.54857147, a: 1}
   playerHolder: {fileID: 75118967011850446}
-  useDefaultLight: 0
+  useDefaultLight: 1
   useDefaultParticles: 0
   exits: []
   worldObjects: []

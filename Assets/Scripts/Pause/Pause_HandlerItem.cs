@@ -84,11 +84,12 @@ public class Pause_HandlerItem : Pause_HandlerShared_SideTabs
         MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Select);
 
         //even more submenus (but we are getting close to the end)
-        Debug.Log((PauseItemPage)tabindex + " select");
+        //Debug.Log((PauseItemPage)tabindex + " select");
         Pause_SectionShared newSection = null;
         if (section != null)
         {
             newSection = section.GetSubsection(new UpdateObject(tabindex, selectedPlayer));
+            section.OnInactive();
         }
         //build the menu
         MenuHandler b = null;

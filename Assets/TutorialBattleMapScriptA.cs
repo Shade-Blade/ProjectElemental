@@ -14,10 +14,9 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
     public enum TutorialState
     {
         Start,
-        ChooseCheck,
-        ChooseScan,
+        ChooseSlash,
         ChooseTurnRelay,
-        ChooseExpensive,
+        ChooseStomp,
         DoBlock,
         UseItem,
     }
@@ -26,6 +25,7 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
 
     public bool cueStateChange;
     public bool blockFail;
+    public bool acFail;
 
 
     public IEnumerator StateChangeDialogue()
@@ -42,24 +42,20 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
         testTextFile[8] = new string[1];
 
         testTextFile[0][0] = "<system>Welcome to Project Elemental! Battles are turn based. Use <button,start> or <button,A> to open menus and use <button,left> and <button,right> to scroll through them (scroll up and down with <button,up> and <button,down>).";
-        testTextFile[0][0] += "<next><system>You'll need to understand how enemies work in order to know how to deal with them. Try using the Check action in the Tactics menu with Luna. (Use <button,b> to switch to her).";
-        testTextFile[0][0] += "<next><system>You can also switch positions with <button,z> but this is only available when both of you can move or one of you is dead.";
-        testTextFile[0][0] +=  "<next><system>The character in the front is targetted more often but gets 33% more Agility (stamina regeneration).";
+        testTextFile[0][0] += "<next><system>You can switch who will act first using <button,b>. This is only possible if both of you can act.";
+        testTextFile[0][0] += "<next><system>You can also switch positions with <button,z> but this is also only available when both of you can move but switching positions can also be done if one of you is dead.";
+        testTextFile[0][0] +=  "<next><system>The character in the front is targetted more often but gets 33% more Agility (stamina regeneration). (Note that if one character is dead the other character is always considered to be in front.)";
+        testTextFile[0][0] += "<next><system>Now try using Slash to attack the enemy.";
+        testTextFile[0][0] += "<next><system>Make sure to read the action command description after selecting the move to know what to do to perform it correctly.";
 
-        testTextFile[1][0] = "<system>You can see that Checking the enemy has revealed their health bar below them. Any other enemies of the same type will also have their health bars shown below them.";
-        testTextFile[1][0] += "<next><system>You can read the entire bestiary text in the Bestiary section of the Journal section of the Pause Menu in the overworld.";
-        testTextFile[1][0] += "<next><system>Keru has the ability to scan enemies from afar and tell you about them remotely. There is a seperate action called Scan which is similar to the Check action but it gives you the entire moveset of the target enemy.";
-        testTextFile[1][0] += "<next><system>While normal enemies have very small movesets, later enemies will have a variety of moves and reactions so knowing the entire moveset is more important then.";
-        testTextFile[1][0] += "<next><system>Try using it with Wilex now (Use <button,b> to switch to him).";
+        testTextFile[1][0] = "<system>Now that Wilex has acted, Luna is the only one you can act with right now. However, you can use Turn Relay to give Wilex another turn.";
+        testTextFile[1][0] += "<next><system>Try doing that now.";
 
-        testTextFile[2][0] = "<system>You can see that the Check action did not use Luna's turn, while the Scan action used up Wilex's turn. However, the Scan action gave you more information.";               
-        testTextFile[2][0] += "<next><system>Try using the Turn Relay action to give Wilex another turn. Note that skills become 25% more expensive for each additional action after the first so only using one character to act is inefficient.";
+        testTextFile[2][0] = "<system>Wilex now has another turn. Note that a character having multiple turns will increase the cost of their abilities by 25% per extra action.";
+        testTextFile[2][0] += "<next><system>Giving only one character all the actions will also likely make them run out of Stamina, which will be covered in a later tutorial.";
+        testTextFile[2][0] += "<next><system>Now try using High Stomp on the enemy. The action command for High Stomp is different than the one for Slash, so pay attention to that.";
 
-        testTextFile[3][0] = "<system>Normally you would not be able to use Turn Relay right now because of the stamina cost but for the purposes of this tutorial you have been given more.";
-
-        testTextFile[4][0] = "<system>Try using Slash with Wilex now to attack the enemy.";
-        testTextFile[4][0] += "<next><system>Skills in red are not usable (this tutorial disables most skills).";
-        testTextFile[4][0] += "<next><system>Make sure to read the action command description after selecting the move to know what to do to perform it correctly.";
+        testTextFile[3][0] = "<system>It seems you didn't do the action command correctly. Try again.";
 
         testTextFile[5][0] = "<system>Now it is the enemy side's turn to attack. Block attacks using <button,a> right before taking damage. This reduces damage taken by 1. Ignore the text that appears below you for now.";
 
@@ -70,6 +66,7 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
 
         testTextFile[8][0] = "<system>Defeating enemies gives you XP, and 100 is required for each level up. Each level up lets you increase max HP, max EP or max SP (SP is the stat used to equip badges but it also controls max Soul Energy).";
         testTextFile[8][0] += "<next><system>You can learn more about battles by reading the descriptions of moves you get and reading the Journal section of the Pause Menu.";
+        testTextFile[8][0] += "<next><system>Try finishing the battle however you want.";
 
 
         PlayerEntity wilex = null;
@@ -95,23 +92,13 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
             case TutorialState.Start:
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[0][0], null));
                 break;
-            case TutorialState.ChooseCheck:
+            case TutorialState.ChooseSlash:
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[1][0], null));
                 break;
-            case TutorialState.ChooseScan:
-                yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[2][0], null));
-                /*
-                if (!BattleControl.Instance.turnRelay.CanChoose(luna))
-                {
-                    yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[3][0], null));
-                    luna.HealStamina(BattleControl.Instance.turnRelay.GetBaseCost());
-                }
-                */
-                break;
             case TutorialState.ChooseTurnRelay:
-                yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[4][0], null));
+                yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[2][0], null));
                 break;
-            case TutorialState.ChooseExpensive:
+            case TutorialState.ChooseStomp:
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[5][0], null));
                 break;
             case TutorialState.DoBlock:
@@ -120,10 +107,6 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
                 break;
             case TutorialState.UseItem:
                 yield return StartCoroutine(MainManager.Instance.DisplayTextBox(testTextFile[8][0], null));
-                foreach (BattleEntity b in BattleControl.Instance.GetEntitiesSorted((e) => (e.posId >= 0)))
-                {
-                    b.TakeDamage(b.hp, BattleHelper.DamageType.Normal, (ulong)(BattleHelper.DamageProperties.Hardcode));
-                }
                 //force a RunOutOfTurnEvents call so the enemy dies
                 PlayerTurnController.Instance.interruptQueued = true;
                 break;
@@ -151,26 +134,27 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
             case TutorialState.Start:
                 cueStateChange = true;
                 break;
-            case TutorialState.ChooseCheck:
-                if (eventID == BattleHelper.Event.Check)
+            case TutorialState.ChooseSlash:
+            case TutorialState.ChooseStomp:
+                if (eventID == BattleHelper.Event.Hurt && b.posId >= 0)
                 {
-                    cueStateChange = true;
-                }
-                break;
-            case TutorialState.ChooseScan:
-                if (eventID == BattleHelper.Event.Check)
-                {
-                    cueStateChange = true;
+                    if (BattleHelper.GetDamageProperty(b.lastDamageProperties, BattleHelper.DamageProperties.AC_Success))
+                    {
+                        cueStateChange = true;
+                    }
+                    else
+                    {
+                        acFail = true;
+                    }
+                    if (b.hp < 5)
+                    {
+                        b.hp = 5;
+                        b.TryCancelEvent(BattleHelper.Event.Death);
+                    }
                 }
                 break;
             case TutorialState.ChooseTurnRelay:
                 if (eventID == BattleHelper.Event.Tactic)
-                {
-                    cueStateChange = true;
-                }
-                break;
-            case TutorialState.ChooseExpensive:
-                if (eventID == BattleHelper.Event.Hurt)
                 {
                     cueStateChange = true;
                 }
@@ -212,6 +196,21 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
             }
             blockFail = false;
         }
+        if (acFail)
+        {
+            string text = "<system>It looks like you didn't do that action command correctly. Let's try again.";
+            yield return StartCoroutine(MainManager.Instance.DisplayTextBox(text, null));
+            foreach (PlayerEntity pe in BattleControl.Instance.GetPlayerEntities())
+            {
+                if (pe.entityID == BattleHelper.EntityID.Wilex)
+                {
+                    pe.ReceiveEffectForce(new Effect(Effect.EffectType.BonusTurns, 1, Effect.INFINITE_DURATION));
+                    pe.actionCounter--;
+                }
+                //pe.ReceiveEffectForce(new Effect(Effect.EffectType.Cooldown, 1, Effect.INFINITE_DURATION));
+            }
+            acFail = false;
+        }
         foreach (PlayerEntity pe in BattleControl.Instance.GetPlayerEntities())
         {
             if (pe.hp < 1)
@@ -228,14 +227,12 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
         {
             case TutorialState.Start:
                 return false;
-            case TutorialState.ChooseCheck:
-                return false;
-            case TutorialState.ChooseScan:
-                return false;
+            case TutorialState.ChooseStomp:
+                return (pm is WM_HighStomp);
             case TutorialState.ChooseTurnRelay:
                 return false;
-            case TutorialState.ChooseExpensive:
-                return (pm is WM_Slash);
+            case TutorialState.ChooseSlash:
+                return (pm is WM_Slash) && !(pm is WM_ElectroSlash);
             case TutorialState.DoBlock:
                 return false;
             case TutorialState.UseItem:
@@ -246,22 +243,14 @@ public class TutorialBattleMapScriptA : TutorialBattleMapScript
     }
     public override bool CanChoose(BattleAction pm, BattleEntity b)
     {
-        switch (state)
+        if (state == TutorialState.ChooseTurnRelay)
         {
-            case TutorialState.Start:
-                return false;
-            case TutorialState.ChooseCheck:
-                return (pm is BA_Check) && b.entityID == BattleHelper.EntityID.Luna;
-            case TutorialState.ChooseScan:
-                return (pm is BA_Scan) && b.entityID == BattleHelper.EntityID.Wilex;
-            case TutorialState.ChooseTurnRelay:
-                return (pm is BA_TurnRelay);
-            case TutorialState.ChooseExpensive:
-                return false;
-            case TutorialState.DoBlock:
-                return false;
-            case TutorialState.UseItem:
-                return false;
+            return (pm is BA_TurnRelay) && b.entityID == BattleHelper.EntityID.Luna;
+        }
+
+        if (state <= TutorialState.UseItem)
+        {
+            return false;
         }
 
         return true;

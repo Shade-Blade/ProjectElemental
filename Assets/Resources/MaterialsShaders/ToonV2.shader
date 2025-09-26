@@ -39,7 +39,7 @@ Shader "Toon/ToonV2" {
 
 
             if (lightIntensity < _BrightnessCutoffA) {
-                lightIntensity = 0;
+                lightIntensity = 0;     //shadows don't use this number?
             } else if (lightIntensity < _BrightnessCutoffB) {
                 lightIntensity = _BrightnessMid;
             } else {

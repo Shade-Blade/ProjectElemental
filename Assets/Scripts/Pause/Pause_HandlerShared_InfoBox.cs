@@ -44,6 +44,7 @@ public class Pause_HandlerShared_InfoBox : Pause_HandlerShared
     {
         index = 0;  //reset this always I guess
         section.ApplyUpdate(new UpdateObject(0, infoText));
+        section.OnActive();
         base.Init();
     }
 
@@ -111,6 +112,7 @@ public class Pause_HandlerShared_InfoBox : Pause_HandlerShared
         {
             MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
             section.gameObject.SetActive(false);
+            section.OnInactive();
             PopSelf();
         }
     }

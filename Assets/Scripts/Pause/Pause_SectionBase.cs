@@ -36,6 +36,17 @@ public abstract class Pause_SectionShared : MonoBehaviour
 
     public bool isInit = false;
 
+    //new later addition: something to make it easier to make it look active or not
+    public virtual void OnActive()
+    {
+
+    }
+    public virtual void OnInactive()
+    {
+
+    }
+
+
     //init (create stuff)
     public virtual void Init()
     {

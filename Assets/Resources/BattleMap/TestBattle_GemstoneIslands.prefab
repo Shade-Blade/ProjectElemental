@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxID: GemstoneIslands
   ambientLight: {r: 0.5, g: 0.5, b: 0.6, a: 1}
+  useDefaultLight: 1
 --- !u!1001 &838067004634421873
 PrefabInstance:
   m_ObjectHideFlags: 0

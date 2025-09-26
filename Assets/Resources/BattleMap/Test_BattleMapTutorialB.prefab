@@ -142,9 +142,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxID: SolarGrove
   ambientLight: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  useDefaultLight: 1
   state: 0
   cueStateChange: 0
   blockFail: 0
+  blockFailB: 0
 --- !u!1001 &8290536654719180826
 PrefabInstance:
   m_ObjectHideFlags: 0

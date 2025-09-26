@@ -416,6 +416,7 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
         if (section != null)
         {
             newSection = section.GetSubsection(new UpdateObject(tabindex, selectedPlayer, badgeIndex, (SortMode)sortIndex));
+            section.OnInactive();
         }
         //build the menu
         MenuHandler b = null;
@@ -508,11 +509,14 @@ public class Pause_HandlerEquip : Pause_HandlerShared_SideTabs
             selectedPlayer = sortedParty[0].entityID;
         }
         //Debug.Log(selectedPlayer);
+
+
         RebuildList();
         //Debug.Log("Selected index: " + selectIndex);
         if (section != null)
         {
             section.ApplyUpdate(new UpdateObject(tabindex, selectedPlayer, badgeIndex, (SortMode)sortIndex));
+            section.OnActive();
         }
         //base.Init();
         //Debug.Log("Badge " + badgeIndex);

@@ -152,6 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxID: InfernalCaldera
   ambientLight: {r: 0.45, g: 0.37968746, b: 0.35859373, a: 1}
+  useDefaultLight: 1
 --- !u!1001 &2727348928856735894
 PrefabInstance:
   m_ObjectHideFlags: 0

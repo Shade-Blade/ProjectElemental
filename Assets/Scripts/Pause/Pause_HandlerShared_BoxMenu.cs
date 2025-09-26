@@ -198,6 +198,9 @@ public class Pause_HandlerShared_BoxMenu : Pause_HandlerShared
             if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
             {
                 MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
+                //Order important: popself calls parent init which resets the list
+                //need to make section inactive to show correct color for equipped stuff
+                section.OnInactive();
                 PopSelf();
             }
         }
@@ -209,6 +212,7 @@ public class Pause_HandlerShared_BoxMenu : Pause_HandlerShared
             {
                 MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Cancel);
                 PopSelf();
+                section.OnInactive();
             }
         }
     }

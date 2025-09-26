@@ -419,6 +419,7 @@ public class Pause_HandlerEquip_BadgeSelect : Pause_HandlerShared_BoxMenu
             Pause_SectionEquip_Inventory p_se_i = (Pause_SectionEquip_Inventory)section;
             index = p_se_i.menuIndex;
             selectedPlayer = p_se_i.selectedPlayer;
+            section.OnActive();
         }
         
 

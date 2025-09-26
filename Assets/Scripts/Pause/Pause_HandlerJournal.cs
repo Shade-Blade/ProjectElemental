@@ -55,6 +55,7 @@ public class Pause_HandlerJournal : Pause_HandlerShared_SideTabs
 
         b.transform.parent = transform;
         PushState(b);
+        section.OnInactive();
         b.menuExit += InvokeExit;
     }
 }

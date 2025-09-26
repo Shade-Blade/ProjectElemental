@@ -84,6 +84,7 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
         {
             MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
             SendNullUpdate();
+            section.OnInactive();
             PopSelf();
         }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.Z)) //Z
@@ -188,6 +189,7 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
         Pause_SectionShared newSection = null;
         if (section != null)
         {
+            section.OnInactive();
             newSection = section.GetSubsection(new UpdateObject(tabindex));
         }
         //build the menu
@@ -219,6 +221,7 @@ public class Pause_HandlerShared_SideTabs : Pause_HandlerShared
         {
             UpdateObject uo = (UpdateObject)section.GetState();
             tabindex = uo.tabindex;
+            section.OnActive();
         }
 
         SendSectionUpdate();

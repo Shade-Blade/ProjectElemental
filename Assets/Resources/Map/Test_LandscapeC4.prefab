@@ -350,7 +350,7 @@ MonoBehaviour:
   skyboxID: InfernalCaldera
   ambientLight: {r: 0.45, g: 0.37968746, b: 0.35859373, a: 1}
   playerHolder: {fileID: 75118967011850446}
-  useDefaultLight: 0
+  useDefaultLight: 1
   useDefaultParticles: 0
   exits: []
   worldObjects: []

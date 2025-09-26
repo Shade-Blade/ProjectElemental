@@ -711,6 +711,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
     public int lastDamageTaken;                                                     //damage from last damage source (not statuses)
     public int lastDamageTakenInput;                                                //damage taken but before the defense calculation
     public DamageType lastDamageType;
+    public ulong lastDamageProperties;
     public bool bufferRemoveCharge = false;                                         //next time you try to remove charge, if this is true, set this to false instead of removing (but also gets reset in postmove phase)
 
     public bool statusCatalyst;
@@ -2329,6 +2330,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
 
         lastDamageTaken = damage;
         lastDamageType = type;
+        lastDamageProperties = properties;
 
         //note that this function is not actually the one that queues the hurt events
         //so there may be some possibilities of desync?
@@ -4793,6 +4795,7 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         target.lastDamageType = type;
         target.lastDamageTaken = 0;
         target.lastDamageTakenInput = 0;
+        target.lastDamageProperties = properties;
 
         if (!BattleHelper.GetDamageProperty(properties, BattleHelper.DamageProperties.SuppressHitParticles))
         {
@@ -8325,6 +8328,13 @@ public class BattleEntity : MonoBehaviour, ITextSpeaker
         if (!eventQueue.Contains(eventID))
         {
             QueueEvent(eventID);
+        }
+    }
+    public void TryCancelEvent(BattleHelper.Event eventID)
+    {
+        if (eventQueue.Contains(eventID))
+        {
+            eventQueue.RemoveAll((e) => (e == eventID));
         }
     }
     //  execute event (called in Update when event queue exists)

@@ -93,6 +93,15 @@ public class Pause_SectionItem : Pause_SectionShared_SideTabs
         characterStats.ApplyUpdate(inventory.selectedPlayer);
         return;
     }
+    public override void OnActive()
+    {
+        selectorArrow.color = new Color(0.5f, 0.5f, 0.5f, 1);
+        selectorArrow.enabled = false;
+        textbox.transform.parent.transform.parent.gameObject.SetActive(false);
+
+        base.OnInactive();
+    }
+
     public override object GetState()
     {
         Pause_HandlerItem.UpdateObject uo = new Pause_HandlerItem.UpdateObject(tabIndex, inventory.selectedPlayer);

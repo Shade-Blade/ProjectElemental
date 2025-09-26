@@ -158,6 +158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxID: AetherTrench
   ambientLight: {r: 0.45, g: 0.3, b: 0.3, a: 1}
+  useDefaultLight: 1
 --- !u!1001 &271659595606959205
 PrefabInstance:
   m_ObjectHideFlags: 0

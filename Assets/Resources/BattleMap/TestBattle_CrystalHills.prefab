@@ -155,6 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxID: CrystalHills
   ambientLight: {r: 0.5325843, g: 0.6, b: 0.6, a: 1}
+  useDefaultLight: 1
 --- !u!1001 &629531708690868551
 PrefabInstance:
   m_ObjectHideFlags: 0

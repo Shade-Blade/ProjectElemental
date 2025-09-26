@@ -2711,6 +2711,7 @@ public class PlayerEntity : BattleEntity
 
         lastDamageTaken = damage;
         lastDamageType = type;
+        lastDamageProperties = properties;
         hitsTaken += 1;
         damageTaken += damage;
         perTurnDamageTaken += damage;

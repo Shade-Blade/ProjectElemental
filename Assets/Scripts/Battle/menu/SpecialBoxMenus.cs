@@ -931,11 +931,11 @@ public class BadgeSwapBoxMenu : BoxMenu
                     break;
                 case BadgeMenuEntry.EquipType.Luna:
                     menuEntries[i].hasBackground = true;
-                    menuEntries[i].backgroundColor = new Color(0.5f, 1f, 0.5f);
+                    menuEntries[i].backgroundColor = new Color(1f, 1f, 0.5f);
                     break;
                 case BadgeMenuEntry.EquipType.Party:
                     menuEntries[i].hasBackground = true;
-                    menuEntries[i].backgroundColor = new Color(1f, 1f, 0.5f);
+                    menuEntries[i].backgroundColor = new Color(1f, 0.75f, 0.5f);
                     break;
             }
 
@@ -1069,11 +1069,11 @@ public class RibbonSwapBoxMenu : BoxMenu
                     break;
                 case BadgeMenuEntry.EquipType.Luna:
                     menuEntries[i].hasBackground = true;
-                    menuEntries[i].backgroundColor = new Color(0.5f, 1f, 0.5f);
+                    menuEntries[i].backgroundColor = new Color(1f, 1f, 0.5f);
                     break;
                 case BadgeMenuEntry.EquipType.Party:
                     menuEntries[i].hasBackground = true;
-                    menuEntries[i].backgroundColor = new Color(1f, 1f, 0.5f);
+                    menuEntries[i].backgroundColor = new Color(1f, 0.75f, 0.5f);
                     break;
             }            
             

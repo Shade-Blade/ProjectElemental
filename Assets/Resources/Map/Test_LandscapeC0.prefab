@@ -103,7 +103,7 @@ MonoBehaviour:
   skyboxID: SolarGrove
   ambientLight: {r: 0.6, g: 0.5586207, b: 0.5296552, a: 1}
   playerHolder: {fileID: 388424779153874435}
-  useDefaultLight: 0
+  useDefaultLight: 1
   useDefaultParticles: 0
   exits: []
   worldObjects: []

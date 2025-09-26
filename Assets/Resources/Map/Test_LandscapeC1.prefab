@@ -307,7 +307,7 @@ MonoBehaviour:
   skyboxID: VerdantForest
   ambientLight: {r: 0.53, g: 0.56, b: 0.53, a: 1}
   playerHolder: {fileID: 388424779153874435}
-  useDefaultLight: 0
+  useDefaultLight: 1
   useDefaultParticles: 0
   exits: []
   worldObjects: []

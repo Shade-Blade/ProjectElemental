@@ -162,6 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxID: TempestDesert
   ambientLight: {r: 0.6, g: 0.6, b: 0.54943824, a: 1}
+  useDefaultLight: 1
 --- !u!1001 &547786608238281415
 PrefabInstance:
   m_ObjectHideFlags: 0

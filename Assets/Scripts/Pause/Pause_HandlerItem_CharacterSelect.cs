@@ -107,6 +107,7 @@ public class Pause_HandlerItem_CharacterSelect : Pause_HandlerShared
         }
         if (lifetime > MIN_SELECT_TIME && InputManager.GetButtonDown(InputManager.Button.B)) //Press B to go back
         {
+            section.OnInactive();
             PopSelf();
         }
     }
@@ -119,6 +120,7 @@ public class Pause_HandlerItem_CharacterSelect : Pause_HandlerShared
         section.ApplyUpdate(sortedParty[index].entityID);
         //you go back automatically
         PopSelf();
+        section.OnInactive();
     }
 
     public override void Init()
@@ -131,6 +133,7 @@ public class Pause_HandlerItem_CharacterSelect : Pause_HandlerShared
         allPossible = Item.GetProperty(item.type, Item.ItemProperty.TargetAll) != null;
         section.ApplyUpdate(sortedParty[index].entityID);
         section.ApplyUpdate(null);
+        section.OnActive();
         base.Init();
     }
 

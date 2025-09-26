@@ -20,9 +20,25 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
 
     public Pause_HandlerEquip.SortMode sortMode;
 
+    public bool active;
+
+    public override void OnActive()
+    {
+        base.OnActive();
+        active = true;
+        //Debug.Log("onactive");
+    }
+    public override void OnInactive()
+    {
+        base.OnInactive();
+        active = false;
+        //Debug.Log("oninactive");
+    }
+
 
     public override void ApplyUpdate(object state)
     {
+        //Debug.Log("Inventory update " + state == null);
         if (state == null)  //resets the inventory
         {
             Clear();
@@ -133,7 +149,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 if (selectedScriptIndex >= 0 && selectedScriptIndex < menuEntriesS.Count)
                 {
                     ebmes = (EquipBoxMenuEntryScript)menuEntriesS[selectedScriptIndex];
-                    ebmes.Setup((RibbonMenuEntry)(menuEntries[selectedIndex]));
+                    ebmes.Setup((RibbonMenuEntry)(menuEntries[selectedIndex]), active);
                 }
 
                 //seek out the others?
@@ -156,7 +172,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                             int selectedScriptIndexB = i - loadedTopIndex;
 
                             EquipBoxMenuEntryScript ebmesB = (EquipBoxMenuEntryScript)menuEntriesS[selectedScriptIndexB];
-                            ebmesB.Setup(prme);
+                            ebmesB.Setup(prme, active);
                         }
                     }
                 }
@@ -191,7 +207,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 if (selectedScriptIndex >= 0 && selectedScriptIndex < menuEntriesS.Count)
                 {
                     ebmes = (EquipBoxMenuEntryScript)menuEntriesS[selectedScriptIndex];
-                    ebmes.Setup((BadgeMenuEntry)(menuEntries[selectedIndex]));
+                    ebmes.Setup((BadgeMenuEntry)(menuEntries[selectedIndex]), active);
                 }
 
                 //unfortunately I still have to update everything's "can use" value (which changes based on whenever you equip or unequip badges, so you end up in this if statement)
@@ -230,7 +246,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                             if (ebmes != null)
                             {
                                 ebmes = (EquipBoxMenuEntryScript)menuEntriesS[newIndex];
-                                ebmes.Setup(pbme);
+                                ebmes.Setup(pbme, active);
                             }
                         }
 
@@ -683,11 +699,11 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
 
                 if (bs == BadgeSubpage.Ribbons)
                 {
-                    b.Setup((RibbonMenuEntry)(menuEntries[i + loadedTopIndex]));
+                    b.Setup((RibbonMenuEntry)(menuEntries[i + loadedTopIndex]), active);
                 }
                 else
                 {
-                    b.Setup((BadgeMenuEntry)(menuEntries[i + loadedTopIndex]));
+                    b.Setup((BadgeMenuEntry)(menuEntries[i + loadedTopIndex]), active);
                 }
             }
         }
@@ -804,11 +820,11 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                     {
                         if (bs == BadgeSubpage.Ribbons)
                         {
-                            ((EquipBoxMenuEntryScript)(menuEntriesS[i])).Setup((RibbonMenuEntry)(menuEntries[i + desiredLoadedTopIndex]));
+                            ((EquipBoxMenuEntryScript)(menuEntriesS[i])).Setup((RibbonMenuEntry)(menuEntries[i + desiredLoadedTopIndex]), active);
                         }
                         else
                         {
-                            ((EquipBoxMenuEntryScript)(menuEntriesS[i])).Setup((BadgeMenuEntry)(menuEntries[i + desiredLoadedTopIndex]));
+                            ((EquipBoxMenuEntryScript)(menuEntriesS[i])).Setup((BadgeMenuEntry)(menuEntries[i + desiredLoadedTopIndex]), active);
                         }
                     }
                 }
@@ -840,11 +856,11 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                         }
                         if (bs == BadgeSubpage.Ribbons)
                         {
-                            ((EquipBoxMenuEntryScript)(menuEntriesS[i])).Setup((RibbonMenuEntry)(menuEntries[i + desiredLoadedTopIndex]));
+                            ((EquipBoxMenuEntryScript)(menuEntriesS[i])).Setup((RibbonMenuEntry)(menuEntries[i + desiredLoadedTopIndex]), active);
                         }
                         else
                         {
-                            ((EquipBoxMenuEntryScript)(menuEntriesS[i])).Setup((BadgeMenuEntry)(menuEntries[i + desiredLoadedTopIndex]));
+                            ((EquipBoxMenuEntryScript)(menuEntriesS[i])).Setup((BadgeMenuEntry)(menuEntries[i + desiredLoadedTopIndex]), active);
                         }
                     }
                 }

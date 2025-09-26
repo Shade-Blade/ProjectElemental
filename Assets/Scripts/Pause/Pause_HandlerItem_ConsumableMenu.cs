@@ -150,6 +150,7 @@ public class Pause_HandlerItem_ConsumableMenu : Pause_HandlerShared_BoxMenu
         if (section != null)
         {
             newSection = section.GetSubsection(new UpdateObject(index, selectedPlayer));
+            section.OnInactive();
         }
         //build the menu
         MenuHandler b = null;
@@ -173,6 +174,7 @@ public class Pause_HandlerItem_ConsumableMenu : Pause_HandlerShared_BoxMenu
             int newIndex = uo.index;
             selectedPlayer = uo.player;
             index = newIndex;
+            section.OnActive();
         }
 
         if (index > itemList.Count - 1)

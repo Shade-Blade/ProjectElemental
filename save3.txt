@@ -1,22 +1,22 @@
-sus
-d_rh_v0.20
-GF_Recipe_SourJam:True,GF_Bestiary_Fluffling:True,GF_Bestiary_Shrublet:True,GF_Bestiary_PuffJelly:True,GF_Bestiary_Honeybud:True,GF_Bestiary_Rockling:True,GF_Bestiary_Leafling:True,GF_Recipe_CarrotSalad:True,GF_Recipe_RoastedNut:True,GF_Bestiary_Renegade:True,GF_Bestiary_LumistarSoldier:True,GF_Bestiary_Heatwing:True,GF_Bestiary_Bandit:True,GF_Bestiary_Slimebloom:True,GF_Bestiary_Slimewalker:True,GF_Bestiary_Slimeworm:True,GF_Bestiary_Embercrest:True,GF_Bestiary_Flametongue:True,GF_Bestiary_Sandswimmer:True,GF_Bestiary_SirenFish:True
-GV_PitFloor:40,GV_PitAltar:4
-GemstoneIslands,RabbitHole_RestFloor,-0.5387086|0.375|-2.798958
-3062.196
-12,0,17,30,27,30,30,24,54,679,0,0,10,32,6,6,6,44,36,115,902,579,27,17,47,42,5,3
-HP,EP,SP,HP,EP,SP,HP,EP,SP,HP,HP
-
-SleepDart|None|EnemyDrop,WarpedCookie|None|Overworld|0|44,ScaleSteak|None|EnemyDrop|0|43,Dragonfruit|None|EnemyDrop|0|42,Dragonfruit|None|EnemyDrop|0|41,LavaPepper|None|EnemyDrop|0|40,BasaltNut|None|EnemyDrop|0|36,DeliciousMeal|None|Overworld|0|27,SpicyCherry|None|Overworld|0|23,MelonJug|None|Overworld|0|21
+a
+d_rh_v0.24
 
 
-SuperCurse|1,UltraCurse|2,MegaCurse|3,MultiStomp|15,ElectroSlash|10,DashThrough|16,SleepStomp|15,LeafySmash|12,ItemRebate|6,SoftPower|4,MetalPower|18,TenaciousStrikes|17,RagesPower|5,BattleSight|8,DecisiveVictory|14,ProtectiveRush|14,ProtectiveRush|16,ItemFinder|11
-SuperCurse|1,ItemRebate|6,SoftPower|4,RagesPower|5,BattleSight|8,DecisiveVictory|14,ProtectiveRush|16,ItemFinder|11
-SuperCurse|1,ItemRebate|6,BattleSight|8,DecisiveVictory|14,ItemFinder|11
-SafetyRibbon|2,SafetyRibbon|6,SafetyRibbon|7,SharpRibbon|4,ExpertRibbon|8,SlimyRibbon|3,SoftRibbon|4,ThornyRibbon|5
+Nowhere,RabbitHole_Lobby,-27.46|5|-1.5
+0
+1,0,12,12,12,12,12,0,0,0,0,0,10,32,6,6,6,0,0,0,0,0,0,0,0,0,0,0
+
+
+
+
+
+
+
+
+
 
 
 2,0
-Luna,26,42,1,1,SoftRibbon|4,12,614,370,22,12,92,2517.382
-SoftPower|4,RagesPower|5,ProtectiveRush|16
-Wilex,21,28,1,1,ExpertRibbon|8,24,288,209,17,17,23,512.8189
+Wilex,8,8,0,0,None,0,0,0,0,0,0,0
+
+Luna,12,12,0,0,None,0,0,0,0,0,0,0

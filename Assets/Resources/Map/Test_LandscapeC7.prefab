@@ -103,7 +103,7 @@ MonoBehaviour:
   skyboxID: AetherTrench
   ambientLight: {r: 0.4509804, g: 0.3, b: 0.3, a: 1}
   playerHolder: {fileID: 388424779153874435}
-  useDefaultLight: 0
+  useDefaultLight: 1
   useDefaultParticles: 0
   exits: []
   worldObjects: []

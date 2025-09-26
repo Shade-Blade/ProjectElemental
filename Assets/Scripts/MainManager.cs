@@ -5680,74 +5680,66 @@ public class MainManager : MonoBehaviour
         switch (wl)
         {
             case WorldLocation.SolarGrove:
-                lightColor = new Color(0.8f, 0.75f, 0.7f, 1f);
+                lightColor = new Color(0.75f, 0.7f, 0.65f, 1f);
                 break;
             case WorldLocation.VerdantForest:
-                lightColor = new Color(0.75f, 0.75f, 0.75f, 1f);
+                lightColor = new Color(0.7f, 0.73f, 0.7f, 1f);
                 break;
             case WorldLocation.TempestDesert:
-                lightColor = new Color(0.8f, 0.8f, 0.75f, 1f);
+                lightColor = new Color(0.75f, 0.75f, 0.7f, 1f);
                 break;
             case WorldLocation.GemstoneIslands:
-                lightColor = new Color(0.75f, 0.75f, 0.8f, 1f);
+                lightColor = new Color(0.7f, 0.7f, 0.75f, 1f);
                 break;
             case WorldLocation.InfernalCaldera:
-                lightColor = new Color(0.7f, 0.65f, 0.6f, 1f);
+                lightColor = new Color(0.65f, 0.6f, 0.55f, 1f);
                 break;
             case WorldLocation.ShroudedValley:
-                lightColor = new Color(0.575f, 0.55f, 0.6f, 1f);
+                lightColor = new Color(0.525f, 0.5f, 0.55f, 1f);
                 break;
             case WorldLocation.RadiantPlateau:
-                lightColor = new Color(0.8f, 0.825f, 0.85f, 1f);
+                lightColor = new Color(0.75f, 0.775f, 0.8f, 1f);
                 break;
             case WorldLocation.AetherTrench:
-                lightColor = new Color(0.65f, 0.54f, 0.54f, 1f);
+                lightColor = new Color(0.6f, 0.49f, 0.49f, 1f);
                 break;
             case WorldLocation.CrystalHills:
-                lightColor = new Color(0.7f, 0.8f, 0.8f, 1f);
+                lightColor = new Color(0.65f, 0.775f, 0.8f, 1f);
                 break;
             case WorldLocation.ForsakenMountains:
-                lightColor = new Color(0.725f, 0.675f, 0.8f, 1f);
+                lightColor = new Color(0.675f, 0.625f, 0.75f, 1f);
                 break;
         }
+
+        //fudge factor
+        lightColor.r *= 0.7f;
+        lightColor.g *= 0.7f;
+        lightColor.b *= 0.7f;
+
         return lightColor;
     }
     public static Color GetDefaultAmbientColor(WorldLocation wl)
     {
-        Color ambientColor = new Color();
-        switch (wl)
-        {
-            case WorldLocation.SolarGrove:
-                ambientColor = new Color(0.57f, 0.53f, 0.55f, 1f);
-                break;
-            case WorldLocation.VerdantForest:
-                ambientColor = new Color(0.53f, 0.56f, 0.53f, 1f);
-                break;
-            case WorldLocation.TempestDesert:
-                ambientColor = new Color(0.55f, 0.55f, 0.5f, 1f);
-                break;
-            case WorldLocation.GemstoneIslands:
-                ambientColor = new Color(0.5f, 0.5f, 0.6f, 1f);
-                break;
-            case WorldLocation.InfernalCaldera:
-                ambientColor = new Color(0.5f, 0.425f, 0.4f, 1f);
-                break;
-            case WorldLocation.ShroudedValley:
-                ambientColor = new Color(0.3f, 0.25f, 0.4f, 1f);
-                break;
-            case WorldLocation.RadiantPlateau:
-                ambientColor = new Color(0.5f, 0.6f, 0.7f, 1f);
-                break;
-            case WorldLocation.AetherTrench:
-                ambientColor = new Color(0.45f, 0.3f, 0.3f, 1f);
-                break;
-            case WorldLocation.CrystalHills:
-                ambientColor = new Color(0.5f, 0.57f, 0.57f, 1f);
-                break;
-            case WorldLocation.ForsakenMountains:
-                ambientColor = new Color(0.53f, 0.45f, 0.57f, 1f);
-                break;
-        }
+        Color ambientColor = GetDefaultLightColor(wl);
+
+        //5/7 old color
+        /*
+        ambientColor.r *= (5 / 7f);
+        ambientColor.g *= (5 / 7f);
+        ambientColor.b *= (5 / 7f);
+        */
+
+        /*
+        ambientColor.r *= (5 / 6f);
+        ambientColor.g *= (5 / 6f);
+        ambientColor.b *= (5 / 6f);
+        */
+
+
+        ambientColor.r *= 1.5f;
+        ambientColor.g *= 1.5f;
+        ambientColor.b *= 1.5f;
+
         return ambientColor;
     }
     public static void CreateDefaultParticles(WorldLocation wl, Transform parent, bool disableMovement = false)

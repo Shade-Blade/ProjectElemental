@@ -157,6 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxID: RadiantPlateau
   ambientLight: {r: 0.5, g: 0.6, b: 0.7, a: 1}
+  useDefaultLight: 1
 --- !u!1001 &68069255223151826
 PrefabInstance:
   m_ObjectHideFlags: 0

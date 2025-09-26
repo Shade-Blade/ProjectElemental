@@ -84,6 +84,7 @@ public class Pause_HandlerBase : Pause_HandlerShared
     {
         Pause_SectionShared newSection = section.GetSubsection(baseIndex);
         section.ApplyUpdate(null);
+        section.OnInactive();
         //build the menu
         MenuHandler b = null;
         switch (page)
@@ -140,6 +141,7 @@ public class Pause_HandlerBase : Pause_HandlerShared
             disabledTabs[i] = disabledList[i];
         }
         section.ApplyUpdate(baseIndex);
+        section.OnActive();
         base.Init();
     }
 
@@ -150,7 +152,7 @@ public class Pause_HandlerBase : Pause_HandlerShared
         List<PauseMenuPage> pages = new List<PauseMenuPage>();
         pages.Add(PauseMenuPage.Status);
 
-        if (MainManager.Instance.playerData.itemCounter > 0)
+        if (MainManager.Instance.playerData.itemCounter > 0 || MainManager.Instance.playerData.itemInventory.Count > 0)
         {
             pages.Add(PauseMenuPage.Items);
         }

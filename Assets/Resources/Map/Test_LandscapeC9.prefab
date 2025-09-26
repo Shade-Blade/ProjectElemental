@@ -103,7 +103,7 @@ MonoBehaviour:
   skyboxID: ForsakenMountains
   ambientLight: {r: 0.46551728, g: 0.3965517, b: 0.5, a: 1}
   playerHolder: {fileID: 388424779153874435}
-  useDefaultLight: 0
+  useDefaultLight: 1
   useDefaultParticles: 0
   exits: []
   worldObjects: []

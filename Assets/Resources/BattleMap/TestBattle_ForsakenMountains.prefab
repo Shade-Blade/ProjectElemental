@@ -158,6 +158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxID: ForsakenMountains
   ambientLight: {r: 0.4640523, g: 0.3954248, b: 0.5, a: 1}
+  useDefaultLight: 1
 --- !u!1001 &2433711714386549450
 PrefabInstance:
   m_ObjectHideFlags: 0

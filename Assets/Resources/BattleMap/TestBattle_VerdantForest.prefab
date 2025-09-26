@@ -159,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyboxID: VerdantForest
   ambientLight: {r: 0.53, g: 0.56, b: 0.53, a: 1}
+  useDefaultLight: 1
 --- !u!1001 &149879212499981478
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -199,6 +199,7 @@ public class Pause_HandlerEquip_RibbonSelect : Pause_HandlerShared_BoxMenu
             index = 0;
         }
         //index = 0;
+        section.OnActive();
 
         base.Init();
 
