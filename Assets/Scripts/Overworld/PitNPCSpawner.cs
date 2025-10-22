@@ -63,6 +63,9 @@ public class PitNPCSpawner : WorldObject
                     new RandomTableEntry<PitNPCHolderScript.PitNPC>(PitNPCHolderScript.PitNPC.Alumi, (pd.coins > 250 || pd.ribbonInventory.Count < (floor / 15)) ? 2 : 1),
                     new RandomTableEntry<PitNPCHolderScript.PitNPC>(PitNPCHolderScript.PitNPC.Spruce, pd.coins > 200 ? 2 : 1),
                     new RandomTableEntry<PitNPCHolderScript.PitNPC>(PitNPCHolderScript.PitNPC.Roielle, (pd.coins > 250 || pd.GetHealthPercentage() > 0.666f || pd.GetEnergyPercentage() > 0.666f) ? 2 : 1), //stand in for the 3 "rare item" merchants
+
+                    new RandomTableEntry<PitNPCHolderScript.PitNPC>(PitNPCHolderScript.PitNPC.Embra, pd.coins > 300 && pd.itemInventory.Count < 4 ? 3 : 1),
+                    new RandomTableEntry<PitNPCHolderScript.PitNPC>(PitNPCHolderScript.PitNPC.Osmi, (pd.coins > 300 || pd.badgeInventory.Count > (0.7f * floor)) ? 2 : 1),
                 };
                 RandomTable<PitNPCHolderScript.PitNPC> mstable = new RandomTable<PitNPCHolderScript.PitNPC>(miscTableEntries);
 

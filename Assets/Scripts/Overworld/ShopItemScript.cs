@@ -176,6 +176,26 @@ public class ShopItemScript : InteractTrigger
         }
     }
 
+    public void ForceInactive()
+    {
+        if (selectedItem)
+        {
+            selectedItem = false;
+            sz.RemoveShopItemFromList(shopItem);
+            if (menu != null)
+            {
+                menu.HideName();
+            }
+        }
+
+        if (menu != null)
+        {
+            //unsetup
+            Destroy(menu.gameObject);
+            menu = null;
+        }
+    }
+
     public override void Interact()
     {
         shopkeeperEntity.Interact(this);

@@ -66,8 +66,9 @@ public class EnemyBuilder// : MonoBehaviour
             case BattleHelper.EntityID.Sandswimmer:
                 return MainManager.SpriteID.C2_Sandswimmer;
             case BattleHelper.EntityID.SpireGuard:
+                return MainManager.SpriteID.C2_FrogNormal_MaleGuard;
             case BattleHelper.EntityID.EliteGuard:
-                break;
+                return MainManager.SpriteID.C2_FrogSpiky_MaleGuard;
             case BattleHelper.EntityID.DesertBloom:
                 return MainManager.SpriteID.C2_DesertBloom;
             case BattleHelper.EntityID.Goldpole:
@@ -258,6 +259,7 @@ public class EnemyBuilder// : MonoBehaviour
         BattleEntity b = null;
         bool debugSprite = true;
 
+        //future idea: use reflection to get the entity names?
         switch (id)
         {
             case BattleHelper.EntityID.Wilex:
@@ -398,9 +400,11 @@ public class EnemyBuilder// : MonoBehaviour
                 break;
             case BattleHelper.EntityID.SpireGuard:
                 b = g.AddComponent<BE_SpireGuard>();
+                debugSprite = false;
                 break;
             case BattleHelper.EntityID.EliteGuard:
                 b = g.AddComponent<BE_EliteGuard>();
+                debugSprite = false;
                 break;
             case BattleHelper.EntityID.DesertBloom:
                 b = g.AddComponent<BE_DesertBloom>();

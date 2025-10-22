@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 24063123630e9b04099cfd46e82d53e7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 77588862cebff9c4ebe89cc6b9b07fa3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,7 +95,7 @@ Animator:
   m_GameObject: {fileID: 3708101264875496809}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3e40c1cb31ea9934cb46b95d1aa3fbb9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -147,7 +147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 538110768454335176}
-  - component: {fileID: 6197429060858156313}
+  - component: {fileID: 8295787326424246743}
   m_Layer: 0
   m_Name: AnimCont_C2_FrogSpiky_MaleBandit
   m_TagString: Untagged
@@ -171,7 +171,7 @@ Transform:
   - {fileID: 4939146674735055669}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6197429060858156313
+--- !u!114 &8295787326424246743
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8631650266227609169}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a0f00b35cdf4654596945377f4a9432, type: 3}
+  m_Script: {fileID: 11500000, guid: 10531703570c33044b32edd2d29897ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7091985871941047424}
@@ -207,5 +207,3 @@ MonoBehaviour:
   height: 0.75
   width: 0.25
   showBack: 0
-  spriteIdle: {fileID: 21300000, guid: 24063123630e9b04099cfd46e82d53e7, type: 3}
-  spriteIdleBack: {fileID: 21300000, guid: cac0f1a1ccdc60c4c99db303fed03d97, type: 3}

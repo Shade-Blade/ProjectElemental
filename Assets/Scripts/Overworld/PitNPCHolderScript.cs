@@ -37,7 +37,10 @@ public class PitNPCHolderScript : MonoBehaviour
         Roielle,
         ShopkeeperMosquito,
         ShopkeeperSpeartongue,
-        Alumi
+        Alumi,
+
+        Embra,  //Random item bag seller
+        Osmi,   //Random badge seller
     }
 
 

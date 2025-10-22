@@ -304,6 +304,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
             {
                 MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
                 PopSelf();
+                section.OnInactive();
             }
         }
         else
@@ -314,6 +315,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
             {
                 MainManager.Instance.PlayGlobalSound(MainManager.Sound.Menu_Close);
                 PopSelf();
+                section.OnInactive();
             }
         }
     }
@@ -402,6 +404,7 @@ public class Pause_HandlerSettings : Pause_HandlerShared_BoxMenu
             int[] uo = (int[])(section.GetState());
             int newIndex = uo[0];
             index = newIndex;
+            section.OnActive();
         }
 
         if (index > GetObjectCount() - 1)

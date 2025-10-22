@@ -802,7 +802,7 @@ public class BE_LumistarStriker : BattleEntity
 {
     public override void Initialize()
     {
-        moveset = new List<Move> { gameObject.AddComponent<BM_Shared_DualSlash>(), gameObject.AddComponent<BM_LumistarStriker_Charge>(), gameObject.AddComponent<BM_LumistarStriker_QuadSlash>() };
+        moveset = new List<Move> { gameObject.AddComponent<BM_LumistarStriker_DualSlash>(), gameObject.AddComponent<BM_LumistarStriker_Charge>(), gameObject.AddComponent<BM_LumistarStriker_QuadSlash>() };
 
         base.Initialize();
     }

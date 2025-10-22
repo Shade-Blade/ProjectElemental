@@ -3560,6 +3560,7 @@ public class MainManager : MonoBehaviour
         C2_FrogNormal_FemaleFoxCitizen,
         C2_FrogNormal_MaleBandit,
         C2_FrogNormal_MaleCitizen,
+        C2_FrogNormal_MaleGuard,
         C2_FrogNormal_MaleFoxBandit,
         C2_FrogNormal_MaleFoxCitizen,
         C2_FrogNormal_Rosette,
@@ -3583,6 +3584,7 @@ public class MainManager : MonoBehaviour
         C2_FrogSpiky_Halberd,
         C2_FrogSpiky_MaleBandit,
         C2_FrogSpiky_MaleCitizen,
+        C2_FrogSpiky_MaleGuard,
 
         C2_Cactupole,
         C2_Sandswimmer,
@@ -5680,7 +5682,7 @@ public class MainManager : MonoBehaviour
         switch (wl)
         {
             case WorldLocation.SolarGrove:
-                lightColor = new Color(0.75f, 0.7f, 0.65f, 1f);
+                lightColor = new Color(0.8f, 0.73f, 0.675f, 1f);
                 break;
             case WorldLocation.VerdantForest:
                 lightColor = new Color(0.7f, 0.73f, 0.7f, 1f);

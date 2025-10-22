@@ -206,6 +206,7 @@ public class WorldNPC_FiniteShopkeeper : WorldNPC_Shopkeeper, IShopkeeperEntity
                 itemScripts[i].DestroyMenu();
             }
         }
+        sis.ForceInactive();
         sis.gameObject.SetActive(false);
 
         yield return StartCoroutine(MainManager.Instance.Pickup(sis.shopItem.pickupUnion.Copy()));
