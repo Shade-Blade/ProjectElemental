@@ -6180,7 +6180,7 @@ public class MainManager : MonoBehaviour
         //0,1,2,3 = sword colors
         //4,5,6,7 = hammer colors
         //note that 0,4 shouldn't be used ("error colors")
-        weaponColors = new Color[8][];
+        weaponColors = new Color[16][];
 
         //4 entries per table
         //(outline), dark, medium, light
@@ -6190,10 +6190,22 @@ public class MainManager : MonoBehaviour
         weaponColors[1] = new Color[] { new Color(0.42f, 0.34f, 0.24f, 1), new Color(0.54f, 0.44f, 0.32f, 1), new Color(0.68f, 0.57f, 0.43f, 1), new Color(0.84f, 0.74f, 0.62f, 1) };
         weaponColors[2] = new Color[] { new Color(0.48f, 0.51f, 0.56f, 1), new Color(0.74f, 0.75f, 0.76f, 1), new Color(0.87f, 0.88f, 0.89f, 1), new Color(1f, 1f, 1f, 1) };
         weaponColors[3] = new Color[] { new Color(0.4f, -2f, 0f, 1), new Color(0.65f, 0f, 0.1f, 1), new Color(0.8f, 0f, 0.15f, 1), new Color(1f, 0.2f, 0.3f, 1) };
+
         weaponColors[4] = new Color[] { new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0) };
         weaponColors[5] = new Color[] { new Color(0.42f, 0.34f, 0.24f, 1), new Color(0.54f, 0.44f, 0.32f, 1), new Color(0.68f, 0.57f, 0.43f, 1), new Color(0.84f, 0.74f, 0.62f, 1) };
         weaponColors[6] = new Color[] { new Color(0.48f, 0.51f, 0.56f, 1), new Color(0.74f, 0.75f, 0.76f, 1), new Color(0.87f, 0.88f, 0.89f, 1), new Color(1f, 1f, 1f, 1) };
-        weaponColors[7] = new Color[] { new Color(0.53f, 0.46f, 0.22f, 1), new Color(1f, 0.9f, 0.5f, 1), new Color(1.3f, 1.2f, 0.6f, 1), new Color(1.4f, 1.3f, 0.82f, 1) };
+        weaponColors[7] = new Color[] { new Color(0.53f, 0.46f, 0.22f, 1), new Color(1f, 0.82f, 0.47f, 1), new Color(1.3f, 1.2f, 0.7f, 1), new Color(1.4f, 1.3f, 0.9f, 1) };
+
+        //handles
+        weaponColors[8] = new Color[] { new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0) };
+        weaponColors[9] = new Color[] { new Color(0.20f, 0.17f, 0.12f, 1), new Color(0.26f, 0.22f, 0.16f, 1), new Color(0.30f, 0.28f, 0.21f, 1), new Color(0.38f, 0.36f, 0.31f, 1) };
+        weaponColors[10] = new Color[] { new Color(0.2f, 0.23f, 0.36f, 1), new Color(0.35f, 0.36f, 0.45f, 1), new Color(0.43f, 0.44f, 0.51f, 1), new Color(0.6f, 0.6f, 0.7f, 1) };
+        weaponColors[11] = new Color[] { new Color(0.25f, -1f, 0.06f, 1), new Color(0.3f, 0.1f, 0.2f, 1), new Color(0.4f, 0.2f, 0.3f, 1), new Color(0.5f, 0.2f, 0.3f, 1) };
+
+        weaponColors[12] = new Color[] { new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0), new Color(0f, 0f, 0f, 0) };
+        weaponColors[13] = new Color[] { new Color(0.20f, 0.17f, 0.12f, 1), new Color(0.26f, 0.22f, 0.16f, 1), new Color(0.30f, 0.28f, 0.21f, 1), new Color(0.38f, 0.36f, 0.31f, 1) };
+        weaponColors[14] = new Color[] { new Color(0.2f, 0.23f, 0.36f, 1), new Color(0.35f, 0.36f, 0.45f, 1), new Color(0.43f, 0.44f, 0.51f, 1), new Color(0.6f, 0.6f, 0.7f, 1) };
+        weaponColors[15] = new Color[] { new Color(0.85f, 0.5f, 0.02f, 1), new Color(1f, 0.7f, 0.07f, 1), new Color(1.2f, 0.95f, 0.34f, 1), new Color(1.3f, 1.1f, 0.5f, 1) };
     }
 
     public void WeaponColorUpdate()
@@ -6237,21 +6249,32 @@ public class MainManager : MonoBehaviour
         if (wilex != null)
         {
             Color[] sc = weaponColors[wilex.weaponLevel + 1];
-
             Shader.SetGlobalVector("_WWeaponColorA", sc[0]);
             Shader.SetGlobalVector("_WWeaponColorB", sc[1]);
             Shader.SetGlobalVector("_WWeaponColorC", sc[2]);
             Shader.SetGlobalVector("_WWeaponColorD", sc[3]);
+
+
+            Color[] hac = weaponColors[wilex.weaponLevel + 9];
+            Shader.SetGlobalVector("_WWeaponHandleColorA", hac[0]);
+            Shader.SetGlobalVector("_WWeaponHandleColorB", hac[1]);
+            Shader.SetGlobalVector("_WWeaponHandleColorC", hac[2]);
+            Shader.SetGlobalVector("_WWeaponHandleColorD", hac[3]);
         }
 
         if (luna != null)
         {
             Color[] hc = weaponColors[luna.weaponLevel + 5];
-
             Shader.SetGlobalVector("_LWeaponColorA", hc[0]);
             Shader.SetGlobalVector("_LWeaponColorB", hc[1]);
             Shader.SetGlobalVector("_LWeaponColorC", hc[2]);
             Shader.SetGlobalVector("_LWeaponColorD", hc[3]);
+
+            Color[] hac = weaponColors[luna.weaponLevel + 13];
+            Shader.SetGlobalVector("_LWeaponHandleColorA", hac[0]);
+            Shader.SetGlobalVector("_LWeaponHandleColorB", hac[1]);
+            Shader.SetGlobalVector("_LWeaponHandleColorC", hac[2]);
+            Shader.SetGlobalVector("_LWeaponHandleColorD", hac[3]);
         }
     }
 

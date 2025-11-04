@@ -6038,7 +6038,7 @@ public class PlayerEntity : BattleEntity
         }
         else
         {
-            SetAnimation("idle", force);
+            SetAnimation("idlecombat", force);
         }
     }
 

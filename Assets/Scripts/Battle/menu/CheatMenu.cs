@@ -138,7 +138,14 @@ public class CheatMenu : MenuHandler
         //Load file
         if (input[0].Equals("ld"))
         {
-            int.TryParse(input[1], out int lfIndex);
+            int lfIndex = 0;
+            if (input.Length < 2 || input[1].Length == 0)
+            {
+                lfIndex = MainManager.Instance.saveIndex;
+            } else
+            {
+                int.TryParse(input[1], out lfIndex);
+            }
             if (MainManager.Instance.worldMode != MainManager.WorldMode.Overworld)
             {
                 doexit = false;

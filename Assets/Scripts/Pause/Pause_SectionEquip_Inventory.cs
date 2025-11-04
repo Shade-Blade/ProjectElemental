@@ -148,6 +148,7 @@ public class Pause_SectionEquip_Inventory : Pause_SectionShared_BoxMenu
                 EquipBoxMenuEntryScript ebmes = null;
                 if (selectedScriptIndex >= 0 && selectedScriptIndex < menuEntriesS.Count)
                 {
+                    //Debug.Log(et);
                     ebmes = (EquipBoxMenuEntryScript)menuEntriesS[selectedScriptIndex];
                     ebmes.Setup((RibbonMenuEntry)(menuEntries[selectedIndex]), active);
                 }

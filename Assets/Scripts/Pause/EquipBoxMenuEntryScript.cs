@@ -119,6 +119,7 @@ public class EquipBoxMenuEntryScript : BoxMenuEntryScript
         string mainString = entry.name;
         string rightString = entry.rightText + entry.spriteString;
 
+        this.et = p_entry.et;
         if (active)
         {
             SetActiveColor();

@@ -3228,7 +3228,14 @@ public class WorldPlayer : WorldEntity
                 break;
             case ActionState.IlluminateFall:
             case ActionState.AetherizeFall:
-                animName = "weaponholdidle";
+                if (rb != null && rb.velocity.y > 0)
+                {
+                    animName = "weaponholdjump";
+                }
+                else
+                {
+                    animName = "weaponholdfall";
+                }
                 break;
             case ActionState.Fall:
             case ActionState.LaunchFall:

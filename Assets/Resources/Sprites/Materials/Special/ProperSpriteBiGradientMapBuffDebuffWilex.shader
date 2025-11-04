@@ -224,6 +224,11 @@ Shader "Custom/ProperSpriteBiGradientMapBuffDebuffWilex" {
 		half4 _WWeaponColorC;
 		half4 _WWeaponColorD;
 
+		half4 _WWeaponHandleColorA;
+		half4 _WWeaponHandleColorB;
+		half4 _WWeaponHandleColorC;
+		half4 _WWeaponHandleColorD;
+
 		half4 _BlackColor;
 		half4 _GrayColor;
 		half4 _WhiteColor;
@@ -260,8 +265,12 @@ Shader "Custom/ProperSpriteBiGradientMapBuffDebuffWilex" {
 			//Ribbon mask
 			half rbm = max(c.r, c.b);
 			half rdelta = abs(c.r - c.b);
+			
+			//handle mask
+			half gbm = max(c.g, c.b);
+			half gdelta = abs(c.g - c.b);
 
-			if (rbm > 0.08 && rdelta < 0.08 && c.g < rbm / 2) {
+			if (c.a > 0.01 && rbm > 0.08 && rdelta < 0.08 && c.g < rbm / 2) {
 				if (rbm < _RibbonCutoffA) {
 					c = _WRibbonColorA;
 				} else if (rbm < _RibbonCutoffB) {
@@ -283,7 +292,7 @@ Shader "Custom/ProperSpriteBiGradientMapBuffDebuffWilex" {
 			}
 			
 			//weapon mask
-			if (bl > 0.08 && bdelta > 0.08 && max(c.r, c.g) < bl / 2) {
+			if (c.a > 0.01 && bl > 0.08 && bdelta > 0.08 && max(c.r, c.g) < bl / 2) {
 				if (bl < _WeaponCutoffA) {
 					c = _WWeaponColorA;
 				} else if (bl < _WeaponCutoffB) {
@@ -292,6 +301,19 @@ Shader "Custom/ProperSpriteBiGradientMapBuffDebuffWilex" {
 					c = _WWeaponColorC;
 				} else {
 					c = _WWeaponColorD;
+				}
+			}
+
+			//weapon handle
+			if (c.a > 0.01 && gbm > 0.08 && gdelta < 0.08 && c.r < 0.08) {
+				if (gbm < _WeaponCutoffA) {
+					c = _WWeaponHandleColorA;
+				} else if (gbm < _WeaponCutoffB) {
+					c = _WWeaponHandleColorB;
+				} else if (gbm < _WeaponCutoffC) {
+					c = _WWeaponHandleColorC;
+				} else {
+					c = _WWeaponHandleColorD;
 				}
 			}
 

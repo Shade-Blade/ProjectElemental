@@ -191,6 +191,11 @@ Shader "Custom/ProperSpriteGeneralLuna" {
 		half4 _LWeaponColorB;
 		half4 _LWeaponColorC;
 		half4 _LWeaponColorD;
+
+		half4 _LWeaponHandleColorA;
+		half4 _LWeaponHandleColorB;
+		half4 _LWeaponHandleColorC;
+		half4 _LWeaponHandleColorD;
 		
 		struct Input
 		{
@@ -206,8 +211,12 @@ Shader "Custom/ProperSpriteGeneralLuna" {
 			//Ribbon mask
 			half rbm = max(c.r, c.b);
 			half rdelta = abs(c.r - c.b);
+			
+			//handle mask
+			half gbm = max(c.g, c.b);
+			half gdelta = abs(c.g - c.b);
 
-			if (rbm > 0.08 && rdelta < 0.08 && c.g < rbm / 2) {
+			if (c.a > 0.01 && rbm > 0.08 && rdelta < 0.08 && c.g < rbm / 2) {
 				if (rbm < _RibbonCutoffA) {
 					c = _LRibbonColorA;
 				} else if (rbm < _RibbonCutoffB) {
@@ -229,7 +238,7 @@ Shader "Custom/ProperSpriteGeneralLuna" {
 			}
 			
 			//weapon mask
-			if (b > 0.08 && bdelta > 0.08 && max(c.r, c.g) < b / 2) {
+			if (c.a > 0.01 && b > 0.08 && bdelta > 0.08 && max(c.r, c.g) < b / 2) {
 				if (b < _WeaponCutoffA) {
 					c = _LWeaponColorA;
 				} else if (b < _WeaponCutoffB) {
@@ -238,6 +247,19 @@ Shader "Custom/ProperSpriteGeneralLuna" {
 					c = _LWeaponColorC;
 				} else {
 					c = _LWeaponColorD;
+				}
+			}
+
+			//weapon handle
+			if (c.a > 0.01 && gbm > 0.08 && gdelta < 0.08 && c.r < 0.08) {
+				if (gbm < _WeaponCutoffA) {
+					c = _LWeaponHandleColorA;
+				} else if (gbm < _WeaponCutoffB) {
+					c = _LWeaponHandleColorB;
+				} else if (gbm < _WeaponCutoffC) {
+					c = _LWeaponHandleColorC;
+				} else {
+					c = _LWeaponHandleColorD;
 				}
 			}
 
