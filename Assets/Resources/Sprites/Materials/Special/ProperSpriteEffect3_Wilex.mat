@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: ProperSpriteEffect3_Wilex
   m_Shader: {fileID: 4800000, guid: d21f6c6763ecd3f4f9b3f605af314a64, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: 2401
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -92,7 +95,7 @@ Material:
     - _Parallax: 0.02
     - _PerPixelScale: 48
     - _RibbonCutoffA: 0.75
-    - _RibbonCutoffB: 0.85
+    - _RibbonCutoffB: 0.95
     - _RibbonCutoffC: 0.6
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

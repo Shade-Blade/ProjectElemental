@@ -238,7 +238,7 @@ Shader "Custom/ProperSpriteGeneralWilex" {
 			}
 			
 			//weapon mask
-			if (c.a > 0.01 &&bl > 0.08 && bdelta > 0.08 && max(c.r, c.g) < bl / 2) {
+			if (c.a > 0.01 && bl > 0.08 && bdelta > 0.08 && max(c.r, c.g) < bl / 2) {
 				if (bl < _WeaponCutoffA) {
 					c = _WWeaponColorA;
 				} else if (bl < _WeaponCutoffB) {
@@ -251,7 +251,7 @@ Shader "Custom/ProperSpriteGeneralWilex" {
 			}
 
 			//weapon handle
-			if (c.a > 0.01 &&gbm > 0.08 && gdelta < 0.08 && c.r < 0.08) {
+			if (c.a > 0.01 && gbm > 0.08 && gdelta < 0.08 && c.r < gbm / 2) {
 				if (gbm < _WeaponCutoffA) {
 					c = _WWeaponHandleColorA;
 				} else if (gbm < _WeaponCutoffB) {

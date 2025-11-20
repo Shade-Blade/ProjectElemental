@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: wilex_weaponholdwalk_back
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,21 +18,23 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
-      value: {fileID: 21300000, guid: 8a2e84fb23006c8498c7dac22872b10c, type: 3}
+      value: {fileID: 21300000, guid: 41a5d50c3e9131a48822751964ed0b2b, type: 3}
     - time: 0.21666667
-      value: {fileID: 21300000, guid: 0ac72b3e647485b489f7520808f8c13e, type: 3}
+      value: {fileID: 21300000, guid: 5e0825fcb9f44684e86712fa6e5edad2, type: 3}
     - time: 0.43333334
-      value: {fileID: 21300000, guid: 8a2e84fb23006c8498c7dac22872b10c, type: 3}
+      value: {fileID: 21300000, guid: c3b04dbac82504c4ca6ec9154a3c6117, type: 3}
     - time: 0.65
-      value: {fileID: 21300000, guid: 956ae962b2bbd1a49a95dd51faaa0e05, type: 3}
+      value: {fileID: 21300000, guid: 5e0825fcb9f44684e86712fa6e5edad2, type: 3}
     - time: 0.8666667
-      value: {fileID: 21300000, guid: 8a2e84fb23006c8498c7dac22872b10c, type: 3}
+      value: {fileID: 21300000, guid: 41a5d50c3e9131a48822751964ed0b2b, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -47,12 +49,14 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 8a2e84fb23006c8498c7dac22872b10c, type: 3}
-    - {fileID: 21300000, guid: 0ac72b3e647485b489f7520808f8c13e, type: 3}
-    - {fileID: 21300000, guid: 8a2e84fb23006c8498c7dac22872b10c, type: 3}
-    - {fileID: 21300000, guid: 956ae962b2bbd1a49a95dd51faaa0e05, type: 3}
-    - {fileID: 21300000, guid: 8a2e84fb23006c8498c7dac22872b10c, type: 3}
+    - {fileID: 21300000, guid: 41a5d50c3e9131a48822751964ed0b2b, type: 3}
+    - {fileID: 21300000, guid: 5e0825fcb9f44684e86712fa6e5edad2, type: 3}
+    - {fileID: 21300000, guid: c3b04dbac82504c4ca6ec9154a3c6117, type: 3}
+    - {fileID: 21300000, guid: 5e0825fcb9f44684e86712fa6e5edad2, type: 3}
+    - {fileID: 21300000, guid: 41a5d50c3e9131a48822751964ed0b2b, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

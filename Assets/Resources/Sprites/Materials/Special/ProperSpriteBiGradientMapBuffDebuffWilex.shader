@@ -305,7 +305,7 @@ Shader "Custom/ProperSpriteBiGradientMapBuffDebuffWilex" {
 			}
 
 			//weapon handle
-			if (c.a > 0.01 && gbm > 0.08 && gdelta < 0.08 && c.r < 0.08) {
+			if (c.a > 0.01 && gbm > 0.08 && gdelta < 0.08 && c.r < gbm / 2) {
 				if (gbm < _WeaponCutoffA) {
 					c = _WWeaponHandleColorA;
 				} else if (gbm < _WeaponCutoffB) {
