@@ -20,11 +20,37 @@ Shader "Custom/PositionCutoutToon"
     {
         Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
 
-        Cull Off
-        ZWrite On
+        //Cull Off
+        //ZWrite On
         Blend SrcAlpha OneMinusSrcAlpha
         LOD 200
 
+        Cull Off	//doesn't seem to change anything, front face will block out back face so you can't see the backfaces from the outside of a closed surface
+
+		// First Pass: Only render alpha (A) channel
+		Pass {
+			ColorMask A
+			Blend SrcAlpha OneMinusSrcAlpha
+
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+
+			fixed4 _Color;
+
+			float4 vert(float4 vertex:POSITION) : SV_POSITION {
+				return UnityObjectToClipPos(vertex);
+			}
+
+			fixed4 frag() : SV_Target {
+				return _Color;
+			}
+
+			ENDCG
+		}
+
+        ColorMask RG
+		Blend SrcAlpha OneMinusSrcAlpha
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
         #pragma surface surf ToonRamp fullforwardshadows alpha:fade

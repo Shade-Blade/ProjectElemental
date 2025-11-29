@@ -2022,7 +2022,7 @@ public class LM_TeamThrow : LunaMove
 
             int sd = 2;
 
-            Vector3 grabPos = caller.transform.position + Vector3.up * 0.05f + Vector3.right * (caller.width * 0.5f + other.width * 0.5f - 0.05f) + Vector3.back * 0.002f;
+            Vector3 grabPos = caller.transform.position + Vector3.up * 0.3f + Vector3.right * (caller.width * 0.5f + other.width * 0.5f - 0.05f) + Vector3.back * 0.002f;
             yield return StartCoroutine(other.JumpHeavy(grabPos, 2, 0.5f, -0.25f));
 
             AC_MashLeftRight actionCommand = null;
@@ -2057,7 +2057,7 @@ public class LM_TeamThrow : LunaMove
                 other.SetRotation(Vector3.up * (-radialPos));
 
                 float xoffset = (caller.width * 0.5f + other.width * 0.5f - 0.05f);
-                Vector3 wPos = Vector3.up * 0.05f * caller.height + Vector3.right * xoffset * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset * Mathf.Sin(radialPos * (Mathf.PI / 180)) + Vector3.back * 0.002f;
+                Vector3 wPos = Vector3.up * 0.3f * caller.height + Vector3.right * xoffset * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset * Mathf.Sin(radialPos * (Mathf.PI / 180)) + Vector3.back * 0.002f;
                 other.Warp(caller.transform.position + wPos);
 
                 yield return null;
@@ -2082,7 +2082,7 @@ public class LM_TeamThrow : LunaMove
                 other.SetRotation(Vector3.up * (-radialPos));
 
                 float xoffset2 = (caller.width * 0.5f + other.width * 0.5f - 0.05f);
-                Vector3 wPos2 = Vector3.up * 0.05f * caller.height + Vector3.right * xoffset2 * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset2 * Mathf.Sin(radialPos * (Mathf.PI / 180)) + Vector3.back * 0.002f;
+                Vector3 wPos2 = Vector3.up * 0.3f * caller.height + Vector3.right * xoffset2 * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset2 * Mathf.Sin(radialPos * (Mathf.PI / 180)) + Vector3.back * 0.002f;
                 other.Warp(caller.transform.position + wPos2);
 
                 yield return null;
@@ -2136,7 +2136,7 @@ public class LM_TeamThrow : LunaMove
                 other.SetRotation(Vector3.up * (-radialPos));
 
                 float xoffset2 = (caller.width * 0.5f + other.width * 0.5f - 0.05f);
-                Vector3 wPos2 = Vector3.up * 0.05f * caller.height + Vector3.right * xoffset2 * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset2 * Mathf.Sin(radialPos * (Mathf.PI / 180)) + Vector3.back * 0.002f;
+                Vector3 wPos2 = Vector3.up * 0.3f * caller.height + Vector3.right * xoffset2 * Mathf.Cos(radialPos * (Mathf.PI / 180)) + Vector3.forward * xoffset2 * Mathf.Sin(radialPos * (Mathf.PI / 180)) + Vector3.back * 0.002f;
                 other.Warp(caller.transform.position + wPos2);
 
                 yield return null;

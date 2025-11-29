@@ -131,7 +131,7 @@ Shader "UI/Default_Wilex"
 			    half rbm = max(c.r, c.b);
 			    half rdelta = abs(c.r - c.b);
 
-			    if (rbm > 0.08 && rdelta < 0.08 && c.g  < rbm / 2) {
+			    if (rbm > 0.08 && rdelta < 0.08 && c.g  < rbm / 2 && c.a > 0.08) {
 				    if (rbm < _RibbonCutoffA) {
 					    c = _WRibbonColorA;
 				    } else if (rbm < _RibbonCutoffB) {
@@ -153,7 +153,7 @@ Shader "UI/Default_Wilex"
 			    }
 			
 			    //weapon mask
-			    if (bl > 0.08 && bdelta > 0.08 && max(c.r, c.g) < bl / 2) {
+			    if (bl > 0.08 && bdelta > 0.08 && max(c.r, c.g) < bl / 2 && c.a > 0.08) {
 				    if (bl < _WeaponCutoffA) {
 					    c = _WWeaponColorA;
 				    } else if (bl < _WeaponCutoffB) {
