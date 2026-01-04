@@ -5853,6 +5853,7 @@ public class MainManager : MonoBehaviour
 
     public void OnGUI()
     {
+        //note: only set by CheatMenu (to block input while it is up)
         if (InputManager.Instance.disableControl)
         {
             return;

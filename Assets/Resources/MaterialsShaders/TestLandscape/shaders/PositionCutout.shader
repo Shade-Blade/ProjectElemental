@@ -1,4 +1,4 @@
-Shader "Custom/PositionCutoutToon"
+Shader "Toon/PositionCutoutToon"
 {
     Properties
     {

@@ -1,6 +1,6 @@
 //https://github.com/ewersp/Shaders/blob/master/BetterTransparentDiffuse.shader
 // An improvement to the default Unity "Transparent/Diffuse" shader to prevent see-through artifacts.
-Shader "Custom/BetterTransparent" {
+Shader "Toon/ToonBetterTransparent" {
 	Properties {
 		_Color("Main Color", Color) = (1, 1, 1, 1)
 		_MainTex("Base (RGB) Trans (A)", 2D) = "white" { }

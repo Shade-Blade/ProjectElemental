@@ -1,4 +1,4 @@
-Shader "Custom/PositionCutoutToonGlow"
+Shader "Toon/PositionCutoutToonGlow"
 {
     Properties
     {

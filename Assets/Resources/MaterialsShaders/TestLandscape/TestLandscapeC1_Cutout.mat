@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TestLandscapeC1_Cutout
-  m_Shader: {fileID: 4800000, guid: 4f1013ac656eb93459c6ea14438c2720, type: 3}
+  m_Shader: {fileID: 4800000, guid: b75c8e5b3be729343a303c43a253d786, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -16,7 +16,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2900
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -63,6 +63,22 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TriplanarA:
+        m_Texture: {fileID: 2800000, guid: afa2ec25b5a286b47912250a98b64863, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriplanarB:
+        m_Texture: {fileID: 2800000, guid: 666f7fd0ab0c84c4ebebc204fd849bce, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriplanarC:
+        m_Texture: {fileID: 2800000, guid: db3ca509fa82c8644a16bdf3ab1027b8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriplanarD:
+        m_Texture: {fileID: 2800000, guid: b004ae3d22e872648acb1b5ebf0e1e54, type: 3}
+        m_Scale: {x: 0.5, y: 0.5}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BrightnessCutoffA: 0.05
@@ -70,6 +86,7 @@ Material:
     - _BrightnessHigh: 1
     - _BrightnessLow: 0.22
     - _BrightnessMid: 0.53
+    - _BrightnessMult: 0.75
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -85,6 +102,7 @@ Material:
     - _OcclusionStrength: 1
     - _Offset: 0.3
     - _Parallax: 0.02
+    - _Scale: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
